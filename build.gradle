@@ -29,6 +29,7 @@ allprojects {
 
 configure(subprojects) {
     apply plugin: 'java-library'
+    apply plugin: 'com.bmuschko.nexus'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     compileJava {
@@ -37,7 +38,7 @@ configure(subprojects) {
 }
 
 subprojects {
-	version = "$version"
+	version = "$parent.version"
     ext.projectName = 'SquidSquad'
 	repositories {
 		mavenLocal()
