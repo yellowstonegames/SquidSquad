@@ -1,0 +1,34 @@
+modifyPom {
+    project {
+        name 'SquidSquad'
+        description "Connected libraries for procedural generation and roguelikes."
+        url 'https://github.com/yellowstonegames/SquidSquad'
+        inceptionYear '2020'
+
+        scm {
+            url 'https://github.com/yellowstonegames/SquidSquad'
+            connection 'scm:https://yellowstonegames@github.com/yellowstonegames/SquidSquad.git'
+            developerConnection 'scm:git://github.com/yellowstonegames/SquidSquad.git'
+        }
+
+        licenses {
+            license {
+                name 'Apache Public License'
+                url 'https://www.apache.org/licenses/LICENSE-2.0.html'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'tommyettinger'
+                name 'Tommy Ettinger'
+                email 'tommy.ettinger@gmail.com'
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = 'com.squidpony'
+}

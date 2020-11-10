@@ -1,0 +1,77 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.0"
+    }
+}
+
+apply plugin: 'java-library'
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'io.codearte.nexus-staging'
+apply from: 'publish.gradle'
+
+def projectName = 'SquidSquad'
+version '0.0.1-SNAPSHOT'
+group 'com.squidpony'
+
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+}
+
+configure(subprojects) {
+    apply plugin: 'java-library'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    compileJava {
+        options.incremental = true
+    }
+}
+
+subprojects {
+	version = "$version"
+    ext.projectName = 'SquidSquad'
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+		maven { url 'https://jitpack.io' }
+		jcenter()
+	}
+    compileJava.exclude("emu")
+    javadoc.exclude("emu")
+    javadoc.options.source("14")
+    javadoc.destinationDir = file("../docs/$name/apidocs")
+
+}
+
+// Disable JDK 8's doclint
+// http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            // The -quiet is because of some sort of weird JDK JavaCompiler bug:
+            // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
+            options.addStringOption('Xdoclint:all,-missing', '-quiet')
+            options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
+        }
+    }
+}
+
+sourceSets.main.resources.srcDirs += [ file('src/main/resources').path ]
+sourceSets.test.resources.srcDirs += [ file('src/test/resources').path ]
+
+jar {
+    archiveBaseName.set(projectName)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
