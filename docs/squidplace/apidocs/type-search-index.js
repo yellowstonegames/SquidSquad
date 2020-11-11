@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"com.github.yellowstonegames.place","l":"Coord"},{"p":"com.github.yellowstonegames.place","l":"Direction"}];updateSearchResults();
