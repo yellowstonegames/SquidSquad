@@ -5,10 +5,9 @@
 <!-- To compile to Gwt, you need to reference this file in your master .gwt.xml
      file (usually called GdxDefinition.gwt.xml) as follows:
      
-    <inherits name="squidcore" />
+    <inherits name="squidplace" />
   -->
 <module>
-    <inherits name="jdkgdxds" />
-    <super-source path="emu"/>
-    <source path="com/github/yellowstonegames/core" />
+    <inherits name="squidcore" />
+    <source path="com/github/yellowstonegames/place" />
 </module>

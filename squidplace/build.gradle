@@ -1,12 +1,11 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-eclipse.project.name = projectName + 'squidcore'
+eclipse.project.name = projectName + 'squidplace'
 
 compileJava.exclude("emu")
 javadoc.exclude("emu")
 
 dependencies {
-    api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
-    //api "com.github.tommyettinger:regexodus:$regexodusVersion"
+    api project(':squidcore')
     testImplementation "junit:junit:4.13.1"
 }
 

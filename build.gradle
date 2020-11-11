@@ -66,13 +66,3 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
-
-sourceSets.main.resources.srcDirs += [ file('src/main/resources').path ]
-sourceSets.test.resources.srcDirs += [ file('src/test/resources').path ]
-
-jar {
-    archiveBaseName.set(projectName)
-    manifest {
-        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
-    }
-}

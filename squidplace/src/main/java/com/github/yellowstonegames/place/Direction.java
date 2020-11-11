@@ -1,4 +1,6 @@
-package com.github.yellowstonegames.core;
+package com.github.yellowstonegames.place;
+
+import com.github.yellowstonegames.core.TrigTools;
 
 /**
  * Represents the eight grid directions and the deltaX, deltaY values associated
