@@ -1,0 +1,355 @@
+// ============================================================================
+//   Copyright 2006-2012 Daniel W. Dyer
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// ============================================================================
+package com.github.yellowstonegames.core;
+
+import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Random;
+
+/**
+ * Mathematical operations not provided by {@link Math java.lang.Math}.
+ * <br>
+ * Originally part of the <a href="http://maths.uncommons.org/">Uncommon Maths software package</a> as Maths.
+ * @author Daniel Dyer
+ */
+public final class MathTools
+{
+    private MathTools ()
+    {
+        // Prevent instantiation.
+    }
+
+    /**
+     * Calculate the first argument raised to the power of the second.
+     * This method only supports non-negative powers.
+     * @param value The number to be raised.
+     * @param power The exponent (must be positive).
+     * @return {@code value} raised to {@code power}.
+     */
+    public static long raiseToPower(int value, int power)
+    {
+        if (power < 0)
+        {
+            throw new IllegalArgumentException("This method does not support negative powers.");
+        }
+        long result = 1;
+        for (int i = 0; i < power; i++)
+        {
+            result *= value;
+        }
+        return result;
+    }
+
+
+    /**
+     * Calculate logarithms for arbitrary bases.
+     * @param base The base for the logarithm.
+     * @param arg The value to calculate the logarithm for.
+     * @return The log of {@code arg} in the specified {@code base}.
+     */
+    public static double log(double base, double arg)
+    {
+        // Use natural logarithms and change the base.
+        return Math.log(arg) / Math.log(base);
+    }
+
+
+    /**
+     * Equivalent to libGDX's isEqual() method in MathUtils; this compares two doubles for equality and allows the given
+     * tolerance during comparison. An example is {@code 0.3 - 0.2 == 0.1} vs. {@code isEqual(0.3 - 0.2, 0.1, 0.000001)};
+     * the first is incorrectly false, while the second is correctly true.
+     * @param a the first float to compare
+     * @param b the second float to compare
+     * @param tolerance the maximum difference between a and b permitted for this to return true, inclusive   
+     * @return true if a and b have a difference less than or equal to tolerance, or false otherwise.
+     */
+    public static boolean isEqual (double a, double b, double tolerance)
+    {
+        return Math.abs(a - b) <= tolerance;
+    }
+
+    /**
+     * A float that is meant to be used as the smallest reasonable tolerance for methods like {@link #isEqual(float, float, float)}.
+     */
+    public static final float FLOAT_ROUNDING_ERROR = 0.000001f;
+    /**
+     * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows just enough
+     * tolerance to ignore a rounding error. An example is {@code 0.3f - 0.2f == 0.1f} vs. {@code isEqual(0.3f - 0.2f, 0.1f)};
+     * the first is incorrectly false, while the second is correctly true.
+     * @param a the first float to compare
+     * @param b the second float to compare
+     * @return true if a and b are equal or extremely close to equal, or false otherwise.
+     */
+    public static boolean isEqual (float a, float b) {
+        return Math.abs(a - b) <= 0.000001f;
+    }
+    /**
+     * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows the given
+     * tolerance during comparison. An example is {@code 0.3f - 0.2f == 0.1f} vs. {@code isEqual(0.3f - 0.2f, 0.1f, 0.000001f)};
+     * the first is incorrectly false, while the second is correctly true.
+     * @param a the first float to compare
+     * @param b the second float to compare
+     * @param tolerance the maximum difference between a and b permitted for this to return true, inclusive   
+     * @return true if a and b have a difference less than or equal to tolerance, or false otherwise.
+     */
+    public static boolean isEqual (float a, float b, float tolerance) {
+        return Math.abs(a - b) <= tolerance;
+    }
+
+    /**
+     * If the specified value is not greater than or equal to the specified minimum and
+     * less than or equal to the specified maximum, adjust it so that it is.
+     * @param value The value to check.
+     * @param min The minimum permitted value.
+     * @param max The maximum permitted value.
+     * @return {@code value} if it is between the specified limits, {@code min} if the value
+     * is too low, or {@code max} if the value is too high.
+     */
+    public static int clamp(int value, int min, int max)
+    {
+        return Math.min(Math.max(value, min), max);
+    }
+
+
+    /**
+     * If the specified value is not greater than or equal to the specified minimum and
+     * less than or equal to the specified maximum, adjust it so that it is.
+     * @param value The value to check.
+     * @param min The minimum permitted value.
+     * @param max The maximum permitted value.
+     * @return {@code value} if it is between the specified limits, {@code min} if the value
+     * is too low, or {@code max} if the value is too high.
+     */
+    public static long clamp(long value, long min, long max)
+    {
+        return Math.min(Math.max(value, min), max);
+    }
+
+
+    /**
+     * If the specified value is not greater than or equal to the specified minimum and
+     * less than or equal to the specified maximum, adjust it so that it is.
+     * @param value The value to check.
+     * @param min The minimum permitted value.
+     * @param max The maximum permitted value.
+     * @return {@code value} if it is between the specified limits, {@code min} if the value
+     * is too low, or {@code max} if the value is too high.
+     */
+    public static double clamp(double value, double min, double max)
+    {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * If the specified value is not greater than or equal to the specified minimum and
+     * less than or equal to the specified maximum, adjust it so that it is.
+     * @param value The value to check.
+     * @param min The minimum permitted value.
+     * @param max The maximum permitted value.
+     * @return {@code value} if it is between the specified limits, {@code min} if the value
+     * is too low, or {@code max} if the value is too high.
+     */
+    public static float clamp(float value, float min, float max)
+    {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * Like the modulo operator {@code %}, but the result will always match the sign of {@code d} instead of {@code op}.
+     * @param op the dividend; negative values are permitted and wrap instead of producing negative results
+     * @param d the divisor; if this is negative then the result will be negative, otherwise it will be positive
+     * @return the remainder of the division of op by d, with a sign matching d
+     */
+    public static double remainder(final double op, final double d) {
+        return (op % d + d) % d;
+    }
+
+    /**
+     * Determines the greatest common divisor of a pair of natural numbers
+     * using the Euclidean algorithm.  This method only works with natural
+     * numbers.  If negative integers are passed in, the absolute values will
+     * be used.  The return value is always positive.
+     * @param a The first value.
+     * @param b The second value.
+     * @return The greatest common divisor.
+     */
+    public static long greatestCommonDivisor(long a, long b)
+    {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        while (b != 0)
+        {
+            long temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    /**
+     * Given any odd int {@code a}, this finds another odd int {@code b} such that {@code a * b == 1}.
+     * <br>
+     * This is incompatible with GWT, but it should usually only find uses in exploratory code or in tests anyway...
+     * It is only incompatible because it tends to rely on multiplication overflow to work.
+     * @param a any odd int; note that even numbers do not have inverses modulo 2 to the 32
+     * @return the multiplicative inverse of {@code a} modulo 4294967296 (or, 2 to the 32)
+     */
+    @GwtIncompatible
+    public static int modularMultiplicativeInverse(int a)
+    {
+        int x = 2 ^ a * 3;     //  5 bits
+        x *= 2 - a * x;        // 10
+        x *= 2 - a * x;        // 20
+        x *= 2 - a * x;        // 40 -- 32 low bits
+        return x;
+    }
+
+    /**
+     * Given any odd long {@code a}, this finds another odd long {@code b} such that {@code a * b == 1L}.
+     * @param a any odd long; note that even numbers do not have inverses modulo 2 to the 64
+     * @return the multiplicative inverse of {@code a} modulo 18446744073709551616 (or, 2 to the 64)
+     */
+    public static long modularMultiplicativeInverse(long a)
+    {
+        long x = 2 ^ a * 3;    //  5 bits
+        x *= 2 - a * x;        // 10
+        x *= 2 - a * x;        // 20
+        x *= 2 - a * x;        // 40
+        x *= 2 - a * x;        // 80 -- 64 low bits
+        return x;
+    }
+
+    /**
+     * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
+     * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
+     * deviation seems to be 1.0 (the same as {@link Random#nextGaussian()}). If this is given an input of 0.0
+     * or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
+     * given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
+     * largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
+     * given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
+     * {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
+     * implemented by Sherali Karimov.
+     * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
+     * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
+     * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
+     * is more likely to just be confusing.
+     * <br>
+     * Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
+     * Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
+     * as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
+     * a typical uniform random {@code double} that's exclusive on 1.0, it won't produce a result higher than
+     * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
+     * excluded from the inputs (if 0.0 is an input, the result is {@code 38.5}). A chief advantage of using this with
+     * a random number generator is that it only requires one random double to obtain one Gaussian value;
+     * {@link Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but may rarely
+     * require much more random generation.
+     * <br>
+     * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
+     * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
+     * as the input).
+     * @param d should be between 0 and 1, exclusive, but other values are tolerated
+     * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
+     */
+    public static double probit(final double d) {
+        if (d <= 0 || d >= 1) {
+            return Math.copySign(38.5, d - 0.5);
+        }
+        // Rational approximation for lower region:
+        else if (d < 0.02425) {
+            final double q = Math.sqrt(-2.0 * Math.log(d));
+            return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
+                    / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+        }
+        // Rational approximation for upper region:
+        else if (0.97575 < d) {
+            final double q = Math.sqrt(-2.0 * Math.log(1 - d));
+            return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
+                    / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+        }
+        // Rational approximation for central region:
+        else {
+            final double q = d - 0.5;
+            final double r = q * q;
+            return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q
+                    / (((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
+        }
+    }
+
+    /**
+     * Integer square root (using floor), maintaining correct results even for very large {@code long} values. This
+     * version treats negative inputs as unsigned and returns positive square roots for them (these are usually large).
+     * <br>
+     * This is based on <a href="https://github.com/python/cpython/pull/13244">code recently added to Python</a>, but
+     * isn't identical. Notably, this doesn't branch except in the for loop, and it handles negative inputs differently.
+     * @param n a {@code long} value that will be treated as if unsigned
+     * @return the square root of n, rounded down to the next lower {@code long} if the result isn't already a {@code long}
+     */
+    public static long isqrt(final long n) {
+        final int c = 63 - Long.numberOfLeadingZeros(n) >> 1;
+        long a = 1, d = 0, e;
+        for(int s = 31 & 32 - Integer.numberOfLeadingZeros(c); s > 0;) {
+            e = d;
+            d = c >>> --s;
+            a = (a << d - e - 1) + (n >>> c + c - e - d + 1) / a;
+        }
+        return a - (n - a * a >>> 63);
+    }
+
+    /**
+     * A generalization on bias and gain functions that can represent both; this version is branch-less.
+     * This is based on <a href="https://arxiv.org/abs/2010.09714">this micro-paper</a> by Jon Barron, which
+     * generalizes the earlier bias and gain rational functions by Schlick. The second and final page of the
+     * paper has useful graphs of what the s (shape) and t (turning point) parameters do; shape should be 0
+     * or greater, while turning must be between 0 and 1, inclusive. This effectively combines two different
+     * curving functions so they continue into each other when x equals turning. The shape parameter will
+     * cause this to imitate "smoothstep-like" splines when greater than 1 (where the values ease into their
+     * starting and ending levels), or to be the inverse when less than 1 (where values start like square
+     * root does, taking off very quickly, but also end like square does, landing abruptly at the ending
+     * level). You should only give x values between 0 and 1, inclusive.
+     * @param x progress through the spline, from 0 to 1, inclusive
+     * @param shape must be greater than or equal to 0; values greater than 1 are "normal interpolations" 
+     * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes
+     * @return a float between 0 and 1, inclusive
+     */
+    public static float barronSpline(final float x, final float shape, final float turning) {
+        final float d = turning - x;
+        final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
+        return ((turning * n - f) * (x + f)) / (Float.MIN_VALUE - f + (x + shape * d) * n) - f;
+    }
+
+    /**
+     * A generalization on bias and gain functions that can represent both; this version is branch-less.
+     * This is based on <a href="https://arxiv.org/abs/2010.09714">this micro-paper</a> by Jon Barron, which
+     * generalizes the earlier bias and gain rational functions by Schlick. The second and final page of the
+     * paper has useful graphs of what the s (shape) and t (turning point) parameters do; shape should be 0
+     * or greater, while turning must be between 0 and 1, inclusive. This effectively combines two different
+     * curving functions so they continue into each other when x equals turning. The shape parameter will
+     * cause this to imitate "smoothstep-like" splines when greater than 1 (where the values ease into their
+     * starting and ending levels), or to be the inverse when less than 1 (where values start like square
+     * root does, taking off very quickly, but also end like square does, landing abruptly at the ending
+     * level). You should only give x values between 0 and 1, inclusive.
+     * @param x progress through the spline, from 0 to 1, inclusive
+     * @param shape must be greater than or equal to 0; values greater than 1 are "normal interpolations" 
+     * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes
+     * @return a double between 0 and 1, inclusive
+     */
+    public static double barronSpline(final double x, final double shape, final double turning) {
+        final double d = turning - x;
+        final int f = BitConversion.doubleToHighIntBits(d) >> 31, n = f | 1;
+        return ((turning * n - f) * (x + f)) / (Double.MIN_VALUE - f + (x + shape * d) * n) - f;
+    }
+}
