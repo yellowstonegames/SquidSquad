@@ -1,0 +1,15 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+eclipse.project.name = projectName + 'squidtext'
+
+dependencies {
+    api project(':squidcore')
+    api "com.github.tommyettinger:regexodus:$regexodusVersion"
+    testImplementation "junit:junit:4.13.1"
+}
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}

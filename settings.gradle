@@ -1,1 +1,1 @@
-include 'squidcore', 'squidplace'
+include 'squidcore', 'squidplace', 'squidtext'
