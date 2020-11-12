@@ -119,6 +119,15 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.place">Region</a>[]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LEVELS">LEVELS</a></span></code></th>
+<td class="col-last">
+<div class="block">A 256-element array of <a href="Region.html" title="class in com.github.yellowstonegames.place"><code>Region</code></a>s, each 64x64, where the first Region has an impossibly strict
+ threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+ and so on until the last element includes almost all points.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>static byte[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#RAW_2D">RAW_2D</a></span></code></th>
 <td class="col-last">
@@ -126,7 +135,7 @@ extends java.lang.Object</pre>
  Region and other classes that can use 2D byte arrays.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static byte[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#RAW_NOISE">RAW_NOISE</a></span></code></th>
 <td class="col-last">
@@ -290,6 +299,15 @@ float&nbsp;strength)</code></th>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">byte[][]</span>&nbsp;<span class="member-name">RAW_2D</span></div>
 <div class="block">Stores the same values as <a href="#RAW_NOISE"><code>RAW_NOISE</code></a> if considered [x][y] indexed; available for convenient usage by
  Region and other classes that can use 2D byte arrays.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="LEVELS">
+<h3>LEVELS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.place">Region</a>[]</span>&nbsp;<span class="member-name">LEVELS</span></div>
+<div class="block">A 256-element array of <a href="Region.html" title="class in com.github.yellowstonegames.place"><code>Region</code></a>s, each 64x64, where the first Region has an impossibly strict
+ threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+ and so on until the last element includes almost all points.</div>
 </section>
 </li>
 </ul>

@@ -269,18 +269,18 @@ public class BlueNoise {
                 ^ (x + x + y >> 2 & 0x3F) ^ (x - y - y >> 2 & 0x3F));
     }
 
-//    /**
-//     * A 256-element array of {@link Region}s, each 64x64, where the first Region has an impossibly strict
-//     * threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
-//     * and so on until the last element includes almost all points.
-//     */
-//    public static final Region[] LEVELS = new Region[256];
-//    static {
-//        LEVELS[0] = new Region(64, 64);
-//        for (int i = -127; i < 128; i++) {
-//            LEVELS[i + 128] = new Region(RAW_2D, -128, i);
-//        }
-//    }
+    /**
+     * A 256-element array of {@link Region}s, each 64x64, where the first Region has an impossibly strict
+     * threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+     * and so on until the last element includes almost all points.
+     */
+    public static final Region[] LEVELS = new Region[256];
+    static {
+        LEVELS[0] = new Region(64, 64);
+        for (int i = -127; i < 128; i++) {
+            LEVELS[i + 128] = new Region(RAW_2D, -128, i);
+        }
+    }
 
     
     /**
