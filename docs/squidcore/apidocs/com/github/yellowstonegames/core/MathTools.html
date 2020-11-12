@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -190,6 +190,34 @@ long&nbsp;max)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i6">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastCeil(double)">fastCeil</a></span>&#8203;(double&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.ceil(double)</code>, but returns an int.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastCeil(float)">fastCeil</a></span>&#8203;(float&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.ceil(double)</code>, but takes a float and returns an int.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastFloor(double)">fastFloor</a></span>&#8203;(double&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.floor(double)</code> , but returns an int.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastFloor(float)">fastFloor</a></span>&#8203;(float&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns an int.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#greatestCommonDivisor(long,long)">greatestCommonDivisor</a></span>&#8203;(long&nbsp;a,
 long&nbsp;b)</code></th>
@@ -198,7 +226,7 @@ long&nbsp;b)</code></th>
  using the Euclidean algorithm.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(double,double,double)">isEqual</a></span>&#8203;(double&nbsp;a,
 double&nbsp;b,
@@ -208,7 +236,7 @@ double&nbsp;tolerance)</code></th>
  tolerance during comparison.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(float,float)">isEqual</a></span>&#8203;(float&nbsp;a,
 float&nbsp;b)</code></th>
@@ -217,7 +245,7 @@ float&nbsp;b)</code></th>
  tolerance to ignore a rounding error.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(float,float,float)">isEqual</a></span>&#8203;(float&nbsp;a,
 float&nbsp;b,
@@ -227,14 +255,14 @@ float&nbsp;tolerance)</code></th>
  tolerance during comparison.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isqrt(long)">isqrt</a></span>&#8203;(long&nbsp;n)</code></th>
 <td class="col-last">
 <div class="block">Integer square root (using floor), maintaining correct results even for very large <code>long</code> values.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#log(double,double)">log</a></span>&#8203;(double&nbsp;base,
 double&nbsp;arg)</code></th>
@@ -242,21 +270,51 @@ double&nbsp;arg)</code></th>
 <div class="block">Calculate logarithms for arbitrary bases.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i16">
+<td class="col-first"><code>static long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#longFloor(double)">longFloor</a></span>&#8203;(double&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.floor(double)</code>, but returns a long.</div>
+</td>
+</tr>
+<tr class="row-color" id="i17">
+<td class="col-first"><code>static long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#longFloor(float)">longFloor</a></span>&#8203;(float&nbsp;t)</code></th>
+<td class="col-last">
+<div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns a long.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i18">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(int)">lowestOneBit</a></span>&#8203;(int&nbsp;num)</code></th>
+<td class="col-last">
+<div class="block">Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
+ the specified int value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i19">
+<td class="col-first"><code>static long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(long)">lowestOneBit</a></span>&#8203;(long&nbsp;num)</code></th>
+<td class="col-last">
+<div class="block">Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
+ the specified long value.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#modularMultiplicativeInverse(int)">modularMultiplicativeInverse</a></span>&#8203;(int&nbsp;a)</code></th>
 <td class="col-last">
 <div class="block">Given any odd int <code>a</code>, this finds another odd int <code>b</code> such that <code>a * b == 1</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#modularMultiplicativeInverse(long)">modularMultiplicativeInverse</a></span>&#8203;(long&nbsp;a)</code></th>
 <td class="col-last">
 <div class="block">Given any odd long <code>a</code>, this finds another odd long <code>b</code> such that <code>a * b == 1L</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#probit(double)">probit</a></span>&#8203;(double&nbsp;d)</code></th>
 <td class="col-last">
@@ -264,7 +322,7 @@ double&nbsp;arg)</code></th>
  inputs correspond to high outputs, and similarly for the low range.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#raiseToPower(int,int)">raiseToPower</a></span>&#8203;(int&nbsp;value,
 int&nbsp;power)</code></th>
@@ -272,7 +330,7 @@ int&nbsp;power)</code></th>
 <div class="block">Calculate the first argument raised to the power of the second.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#remainder(double,double)">remainder</a></span>&#8203;(double&nbsp;op,
 double&nbsp;d)</code></th>
@@ -646,6 +704,136 @@ double&nbsp;turning)</span></div>
 <dd><code>turning</code> - a value between 0.0 and 1.0, inclusive, where the shape changes</dd>
 <dt>Returns:</dt>
 <dd>a double between 0 and 1, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="lowestOneBit(int)">
+<h3>lowestOneBit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">lowestOneBit</span>&#8203;(<span class="parameters">int&nbsp;num)</span></div>
+<div class="block">Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
+ the specified int value. Returns zero if the specified value has no one-bits in its two's complement binary
+ representation, that is, if it is equal to zero.
+ <br>
+ Identical to <code>Integer.lowestOneBit(int)</code>, but super-sourced to act correctly on GWT. If you have GWT as a
+ target and do bit manipulation work, double-check everything! An int can be higher than <code>Integer.MAX_VALUE</code>
+ or lower than <code>Integer.MIN_VALUE</code> on GWT, without actually being a long (internally it's a double). This
+ is especially relevant for the overload of this method that takes and returns a long;
+ <code>Long.lowestOneBit(long)</code> does not provide correct results for certain inputs on GWT, such as
+ -17592186044416L, which it mysteriously returns 0L on, so you should use <a href="#lowestOneBit(long)"><code>lowestOneBit(long)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>num</code> - the value whose lowest one bit is to be computed</dd>
+<dt>Returns:</dt>
+<dd>an int value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
+         or zero if the specified value is itself equal to zero.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="lowestOneBit(long)">
+<h3>lowestOneBit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">lowestOneBit</span>&#8203;(<span class="parameters">long&nbsp;num)</span></div>
+<div class="block">Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
+ the specified long value. Returns zero if the specified value has no one-bits in its two's complement binary
+ representation, that is, if it is equal to zero.
+ <br>
+ Identical to <code>Long.lowestOneBit(long)</code>, but super-sourced to act correctly on GWT. If you have GWT as a
+ target and do bit manipulation work, double-check everything! An int can be higher than <code>Integer.MAX_VALUE</code>
+ or lower than <code>Integer.MIN_VALUE</code> on GWT, without actually being a long (internally it's a double). This
+ is especially relevant for this overload (for longs more so than for ints); <code>Long.lowestOneBit(long)</code> does
+ not provide correct results for certain inputs on GWT, such as -17592186044416L, which it mysteriously returns 0L
+ on, so you should use this method.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>num</code> - the value whose lowest one bit is to be computed</dd>
+<dt>Returns:</dt>
+<dd>a long value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
+         or zero if the specified value is itself equal to zero.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="longFloor(double)">
+<h3>longFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">longFloor</span>&#8203;(<span class="parameters">double&nbsp;t)</span></div>
+<div class="block">Like <code>Math.floor(double)</code>, but returns a long.
+ Doesn't consider "weird doubles" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the double to find the floor for</dd>
+<dt>Returns:</dt>
+<dd>the floor of t, as a long</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="longFloor(float)">
+<h3>longFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">longFloor</span>&#8203;(<span class="parameters">float&nbsp;t)</span></div>
+<div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns a long.
+ Doesn't consider "weird floats" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the double to find the floor for</dd>
+<dt>Returns:</dt>
+<dd>the floor of t, as a long</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fastFloor(double)">
+<h3>fastFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">fastFloor</span>&#8203;(<span class="parameters">double&nbsp;t)</span></div>
+<div class="block">Like <code>Math.floor(double)</code> , but returns an int.
+ Doesn't consider "weird doubles" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the float to find the floor for</dd>
+<dt>Returns:</dt>
+<dd>the floor of t, as an int</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fastFloor(float)">
+<h3>fastFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">fastFloor</span>&#8203;(<span class="parameters">float&nbsp;t)</span></div>
+<div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns an int.
+ Doesn't consider "weird floats" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the float to find the floor for</dd>
+<dt>Returns:</dt>
+<dd>the floor of t, as an int</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fastCeil(double)">
+<h3>fastCeil</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">fastCeil</span>&#8203;(<span class="parameters">double&nbsp;t)</span></div>
+<div class="block">Like <code>Math.ceil(double)</code>, but returns an int.
+ Doesn't consider "weird doubles" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the float to find the ceiling for</dd>
+<dt>Returns:</dt>
+<dd>the ceiling of t, as an int</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fastCeil(float)">
+<h3>fastCeil</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">fastCeil</span>&#8203;(<span class="parameters">float&nbsp;t)</span></div>
+<div class="block">Like <code>Math.ceil(double)</code>, but takes a float and returns an int.
+ Doesn't consider "weird floats" like INFINITY and NaN.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - the float to find the ceiling for</dd>
+<dt>Returns:</dt>
+<dd>the ceiling of t, as an int</dd>
 </dl>
 </section>
 </li>

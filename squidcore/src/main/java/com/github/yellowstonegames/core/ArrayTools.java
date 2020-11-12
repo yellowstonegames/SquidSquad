@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.support.LaserRandom;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Static methods for various frequently-used operations on 1D and 2D arrays. Has methods for copying, inserting, and
@@ -42,6 +43,19 @@ public class ArrayTools {
         return r;
     }
 
+    /**
+     * Fills the given int array with sequential ints from 0 to {@code buffer.length - 1}.
+     * @param buffer an int array that will be modified in-place; if null this returns null
+     * @return buffer, after modifications
+     */
+    public static int[] range(int[] buffer) {
+        int len;
+        if(buffer == null || (len = buffer.length) == 0) return buffer;
+        for (int i = 0; i < len; i++) {
+            buffer[i] = i;
+        }
+        return buffer;
+    }
     /**
      * Stupidly simple convenience method that produces a range from start to end, not including end, as an int array.
      *
@@ -693,7 +707,77 @@ public class ArrayTools {
         random.setStateA(a);
         random.setStateB(b);
     }
-    
+
+    /**
+     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
+     * @param items an int array; must be non-null
+     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     */
+    public static void shuffle(int[] items, Random random) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            int ii = random.nextInt(i + 1);
+            int temp = items[i];
+            items[i] = items[ii];
+            items[ii] = temp;
+        }
+    }
+
+    /**
+     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
+     * @param items a long array; must be non-null
+     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     */
+    public static void shuffle(long[] items, Random random) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            int ii = random.nextInt(i + 1);
+            long temp = items[i];
+            items[i] = items[ii];
+            items[ii] = temp;
+        }
+    }
+
+    /**
+     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
+     * @param items a char array; must be non-null
+     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     */
+    public static void shuffle(char[] items, Random random) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            int ii = random.nextInt(i + 1);
+            char temp = items[i];
+            items[i] = items[ii];
+            items[ii] = temp;
+        }
+    }
+
+    /**
+     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
+     * @param items a float array; must be non-null
+     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     */
+    public static void shuffle(float[] items, Random random) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            int ii = random.nextInt(i + 1);
+            float temp = items[i];
+            items[i] = items[ii];
+            items[ii] = temp;
+        }
+    }
+
+    /**
+     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
+     * @param items an array of some reference type; must be non-null but may contain null items
+     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     */
+    public static <T> void shuffle(T[] items, Random random) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            int ii = random.nextInt(i + 1);
+            T temp = items[i];
+            items[i] = items[ii];
+            items[ii] = temp;
+        }
+    }
+
     /**
      * Reverses the array given as a parameter, in-place, and returns the modified original.
      * @param data an array that will be reversed in-place

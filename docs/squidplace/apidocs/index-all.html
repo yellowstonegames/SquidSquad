@@ -51,7 +51,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#add(double)">add(double)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
@@ -68,10 +68,35 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Separately combines the x and y positions of this Coord and other, producing a different Coord as their "sum."</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#ALT_NOISE">ALT_NOISE</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Raw data this class uses, as 64 1D byte arrays.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#average(com.github.yellowstonegames.place.Coord)">average(Coord)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Separately averages the x and y positions of this Coord with other, producing a different Coord as their
  "midpoint."</div>
+</dd>
+</dl>
+<h2 class="title" id="I:B">B</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">BlueNoise</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Provides access to a precalculated, tiling plane of 2D blue noise, that is, noise without high-frequency components,
+ as well as seeded modifications to that tiling blue noise plane that make it have even fewer patterns.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill(int[][], int, LaserRandom)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#blueSpill(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill(int, int, int, LaserRandom)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
+ noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
+ range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
+ original point.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
@@ -201,8 +226,21 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#get(int,int)">get(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Gets a byte from the raw data this stores, treating it as an infinite 2D plane of tiling 64x64 regions.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#get(int,int)">get(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#get(int,int,byte%5B%5D)">get(int, int, byte[])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane
+ of tiling 64x64 regions.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#get(int,int,int)">get(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Gets a byte from the raw data this stores, treating it as an infinite 3D space of tiling 64x64x64 regions.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#getCacheHeight()">getCacheHeight()</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Gets the height of the pool used as a cache for Coords, not including negative Coords.</div>
@@ -214,6 +252,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#getCardinalDirection(int,int)">getCardinalDirection(int, int)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
 <div class="block">Returns the direction that most closely matches the input.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#getChosen(int,int,int)">getChosen(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
+ artifacts detectable to the human eye.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#getDirection(int,int)">getDirection(int, int)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
@@ -227,6 +270,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets an estimate at the correct direction that a position lies in given the distance towards it on the x and y
  axes.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#getSeeded(int,int,int)">getSeeded(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Gets a modified byte from the raw data this stores, using seed to adjust repeated sections of blue noise so
+ patterns are much less noticeable.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#getSeeded(int,int,int,byte%5B%5D)">getSeeded(int, int, int, byte[])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Gets a modified byte from some raw noise data in an array of at least 4096 bytes, using seed to adjust repeated
+ sections of noise so patterns are much less noticeable.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#getX()">getX()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>&nbsp;</dd>
@@ -252,6 +305,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#indexedBlueNoisePoint(float%5B%5D,int,float)">indexedBlueNoisePoint(float[], int, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Implements http://extremelearning.com.au/a-simple-method-to-construct-isotropic-quasirandom-blue-noise-point-sequences/ .</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#interpolate(com.github.yellowstonegames.place.Coord,float)">interpolate(Coord, float)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Gets a (usually cached) Coord between this Coord and <code>end</code>, with the actual position relative to this based
@@ -330,6 +387,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#RAW_2D">RAW_2D</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">Stores the same values as <a href="com/github/yellowstonegames/place/BlueNoise.html#RAW_NOISE"><code>BlueNoise.RAW_NOISE</code></a> if considered [x][y] indexed; available for convenient usage by
+ Region and other classes that can use 2D byte arrays.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#RAW_NOISE">RAW_NOISE</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
+<dd>
+<div class="block">The raw data this class uses, as a 1D byte array.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#RIGHT">RIGHT</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#rosenbergStrongHashCode(int,int)">rosenbergStrongHashCode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
@@ -427,7 +493,7 @@ the order they are declared.</div>
 <div class="block">The y-coordinate (the ordinate)</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
 <footer role="contentinfo">
 <nav role="navigation">
 <!-- ======= START OF BOTTOM NAVBAR ====== -->

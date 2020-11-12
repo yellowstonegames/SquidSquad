@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -300,22 +300,6 @@ float&nbsp;x)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i21">
-<td class="col-first"><code>static int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(int)">lowestOneBit</a></span>&#8203;(int&nbsp;num)</code></th>
-<td class="col-last">
-<div class="block">Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
- the specified int value.</div>
-</td>
-</tr>
-<tr class="alt-color" id="i22">
-<td class="col-first"><code>static long</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(long)">lowestOneBit</a></span>&#8203;(long&nbsp;num)</code></th>
-<td class="col-last">
-<div class="block">Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
- the specified long value.</div>
-</td>
-</tr>
-<tr class="row-color" id="i23">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin(double)">sin</a></span>&#8203;(double&nbsp;radians)</code></th>
 <td class="col-last">
@@ -324,7 +308,7 @@ float&nbsp;x)</code></th>
  and sometimes-faster MathUtils.sin() method.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin(float)">sin</a></span>&#8203;(float&nbsp;radians)</code></th>
 <td class="col-last">
@@ -333,7 +317,7 @@ float&nbsp;x)</code></th>
  consider its more-precise and sometimes-faster MathUtils.sin() method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin_(double)">sin_</a></span>&#8203;(double&nbsp;turns)</code></th>
 <td class="col-last">
@@ -341,7 +325,7 @@ float&nbsp;x)</code></th>
  turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin_(float)">sin_</a></span>&#8203;(float&nbsp;turns)</code></th>
 <td class="col-last">
@@ -349,7 +333,7 @@ float&nbsp;x)</code></th>
  also takes and returns a float); one turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sinDegrees(float)">sinDegrees</a></span>&#8203;(float&nbsp;degrees)</code></th>
 <td class="col-last">
@@ -390,52 +374,6 @@ float&nbsp;x)</code></th>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="lowestOneBit(int)">
-<h3>lowestOneBit</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">lowestOneBit</span>&#8203;(<span class="parameters">int&nbsp;num)</span></div>
-<div class="block">Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
- the specified int value. Returns zero if the specified value has no one-bits in its two's complement binary
- representation, that is, if it is equal to zero.
- <br>
- Identical to <code>Integer.lowestOneBit(int)</code>, but super-sourced to act correctly on GWT. If you have GWT as a
- target and do bit manipulation work, double-check everything! An int can be higher than <code>Integer.MAX_VALUE</code>
- or lower than <code>Integer.MIN_VALUE</code> on GWT, without actually being a long (internally it's a double). This
- is especially relevant for the overload of this method that takes and returns a long;
- <code>Long.lowestOneBit(long)</code> does not provide correct results for certain inputs on GWT, such as
- -17592186044416L, which it mysteriously returns 0L on, so you should use <a href="#lowestOneBit(long)"><code>lowestOneBit(long)</code></a>.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>num</code> - the value whose lowest one bit is to be computed</dd>
-<dt>Returns:</dt>
-<dd>an int value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-         or zero if the specified value is itself equal to zero.</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="lowestOneBit(long)">
-<h3>lowestOneBit</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">lowestOneBit</span>&#8203;(<span class="parameters">long&nbsp;num)</span></div>
-<div class="block">Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
- the specified long value. Returns zero if the specified value has no one-bits in its two's complement binary
- representation, that is, if it is equal to zero.
- <br>
- Identical to <code>Long.lowestOneBit(long)</code>, but super-sourced to act correctly on GWT. If you have GWT as a
- target and do bit manipulation work, double-check everything! An int can be higher than <code>Integer.MAX_VALUE</code>
- or lower than <code>Integer.MIN_VALUE</code> on GWT, without actually being a long (internally it's a double). This
- is especially relevant for this overload (for longs more so than for ints); <code>Long.lowestOneBit(long)</code> does
- not provide correct results for certain inputs on GWT, such as -17592186044416L, which it mysteriously returns 0L
- on, so you should use this method.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>num</code> - the value whose lowest one bit is to be computed</dd>
-<dt>Returns:</dt>
-<dd>a long value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-         or zero if the specified value is itself equal to zero.</dd>
-</dl>
-</section>
-</li>
 <li>
 <section class="detail" id="sin(double)">
 <h3>sin</h3>
