@@ -9,18 +9,15 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Various utility functions for dealing with Strings, CharSequences, and char[]s; this has lots of methods to convert
- * to and from Strings and numbers, but also has tools to wrap long CharSequences to fit in a maximum width, join arrays
- * of various items into long Strings, split/search/count occurrences of literal char arrays or CharSequences without
- * using any regex, and generally tidy up generated text. This last step includes padding left and right (including a
- * "strict" option that truncates Strings that are longer than the padded size), Capitalizing Each Word, Capitalizing
- * the first word in a sentence, replacing "a improper usage of a" with "an improved replacement using an," etc. This
- * also has a lot of predefined categories of chars that are considered widely enough supported in fonts, like
- * {@link #COMMON_PUNCTUATION} and {@link #LATIN_LETTERS_UPPER}.
- * <br>
- * Created by Tommy Ettinger on 3/21/2016.
+ * Various utility functions for handling readable natural-language text. This has tools to wrap long
+ * CharSequences to fit in a maximum width, and generally tidy up generated text. This last step includes padding left
+ * and right (including a "strict" option that truncates Strings that are longer than the padded size), Capitalizing
+ * Each Word, Capitalizing the first word in a sentence, replacing "a improper usage of a" with "an improved
+ * replacement using an," etc. This also has a lot of predefined categories of chars that are considered widely enough
+ * supported by fonts, like {@link #COMMON_PUNCTUATION} and {@link #LATIN_LETTERS_UPPER}.
+ * @author Tommy Ettinger
  */
-public class StringTools {
+public class TextTools {
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search

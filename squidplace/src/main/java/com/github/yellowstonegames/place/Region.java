@@ -2,9 +2,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.core.Hasher;
-import com.github.yellowstonegames.core.MathTools;
+import com.github.yellowstonegames.core.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -5853,40 +5851,39 @@ public class Region implements Collection<Coord>, Serializable {
     {
         return Hasher.hash64(seed, data) ^ Hasher.randomize(Hasher.randomize(height) + width);
     }
-//TODO: implement StringKit so serialization works.
 
-//    public String serializeToString()
-//    {
-//        return width +
-//                "," + height +
-//                "," + StringKit.joinAlt(",",data);
-//    }
-//    public static Region deserializeFromString(String s)
-//    {
-//        if(s == null || s.isEmpty())
-//            return null;
-//        int gap = s.indexOf(','), w = Integer.parseInt(s.substring(0, gap)),
-//                gap2 = s.indexOf(',', gap+1), h = Integer.parseInt(s.substring(gap+1, gap2));
-//        String[] splits = StringKit.split(s.substring(gap2+1), ",");
-//        long[] data = new long[splits.length];
-//        for (int i = 0; i < splits.length; i++) {
-//            data[i] = StringKit.longFromDec(splits[i]);
-//        }
-//        return new Region(data, w, h);
-//    }
+    public String serializeToString()
+    {
+        return width +
+                "," + height +
+                "," + StringTools.joinAlt(",",data);
+    }
+    public static Region deserializeFromString(String s)
+    {
+        if(s == null || s.isEmpty())
+            return null;
+        int gap = s.indexOf(','), w = Integer.parseInt(s.substring(0, gap)),
+                gap2 = s.indexOf(',', gap+1), h = Integer.parseInt(s.substring(gap+1, gap2));
+        String[] splits = StringTools.split(s.substring(gap2+1), ",");
+        long[] data = new long[splits.length];
+        for (int i = 0; i < splits.length; i++) {
+            data[i] = DigitTools.longFromDec(splits[i]);
+        }
+        return new Region(data, w, h);
+    }
 
-//    /**
-//     * Constructs a Region using a vararg for data. Primarily meant for generated code, since
-//     * {@link #serializeToString()} produces a String that happens to be a valid parameter list for this method.
-//     * @param width width of the Region to produce
-//     * @param height height of the Region to produce
-//     * @param data array or vararg of long containing the exact data, probably from an existing Region
-//     * @return a new Region with the given width, height, and data
-//     */
-//    public static Region of(final int width, final int height, final long... data)
-//    {
-//        return new Region(data, width, height);
-//    }
+    /**
+     * Constructs a Region using a vararg for data. Primarily meant for generated code, since
+     * {@link #serializeToString()} produces a String that happens to be a valid parameter list for this method.
+     * @param width width of the Region to produce
+     * @param height height of the Region to produce
+     * @param data array or vararg of long containing the exact data, probably from an existing Region
+     * @return a new Region with the given width, height, and data
+     */
+    public static Region of(final int width, final int height, final long... data)
+    {
+        return new Region(data, width, height);
+    }
 
 //TODO: this needs CoordPacker's Hilbert Curve code.
 
