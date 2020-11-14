@@ -701,12 +701,14 @@ public class ArrayTools {
      * @param sequence an {@link Arrangeable}, such as an {@link com.github.tommyettinger.ds.ObjectList}, {@link com.github.tommyettinger.ds.FloatList},
      *                 or {@link com.github.tommyettinger.ds.IntFloatOrderedMap}, that will be rearranged in-place
      */
-    public static void reorder(Arrangeable sequence, LaserRandom random) {
+    public static void rearrange(Arrangeable sequence, LaserRandom random) {
         long a = random.getStateA(), b = random.getStateB();
         sequence.shuffle(random);
         random.setStateA(a);
         random.setStateB(b);
     }
+
+
 
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.

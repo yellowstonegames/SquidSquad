@@ -1,4 +1,4 @@
-package com.github.yellowstonegames.place;
+package com.github.yellowstonegames.text;
 
 import regexodus.Matcher;
 import regexodus.Pattern;

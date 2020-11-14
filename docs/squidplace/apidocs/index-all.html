@@ -229,6 +229,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#%3Cinit%3E(int,int)">Coord(int, int)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#coordToHilbert(com.github.yellowstonegames.place.Coord)">coordToHilbert(Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a position as a Coord called pt and returns the length to travel along the 256x256 Hilbert curve to reach
+ that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#coordToMoore(com.github.yellowstonegames.place.Coord)">coordToMoore(Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a position as a Coord called pt and returns the length to travel along the 16x16 Moore curve to reach
+ that position.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#copy()">copy()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Simple method that returns a newly-allocated copy of this Region; modifications to one won't change the
@@ -260,6 +270,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This can take an int produced by <code>someCoord.encode()</code> and get the original Coord back out of it.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#decompress(java.lang.String)">decompress(String)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
+<dd>
+<div class="block">Decompresses a String returned by <a href="com/github/yellowstonegames/place/Region.html#toCompressedString()"><code>Region.toCompressedString()</code></a>, returning a new Region with identical
+ width, height, and contents to the Region before compression.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#degrees(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">degrees(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Gets the angle in degrees to go between two Coords.</div>
@@ -272,6 +287,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The y coordinate difference for this direction.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#DEPTH">DEPTH</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#deserializeFromString(java.lang.String)">deserializeFromString(String)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#deteriorate(java.util.Random,double)">deteriorate(Random, double)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
@@ -576,8 +593,28 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#getX()">getX()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#getXMoore3D(int,int)">getXMoore3D(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Gets the x coordinate for a given index into the 16x16x(8*n) Moore curve.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#getY()">getY()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#getYMoore3D(int,int)">getYMoore3D(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Gets the y coordinate for a given index into the 16x16x(8*n) Moore curve.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#getZMoore3D(int,int)">getZMoore3D(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Gets the z coordinate for a given index into the 16x16x(8*n) Moore curve.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#grayDecode(int)">grayDecode(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Decode a number from a Gray code n; Gray codes have a relation to the Hilbert curve and may be useful.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#grayEncode(int)">grayEncode(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Encode a number n as a Gray code; Gray codes have a relation to the Hilbert curve and may be useful.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.GRIterator.html#%3Cinit%3E()">GRIterator()</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.GRIterator.html" title="class in com.github.yellowstonegames.place">Region.GRIterator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -612,6 +649,35 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#heuristic(com.github.yellowstonegames.place.Direction)">heuristic(Direction)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbert3Distances">hilbert3Distances</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbert3X">hilbert3X</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbert3Y">hilbert3Y</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbert3Z">hilbert3Z</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">HilbertCurve</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Calculates and stores 2D and optionally 3D Hilbert Curves up to a reasonable size.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbertDistances">hilbertDistances</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbertToCoord(int)">hilbertToCoord(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a distance to travel along the 256x256 Hilbert curve and returns a Coord representing the position
+ in 2D space that corresponds to that point on the Hilbert curve.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbertToMorton(int)">hilbertToMorton(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a distance to travel along the 256x256 Hilbert curve and returns a Morton code representing the position
+ in 2D space that corresponds to that point on the Hilbert Curve; the Morton code will have interleaved x and y
+ bits and x in the least significant bit.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbertX">hilbertX</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#hilbertY">hilbertY</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
@@ -641,6 +707,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Manhattan measurement (making
  a diamond).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#init2D()">init2D()</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#init3D()">init3D()</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inRange(int,int,int,int,int,int)">inRange(int, int, int, int, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#insert(int)">insert(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
@@ -807,6 +877,36 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a new Region that has been mirrored along the rightmost edge, parallel to the y-axis.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreDistances">mooreDistances</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreToCoord(int)">mooreToCoord(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a distance to travel along the 16x16 Hilbert curve and returns a Coord representing the position
+ in 2D space that corresponds to that point on the Hilbert curve.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreX">mooreX</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreY">mooreY</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mortonBitDecode3D(int)">mortonBitDecode3D(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mortonDecode(int)">mortonDecode(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a Morton code, with interleaved x and y bits and x in the least significant bit, and returns the Coord
+ representing the same x, y position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mortonEncode(int,int)">mortonEncode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
+ index2 bits and index1 in the least significant bit.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mortonEncode3D(int,int,int)">mortonEncode3D(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mortonToHilbert(int)">mortonToHilbert(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a position as a Morton code, with interleaved x and y bits and x in the least significant bit, and returns
+ the length to travel along the 256x256 Hilbert Curve to reach that position.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#multiply(double)">multiply(double)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Separately multiplies the x and y positions of this Coord by operand, rounding to the nearest int for each of x
@@ -913,6 +1013,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#pointsInside(com.github.yellowstonegames.place.Coord,int,boolean,int,int)">pointsInside(Coord, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#posToHilbert(int,int)">posToHilbert(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes an x, y position and returns the length to travel along the 256x256 Hilbert curve to reach that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#posToHilbert3D(int,int,int)">posToHilbert3D(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes an x, y, z position and returns the length to travel along the 8x8x8 Hilbert curve to reach that
+ position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#posToMoore(int,int)">posToMoore(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes an x, y position and returns the length to travel along the 16x16 Moore curve to reach that position.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#pureEncode(int,int)">pureEncode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">An alternative to getting a Coord with Coord.get() only to encode() it as the next step.</div>
@@ -1443,6 +1556,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns this Region's data as a 2D char array,  [width][height] in size, with "on" cells filled with the
  char parameter on and "off" cells with the parameter off.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#toCompressedString()">toCompressedString()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
+<dd>
+<div class="block">Compresses this Region into a UTF-16 String and returns the String without modifying this Region.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#toggle(int,int)">toggle(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Changes the on/off state of the cell with the given x and y, making an on cell into an off cell, or an off cell
@@ -1581,6 +1698,16 @@ the order they are declared.</div>
 </dl>
 <h2 class="title" id="I:Z">Z</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#zDecode(int)">zDecode(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes a Morton code, with interleaved x and y bits and x in the least significant bit, and returns the Coord
+ representing the same x, y position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#zEncode(int,int)">zEncode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
+<dd>
+<div class="block">Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
+ index2 bits and index1 in the least significant bit.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#zoom(int,int)">zoom(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Effectively doubles the x and y values of each cell this contains (not scaling each cell to be larger, so each
