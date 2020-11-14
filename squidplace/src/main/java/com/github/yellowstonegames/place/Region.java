@@ -5980,8 +5980,6 @@ public class Region implements Collection<Coord>, Serializable {
 //                    if (on) {
 //                        for (int toSkip = idx + (compressed.charAt(p) - 256); idx < toSkip && idx < 0x8000; idx++) {
 //                            target.insert(CoordPacker.hilbertX[idx] + baseX, CoordPacker.hilbertY[idx] + baseY);
-//                            //hy = CoordPacker.hilbertY[idx] + baseY;
-//                            //target.data[(CoordPacker.hilbertX[idx] + baseX) * target.ySections + (hy >> 6)] |= 1L << (hy & 63);
 //                        }
 //                    } else {
 //                        idx += compressed.charAt(p) - 256;
@@ -5990,7 +5988,6 @@ public class Region implements Collection<Coord>, Serializable {
 //                startPack = endPack;
 //            }
 //        }
-////        target.tallied = false;
 //        return target;
 //    }
 
@@ -6268,19 +6265,6 @@ public class Region implements Collection<Coord>, Serializable {
                 }
             }
             return null;
-
-            /*
-            for (int x = 0; x < width; x++) {
-                for (int s = 0; s < ySections; s++) {
-                    if ((w = MathTools.lowestOneBit(data[x * ySections + s])) != 0 && i++ >= index) {
-                        if(index++ < limit)
-                            return Coord.get(x, (s << 6) | Long.numberOfTrailingZeros(w));
-                        else
-                            return null;
-                    }
-                }
-            }
-            */
         }
 
         @Override

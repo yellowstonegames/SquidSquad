@@ -113,6 +113,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#area(double)">area(double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#asCoords()">asCoords()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#asCoords(com.github.yellowstonegames.place.Coord%5B%5D)">asCoords(Coord[])</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
@@ -170,6 +172,15 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#CARDINALS_COUNTERCLOCKWISE">CARDINALS_COUNTERCLOCKWISE</a></span> - Static variable in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
 <div class="block">An array which holds only the four cardinal directions in counter-clockwise order.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#CHEBYSHEV">CHEBYSHEV</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">The distance it takes when diagonal movement costs the same as
+ cardinal movement.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#CIRCLE">CIRCLE</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">In an unobstructed area the FOV would be a circle.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#clear()">clear()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -277,11 +288,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An array which holds only the four diagonal directions.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#DIAMOND">DIAMOND</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">In an unobstructed area the FOV would be a diamond.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place"><span class="type-name-link">Direction</span></a> - Enum in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
 <dd>
 <div class="block">Represents the eight grid directions and the deltaX, deltaY values associated
  with those directions.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#directionCount()">directionCount()</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#disperse()">disperse()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Removes "on" cells that are orthogonally adjacent to other "on" cells, keeping at least one cell in a group "on."
@@ -357,6 +374,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#EUCLIDEAN">EUCLIDEAN</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">The distance it takes as the crow flies.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#expand()">expand()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Takes the "on" cells in this Region and expands them by one cell in the 4 orthogonal directions, making
@@ -368,6 +389,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions,
  making each "on" cell take up a plus-shaped area that may overlap with other "on" cells (which is just a normal
  "on" cell then).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#expand(int,int,int,java.lang.Iterable)">expand(int, int, int, Iterable&lt;Coord&gt;)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Given an Iterable of Coord (such as a List or Set), a distance to expand outward by (using this Radius), and the
+ bounding height and width of the map, gets a "thickened" group of Coord as a Set where each Coord in points has
+ been expanded out by an amount no greater than distance.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#expand8way()">expand8way()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -393,6 +420,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#expandSeriesToLimit()">expandSeriesToLimit()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#expandSeriesToLimit8way()">expandSeriesToLimit8way()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#extend(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord,int,boolean,int,int)">extend(Coord, Coord, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
@@ -581,15 +610,39 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#heuristic(com.github.yellowstonegames.place.Direction)">heuristic(Direction)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inCircle(int,int,int,boolean,int,int)">inCircle(int, int, int, boolean, int, int)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Euclidean measurement (making
+ a circle).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inCircle(int,int,int,boolean,int,int,java.util.List)">inCircle(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Euclidean measurement (making
+ a circle).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.GRIterator.html#index">index</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.GRIterator.html" title="class in com.github.yellowstonegames.place">Region.GRIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#indexedBlueNoisePoint(float%5B%5D,int,float)">indexedBlueNoisePoint(float[], int, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
 <dd>
 <div class="block">Implements http://extremelearning.com.au/a-simple-method-to-construct-isotropic-quasirandom-blue-noise-point-sequences/ .</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inDiamond(int,int,int,boolean,int,int)">inDiamond(int, int, int, boolean, int, int)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Manhattan measurement (making
+ a diamond).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inDiamond(int,int,int,boolean,int,int,java.util.List)">inDiamond(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Manhattan measurement (making
+ a diamond).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inRange(int,int,int,int,int,int)">inRange(int, int, int, int, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#insert(int)">insert(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Sets the given cell, "tightly" encoded for a specific width/height as by <a href="com/github/yellowstonegames/place/Region.html#asTightEncoded()"><code>Region.asTightEncoded()</code></a>, to "on".</div>
@@ -620,6 +673,16 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#insertTranslation(int,int)">insertTranslation(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Adds to this Region with a moved set of its own "on" cells, moved to the given x and y offset.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inSquare(int,int,int,boolean,int,int)">inSquare(int, int, int, boolean, int, int)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Chebyshev measurement (making
+ a square).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#inSquare(int,int,int,boolean,int,int,java.util.List)">inSquare(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets a List of all Coord points within <code>radiusLength</code> of <code>center</code> using Chebyshev measurement (making
+ a square).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#interleaveBits(int,int)">interleaveBits(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
@@ -709,6 +772,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets a Coord based off this instance but with even values for x and/or y increased to the nearest odd number.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#MANHATTAN">MANHATTAN</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">The distance it takes when only the four primary directions can be
+ moved in.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#mask(char%5B%5D%5B%5D,char)">mask(char[][], char)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
@@ -718,6 +786,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
  and where a cell is "off", it instead writes the short filler.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#matchingMeasurement()">matchingMeasurement()</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Gets the appropriate <a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place"><code>Measurement</code></a> to pass to a constructor if you already have a Radius.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#matchingMeasurement(com.github.yellowstonegames.place.Radius)">matchingMeasurement(Radius)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">Gets the appropriate Measurement that matches a Radius enum.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#matchingRadius()">matchingRadius()</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">Gets the appropriate Radius corresponding to a Measurement.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place"><span class="type-name-link">Measurement</span></a> - Enum in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">A way of measuring what cells are adjacent and how much further any adjacent cells are from other adjacent cells.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#mirrorY()">mirrorY()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
@@ -799,6 +883,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a Region using a vararg for data.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#onUnitShape(double,com.github.tommyettinger.ds.support.LaserRandom)">onUnitShape(double, LaserRandom)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#opposite()">opposite()</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
 <div class="block">Returns the direction directly opposite to this one.</div>
@@ -819,6 +905,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Calculates a perceptual hash for this Region using a method that is only precise for some sizes of
  Region; it writes a result to into, and uses working as a temporary buffer.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#perimeter(com.github.yellowstonegames.place.Coord,int,boolean,int,int)">perimeter(Coord, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#pointsInside(int,int,int,boolean,int,int)">pointsInside(int, int, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#pointsInside(int,int,int,boolean,int,int,java.util.List)">pointsInside(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#pointsInside(com.github.yellowstonegames.place.Coord,int,boolean,int,int)">pointsInside(Coord, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#pureEncode(int,int)">pureEncode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">An alternative to getting a Coord with Coord.get() only to encode() it as the next step.</div>
@@ -826,6 +920,18 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(double,double)">radius(double, double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(double,double,double,double)">radius(double, double, double, double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(com.github.yellowstonegames.place.Coord)">radius(Coord)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">radius(Coord, Coord)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place"><span class="type-name-link">Radius</span></a> - Enum in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Basic radius strategy implementations likely to be used for roguelikes.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#randomInterleave(java.util.Random)">randomInterleave(Random)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
@@ -1138,6 +1244,8 @@ loadScripts(document, 'script');</script>
 <div class="block">A static version of the current <a href="com/github/yellowstonegames/place/Coord.html#hashCode()"><code>Coord.hashCode()</code></a> method of this class, taking x and y as parameters instead of
  requiring a Coord object.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#roughDistance(int,int)">roughDistance(int, int)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -1209,6 +1317,10 @@ loadScripts(document, 'script');</script>
 <div class="block">If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
  are only adjacent diagonally are considered <b>one area</b> with this) and returns it as an element in an
  ArrayList of Region, with one Region per isolated area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#SQUARE">SQUARE</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">In an unobstructed area the FOV would be a square.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#subtract(double)">subtract(double)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
@@ -1382,7 +1494,25 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#values()">values()</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#values()">values()</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#values()">values()</a></span> - Static method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
