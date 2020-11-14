@@ -5885,111 +5885,109 @@ public class Region implements Collection<Coord>, Serializable {
         return new Region(data, width, height);
     }
 
-//TODO: this needs CoordPacker's Hilbert Curve code.
+    /**
+     * Compresses this Region into a UTF-16 String and returns the String without modifying this Region.
+     * Uses {@link HilbertCurve}'s algorithm and data to compress this Region in 256x128 blocks, storing the
+     * HilbertCurve data as chars with values from 256 to 33023 (a concept also used in {@link LZSEncoding}),
+     * and using ASCII semicolons to separate them or store other info (just width and height, which are given first as
+     * 16 hex digits). This finishes by running the result through {@link LZSEncoding}, a combination which typically
+     * gets very good compression.
+     * @return a String that could be used to reconstruct this Region using {@link #decompress(String)}
+     */
+    public String toCompressedString()
+    {
+        HilbertCurve.init2D();
+        StringBuilder packing = new StringBuilder(width * height >> 3);
+        DigitTools.appendHex(packing, width);
+        DigitTools.appendHex(packing, height);
+        final int chunksX = width + 255 >> 8, chunksY = height + 127 >> 7;
+        for (int bigX = 0, baseX = 0; bigX < chunksX; bigX++, baseX += 256) {
+            for (int bigY = 0, baseY = 0; bigY < chunksY; bigY++, baseY += 128) {
+                packing.append(';');
+                boolean on = false, current;
+                char skip = 0, hx, hy;
+                int xSize = Math.min(256, width - baseX), ySize = Math.min(128, height - baseY),
+                        limit = 0x8000, mapLimit = xSize * ySize;
+                if (xSize <= 128) {
+                    limit >>= 1;
+                    if (xSize <= 64) {
+                        limit >>= 1;
+                        if (ySize <= 64) {
+                            limit >>= 1;
+                            if (ySize <= 32) {
+                                limit >>= 1;
+                                if (xSize <= 32) {
+                                    limit >>= 1;
+                                }
+                            }
+                        }
+                    }
+                }
+                for (int i = 0, ml = 0; i < limit && ml < mapLimit; i++, skip++) {
+                    hx = HilbertCurve.hilbertX[i];
+                    hy = HilbertCurve.hilbertY[i];
+                    if (hx >= xSize || hy >= ySize) {
+                        if (on) {
+                            on = false;
+                            packing.append((char) (skip + 256));
+                            skip = 0;
+                        }
+                        continue;
+                    }
+                    ml++;
+                    current = ((data[(baseX + hx) * ySections + (baseY + hy >> 6)] & (1L << hy)) != 0);
+                    if (current != on) {
+                        packing.append((char) (skip + 256));
+                        skip = 0;
+                        on = current;
+                    }
+                }
+                if (on)
+                    packing.append((char) (skip + 256));
+            }
+        }
+        return LZSEncoding.compressToUTF16(packing.toString());
+    }
 
-//    /**
-//     * Compresses this Region into a UTF-16 String and returns the String without modifying this Region.
-//     * Uses {@link CoordPacker}'s algorithm and data to compress this Region in 256x128 blocks, storing the
-//     * CoordPacker-like data as chars with values from 256 to 33023 (a concept also used in {@link LZSEncoding}),
-//     * and using ASCII semicolons to separate them or store other info (just width and height, which are given first as
-//     * 16 hex digits). This finishes by running the result through {@link LZSEncoding}, a combination which typically
-//     * gets very good compression.
-//     * @return a String that could be used to reconstruct this Region using {@link #decompress(String)}
-//     */
-//    public String toCompressedString()
-//    {
-//        CoordPacker.init();
-//        StringBuilder packing = new StringBuilder(width * height >> 3);
-//        StringKit.appendHex(packing, width);
-//        StringKit.appendHex(packing, height);
-//        final int chunksX = width + 255 >> 8, chunksY = height + 127 >> 7;
-//        for (int bigX = 0, baseX = 0; bigX < chunksX; bigX++, baseX += 256) {
-//            for (int bigY = 0, baseY = 0; bigY < chunksY; bigY++, baseY += 128) {
-//                packing.append(';');
-//                boolean on = false, current;
-//                short skip = 0, hx, hy;
-//                int xSize = Math.min(256, width - baseX), ySize = Math.min(128, height - baseY),
-//                        limit = 0x8000, mapLimit = xSize * ySize;
-//                if (xSize <= 128) {
-//                    limit >>= 1;
-//                    if (xSize <= 64) {
-//                        limit >>= 1;
-//                        if (ySize <= 64) {
-//                            limit >>= 1;
-//                            if (ySize <= 32) {
-//                                limit >>= 1;
-//                                if (xSize <= 32) {
-//                                    limit >>= 1;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                for (int i = 0, ml = 0; i < limit && ml < mapLimit; i++, skip++) {
-//                    hx = CoordPacker.hilbertX[i];
-//                    hy = CoordPacker.hilbertY[i];
-//                    if (hx >= xSize || hy >= ySize) {
-//                        if (on) {
-//                            on = false;
-//                            packing.append((char) (skip + 256));
-//                            skip = 0;
-//                        }
-//                        continue;
-//                    }
-//                    ml++;
-//                    current = ((data[(baseX + hx) * ySections + (baseY + hy >> 6)] & (1L << hy)) != 0);
-//                    if (current != on) {
-//                        packing.append((char) (skip + 256));
-//                        skip = 0;
-//                        on = current;
-//                    }
-//                }
-//                if (on)
-//                    packing.append((char) (skip + 256));
-//            }
-//        }
-//        return LZSEncoding.compressToUTF16(packing.toString());
-//    }
-//
-//    /**
-//     * Decompresses a String returned by {@link #toCompressedString()}, returning a new Region with identical
-//     * width, height, and contents to the Region before compression. This decompresses the {@link LZSEncoding}
-//     * applied to the data, then decompresses the {@link CoordPacker}-type Hilbert Curve RLE data to get the original
-//     * Region back.
-//     * @param compressed a String that was compressed by {@link #toCompressedString()}, without changes
-//     * @return a new copy of the Region that was previously compressed
-//     */
-//    public static Region decompress(String compressed)
-//    {
-//        CoordPacker.init();
-//        Region target;
-//        compressed = LZSEncoding.decompressFromUTF16(compressed);
-//        final int width = StringKit.intFromHex(compressed), height = StringKit.intFromHex(compressed, 8, 16);
-//        target = new Region(width, height);
-//        final int chunksX = width + 255 >> 8, chunksY = height + 127 >> 7;
-//        int startPack = 16, endPack, idx;//, hy;
-//        boolean on;
-//        for (int bigX = 0, baseX = 0; bigX < chunksX; bigX++, baseX += 256) {
-//            for (int bigY = 0, baseY = 0; bigY < chunksY; bigY++, baseY += 128) {
-//                ++startPack;
-//                endPack = compressed.indexOf(';', startPack);
-//                if(endPack < 0) endPack = compressed.length();
-//                on = false;
-//                idx = 0;
-//                for(int p = startPack; p < endPack; p++, on = !on) {
-//                    if (on) {
-//                        for (int toSkip = idx + (compressed.charAt(p) - 256); idx < toSkip && idx < 0x8000; idx++) {
-//                            target.insert(CoordPacker.hilbertX[idx] + baseX, CoordPacker.hilbertY[idx] + baseY);
-//                        }
-//                    } else {
-//                        idx += compressed.charAt(p) - 256;
-//                    }
-//                }
-//                startPack = endPack;
-//            }
-//        }
-//        return target;
-//    }
+    /**
+     * Decompresses a String returned by {@link #toCompressedString()}, returning a new Region with identical
+     * width, height, and contents to the Region before compression. This decompresses the {@link LZSEncoding}
+     * applied to the data, then decompresses the {@link HilbertCurve} RLE data to get the original
+     * Region back.
+     * @param compressed a String that was compressed by {@link #toCompressedString()}, without changes
+     * @return a new copy of the Region that was previously compressed
+     */
+    public static Region decompress(String compressed)
+    {
+        HilbertCurve.init2D();
+        Region target;
+        compressed = LZSEncoding.decompressFromUTF16(compressed);
+        final int width = DigitTools.intFromHex(compressed), height = DigitTools.intFromHex(compressed, 8, 16);
+        target = new Region(width, height);
+        final int chunksX = width + 255 >> 8, chunksY = height + 127 >> 7;
+        int startPack = 16, endPack, idx;//, hy;
+        boolean on;
+        for (int bigX = 0, baseX = 0; bigX < chunksX; bigX++, baseX += 256) {
+            for (int bigY = 0, baseY = 0; bigY < chunksY; bigY++, baseY += 128) {
+                ++startPack;
+                endPack = compressed.indexOf(';', startPack);
+                if(endPack < 0) endPack = compressed.length();
+                on = false;
+                idx = 0;
+                for(int p = startPack; p < endPack; p++, on = !on) {
+                    if (on) {
+                        for (int toSkip = idx + (compressed.charAt(p) - 256); idx < toSkip && idx < 0x8000; idx++) {
+                            target.insert(HilbertCurve.hilbertX[idx] + baseX, HilbertCurve.hilbertY[idx] + baseY);
+                        }
+                    } else {
+                        idx += compressed.charAt(p) - 256;
+                    }
+                }
+                startPack = endPack;
+            }
+        }
+        return target;
+    }
 
     @Override
     public boolean contains(Object o) {
