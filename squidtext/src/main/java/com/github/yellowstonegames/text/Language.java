@@ -3537,7 +3537,7 @@ public class Language implements Serializable {
         order = parts0.order();
         alt.clear();
         alt.addAll(order);
-        for (int i = 0; i < ol; i++)
+        for (int i = 0; i < vOrd.length; i++)
             order.set(i, alt.get(vOrd[i]));
         int n;
 

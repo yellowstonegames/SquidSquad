@@ -465,7 +465,7 @@ se$->z
      * similar words should be low, even if the values are very different on a number line. The input to this must
      * contain lower-case ASCII letters, since that is all this knows how to read (characters not between 'a' and 'z'
      * are ignored). In Translator, the hashes this produces are given as seeds to an
-     * intentionally-low-quality RandomnessSource that produces  similar results for similar input states, which makes
+     * intentionally-low-quality Random that produces  similar results for similar input states, which makes
      * it likely to generate output words that are similar to each other when the input words are similar to each other.
      * @param data a char array that should contain letters from 'a' to 'z' this can hash
      * @param start the starting position in data to read, inclusive
@@ -804,7 +804,7 @@ se$->z
             //System.out.print(source + ":" + ((h >>> 60) & 7) + ":" + StringKit.hex(h) + ", ");
             rng.setState(h, 23L);
             do {
-                ciphered = conjugate(language.word(rng, false, (int) Math.ceil((h >>> 60) / (0.9 + 0.5 * rng.nextDouble()))), mods);
+                ciphered = conjugate(language.word(rng, false, (int) Math.ceil(language.syllableBias + ((h >>> 60) - language.syllableBias) * Math.sqrt(rng.nextDouble()))), mods);
                 if(cacheLevel < 2 || frustration++ > 9)
                     break;
             }while (reverse.containsKey(ciphered));
