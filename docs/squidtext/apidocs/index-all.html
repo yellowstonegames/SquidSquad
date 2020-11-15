@@ -150,6 +150,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#cacheLevel">cacheLevel</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">The degree of vocabulary to cache to speed up future searches at the expense of memory usage.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#capitalize(java.lang.CharSequence)">capitalize(CharSequence)</a></span> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
 <div class="block">Capitalizes Each Word In The Parameter <code>original</code>, Returning A New String.</div>
@@ -180,6 +184,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An approximation of Hanyu Pinyin, a Romanization technique used for Mandarin Chinese that has been in common use
  since the 1980s.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#cipher(java.lang.String)">cipher(String)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Given a String that should contain words in the source language, this translates each word to the fake language,
+ using existing translations if previous calls to cipher() or lookup() had translated that word.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#cipherMarkup(java.lang.CharSequence)">cipherMarkup(CharSequence)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Given a String, StringBuilder, or other CharSequence that should contain words in the source language (almost
+ always English, since this only knows English prefixes and suffixes), this finds sections of the text that
+ start and end with <code>[?]</code> and <code>[?]</code>, translates each word between those start/end markers to the fake
+ language, using existing translations if previous calls to cipher() or lookup() had translated that word, and
+ removes the <code>[?]</code> markup afterwards.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#clean">clean</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
@@ -255,6 +272,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#decipher(java.lang.CharSequence,java.util.Map)">decipher(CharSequence, Map&lt;String, String&gt;)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Deciphers words in an already-ciphered text with a given String-to-String Map for a vocabulary.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#DEEP_SPEECH">DEEP_SPEECH</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
 <div class="block">Fantasy/sci-fi language that would potentially be fitting for a trade language spoken by various very-different
@@ -351,6 +372,8 @@ loadScripts(document, 'script');</script>
 <div class="block">If a Language is known and is in <a href="com/github/yellowstonegames/text/Language.html#registered"><code>Language.registered</code></a>, this allows you to look up that Language by
  index, from 0 to <code>Language.registered.length - 1</code>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#getCacheLevel()">getCacheLevel()</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#getName()">getName()</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
 <div class="block">Returns the name of this Language, such as "English" or "Deep Speech", if one was registered for this.</div>
@@ -369,11 +392,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_LOWER">GREEK_LETTERS_LOWER</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
 <div class="block">Includes both lower-case forms for Sigma, 'ς' and 'σ', but this matches the two upper-case Sigma in
- <a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_UPPER"><code>GREEK_LETTERS_UPPER</code></a>.</div>
+ <a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_UPPER"><code>TextTools.GREEK_LETTERS_UPPER</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_UPPER">GREEK_LETTERS_UPPER</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
-<div class="block">Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in <a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_LOWER"><code>GREEK_LETTERS_LOWER</code></a>.</div>
+<div class="block">Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in <a href="com/github/yellowstonegames/text/TextTools.html#GREEK_LETTERS_LOWER"><code>TextTools.GREEK_LETTERS_LOWER</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#GREEK_ROMANIZED">GREEK_ROMANIZED</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
@@ -381,11 +404,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_CLOSE">GROUPING_SIGNS_CLOSE</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
-<div class="block">An index in <a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_OPEN"><code>GROUPING_SIGNS_OPEN</code></a> can be used here to find the closing char for that opening one.</div>
+<div class="block">An index in <a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_OPEN"><code>TextTools.GROUPING_SIGNS_OPEN</code></a> can be used here to find the closing char for that opening one.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_OPEN">GROUPING_SIGNS_OPEN</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
-<div class="block">Can be used to match an index with one in <a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_CLOSE"><code>GROUPING_SIGNS_CLOSE</code></a> to find the closing char (this way only).</div>
+<div class="block">Can be used to match an index with one in <a href="com/github/yellowstonegames/text/TextTools.html#GROUPING_SIGNS_CLOSE"><code>TextTools.GROUPING_SIGNS_CLOSE</code></a> to find the closing char (this way only).</div>
 </dd>
 </dl>
 <h2 class="title" id="I:H">H</h2>
@@ -430,6 +453,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Fantasy language that might be suitable for a language spoken by fiends, users of witchcraft, or people who seek
  to emulate or worship similar groups.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#initialize(com.github.yellowstonegames.text.Language,long)">initialize(Language, long)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Changes the language this can cipher, clearing its known translation (if any) and using the given Language
+ and shift as if given to <a href="com/github/yellowstonegames/text/Translator.html#%3Cinit%3E(com.github.yellowstonegames.text.Language,long)"><code>Translator(Language, long)</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#INSECT">INSECT</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
@@ -524,7 +552,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#joinAlt(java.lang.CharSequence,long...)">joinAlt(CharSequence, long...)</a></span> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>
-<div class="block">Like <a href="com/github/yellowstonegames/text/TextTools.html#join(java.lang.CharSequence,long...)"><code>join(CharSequence, long...)</code></a>, but this appends an 'L' to each number so they can be read in by Java.</div>
+<div class="block">Like <a href="com/github/yellowstonegames/text/TextTools.html#join(java.lang.CharSequence,long...)"><code>TextTools.join(CharSequence, long...)</code></a>, but this appends an 'L' to each number so they can be read in by Java.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#joinArrays(java.lang.CharSequence,char%5B%5D...)">joinArrays(CharSequence, char[]...)</a></span> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
@@ -546,6 +574,12 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#language">language</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#language">language</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">The Language this will use to construct words; normally one of the static fields in Language, a
+ Language produced by using the <a href="com/github/yellowstonegames/text/Language.html#mixAll(java.lang.Object...)"><code>Language.mixAll(Object...)</code></a> method of two or more of them, or
+ a random Language produced by <a href="com/github/yellowstonegames/text/Language.html#randomLanguage(long)"><code>Language.randomLanguage(long)</code></a>.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text"><span class="type-name-link">Language</span></a> - Class in <a href="com/github/yellowstonegames/text/package-summary.html">com.github.yellowstonegames.text</a></dt>
 <dd>
 <div class="block">A text generator for producing sentences and/or words in nonsense languages that fit a theme.</div>
@@ -585,6 +619,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#LATIN_LETTERS_UPPER">LATIN_LETTERS_UPPER</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#learnTranslation(java.util.Map,java.lang.String)">learnTranslation(Map&lt;String, String&gt;, String)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Adds a translation pair to vocabulary so it can be used in decipher, giving a correct translation for sourceWord.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#learnTranslations(java.util.Map,java.lang.Iterable)">learnTranslations(Map&lt;String, String&gt;, Iterable&lt;String&gt;)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Adds translation pairs to vocabulary so it can be used in decipher, giving a correct translation for sourceWords.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#learnTranslations(java.util.Map,java.lang.String...)">learnTranslations(Map&lt;String, String&gt;, String...)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Adds translation pairs to vocabulary so it can be used in decipher, giving a correct translation for sourceWords.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#LETTERS">LETTERS</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#LETTERS_AND_NUMBERS">LETTERS_AND_NUMBERS</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
@@ -600,6 +646,12 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.Modifier.html#LISP">LISP</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a></dt>
 <dd>
 <div class="block">For a character who always pronounces 's', 'ss', and 'sh' as 'th'.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#lookup(java.lang.String)">lookup(String)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Given a word in the source language (usually English), looks up an existing translation for that word, or if none
+ exists, generates a new word based on the phonetic hash of the source word, any of its stemming information such
+ as prefixes or suffixes, and this Translator's Language.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#LOVECRAFT">LOVECRAFT</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
@@ -619,6 +671,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#MARKS">MARKS</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#markupMatcher">markupMatcher</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#maxChars">maxChars</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#maxWords">maxWords</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
@@ -635,6 +689,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#minWords">minWords</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#mismatchTranslation(java.util.Map,java.lang.String,java.lang.String)">mismatchTranslation(Map&lt;String, String&gt;, String, String)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Adds a translation pair to vocabulary so it can be used in decipher, giving a typically-incorrect translation for
+ correctWord where it provides mismatchWord instead when the ciphered version of correctWord appears.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#mix(double,com.github.yellowstonegames.text.Language,double,java.lang.Object...)">mix(double, Language, double, Object...)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
 <div class="block">Produces a Language by mixing this Language with one or more other Language objects.</div>
@@ -759,6 +818,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A constant containing only chars that are reasonably likely to be supported by broad fonts and thus display-able.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#phoneticHash64(char%5B%5D,int,int)">phoneticHash64(char[], int, int)</a></span> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Gets a phonetic hash of a section of <code>data</code> between <code>start</code> inclusive and <code>end</code> exclusive; this
+ 64-bit hash should be similar for similar words, instead of very different if they are different at all.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#PUNCTUATION">PUNCTUATION</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -811,6 +875,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.Alteration.html#replacer">replacer</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Alteration.html" title="class in com.github.yellowstonegames.text">Language.Alteration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#reverse">reverse</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">The mapping of lower-case word keys to lower-case word values, where keys are in the source language and values
+ are generated by language.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#romanizedHumanLanguages">romanizedHumanLanguages</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
@@ -916,6 +985,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#serializeToString()">serializeToString()</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#setCacheLevel(int)">setCacheLevel(int)</a></span> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#shift">shift</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.Modifier.html#SIMPLIFY_NORSE">SIMPLIFY_NORSE</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a></dt>
 <dd>
 <div class="block">Removes accented letters and the two non-English consonants from text generated with <a href="com/github/yellowstonegames/text/Language.html#NORSE"><code>Language.NORSE</code></a>.</div>
@@ -967,6 +1040,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#table">table</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">The mapping of lower-case word keys to lower-case word values, where keys are in the source language and values
+ are generated by language.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/TextTools.html#TECHNICAL_PUNCTUATION">TECHNICAL_PUNCTUATION</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text">TextTools</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/TextTools.html" title="class in com.github.yellowstonegames.text"><span class="type-name-link">TextTools</span></a> - Class in <a href="com/github/yellowstonegames/text/package-summary.html">com.github.yellowstonegames.text</a></dt>
@@ -983,6 +1061,31 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#totalSyllableFrequency">totalSyllableFrequency</a></span> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text"><span class="type-name-link">Translator</span></a> - Class in <a href="com/github/yellowstonegames/text/package-summary.html">com.github.yellowstonegames.text</a></dt>
+<dd>
+<div class="block">Class that builds up a dictionary of words in an English-language source text to words generated by a
+ <a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text"><code>Language</code></a>, and can translate a source text to a similarly-punctuated, similarly-capitalized fake text;
+ it will try to use variants on the translation of the same root word when it encounters conjugations of that root
+ word or that root word with common English prefixes/suffixes.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#%3Cinit%3E()">Translator()</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Constructs a Translator that will generate simplified English-like text by default (this uses
+ <a href="com/github/yellowstonegames/text/Language.html#SIMPLISH"><code>Language.SIMPLISH</code></a>).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#%3Cinit%3E(com.github.yellowstonegames.text.Language)">Translator(Language)</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Constructs a Translator that will use the given style of language generator to produce its text.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#%3Cinit%3E(com.github.yellowstonegames.text.Language,long)">Translator(Language, long)</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Constructs a Translator that will use the given style of language generator to produce its text, using
+ the specified <code>shift</code> as a long to modify the generated words from the language's normal results.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Translator.html#%3Cinit%3E(com.github.yellowstonegames.text.Translator)">Translator(Translator)</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
+<dd>
+<div class="block">Copies another Translator and constructs this one with the information in the other.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
