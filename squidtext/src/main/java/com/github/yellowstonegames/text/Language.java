@@ -1,9 +1,6 @@
 package com.github.yellowstonegames.text;
 
-import com.github.tommyettinger.ds.CaseInsensitiveMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
@@ -43,7 +40,7 @@ public class Language implements Serializable {
     public final Pattern[] sanityChecks;
     public final ObjectList<Modifier> modifiers;
     public static final LaserRandom srng = new LaserRandom();
-    private static final ObjectObjectOrderedMap<String, Language> registry = new ObjectObjectOrderedMap<>(64);
+    private static final CaseInsensitiveOrderedMap<Language> registry = new CaseInsensitiveOrderedMap<>(64);
     protected String summary;
     protected String name = "Nameless Language";
     private static final transient StringBuilder sb = new StringBuilder(20);
@@ -3084,8 +3081,8 @@ public class Language implements Serializable {
         registered = new Language[registry.size()-1];
         registeredNames = new String[registered.length];
         for (int i = 0; i < registered.length; i++) {
-            registeredNames[i] = registry.order().get(i+1);
-            registered[i] = registry.get(registry.order().get(i+1));
+            registeredNames[i] = registry.keyAtIndex(i+1).toString();
+            registered[i] = registry.getAtIndex(i+1);
         }
     }
 
@@ -3107,7 +3104,7 @@ public class Language implements Serializable {
      */
     public static Language getAt(int index)
     {
-        return registry.get(registry.order().get(index));
+        return registered[index];
     }
     /**
      * If a Language is known and is in {@link #registered}, this allows you to look up that Language's
@@ -3117,7 +3114,7 @@ public class Language implements Serializable {
      */
     public static String nameAt(int index)
     {
-        return registry.order().get(index);
+        return registeredNames[index];
     }
 
     /**
@@ -3400,7 +3397,7 @@ public class Language implements Serializable {
                                     num = 13;
                         }
                         for (int i = 0; i < num * 3; i++) {
-                            if (rng.nextDouble() < 0.75) {
+                            if (rng.nextFloat() < 0.75f) {
                                 working.add(t);
                             }
                         }
@@ -3412,18 +3409,18 @@ public class Language implements Serializable {
                             working.add(pair);
                             working.add(pair);
                             working.add(pair);
-                            if (rng.nextDouble() < 0.7) {
+                            if (rng.nextFloat() < 0.7f) {
                                 working.add(pair);
                                 working.add(pair);
                             }
-                            if (rng.nextDouble() < 0.7) {
+                            if (rng.nextFloat() < 0.7f) {
                                 working.add(pair);
                             }
                         }
 
                         break;
                     case 2:
-                        if (rng.nextDouble() < 0.65) {
+                        if (rng.nextFloat() < 0.65f) {
                             c = t.charAt(1);
                             switch (c) {
                                 case 'z':
@@ -3444,14 +3441,14 @@ public class Language implements Serializable {
                             }
                             working.add(t);
                             for (int i = 0; i < num; i++) {
-                                if (rng.nextDouble() < 0.25) {
+                                if (rng.nextFloat() < 0.25f) {
                                     working.add(t);
                                 }
                             }
                         }
                         break;
                     case 3:
-                        if (rng.nextDouble() < 0.5) {
+                        if (rng.nextFloat() < 0.5f) {
                             c = t.charAt(0);
                             switch (c) {
                                 case 'z':
@@ -3471,14 +3468,14 @@ public class Language implements Serializable {
                             }
                             working.add(t);
                             for (int i = 0; i < num; i++) {
-                                if (rng.nextDouble() < 0.2) {
+                                if (rng.nextFloat() < 0.2f) {
                                     working.add(t);
                                 }
                             }
                         }
                         break;
                     default:
-                        if (rng.nextDouble() < 0.3 && (t.charAt(l - 1) != 'z' || rng.nextDouble() < 0.1)) {
+                        if (rng.nextFloat() < 0.3f && (t.charAt(l - 1) != 'z' || rng.nextFloat() < 0.1f)) {
                             working.add(t);
                         }
                         break;
@@ -3506,10 +3503,13 @@ public class Language implements Serializable {
         int[] lengths = new int[rng.nextInt(3, 5)];
         System.arraycopy(new int[]{1, 2, 3, 4}, 0, lengths, 0, lengths.length);
         double[] chances = new double[lengths.length];
-        System.arraycopy(new double[]{
-                5 + rng.nextDouble() * 4, 13 + rng.nextDouble() * 9, 3 + rng.nextDouble() * 3, 1 + rng.nextDouble() * 2
-        }, 0, chances, 0, chances.length);
-        double vowelHeavy = rng.nextDouble() * 0.3 + 0.2, removalRate = rng.nextDouble() * 0.5 + 0.15;
+        chances[0] = 5.0 + rng.nextDouble(12.0);
+        chances[1] = 13.0 + rng.nextDouble(10.0);
+        chances[2] = 3.0 + rng.nextDouble(3.5);
+        if (chances.length == 4) {
+            chances[3] = 0.5 + rng.nextDouble(2.75);
+        }
+        double vowelHeavy = rng.nextDouble(0.3) + 0.2, removalRate = rng.nextDouble(0.5) + 0.15;
         int sz = openCons.size();
         int[] reordering = ArrayTools.range(sz), vOrd = ArrayTools.range(openVowels.size());
         ArrayTools.shuffle(reordering, rng);
@@ -3541,12 +3541,27 @@ public class Language implements Serializable {
             order.set(i, alt.get(vOrd[i]));
         int n;
 
+//        int mn = Math.min(rng.nextInt(3), rng.nextInt(3)), sz0, p0s;
+//
+//        for (n = 0; n < mn; n++) {
+//            missingSounds.add(parts0.keyAtIndex(0));
+//            Collections.addAll(forbidden, parts0.getAtIndex(0).split(" "));
+//            parts0.removeAtIndex(0);
+//        }
+//        p0s = parts0.size();
+//        sz0 = Math.max(rng.nextInt(1, p0s + 1), rng.nextInt(1, p0s + 1));
+//        char[] nextAccents = new char[sz0], unaccented = new char[sz0];
+//        int vowelAccent = rng.nextInt(1, 7);
+//        for (int i = 0; i < sz0; i++) {
+//            nextAccents[i] = accentedVowels[vOrd[i + mn]][vowelAccent];
+//            unaccented[i] = accentedVowels[vOrd[i + mn]][0];
+//        }
         int mn = Math.min(rng.nextInt(3), rng.nextInt(3)), sz0, p0s;
 
         for (n = 0; n < mn; n++) {
-            missingSounds.add(parts0.order().get(0));
-            Collections.addAll(forbidden, parts0.get(parts0.order().get(0)).split(" "));
-            parts0.removeIndex(0);
+            missingSounds.add(parts0.keyAtIndex(0));
+            Collections.addAll(forbidden, parts0.getAtIndex(0).split(" "));
+            parts0.removeAtIndex(0);
         }
         p0s = parts0.size();
         sz0 = Math.max(rng.nextInt(1, p0s + 1), rng.nextInt(1, p0s + 1));
@@ -3556,18 +3571,18 @@ public class Language implements Serializable {
             nextAccents[i] = accentedVowels[vOrd[i + mn]][vowelAccent];
             unaccented[i] = accentedVowels[vOrd[i + mn]][0];
         }
-        if (rng.nextDouble() < 0.8) {
+        if (rng.nextFloat() < 0.8f) {
             for (int i = 0; i < sz0; i++) {
                 char ac = nextAccents[i], ua = unaccented[i];
                 String v = "", uas = String.valueOf(ua);
                 Pattern pat = Pattern.compile("\\b([aeiou]*)(" + ua + ")([aeiou]*)\\b");
                 Replacer rep = pat.replacer("$1$2$3 $1" + ac + "$3"), repLess = pat.replacer("$1" + ac + "$3");
                 for (int j = 0; j < p0s; j++) {
-                    String k = parts0.order().get(j);
+                    String k = parts0.keyAtIndex(j);
                     if (uas.equals(k)) // uas is never null, always length 1
-                        v = parts0.get(parts0.order().get(j));
+                        v = parts0.getAtIndex(j);
                     else {
-                        String current = parts0.get(parts0.order().get(j));
+                        String current = parts0.getAtIndex(j);
                         String[] splits = current.split(" ");
                         for (int s = 0; s < splits.length; s++) {
                             if (forbidden.contains(uas) && splits[s].contains(uas))
@@ -3581,56 +3596,56 @@ public class Language implements Serializable {
         }
 
         n = 0;
-        if (rng.nextDouble() < 0.75) {
+        if (rng.nextFloat() < 0.75f) {
             missingSounds.add("z");
             Collections.addAll(forbidden, parts1.get("z").split(" "));
             Collections.addAll(forbidden, parts2.get("z").split(" "));
             Collections.addAll(forbidden, parts3.get("z").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.82) {
+        if (rng.nextFloat() < 0.82f) {
             missingSounds.add("x");
             Collections.addAll(forbidden, parts1.get("x").split(" "));
             Collections.addAll(forbidden, parts2.get("x").split(" "));
             Collections.addAll(forbidden, parts3.get("x").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.92) {
+        if (rng.nextFloat() < 0.92f) {
             missingSounds.add("qu");
             Collections.addAll(forbidden, parts1.get("qu").split(" "));
             Collections.addAll(forbidden, parts2.get("qu").split(" "));
             Collections.addAll(forbidden, parts3.get("qu").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.96) {
+        if (rng.nextFloat() < 0.96f) {
             missingSounds.add("q");
             Collections.addAll(forbidden, parts1.get("q").split(" "));
             Collections.addAll(forbidden, parts2.get("q").split(" "));
             Collections.addAll(forbidden, parts3.get("q").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.97) {
+        if (rng.nextFloat() < 0.97f) {
             missingSounds.add("tl");
             Collections.addAll(forbidden, parts1.get("tl").split(" "));
             Collections.addAll(forbidden, parts2.get("tl").split(" "));
             Collections.addAll(forbidden, parts3.get("tl").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.86) {
+        if (rng.nextFloat() < 0.86f) {
             missingSounds.add("ph");
             Collections.addAll(forbidden, parts1.get("ph").split(" "));
             Collections.addAll(forbidden, parts2.get("ph").split(" "));
             Collections.addAll(forbidden, parts3.get("ph").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.94) {
+        if (rng.nextFloat() < 0.94f) {
             missingSounds.add("kh");
             Collections.addAll(forbidden, parts1.get("kh").split(" "));
             Collections.addAll(forbidden, parts2.get("kh").split(" "));
             Collections.addAll(forbidden, parts3.get("kh").split(" "));
             n++;
         }
-        if (rng.nextDouble() < 0.96) {
+        if (rng.nextFloat() < 0.96f) {
             missingSounds.add("bh");
             missingSounds.add("dh");
             Collections.addAll(forbidden, parts1.get("bh").split(" "));
@@ -3644,20 +3659,20 @@ public class Language implements Serializable {
         }
 
         for (; n < sz * removalRate; n++) {
-            missingSounds.add(parts1.order().get(n));
-            missingSounds.add(parts2.order().get(n));
-            missingSounds.add(parts3.order().get(n));
-            Collections.addAll(forbidden, parts1.get(parts1.order().get(n)).split(" "));
-            Collections.addAll(forbidden, parts2.get(parts2.order().get(n)).split(" "));
-            Collections.addAll(forbidden, parts3.get(parts3.order().get(n)).split(" "));
+            missingSounds.add(parts1.keyAtIndex(n));
+            missingSounds.add(parts2.keyAtIndex(n));
+            missingSounds.add(parts3.keyAtIndex(n));
+            Collections.addAll(forbidden, parts1.getAtIndex(n).split(" "));
+            Collections.addAll(forbidden, parts2.getAtIndex(n).split(" "));
+            Collections.addAll(forbidden, parts3.getAtIndex(n).split(" "));
         }
 
         return new Language(
                 processParts(parts0, missingSounds, forbidden, rng, 0.0, p0s),
                 new String[]{},
                 processParts(openCons, missingSounds, forbidden, rng, 0.0, 4096),
-                processParts(midCons, missingSounds, forbidden, rng, (rng.nextDouble() * 3 - 0.75) * 0.4444, 4096),
-                processParts(closeCons, missingSounds, forbidden, rng, (rng.nextDouble() * 3 - 0.75) * 0.2857, 4096),
+                processParts(midCons, missingSounds, forbidden, rng, (rng.nextFloat(3f) - 0.75) * 0.4444, 4096),
+                processParts(closeCons, missingSounds, forbidden, rng, (rng.nextFloat(3f) - 0.75) * 0.2857, 4096),
                 new String[]{},
                 new String[]{}, lengths, chances, vowelHeavy, vowelHeavy * 1.8, 0.0, 0.0, genericSanityChecks, true).summarize("0#" + seed + "@1");
     }
@@ -3684,10 +3699,7 @@ public class Language implements Serializable {
         CharSequence fixed = removeAccents(testing);
         for (int i = 0; i < vulgarChecks.length; i++) {
             if (vulgarChecks[i].matcher(fixed).find())
-            {
-//                System.out.println(vulgarChecks[i]);
                 return true;
-            }
         }
         return false;
     }
@@ -4580,7 +4592,7 @@ public class Language implements Serializable {
                 }
             }
             for (int i = 0; i < mods.size(); i++) {
-                sb.append('℗').append(mods.order().get(i).serializeToString());
+                sb.append('℗').append(mods.getAtIndex(i).serializeToString());
             }
             return mixer.addModifiers(mods).summarize(sb.toString());
         } else
@@ -4913,7 +4925,7 @@ public class Language implements Serializable {
                 pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
                 poundIndex = -1;
             } else {
-                pairs.add(registry.get(registry.order().get(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
+                pairs.add(registry.get(registry.keyAtIndex(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
                 pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
             }
             snailIndex = data.indexOf('@', snailIndex + 1);
@@ -5118,7 +5130,7 @@ public class Language implements Serializable {
                 return new Modifier();
             Alteration[] alts = new Alteration[map.size()];
             for (int i = 0; i < alts.length; i++) {
-                alts[i] = new Alteration(map.order().get(i), map.get(map.order().get(i)));
+                alts[i] = new Alteration(map.keyAtIndex(i), map.getAtIndex(i));
             }
             return new Modifier(alts);
         }
