@@ -72,6 +72,22 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#addAll(java.util.Collection)">addAll(Collection&lt;? extends Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#addFOVs(float%5B%5D%5B%5D...)">addFOVs(float[][]...)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds multiple FOV maps together in the simplest way possible; does not check line-of-sight between FOV maps.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#addFOVs(java.lang.Iterable)">addFOVs(Iterable&lt;float[][]&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds multiple FOV maps together in the simplest way possible; does not check line-of-sight between FOV maps.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#addFOVsInto(float%5B%5D%5B%5D,float%5B%5D%5B%5D)">addFOVsInto(float[][], float[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds an FOV map to another in the simplest way possible; does not check line-of-sight between FOV maps.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#addFOVsInto(float%5B%5D%5B%5D,float%5B%5D%5B%5D...)">addFOVsInto(float[][], float[][]...)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds multiple FOV maps to basis cell-by-cell, modifying basis; does not check line-of-sight between FOV maps.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#allOn()">allOn()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Sets all cells in this to "on."</div>
@@ -113,7 +129,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#area(double)">area(double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#area(float)">area(float)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#asCoords()">asCoords()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -158,6 +174,11 @@ loadScripts(document, 'script');</script>
  range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
  original point.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#bouncingLine(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,float)">bouncingLine(float[][], float[][], int, int, float, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Reuses the existing light 2D array and fills it with a straight-line bouncing path of light that reflects its way
+ through the given resistanceMap from startX, startY until it uses up the given distance.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
@@ -173,6 +194,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An array which holds only the four cardinal directions in counter-clockwise order.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#ccw">ccw</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#ccw_full">ccw_full</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Measurement.html#CHEBYSHEV">CHEBYSHEV</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Measurement.html" title="enum in com.github.yellowstonegames.place">Measurement</a></dt>
 <dd>
 <div class="block">The distance it takes when diagonal movement costs the same as
@@ -495,6 +520,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Repeatedly generates new Regions, each one cell expanded in 8 directions from the previous Region
  and staying inside the "on" cells of <code>bounds</code>, until it can't expand any more.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">FOV</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">This class provides methods for calculating Field of View in grids.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#fray(double)">fray(double)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/place/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
@@ -536,6 +565,29 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#generateResistances(char%5B%5D%5B%5D)">generateResistances(char[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Given a char[][] for the map, produces a float[][] that can be used with most of the methods in FOV, like
+ <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>FOV.reuseFOV(float[][], float[][], int, int, float)</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#generateResistances3x3(char%5B%5D%5B%5D)">generateResistances3x3(char[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
+ triple height that can be used with FOV methods like <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>FOV.reuseFOV(float[][], float[][], int, int, float)</code></a>
+ in classes that use subcell lighting.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)">generateSimpleResistances(char[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Given a char[][] for the map, produces a float[][] that can be used with any FOV methods that expect a
+ resistance map (like <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>FOV.reuseFOV(float[][], float[][], int, int, float)</code></a>), but does not treat
+ any cells as partly transparent, only fully-blocking or fully-permitting light.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#generateSimpleResistances3x3(char%5B%5D%5B%5D)">generateSimpleResistances3x3(char[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
+ triple height that can be used with FOV's methods that expect a resistance map (like
+ <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>FOV.reuseFOV(float[][], float[][], int, int, float)</code></a>) in classes that use subcell lighting.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/BlueNoise.html#get(int,int)">get(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/BlueNoise.html" title="class in com.github.yellowstonegames.place">BlueNoise</a></dt>
 <dd>
 <div class="block">Gets a byte from the raw data this stores, treating it as an infinite 2D plane of tiling 64x64 regions.</div>
@@ -877,6 +929,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a new Region that has been mirrored along the rightmost edge, parallel to the y-axis.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#mixVisibleFOVs(float%5B%5D%5B%5D,float%5B%5D%5B%5D...)">mixVisibleFOVs(float[][], float[][]...)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#mixVisibleFOVs(float%5B%5D%5B%5D,java.lang.Iterable)">mixVisibleFOVs(float[][], Iterable&lt;float[][]&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#mixVisibleFOVsInto(float%5B%5D%5B%5D,float%5B%5D%5B%5D,float%5B%5D%5B%5D...)">mixVisibleFOVsInto(float[][], float[][], float[][]...)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreDistances">mooreDistances</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/HilbertCurve.html#mooreToCoord(int)">mooreToCoord(int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/HilbertCurve.html" title="class in com.github.yellowstonegames.place">HilbertCurve</a></dt>
@@ -983,7 +1047,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a Region using a vararg for data.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#onUnitShape(double,com.github.tommyettinger.ds.support.LaserRandom)">onUnitShape(double, LaserRandom)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#onUnitShape(float,com.github.tommyettinger.ds.support.LaserRandom)">onUnitShape(float, LaserRandom)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#opposite()">opposite()</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
@@ -1033,9 +1097,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(double,double)">radius(double, double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(float,float)">radius(float, float)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(double,double,double,double)">radius(double, double, double, double)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(float,float,float,float)">radius(float, float, float, float)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Radius.html#radius(com.github.yellowstonegames.place.Coord)">radius(Coord)</a></span> - Method in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Radius.html" title="enum in com.github.yellowstonegames.place">Radius</a></dt>
 <dd>&nbsp;</dd>
@@ -1350,6 +1414,56 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#retractSeriesToLimit8way()">retractSeriesToLimit8way()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)">reuseFOV(float[][], float[][], int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)">reuseFOV(float[][], float[][], int, int, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius)">reuseFOV(float[][], float[][], int, int, float, Radius)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius,float,float)">reuseFOV(float[][], float[][], int, int, float, Radius, float, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates, lighting at the given angle in  degrees and covering a span
+ centered on that angle, also in degrees.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius,float,float,float,float,float,float)">reuseFOV(float[][], float[][], int, int, float, Radius, float, float, float, float, float, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates, lighting with the view "pointed at" the given <code>angle</code> in degrees,
+ extending to different ranges based on the direction the light is traveling.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius)">reuseFOVSymmetrical(float[][], float[][], int, int, float, Radius)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)">reuseLOS(float[][], float[][], int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,int,int,int)">reuseLOS(float[][], float[][], int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.place.Radius)">reuseRippleFOV(float[][], float[][], int, int, int, float, Radius)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Like the <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius)"><code>FOV.reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this uses Ripple FOV
+ with a configurable tightness/looseness (between 1, tightest, and 6, loosest).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/FOV.html#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.place.Radius,float,float)">reuseRippleFOV(float[][], float[][], int, int, int, float, Radius, float, float)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FOV.html" title="class in com.github.yellowstonegames.place">FOV</a></dt>
+<dd>
+<div class="block">Like the <a href="com/github/yellowstonegames/place/FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.place.Radius,float,float)"><code>FOV.reuseFOV(float[][], float[][], int, int, float, Radius, float, float)</code></a> method, but this
+ uses Ripple FOV with a configurable tightness/looseness (between 1, tightest, and 6, loosest).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#RIGHT">RIGHT</a></span> - com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#rosenbergStrongHashCode(int,int)">rosenbergStrongHashCode(int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>

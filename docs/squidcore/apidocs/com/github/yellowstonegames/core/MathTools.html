@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -105,9 +105,26 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#E">E</a></span></code></th>
+<td class="col-last">
+<div class="block">The <code>float</code> value that is closer than any other to
+ <i>e</i>, the base of the natural logarithms.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#FLOAT_ROUNDING_ERROR">FLOAT_ROUNDING_ERROR</a></span></code></th>
 <td class="col-last">
 <div class="block">A float that is meant to be used as the smallest reasonable tolerance for methods like <a href="#isEqual(float,float,float)"><code>isEqual(float, float, float)</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#PI">PI</a></span></code></th>
+<td class="col-last">
+<div class="block">The <code>float</code> value that is closer than any other to
+ <i>pi</i>, the ratio of the circumference of a circle to its
+ diameter.</div>
 </td>
 </tr>
 </tbody>
@@ -150,6 +167,13 @@ float&nbsp;turning)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cbrt(float)">cbrt</a></span>&#8203;(float&nbsp;x)</code></th>
+<td class="col-last">
+<div class="block">An approximation of the cube-root function for float inputs and outputs.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clamp(double,double,double)">clamp</a></span>&#8203;(double&nbsp;value,
 double&nbsp;min,
@@ -159,7 +183,7 @@ double&nbsp;max)</code></th>
  less than or equal to the specified maximum, adjust it so that it is.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clamp(float,float,float)">clamp</a></span>&#8203;(float&nbsp;value,
 float&nbsp;min,
@@ -169,7 +193,7 @@ float&nbsp;max)</code></th>
  less than or equal to the specified maximum, adjust it so that it is.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clamp(int,int,int)">clamp</a></span>&#8203;(int&nbsp;value,
 int&nbsp;min,
@@ -179,7 +203,7 @@ int&nbsp;max)</code></th>
  less than or equal to the specified maximum, adjust it so that it is.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clamp(long,long,long)">clamp</a></span>&#8203;(long&nbsp;value,
 long&nbsp;min,
@@ -189,35 +213,35 @@ long&nbsp;max)</code></th>
  less than or equal to the specified maximum, adjust it so that it is.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastCeil(double)">fastCeil</a></span>&#8203;(double&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.ceil(double)</code>, but returns an int.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastCeil(float)">fastCeil</a></span>&#8203;(float&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.ceil(double)</code>, but takes a float and returns an int.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastFloor(double)">fastFloor</a></span>&#8203;(double&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.floor(double)</code> , but returns an int.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fastFloor(float)">fastFloor</a></span>&#8203;(float&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns an int.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#greatestCommonDivisor(long,long)">greatestCommonDivisor</a></span>&#8203;(long&nbsp;a,
 long&nbsp;b)</code></th>
@@ -226,7 +250,7 @@ long&nbsp;b)</code></th>
  using the Euclidean algorithm.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(double,double,double)">isEqual</a></span>&#8203;(double&nbsp;a,
 double&nbsp;b,
@@ -236,7 +260,7 @@ double&nbsp;tolerance)</code></th>
  tolerance during comparison.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(float,float)">isEqual</a></span>&#8203;(float&nbsp;a,
 float&nbsp;b)</code></th>
@@ -245,7 +269,7 @@ float&nbsp;b)</code></th>
  tolerance to ignore a rounding error.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEqual(float,float,float)">isEqual</a></span>&#8203;(float&nbsp;a,
 float&nbsp;b,
@@ -255,14 +279,14 @@ float&nbsp;tolerance)</code></th>
  tolerance during comparison.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isqrt(long)">isqrt</a></span>&#8203;(long&nbsp;n)</code></th>
 <td class="col-last">
 <div class="block">Integer square root (using floor), maintaining correct results even for very large <code>long</code> values.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#log(double,double)">log</a></span>&#8203;(double&nbsp;base,
 double&nbsp;arg)</code></th>
@@ -270,21 +294,21 @@ double&nbsp;arg)</code></th>
 <div class="block">Calculate logarithms for arbitrary bases.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#longFloor(double)">longFloor</a></span>&#8203;(double&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.floor(double)</code>, but returns a long.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#longFloor(float)">longFloor</a></span>&#8203;(float&nbsp;t)</code></th>
 <td class="col-last">
 <div class="block">Like <code>Math.floor(double)</code>, but takes a float and returns a long.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(int)">lowestOneBit</a></span>&#8203;(int&nbsp;num)</code></th>
 <td class="col-last">
@@ -292,7 +316,7 @@ double&nbsp;arg)</code></th>
  the specified int value.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lowestOneBit(long)">lowestOneBit</a></span>&#8203;(long&nbsp;num)</code></th>
 <td class="col-last">
@@ -300,21 +324,21 @@ double&nbsp;arg)</code></th>
  the specified long value.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#modularMultiplicativeInverse(int)">modularMultiplicativeInverse</a></span>&#8203;(int&nbsp;a)</code></th>
 <td class="col-last">
 <div class="block">Given any odd int <code>a</code>, this finds another odd int <code>b</code> such that <code>a * b == 1</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#modularMultiplicativeInverse(long)">modularMultiplicativeInverse</a></span>&#8203;(long&nbsp;a)</code></th>
 <td class="col-last">
 <div class="block">Given any odd long <code>a</code>, this finds another odd long <code>b</code> such that <code>a * b == 1L</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#probit(double)">probit</a></span>&#8203;(double&nbsp;d)</code></th>
 <td class="col-last">
@@ -322,7 +346,7 @@ double&nbsp;arg)</code></th>
  inputs correspond to high outputs, and similarly for the low range.</div>
 </td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#raiseToPower(int,int)">raiseToPower</a></span>&#8203;(int&nbsp;value,
 int&nbsp;power)</code></th>
@@ -330,7 +354,7 @@ int&nbsp;power)</code></th>
 <div class="block">Calculate the first argument raised to the power of the second.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#remainder(double,double)">remainder</a></span>&#8203;(double&nbsp;op,
 double&nbsp;d)</code></th>
@@ -356,6 +380,31 @@ double&nbsp;d)</code></th>
 <section class="field-details" id="field.detail">
 <h2>Field Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="E">
+<h3>E</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">E</span></div>
+<div class="block">The <code>float</code> value that is closer than any other to
+ <i>e</i>, the base of the natural logarithms.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.MathTools.E">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="PI">
+<h3>PI</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">PI</span></div>
+<div class="block">The <code>float</code> value that is closer than any other to
+ <i>pi</i>, the ratio of the circumference of a circle to its
+ diameter.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.MathTools.PI">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="FLOAT_ROUNDING_ERROR">
 <h3>FLOAT_ROUNDING_ERROR</h3>
@@ -652,6 +701,30 @@ long&nbsp;b)</span></div>
 <dd><code>n</code> - a <code>long</code> value that will be treated as if unsigned</dd>
 <dt>Returns:</dt>
 <dd>the square root of n, rounded down to the next lower <code>long</code> if the result isn't already a <code>long</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="cbrt(float)">
+<h3>cbrt</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">cbrt</span>&#8203;(<span class="parameters">float&nbsp;x)</span></div>
+<div class="block">An approximation of the cube-root function for float inputs and outputs.
+ This can be about twice as fast as <code>Math.cbrt(double)</code>. It
+ correctly returns negative results when given negative inputs.
+ <br>
+ Has very low relative error (less than 1E-9) when inputs are uniformly
+ distributed between -512 and 512, and absolute mean error of less than
+ 1E-6 in the same scenario. Uses a bit-twiddling method similar to one
+ presented in Hacker's Delight and also used in early 3D graphics (see
+ https://en.wikipedia.org/wiki/Fast_inverse_square_root for more, but
+ this code approximates cbrt(x) and not 1/sqrt(x)). This specific code
+ was originally by Marc B. Reynolds, posted in his "Stand-alone-junk"
+ repo: https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197 .</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - any finite float to find the cube root of</dd>
+<dt>Returns:</dt>
+<dd>the cube root of x, approximated</dd>
 </dl>
 </section>
 </li>

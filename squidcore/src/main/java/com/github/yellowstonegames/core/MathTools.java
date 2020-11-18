@@ -32,6 +32,18 @@ public final class MathTools
     {
         // Prevent instantiation.
     }
+    /**
+     * The {@code float} value that is closer than any other to
+     * <i>e</i>, the base of the natural logarithms.
+     */
+    public static final float E = 2.7182818284590452354f;
+
+    /**
+     * The {@code float} value that is closer than any other to
+     * <i>pi</i>, the ratio of the circumference of a circle to its
+     * diameter.
+     */
+    public static final float PI = 3.14159265358979323846f;
 
     /**
      * Calculate the first argument raised to the power of the second.

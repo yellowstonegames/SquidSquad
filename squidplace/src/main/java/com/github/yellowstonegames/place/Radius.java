@@ -3,6 +3,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
 
 import java.util.List;
@@ -37,35 +38,35 @@ public enum Radius {
      */
     CIRCLE;
 
-    public double radius(Coord start, Coord end) {
-        double dx = start.x - end.x;
-        double dy = start.y - end.y;
+    public float radius(Coord start, Coord end) {
+        float dx = start.x - end.x;
+        float dy = start.y - end.y;
         return radius(dx, dy);
     }
-    public double radius(Coord end) {
+    public float radius(Coord end) {
         return radius(end.x, end.y);
     }
 
-    public double radius(double startx, double starty, double endx, double endy) {
-        double dx = startx - endx;
-        double dy = starty - endy;
+    public float radius(float startx, float starty, float endx, float endy) {
+        float dx = startx - endx;
+        float dy = starty - endy;
         return radius(dx, dy);
     }
 
-    public double radius(double dx, double dy) {
+    public float radius(float dx, float dy) {
         dx = Math.abs(dx);
         dy = Math.abs(dy);
         switch (this) {
             case SQUARE:
                 return Math.max(dx, dy);//radius is longest axial distance
             case CIRCLE:
-                return Math.sqrt(dx * dx + dy * dy);//standard spherical radius
+                return (float) Math.sqrt(dx * dx + dy * dy);//standard spherical radius
             default:
                 return dx + dy;//radius is the manhattan distance
         }
     }
 
-    public Coord onUnitShape(double distance, LaserRandom rng) {
+    public Coord onUnitShape(float distance, LaserRandom rng) {
         int x, y;
         switch (this) {
             case SQUARE:
@@ -96,16 +97,16 @@ public enum Radius {
                 }
                 break;
             default: // CIRCLE
-                double radius = distance * Math.sqrt(rng.nextDouble());
-                double theta = rng.nextDouble();
-                x = (int) Math.round(TrigTools.cos_(theta) * radius);
-                y = (int) Math.round(TrigTools.sin_(theta) * radius);
+                float radius = distance * (float) Math.sqrt(rng.nextDouble());
+                float theta = rng.nextFloat();
+                x = Math.round(TrigTools.cos_(theta) * radius);
+                y = Math.round(TrigTools.sin_(theta) * radius);
         }
 
         return Coord.get(x, y);
     }
 
-    public double area(double radiusLength)
+    public float area(float radiusLength)
     {
         switch (this) {
             case SQUARE:
@@ -113,7 +114,7 @@ public enum Radius {
             case DIAMOND:
                 return radiusLength * (radiusLength + 1) * 2 + 1;
             default:
-                return Math.PI * radiusLength * radiusLength + 1;
+                return MathTools.PI * radiusLength * radiusLength + 1;
         }
     }
 
@@ -177,7 +178,7 @@ public enum Radius {
             }
             break;
             default: {
-                double theta;
+                float theta;
                 int x, y, denom = 1;
                 boolean anySuccesses;
                 while(denom <= 256) {
@@ -215,7 +216,7 @@ public enum Radius {
         if(radiusLength < 1) {
             return center;
         }
-        double theta = TrigTools.atan2_(middle.y - center.y, middle.x - center.x),
+        float theta = TrigTools.atan2_(middle.y - center.y, middle.x - center.x),
                 cosTheta = TrigTools.cos_(theta), sinTheta = TrigTools.sin_(theta);
 
         Coord end = Coord.get(middle.x, middle.y);
@@ -288,7 +289,7 @@ public enum Radius {
 
     public boolean inRange(int startx, int starty, int endx, int endy, int minRange, int maxRange)
     {
-        double dist = radius(startx, starty, endx, endy);
+        float dist = radius(startx, starty, endx, endy);
         return dist >= minRange - 0.001 && dist <= maxRange + 0.001;
     }
 
