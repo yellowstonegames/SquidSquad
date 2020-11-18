@@ -43,7 +43,7 @@ public class DigitTools {
     }
 
     public static String hex(float number) {
-        final int h = BitConversion.floatToIntBits(number);
+        final int h = BitConversion.floatToRawIntBits(number);
         for (int i = 0; i < 8; i++) {
             hexBuilder.setCharAt(7 - i, hexDigits[(h >> (i << 2) & 15)]);
         }
@@ -95,7 +95,7 @@ public class DigitTools {
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, float number){
-        final int h = BitConversion.floatToIntBits(number);
+        final int h = BitConversion.floatToRawIntBits(number);
         for (int i = 28; i >= 0; i -= 4) {
             builder.append(hexDigits[(h >> i & 15)]);
         }

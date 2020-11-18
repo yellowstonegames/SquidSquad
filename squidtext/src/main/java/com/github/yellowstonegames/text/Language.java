@@ -4479,7 +4479,7 @@ public class Language implements Serializable {
         otherInfluence = Math.max(0.0, Math.min(otherInfluence, 1.0));
         double myInfluence = 1.0 - otherInfluence;
 
-        LaserRandom rng = new LaserRandom(hash64() << 1, other.hash64() << 1 ^ BitConversion.doubleToLongBits(otherInfluence));
+        LaserRandom rng = new LaserRandom(hash64() << 1, other.hash64() << 1 ^ BitConversion.doubleToRawLongBits(otherInfluence));
 
         String[] ov = merge1000(rng, openingVowels, other.openingVowels, otherInfluence),
                 mv = merge1000(rng, midVowels, other.midVowels, otherInfluence),
@@ -4645,8 +4645,8 @@ public class Language implements Serializable {
         vowelInfluence = Math.max(0.0, Math.min(vowelInfluence, 1.0));
         consonantInfluence = Math.max(0.0, Math.min(consonantInfluence, 1.0));
         LaserRandom rng = new LaserRandom(hash64(),
-                BitConversion.doubleToLongBits(vowelInfluence)
-                        ^ BitConversion.doubleToLongBits(consonantInfluence));
+                BitConversion.doubleToRawLongBits(vowelInfluence)
+                        ^ BitConversion.doubleToRawLongBits(consonantInfluence));
         String[] ov = accentVowels(rng, openingVowels, vowelInfluence),
                 mv = accentVowels(rng, midVowels, vowelInfluence),
                 oc = accentConsonants(rng, openingConsonants, consonantInfluence),
@@ -4857,11 +4857,11 @@ public class Language implements Serializable {
         result = 31L * result + h.hash64(closingSyllables);
         result = 31L * result + h.hash64(syllableFrequencies);
         result = 31L * result + (clean ? 1L : 0L);
-        result = 31L * result + BitConversion.doubleToLongBits(totalSyllableFrequency);
-        result = 31L * result + BitConversion.doubleToLongBits(vowelStartFrequency);
-        result = 31L * result + BitConversion.doubleToLongBits(vowelEndFrequency);
-        result = 31L * result + BitConversion.doubleToLongBits(vowelSplitFrequency);
-        result = 31L * result + BitConversion.doubleToLongBits(syllableEndFrequency);
+        result = 31L * result + BitConversion.doubleToRawLongBits(totalSyllableFrequency);
+        result = 31L * result + BitConversion.doubleToRawLongBits(vowelStartFrequency);
+        result = 31L * result + BitConversion.doubleToRawLongBits(vowelEndFrequency);
+        result = 31L * result + BitConversion.doubleToRawLongBits(vowelSplitFrequency);
+        result = 31L * result + BitConversion.doubleToRawLongBits(syllableEndFrequency);
         result = 31L * result + (sanityChecks != null ? sanityChecks.length + 1L : 0L);
         result *= 31L;
         if(modifiers != null) {
@@ -5364,7 +5364,7 @@ public class Language implements Serializable {
         public int hashCode() {
             long result;
             result = Hasher.shax.hash64(replacer.getPattern().serializeToString());
-            result = 31L * result + BitConversion.doubleToLongBits(chance);
+            result = 31L * result + BitConversion.doubleToRawLongBits(chance);
             result ^= result >>> 32;
             return (int) (0xFFFFFFFFL & result);
         }
@@ -5506,7 +5506,7 @@ public class Language implements Serializable {
                     maxWords + '℘' +
                     StringTools.join("ℙ", midPunctuation) + '℘' +
                     StringTools.join("ℙ", endPunctuation) + '℘' +
-                    BitConversion.doubleToLongBits(midPunctuationFrequency) + '℘' +
+                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
                     maxChars;
         }
         public static SentenceForm deserializeFromString(String ser)

@@ -86,8 +86,9 @@ extends java.lang.Object</pre>
  This uses the "Curlup" algorithm, which was designed for speed and general-purpose
  usability, but not cryptographic security. It can take advantage of parallel pipelines
  on modern processor cores, and passes the stringent SMHasher test battery. Some specific
- types of input (long arrays) use "WheatHash" instead, which is a variant on "Water" or
- wyhash that takes 64-bit inputs and produces 64-bit output; it also passes SMHasher.
+ types of input (long arrays, CharSequences, and Iterables) use "WheatHash" instead,
+ which is a variant on "Water" or wyhash that takes 64-bit inputs and produces 64-bit
+ output; it also passes SMHasher.
  <br>
  This provides an object-based API and a static API, where a Hasher object is
  instantiated with a seed, and the static methods take a seed as their first argument.

@@ -327,7 +327,7 @@ public final class MathTools
      */
     public static float barronSpline(final float x, final float shape, final float turning) {
         final float d = turning - x;
-        final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
+        final int f = BitConversion.floatToRawIntBits(d) >> 31, n = f | 1;
         return ((turning * n - f) * (x + f)) / (Float.MIN_VALUE - f + (x + shape * d) * n) - f;
     }
 

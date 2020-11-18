@@ -4,15 +4,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.github.tommyettinger.ds.support.BitConversion.doubleToMixedIntBits;
-import static com.github.tommyettinger.ds.support.BitConversion.floatToIntBits;
+import static com.github.tommyettinger.ds.support.BitConversion.floatToRawIntBits;
 
 /**
  * 64-bit and 32-bit hashing functions that we can rely on staying the same cross-platform.
  * This uses the "Curlup" algorithm, which was designed for speed and general-purpose
  * usability, but not cryptographic security. It can take advantage of parallel pipelines
  * on modern processor cores, and passes the stringent SMHasher test battery. Some specific
- * types of input (long arrays) use "WheatHash" instead, which is a variant on "Water" or
- * wyhash that takes 64-bit inputs and produces 64-bit output; it also passes SMHasher.
+ * types of input (long arrays, CharSequences, and Iterables) use "WheatHash" instead,
+ * which is a variant on "Water" or wyhash that takes 64-bit inputs and produces 64-bit
+ * output; it also passes SMHasher.
  * <br>
  * This provides an object-based API and a static API, where a Hasher object is
  * instantiated with a seed, and the static methods take a seed as their first argument.
@@ -303,30 +304,21 @@ public class Hasher {
 
         public long hash64(final CharSequence data) {
             if (data == null) return 0;
-            final int length = data.length();
-            long result = seed ^ length * 0x9E3779B97F4A7C15L;
-            int i = 0;
-            for (; i + 7 < length; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            long seed = this.seed;
+            final int len = data.length();
+            for (int i = 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i  ) ^ b4));
             }
-            for (; i < length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (result ^ result >>> 28);
+            seed = (seed ^ seed << 16) * (len ^ b0);
+            return seed - (seed >>> 31) + (seed << 33);
         }
 
         public long hash64(final int[] data) {
@@ -410,18 +402,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * floatToIntBits(data[i])
-                        + 0xC862B36DAF790DD5L * floatToIntBits(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * floatToIntBits(data[i + 2])
-                        + 0xAA324F90DED86B69L * floatToIntBits(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * floatToIntBits(data[i + 4])
-                        + 0x908E3D2C82567A73L * floatToIntBits(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * floatToIntBits(data[i + 6])
-                        + 0xD1B54A32D192ED03L * floatToIntBits(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * floatToRawIntBits(data[i])
+                        + 0xC862B36DAF790DD5L * floatToRawIntBits(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * floatToRawIntBits(data[i + 2])
+                        + 0xAA324F90DED86B69L * floatToRawIntBits(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * floatToRawIntBits(data[i + 4])
+                        + 0x908E3D2C82567A73L * floatToRawIntBits(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * floatToRawIntBits(data[i + 6])
+                        + 0xD1B54A32D192ED03L * floatToRawIntBits(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + floatToIntBits(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + floatToRawIntBits(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -503,32 +495,22 @@ public class Hasher {
          * @return a 64-bit hash code for the requested section of data
          */
         public long hash64(final CharSequence data, final int start, final int end) {
-            if (data == null || start >= end) return 0;
+            if (data == null || start >= end)
+                return 0;
+            long seed = this.seed;
             final int len = Math.min(end, data.length());
-
-            long result = seed ^ (len - start) * 0x9E3779B97F4A7C15L;
-            int i = start;
-            for (; i + 7 < len; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            for (int i = start + 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i) ^ b4));
             }
-            for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len - start & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (result ^ result >>> 28);
+            return mum(seed ^ seed << 16, len - start ^ b0);
         }
 
 
@@ -538,18 +520,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -565,18 +547,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -592,18 +574,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -619,18 +601,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -646,18 +628,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -676,8 +658,8 @@ public class Hasher {
             {
                 ++len;
                 seed = mum(
-                        mum(hash(it.next()) ^ b1, (it.hasNext() ? hash(it.next()) ^ b2 ^ ++len : b2)) + seed,
-                        mum((it.hasNext() ? hash(it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(it.next()) ^ b4 ^ ++len : b4)));
+                        mum(hash64(it.next()) ^ b1, (it.hasNext() ? hash64(it.next()) ^ b2 ^ ++len : b2)) + seed,
+                        mum((it.hasNext() ? hash64(it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash64(it.next()) ^ b4 ^ ++len : b4)));
             }
             seed = (seed ^ seed << 16) * (len ^ b0);
             return seed - (seed >>> 31) + (seed << 33);
@@ -690,18 +672,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < len; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data.get(i))
-                        + 0xC862B36DAF790DD5L * hash(data.get(i + 1))
-                        + 0xB8ACD90C142FE10BL * hash(data.get(i + 2))
-                        + 0xAA324F90DED86B69L * hash(data.get(i + 3))
-                        + 0x9CDA5E693FEA10AFL * hash(data.get(i + 4))
-                        + 0x908E3D2C82567A73L * hash(data.get(i + 5))
-                        + 0x8538ECB5BD456EA3L * hash(data.get(i + 6))
-                        + 0xD1B54A32D192ED03L * hash(data.get(i + 7))
+                        + 0xD96EB1A810CAAF5FL * hash64(data.get(i))
+                        + 0xC862B36DAF790DD5L * hash64(data.get(i + 1))
+                        + 0xB8ACD90C142FE10BL * hash64(data.get(i + 2))
+                        + 0xAA324F90DED86B69L * hash64(data.get(i + 3))
+                        + 0x9CDA5E693FEA10AFL * hash64(data.get(i + 4))
+                        + 0x908E3D2C82567A73L * hash64(data.get(i + 5))
+                        + 0x8538ECB5BD456EA3L * hash64(data.get(i + 6))
+                        + 0xD1B54A32D192ED03L * hash64(data.get(i + 7))
                 ;
             }
             for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data.get(i));
+                result = 0x9E3779B97F4A7C15L * result + hash64(data.get(i));
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -718,18 +700,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -855,30 +837,20 @@ public class Hasher {
 
         public int hash(final CharSequence data) {
             if (data == null) return 0;
-            final int length = data.length();
-            long result = seed ^ length * 0x9E3779B97F4A7C15L;
-            int i = 0;
-            for (; i + 7 < length; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            long seed = this.seed;
+            final int len = data.length();
+            for (int i = 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i  ) ^ b4));
             }
-            for (; i < length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (int)(result ^ result >>> 28);
+            return (int) mum(seed ^ seed << 16, len ^ b0);
         }
 
         public int hash(final int[] data) {
@@ -963,18 +935,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * floatToIntBits(data[i])
-                        + 0xC862B36DAF790DD5L * floatToIntBits(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * floatToIntBits(data[i + 2])
-                        + 0xAA324F90DED86B69L * floatToIntBits(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * floatToIntBits(data[i + 4])
-                        + 0x908E3D2C82567A73L * floatToIntBits(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * floatToIntBits(data[i + 6])
-                        + 0xD1B54A32D192ED03L * floatToIntBits(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * floatToRawIntBits(data[i])
+                        + 0xC862B36DAF790DD5L * floatToRawIntBits(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * floatToRawIntBits(data[i + 2])
+                        + 0xAA324F90DED86B69L * floatToRawIntBits(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * floatToRawIntBits(data[i + 4])
+                        + 0x908E3D2C82567A73L * floatToRawIntBits(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * floatToRawIntBits(data[i + 6])
+                        + 0xD1B54A32D192ED03L * floatToRawIntBits(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + floatToIntBits(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + floatToRawIntBits(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1056,32 +1028,22 @@ public class Hasher {
          * @return a 64-bit hash code for the requested section of data
          */
         public int hash(final CharSequence data, final int start, final int end) {
-            if (data == null || start >= end) return 0;
+            if (data == null || start >= end)
+                return 0;
+            long seed = this.seed;
             final int len = Math.min(end, data.length());
-
-            long result = seed ^ (len - start) * 0x9E3779B97F4A7C15L;
-            int i = start;
-            for (; i + 7 < len; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            for (int i = start + 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i) ^ b4));
             }
-            for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len - start & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (int)(result ^ result >>> 28);
+            return (int) mum(seed ^ seed << 16, len - start ^ b0);
         }
 
 
@@ -1091,18 +1053,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1118,18 +1080,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1145,18 +1107,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1172,18 +1134,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1199,18 +1161,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1229,8 +1191,8 @@ public class Hasher {
             {
                 ++len;
                 seed = mum(
-                        mum(hash(it.next()) ^ b1, (it.hasNext() ? hash(it.next()) ^ b2 ^ ++len : b2)) + seed,
-                        mum((it.hasNext() ? hash(it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(it.next()) ^ b4 ^ ++len : b4)));
+                        mum(hash64(it.next()) ^ b1, (it.hasNext() ? hash64(it.next()) ^ b2 ^ ++len : b2)) + seed,
+                        mum((it.hasNext() ? hash64(it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash64(it.next()) ^ b4 ^ ++len : b4)));
             }
             return (int) mum(seed ^ seed << 16, len ^ b0);
         }
@@ -1242,18 +1204,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < len; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data.get(i))
-                        + 0xC862B36DAF790DD5L * hash(data.get(i + 1))
-                        + 0xB8ACD90C142FE10BL * hash(data.get(i + 2))
-                        + 0xAA324F90DED86B69L * hash(data.get(i + 3))
-                        + 0x9CDA5E693FEA10AFL * hash(data.get(i + 4))
-                        + 0x908E3D2C82567A73L * hash(data.get(i + 5))
-                        + 0x8538ECB5BD456EA3L * hash(data.get(i + 6))
-                        + 0xD1B54A32D192ED03L * hash(data.get(i + 7))
+                        + 0xD96EB1A810CAAF5FL * hash64(data.get(i))
+                        + 0xC862B36DAF790DD5L * hash64(data.get(i + 1))
+                        + 0xB8ACD90C142FE10BL * hash64(data.get(i + 2))
+                        + 0xAA324F90DED86B69L * hash64(data.get(i + 3))
+                        + 0x9CDA5E693FEA10AFL * hash64(data.get(i + 4))
+                        + 0x908E3D2C82567A73L * hash64(data.get(i + 5))
+                        + 0x8538ECB5BD456EA3L * hash64(data.get(i + 6))
+                        + 0xD1B54A32D192ED03L * hash64(data.get(i + 7))
                 ;
             }
             for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data.get(i));
+                result = 0x9E3779B97F4A7C15L * result + hash64(data.get(i));
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1270,18 +1232,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(data[i])
-                        + 0xC862B36DAF790DD5L * hash(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(data[i])
+                        + 0xC862B36DAF790DD5L * hash64(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1435,32 +1397,23 @@ public class Hasher {
             return (result ^ result >>> 28);
         }
 
-        public static long hash64(final long seed, final CharSequence data) {
-            if (data == null) return 0;
-            final int length = data.length();
-            long result = randomize(seed) ^ length * 0x9E3779B97F4A7C15L;
-            int i = 0;
-            for (; i + 7 < length; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+        public static long hash64(long seed, final CharSequence data) {
+            if (data == null) return 0L;
+            seed += b1; seed ^= seed >>> 23 ^ seed >>> 48 ^ seed << 7 ^ seed << 53;
+            final int len = data.length();
+            for (int i = 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i  ) ^ b4));
             }
-            for (; i < length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (result ^ result >>> 28);
+            seed = (seed ^ seed << 16) * (len ^ b0);
+            return seed - (seed >>> 31) + (seed << 33);
         }
 
         public static long hash64(final long seed, final int[] data) {
@@ -1544,18 +1497,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * floatToIntBits(data[i])
-                        + 0xC862B36DAF790DD5L * floatToIntBits(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * floatToIntBits(data[i + 2])
-                        + 0xAA324F90DED86B69L * floatToIntBits(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * floatToIntBits(data[i + 4])
-                        + 0x908E3D2C82567A73L * floatToIntBits(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * floatToIntBits(data[i + 6])
-                        + 0xD1B54A32D192ED03L * floatToIntBits(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * floatToRawIntBits(data[i])
+                        + 0xC862B36DAF790DD5L * floatToRawIntBits(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * floatToRawIntBits(data[i + 2])
+                        + 0xAA324F90DED86B69L * floatToRawIntBits(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * floatToRawIntBits(data[i + 4])
+                        + 0x908E3D2C82567A73L * floatToRawIntBits(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * floatToRawIntBits(data[i + 6])
+                        + 0xD1B54A32D192ED03L * floatToRawIntBits(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + floatToIntBits(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + floatToRawIntBits(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1636,33 +1589,23 @@ public class Hasher {
          * @param end   the end of the section to hash (exclusive)
          * @return a 64-bit hash code for the requested section of data
          */
-        public static long hash64(final long seed, final CharSequence data, final int start, final int end) {
-            if (data == null || start >= end) return 0;
+        public static long hash64(long seed, final CharSequence data, final int start, final int end) {
+            if (data == null || start >= end)
+                return 0L;
+            seed += b1; seed ^= seed >>> 23 ^ seed >>> 48 ^ seed << 7 ^ seed << 53;
             final int len = Math.min(end, data.length());
-
-            long result = randomize(seed) ^ (len - start) * 0x9E3779B97F4A7C15L;
-            int i = start;
-            for (; i + 7 < len; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            for (int i = start + 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i) ^ b4));
             }
-            for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len - start & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (result ^ result >>> 28);
+            return mum(seed ^ seed << 16, len - start ^ b0);
         }
 
 
@@ -1672,18 +1615,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1699,18 +1642,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1726,18 +1669,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1753,18 +1696,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1780,18 +1723,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1810,8 +1753,8 @@ public class Hasher {
             {
                 ++len;
                 s = mum(
-                        mum(hash(seed, it.next()) ^ b1, (it.hasNext() ? hash(seed, it.next()) ^ b2 ^ ++len : b2)) + s,
-                        mum((it.hasNext() ? hash(seed, it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(seed, it.next()) ^ b4 ^ ++len : b4)));
+                        mum(hash64(seed, it.next()) ^ b1, (it.hasNext() ? hash64(seed, it.next()) ^ b2 ^ ++len : b2)) + s,
+                        mum((it.hasNext() ? hash64(seed, it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash64(seed, it.next()) ^ b4 ^ ++len : b4)));
             }
             s = (s ^ s << 16) * (len ^ b0);
             return s - (s >>> 31) + (s << 33);
@@ -1824,18 +1767,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < len; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data.get(i))
-                        + 0xC862B36DAF790DD5L * hash(seed, data.get(i + 1))
-                        + 0xB8ACD90C142FE10BL * hash(seed, data.get(i + 2))
-                        + 0xAA324F90DED86B69L * hash(seed, data.get(i + 3))
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data.get(i + 4))
-                        + 0x908E3D2C82567A73L * hash(seed, data.get(i + 5))
-                        + 0x8538ECB5BD456EA3L * hash(seed, data.get(i + 6))
-                        + 0xD1B54A32D192ED03L * hash(seed, data.get(i + 7))
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data.get(i))
+                        + 0xC862B36DAF790DD5L * hash64(seed, data.get(i + 1))
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data.get(i + 2))
+                        + 0xAA324F90DED86B69L * hash64(seed, data.get(i + 3))
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data.get(i + 4))
+                        + 0x908E3D2C82567A73L * hash64(seed, data.get(i + 5))
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data.get(i + 6))
+                        + 0xD1B54A32D192ED03L * hash64(seed, data.get(i + 7))
                 ;
             }
             for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data.get(i));
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data.get(i));
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1852,18 +1795,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -1987,32 +1930,22 @@ public class Hasher {
             return (int)(result ^ result >>> 28);
         }
 
-        public static int hash(final long seed, final CharSequence data) {
+        public static int hash(long seed, final CharSequence data) {
             if (data == null) return 0;
-            final int length = data.length();
-            long result = randomize(seed) ^ length * 0x9E3779B97F4A7C15L;
-            int i = 0;
-            for (; i + 7 < length; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            seed += b1; seed ^= seed >>> 23 ^ seed >>> 48 ^ seed << 7 ^ seed << 53;
+            final int len = data.length();
+            for (int i = 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i  ) ^ b4));
             }
-            for (; i < length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (int)(result ^ result >>> 28);
+            return (int) mum(seed ^ seed << 16, len ^ b0);
         }
 
         public static int hash(final long seed, final int[] data) {
@@ -2097,18 +2030,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * floatToIntBits(data[i])
-                        + 0xC862B36DAF790DD5L * floatToIntBits(data[i + 1])
-                        + 0xB8ACD90C142FE10BL * floatToIntBits(data[i + 2])
-                        + 0xAA324F90DED86B69L * floatToIntBits(data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * floatToIntBits(data[i + 4])
-                        + 0x908E3D2C82567A73L * floatToIntBits(data[i + 5])
-                        + 0x8538ECB5BD456EA3L * floatToIntBits(data[i + 6])
-                        + 0xD1B54A32D192ED03L * floatToIntBits(data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * floatToRawIntBits(data[i])
+                        + 0xC862B36DAF790DD5L * floatToRawIntBits(data[i + 1])
+                        + 0xB8ACD90C142FE10BL * floatToRawIntBits(data[i + 2])
+                        + 0xAA324F90DED86B69L * floatToRawIntBits(data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * floatToRawIntBits(data[i + 4])
+                        + 0x908E3D2C82567A73L * floatToRawIntBits(data[i + 5])
+                        + 0x8538ECB5BD456EA3L * floatToRawIntBits(data[i + 6])
+                        + 0xD1B54A32D192ED03L * floatToRawIntBits(data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + floatToIntBits(data[i]);
+                result = 0x9E3779B97F4A7C15L * result + floatToRawIntBits(data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2189,33 +2122,23 @@ public class Hasher {
          * @param end   the end of the section to hash (exclusive)
          * @return a 64-bit hash code for the requested section of data
          */
-        public static int hash(final long seed, final CharSequence data, final int start, final int end) {
-            if (data == null || start >= end) return 0;
+        public static int hash(long seed, final CharSequence data, final int start, final int end) {
+            if (data == null || start >= end)
+                return 0;
+            seed += b1; seed ^= seed >>> 23 ^ seed >>> 48 ^ seed << 7 ^ seed << 53;
             final int len = Math.min(end, data.length());
-
-            long result = randomize(seed) ^ (len - start) * 0x9E3779B97F4A7C15L;
-            int i = start;
-            for (; i + 7 < len; i += 8) {
-                result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * data.charAt(i)
-                        + 0xC862B36DAF790DD5L * data.charAt(i + 1)
-                        + 0xB8ACD90C142FE10BL * data.charAt(i + 2)
-                        + 0xAA324F90DED86B69L * data.charAt(i + 3)
-                        + 0x9CDA5E693FEA10AFL * data.charAt(i + 4)
-                        + 0x908E3D2C82567A73L * data.charAt(i + 5)
-                        + 0x8538ECB5BD456EA3L * data.charAt(i + 6)
-                        + 0xD1B54A32D192ED03L * data.charAt(i + 7)
-                ;
+            for (int i = start + 3; i < len; i+=4) {
+                seed = mum(
+                        mum(data.charAt(i-3) ^ b1, data.charAt(i-2) ^ b2) + seed,
+                        mum(data.charAt(i-1) ^ b3, data.charAt(i) ^ b4));
             }
-            for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + data.charAt(i);
+            switch (len - start & 3) {
+                case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+                case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
+                case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
+                case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
             }
-            result *= 0x94D049BB133111EBL;
-            result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
-            result *= 0x369DEA0F31A53F85L;
-            result ^= result >>> 31;
-            result *= 0xDB4F0B9175AE2165L;
-            return (int)(result ^ result >>> 28);
+            return (int) mum(seed ^ seed << 16, len - start ^ b0);
         }
 
 
@@ -2225,18 +2148,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2252,18 +2175,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2279,18 +2202,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2306,18 +2229,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2333,18 +2256,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2363,8 +2286,8 @@ public class Hasher {
             {
                 ++len;
                 s = mum(
-                        mum(hash(seed, it.next()) ^ b1, (it.hasNext() ? hash(seed, it.next()) ^ b2 ^ ++len : b2)) + s,
-                        mum((it.hasNext() ? hash(seed, it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(seed, it.next()) ^ b4 ^ ++len : b4)));
+                        mum(hash64(seed, it.next()) ^ b1, (it.hasNext() ? hash64(seed, it.next()) ^ b2 ^ ++len : b2)) + s,
+                        mum((it.hasNext() ? hash64(seed, it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash64(seed, it.next()) ^ b4 ^ ++len : b4)));
             }
             return (int) mum(s ^ s << 16, len ^ b0);
         }
@@ -2376,18 +2299,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < len; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data.get(i))
-                        + 0xC862B36DAF790DD5L * hash(seed, data.get(i + 1))
-                        + 0xB8ACD90C142FE10BL * hash(seed, data.get(i + 2))
-                        + 0xAA324F90DED86B69L * hash(seed, data.get(i + 3))
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data.get(i + 4))
-                        + 0x908E3D2C82567A73L * hash(seed, data.get(i + 5))
-                        + 0x8538ECB5BD456EA3L * hash(seed, data.get(i + 6))
-                        + 0xD1B54A32D192ED03L * hash(seed, data.get(i + 7))
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data.get(i))
+                        + 0xC862B36DAF790DD5L * hash64(seed, data.get(i + 1))
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data.get(i + 2))
+                        + 0xAA324F90DED86B69L * hash64(seed, data.get(i + 3))
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data.get(i + 4))
+                        + 0x908E3D2C82567A73L * hash64(seed, data.get(i + 5))
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data.get(i + 6))
+                        + 0xD1B54A32D192ED03L * hash64(seed, data.get(i + 7))
                 ;
             }
             for (; i < len; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data.get(i));
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data.get(i));
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
@@ -2404,18 +2327,18 @@ public class Hasher {
             int i = 0;
             for (; i + 7 < data.length; i += 8) {
                 result =  0xEBEDEED9D803C815L * result
-                        + 0xD96EB1A810CAAF5FL * hash(seed, data[i])
-                        + 0xC862B36DAF790DD5L * hash(seed, data[i + 1])
-                        + 0xB8ACD90C142FE10BL * hash(seed, data[i + 2])
-                        + 0xAA324F90DED86B69L * hash(seed, data[i + 3])
-                        + 0x9CDA5E693FEA10AFL * hash(seed, data[i + 4])
-                        + 0x908E3D2C82567A73L * hash(seed, data[i + 5])
-                        + 0x8538ECB5BD456EA3L * hash(seed, data[i + 6])
-                        + 0xD1B54A32D192ED03L * hash(seed, data[i + 7])
+                        + 0xD96EB1A810CAAF5FL * hash64(seed, data[i])
+                        + 0xC862B36DAF790DD5L * hash64(seed, data[i + 1])
+                        + 0xB8ACD90C142FE10BL * hash64(seed, data[i + 2])
+                        + 0xAA324F90DED86B69L * hash64(seed, data[i + 3])
+                        + 0x9CDA5E693FEA10AFL * hash64(seed, data[i + 4])
+                        + 0x908E3D2C82567A73L * hash64(seed, data[i + 5])
+                        + 0x8538ECB5BD456EA3L * hash64(seed, data[i + 6])
+                        + 0xD1B54A32D192ED03L * hash64(seed, data[i + 7])
                 ;
             }
             for (; i < data.length; i++) {
-                result = 0x9E3779B97F4A7C15L * result + hash(seed, data[i]);
+                result = 0x9E3779B97F4A7C15L * result + hash64(seed, data[i]);
             }
             result *= 0x94D049BB133111EBL;
             result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
