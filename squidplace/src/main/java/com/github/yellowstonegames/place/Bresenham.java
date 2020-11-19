@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
+
 import java.util.List;
 
 /**
@@ -140,6 +141,93 @@ public class Bresenham {
             }
         }
         return result;
+    }
+
+    public static boolean isReachable(int startx, int starty, int targetx, int targety, int maxLength, float[][] resistanceMap, ObjectList<Coord> buffer) {
+        int dx = targetx - startx;
+        int dy = targety - starty;
+
+        int ax = Math.abs(dx);
+        int ay = Math.abs(dy);
+
+        int dist = ax + ay;
+
+        if(buffer == null) {
+            buffer = new ObjectList<>(dist);
+        }
+        else {
+            buffer.clear();
+        }
+        if(startx == targetx && starty == targety) {
+            buffer.add(Coord.get(startx, starty));
+            return true; // already at the point; we can see our own feet just fine!
+        }
+        float decay = 1f / dist;
+        float currentForce = 1f;
+        Coord p;
+
+
+        ax <<= 1;
+        ay <<= 1;
+
+        int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
+        int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
+
+        int x = startx;
+        int y = starty;
+
+        int deltax, deltay;
+        if (ax >= ay) /* x dominant */ {
+            deltay = ay - (ax >> 1);
+            while (buffer.size() < maxLength) {
+                buffer.add(Coord.get(x, y));
+                if (x == targetx) {
+                    return true;
+                }
+
+                if (x != startx || y != starty) {//don't discount the start location even if on resistant cell
+                    currentForce -= resistanceMap[x][y];
+                }
+                currentForce -= decay;
+                if (currentForce <= 0) {
+                    return false;//too much resistance
+                }
+
+                if (deltay >= 0) {
+                    y += signy;
+                    deltay -= ax;
+                }
+
+                x += signx;
+                deltay += ay;
+            }
+        } else /* y dominant */ {
+            deltax = ax - (ay >> 1);
+            while (buffer.size() < maxLength) {
+                buffer.add(Coord.get(x, y));
+                if (y == targety) {
+                    return true;
+                }
+
+                if (x != startx || y != starty) {//don't discount the start location even if on resistant cell
+                    currentForce -= resistanceMap[x][y];
+                }
+                currentForce -= decay;
+                if (currentForce <= 0) {
+                    return false;//too much resistance
+                }
+
+                if (deltax >= 0) {
+                    x += signx;
+                    deltax -= ay;
+                }
+
+                y += signy;
+                deltax += ax;
+
+            }
+        }
+        return false;//never got to the target point
     }
 
 
