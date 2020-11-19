@@ -57,15 +57,15 @@ public class Bresenham {
      * reduce the work the garbage collector needs to do, especially
      * on Android.
      *
-     * @param startx the x coordinate of the starting point
-     * @param starty the y coordinate of the starting point
-     * @param endx the x coordinate of the starting point
-     * @param endy the y coordinate of the starting point
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
      * @return a List (internally, an ObjectList) of Coord points along the line
      */
-    public static List<Coord> line(int startx, int starty, int endx, int endy) {
+    public static List<Coord> line(int startX, int startY, int targetX, int targetY) {
         // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
-        return line(startx, starty, endx, endy, 0x7fffffff);
+        return line(startX, startY, targetX, targetY, 0x7fffffff);
     }
 
     /**
@@ -81,16 +81,16 @@ public class Bresenham {
      * reduce the work the garbage collector needs to do, especially
      * on Android.
      *
-     * @param startx the x coordinate of the starting point
-     * @param starty the y coordinate of the starting point
-     * @param endx the x coordinate of the starting point
-     * @param endy the y coordinate of the starting point
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
      * @return an ObjectList of Coord points along the line
      */
-    public static List<Coord> line(int startx, int starty, int endx, int endy, int maxLength) {
-        int dx = endx - startx;
-        int dy = endy - starty;
+    public static List<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength) {
+        int dx = targetX - startX;
+        int dy = targetY - startY;
 
         int ax = Math.abs(dx);
         int ay = Math.abs(dy);
@@ -103,15 +103,15 @@ public class Bresenham {
         int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
         int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
 
-        int x = startx;
-        int y = starty;
+        int x = startX;
+        int y = startY;
 
         int deltax, deltay;
         if (ax >= ay) /* x dominant */ {
             deltay = ay - (ax >> 1);
             while (result.size() < maxLength) {
                 result.add(Coord.get(x, y));
-                if (x == endx) {
+                if (x == targetX) {
                     return result;
                 }
 
@@ -127,7 +127,7 @@ public class Bresenham {
             deltax = ax - (ay >> 1);
             while (result.size() < maxLength) {
                 result.add(Coord.get(x, y));
-                if (y == endy) {
+                if (y == targetY) {
                     return result;
                 }
 
@@ -171,17 +171,17 @@ public class Bresenham {
      * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
-     * @param startx the x-coordinate of the starting point
-     * @param starty  the y-coordinate of the starting point
-     * @param targetx the x-coordinate of the target point
-     * @param targety  the y-coordinate of the target point
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startx, int starty, int targetx, int targety,
+    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
                                       @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
-        return isReachable(startx, starty, targetx, targety, 0x7FFFFFFF, resistanceMap, buffer);
+        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
@@ -192,19 +192,19 @@ public class Bresenham {
      * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
-     * @param startx the x-coordinate of the starting point
-     * @param starty  the y-coordinate of the starting point
-     * @param targetx the x-coordinate of the target point
-     * @param targety  the y-coordinate of the target point
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
      * @param maxLength the maximum permitted length of a line of sight
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startx, int starty, int targetx, int targety, int maxLength,
+    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
                                       @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
-        int dx = targetx - startx;
-        int dy = targety - starty;
+        int dx = targetX - startX;
+        int dy = targetY - startY;
 
         int ax = Math.abs(dx);
         int ay = Math.abs(dy);
@@ -212,19 +212,17 @@ public class Bresenham {
         int dist = ax + ay;
 
         if(buffer == null) {
-            buffer = new ObjectList<>(dist);
+            buffer = new ObjectList<>(dist + 1);
         }
         else {
             buffer.clear();
         }
-        if(startx == targetx && starty == targety) {
-            buffer.add(Coord.get(startx, starty));
+        if(startX == targetX && startY == targetY) {
+            buffer.add(Coord.get(startX, startY));
             return true; // already at the point; we can see our own feet just fine!
         }
         float decay = 1f / dist;
         float currentForce = 1f;
-        Coord p;
-
 
         ax <<= 1;
         ay <<= 1;
@@ -232,19 +230,19 @@ public class Bresenham {
         int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
         int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
 
-        int x = startx;
-        int y = starty;
+        int x = startX;
+        int y = startY;
 
         int deltax, deltay;
         if (ax >= ay) /* x dominant */ {
             deltay = ay - (ax >> 1);
             while (buffer.size() < maxLength) {
                 buffer.add(Coord.get(x, y));
-                if (x == targetx) {
+                if (x == targetX) {
                     return true;
                 }
 
-                if (x != startx || y != starty) {//don't discount the start location even if on resistant cell
+                if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
@@ -264,11 +262,11 @@ public class Bresenham {
             deltax = ax - (ay >> 1);
             while (buffer.size() < maxLength) {
                 buffer.add(Coord.get(x, y));
-                if (y == targety) {
+                if (y == targetY) {
                     return true;
                 }
 
-                if (x != startx || y != starty) {//don't discount the start location even if on resistant cell
+                if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
@@ -301,15 +299,15 @@ public class Bresenham {
      * reduce the work the garbage collector needs to do, especially
      * on Android.
      *
-     * @param startx the x coordinate of the starting point
-     * @param starty the y coordinate of the starting point
-     * @param endx the x coordinate of the starting point
-     * @param endy the y coordinate of the starting point
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
      * @return an array of Coord points along the line
      */
-    public static Coord[] lineArray(int startx, int starty, int endx, int endy) {
+    public static Coord[] lineArray(int startX, int startY, int targetX, int targetY) {
         // largest positive int for maxLength; it is extremely unlikely that this could be reached
-        return lineArray(startx, starty, endx, endy, 0x7fffffff);
+        return lineArray(startX, startY, targetX, targetY, 0x7fffffff);
     }
 
 
@@ -325,16 +323,16 @@ public class Bresenham {
      * reduce the work the garbage collector needs to do, especially
      * on Android.
      *
-     * @param startx the x coordinate of the starting point
-     * @param starty the y coordinate of the starting point
-     * @param endx the x coordinate of the starting point
-     * @param endy the y coordinate of the starting point
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
      * @return an array of Coord points along the line
      */
-    public static Coord[] lineArray(int startx, int starty, int endx, int endy, int maxLength) {
-        int dx = endx - startx;
-        int dy = endy - starty;
+    public static Coord[] lineArray(int startX, int startY, int targetX, int targetY, int maxLength) {
+        int dx = targetX - startX;
+        int dy = targetY - startY;
 
         int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
         int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
@@ -342,8 +340,8 @@ public class Bresenham {
         int ax = (dx = Math.abs(dx)) << 1;
         int ay = (dy = Math.abs(dy)) << 1;
 
-        int x = startx;
-        int y = starty;
+        int x = startX;
+        int y = startY;
 
         int deltax, deltay;
         if (ax >= ay) /* x dominant */ {
