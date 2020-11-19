@@ -14,6 +14,7 @@ buildscript {
 apply plugin: 'java-library'
 apply plugin: 'com.bmuschko.nexus'
 apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'maven'
 apply from: 'publish.gradle'
 
 def projectName = 'SquidSquad'

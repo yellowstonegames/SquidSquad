@@ -179,6 +179,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Reuses the existing light 2D array and fills it with a straight-line bouncing path of light that reflects its way
  through the given resistanceMap from startX, startY until it uses up the given distance.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">Bresenham</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Provides a means to generate Bresenham lines in 2D and 3D.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
@@ -844,6 +848,42 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Region.html#isEmpty()">isEmpty()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#isReachable(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#isReachable(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Coord.html#isWithin(int,int)">isWithin(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Coord.html" title="class in com.github.yellowstonegames.place">Coord</a></dt>
 <dd>
 <div class="block">Returns true if x is between 0 (inclusive) and width (exclusive) and y is between 0 (inclusive) and height
@@ -882,6 +922,60 @@ loadScripts(document, 'script');</script>
 <div class="block">A 256-element array of <a href="com/github/yellowstonegames/place/Region.html" title="class in com.github.yellowstonegames.place"><code>Region</code></a>s, each 64x64, where the first Region has an impossibly strict
  threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
  and so on until the last element includes almost all points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#line(int,int,int,int,int)">line(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#line(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">line(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#line(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">line(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from start to end using only N/S/E/W movement.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#lineArray(int,int,int,int)">lineArray(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#lineArray(int,int,int,int)">lineArray(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#lineArray(int,int,int,int,int)">lineArray(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength..</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Bresenham.html#lineArray(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">lineArray(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Bresenham.html" title="class in com.github.yellowstonegames.place">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#lineArray(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)">lineArray(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from start to end using only N/S/E/W movement.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#lineChars(com.github.yellowstonegames.place.Coord%5B%5D)">lineChars(Coord[])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Given an array of Coord as produced by <a href="com/github/yellowstonegames/place/OrthoLine.html#lineArray(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)"><code>OrthoLine.lineArray(Coord, Coord)</code></a> or <a href="com/github/yellowstonegames/place/OrthoLine.html#lineArray(int,int,int,int)"><code>OrthoLine.lineArray(int, int, int, int)</code></a>, this
+ gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
+ given line.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#lineChars(java.util.List)">lineChars(List&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>
+<div class="block">Given a List of Coord as produced by <a href="com/github/yellowstonegames/place/OrthoLine.html#line(com.github.yellowstonegames.place.Coord,com.github.yellowstonegames.place.Coord)"><code>OrthoLine.line(Coord, Coord)</code></a> or <a href="com/github/yellowstonegames/place/OrthoLine.html#line(int,int,int,int)"><code>OrthoLine.line(int, int, int, int)</code></a>, this
+ gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
+ given line.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
@@ -1057,6 +1151,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Union of two Regions, assigning the result into this Region.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">OrthoLine</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
+ distances for measurements.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/OrthoLine.html#%3Cinit%3E()">OrthoLine()</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/OrthoLine.html" title="class in com.github.yellowstonegames.place">OrthoLine</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Direction.html#OUTWARDS">OUTWARDS</a></span> - Static variable in enum com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Direction.html" title="enum in com.github.yellowstonegames.place">Direction</a></dt>
 <dd>
 <div class="block">An array which holds all eight OUTWARDS directions.</div>
