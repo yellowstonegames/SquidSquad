@@ -2,6 +2,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class Bresenham {
      * @param starty the y coordinate of the starting point
      * @param endx the x coordinate of the starting point
      * @param endy the y coordinate of the starting point
-     * @return a ObjectList (internally, an ObjectList) of Coord points along the line
+     * @return a List (internally, an ObjectList) of Coord points along the line
      */
     public static List<Coord> line(int startx, int starty, int endx, int endy) {
         // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
@@ -142,8 +143,66 @@ public class Bresenham {
         }
         return result;
     }
-
-    public static boolean isReachable(int startx, int starty, int targetx, int targety, int maxLength, float[][] resistanceMap, ObjectList<Coord> buffer) {
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param start the starting point
+     * @param target the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
+                                      ObjectList<Coord> buffer){
+        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
+    }
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param startx the x-coordinate of the starting point
+     * @param starty  the y-coordinate of the starting point
+     * @param targetx the x-coordinate of the target point
+     * @param targety  the y-coordinate of the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(int startx, int starty, int targetx, int targety,
+                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
+        return isReachable(startx, starty, targetx, targety, 0x7FFFFFFF, resistanceMap, buffer);
+    }
+    /**
+     * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param startx the x-coordinate of the starting point
+     * @param starty  the y-coordinate of the starting point
+     * @param targetx the x-coordinate of the target point
+     * @param targety  the y-coordinate of the target point
+     * @param maxLength the maximum permitted length of a line of sight
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(int startx, int starty, int targetx, int targety, int maxLength,
+                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
         int dx = targetx - startx;
         int dy = targety - starty;
 

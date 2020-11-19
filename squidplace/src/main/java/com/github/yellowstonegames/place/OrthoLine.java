@@ -21,11 +21,11 @@ public class OrthoLine {
      */
     public static List<Coord> line(int startX, int startY, int endX, int endY) {
         int dx = endX - startX, dy = endY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
-        int signX = (dx > 0) ? 1 : -1, signY = (dy > 0) ? 1 : -1, workX = startX, workY = startY;
+        int signX = dx >> 31 | 1, signY = dy >> 31 | 1, workX = startX, workY = startY;
         ObjectList<Coord> drawn = new ObjectList<>(1 + nx + ny);
         drawn.add(Coord.get(startX, startY));
         for (int ix = 0, iy = 0; ix < nx || iy < ny; ) {
-            if ((0.5f + ix) / nx < (0.5 + iy) / ny) {
+            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
                 workX += signX;
                 ix++;
             } else {
@@ -58,11 +58,11 @@ public class OrthoLine {
      */
     public static Coord[] lineArray(int startX, int startY, int endX, int endY) {
         int dx = endX - startX, dy = endY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
-        int signX = (dx > 0) ? 1 : -1, signY = (dy > 0) ? 1 : -1, workX = startX, workY = startY;
+        int signX = dx >> 31 | 1, signY = dy >> 31 | 1, workX = startX, workY = startY;
         Coord[] drawn = new Coord[nx + ny + 1];
         drawn[0] = Coord.get(startX, startY);
         for (int i = 1, ix = 0, iy = 0; ix < nx || iy < ny; i++) {
-            if ((0.5f + ix) / nx < (0.5 + iy) / ny) {
+            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
                 workX += signX;
                 ix++;
             } else {
