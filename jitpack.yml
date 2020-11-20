@@ -2,4 +2,4 @@ jdk:
   - openjdk15
 install:
   - echo "Installing with Gradle"
-  - ./gradlew clean install
+  - gradle clean install
