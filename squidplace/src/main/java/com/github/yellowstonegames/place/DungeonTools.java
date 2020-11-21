@@ -1,0 +1,638 @@
+package com.github.yellowstonegames.place;
+
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.grid.*;
+
+import java.util.*;
+
+/**
+ * A static class that can be used to modify the char[][] dungeons that other generators produce.
+ * Includes various utilities for random floor-finding, but also provides ways to take dungeons that use '#'
+ * for walls and make a copy that uses unicode box drawing characters.
+ *
+ * @author Tommy Ettinger - https://github.com/tommyettinger
+ * Created by Tommy Ettinger on 4/1/2015.
+ */
+public class DungeonTools {
+
+    /**
+     * Constant for environment tiles that are not near a cave, room, or corridor. Value is 0.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int UNTOUCHED = 0;
+    /**
+     * Constant for environment tiles that are floors for a room. Value is 1.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int ROOM_FLOOR = 1;
+    /**
+     * Constant for environment tiles that are walls near a room. Value is 2.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int ROOM_WALL = 2;
+    /**
+     * Constant for environment tiles that are floors for a cave. Value is 3.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int CAVE_FLOOR = 3;
+    /**
+     * Constant for environment tiles that are walls near a cave. Value is 4.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int CAVE_WALL = 4;
+    /**
+     * Constant for environment tiles that are floors for a corridor. Value is 5.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int CORRIDOR_FLOOR = 5;
+    /**
+     * Constant for environment tiles that are walls near a corridor. Value is 6.
+     * Used by several classes that distinguish types of dungeon environment.
+     */
+    public static final int CORRIDOR_WALL = 6;
+
+    private DungeonTools() {
+    }
+
+    /**
+     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+     * drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
+     * filled with more walls before) with space characters, ' '. If the lines "point the wrong way," such as having
+     * multiple horizontally adjacent vertical lines where there should be horizontal lines, call transposeLines() on
+     * the returned map, which will keep the dimensions of the map the same and only change the line chars. You will
+     * also need to call transposeLines if you call hashesToLines on a map that already has "correct" line-drawing
+     * characters, which means hashesToLines should only be called on maps that use '#' for walls. If you have a
+     * jumbled map that contains two or more of the following: "correct" line-drawing characters, "incorrect"
+     * line-drawing characters, and '#' characters for walls, you can reset by calling linesToHashes() and then
+     * potentially calling hashesToLines() again.
+     *
+     * @param map a 2D char array indexed with x,y that uses '#' for walls
+     * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
+     */
+    public static char[][] hashesToLines(char[][] map) {
+        return hashesToLines(map, false);
+    }
+
+    private static final char[] wallLookup = new char[]
+            {
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '┴', '┐', '┤', '┬', '┤',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '─', '┴',
+                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '┴', '┐', '┤', '─', '┘',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '─', '┐', '┤', '┬', '┬',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '┤', '┬', '┼',
+                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '─', '┐', '┤', '┬', '┐',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '│', '┬', '├',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '─', '┐', '│', '┬', '┌',
+                    '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '│', '─', '└',
+                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '─', '┐', '│', '─', '\1'
+            };
+
+    /**
+     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+     * drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
+     * filled with more walls before) with space characters, ' '. If keepSingleHashes is true, then '#' will be used if
+     * a wall has no orthogonal wall neighbors; if it is false, then a horizontal line will be used for stand-alone
+     * wall cells. If the lines "point the wrong way," such as having multiple horizontally adjacent vertical lines
+     * where there should be horizontal lines, call transposeLines() on the returned map, which will keep the dimensions
+     * of the map the same and only change the line chars. You will also need to call transposeLines if you call
+     * hashesToLines on a map that already has "correct" line-drawing characters, which means hashesToLines should only
+     * be called on maps that use '#' for walls. If you have a jumbled map that contains two or more of the following:
+     * "correct" line-drawing characters, "incorrect" line-drawing characters, and '#' characters for walls, you can
+     * reset by calling linesToHashes() and then potentially calling hashesToLines() again.
+     *
+     * @param map              a 2D char array indexed with x,y that uses '#' for walls
+     * @param keepSingleHashes true if walls that are not orthogonally adjacent to other walls should stay as '#'
+     * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
+     */
+    public static char[][] hashesToLines(char[][] map, boolean keepSingleHashes) {
+        int width = map.length + 2;
+        int height = map[0].length + 2;
+
+        char[][] dungeon = new char[width][height];
+        for (int i = 1; i < width - 1; i++) {
+            System.arraycopy(map[i - 1], 0, dungeon[i], 1, height - 2);
+        }
+        for (int i = 0; i < width; i++) {
+            dungeon[i][0] = '\1';
+            dungeon[i][height - 1] = '\1';
+        }
+        for (int i = 0; i < height; i++) {
+            dungeon[0][i] = '\1';
+            dungeon[width - 1][i] = '\1';
+        }
+        for (int x = 1; x < width - 1; x++) {
+            for (int y = 1; y < height - 1; y++) {
+                if (map[x - 1][y - 1] == '#') {
+                    int q = 0;
+                    q |= (y <= 1 || map[x - 1][y - 2] == '#' || map[x - 1][y - 2] == '+' || map[x - 1][y - 2] == '/') ? 1 : 0;
+                    q |= (x >= width - 2 || map[x][y - 1] == '#' || map[x][y - 1] == '+' || map[x][y - 1] == '/') ? 2 : 0;
+                    q |= (y >= height - 2 || map[x - 1][y] == '#' || map[x - 1][y] == '+' || map[x - 1][y] == '/') ? 4 : 0;
+                    q |= (x <= 1 || map[x - 2][y - 1] == '#' || map[x - 2][y - 1] == '+' || map[x - 2][y - 1] == '/') ? 8 : 0;
+
+                    q |= (y <= 1 || x >= width - 2 || map[x][y - 2] == '#' || map[x][y - 2] == '+' || map[x][y - 2] == '/') ? 16 : 0;
+                    q |= (y >= height - 2 || x >= width - 2 || map[x][y] == '#' || map[x][y] == '+' || map[x][y] == '/') ? 32 : 0;
+                    q |= (y >= height - 2 || x <= 1 || map[x - 2][y] == '#' || map[x - 2][y] == '+' || map[x - 2][y] == '/') ? 64 : 0;
+                    q |= (y <= 1 || x <= 1 || map[x - 2][y - 2] == '#' || map[x - 2][y - 2] == '+' || map[x - 2][y - 2] == '/') ? 128 : 0;
+                    if (!keepSingleHashes && wallLookup[q] == '#') {
+                        dungeon[x][y] = '─';
+                    } else {
+                        dungeon[x][y] = wallLookup[q];
+                    }
+                }
+            }
+        }
+        char[][] portion = new char[width - 2][height - 2];
+        for (int i = 1; i < width - 1; i++) {
+            for (int j = 1; j < height - 1; j++) {
+                if (dungeon[i][j] == '\1') {
+                    portion[i - 1][j - 1] = ' ';
+                } else {
+                    // ┼┌┘
+                    portion[i - 1][j - 1] = dungeon[i][j];
+                }
+            }
+        }
+        return portion;
+    }
+
+    /**
+     * Reverses most of the effects of hashesToLines(). The only things that will not be reversed are the placement of
+     * space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
+     * have a modified map that contains wall characters of conflicting varieties, as described in hashesToLines().
+     *
+     * @param map a 2D char array indexed with x,y that uses box-drawing characters for walls
+     * @return a copy of the map passed as an argument with '#' replacing box-drawing characters for walls
+     */
+    public static char[][] linesToHashes(char[][] map) {
+
+        int width = map.length;
+        int height = map[0].length;
+        char[][] portion = new char[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (map[i][j]) {
+                    case '\1':
+                    case '├':
+                    case '┤':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '┐':
+                    case '└':
+                    case '┘':
+                    case '│':
+                    case '─':
+                    case '┼':
+                        portion[i][j] = '#';
+                        break;
+                    default:
+                        portion[i][j] = map[i][j];
+                }
+            }
+        }
+        return portion;
+    }
+
+    /**
+     * If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
+     * connect as you expect. Use this function to change the directions of the box-drawing characters only, without
+     * altering the dimensions in any way. This returns a new char[][], instead of modifying the parameter in place.
+     * transposeLines is also needed if the lines in a map have become transposed when they were already correct;
+     * calling this method on an incorrectly transposed map will change the directions on all of its lines.
+     *
+     * @param map a 2D char array indexed with y,x that uses box-drawing characters for walls
+     * @return a copy of map that uses box-drawing characters for walls that will be correct when indexed with x,y
+     */
+    public static char[][] transposeLines(char[][] map) {
+
+        int width = map[0].length;
+        int height = map.length;
+        char[][] portion = new char[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                switch (map[i][j]) {
+                    case '\1':
+                        portion[i][j] = ' ';
+                        break;
+                    case '├':
+                        portion[i][j] = '┬';
+                        break;
+                    case '┤':
+                        portion[i][j] = '┴';
+                        break;
+                    case '┴':
+                        portion[i][j] = '┤';
+                        break;
+                    case '┬':
+                        portion[i][j] = '├';
+                        break;
+                    case '┐':
+                        portion[i][j] = '└';
+                        break;
+                    case '└':
+                        portion[i][j] = '┐';
+                        break;
+                    case '│':
+                        portion[i][j] = '─';
+                        break;
+                    case '─':
+                        portion[i][j] = '│';
+                        break;
+                    default: //applies to ┼┌┘ and any non-box-drawing
+                        portion[i][j] = map[i][j];
+                }
+            }
+        }
+        return portion;
+    }
+    //                    case '├ ┤ ┴ ┬ ┌ ┐ └ ┘ │ ─':
+    /**
+     * When a map is generated by DungeonGenerator with addDoors enabled, different chars are used for vertical and
+     * horizontal doors ('+' for vertical and '/' for horizontal).  This makes all doors '+', which is useful if you
+     * want '/' to be used for a different purpose and/or to distinguish open and closed doors.
+     *
+     * @param map a char[][] that may have both '+' and '/' for doors
+     * @return a char[][] that only uses '+' for all doors
+     */
+    public static char[][] closeDoors(char[][] map) {
+
+        int width = map.length;
+        int height = map[0].length;
+        char[][] portion = new char[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (map[i][j] == '/') portion[i][j] = '+';
+                else portion[i][j] = map[i][j];
+
+            }
+        }
+        return portion;
+    }
+
+    /**
+     * When a map is generated by DungeonGenerator with addDoors enabled, different chars are used for vertical and
+     * horizontal doors ('+' for vertical and '/' for horizontal).  This makes all doors '/', which is useful if you
+     * want '+' to be used for a different purpose and/or to distinguish open and closed doors.
+     *
+     * @param map a char[][] that may have both '+' and '/' for doors
+     * @return a char[][] that only uses '/' for all doors
+     */
+    public static char[][] openDoors(char[][] map) {
+
+        int width = map.length;
+        int height = map[0].length;
+        char[][] portion = new char[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (map[i][j] == '+') portion[i][j] = '/';
+                else portion[i][j] = map[i][j];
+            }
+        }
+        return portion;
+    }
+
+
+    /**
+     * Takes a char[][] dungeon map and returns a copy with all box drawing chars, special placeholder chars, or '#'
+     * chars changed to '#' and everything else changed to '.' .
+     *
+     * @param map a char[][] with different characters that can be simplified to "wall" or "floor"
+     * @return a copy of map with all box-drawing, placeholder, wall or space characters as '#' and everything else '.'
+     */
+    public static char[][] simplifyDungeon(char[][] map) {
+
+        int width = map.length;
+        int height = map[0].length;
+        char[][] portion = new char[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (map[i][j]) {
+                    case '\1':
+                    case '├':
+                    case '┤':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '┐':
+                    case '└':
+                    case '┘':
+                    case '│':
+                    case '─':
+                    case '┼':
+                    case ' ':
+                    case '#':
+                        portion[i][j] = '#';
+                        break;
+                    default:
+                        portion[i][j] = '.';
+                }
+            }
+        }
+        return portion;
+    }
+
+    /**
+     * Takes a dungeon map with either '#' as the only wall character or the unicode box drawing characters used by
+     * hashesToLines(), and returns a new char[][] dungeon map with two characters per cell, mostly filling the spaces
+     * next to non-walls with space characters, and only doing anything different if a box-drawing character would
+     * continue into an adjacent cell, or if a '#' wall needs another '#' wall next to it. The recommended approach is
+     * to keep both the original non-double-width map and the newly-returned double-width map, since the single-width
+     * maps can be used more easily for pathfinding. If you need to undo this function, call unDoubleWidth().
+     *
+     * @param map a char[][] that uses either '#' or box-drawing characters for walls, but one per cell
+     * @return a widened copy of map that uses two characters for every cell, connecting box-drawing chars correctly
+     */
+    public static char[][] doubleWidth(char[][] map) {
+        int width = map.length;
+        int height = map[0].length;
+        char[][] paired = new char[width * 2][height];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0, px = 0; x < width; x++, px += 2) {
+                paired[px][y] = map[x][y];
+                switch (paired[px][y]) {
+                    //                        case '┼ ├ ┤ ┴ ┬ ┌ ┐ └ ┘ │ ─'
+                    case '┼':
+                    case '├':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '└':
+                    case '─':
+                        paired[px + 1][y] = '─';
+                        break;
+                    case '#':
+                        paired[px + 1][y] = '#';
+                        break;
+
+                    default:
+                        paired[px + 1][y] = ' ';
+                        break;
+                        /*
+                    case '.':
+                    case '┤':
+                    case '┐':
+                    case '┘':
+                    case '│':
+                         */
+                }
+            }
+        }
+        return paired;
+    }
+
+    /**
+     * Takes a dungeon map that uses two characters per cell, and condenses it to use only the left (lower index)
+     * character in each cell. This should (probably) only be called on the result of doubleWidth(), and will throw an
+     * exception if called on a map with an odd number of characters for width, such as "#...#" .
+     *
+     * @param map a char[][] that has been widened by doubleWidth()
+     * @return a copy of map that uses only one char per cell
+     */
+    public static char[][] unDoubleWidth(char[][] map) {
+        int width = map.length;
+        int height = map[0].length;
+        if (width % 2 != 0)
+            throw new IllegalArgumentException("Argument must be a char[width][height] with an even width.");
+        char[][] unpaired = new char[width / 2][height];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0, px = 0; px < width; x++, px += 2) {
+                unpaired[x][y] = map[px][y];
+            }
+        }
+        return unpaired;
+    }
+
+    /**
+     * @param level dungeon/map level as 2D char array. x,y indexed
+     * @param c     Coord to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static boolean inLevel(char[][] level, Coord c) {
+        return inLevel(level, c.x, c.y);
+    }
+
+    /**
+     * @param level dungeon/map level as 2D char array. x,y indexed
+     * @param x     x coordinate to check
+     * @param y     y coordinate to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static boolean inLevel(char[][] level, int x, int y) {
+        return 0 <= x && x < level.length && 0 <= y && y < level[x].length;
+    }
+
+    /**
+     * @param level dungeon/map level as 2D double array. x,y indexed
+     * @param c     Coord to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static boolean inLevel(float[][] level, Coord c) {
+        return inLevel(level, c.x, c.y);
+    }
+
+    /**
+     * @param level dungeon/map level as 2D double array. x,y indexed
+     * @param x     x coordinate to check
+     * @param y     y coordinate to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static boolean inLevel(float[][] level, int x, int y) {
+        return 0 <= x && x < level.length && 0 <= y && y < level[x].length;
+    }
+
+    /**
+     * @param level a dungeon/map level as 2D array. x,y indexed
+     * @param c     Coord to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static <T> boolean inLevel(T[][] level, Coord c) {
+        return inLevel(level, c.x, c.y);
+    }
+
+    /**
+     * @param level a dungeon/map level as 2D array. x,y indexed
+     * @param x     x coordinate to check
+     * @param y     y coordinate to check
+     * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
+     */
+    public static <T> boolean inLevel(T[][] level, int x, int y) {
+        return 0 <= x && x < level.length && 0 <= y && y < level[x].length;
+    }
+    
+    /**
+     * Quickly counts the number of char elements in level that are equal to match.
+     *
+     * @param level the 2D char array to count cells in
+     * @param match the char to search for
+     * @return the number of cells that matched
+     */
+    public static int countCells(char[][] level, char match) {
+        if (level == null || level.length == 0)
+            return 0;
+        int counter = 0;
+        for (int x = 0; x < level.length; x++) {
+            for (int y = 0; y < level[x].length; y++) {
+                if (level[x][y] == match) counter++;
+            }
+        }
+        return counter;
+    }
+
+    /**
+     * For when you want to print a 2D char array. Prints on multiple lines, with a trailing newline.
+     *
+     * @param level a 2D char array to print with a trailing newline
+     */
+    public static void debugPrint(char[][] level) {
+        if (level == null || level.length == 0 || level[0].length == 0)
+            System.out.println("INVALID DUNGEON LEVEL");
+        else {
+            for (int y = 0; y < level[0].length; y++) {
+                for (int x = 0; x < level.length; x++) {
+                    System.out.print(level[x][y]);
+                }
+                System.out.println();
+
+            }
+        }
+    }
+
+    /**
+     * Changes the outer edge of a char[][] to the wall char, '#'.
+     *
+     * @param map A char[][] that stores map data; will be modified in place
+     * @return the modified-in-place map with its edge replaced with '#'
+     */
+    public static char[][] wallWrap(char[][] map) {
+        int upperY = map[0].length - 1;
+        int upperX = map.length - 1;
+        for (int i = 0; i < map.length; i++) {
+            map[i][0] = '#';
+            map[i][upperY] = '#';
+        }
+        for (int i = 0; i < map[0].length; i++) {
+            map[0][i] = '#';
+            map[upperX][i] = '#';
+        }
+        return map;
+    }
+    public static ObjectList<Coord> pointPath(int width, int height, LaserRandom rng) {
+        if (width <= 2 || height <= 2)
+            throw new IllegalArgumentException("width and height must be greater than 2");
+        HilbertCurve.init2D();
+        long columnAlterations = (rng.nextLong() & 0xFFFFFFFFFFFFL);
+        float columnBase = width / (Long.bitCount(columnAlterations) + 48.0f);
+        long rowAlterations = (rng.nextLong() & 0xFFFFFFFFFFFFL);
+        float rowBase = height / (Long.bitCount(rowAlterations) + 48.0f);
+
+        int[] columns = new int[16], rows = new int[16];
+        int csum = 0, rsum = 0;
+        long b = 7;
+        for (int i = 0; i < 16; i++, b <<= 3) {
+            columns[i] = csum + (int) (columnBase * 0.5f * (3 + Long.bitCount(columnAlterations & b)));
+            csum += (int) (columnBase * (3 + Long.bitCount(columnAlterations & b)));
+            rows[i] = rsum + (int) (rowBase * 0.5f * (3 + Long.bitCount(rowAlterations & b)));
+            rsum += (int) (rowBase * (3 + Long.bitCount(rowAlterations & b)));
+        }
+        int cs = width - csum;
+        int rs = height - rsum;
+        int cs2 = cs, rs2 = rs, cs3 = cs, rs3 = rs;
+        for (int i = 0; i <= 7; i++) {
+            cs2 = 0;
+            rs2 = 0;
+            columns[i] -= cs2;
+            rows[i] -= rs2;
+        }
+        for (int i = 15; i >= 8; i--) {
+            cs3 = cs3 * (i - 8) >> 3;
+            rs3 = rs3 * (i - 8) >> 3;
+            columns[i] += cs3;
+            rows[i] += rs3;
+        }
+
+        ObjectList<Coord> points = new ObjectList<>(80);
+        int m = rng.nextInt(64);
+        Coord temp = HilbertCurve.mooreToCoord(m), next;
+        temp = Coord.get(columns[temp.x], rows[temp.y]);
+        for (int i = 0, r; i < 256; r = rng.nextInt(4, 12), i += r, m += r) {
+            next = HilbertCurve.mooreToCoord(m);
+            next = Coord.get(columns[next.x], rows[next.y]);
+            points.addAll(OrthoLine.line(temp, next));
+            temp = next;
+        }
+        points.add(points.get(0));
+        return points;
+    }
+
+    /**
+     * Ensures a path exists in a rough ring around the map by first creating the path (using
+     * {@link #pointPath(int, int, LaserRandom)} with the given LaserRandom), then finding chars in blocking that are on
+     * that path and replacing them with replacement. Modifies map in-place (!) and returns an ObjectList of Coord points
+     * that will always be on the path.
+     *
+     * @param map         a 2D char array, x then y, etc. that will be modified directly; this is the "returned map"
+     * @param rng         used for random factors in the path choice
+     * @param replacement the char that will fill be used where a path needs to be carved out; usually '.'
+     * @param blocking    an array or vararg of char that are considered blocking for the path and will be replaced if
+     *                    they are in the way
+     * @return the ObjectList of Coord points that are on the carved path, including existing non-blocking cells; will be empty if any parameters are invalid
+     */
+    public static ObjectList<Coord> ensurePath(char[][] map, LaserRandom rng, char replacement, char... blocking) {
+        if (map == null || map.length <= 0 || blocking == null || blocking.length <= 0)
+            return new ObjectList<Coord>(0);
+        int width = map.length, height = map[0].length;
+        ObjectList<Coord> points = pointPath(width, height, rng);
+        char[] blocks = new char[blocking.length];
+        System.arraycopy(blocking, 0, blocks, 0, blocking.length);
+        Arrays.sort(blocks);
+        for (Coord c : points) {
+            if (c.x >= 0 && c.x < width && c.y >= 0 && c.y < height && Arrays.binarySearch(blocks, map[c.x][c.y]) >= 0) {
+                map[c.x][c.y] = replacement;
+            }
+        }
+        return points;
+    }
+
+    public static ObjectList<Coord> allMatching(char[][] map, char... matching) {
+        if (map == null || map.length <= 0 || matching == null || matching.length <= 0)
+            return new ObjectList<Coord>(0);
+        return new ObjectList<>(new Region(map, matching));
+    }
+
+    /**
+     * Gets a List of Coord that are within radius distance of (x,y), and appends them to buf if it is non-null or makes
+     * a fresh List to append to otherwise. Returns buf if non-null, else the fresh List of Coord. May produce Coord
+     * values that are not within the boundaries of a map, such as (-5,-4), if the center is too close to the edge or
+     * radius is too high. You can use {@link Radius#inCircle(int, int, int, boolean, int, int, List)}
+     * with surpassEdges as false if you want to limit Coords to within the map, or the more general
+     * {@link Radius#pointsInside(int, int, int, boolean, int, int, List)} on a Radius.SQUARE or
+     * Radius.DIAMOND enum value if you want a square or diamond shape.
+     *
+     * @param x      center x of the circle
+     * @param y      center y of the circle
+     * @param radius inclusive radius to extend from the center; radius 0 gives just the center
+     * @param buf    Where to add the coordinates, or null for this method to
+     *               allocate a fresh list.
+     * @return The coordinates of a circle centered {@code (x, y)}, whose
+     * diameter is {@code (radius * 2) + 1}.
+     * @see Radius#inCircle(int, int, int, boolean, int, int, List) if you want to keep the Coords within the bounds of the map
+     */
+    public static List<Coord> circle(int x, int y, int radius, /* @Nullable */ List<Coord> buf) {
+        final List<Coord> result = buf == null ? new ObjectList<Coord>() : buf;
+        radius = Math.max(0, radius);
+        for (int dx = -radius; dx <= radius; ++dx) {
+            final int high = (int) Math.floor(Math.sqrt(radius * radius - dx * dx));
+            for (int dy = -high; dy <= high; ++dy) {
+                result.add(Coord.get(x + dx, y + dy));
+            }
+        }
+        return result;
+    }
+}
