@@ -3081,8 +3081,8 @@ public class Language implements Serializable {
         registered = new Language[registry.size()-1];
         registeredNames = new String[registered.length];
         for (int i = 0; i < registered.length; i++) {
-            registeredNames[i] = registry.keyAtIndex(i+1).toString();
-            registered[i] = registry.getAtIndex(i+1);
+            registeredNames[i] = registry.keyAt(i+1).toString();
+            registered[i] = registry.getAt(i+1);
         }
     }
 
@@ -3544,9 +3544,9 @@ public class Language implements Serializable {
 //        int mn = Math.min(rng.nextInt(3), rng.nextInt(3)), sz0, p0s;
 //
 //        for (n = 0; n < mn; n++) {
-//            missingSounds.add(parts0.keyAtIndex(0));
-//            Collections.addAll(forbidden, parts0.getAtIndex(0).split(" "));
-//            parts0.removeAtIndex(0);
+//            missingSounds.add(parts0.keyAt(0));
+//            Collections.addAll(forbidden, parts0.getAt(0).split(" "));
+//            parts0.removeAt(0);
 //        }
 //        p0s = parts0.size();
 //        sz0 = Math.max(rng.nextInt(1, p0s + 1), rng.nextInt(1, p0s + 1));
@@ -3559,9 +3559,9 @@ public class Language implements Serializable {
         int mn = Math.min(rng.nextInt(3), rng.nextInt(3)), sz0, p0s;
 
         for (n = 0; n < mn; n++) {
-            missingSounds.add(parts0.keyAtIndex(0));
-            Collections.addAll(forbidden, parts0.getAtIndex(0).split(" "));
-            parts0.removeAtIndex(0);
+            missingSounds.add(parts0.keyAt(0));
+            Collections.addAll(forbidden, parts0.getAt(0).split(" "));
+            parts0.removeAt(0);
         }
         p0s = parts0.size();
         sz0 = Math.max(rng.nextInt(1, p0s + 1), rng.nextInt(1, p0s + 1));
@@ -3578,11 +3578,11 @@ public class Language implements Serializable {
                 Pattern pat = Pattern.compile("\\b([aeiou]*)(" + ua + ")([aeiou]*)\\b");
                 Replacer rep = pat.replacer("$1$2$3 $1" + ac + "$3"), repLess = pat.replacer("$1" + ac + "$3");
                 for (int j = 0; j < p0s; j++) {
-                    String k = parts0.keyAtIndex(j);
+                    String k = parts0.keyAt(j);
                     if (uas.equals(k)) // uas is never null, always length 1
-                        v = parts0.getAtIndex(j);
+                        v = parts0.getAt(j);
                     else {
-                        String current = parts0.getAtIndex(j);
+                        String current = parts0.getAt(j);
                         String[] splits = current.split(" ");
                         for (int s = 0; s < splits.length; s++) {
                             if (forbidden.contains(uas) && splits[s].contains(uas))
@@ -3659,12 +3659,12 @@ public class Language implements Serializable {
         }
 
         for (; n < sz * removalRate; n++) {
-            missingSounds.add(parts1.keyAtIndex(n));
-            missingSounds.add(parts2.keyAtIndex(n));
-            missingSounds.add(parts3.keyAtIndex(n));
-            Collections.addAll(forbidden, parts1.getAtIndex(n).split(" "));
-            Collections.addAll(forbidden, parts2.getAtIndex(n).split(" "));
-            Collections.addAll(forbidden, parts3.getAtIndex(n).split(" "));
+            missingSounds.add(parts1.keyAt(n));
+            missingSounds.add(parts2.keyAt(n));
+            missingSounds.add(parts3.keyAt(n));
+            Collections.addAll(forbidden, parts1.getAt(n).split(" "));
+            Collections.addAll(forbidden, parts2.getAt(n).split(" "));
+            Collections.addAll(forbidden, parts3.getAt(n).split(" "));
         }
 
         return new Language(
@@ -4592,7 +4592,7 @@ public class Language implements Serializable {
                 }
             }
             for (int i = 0; i < mods.size(); i++) {
-                sb.append('℗').append(mods.getAtIndex(i).serializeToString());
+                sb.append('℗').append(mods.getAt(i).serializeToString());
             }
             return mixer.addModifiers(mods).summarize(sb.toString());
         } else
@@ -4925,7 +4925,7 @@ public class Language implements Serializable {
                 pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
                 poundIndex = -1;
             } else {
-                pairs.add(registry.get(registry.keyAtIndex(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
+                pairs.add(registry.get(registry.keyAt(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
                 pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
             }
             snailIndex = data.indexOf('@', snailIndex + 1);
@@ -5130,7 +5130,7 @@ public class Language implements Serializable {
                 return new Modifier();
             Alteration[] alts = new Alteration[map.size()];
             for (int i = 0; i < alts.length; i++) {
-                alts[i] = new Alteration(map.keyAtIndex(i), map.getAtIndex(i));
+                alts[i] = new Alteration(map.keyAt(i), map.getAt(i));
             }
             return new Modifier(alts);
         }
