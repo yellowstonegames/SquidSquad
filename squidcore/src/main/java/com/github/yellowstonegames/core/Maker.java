@@ -1,10 +1,6 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.*;
 
 /**
  * Utility methods for more easily constructing data structures, particularly those in jdkgdxds.
@@ -185,4 +181,53 @@ public class Maker {
         set.add(element);
         return set;
     }
+    /**
+     * Makes an CaseInsensitiveOrderedMap with the value type inferred from the type of v0, and considers all parameters
+     * key-value pairs, casting the Objects at positions 0, 2, 4... etc. to CharSequence and the objects at positions
+     * 1, 3, 5... etc. to V. If rest has an odd-number length, then it discards the last item. If any pair of items in
+     * rest cannot be cast to the correct type of CharSequence or V (such as if the key is null), then this inserts
+     * nothing for that pair. You can pass an array containing keys and values for rest, but k0 and v0 can't be inside
+     * that array.
+     * @param k0 the first key; this can be any implementation of CharSequence, and is typically a String
+     * @param v0 the first value; used to infer the types of other values if generic parameters aren't specified
+     * @param rest an array or vararg of keys and values in pairs; should contain alternating CharSequence, V, CharSequence, V... elements
+     * @param <V> the type of values in the returned CaseInsensitiveOrderedMap; if not specified, will be inferred from v0
+     * @return a freshly-made CaseInsensitiveOrderedMap with V values, using k0, v0, and the contents of rest to fill it
+     */
+    @SuppressWarnings("unchecked")
+    public static <V> CaseInsensitiveOrderedMap<V> caseInsensitiveOrderedMap(CharSequence k0, V v0, Object... rest)
+    {
+        if(rest == null || rest.length == 0)
+        {
+            CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(2);
+            if(k0 != null)
+                map.put(k0, v0);
+            return map;
+        }
+        CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(1 + (rest.length >>> 1));
+        map.put(k0, v0);
+
+        for (int i = 0; i < rest.length - 1; i+=2) {
+            try {
+                if(rest[i] != null)
+                    map.put((CharSequence) rest[i], (V) rest[i + 1]);
+            }catch (ClassCastException ignored) {
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Makes an empty CaseInsensitiveOrderedMap; needs the value type to be specified in order to work. For an empty
+     * CaseInsensitiveOrderedMap with Coord values, you could use {@code Maker.<Coord>orderedMap();}.
+     * Using the new keyword is probably just as easy in this case; this method is provided for completeness relative to
+     * caseInsensitiveOrderedMap() with 2 or more parameters.
+     * @param <V> the type of values in the returned CaseInsensitiveOrderedMap; cannot be inferred and must be specified
+     * @return an empty CaseInsensitiveOrderedMap with the given key and value types.
+     */
+    public static <V> CaseInsensitiveOrderedMap<V> caseInsensitiveOrderedMap()
+    {
+        return new CaseInsensitiveOrderedMap<>();
+    }
+
 }
