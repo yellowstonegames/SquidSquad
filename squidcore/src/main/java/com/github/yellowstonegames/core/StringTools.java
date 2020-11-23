@@ -209,9 +209,49 @@ public class StringTools {
      * @param search a char array to try to find in text
      * @return true if search was found
      */
+    public static boolean contains(CharSequence text, CharSequence search) {
+        return !(text == null || text.length() == 0 || search == null || search.length() <= 0)
+                && containsPart(text, search) == search.length();
+    }
+
+    /**
+     * Tries to find as much of the char array {@code search} in the CharSequence {@code text}, always starting from the
+     * beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
+     * part of search (0 if not found).
+     * @param text a CharSequence to search in
+     * @param search a char array to look for
+     * @return the length of the searched-for char array that was found
+     */
+    public static int containsPart(CharSequence text, CharSequence search)
+    {
+        if(text == null || text.length() == 0 || search == null || (search.length() <= 0))
+            return 0;
+        int sl = search.length(), tl = text.length() - sl, f = 0;
+        char s = search.charAt(0);
+        PRIMARY:
+        for (int i = 0; i <= tl; i++) {
+            if (text.charAt(i) == s) {
+                for (int j = i + 1, x = 1; x < sl; j++, x++) {
+                    if (text.charAt(j) != search.charAt(x)) {
+                        f = Math.max(f, x);
+                        continue PRIMARY;
+                    }
+                }
+                return sl;
+            }
+        }
+        return f;
+    }
+
+    /**
+     * Searches text for the exact contents of the char array search; returns true if text contains search.
+     * @param text a CharSequence, such as a String or StringBuilder, that might contain search
+     * @param search a char array to try to find in text
+     * @return true if search was found
+     */
     public static boolean contains(CharSequence text, char[] search) {
         return !(text == null || text.length() == 0 || search == null || search.length <= 0)
-                && containsPart(text, search, "", "") == search.length;
+                && containsPart(text, search) == search.length;
     }
 
     /**
@@ -224,7 +264,23 @@ public class StringTools {
      */
     public static int containsPart(CharSequence text, char[] search)
     {
-        return containsPart(text, search, "", "");
+        if(text == null || text.length() == 0 || search == null || (search.length <= 0))
+            return 0;
+        int sl = search.length, tl = text.length() - sl, f = 0;
+        char s = search[0];
+        PRIMARY:
+        for (int i = 0; i <= tl; i++) {
+            if (text.charAt(i) == s) {
+                for (int j = i + 1, x = 1; x < sl; j++, x++) {
+                    if (text.charAt(j) != search[x]) {
+                        f = Math.max(f, x);
+                        continue PRIMARY;
+                    }
+                }
+                return sl;
+            }
+        }
+        return f;
     }
 
     /**
@@ -280,6 +336,15 @@ public class StringTools {
             }
         }
         return f;
+    }
+
+    public static String replace(CharSequence text, CharSequence before, CharSequence after) {
+        if(text instanceof String)
+        {
+            return ((String)text).replace(before, after);
+        }
+        String t = text.toString();
+        return t.replace(before, after);
     }
 
     /**

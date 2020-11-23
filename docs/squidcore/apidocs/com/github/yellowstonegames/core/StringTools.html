@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -137,6 +137,14 @@ char[]&nbsp;search)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i1">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contains(java.lang.CharSequence,java.lang.CharSequence)">contains</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;search)</code></th>
+<td class="col-last">
+<div class="block">Searches text for the exact contents of the char array search; returns true if text contains search.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,char%5B%5D)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 char[]&nbsp;search)</code></th>
@@ -146,7 +154,7 @@ char[]&nbsp;search)</code></th>
  part of search (0 if not found).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,char%5B%5D,java.lang.CharSequence,java.lang.CharSequence)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 char[]&nbsp;search,
@@ -157,7 +165,17 @@ java.lang.CharSequence&nbsp;suffix)</code></th>
  CharSequences for some reason and search is a char array.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,java.lang.CharSequence)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;search)</code></th>
+<td class="col-last">
+<div class="block">Tries to find as much of the char array <code>search</code> in the CharSequence <code>text</code>, always starting from the
+ beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
+ part of search (0 if not found).</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;search)</code></th>
@@ -167,7 +185,7 @@ int&nbsp;search)</code></th>
  null.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,int,int,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;search,
@@ -179,7 +197,7 @@ int&nbsp;endIndex)</code></th>
  the number of instances of search that were found, or 0 if source is null or if the searched area is empty.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,java.lang.String)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;search)</code></th>
@@ -189,7 +207,7 @@ java.lang.String&nbsp;search)</code></th>
  search is null or empty.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,java.lang.String,int,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;search,
@@ -201,61 +219,61 @@ int&nbsp;endIndex)</code></th>
  number of instances of search that were found, or 0 if source or search is null or if the searched area is empty.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,boolean...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 boolean...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,byte...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 byte...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,char...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 char...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,double...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 double...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,float...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 float...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,int...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 int...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,long...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,short...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 short...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.CharSequence...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.CharSequence...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.Iterable)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
@@ -264,7 +282,7 @@ java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
  null items), and separating each item with <code>delimiter</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.Object%5B%5D)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.Object[]&nbsp;elements)</code></th>
@@ -273,98 +291,98 @@ java.lang.Object[]&nbsp;elements)</code></th>
  null items), and separating each item with <code>delimiter</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,boolean...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 boolean...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,byte...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 byte...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,char...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 char...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,char%5B%5D...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 char[]...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,double...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 double...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,float...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 float...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,int...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 int...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,long...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,short...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 short...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.CharSequence...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 java.lang.CharSequence...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i28">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Iterable)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Object...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 java.lang.Object...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(boolean...)">joinAlt</a></span>&#8203;(boolean...&nbsp;elements)</code></th>
 <td class="col-last">
 <div class="block">Joins the boolean array <code>elements</code> without delimiters into a String, using "1" for true and "0" for false.</div>
 </td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="row-color" id="i33">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.CharSequence,long...)">joinAlt</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
@@ -372,26 +390,26 @@ long...&nbsp;elements)</code></th>
 <div class="block">Like <a href="#join(java.lang.CharSequence,long...)"><code>join(CharSequence, long...)</code></a>, but this appends an 'L' to each number so they can be read in by Java.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i32">
+<tr class="alt-color" id="i34">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.StringBuilder,boolean...)">joinAlt</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 boolean...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="row-color" id="i35">
 <td class="col-first"><code>static java.lang.StringBuilder</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.StringBuilder,java.lang.CharSequence,long...)">joinAlt</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
 java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i34">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinArrays(java.lang.CharSequence,char%5B%5D...)">joinArrays</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 char[]...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i35">
+<tr class="row-color" id="i37">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeft(java.lang.String,char,int)">padLeft</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -401,7 +419,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i36">
+<tr class="alt-color" id="i38">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeft(java.lang.String,int)">padLeft</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;minimumLength)</code></th>
@@ -410,7 +428,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="row-color" id="i37">
+<tr class="row-color" id="i39">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeftStrict(java.lang.String,char,int)">padLeftStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -420,7 +438,7 @@ int&nbsp;totalLength)</code></th>
  its left side with padChar until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i38">
+<tr class="alt-color" id="i40">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeftStrict(java.lang.String,int)">padLeftStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;totalLength)</code></th>
@@ -429,7 +447,7 @@ int&nbsp;totalLength)</code></th>
  its left side with spaces until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="row-color" id="i39">
+<tr class="row-color" id="i41">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRight(java.lang.String,char,int)">padRight</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -439,7 +457,7 @@ int&nbsp;minimumLength)</code></th>
  until it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i40">
+<tr class="alt-color" id="i42">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRight(java.lang.String,int)">padRight</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;minimumLength)</code></th>
@@ -448,7 +466,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="row-color" id="i41">
+<tr class="row-color" id="i43">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRightStrict(java.lang.String,char,int)">padRightStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -458,7 +476,7 @@ int&nbsp;totalLength)</code></th>
  its right side with padChar until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i42">
+<tr class="alt-color" id="i44">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRightStrict(java.lang.String,int)">padRightStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;totalLength)</code></th>
@@ -467,7 +485,14 @@ int&nbsp;totalLength)</code></th>
  its right side with spaces until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="row-color" id="i43">
+<tr class="row-color" id="i45">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replace(java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)">replace</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;before,
+java.lang.CharSequence&nbsp;after)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i46">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#safeSubstring(java.lang.String,int,int)">safeSubstring</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;beginIndex,
@@ -476,7 +501,7 @@ int&nbsp;endIndex)</code></th>
 <div class="block">Like <code>String.substring(int, int)</code> but returns "" instead of throwing any sort of Exception.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i44">
+<tr class="row-color" id="i47">
 <td class="col-first"><code>static java.lang.String[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#split(java.lang.String,java.lang.String)">split</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;delimiter)</code></th>
@@ -762,6 +787,38 @@ long...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="contains(java.lang.CharSequence,java.lang.CharSequence)">
+<h3>contains</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">contains</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;search)</span></div>
+<div class="block">Searches text for the exact contents of the char array search; returns true if text contains search.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - a CharSequence, such as a String or StringBuilder, that might contain search</dd>
+<dd><code>search</code> - a char array to try to find in text</dd>
+<dt>Returns:</dt>
+<dd>true if search was found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="containsPart(java.lang.CharSequence,java.lang.CharSequence)">
+<h3>containsPart</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">containsPart</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;search)</span></div>
+<div class="block">Tries to find as much of the char array <code>search</code> in the CharSequence <code>text</code>, always starting from the
+ beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
+ part of search (0 if not found).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - a CharSequence to search in</dd>
+<dd><code>search</code> - a char array to look for</dd>
+<dt>Returns:</dt>
+<dd>the length of the searched-for char array that was found</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="contains(java.lang.CharSequence,char[])">
 <h3>contains</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">contains</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
@@ -815,6 +872,14 @@ java.lang.CharSequence&nbsp;suffix)</span></div>
 <dt>Returns:</dt>
 <dd>the length of the searched-for prefix+search+suffix that was found</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="replace(java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)">
+<h3>replace</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">replace</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+java.lang.CharSequence&nbsp;before,
+java.lang.CharSequence&nbsp;after)</span></div>
 </section>
 </li>
 <li>
