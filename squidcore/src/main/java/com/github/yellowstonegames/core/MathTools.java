@@ -344,10 +344,10 @@ public final class MathTools
         final float x0 = x;
         ix = (ix>>>2) + (ix>>>4);
         ix += (ix>>>4);
-        ix = ix + (ix>>>8) + 0x2a5137a0 | sign;
+        ix = ix + (ix>>>8) + 0x2A5137A0 | sign;
         x  = Float.intBitsToFloat(ix);
-        x  = 0.33333334f*(2f*x + x0/(x*x));
-        x  = 0.33333334f*(2f*x + x0/(x*x));
+        x  = 0.33333334f*(2f * x + x0/(x*x));
+        x  = 0.33333334f*(2f * x + x0/(x*x));
         return x;
     }
 
