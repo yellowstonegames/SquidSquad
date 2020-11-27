@@ -15,8 +15,8 @@
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="all-classes-index-page">
-<script type="text/javascript">var data = {"i0":2,"i1":2,"i2":2,"i3":4,"i4":2,"i5":2,"i6":4,"i7":2,"i8":4,"i9":2};
-var tabs = {65535:["t0","All Classes"],2:["t2","Class Summary"],4:["t3","Enum Summary"]};
+<script type="text/javascript">var data = {"i0":2,"i1":2,"i2":2,"i3":4,"i4":1,"i5":2,"i6":2,"i7":2,"i8":2,"i9":2,"i10":2,"i11":2,"i12":1,"i13":2,"i14":2,"i15":2,"i16":4,"i17":2,"i18":2,"i19":2,"i20":2,"i21":4,"i22":2};
+var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],4:["t3","Enum Summary"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <h1 title="All&amp;nbsp;Classes" class="title">All&nbsp;Classes</h1>
 </div>
 <div class="type-summary" id="all-classes-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Classes</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Class Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Enum Summary</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Classes</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Interface Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Class Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Enum Summary</button></div>
 <div id="all-classes-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -95,37 +95,123 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="alt-color" id="i4">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid">FlawedPointHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">An interface for point hashes that are statistically biased, as well as a holder for inner classes that implement
+ this.</div>
+</th>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">Very similar to <a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid"><code>FlawedPointHash.QuiltHash</code></a>, but this doesn't change the pattern in different large squares, and instead
+ repeats a square or cube of symmetric and patterned results over and over (so it can be tiled).</div>
+</th>
+</tr>
+<tr class="alt-color" id="i6">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/FlawedPointHash.FNVHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.FNVHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">FNV32a is OK as a hash for bytes when used in some hash tables, but it has major issues on its low-order bits
+ when used as a point hash (the high bits aren't much better).</div>
+</th>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">Extremely flawed if you're using this as a point hash, but meant to be aesthetically interesting, this produces
+ different symmetrical patterns in squares, as if on a quilt.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/FlawedPointHash.RugHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.RugHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">Produces hashes that show strong bias on one axis (usually the later axes matter more) and have nice-looking
+ patterns of dots.</div>
+</th>
+</tr>
+<tr class="row-color" id="i9">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></td>
 <th class="col-last" scope="row">
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
 </th>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i10">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></td>
 <th class="col-last" scope="row">
 <div class="block">Calculates and stores 2D and optionally 3D Hilbert Curves up to a reasonable size.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i11">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">A group of similar methods for getting hashes of points based on int coordinates in 2, 3, 4, or 6 dimensions and
+ an int for state; the code is similar to <a href="com/github/yellowstonegames/grid/LongPointHash.html" title="class in com.github.yellowstonegames.grid"><code>LongPointHash</code></a> but will be much faster on GWT.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i12">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">An interface for "point hashes", that is, functions that produce usually-unique integer results given multiple
+ integer inputs.</div>
+</th>
+</tr>
+<tr class="row-color" id="i13">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/IPointHash.IntImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.IntImpl</a></td>
+<th class="col-last" scope="row">
+<div class="block">A convenience abstract class to implement IPointHash when you have an int for state.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i14">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></td>
+<th class="col-last" scope="row">
+<div class="block">A convenience abstract class to implement IPointHash when you have a long for state.</div>
+</th>
+</tr>
+<tr class="row-color" id="i15">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></td>
+<th class="col-last" scope="row">
+<div class="block">A group of similar methods for getting hashes of points based on long coordinates in 2, 3, 4, or 6 dimensions and
+ a long for state.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i16">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/Measurement.html" title="enum in com.github.yellowstonegames.grid">Measurement</a></td>
 <th class="col-last" scope="row">
 <div class="block">A way of measuring what cells are adjacent and how much further any adjacent cells are from other adjacent cells.</div>
 </th>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i17">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></td>
+<th class="col-last" scope="row">
+<div class="block">A wide range of noise functions that can all be called from one configurable object.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i18">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/Noise.Float2.html" title="class in com.github.yellowstonegames.grid">Noise.Float2</a></td>
+<th class="col-last" scope="row">
+<div class="block">Simple container class that holds 2 floats.</div>
+</th>
+</tr>
+<tr class="row-color" id="i19">
+<td class="col-first"><a href="com/github/yellowstonegames/grid/Noise.Float3.html" title="class in com.github.yellowstonegames.grid">Noise.Float3</a></td>
+<th class="col-last" scope="row">
+<div class="block">Simple container class that holds 3 floats.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i20">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></td>
 <th class="col-last" scope="row">
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i21">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></td>
 <th class="col-last" scope="row">
 <div class="block">Basic radius strategy implementations likely to be used for roguelikes.</div>
 </th>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i22">
 <td class="col-first"><a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></td>
 <th class="col-last" scope="row">
 <div class="block">Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.</div>

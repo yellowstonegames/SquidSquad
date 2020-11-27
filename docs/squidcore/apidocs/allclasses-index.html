@@ -15,8 +15,8 @@
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="all-classes-index-page">
-<script type="text/javascript">var data = {"i0":2,"i1":2,"i2":2,"i3":32,"i4":2,"i5":2,"i6":2,"i7":2,"i8":2,"i9":2};
-var tabs = {65535:["t0","All Classes"],2:["t2","Class Summary"],32:["t6","Annotation Types Summary"]};
+<script type="text/javascript">var data = {"i0":2,"i1":32,"i2":2,"i3":2,"i4":32,"i5":2,"i6":1,"i7":2,"i8":2,"i9":2,"i10":2,"i11":2};
+var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],32:["t6","Annotation Types Summary"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -59,7 +59,7 @@ loadScripts(document, 'script');</script>
 <h1 title="All&amp;nbsp;Classes" class="title">All&nbsp;Classes</h1>
 </div>
 <div class="type-summary" id="all-classes-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Classes</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Class Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="table-tab" onclick="show(32);">Annotation Types Summary</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Classes</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Interface Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Class Summary</button><button role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="table-tab" onclick="show(32);">Annotation Types Summary</button></div>
 <div id="all-classes-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -76,53 +76,67 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i1">
+<td class="col-first"><a href="com/github/yellowstonegames/core/annotations/Beta.html" title="annotation in com.github.yellowstonegames.core.annotations">Beta</a></td>
+<th class="col-last" scope="row">
+<div class="block">Signifies that a public API (public class, method or field) is subject to
+ incompatible changes, or even removal, in a future release.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i2">
 <td class="col-first"><a href="com/github/yellowstonegames/core/DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;<a href="com/github/yellowstonegames/core/GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
  quick succession; that is, there should always be a gap between the same item's occurrences.</div>
 </th>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><a href="com/github/yellowstonegames/core/annotations/GwtIncompatible.html" title="annotation in com.github.yellowstonegames.core.annotations">GwtIncompatible</a></td>
 <th class="col-last" scope="row">
 <div class="block">An annotation for the GWT compiler.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></td>
 <th class="col-last" scope="row">
 <div class="block">64-bit and 32-bit hashing functions that we can rely on staying the same cross-platform.</div>
 </th>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
+<td class="col-first"><a href="com/github/yellowstonegames/core/IFlawed.html" title="interface in com.github.yellowstonegames.core">IFlawed</a></td>
+<th class="col-last" scope="row">
+<div class="block">An empty marker interface to indicate that an implementor has known or intentional issues with a key property of its
+ functionality.</div>
+</th>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><a href="com/github/yellowstonegames/core/LZSEncoding.html" title="class in com.github.yellowstonegames.core">LZSEncoding</a></td>
 <th class="col-last" scope="row">
 <div class="block">Implements LZ-String compression, for taking a large String and compressing it to a (usually) smaller one.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><a href="com/github/yellowstonegames/core/Maker.html" title="class in com.github.yellowstonegames.core">Maker</a></td>
 <th class="col-last" scope="row">
 <div class="block">Utility methods for more easily constructing data structures, particularly those in jdkgdxds.</div>
 </th>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><a href="com/github/yellowstonegames/core/MathTools.html" title="class in com.github.yellowstonegames.core">MathTools</a></td>
 <th class="col-last" scope="row">
 <div class="block">Mathematical operations not provided by <code>java.lang.Math</code>.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><a href="com/github/yellowstonegames/core/StringTools.html" title="class in com.github.yellowstonegames.core">StringTools</a></td>
 <th class="col-last" scope="row">
 <div class="block">Various utility functions for dealing with Strings, CharSequences, and char[]s.</div>
 </th>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></td>
 <th class="col-last" scope="row">
 <div class="block">Various fast trigonometric approximations that don't use a lookup table.</div>

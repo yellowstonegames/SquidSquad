@@ -56,6 +56,35 @@ loadScripts(document, 'script');</script>
 <li>
 <div class="type-summary">
 <table class="summary-table">
+<caption><span>Interface Summary</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Interface</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid">FlawedPointHash</a></th>
+<td class="col-last">
+<div class="block">An interface for point hashes that are statistically biased, as well as a holder for inner classes that implement
+ this.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a></th>
+<td class="col-last">
+<div class="block">An interface for "point hashes", that is, functions that produce usually-unique integer results given multiple
+ integer inputs.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<div class="type-summary">
+<table class="summary-table">
 <caption><span>Class Summary</span></caption>
 <thead>
 <tr>
@@ -84,6 +113,34 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></th>
+<td class="col-last">
+<div class="block">Very similar to <a href="FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid"><code>FlawedPointHash.QuiltHash</code></a>, but this doesn't change the pattern in different large squares, and instead
+ repeats a square or cube of symmetric and patterned results over and over (so it can be tiled).</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FlawedPointHash.FNVHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.FNVHash</a></th>
+<td class="col-last">
+<div class="block">FNV32a is OK as a hash for bytes when used in some hash tables, but it has major issues on its low-order bits
+ when used as a point hash (the high bits aren't much better).</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></th>
+<td class="col-last">
+<div class="block">Extremely flawed if you're using this as a point hash, but meant to be aesthetically interesting, this produces
+ different symmetrical patterns in squares, as if on a quilt.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FlawedPointHash.RugHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.RugHash</a></th>
+<td class="col-last">
+<div class="block">Produces hashes that show strong bias on one axis (usually the later axes matter more) and have nice-looking
+ patterns of dots.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></th>
 <td class="col-last">
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
@@ -96,13 +153,57 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></th>
+<td class="col-last">
+<div class="block">A group of similar methods for getting hashes of points based on int coordinates in 2, 3, 4, or 6 dimensions and
+ an int for state; the code is similar to <a href="LongPointHash.html" title="class in com.github.yellowstonegames.grid"><code>LongPointHash</code></a> but will be much faster on GWT.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IPointHash.IntImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.IntImpl</a></th>
+<td class="col-last">
+<div class="block">A convenience abstract class to implement IPointHash when you have an int for state.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></th>
+<td class="col-last">
+<div class="block">A convenience abstract class to implement IPointHash when you have a long for state.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></th>
+<td class="col-last">
+<div class="block">A group of similar methods for getting hashes of points based on long coordinates in 2, 3, 4, or 6 dimensions and
+ a long for state.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></th>
+<td class="col-last">
+<div class="block">A wide range of noise functions that can all be called from one configurable object.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="Noise.Float2.html" title="class in com.github.yellowstonegames.grid">Noise.Float2</a></th>
+<td class="col-last">
+<div class="block">Simple container class that holds 2 floats.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="Noise.Float3.html" title="class in com.github.yellowstonegames.grid">Noise.Float3</a></th>
+<td class="col-last">
+<div class="block">Simple container class that holds 3 floats.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></th>
 <td class="col-last">
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></th>
 <td class="col-last">
 <div class="block">Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.</div>
