@@ -20,4 +20,11 @@ public interface PlaceGenerator {
      * @return the most recently-produced dungeon/place as a 2D char array
      */
     char[][] getPlaceGrid();
+
+    /**
+     * Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
+     * in {@link DungeonTools} like {@link DungeonTools#CAVE_WALL} or {@link DungeonTools#ROOM_FLOOR}.
+     * @return the environment of the most recently-produced place, as a 2D int array
+     */
+    int[][] getEnvironment();
 }

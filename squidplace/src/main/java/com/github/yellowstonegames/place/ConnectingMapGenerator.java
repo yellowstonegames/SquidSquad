@@ -376,6 +376,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      *
      * @return a 2D int array where each element is an environment type constant in DungeonTools
      */
+    @Override
     public int[][] getEnvironment() {
         return environment;
     }
