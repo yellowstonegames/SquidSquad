@@ -197,10 +197,12 @@ public class PoissonDisk {
                                                                                    int xBound, int yBound,
                                                                                    int pointsPerTry, Random random) {
         radius = Math.max(1.0001f, radius);
-        final float radius2 = Math.min(radius * radius, maxSampleRadius);
+        maxSampleRadius *= maxSampleRadius;
+        final float radius2 = radius * radius;
         final float iCellSize = 1f / (radius * inverseRootTwo);
         final float ik = 1f / pointsPerTry;
         final float width = maxPos.x - minPos.x, height = maxPos.y - minPos.y;
+        final Coord gridCenter = minPos.average(maxPos);
         final int gridWidth = Math.min((int) Math.ceil(width * iCellSize), xBound);
         final int gridHeight = Math.min((int) Math.ceil(height * iCellSize), yBound);
         final float[][] gridX = new float[gridWidth][gridHeight];
@@ -227,7 +229,8 @@ public class PoissonDisk {
 
                 // Accept candidates that are inside the allowed extent
                 // and farther than 2 * radius to all existing samples.
-                if (x >= 0 && x < width && y >= 0 && y < height && far(x, y, iCellSize, radius2, gridX, gridY)) {
+                if (x >= 0 && x < width && y >= 0 && y < height && far(x, y, iCellSize, radius2,
+                        gridCenter, maxSampleRadius, gridX, gridY)) {
                     final Coord sam = sample(x, y, iCellSize, qx, qy, gridX, gridY);
                     graph.get(parent).add(sam);
                     graph.put(sam, new ObjectList<>(4));
@@ -241,7 +244,8 @@ public class PoissonDisk {
         }
         return graph;
     }
-    private static boolean far(float x, float y, float iCellSize, float radius2, float[][] gridX, float[][] gridY){
+    private static boolean far(float x, float y, float iCellSize, float radius2, Coord gridCenter, float maxSampleRadius, float[][] gridX, float[][] gridY){
+        if(gridCenter.distanceSq(x, y) > maxSampleRadius) return false;
         final int i = (int)(x * iCellSize);
         final int j = (int)(y * iCellSize);
         final int gridWidth = gridX.length;
@@ -263,7 +267,6 @@ public class PoissonDisk {
         return true;
     }
     private static Coord sample(float x, float y, float iCellSize, FloatList qx, FloatList qy, float[][] gridX, float[][] gridY){
-//        if(x < 0 || y < 0 || x >= gridX.length || y >= gridX[0].length) return Coord.get(-1, -1);
         final int gx = (int)(x * iCellSize), gy = (int)(y * iCellSize);
         gridX[gx][gy] = x;
         gridY[gx][gy] = y;
