@@ -2,6 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.TrigTools;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -41,6 +42,7 @@ public class Coord implements Serializable {
         this.x = x;
         this.y = y;
     }
+    @Nonnull
     public static Coord get(final int x, final int y)
     {
         if(x >= -3 && y >= -3 && x < POOL.length - 3 && y < POOL[x + 3].length - 3)
@@ -510,6 +512,7 @@ public class Coord implements Serializable {
             return false;
         }
     }
+    @Nonnull
     private static Coord[][] POOL = new Coord[259][259];
     static {
         int width = POOL.length, height = POOL[0].length;
