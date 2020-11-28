@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
@@ -35,7 +36,7 @@ import java.util.*;
  *     8-way variant {@link #expand8way()}. There's an overload that expands several times as if by a loop,
  *     {@link #expand(int)}, which also has an 8-way variant. You can use {@link #expandSeries(int)} to get multiple
  *     Regions produced as intermediate values of a series of expansions; this also has an 8-way variant.
- *     {@link #expandSeriesToLimit()} returns an ArrayList of as many Regions as it takes to expand until no more
+ *     {@link #expandSeriesToLimit()} returns an ObjectList of as many Regions as it takes to expand until no more
  *     cells can change.</li>
  *     <li>{@link #retract()} is just like {@link #expand()}, but changes any "on" cells that are next to an "off" cell
  *     to also be "off." It can be thought of as expanding the "off" cells, with the subtle difference that the edges
@@ -3423,9 +3424,9 @@ public class Region implements Collection<Coord>, Serializable {
         return result;
     }
 
-    public ArrayList<Region> expandSeriesToLimit()
+    public ObjectList<Region> expandSeriesToLimit()
     {
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (temp.size() != temp.expand().size()) {
             regions.add(new Region(temp));
@@ -3503,9 +3504,9 @@ public class Region implements Collection<Coord>, Serializable {
         }
         return result;
     }
-    public ArrayList<Region> fringeSeriesToLimit()
+    public ObjectList<Region> fringeSeriesToLimit()
     {
-        ArrayList<Region> regions = expandSeriesToLimit();
+        ObjectList<Region> regions = expandSeriesToLimit();
         for (int i = regions.size() - 1; i > 0; i--) {
             regions.get(i).xor(regions.get(i-1));
         }
@@ -3602,9 +3603,9 @@ public class Region implements Collection<Coord>, Serializable {
         return result;
     }
 
-    public ArrayList<Region> retractSeriesToLimit()
+    public ObjectList<Region> retractSeriesToLimit()
     {
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (!temp.retract().isEmpty()) {
             regions.add(new Region(temp));
@@ -3639,9 +3640,9 @@ public class Region implements Collection<Coord>, Serializable {
         return regions;
     }
 
-    public ArrayList<Region> surfaceSeriesToLimit() {
-        ArrayList<Region> result;
-        ArrayList<Region> regions = retractSeriesToLimit();
+    public ObjectList<Region> surfaceSeriesToLimit() {
+        ObjectList<Region> result;
+        ObjectList<Region> regions = retractSeriesToLimit();
         if (regions.isEmpty()) {
             result = regions;
         } else {
@@ -3721,9 +3722,9 @@ public class Region implements Collection<Coord>, Serializable {
         }
         return result;
     }
-    public ArrayList<Region> expandSeriesToLimit8way()
+    public ObjectList<Region> expandSeriesToLimit8way()
     {
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (temp.size() != temp.expand8way().size()) {
             regions.add(new Region(temp));
@@ -3763,9 +3764,9 @@ public class Region implements Collection<Coord>, Serializable {
         }
         return result;
     }
-    public ArrayList<Region> fringeSeriesToLimit8way()
+    public ObjectList<Region> fringeSeriesToLimit8way()
     {
-        ArrayList<Region> regions = expandSeriesToLimit8way();
+        ObjectList<Region> regions = expandSeriesToLimit8way();
         for (int i = regions.size() - 1; i > 0; i--) {
             regions.get(i).xor(regions.get(i-1));
         }
@@ -3862,9 +3863,9 @@ public class Region implements Collection<Coord>, Serializable {
         return result;
     }
 
-    public ArrayList<Region> retractSeriesToLimit8way()
+    public ObjectList<Region> retractSeriesToLimit8way()
     {
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (!temp.retract8way().isEmpty()) {
             regions.add(new Region(temp));
@@ -3903,9 +3904,9 @@ public class Region implements Collection<Coord>, Serializable {
         }
         return result;
     }
-    public ArrayList<Region> surfaceSeriesToLimit8way() {
-        ArrayList<Region> result;
-        ArrayList<Region> regions = retractSeriesToLimit8way();
+    public ObjectList<Region> surfaceSeriesToLimit8way() {
+        ObjectList<Region> result;
+        ObjectList<Region> regions = retractSeriesToLimit8way();
         if (regions.isEmpty()) {
             result = regions;
         } else {
@@ -4038,15 +4039,15 @@ public class Region implements Collection<Coord>, Serializable {
 
     /**
      * Repeatedly generates new Regions, each one cell expanded in 4 directions from the previous Region
-     * and staying inside the "on" cells of {@code bounds}, until it can't expand any more. Returns an ArrayList of the
+     * and staying inside the "on" cells of {@code bounds}, until it can't expand any more. Returns an ObjectList of the
      * Region steps this generated; this list does not include this Region (or any unmodified copy of this
      * Region), and this method does not modify it.
      * @param bounds the set of "on" cells that this will attempt to fill in steps
-     * @return an ArrayList of steps from one {@link #flood(Region)} call to possibly many chained after it
+     * @return an ObjectList of steps from one {@link #flood(Region)} call to possibly many chained after it
      */
-    public ArrayList<Region> floodSeriesToLimit(Region bounds) {
+    public ObjectList<Region> floodSeriesToLimit(Region bounds) {
         int ct = size(), ct2;
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (true) {
             temp.flood(bounds);
@@ -4187,15 +4188,15 @@ public class Region implements Collection<Coord>, Serializable {
 
     /**
      * Repeatedly generates new Regions, each one cell expanded in 8 directions from the previous Region
-     * and staying inside the "on" cells of {@code bounds}, until it can't expand any more. Returns an ArrayList of the
+     * and staying inside the "on" cells of {@code bounds}, until it can't expand any more. Returns an ObjectList of the
      * Region steps this generated; this list does not include this Region (or any unmodified copy of this
      * Region), and this method does not modify it.
      * @param bounds the set of "on" cells that this will attempt to fill in steps
-     * @return an ArrayList of steps from one {@link #flood8way(Region)} call to possibly many chained after it
+     * @return an ObjectList of steps from one {@link #flood8way(Region)} call to possibly many chained after it
      */
-    public ArrayList<Region> floodSeriesToLimit8way(Region bounds) {
+    public ObjectList<Region> floodSeriesToLimit8way(Region bounds) {
         int ct = size(), ct2;
-        ArrayList<Region> regions = new ArrayList<>();
+        ObjectList<Region> regions = new ObjectList<>();
         Region temp = new Region(this);
         while (true) {
             temp.flood8way(bounds);
@@ -4346,7 +4347,7 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
      * are only adjacent diagonally are considered separate from each other) and returns it as an element in an
-     * ArrayList of Region, with one Region per isolated area. Not to be confused with
+     * ObjectList of Region, with one Region per isolated area. Not to be confused with
      * {@link #split8way()}, which considers diagonally-adjacent cells as part of one region, while this method requires
      * cells to be orthogonally adjacent.
      * <br>
@@ -4366,11 +4367,11 @@ public class Region implements Collection<Coord>, Serializable {
      * the rooms from floors. The example code also gets the doors (which overlap with rooms, not corridors) by finding
      * where the a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
      * class.
-     * @return an ArrayList containing each unconnected area from packed as a Region element
+     * @return an ObjectList containing each unconnected area from packed as a Region element
      */
-    public ArrayList<Region> split()
+    public ObjectList<Region> split()
     {
-        ArrayList<Region> scattered = new ArrayList<>(32);
+        ObjectList<Region> scattered = new ObjectList<>(32);
         int fst = firstTight();
         Region remaining = new Region(this);
         while (fst >= 0) {
@@ -4384,7 +4385,7 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
      * are only adjacent diagonally are considered <b>one area</b> with this) and returns it as an element in an
-     * ArrayList of Region, with one Region per isolated area. This should not be confused with
+     * ObjectList of Region, with one Region per isolated area. This should not be confused with
      * {@link #split()}, which is almost identical except that split() considers only orthogonal connections, while this
      * method considers both orthogonal and diagonal connections between cells as joining an area.
      * <br>
@@ -4404,11 +4405,11 @@ public class Region implements Collection<Coord>, Serializable {
      * the rooms from floors. The example code also gets the doors (which overlap with rooms, not corridors) by finding
      * where the a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
      * class.
-     * @return an ArrayList containing each unconnected area from packed as a Region element
+     * @return an ObjectList containing each unconnected area from packed as a Region element
      */
-    public ArrayList<Region> split8way()
+    public ObjectList<Region> split8way()
     {
-        ArrayList<Region> scattered = new ArrayList<>(32);
+        ObjectList<Region> scattered = new ObjectList<>(32);
         int fst = firstTight();
         Region remaining = new Region(this);
         while (fst >= 0) {
