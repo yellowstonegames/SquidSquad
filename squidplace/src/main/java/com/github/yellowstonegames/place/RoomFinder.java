@@ -283,7 +283,7 @@ public class RoomFinder {
         ObjectList<char[][]> rs = new ObjectList<>(rooms.size());
         for(Region r : rooms.keySet())
         {
-            rs.add(r.mask(map, '#'));
+            rs.add(r.writeCharsToOff(map, '#'));
         }
         return rs;
     }
@@ -298,7 +298,7 @@ public class RoomFinder {
         ObjectList<char[][]> cs = new ObjectList<>(corridors.size());
         for(Region c : corridors.keySet())
         {
-            cs.add(c.mask(map, '#'));
+            cs.add(c.writeCharsToOff(map, '#'));
         }
         return cs;
     }
@@ -314,7 +314,7 @@ public class RoomFinder {
         ObjectList<char[][]> vs = new ObjectList<>(caves.size());
         for(Region v : caves.keySet())
         {
-            vs.add(v.mask(map, '#'));
+            vs.add(v.writeCharsToOff(map, '#'));
         }
         return vs;
     }
@@ -329,15 +329,15 @@ public class RoomFinder {
         ObjectList<char[][]> rs = new ObjectList<char[][]>(rooms.size() + corridors.size() + caves.size());
         for(Region r : rooms.keySet())
         {
-            rs.add(r.mask(map, '#'));
+            rs.add(r.writeCharsToOff(map, '#'));
         }
         for(Region c : corridors.keySet())
         {
-            rs.add(c.mask(map, '#'));
+            rs.add(c.writeCharsToOff(map, '#'));
         }
         for(Region v : caves.keySet())
         {
-            rs.add(v.mask(map, '#'));
+            rs.add(v.writeCharsToOff(map, '#'));
         }
         return rs;
     }
@@ -398,7 +398,7 @@ public class RoomFinder {
             found = new Region(width, height);
         else
             found = regions.first();
-        return found.mask(map, '#');
+        return found.writeCharsToOff(map, '#');
     }
 
     /**
@@ -451,7 +451,7 @@ public class RoomFinder {
                 }
             }
         }
-        return found.mask(map, '#');
+        return found.writeCharsToOff(map, '#');
     }
 
     /**
@@ -471,7 +471,7 @@ public class RoomFinder {
         for (ObjectList<Region> links : near) {
             for(Region n : links)
             {
-                regions.add(n.mask(map, '#'));
+                regions.add(n.writeCharsToOff(map, '#'));
             }
         }
         at = Region.whichContain(x, y, corridors.keySet());
@@ -479,7 +479,7 @@ public class RoomFinder {
             near.add(corridors.getAt(i));
         for (ObjectList<Region> links : near) {
             for (Region n : links) {
-                regions.add(n.mask(map, '#'));
+                regions.add(n.writeCharsToOff(map, '#'));
             }
         }
         at = Region.whichContain(x, y, caves.keySet());
@@ -488,7 +488,7 @@ public class RoomFinder {
         for (ObjectList<Region> links : near) {
             for(Region n : links)
             {
-                regions.add(n.mask(map, '#'));
+                regions.add(n.writeCharsToOff(map, '#'));
             }
         }
 

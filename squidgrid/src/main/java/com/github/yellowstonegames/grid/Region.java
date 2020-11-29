@@ -81,8 +81,8 @@ import java.util.*;
  *     {@link #separatedRegionBlue(double)} ),</li>
  *     <li>get all points from it (use {@link #asCoords()} to get a Coord array, or produce a 2D array of the contents
  *     with {@link #decode()} or {@link #toChars(char, char)}),</li>
- *     <li>use it to modify other 2D data, such as with {@link #mask(char[][], char)},
- *     {@link #inverseMask(char[][], char)}, {@link #writeDoubles(double[][], double)}, or
+ *     <li>use it to modify other 2D data, such as with {@link #writeCharsToOff(char[][], char)},
+ *     {@link #writeChars(char[][], char)}, {@link #writeDoubles(double[][], double)}, or
  *     {@link #writeIntsInto(int[][], int)}, along with variations on those.</li>
  * </ul>
  * <br>
@@ -2365,9 +2365,9 @@ public class Region implements Collection<Coord>, Serializable {
      * and where a cell is "off", it instead writes the char filler.
      * @param map a 2D char array that will not be modified
      * @param filler the char to use where this Region stores an "off" cell
-     * @return a masked copy of map
+     * @return a masked copy of map, with "off" cells from this changed to filler
      */
-    public char[][] mask(char[][] map, char filler)
+    public char[][] writeCharsToOff(char[][] map, char filler)
     {
         if(map == null || map.length == 0)
             return new char[0][0];
@@ -2384,12 +2384,12 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
      * and where a cell is "off", it instead writes the short filler. Meant for use with MultiSpill, but may be
-     * used anywhere you have a 2D short array. {@link #mask(char[][], char)} is more likely to be useful.
+     * used anywhere you have a 2D short array. {@link #writeCharsToOff(char[][], char)} is more likely to be useful.
      * @param map a 2D short array that will not be modified
      * @param filler the short to use where this Region stores an "off" cell
-     * @return a masked copy of map
+     * @return a masked copy of map, with "off" cells from this changed to filler
      */
-    public short[][] mask(short[][] map, short filler)
+    public short[][] writeShortsToOff(short[][] map, short filler)
     {
         if(map == null || map.length == 0)
             return new short[0][0];
@@ -2408,9 +2408,9 @@ public class Region implements Collection<Coord>, Serializable {
      * and where a cell is "on", it instead writes the char toWrite.
      * @param map a 2D char array that will not be modified
      * @param toWrite the char to use where this Region stores an "on" cell
-     * @return a masked copy of map
+     * @return a masked copy of map, with "on" cells from this changed to toWrite
      */
-    public char[][] inverseMask(char[][] map, char toWrite)
+    public char[][] writeChars(char[][] map, char toWrite)
     {
         if(map == null || map.length == 0)
             return new char[0][0];
@@ -2425,11 +2425,11 @@ public class Region implements Collection<Coord>, Serializable {
     }
 
     /**
-     * "Inverse mask for ints;" returns a copy of map where if a cell is "off" in this Region, this keeps
+     * Returns a copy of map where if a cell is "off" in this Region, this keeps
      * the value in map intact, and where a cell is "on", it instead writes the int toWrite.
      * @param map a 2D int array that will not be modified
      * @param toWrite the int to use where this Region stores an "on" cell
-     * @return an altered copy of map
+     * @return a masked copy of map, with "on" cells from this changed to toWrite
      */
     public int[][] writeInts(int[][] map, int toWrite)
     {
@@ -2446,12 +2446,12 @@ public class Region implements Collection<Coord>, Serializable {
     }
 
     /**
-     * "Inverse mask for ints;" returns a copy of map where if a cell is "off" in this Region, this keeps
-     * the value in map intact, and where a cell is "on", it instead writes the int toWrite. Modifies map in-place,
-     * unlike {@link #writeInts(int[][], int)}.
+     * Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
+     * and where a cell is "on", it instead writes the int toWrite. Modifies map in-place, unlike
+     * {@link #writeInts(int[][], int)}.
      * @param map a 2D int array that <b>will</b> be modified
      * @param toWrite the int to use where this Region stores an "on" cell
-     * @return map, with the changes applied; not a copy
+     * @return map, with "on" cells from this changed to toWrite; not a copy
      */
     public int[][] writeIntsInto(int[][] map, int toWrite)
     {
@@ -2467,11 +2467,11 @@ public class Region implements Collection<Coord>, Serializable {
         return map;
     }
     /**
-     * "Inverse mask for doubles;" returns a copy of map where if a cell is "off" in this Region, this keeps
+     * Returns a copy of map where if a cell is "off" in this Region, this keeps
      * the value in map intact, and where a cell is "on", it instead writes the double toWrite.
      * @param map a 2D double array that will not be modified
      * @param toWrite the double to use where this Region stores an "on" cell
-     * @return an altered copy of map
+     * @return an altered copy of map, with "on" cells from this changed to toWrite
      */
     public double[][] writeDoubles(double[][] map, double toWrite)
     {
@@ -2488,12 +2488,12 @@ public class Region implements Collection<Coord>, Serializable {
     }
 
     /**
-     * "Inverse mask for doubles;" returns a copy of map where if a cell is "off" in this Region, this keeps
+     * Returns a copy of map where if a cell is "off" in this Region, this keeps
      * the value in map intact, and where a cell is "on", it instead writes the double toWrite. Modifies map in-place,
      * unlike {@link #writeDoubles(double[][], double)}.
      * @param map a 2D double array that <b>will</b> be modified
      * @param toWrite the double to use where this Region stores an "on" cell
-     * @return map, with the changes applied; not a copy
+     * @return map, with "on" cells from this changed to toWrite; not a copy
      */
     public double[][] writeDoublesInto(double[][] map, double toWrite)
     {
@@ -2509,12 +2509,12 @@ public class Region implements Collection<Coord>, Serializable {
         return map;
     }
     /**
-     * Like {@link #inverseMask(char[][], char)}, but modifies {@code map} in-place and returns it. If a cell is "off"
+     * Like {@link #writeChars(char[][], char)}, but modifies {@code map} in-place and returns it. If a cell is "off"
      * in this Region, this keeps the value in map intact, and where a cell is "on", it instead writes the char
-     * toWrite. Modifies map in-place, unlike {@link #inverseMask(char[][], char)}.
+     * toWrite. Modifies map in-place, unlike {@link #writeChars(char[][], char)}.
      * @param map a 2D char array that <b>will</b> be modified
      * @param toWrite the char to use where this Region stores an "on" cell
-     * @return map, with the changes applied; not a copy
+     * @return map, with "on" cells from this changed to toWrite; not a copy
      */
     public char[][] writeCharsInto(char[][] map, char toWrite)
     {
@@ -5803,20 +5803,50 @@ public class Region implements Collection<Coord>, Serializable {
         return numbers;
     }
 
-    /*
-    public static int[][] selectiveNegate(int[][] numbers, Region region, int mask)
-    {
-        if(region == null)
-            return numbers;
-        int w = region.width, h = region.height, ys = region.ySections;
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                if((region.data[x * ys + (y >> 6)] & (1L << (y & 63))) != 0) numbers[x][y] = (~numbers[x][y] & mask);
-            }
-        }
-        return numbers;
+    /**
+     * A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.
+     * Starting at {@code goal}, this floods outward (4-way) as with {@link #flood(Region)}, modifying
+     * {@code into} so each cell reached during the course of repeated flooding has an int value equal to the
+     * (Manhattan) distance from {@code goal} to that cell, and all other cells will be set to
+     * {@link Integer#MAX_VALUE}. This will call {@link #flood(Region)} until it can't reach any more cells.
+     * This returns {@code into}, after modifications.
+     * @param into a 2D int array that will have all reachable cells assigned their distance from goal, and all others to {@link Integer#MAX_VALUE}
+     * @param goal the starting point for the scan/flood-fill; {@code into} will be assigned 0 at this point
+     * @return {@code into}, after modifications
+     */
+    public int[][] dijkstraScan(int[][] into, Coord goal) {
+        return dijkstraScan(into, goal, Integer.MAX_VALUE);
     }
-    */
+    /**
+     * A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.
+     * Starting at {@code goal}, this floods outward (4-way) as with {@link #flood(Region)}, modifying
+     * {@code into} so each cell reached during the course of repeated flooding has an int value equal to the
+     * (Manhattan) distance from {@code goal} to that cell, and all other cells will be set to
+     * {@link Integer#MAX_VALUE}. The {@code limit} is the exclusive upper bound for the greatest distance from
+     * the {@code goal} this will change; this will call {@link #flood(Region)} at most {@code limit} times, and
+     * can call it fewer times if it tries to flood but can't reach any more cells. This returns {@code into},
+     * after modifications.
+     * @param into a 2D int array that will have all reachable cells assigned their distance from goal, and all others to {@link Integer#MAX_VALUE}
+     * @param goal the starting point for the scan/flood-fill; {@code into} will be assigned 0 at this point
+     * @param limit the exclusive upper bound on the distance this can travel from the {@code goal}
+     * @return {@code into}, after modifications
+     */
+    public int[][] dijkstraScan(int[][] into, Coord goal, int limit){
+        Region goals = new Region(goal, width, height);
+        ArrayTools.fill(into, Integer.MAX_VALUE);
+        for (int i = 0; i < limit; i++) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if((goals.data[x * ySections + (y >> 6)] & (1L << (y & 63))) != 0 && into[x][y] > i)
+                        into[x][y] = i;
+                }
+            }
+            int sz = goals.size();
+            goals.flood(this);
+            if(sz == goals.size()) break;
+        }
+        return into;
+    }
 
     @Override
     public boolean equals(Object o) {
