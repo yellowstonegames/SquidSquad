@@ -245,7 +245,7 @@ public class PoissonDisk {
         return graph;
     }
     private static boolean far(float x, float y, float iCellSize, float radius2, Coord gridCenter, float maxSampleRadius, float[][] gridX, float[][] gridY){
-        if(gridCenter.distanceSq(x, y) > maxSampleRadius) return false;
+        if(maxSampleRadius != 0f && gridCenter.distanceSq(x, y) > maxSampleRadius) return false;
         final int i = (int)(x * iCellSize);
         final int j = (int)(y * iCellSize);
         final int gridWidth = gridX.length;
