@@ -57,13 +57,25 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Tile.html#a_constraint">a_constraint</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#allCaves">allCaves</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#allCorridors">allCorridors</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#allFloors">allFloors</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/DungeonTools.html#allMatching(char%5B%5D%5B%5D,char...)">allMatching(char[][], char...)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#allRooms">allRooms</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Tile.html#b_constraint">b_constraint</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#basic">basic</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">A copy of the dungeon map, however it was passed to the constructor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#basicPoints(int,int,com.github.tommyettinger.ds.support.LaserRandom)">basicPoints(int, int, LaserRandom)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">Mainly for internal use; this is used by <a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)"><code>MixedGenerator(int, int, LaserRandom)</code></a> to get its room positions.</div>
@@ -90,6 +102,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/DungeonTools.html#CAVE_WALL">CAVE_WALL</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>
 <div class="block">Constant for environment tiles that are walls near a cave.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#caves">caves</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Not likely to be used directly, but there may be things you can do with these that are cumbersome using only
+ RoomFinder's simpler API.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#CAVES_LIMIT_CONNECTIVITY">CAVES_LIMIT_CONNECTIVITY</a></span> - com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
 <dd>
@@ -155,6 +172,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Determines room width and room height by dividing width or height by 10; wallThickness is 2.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#connections">connections</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">When a RoomFinder is constructed, it stores all points of rooms that are adjacent to another region here.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#CORNER_CAVES">CORNER_CAVES</a></span> - com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
 <dd>
 <div class="block">Most parts of the cave are large and open, but tiny corridors link them, providing hiding places.</div>
@@ -171,10 +192,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constant for environment tiles that are walls near a corridor.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#corridors">corridors</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Not likely to be used directly, but there may be things you can do with these that are cumbersome using only
+ RoomFinder's simpler API.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/DungeonTools.html#countCells(char%5B%5D%5B%5D,char)">countCells(char[][], char)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>
 <div class="block">Quickly counts the number of char elements in level that are equal to match.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#create()">create()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#crossConnect(int,int,java.util.Map)">crossConnect(int, int, Map&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
@@ -196,6 +226,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#divideRooms">divideRooms</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#doorways">doorways</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">When a RoomFinder is constructed, it stores all points of rooms that are adjacent to another region here.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/DungeonTools.html#doubleWidth(char%5B%5D%5B%5D)">doubleWidth(char[][])</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>
 <div class="block">Takes a dungeon map with either '#' as the only wall character or the unicode box drawing characters used by
@@ -238,6 +272,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#environment">environment</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#environment">environment</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#environment()">environment()</a></span> - Method in enum com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
 <dd>
 <div class="block">Returns MixedGenerator.CAVE_FLOOR (which is 3) or MixedGenerator.ROOM_FLOOR (which is 1) based on whether this
@@ -248,6 +284,27 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Tile.html#f_constraint">f_constraint</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#findCaves()">findCaves()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Gets all the caves this found during construction, returning them as an ObjectList of 2D char arrays, where an
+ individual room is "masked" so only its contents have normal map chars and the rest have only '#'.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#findCorridors()">findCorridors()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Gets all the corridors this found during construction, returning them as an ObjectList of 2D char arrays, where an
+ individual corridor is "masked" so only its contents have normal map chars and the rest have only '#'.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#findRegions()">findRegions()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Gets all the rooms, corridors, and caves this found during construction, returning them as an ObjectList of 2D
+ char arrays, where an individual room or corridor is "masked" so only its contents have normal map chars and the
+ rest have only '#'.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#findRooms()">findRooms()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Gets all the rooms this found during construction, returning them as an ObjectList of 2D char arrays, where an
+ individual room is "masked" so only its contents have normal map chars and the rest have only '#'.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#fixedRooms">fixedRooms</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -262,9 +319,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Uses the added carvers (or just makes caves if none were added) to carve from point to point in sequence, if it
  was provided by the constructor, or evenly-spaced randomized points if it was not.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#generate()">generate()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PlaceGenerator.html#generate()">generate()</a></span> - Method in interface com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></dt>
 <dd>
 <div class="block">Generates a dungeon or other place as a 2D char array.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#generate()">generate()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">This generates a new map by stretching a 16x16 grid of potential rooms to fit the width and height passed to the
+ constructor, randomly expanding columns and rows before contracting the whole to fit perfectly.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#generate(com.github.yellowstonegames.place.tileset.Tileset,int,int)">generate(Tileset, int, int)</a></span> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
@@ -280,6 +344,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the char at a given x,y position.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#getBooleanMaze()">getBooleanMaze()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>
+<div class="block">Gets the maze as a 2D array of true for passable or false for blocked.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#getDungeon()">getDungeon()</a></span> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
 <div class="block">Get the char[][] dungeon that was last returned by generate(), or null if generate() or setDungeon have not been
@@ -292,10 +360,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#getEnvironment()">getEnvironment()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#getEnvironment()">getEnvironment()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PlaceGenerator.html#getEnvironment()">getEnvironment()</a></span> - Method in interface com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></dt>
 <dd>
 <div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
  in <a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="com/github/yellowstonegames/place/DungeonTools.html#CAVE_WALL"><code>DungeonTools.CAVE_WALL</code></a> or <a href="com/github/yellowstonegames/place/DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#getEnvironment()">getEnvironment()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">Gets a 2D array of int constants, each representing a type of environment corresponding to a static field of
+ MixedGenerator.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#getFixedRooms()">getFixedRooms()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
@@ -310,11 +385,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#getPlaceGrid()">getPlaceGrid()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#getPlaceGrid()">getPlaceGrid()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>
+<div class="block">Gets the maze as a 2D array of ',' for passable or '#' for blocked.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PlaceGenerator.html#getPlaceGrid()">getPlaceGrid()</a></span> - Method in interface com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></dt>
 <dd>
 <div class="block">Gets the most recently-produced place as a 2D char array, usually produced by calling <a href="com/github/yellowstonegames/place/PlaceGenerator.html#generate()"><code>PlaceGenerator.generate()</code></a> or
  some similar method present in a specific implementation.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#getPlaceGrid()">getPlaceGrid()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#getRng()">getRng()</a></span> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
 <div class="block">Gets the current RNG.</div>
@@ -347,6 +428,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Tile.html#height">height</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>
@@ -452,10 +537,20 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Reverses most of the effects of hashesToLines().</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#listToMap(com.github.tommyettinger.ds.ObjectList)">listToMap(ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#map">map</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">A copy of the dungeon map, however it was passed to the constructor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#mark(int,int)">mark(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>
+<div class="block">Internal use.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#mark(int,int)">mark(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">Internal use.</div>
 </dd>
@@ -466,6 +561,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#marked">marked</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#markEnvironment(int,int,int)">markEnvironment(int, int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>
+<div class="block">Internal use.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#markEnvironment(int,int,int)">markEnvironment(int, int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">Internal use.</div>
 </dd>
@@ -486,6 +585,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Internal use.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#markPiercing(int,int)">markPiercing(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>
+<div class="block">Internal use.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#markPiercing(int,int)">markPiercing(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">Internal use.</div>
 </dd>
@@ -517,6 +620,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/MazePlus2Wide.html#%3Cinit%3E()">MazePlus2Wide()</a></span> - Constructor for class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/MazePlus2Wide.html" title="class in com.github.yellowstonegames.place.tileset">MazePlus2Wide</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#merge(com.github.tommyettinger.ds.ObjectList,int,int)">merge(ObjectList&lt;char[][]&gt;, int, int)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Merges multiple 2D char arrays where the '#' character means "no value", and combines them so all cells with
+ value are on one map, with '#' filling any other cells.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">MixedGenerator</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
 <dd>
 <div class="block">A dungeon generator that can use a mix of techniques to have part-cave, part-room dungeons.</div>
@@ -536,6 +644,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.Map,float)">MixedGenerator(int, int, LaserRandom, Map&lt;Coord, ? extends List&lt;Coord&gt;&gt;, float)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#mouths">mouths</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">When a RoomFinder is constructed, it stores all points of rooms that are adjacent to another region here.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
@@ -561,6 +673,16 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">PacMazeGenerator</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E()">PacMazeGenerator()</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E(int,int)">PacMazeGenerator(int, int)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E(int,int,java.util.Random)">PacMazeGenerator(int, int, Random)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/PlaceGenerator.html" title="interface in com.github.yellowstonegames.place"><span class="type-name-link">PlaceGenerator</span></a> - Interface in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
 <dd>
 <div class="block">Standardizes an interface for classes that generate 2D char arrays to be used as place maps.</div>
@@ -578,11 +700,26 @@ loadScripts(document, 'script');</script>
 <div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
  with a random size in a box shape at the start and end, and a small room at the corner if there is one.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#putBoxRoomCarvers(int)">putBoxRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
+ with a random size in a box shape at the start and end, and a small room at the corner if there is one.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#putCaveCarvers(int)">putCaveCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">Changes the number of "carvers" that will create caves from one room to the next.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#putCaveCarvers(int)">putCaveCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">Changes the number of "carvers" that will create caves from one room to the next.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#putRoundRoomCarvers(int)">putRoundRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>
+<div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
+ with a random size in a circle shape at the start and end, and a small circular room at the corner if there is
+ one.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#putRoundRoomCarvers(int)">putRoundRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
  with a random size in a circle shape at the start and end, and a small circular room at the corner if there is
@@ -594,12 +731,23 @@ loadScripts(document, 'script');</script>
  with a random size in a box shape at the start and end, and a small room at the corner if there is one, enforcing
  the presence of walls around the rooms even if another room is already there or would be placed there.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#putWalledBoxRoomCarvers(int)">putWalledBoxRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
+ with a random size in a box shape at the start and end, and a small room at the corner if there is one.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#putWalledRoundRoomCarvers(int)">putWalledRoundRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
  with a random size in a circle shape at the start and end, and a small circular room at the corner if there is
  one, enforcing the presence of walls around the rooms even if another room is already there or would be placed
  there.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#putWalledRoundRoomCarvers(int)">putWalledRoundRoomCarvers(int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
+ with a random size in a circle shape at the start and end, and a small circular room at the corner if there is
+ one.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
@@ -619,9 +767,30 @@ loadScripts(document, 'script');</script>
 <div class="block">A Region that, after <a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#generate(com.github.yellowstonegames.place.tileset.TilesetType,int,int)"><code>DungeonBoneGen.generate(TilesetType, int, int)</code></a> has been called, will hold the floor cells
  in its data as "on" cells and walls as "off" cells.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#regionAt(int,int)">regionAt(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Takes an x, y position and finds the room, corridor, or cave at that position, if there is one, returning the
+ same 2D char array format as the other methods.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#regionsConnected(int,int)">regionsConnected(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Takes an x, y position and finds the rooms or corridors that are directly connected to the room, corridor or cave
+ at that position, and returns the group as an ObjectList of 2D char arrays, one per connecting region.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#regionsNear(int,int)">regionsNear(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Takes an x, y position and finds the room or corridor at that position and the rooms, corridors or caves that it
+ directly connects to, and returns the group as one merged 2D char array.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#removeSomeOverlap(int,int,com.github.tommyettinger.ds.ObjectObjectOrderedMap)">removeSomeOverlap(int, int, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#removeSomeOverlap(int,int,java.util.Collection)">removeSomeOverlap(int, int, Collection&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
@@ -635,10 +804,36 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constant for environment tiles that are walls near a room.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">RoomFinder</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">A small class that can analyze a dungeon or other map and identify areas as being "room" or "corridor" based on how
+ thick the walkable areas are (corridors are at most 2 cells wide at their widest, rooms are anything else).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#%3Cinit%3E(char%5B%5D%5B%5D)">RoomFinder(char[][])</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Constructs a RoomFinder given a dungeon map, and finds rooms, corridors, and their connections on the map.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#%3Cinit%3E(char%5B%5D%5B%5D,int)">RoomFinder(char[][], int)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Constructs a RoomFinder given a dungeon map and a general kind of environment for the whole map, then finds
+ rooms, corridors, and their connections on the map.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#%3Cinit%3E(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">RoomFinder(char[][], int[][])</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Constructs a RoomFinder given a dungeon map and an environment map (which currently is only produced by
+ MixedGenerator by the getEnvironment() method after generate() is called, but other classes that use
+ MixedGenerator may also expose that environment, such as SerpentMapGenerator.getEnvironment()), and finds rooms,
+ corridors, caves, and their connections on the map.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#roomHeight">roomHeight</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#roomHeight">roomHeight</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#rooms">rooms</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
+<dd>
+<div class="block">Not likely to be used directly, but there may be things you can do with these that are cumbersome using only
+ RoomFinder's simpler API.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#ROOMS_AND_CORRIDORS_A">ROOMS_AND_CORRIDORS_A</a></span> - com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
 <dd>
 <div class="block">Mostly open, kinda weird.</div>
@@ -682,6 +877,26 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">SerpentMapGenerator</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">Generate dungeons based on a random, winding, looping path through 2D space.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)">SerpentMapGenerator(int, int, LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">SerpentMapGenerator(int, int, LaserRandom, boolean)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,double)">SerpentMapGenerator(int, int, LaserRandom, double)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,double,boolean)">SerpentMapGenerator(int, int, LaserRandom, double, boolean)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#setDungeon(char%5B%5D%5B%5D)">setDungeon(char[][])</a></span> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
 <div class="block">Change the stored char[][] dungeon, using x,y indexing.</div>
@@ -692,6 +907,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the current RNG.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#setToMap(com.github.tommyettinger.ds.Ordered)">setToMap(Ordered&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Config.html#short_side_length">short_side_length</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Config.html" title="class in com.github.yellowstonegames.place.tileset">Config</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#SIMPLE_CAVES">SIMPLE_CAVES</a></span> - com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
@@ -718,6 +935,30 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#store()">store()</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">Internal use.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place"><span class="type-name-link">SymmetryDungeonGenerator</span></a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
+<dd>
+<div class="block">A variant on <a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place"><code>MixedGenerator</code></a> that creates bi-radially symmetric maps (basically a yin-yang shape).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)">SymmetryDungeonGenerator(int, int, LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">SymmetryDungeonGenerator(int, int, LaserRandom, ObjectList&lt;Coord&gt;)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap)">SymmetryDungeonGenerator(int, int, LaserRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap,float)">SymmetryDungeonGenerator(int, int, LaserRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;, float)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.Ordered)">SymmetryDungeonGenerator(int, int, LaserRandom, Ordered&lt;Coord&gt;)</a></span> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
@@ -793,6 +1034,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Internal use.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#wallOff(int,int)">wallOff(int, int)</a></span> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dd>
+<div class="block">Internal use.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#wallThickness">wallThickness</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#wallWrap()">wallWrap()</a></span> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
@@ -810,6 +1055,10 @@ the order they are declared.</div>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#width">width</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/MixedGenerator.html#width">width</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#width">width</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/RoomFinder.html#width">width</a></span> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/tileset/Tile.html#width">width</a></span> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>

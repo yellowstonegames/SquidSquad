@@ -365,6 +365,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">In an unobstructed area the FOV would be a diamond.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#dijkstraScan(int%5B%5D%5B%5D,com.github.yellowstonegames.grid.Coord)">dijkstraScan(int[][], Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#dijkstraScan(int%5B%5D%5B%5D,com.github.yellowstonegames.grid.Coord,int)">dijkstraScan(int[][], Coord, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid"><span class="type-name-link">Direction</span></a> - Enum in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">Represents the eight grid directions and the deltaX, deltaY values associated
@@ -1516,11 +1524,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#%3Cinit%3E()">IntPointHash()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#inverseMask(char%5B%5D%5B%5D,char)">inverseMask(char[][], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
- and where a cell is "on", it instead writes the char toWrite.</div>
-</dd>
 <dt><a href="com/github/yellowstonegames/grid/IPointHash.html" title="interface in com.github.yellowstonegames.grid"><span class="type-name-link">IPointHash</span></a> - Interface in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">An interface for "point hashes", that is, functions that produce usually-unique integer results given multiple
@@ -1746,16 +1749,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#MANHATTAN">MANHATTAN</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#mask(char%5B%5D%5B%5D,char)">mask(char[][], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
- and where a cell is "off", it instead writes the char filler.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#mask(short%5B%5D%5B%5D,short)">mask(short[][], short)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
- and where a cell is "off", it instead writes the short filler.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#matchingMeasurement()">matchingMeasurement()</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>
 <div class="block">Gets the appropriate <a href="com/github/yellowstonegames/grid/Measurement.html" title="enum in com.github.yellowstonegames.grid"><code>Measurement</code></a> to pass to a constructor if you already have a Radius.</div>
@@ -2650,13 +2643,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
  are only adjacent diagonally are considered separate from each other) and returns it as an element in an
- ArrayList of Region, with one Region per isolated area.</div>
+ ObjectList of Region, with one Region per isolated area.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#split8way()">split8way()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
  are only adjacent diagonally are considered <b>one area</b> with this) and returns it as an element in an
- ArrayList of Region, with one Region per isolated area.</div>
+ ObjectList of Region, with one Region per isolated area.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#SQUARE">SQUARE</a></span> - com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>
@@ -2903,29 +2896,44 @@ the order they are declared.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#width">width</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeChars(char%5B%5D%5B%5D,char)">writeChars(char[][], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
+ and where a cell is "on", it instead writes the char toWrite.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeCharsInto(char%5B%5D%5B%5D,char)">writeCharsInto(char[][], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#inverseMask(char%5B%5D%5B%5D,char)"><code>Region.inverseMask(char[][], char)</code></a>, but modifies <code>map</code> in-place and returns it.</div>
+<div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#writeChars(char%5B%5D%5B%5D,char)"><code>Region.writeChars(char[][], char)</code></a>, but modifies <code>map</code> in-place and returns it.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeCharsToOff(char%5B%5D%5B%5D,char)">writeCharsToOff(char[][], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
+ and where a cell is "off", it instead writes the char filler.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeDoubles(double%5B%5D%5B%5D,double)">writeDoubles(double[][], double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">"Inverse mask for doubles;" returns a copy of map where if a cell is "off" in this Region, this keeps
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
  the value in map intact, and where a cell is "on", it instead writes the double toWrite.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeDoublesInto(double%5B%5D%5B%5D,double)">writeDoublesInto(double[][], double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">"Inverse mask for doubles;" returns a copy of map where if a cell is "off" in this Region, this keeps
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
  the value in map intact, and where a cell is "on", it instead writes the double toWrite.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeInts(int%5B%5D%5B%5D,int)">writeInts(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">"Inverse mask for ints;" returns a copy of map where if a cell is "off" in this Region, this keeps
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
  the value in map intact, and where a cell is "on", it instead writes the int toWrite.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeIntsInto(int%5B%5D%5B%5D,int)">writeIntsInto(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">"Inverse mask for ints;" returns a copy of map where if a cell is "off" in this Region, this keeps
- the value in map intact, and where a cell is "on", it instead writes the int toWrite.</div>
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
+ and where a cell is "on", it instead writes the int toWrite.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeShortsToOff(short%5B%5D%5B%5D,short)">writeShortsToOff(short[][], short)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
+ and where a cell is "off", it instead writes the short filler.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:X">X</h2>
