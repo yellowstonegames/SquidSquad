@@ -1,14 +1,12 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
-import org.junit.Test;
 
-public class ConnectingMapGeneratorTest {
-    @Test
-    public void testOutput() {
-        if (!"true".equals(System.getenv("printing"))) return;
+public class PacMazeGeneratorDemo {
+
+    public static void main(String[] args) {
         LaserRandom random = new LaserRandom(0xB0BAFE77);
-        ConnectingMapGenerator gen = new ConnectingMapGenerator(61, 31, 3, 4, random, 2, 0.5);
+        PacMazeGenerator gen = new PacMazeGenerator(60, 60, random);
         char[][] map = DungeonTools.hashesToLines(gen.generate());
         DungeonTools.debugPrint(map);
     }
