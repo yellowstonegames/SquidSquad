@@ -5847,6 +5847,53 @@ public class Region implements Collection<Coord>, Serializable {
         }
         return into;
     }
+    /**
+     * A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.
+     * Starting at each "on" cell in {@code goals}, this floods outward (4-way) as with {@link #flood(Region)},
+     * modifying {@code into} so each cell reached during the course of repeated flooding has an int value equal to the
+     * (Manhattan) distance from {@code goal} to that cell, and all other cells will be set to
+     * {@link Integer#MAX_VALUE}. This will call {@link #flood(Region)} until it can't reach any more cells. Note, this
+     * modifies both {@code into} and {@code goals}, but usually the result in {@code goals} isn't very useful (you may
+     * want to get its {@link #size()} to know how many cells were affected, but it can't tell you the distance for any
+     * particular cell). This returns {@code into}, after modifications.
+     * @param into a 2D int array that will have all reachable cells assigned their distance from goal, and all others to {@link Integer#MAX_VALUE}
+     * @param goals the starting points for the scan/flood-fill; will be modified by repeatedly calling flood()
+     * @return {@code into}, after modifications
+     */
+    public int[][] dijkstraScan(int[][] into, Region goals){
+        return dijkstraScan(into, goals, Integer.MAX_VALUE);
+    }
+    /**
+     * A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.
+     * Starting at each "on" cell in {@code goals}, this floods outward (4-way) as with {@link #flood(Region)},
+     * modifying {@code into} so each cell reached during the course of repeated flooding has an int value equal to the
+     * (Manhattan) distance from {@code goal} to that cell, and all other cells will be set to
+     * {@link Integer#MAX_VALUE}. The {@code limit} is the exclusive upper bound for the greatest distance from a goal
+     * this will change; this will call {@link #flood(Region)} at most {@code limit} times, and can call it fewer times
+     * if it tries to flood but can't reach any more cells. Note, this modifies both {@code into} and {@code goals}, but
+     * usually the result in {@code goals} isn't very useful (you may want to get its {@link #size()} to know how many
+     * cells were affected, but it can't tell you the distance for any particular cell). This returns {@code into},
+     * after modifications.
+     * @param into a 2D int array that will have all reachable cells assigned their distance from goal, and all others to {@link Integer#MAX_VALUE}
+     * @param goals the starting points for the scan/flood-fill; will be modified by repeatedly calling flood()
+     * @param limit the exclusive upper bound on the distance this can travel from the {@code goal}
+     * @return {@code into}, after modifications
+     */
+    public int[][] dijkstraScan(int[][] into, Region goals, int limit){
+        ArrayTools.fill(into, Integer.MAX_VALUE);
+        for (int i = 0; i < limit; i++) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if((goals.data[x * ySections + (y >> 6)] & (1L << (y & 63))) != 0 && into[x][y] > i)
+                        into[x][y] = i;
+                }
+            }
+            int sz = goals.size();
+            goals.flood(this);
+            if(sz == goals.size()) break;
+        }
+        return into;
+    }
 
     @Override
     public boolean equals(Object o) {
