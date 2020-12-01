@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -235,10 +235,9 @@ int&nbsp;environmentKind)</code></th>
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">RoomFinder</a></span>&#8203;(char[][]&nbsp;dungeon,
 int[][]&nbsp;environment)</code></th>
 <td class="col-last">
-<div class="block">Constructs a RoomFinder given a dungeon map and an environment map (which currently is only produced by
- MixedGenerator by the getEnvironment() method after generate() is called, but other classes that use
- MixedGenerator may also expose that environment, such as SerpentMapGenerator.getEnvironment()), and finds rooms,
- corridors, caves, and their connections on the map.</div>
+<div class="block">Constructs a RoomFinder given a dungeon map and an environment map (typically obtained with
+ <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a> after generating a map with <a href="PlaceGenerator.html#getPlaceGrid()"><code>PlaceGenerator.getPlaceGrid()</code></a>), and
+ finds rooms, corridors, caves, and their connections on the map.</div>
 </td>
 </tr>
 </tbody>
@@ -331,6 +330,23 @@ int&nbsp;y)</code></th>
 <div class="block">Takes an x, y position and finds the room or corridor at that position and the rooms, corridors or caves that it
  directly connects to, and returns the group as one merged 2D char array.</div>
 </td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reset(char%5B%5D%5B%5D)">reset</a></span>&#8203;(char[][]&nbsp;dungeon)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reset(char%5B%5D%5B%5D,int)">reset</a></span>&#8203;(char[][]&nbsp;dungeon,
+int&nbsp;environmentKind)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reset(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">reset</a></span>&#8203;(char[][]&nbsp;dungeon,
+int[][]&nbsp;environment)</code></th>
+<td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -478,11 +494,11 @@ int&nbsp;y)</code></th>
 int&nbsp;environmentKind)</span></div>
 <div class="block">Constructs a RoomFinder given a dungeon map and a general kind of environment for the whole map, then finds
  rooms, corridors, and their connections on the map. Defaults to treating all areas as cave unless
- <code>environmentKind</code> is <code>MixedGenerator.ROOM_FLOOR</code> (or its equivalent, 1).</div>
+ <code>environmentKind</code> is <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a> (or its equivalent, 1).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dungeon</code> - a 2D char array that uses '#', box drawing characters, or ' ' for walls.</dd>
-<dd><code>environmentKind</code> - if 1 (<code>MixedGenerator.ROOM_FLOOR</code>), this will find rooms and corridors, else caves</dd>
+<dd><code>environmentKind</code> - if 1 (<a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>), this will find rooms and corridors, else caves</dd>
 </dl>
 </section>
 </li>
@@ -491,15 +507,14 @@ int&nbsp;environmentKind)</span></div>
 <h3>RoomFinder</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">RoomFinder</span>&#8203;(<span class="parameters">char[][]&nbsp;dungeon,
 int[][]&nbsp;environment)</span></div>
-<div class="block">Constructs a RoomFinder given a dungeon map and an environment map (which currently is only produced by
- MixedGenerator by the getEnvironment() method after generate() is called, but other classes that use
- MixedGenerator may also expose that environment, such as SerpentMapGenerator.getEnvironment()), and finds rooms,
- corridors, caves, and their connections on the map.</div>
+<div class="block">Constructs a RoomFinder given a dungeon map and an environment map (typically obtained with
+ <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a> after generating a map with <a href="PlaceGenerator.html#getPlaceGrid()"><code>PlaceGenerator.getPlaceGrid()</code></a>), and
+ finds rooms, corridors, caves, and their connections on the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dungeon</code> - a 2D char array that uses '#' for walls.</dd>
-<dd><code>environment</code> - a 2D int array using constants from MixedGenerator; typically produced by a call to
-                    getEnvironment() in MixedGenerator or SerpentMapGenerator after dungeon generation.</dd>
+<dd><code>environment</code> - a 2D int array using constants from DungeonTools; typically produced by a call to
+                    getEnvironment() in a PlaceGenerator after dungeon generation.</dd>
 </dl>
 </section>
 </li>
@@ -511,6 +526,26 @@ int[][]&nbsp;environment)</span></div>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="reset(char[][])">
+<h3>reset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></span>&nbsp;<span class="member-name">reset</span>&#8203;(<span class="parameters">char[][]&nbsp;dungeon)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="reset(char[][],int)">
+<h3>reset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></span>&nbsp;<span class="member-name">reset</span>&#8203;(<span class="parameters">char[][]&nbsp;dungeon,
+int&nbsp;environmentKind)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="reset(char[][],int[][])">
+<h3>reset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></span>&nbsp;<span class="member-name">reset</span>&#8203;(<span class="parameters">char[][]&nbsp;dungeon,
+int[][]&nbsp;environment)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="findRooms()">
 <h3>findRooms</h3>

@@ -39,7 +39,7 @@ public class RoomFinder {
     /**
      * Not likely to be used directly, but there may be things you can do with these that are cumbersome using only
      * RoomFinder's simpler API. Won't be assigned a value if this class is constructed with a 2D char array; it needs
-     * the two-arg constructor using the environment produced by a MixedGenerator, SerpentMapGenerator, or similar.
+     * the two-arg constructor using the environment produced by a PlaceGenerator.
      */
     caves;
 
@@ -66,60 +66,15 @@ public class RoomFinder {
      */
     public RoomFinder(char[][] dungeon)
     {
-        if(dungeon.length <= 0)
-            return;
-        width = dungeon.length;
-        height = dungeon[0].length;
-        map = new char[width][height];
-        environment = new int[width][height];
-        for (int i = 0; i < width; i++) {
-            System.arraycopy(dungeon[i], 0, map[i], 0, height);
-        }
-        rooms = new ObjectObjectOrderedMap<>(32);
-        corridors = new ObjectObjectOrderedMap<>(32);
-        caves = new ObjectObjectOrderedMap<>(8);
-        basic = DungeonTools.simplifyDungeon(map);
-        allFloors = new Region(basic, '.');
-        allRooms = allFloors.copy().retract8way().flood(allFloors, 2);
-        allCorridors = allFloors.copy().andNot(allRooms);
-
-        environment = allCorridors.writeInts(
-                allRooms.writeInts(environment, DungeonTools.ROOM_FLOOR),
-                DungeonTools.CORRIDOR_FLOOR);
-
-        allCaves = new Region(width, height);
-        Region d = allCorridors.copy().fringe().and(allRooms);
-        connections = doorways = d.asCoords();
-        mouths = new Coord[0];
-        ObjectList<Region> rs = allRooms.split(), cs = allCorridors.split();
-
-        for (Region sep : cs) {
-            Region someDoors = sep.copy().fringe().and(allRooms);
-            Coord[] doors = someDoors.asCoords();
-            ObjectList<Region> near = new ObjectList<>(4);
-            for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
-            }
-            corridors.put(sep, near);
-        }
-
-        for (Region sep : rs) {
-            Region aroundDoors = sep.copy().fringe().and(allCorridors);
-            Coord[] doors = aroundDoors.asCoords();
-            ObjectList<Region> near = new ObjectList<>(10);
-            for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
-            }
-            rooms.put(sep, near);
-        }
+        this(dungeon, DungeonTools.ROOM_FLOOR);
     }
 
     /**
      * Constructs a RoomFinder given a dungeon map and a general kind of environment for the whole map, then finds
      * rooms, corridors, and their connections on the map. Defaults to treating all areas as cave unless
-     * {@code environmentKind} is {@code MixedGenerator.ROOM_FLOOR} (or its equivalent, 1).
+     * {@code environmentKind} is {@link DungeonTools#ROOM_FLOOR} (or its equivalent, 1).
      * @param dungeon a 2D char array that uses '#', box drawing characters, or ' ' for walls.
-     * @param environmentKind if 1 ({@code MixedGenerator.ROOM_FLOOR}), this will find rooms and corridors, else caves
+     * @param environmentKind if 1 ({@link DungeonTools#ROOM_FLOOR}), this will find rooms and corridors, else caves
      */
     public RoomFinder(char[][] dungeon, int environmentKind)
     {
@@ -181,7 +136,7 @@ public class RoomFinder {
             allFloors = new Region(width, height);
             allRooms = new Region(width, height);
             allCorridors = new Region(width, height);
-            caves.put(allCaves, new ObjectList<Region>());
+            caves.put(allCaves, new ObjectList<>());
             connections = mouths = allCaves.copy().andNot(allCaves.copy().retract8way()).retract().asCoords();
             doorways = new Coord[0];
             environment = allCaves.writeInts(environment, DungeonTools.CAVE_FLOOR);
@@ -190,13 +145,12 @@ public class RoomFinder {
     }
 
     /**
-     * Constructs a RoomFinder given a dungeon map and an environment map (which currently is only produced by
-     * MixedGenerator by the getEnvironment() method after generate() is called, but other classes that use
-     * MixedGenerator may also expose that environment, such as SerpentMapGenerator.getEnvironment()), and finds rooms,
-     * corridors, caves, and their connections on the map.
+     * Constructs a RoomFinder given a dungeon map and an environment map (typically obtained with
+     * {@link PlaceGenerator#getEnvironment()} after generating a map with {@link PlaceGenerator#getPlaceGrid()}), and
+     * finds rooms, corridors, caves, and their connections on the map.
      * @param dungeon a 2D char array that uses '#' for walls.
-     * @param environment a 2D int array using constants from MixedGenerator; typically produced by a call to
-     *                    getEnvironment() in MixedGenerator or SerpentMapGenerator after dungeon generation.
+     * @param environment a 2D int array using constants from DungeonTools; typically produced by a call to
+     *                    getEnvironment() in a PlaceGenerator after dungeon generation.
      */
     public RoomFinder(char[][] dungeon, int[][] environment)
     {
@@ -204,12 +158,8 @@ public class RoomFinder {
             return;
         width = dungeon.length;
         height = dungeon[0].length;
-        map = new char[width][height];
+        map = ArrayTools.copy(dungeon);
         this.environment = ArrayTools.copy(environment);
-        for (int i = 0; i < width; i++) {
-            System.arraycopy(dungeon[i], 0, map[i], 0, height);
-        }
-
         rooms = new ObjectObjectOrderedMap<>(32);
         corridors = new ObjectObjectOrderedMap<>(32);
         caves = new ObjectObjectOrderedMap<>(32);
@@ -272,6 +222,151 @@ public class RoomFinder {
             caves.put(sep, near);
         }
     }
+    public RoomFinder reset(char[][] dungeon) {
+        return reset(dungeon, DungeonTools.ROOM_FLOOR);
+    }
+    public RoomFinder reset(char[][] dungeon, int environmentKind){
+        if(width != dungeon.length || height != dungeon[0].length){
+            width = dungeon.length;
+            height = dungeon[0].length;
+            map = ArrayTools.copy(dungeon);
+            environment = new int[width][height];
+            allCaves.resizeAndEmpty(width, height);
+        }
+        else {
+            ArrayTools.insert(dungeon, map, 0, 0);
+            ArrayTools.fill(environment, 0);
+            allCaves.clear();
+        }
+        rooms.clear();
+        corridors.clear();
+        caves.clear();
+        basic = DungeonTools.simplifyDungeon(map);
+
+        if(environmentKind == DungeonTools.ROOM_FLOOR) {
+            allFloors.refill(basic, '.');
+            allRooms.remake(allFloors).retract8way().flood(allFloors, 2);
+            allCorridors.remake(allFloors).andNot(allRooms);
+
+            environment = allCorridors.writeInts(
+                    allRooms.writeInts(environment, DungeonTools.ROOM_FLOOR),
+                    DungeonTools.CORRIDOR_FLOOR);
+
+            Region d = allCorridors.copy().fringe().and(allRooms);
+            connections = doorways = d.asCoords();
+            mouths = new Coord[0];
+            ObjectList<Region> rs = allRooms.split(), cs = allCorridors.split();
+
+            for (Region sep : cs) {
+                Region someDoors = sep.copy().fringe().and(allRooms);
+                Coord[] doors = someDoors.asCoords();
+                ObjectList<Region> near = new ObjectList<>(4);
+                for (int i = 0; i < doors.length; i++) {
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
+                }
+                corridors.put(sep, near);
+            }
+
+            for (Region sep : rs) {
+                Region aroundDoors = sep.copy().fringe().and(allCorridors);
+                Coord[] doors = aroundDoors.asCoords();
+                ObjectList<Region> near = new ObjectList<>(10);
+                for (int i = 0; i < doors.length; i++) {
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
+                }
+                rooms.put(sep, near);
+            }
+        }
+        else {
+            allCaves.refill(basic, '.');
+            allFloors.resizeAndEmpty(width, height);
+            allRooms.resizeAndEmpty(width, height);
+            allCorridors.resizeAndEmpty(width, height);
+            caves.put(allCaves, new ObjectList<>());
+            connections = mouths = allCaves.copy().andNot(allCaves.copy().retract8way()).retract().asCoords();
+            doorways = new Coord[0];
+            environment = allCaves.writeInts(environment, DungeonTools.CAVE_FLOOR);
+        }
+        return this;
+    }
+    public RoomFinder reset(char[][] dungeon, int[][] environment){
+        if(width != dungeon.length || height != dungeon[0].length){
+            width = dungeon.length;
+            height = dungeon[0].length;
+            map = ArrayTools.copy(dungeon);
+            this.environment = ArrayTools.copy(environment);
+            allCaves.resizeAndEmpty(width, height);
+        }
+        else {
+            ArrayTools.insert(dungeon, map, 0, 0);
+            ArrayTools.insert(environment, this.environment, 0, 0);
+            allCaves.clear();
+        }
+        rooms.clear();
+        corridors.clear();
+        caves.clear();
+        basic = DungeonTools.simplifyDungeon(map);
+        allFloors.refill(basic, '.');
+        allRooms.refill(this.environment, DungeonTools.ROOM_FLOOR);
+        allCorridors.refill(this.environment, DungeonTools.CORRIDOR_FLOOR);
+        allCaves.refill(this.environment, DungeonTools.CAVE_FLOOR);
+
+        Region d = allCorridors.copy().fringe().and(allRooms),
+                m = allCaves.copy().fringe().and(allRooms.copy().or(allCorridors));
+        doorways = d.asCoords();
+        mouths = m.asCoords();
+        connections = new Coord[doorways.length + mouths.length];
+        System.arraycopy(doorways, 0, connections, 0, doorways.length);
+        System.arraycopy(mouths, 0, connections, doorways.length, mouths.length);
+
+        ObjectList<Region> rs = allRooms.split(), cs = allCorridors.split(), vs = allCaves.split();
+
+        for (Region sep : cs) {
+            Region someDoors = sep.copy().fringe().and(allRooms);
+            Coord[] doors = someDoors.asCoords();
+            ObjectList<Region> near = new ObjectList<>(16);
+            for (int i = 0; i < doors.length; i++) {
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
+            }
+            someDoors.remake(sep).fringe().and(allCaves);
+            doors = someDoors.asCoords();
+            for (int i = 0; i < doors.length; i++) {
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
+            }
+            corridors.put(sep, near);
+        }
+
+        for (Region sep : rs) {
+            Region aroundDoors = sep.copy().fringe().and(allCorridors);
+            Coord[] doors = aroundDoors.asCoords();
+            ObjectList<Region> near = new ObjectList<>(32);
+            for (int i = 0; i < doors.length; i++) {
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
+            }
+            aroundDoors.remake(sep).fringe().and(allCaves);
+            doors = aroundDoors.asCoords();
+            for (int i = 0; i < doors.length; i++) {
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
+            }
+            rooms.put(sep, near);
+        }
+        for (Region sep : vs) {
+            Region aroundMouths = sep.copy().fringe().and(allCorridors);
+            Coord[] maws = aroundMouths.asCoords();
+            ObjectList<Region> near = new ObjectList<>(48);
+            for (int i = 0; i < maws.length; i++) {
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, cs));
+            }
+            aroundMouths.remake(sep).fringe().and(allRooms);
+            maws = aroundMouths.asCoords();
+            for (int i = 0; i < maws.length; i++) {
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, rs));
+            }
+            caves.put(sep, near);
+        }
+
+        return this;
+    }
 
     /**
      * Gets all the rooms this found during construction, returning them as an ObjectList of 2D char arrays, where an
@@ -326,7 +421,7 @@ public class RoomFinder {
      */
     public ObjectList<char[][]> findRegions()
     {
-        ObjectList<char[][]> rs = new ObjectList<char[][]>(rooms.size() + corridors.size() + caves.size());
+        ObjectList<char[][]> rs = new ObjectList<>(rooms.size() + corridors.size() + caves.size());
         for(Region r : rooms.keySet())
         {
             rs.add(r.writeCharsToOff(map, '#'));
