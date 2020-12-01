@@ -139,9 +139,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#asTightEncoded()">asTightEncoded()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#atFraction(double)">atFraction(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#atFraction(float)">atFraction(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#atFractionTight(double)">atFractionTight(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#atFractionTight(float)">atFractionTight(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#average(com.github.yellowstonegames.grid.Coord)">average(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
@@ -347,7 +347,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deserializeFromString(java.lang.String)">deserializeFromString(String)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(java.util.Random,double)">deteriorate(Random, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(java.util.Random,float)">deteriorate(Random, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Randomly removes points from a Region, with preservation as a fraction between 1.0 (keep all) and 0.0
  (remove all).</div>
@@ -370,6 +370,14 @@ loadScripts(document, 'script');</script>
 <div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#dijkstraScan(int%5B%5D%5B%5D,com.github.yellowstonegames.grid.Coord,int)">dijkstraScan(int[][], Coord, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#dijkstraScan(int%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region)">dijkstraScan(int[][], Region)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#dijkstraScan(int%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region,int)">dijkstraScan(int[][], Region, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
 </dd>
@@ -545,7 +553,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#firstTight()">firstTight()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fit(double,double)">fit(double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fit(float,float)">fit(float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fit(int%5B%5D%5B%5D,int)">fit(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -634,12 +642,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(double)">fray(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(float)">fray(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, quasi-randomly selecting them.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(java.util.Random,double)">fray(Random, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(java.util.Random,float)">fray(Random, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, randomly selecting them.</div>
@@ -2089,19 +2097,19 @@ loadScripts(document, 'script');</script>
 <div class="block">Reassigns this Region with the given rectangular char array, reusing the current data storage (without
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(double%5B%5D%5B%5D,double)">refill(double[][], double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(float%5B%5D%5B%5D,float)">refill(float[][], float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Reassigns this Region with the given rectangular double array, reusing the current data storage (without
+<div class="block">Reassigns this Region with the given rectangular float array, reusing the current data storage (without
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(double%5B%5D%5B%5D,double,double)">refill(double[][], double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(float%5B%5D%5B%5D,float,float)">refill(float[][], float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Reassigns this Region with the given rectangular double array, reusing the current data storage (without
+<div class="block">Reassigns this Region with the given rectangular float array, reusing the current data storage (without
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(double%5B%5D%5B%5D,double,double,int)">refill(double[][], double, double, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(float%5B%5D%5B%5D,float,float,int)">refill(float[][], float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Reassigns this Region with the given rectangular double array, reusing the current data storage (without
+<div class="block">Reassigns this Region with the given rectangular float array, reusing the current data storage (without
  extra allocations) if <code>this.width == map.length * scale &amp;&amp; this.height == map[0].length * scale</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(int%5B%5D%5B%5D,int)">refill(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2131,7 +2139,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Weird refill method that takes a String array, _as it would be printed_, so each String is a row and indexing
  would be done with y, x instead of the normal x, y.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.util.Random,double,int,int)">refill(Random, double, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.util.Random,float,int,int)">refill(Random, float, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Reassigns this Region randomly, reusing the current data storage (without extra allocations) if this.width
  == width and this.height == height, while trying to set the given fraction of cells to on.</div>
@@ -2176,21 +2184,21 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a Region with the given rectangular char array, with width of map.length and height of
  map[0].length, any value that equals yes is considered "on", and any other value considered "off."</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(double%5B%5D%5B%5D,double)">Region(double[][], double)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(float%5B%5D%5B%5D,float)">Region(float[][], float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Constructs this Region using a double[][] (typically one generated by
+<div class="block">Constructs this Region using a float[][] (typically one generated by
  DijkstraMap) that only stores two relevant states:  an "on" state for values less than
  or equal to upperBound (inclusive), and an "off" state for anything else.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(double%5B%5D%5B%5D,double,double)">Region(double[][], double, double)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(float%5B%5D%5B%5D,float,float)">Region(float[][], float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Constructs this Region using a double[][] (typically one generated by
+<div class="block">Constructs this Region using a float[][] (typically one generated by
  DijkstraMap) that only stores two relevant states:  an "on" state for values between
  lowerBound (inclusive) and upperBound (exclusive), and an "off" state for anything else.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(double%5B%5D%5B%5D,double,double,int)">Region(double[][], double, double, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(float%5B%5D%5B%5D,float,float,int)">Region(float[][], float, float, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Constructs this Region using a double[][] that only stores two relevant states: an "on" state for values
+<div class="block">Constructs this Region using a float[][] that only stores two relevant states: an "on" state for values
  between lowerBound (inclusive) and upperBound (exclusive), and an "off" state for anything else.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(int%5B%5D%5B%5D,int)">Region(int[][], int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2246,7 +2254,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Weird constructor that takes a String array, _as it would be printed_, so each String is a row and indexing would
  be done with y, x instead of the normal x, y.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(java.util.Random,double,int,int)">Region(Random, double, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(java.util.Random,float,int,int)">Region(Random, float, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Constructor for a random Region of the given width and height, trying to set the given fraction of cells
  to on.</div>
@@ -2461,22 +2469,22 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#scale(int,int)">scale(int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedBlue(double)">separatedBlue(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedBlue(float)">separatedBlue(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a Coord array from the "on" contents of this Region, using a quasi-random scattering of chosen cells
  with a count that matches the given <code>fraction</code> of the total amount of "on" cells in this.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedBlue(double,int)">separatedBlue(double, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedBlue(float,int)">separatedBlue(float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a Coord array from the "on" contents of this Region, using a quasi-random scattering of chosen cells
  with a count that matches the given <code>fraction</code> of the total amount of "on" cells in this.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedRegionBlue(double)">separatedRegionBlue(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedRegionBlue(float)">separatedRegionBlue(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a quasi-random subset of its previous contents, choosing cells so that
  the <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> matches the given <code>fraction</code> of the total amount of "on" cells in this.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedRegionBlue(double,int)">separatedRegionBlue(double, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#separatedRegionBlue(float,int)">separatedRegionBlue(float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a quasi-random subset of its previous contents, choosing cells so that
  the <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> matches the given <code>fraction</code> of the total amount of "on" cells in this.</div>
@@ -2688,16 +2696,16 @@ loadScripts(document, 'script');</script>
  this method, it can produce any number between 0 and 8 in a cell; if you give 16 Regions, then it can
  produce any number between 0 and 16 in a cell.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumDouble(com.github.yellowstonegames.grid.Region...)">sumDouble(Region...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumFloat(com.github.yellowstonegames.grid.Region...)">sumFloat(Region...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Generates a 2D double array from an array or vararg of Regions, starting at all 0 and adding 1 to the double at
+<div class="block">Generates a 2D float array from an array or vararg of Regions, starting at all 0 and adding 1 to the float at
  a position once for every Region that has that cell as "on." This means if you give 8 Regions to
  this method, it can produce any number between 0 and 8 in a cell; if you give 16 Regions, then it can
  produce any number between 0 and 16 in a cell.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumDouble(java.util.List)">sumDouble(List&lt;Region&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumFloat(java.util.List)">sumFloat(List&lt;Region&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Generates a 2D double array from a List of Regions, starting at all 0 and adding 1 to the double at
+<div class="block">Generates a 2D float array from a List of Regions, starting at all 0 and adding 1 to the float at
  a position once for every Region that has that cell as "on." This means if you give 8 Regions to
  this method, it can produce any number between 0 and 8 in a cell; if you give 16 Regions, then it can
  produce any number between 0 and 16 in a cell.</div>
@@ -2709,9 +2717,9 @@ loadScripts(document, 'script');</script>
  this method, it can increment by any number between 0 and 8 in a cell; if you give 16 Regions, then it can
  increase the value in existing by any number between 0 and 16 in a cell.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumIntoDouble(double%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region...)">sumIntoDouble(double[][], Region...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumIntoFloat(float%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region...)">sumIntoFloat(float[][], Region...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Adds to an existing 2D double array with an array or vararg of Regions, adding 1 to the double in existing
+<div class="block">Adds to an existing 2D float array with an array or vararg of Regions, adding 1 to the float in existing
  at a position once for every Region that has that cell as "on." This means if you give 8 Regions to
  this method, it can increment by any number between 0 and 8 in a cell; if you give 16 Regions, then it can
  increase the value in existing by any number between 0 and 16 in a cell.</div>
@@ -2722,10 +2730,10 @@ loadScripts(document, 'script');</script>
  and, for every Region that has that cell as "on," adding the int in the corresponding weights array at
  the position of that cell.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumWeightedDouble(com.github.yellowstonegames.grid.Region%5B%5D,double%5B%5D)">sumWeightedDouble(Region[], double[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#sumWeightedFloat(com.github.yellowstonegames.grid.Region%5B%5D,float%5B%5D)">sumWeightedFloat(Region[], float[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
-<div class="block">Generates a 2D double array from an array of Regions and an array of weights, starting the 2D result at
- all 0 and, for every Region that has that cell as "on," adding the double in the corresponding weights
+<div class="block">Generates a 2D float array from an array of Regions and an array of weights, starting the 2D result at
+ all 0 and, for every Region that has that cell as "on," adding the float in the corresponding weights
  array at the position of that cell.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#surface()">surface()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2910,15 +2918,15 @@ the order they are declared.</div>
 <div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
  and where a cell is "off", it instead writes the char filler.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeDoubles(double%5B%5D%5B%5D,double)">writeDoubles(double[][], double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeFloats(float%5B%5D%5B%5D,float)">writeFloats(float[][], float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
- the value in map intact, and where a cell is "on", it instead writes the double toWrite.</div>
+ the value in map intact, and where a cell is "on", it instead writes the float toWrite.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeDoublesInto(double%5B%5D%5B%5D,double)">writeDoublesInto(double[][], double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeFloatsInto(float%5B%5D%5B%5D,float)">writeFloatsInto(float[][], float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
- the value in map intact, and where a cell is "on", it instead writes the double toWrite.</div>
+ the value in map intact, and where a cell is "on", it instead writes the float toWrite.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#writeInts(int%5B%5D%5B%5D,int)">writeInts(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
