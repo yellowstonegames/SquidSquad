@@ -1087,12 +1087,12 @@ public class DungeonProcessor implements PlaceGenerator{
         fusedMap = RoomFinder.merge(fused, width, height);
         Region limit = new Region(width, height).insertRectangle(1, 1, width - 2, height - 2),
                 potential = new Region(fusedMap, '#').and(limit),
-                flooded, chosen, tmp = new Region(width, height);
+                flooded = new Region(width, height), chosen, tmp = new Region(width, height),
+                deep = new Region(width, height);
         int ctr = potential.size(), potentialMazeSize = ctr * mazeFill / 100, potentialLakeSize = ctr * lakeFill / 100;
         ObjectList<Region> viable;
         int minSize;
         Coord center;
-        boolean[][] deep;
         if(potentialMazeSize > 0) {
             viable = potential.split();
             if (viable.isEmpty())
@@ -1107,22 +1107,21 @@ public class DungeonProcessor implements PlaceGenerator{
                     minSize = sz;
                 }
             }
-            PacMazeGenerator pac = new PacMazeGenerator(width - width % 3, height - height % 3, rng);
-            char[][] pacMap = ArrayTools.insert(pac.generate(), ArrayTools.fill('#', width, height), 1, 1);
+            ConnectingMapGenerator cmg = new ConnectingMapGenerator(width, height, 1, 1, rng, 2);
+            char[][] cmgMap = cmg.generate();
             center = chosen.singleRandom(rng);
-            flooded = new Region(center, width, height).spill(chosen, potentialMazeSize, rng).and(limit);
-            Region pacEnv = new Region(pacMap, '.').and(flooded).removeIsolated();
-            deep = pacEnv.decode();
+            flooded.empty().insert(center).spill(chosen, potentialMazeSize, rng).and(limit);
+            deep.refill(cmgMap, '.').and(flooded).removeIsolated();
 
             for (int x = 1; x < width - 1; x++) {
                 for (int y = 1; y < height - 1; y++) {
-                    if (deep[x][y])
-                        maps[1][x][y] = pacMap[x][y];
+                    if (deep.contains(x, y))
+                        maps[1][x][y] = cmgMap[x][y];
                 }
             }
-            finder.corridors.put(pacEnv, new ObjectList<Region>());
-            finder.allCorridors.or(pacEnv);
-            finder.allFloors.or(pacEnv);
+            finder.corridors.put(deep, new ObjectList<Region>());
+            finder.allCorridors.or(deep);
+            finder.allFloors.or(deep);
             potential.andNot(flooded);
         }
         if(potentialLakeSize > 0) {
@@ -1139,18 +1138,16 @@ public class DungeonProcessor implements PlaceGenerator{
                 }
             }
             center = chosen.singleRandom(rng);
-            flooded = new Region(center, width, height).spill(chosen, potentialLakeSize, rng).and(limit);
+            flooded.empty().insert(center).spill(chosen, potentialLakeSize, rng).and(limit);
 
-            deep = flooded.decode();
+            deep.remake(flooded);
             flooded.flood(new Region(fusedMap, '.').fringe8way(3), 3).and(limit);
-
-            boolean[][] shallow = flooded.decode();
 
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if (deep[x][y])
+                    if (deep.contains(x, y))
                         maps[0][x][y] = deepLakeGlyph;
-                    else if (shallow[x][y])
+                    else if (flooded.contains(x, y))
                         maps[0][x][y] = shallowLakeGlyph;
                 }
             }
