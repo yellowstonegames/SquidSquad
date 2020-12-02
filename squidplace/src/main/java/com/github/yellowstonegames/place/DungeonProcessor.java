@@ -320,7 +320,7 @@ public class DungeonProcessor implements PlaceGenerator{
      * percentage, unless the pools encounter too much tight space. If this DungeonGenerator previously had addWater
      * called, the latest call will take precedence. No islands will be placed with this variant, but the edge of the
      * water will be shallow, represented by ','.
-     * @param env the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"
+     * @param env the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"
      * @param percentage the percentage of floor cells to fill with water
      * @return this DungeonGenerator; can be chained
      */
@@ -365,7 +365,7 @@ public class DungeonProcessor implements PlaceGenerator{
      * unless the pools encounter too much tight space. If this DungeonGenerator previously had addWater called, the
      * latest call will take precedence. If islandSpacing is greater than 1, then this will place islands of floor, '.',
      * surrounded by shallow water, ',', at about the specified distance with Euclidean measurement.
-     * @param env the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"
+     * @param env the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"
      * @param percentage the percentage of floor cells to fill with water
      * @param islandSpacing if greater than 1, islands will be placed randomly this many cells apart.
      * @return this DungeonGenerator; can be chained
@@ -413,7 +413,7 @@ public class DungeonProcessor implements PlaceGenerator{
      * have randomized volume that should fill or get very close to filling (two thirds of) the requested percentage,
      * unless the patches encounter too much tight space. If this DungeonGenerator previously had addGrass called, the
      * latest call will take precedence.
-     * @param env the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"
+     * @param env the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"
      * @param percentage the percentage of floor cells to fill with grass; this can vary quite a lot. It may be
      *                   difficult to fill very high (over 66%) percentages of map with grass, though you can do this by
      *                   giving a percentage of between 100 and 150.
@@ -456,7 +456,7 @@ public class DungeonProcessor implements PlaceGenerator{
     /**
      * Turns the given percentage of floor cells not already adjacent to walls into wall cells, represented by '#'.
      * If this DungeonGenerator previously had addBoulders called, the latest call will take precedence.
-     * @param env the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"
+     * @param env the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"
      * @param percentage the percentage of floor cells not adjacent to walls to fill with boulders.
      * @return this DungeonGenerator; can be chained
      */
@@ -570,7 +570,7 @@ public class DungeonProcessor implements PlaceGenerator{
      * Turns the given percentage of open area floor cells into trap cells, represented by '^'. Corridors that have no
      * possible way to move around a trap will not receive traps, ever. If this DungeonGenerator previously had
      * addTraps called, the latest call will take precedence.
-     * @param env the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"
+     * @param env the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"
      * @param percentage the percentage of valid cells to fill with traps; should be no higher than 5 unless
      *                   the dungeon floor is meant to be a kill screen or minefield.
      * @return this DungeonGenerator; can be chained
@@ -821,8 +821,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
     /**
      * Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated and an
-     * environment as an int[][], which can often be obtained from MixedGenerator or classes that use it, like
-     * SerpentMapGenerator, with their getEnvironment method.
+     * environment as an int[][], which can be obtained with {@link PlaceGenerator#getEnvironment()}.
      * Typically, you want to call generate with a TilesetType or no argument for the easiest generation; this method
      * is meant for adding features like water and doors to existing maps while avoiding placing incongruous features in
      * areas where they don't fit, like a door in a cave or moss in a room.
@@ -913,7 +912,7 @@ public class DungeonProcessor implements PlaceGenerator{
     /**
      * Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated, with
      * staircases represented by greater than and less than signs, and an environment as an int[][], which can often be
-     * obtained from MixedGenerator or classes that use it, like SerpentMapGenerator, with their getEnvironment method.
+     * obtained with {@link PlaceGenerator#getEnvironment()}.
      * Typically, you want to call generate with a TilesetType or no argument for the easiest generation; this method
      * is meant for adding features like water and doors to existing maps while avoiding placing incongruous features in
      * areas where they don't fit, like a door in a cave or moss in a room.
