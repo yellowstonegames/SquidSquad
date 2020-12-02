@@ -1039,7 +1039,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
         BigLoop:
         for(int i = 0; i < total; i++) {
-            Coord entry = doorways.order().random(rng);
+            Coord entry = doorways.random(rng);
             if (map[entry.x][entry.y] == '<' || map[entry.x][entry.y] == '>')
                 continue;
             if (map[entry.x - 1][entry.y] != '#' && map[entry.x + 1][entry.y] != '#' &&
@@ -1316,7 +1316,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
             for(int i = 0; i < total; i++)
             {
-                Coord entry = hazards.order().random(rng);
+                Coord entry = hazards.random(rng);
                 if(map[entry.x][entry.y] == '<' || map[entry.x][entry.y] == '>')
                     continue;
                 map[entry.x][entry.y] = '^';

@@ -261,7 +261,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
         }
         while(links.size() < gridMax)
         {
-            d = surface.order().random(rng);
+            d = surface.random(rng);
             dx = d & 0xFFFF;
             dy = d >>> 16;
             for (int i = 0; i < 5 && links.size() < gridMax && !surface.isEmpty(); i++) {
