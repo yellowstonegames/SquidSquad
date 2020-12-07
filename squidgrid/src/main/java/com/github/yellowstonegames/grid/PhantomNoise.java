@@ -28,7 +28,7 @@ import com.github.yellowstonegames.core.TrigTools;
  * each rotation array has N items. The rotations match the vertices of an N-simplex, so a triangle in 2D, a tetrahedron
  * in 3D, etc. It also stores two working-room arrays, each with N+1 double items, two frequently-edited int arrays of
  * the floors of doubles it's using, and of modified versions of those floors to be hashed (each with N+1 items), and
- * interestingly, a {@link com.github.yellowstonegames.core.Hasher} hash functor, seeded in the PhantomNoise constructor.
+ * interestingly, a {@link Hasher} hash functor, seeded in the PhantomNoise constructor.
  * <br>
  * At higher dimensions, Simplex noise (what {@link Noise#SIMPLEX} produces) starts to change how it looks compared to
  * lower dimensions. PhantomNoise, on the other hand, maintains a fairly consistent blob-like organic look, such as
@@ -42,10 +42,12 @@ import com.github.yellowstonegames.core.TrigTools;
 public class PhantomNoise {
     private final Hasher hasher;
     public final int dim;
-    private final double inverse, sharpness;
-    private final double[] working, points;
-    private final double[][] vertices;
+    public final float sharpness;
+    private final float inverse;
+    private final float[] working, points;
+    private final float[][] vertices;
     private final int[] floors, hashFloors;
+
     public PhantomNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
     }
@@ -53,54 +55,55 @@ public class PhantomNoise {
     public PhantomNoise(long seed, int dimension) {
         this(seed, dimension, Math.max(2, dimension));
     }
-    public PhantomNoise(long seed, int dimension, double sharpness) {
+
+    public PhantomNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
-        this.sharpness = 0.8375 * sharpness;
-        working = new double[dim+1];
-        points = new double[dim+1];
-        vertices = new double[dim+1][dim];
-        double id = -1.0 / dim;
-        vertices[0][0] = 1.0;
+        this.sharpness = 0.8375f * sharpness;
+        working = new float[dim+1];
+        points = new float[dim+1];
+        vertices = new float[dim+1][dim];
+        float id = -1f / dim;
+        vertices[0][0] = 1f;
         for (int v = 1; v <= dim; v++) {
             vertices[v][0] = id;
         }
         for (int d = 1; d < dim; d++) {
-            double t = 0.0;
+            float t = 0f;
             for (int i = 0; i < d; i++) {
                 t += vertices[d][i] * vertices[d][i];
             }
-            vertices[d][d] = Math.sqrt(1.0 - t);
+            vertices[d][d] = (float) Math.sqrt(1f - t);
             t = (id - t) / vertices[d][d];
             for (int v = d + 1; v <= dim; v++) {
                 vertices[v][d] = t;
             }
         }
         for (int v = 0; v <= dim; v++) {
-            final double theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + 0.6180339887498949,
-                    dist = Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + 0.6180339887498949f,
+                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
             vertices[v][0] = TrigTools.cos(theta) * dist;
             vertices[v][1] = TrigTools.sin(theta) * dist;
         }
         floors = new int[dim+1];
         hashFloors = new int[dim+1];
         hasher = new Hasher(seed);
-        inverse = 1.0 / (dim + 1.0);
+        inverse = 1f / (dim + 1f);
 //        printDebugInfo();
     }
 
-    protected double valueNoise()
+    protected float valueNoise()
     {
-        hashFloors[dim] = BitConversion.doubleToMixedIntBits(working[dim]);
+        hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        double sum = 0.0, temp;
+        float sum = 0f, temp;
         final int limit = 1 << dim;
         int bit;
         for (int i = 0; i < limit; i++) {
-            temp = 1.0;
+            temp = 1f;
             for (int j = 0; j < dim; j++) {
                 bit = (i >>> j & 1);
                 temp *= bit + (1|-bit) * working[j];
@@ -108,21 +111,21 @@ public class PhantomNoise {
             }
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32 + 0.5);
+        return (sum * 0x1p-32f + 0.5f);
     }
 
-    protected double valueNoise2D()
+    protected float valueNoise2D()
     {
-        hashFloors[2] = BitConversion.doubleToMixedIntBits(working[2]);
+        hashFloors[2] = BitConversion.floatToRawIntBits(working[2]);
         for (int i = 0; i < 2; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        double sum = 0.0, temp;
+        float sum = 0f, temp;
         int bit;
         for (int i = 0; i < 4; i++) {
-            temp = 1.0;
+            temp = 1f;
             
             bit = i;
             temp *= bit + (1|-bit) * working[0];
@@ -134,18 +137,18 @@ public class PhantomNoise {
             
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32 + 0.5);
+        return (sum * 0x1p-32f + 0.5f);
     }
     
-    public double getNoise(double... args) {
+    public float getNoise(float... args) {
         for (int v = 0; v <= dim; v++) {
-            points[v] = 0.0;
+            points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
                 points[v] += args[d] * vertices[v][d];
             }
         }
-        working[dim] = 0.6180339887498949; // inverse golden ratio; irrational, so its bit representation nears random
-        double result = 0.0, warp = 0.0;
+        working[dim] = 0.6180339887498949f; // inverse golden ratio; irrational, so its bit representation nears random
+        float result = 0f, warp = 0f;
         for (int i = 0; i <= dim; i++) {
             for (int j = 0, d = 0; j < dim; j++, d++) {
                 if(d == i) d++;
@@ -154,10 +157,10 @@ public class PhantomNoise {
             working[0] += warp;
             warp = valueNoise();
             result += warp;
-            working[dim] += -0.423310825130748; // e - pi
+            working[dim] += -0.423310825130748f; // e - pi
         }
         result *= inverse;
-        return MathTools.barronSpline(result, sharpness, 0.5) * 2.0 - 1.0;
+        return MathTools.barronSpline(result, sharpness, 0.5f) * 2f - 1f;
 //        return (result <= 0.5)
 //                ? Math.pow(result * 2, dim) - 1.0
 //                : Math.pow((result - 1) * 2, dim) * (((dim & 1) << 1) - 1) + 1.0;
@@ -168,12 +171,12 @@ public class PhantomNoise {
 //        return  (result * result * (6.0 - 4.0 * result) - 1.0);
     }
 
-    public double getNoise2D(double x, double y) {
-        points[0] = -0.4161468365471422 * x + 0.9092974268256818 * y;
-        points[1] = -0.5794012529532914 * x + -0.8150424455671962 * y;
-        points[2] = 0.9955480895004332 * x + -0.09425498125848553 * y;
-        working[2] = 0.6180339887498949;
-        double result = 0.0, warp = 0.0;
+    public float getNoise2D(float x, float y) {
+        points[0] = -0.4161468365471422f * x + 0.9092974268256818f * y;
+        points[1] = -0.5794012529532914f * x + -0.8150424455671962f * y;
+        points[2] = 0.9955480895004332f * x + -0.09425498125848553f * y;
+        working[2] = 0.6180339887498949f;
+        float result = 0f, warp = 0f;
         for (int i = 0; i <= 2; i++) {
             for (int j = 0, d = 0; j < 2; j++, d++) {
                 if(d == i) d++;
@@ -181,10 +184,10 @@ public class PhantomNoise {
             }
             warp = valueNoise2D();
             result += warp;
-            working[2] += -0.423310825130748;
+            working[2] += -0.423310825130748f;
         }
         result *= inverse;
-        return MathTools.barronSpline(result, sharpness, 0.5) * 2.0 - 1.0;
+        return MathTools.barronSpline(result, sharpness, 0.5f) * 2f - 1f;
     }
     
     void printDebugInfo(){         
@@ -207,14 +210,14 @@ public class PhantomNoise {
         }
     }
 
-    public static final double[][] goldenDouble = {
-            {0.6180339887498949},
-            {0.7548776662466927, 0.5698402909980532},
-            {0.8191725133961645, 0.6710436067037893, 0.5497004779019703},
-            {0.8566748838545029, 0.733891856627126, 0.6287067210378087, 0.5385972572236101},
-            {0.8812714616335696, 0.7766393890897682, 0.6844301295853426, 0.6031687406857282, 0.5315553977157913},
-            {0.8986537126286993, 0.8075784952213448, 0.7257334129697598,
-                    0.6521830259439717, 0.5860866975779695, 0.5266889867007359}
+    public static final float[][] goldenDouble = {
+            {0.6180339887498949f, },
+            {0.7548776662466927f, 0.5698402909980532f, },
+            {0.8191725133961645f, 0.6710436067037893f, 0.5497004779019703f, },
+            {0.8566748838545029f, 0.733891856627126f, 0.6287067210378087f, 0.5385972572236101f, },
+            {0.8812714616335696f, 0.7766393890897682f, 0.6844301295853426f, 0.6031687406857282f, 0.5315553977157913f, },
+            {0.8986537126286993f, 0.8075784952213448f, 0.7257334129697598f,
+                    0.6521830259439717f, 0.5860866975779695f, 0.5266889867007359f, }
     };
 
     public static final long[][] goldenLong = {

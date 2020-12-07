@@ -381,6 +381,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A crude approximation of DijkstraMap's scan() method for when DijkstraMap isn't available.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#dim">dim</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid"><span class="type-name-link">Direction</span></a> - Enum in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">Represents the eight grid directions and the deltaX, deltaY values associated
@@ -855,6 +857,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoise(double,double,double,double,double,double)">getNoise(double, double, double, double, double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#getNoise(float...)">getNoise(float...)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#getNoise2D(float,float)">getNoise2D(float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseType()">getNoiseType()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
 <div class="block">Gets the default type of noise returned by <a href="com/github/yellowstonegames/grid/Noise.html#getConfiguredNoise(float,float)"><code>Noise.getConfiguredNoise(float, float)</code></a>, using one of the following constants
@@ -995,6 +1001,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the z coordinate for a given index into the 16x16x(8*n) Moore curve.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#goldenDouble">goldenDouble</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#goldenLong">goldenLong</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#grad2f">grad2f</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#grad4f">grad4f</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
@@ -1494,6 +1504,20 @@ loadScripts(document, 'script');</script>
 <div class="block">A publicly available Noise object with seed 1337, frequency 1.0f/32.0f, 1 octave of Simplex noise using
  SIMPLEX_FRACTAL noiseType, 2f lacunarity and 0.5f gain.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance2D">instance2D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance3D">instance3D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance4D">instance4D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance5D">instance5D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance6D">instance6D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance7D">instance7D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance8D">instance8D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#interleaveBits(int,int)">interleaveBits(int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Narrow-purpose; takes an x and a y value, each between 0 and 65535 inclusive, and interleaves their bits so the
@@ -1981,6 +2005,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
  edges somewhat.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">PhantomNoise</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly
+ high.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#%3Cinit%3E()">PhantomNoise()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#%3Cinit%3E(long,int)">PhantomNoise(long, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#%3Cinit%3E(long,int,float)">PhantomNoise(long, int, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#pointsInside(int,int,int,boolean,int,int)">pointsInside(int, int, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#pointsInside(int,int,int,boolean,int,int,java.util.List)">pointsInside(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
@@ -2578,6 +2613,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#setY(int)">setY(int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#sharpness">sharpness</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#show(char,char)">show(char, char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Returns this Region's data as a StringBuilder, with each row made of the parameter on for "on" cells and
@@ -2849,6 +2886,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
  edges somewhat.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#valueNoise()">valueNoise()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#valueNoise(int,float,float)">valueNoise(int, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
 <div class="block">Produces noise from 0 to 1, instead of the normal -1 to 1.</div>
@@ -2862,6 +2901,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#valueNoise(int,float,float,float,float,float)">valueNoise(int, float, float, float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#valueNoise(int,float,float,float,float,float,float)">valueNoise(int, float, float, float, float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#valueNoise2D()">valueNoise2D()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>

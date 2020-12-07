@@ -501,8 +501,7 @@ int&nbsp;islandSpacing)</code></th>
 int[][]&nbsp;environment)</code></th>
 <td class="col-last">
 <div class="block">Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated and an
- environment as an int[][], which can often be obtained from MixedGenerator or classes that use it, like
- SerpentMapGenerator, with their getEnvironment method.</div>
+ environment as an int[][], which can be obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i12">
@@ -520,7 +519,7 @@ int[][]&nbsp;environment)</code></th>
 <td class="col-last">
 <div class="block">Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated, with
  staircases represented by greater than and less than signs, and an environment as an int[][], which can often be
- obtained from MixedGenerator or classes that use it, like SerpentMapGenerator, with their getEnvironment method.</div>
+ obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i14">
@@ -1030,7 +1029,7 @@ int&nbsp;percentage)</span></div>
  water will be shallow, represented by ','.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>env</code> - the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"</dd>
+<dd><code>env</code> - the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"</dd>
 <dd><code>percentage</code> - the percentage of floor cells to fill with water</dd>
 <dt>Returns:</dt>
 <dd>this DungeonGenerator; can be chained</dd>
@@ -1051,7 +1050,7 @@ int&nbsp;islandSpacing)</span></div>
  surrounded by shallow water, ',', at about the specified distance with Euclidean measurement.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>env</code> - the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"</dd>
+<dd><code>env</code> - the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"</dd>
 <dd><code>percentage</code> - the percentage of floor cells to fill with water</dd>
 <dd><code>islandSpacing</code> - if greater than 1, islands will be placed randomly this many cells apart.</dd>
 <dt>Returns:</dt>
@@ -1071,7 +1070,7 @@ int&nbsp;percentage)</span></div>
  latest call will take precedence.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>env</code> - the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"</dd>
+<dd><code>env</code> - the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"</dd>
 <dd><code>percentage</code> - the percentage of floor cells to fill with grass; this can vary quite a lot. It may be
                    difficult to fill very high (over 66%) percentages of map with grass, though you can do this by
                    giving a percentage of between 100 and 150.</dd>
@@ -1089,7 +1088,7 @@ int&nbsp;percentage)</span></div>
  If this DungeonGenerator previously had addBoulders called, the latest call will take precedence.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>env</code> - the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"</dd>
+<dd><code>env</code> - the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"</dd>
 <dd><code>percentage</code> - the percentage of floor cells not adjacent to walls to fill with boulders.</dd>
 <dt>Returns:</dt>
 <dd>this DungeonGenerator; can be chained</dd>
@@ -1180,7 +1179,7 @@ int&nbsp;percentage)</span></div>
  addTraps called, the latest call will take precedence.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>env</code> - the environment to apply this to; uses MixedGenerator's constants, or 0 for "all environments"</dd>
+<dd><code>env</code> - the environment to affect; 0 for "all environments," 1 for "rooms", 2 for "corridors," 3 for "caves"</dd>
 <dd><code>percentage</code> - the percentage of valid cells to fill with traps; should be no higher than 5 unless
                    the dungeon floor is meant to be a kill screen or minefield.</dd>
 <dt>Returns:</dt>
@@ -1274,8 +1273,7 @@ char[][]&nbsp;allCorridors)</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="member-name">generate</span>&#8203;(<span class="parameters">char[][]&nbsp;baseDungeon,
 int[][]&nbsp;environment)</span></div>
 <div class="block">Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated and an
- environment as an int[][], which can often be obtained from MixedGenerator or classes that use it, like
- SerpentMapGenerator, with their getEnvironment method.
+ environment as an int[][], which can be obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.
  Typically, you want to call generate with a TilesetType or no argument for the easiest generation; this method
  is meant for adding features like water and doors to existing maps while avoiding placing incongruous features in
  areas where they don't fit, like a door in a cave or moss in a room.
@@ -1310,7 +1308,7 @@ int[][]&nbsp;environment)</span></div>
 int[][]&nbsp;environment)</span></div>
 <div class="block">Generate a char[][] dungeon with extra features given a baseDungeon that has already been generated, with
  staircases represented by greater than and less than signs, and an environment as an int[][], which can often be
- obtained from MixedGenerator or classes that use it, like SerpentMapGenerator, with their getEnvironment method.
+ obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.
  Typically, you want to call generate with a TilesetType or no argument for the easiest generation; this method
  is meant for adding features like water and doors to existing maps while avoiding placing incongruous features in
  areas where they don't fit, like a door in a cave or moss in a room.
