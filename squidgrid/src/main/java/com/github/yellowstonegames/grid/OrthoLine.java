@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class OrthoLine {
     /**
-     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns a List of Coord in order.
+     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns an ObjectList of Coord in order.
      *
      * @param startX x of starting point
      * @param startY y of starting point
      * @param endX   x of ending point
      * @param endY   y of ending point
-     * @return List of Coord, including (startX, startY) and (endX, endY) and all points walked between
+     * @return ObjectList of Coord, including (startX, startY) and (endX, endY) and all points walked between
      */
-    public static List<Coord> line(int startX, int startY, int endX, int endY) {
+    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY) {
         int dx = endX - startX, dy = endY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, workX = startX, workY = startY;
         ObjectList<Coord> drawn = new ObjectList<>(1 + nx + ny);
@@ -139,14 +139,94 @@ public class OrthoLine {
         }
         return false;//never got to the target point
     }
-
     /**
-     * Draws a line from start to end using only N/S/E/W movement. Returns a List of Coord in order.
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
+     * the line of sight is obstructed, without storing the line of points along the way. {@code resistanceMap} must not
+     * be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param start the starting point
+     * @param target the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
+        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
+    }
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
+     * the line of sight is obstructed, without storing the line of points along the way. {@code resistanceMap} must not
+     * be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
+                                      @Nonnull float[][] resistanceMap){
+        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
+    }
+    /**
+     * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, without storing the line of points along the way.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param maxLength the maximum permitted length of a line of sight
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                                      @Nonnull float[][] resistanceMap) {
+        int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
+        int signX = dx >> 31 | 1, signY = dy >> 31 | 1, x = startX, y = startY;
+
+        int dist = nx + ny, traveled = 0;
+        if(startX == targetX && startY == targetY) {
+            return true; // already at the point; we can see our own feet just fine!
+        }
+        float decay = 1f / dist;
+        float currentForce = 1f;
+
+        for (int ix = 0, iy = 0; (ix < nx || iy < ny) && traveled < maxLength; ) {
+            ++traveled;
+            if (x == targetX) {
+                return true;
+            }
+
+            if (x != startX || y != startY) { //don't discount the start location even if on resistant cell
+                currentForce -= resistanceMap[x][y];
+            }
+            currentForce -= decay;
+            if (currentForce <= 0) {
+                return false; //too much resistance
+            }
+
+            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+                x += signX;
+                ix++;
+            } else {
+                y += signY;
+                iy++;
+            }
+        }
+        return false;//never got to the target point
+    }
+    /**
+     * Draws a line from start to end using only N/S/E/W movement. Returns an ObjectList of Coord in order.
      * @param start starting point
      * @param end ending point
-     * @return List of Coord, including start and end and all points walked between
+     * @return ObjectList of Coord, including start and end and all points walked between
      */
-    public static List<Coord> line(Coord start, Coord end)
+    public static ObjectList<Coord> line(Coord start, Coord end)
     {
         return line(start.x, start.y, end.x, end.y);
     }
@@ -178,10 +258,10 @@ public class OrthoLine {
     }
 
     /**
-     * Draws a line from start to end using only N/S/E/W movement. Returns a List of Coord in order.
+     * Draws a line from start to end using only N/S/E/W movement. Returns an array of Coord in order.
      * @param start starting point
      * @param end ending point
-     * @return List of Coord, including start and end and all points walked between
+     * @return array of Coord, including start and end and all points walked between
      */
     public static Coord[] lineArray(Coord start, Coord end)
     {
