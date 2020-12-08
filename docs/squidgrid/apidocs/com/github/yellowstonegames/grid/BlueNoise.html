@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -142,6 +142,13 @@ extends java.lang.Object</pre>
 <div class="block">The raw data this class uses, as a 1D byte array.</div>
 </td>
 </tr>
+<tr class="alt-color">
+<td class="col-first"><code>static byte[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#TRI_NOISE">TRI_NOISE</a></span></code></th>
+<td class="col-last">
+<div class="block">Raw data this class uses for triangularly-distributed blue noise, as 64 1D byte arrays.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -176,6 +183,18 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>static int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
+int&nbsp;spillerLimit,
+com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+boolean&nbsp;triangular)</code></th>
+<td class="col-last">
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>static int[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#blueSpill(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
 int&nbsp;spillerLimit,
@@ -187,7 +206,7 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
  original point.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#get(int,int)">get</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y)</code></th>
@@ -195,17 +214,17 @@ int&nbsp;y)</code></th>
 <div class="block">Gets a byte from the raw data this stores, treating it as an infinite 2D plane of tiling 64x64 regions.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#get(int,int,byte%5B%5D)">get</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y,
 byte[]&nbsp;noiseData)</code></th>
 <td class="col-last">
-<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane
- of tiling 64x64 regions.</div>
+<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane of tiling 64x64
+ regions.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#get(int,int,int)">get</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y,
@@ -214,7 +233,7 @@ int&nbsp;z)</code></th>
 <div class="block">Gets a byte from the raw data this stores, treating it as an infinite 3D space of tiling 64x64x64 regions.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getChosen(int,int,int)">getChosen</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y,
@@ -224,7 +243,18 @@ int&nbsp;seed)</code></th>
  artifacts detectable to the human eye.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static byte</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getChosen(int,int,int,byte%5B%5D%5B%5D)">getChosen</a></span>&#8203;(int&nbsp;x,
+int&nbsp;y,
+int&nbsp;seed,
+byte[][]&nbsp;noises)</code></th>
+<td class="col-last">
+<div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
+ artifacts detectable to the human eye.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSeeded(int,int,int)">getSeeded</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y,
@@ -234,7 +264,7 @@ int&nbsp;seed)</code></th>
  patterns are much less noticeable.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSeeded(int,int,int,byte%5B%5D)">getSeeded</a></span>&#8203;(int&nbsp;x,
 int&nbsp;y,
@@ -245,7 +275,7 @@ byte[]&nbsp;noiseData)</code></th>
  sections of noise so patterns are much less noticeable.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#indexedBlueNoisePoint(float%5B%5D,int,float)">indexedBlueNoisePoint</a></span>&#8203;(float[]&nbsp;dest,
 int&nbsp;index,
@@ -280,6 +310,18 @@ float&nbsp;strength)</code></th>
  <a href="#get(int,int,byte%5B%5D)"><code>get(int, int, byte[])</code></a> or <a href="#getSeeded(int,int,int,byte%5B%5D)"><code>getSeeded(int, int, int, byte[])</code></a> as their noiseData parameter. This
  group of byte arrays is static, which is probably OK even on Android as long as no one writes to it, and uses
  <code>StandardCharsets</code> to decode itself from a String, which only works on GWT 2.8.2 and newer.
+ Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TRI_NOISE">
+<h3>TRI_NOISE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">byte[][]</span>&nbsp;<span class="member-name">TRI_NOISE</span></div>
+<div class="block">Raw data this class uses for triangularly-distributed blue noise, as 64 1D byte arrays. Any of the 1D arrays this
+ holds can be passed to <a href="#get(int,int,byte%5B%5D)"><code>get(int, int, byte[])</code></a> or <a href="#getSeeded(int,int,int,byte%5B%5D)"><code>getSeeded(int, int, int, byte[])</code></a> as their
+ noiseData parameter, which will make those methods produce a different, more centrally-biased distribution of
+ noise results. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
+ to it, and uses <code>StandardCharsets</code> to decode itself from a String, which only works on GWT 2.8.2 and newer.
  Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.</div>
 </section>
 </li>
@@ -368,13 +410,13 @@ int&nbsp;z)</span></div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte</span>&nbsp;<span class="member-name">get</span>&#8203;(<span class="parameters">int&nbsp;x,
 int&nbsp;y,
 byte[]&nbsp;noiseData)</span></div>
-<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane
- of tiling 64x64 regions. You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a>.</div>
+<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane of tiling 64x64
+ regions. You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - x position, can be any int; results will repeat every 64 cells</dd>
 <dd><code>y</code> - y position, can be any int; results will repeat every 64 cells</dd>
-<dd><code>noiseData</code> - a byte array with minimum length 4096; probably from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a></dd>
+<dd><code>noiseData</code> - a byte array with minimum length 4096; probably from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or <a href="#TRI_NOISE"><code>TRI_NOISE</code></a></dd>
 <dt>Returns:</dt>
 <dd>a byte that obeys a blue-noise distribution, so a value is only next to a similar value very rarely</dd>
 </dl>
@@ -395,7 +437,7 @@ int&nbsp;seed)</span></div>
  with values under or over a certain value, that set is still usually blue noise. (Keeping this quality is quite
  hard for blue noise textures generated from combining existing tiles!)
  <br>
- This was changed somewhat on April 28, 2020 to a version with softer line artifacts that don't persist as long.
+ This way of mixing blue noise textures has some soft line artifacts that don't persist very far.
  It tends to look like it has less artifacts to human observers now, and about the same to signal processing.
  Upon closer inspection, it actually has many more line artifacts, but they are small, irregularly-spaced, and
  blend easily into their surroundings. This seems to be a tradeoff with this kind of blue noise. You can make an
@@ -407,6 +449,41 @@ int&nbsp;seed)</span></div>
 <dd><code>x</code> - x position, can be any int; results will not repeat for a very long time</dd>
 <dd><code>y</code> - y position, can be any int; results will not repeat for a very long time</dd>
 <dd><code>seed</code> - seed value, can be any int; should be the same for all calls that should be from the same 2D plane</dd>
+<dt>Returns:</dt>
+<dd>a byte that obeys an almost-blue-noise distribution, so a value is only next to a similar value rarely</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getChosen(int,int,int,byte[][])">
+<h3>getChosen</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte</span>&nbsp;<span class="member-name">getChosen</span>&#8203;(<span class="parameters">int&nbsp;x,
+int&nbsp;y,
+int&nbsp;seed,
+byte[][]&nbsp;noises)</span></div>
+<div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
+ artifacts detectable to the human eye. <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
+ histogram at right.</a> This works by choosing from one of four nearby blue noise tiles and using it as-is, with
+ the choice determined by an initial blue noise sample from a non-tiling blue noise tile, weighted heavily based
+ on how close a pixel is to a border between the four noise tiles. Compared to <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>,
+ the "progressive" quality of the blue noise this uses is preserved better, meaning if you get the set of points
+ with values under or over a certain value, that set is still usually blue noise. (Keeping this quality is quite
+ hard for blue noise textures generated from combining existing tiles!)
+ <br>
+ This way of mixing blue noise textures has some soft line artifacts that don't persist very far.
+ It tends to look like it has less artifacts to human observers now, and about the same to signal processing.
+ Upon closer inspection, it actually has many more line artifacts, but they are small, irregularly-spaced, and
+ blend easily into their surroundings. This seems to be a tradeoff with this kind of blue noise. You can make an
+ obvious grid of badly-stitched-together blue noise textures, and the frequencies will be good, but it will look
+ terrible to humans; you could instead improve the appearance to humans by using just one blue noise texture, but
+ that gets detected immediately by a computer as a pattern.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position, can be any int; results will not repeat for a very long time</dd>
+<dd><code>y</code> - y position, can be any int; results will not repeat for a very long time</dd>
+<dd><code>seed</code> - seed value, can be any int; should be the same for all calls that should be from the same 2D plane</dd>
+<dd><code>noises</code> - a 64-element (or longer) array of byte arrays, with each inner byte array 4096 or longer in length.
+               This is almost always <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>.</dd>
 <dt>Returns:</dt>
 <dd>a byte that obeys an almost-blue-noise distribution, so a value is only next to a similar value rarely</dd>
 </dl>
@@ -446,16 +523,17 @@ byte[]&nbsp;noiseData)</span></div>
 <div class="block">Gets a modified byte from some raw noise data in an array of at least 4096 bytes, using seed to adjust repeated
  sections of noise so patterns are much less noticeable. Unlike <a href="#get(int,int)"><code>get(int, int)</code></a>, this won't repeat every 64
  cells on x or y, but it isn't as correct at matching blue-noise frequencies, and tends to look "scratchy" in
- places, like TV static. You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a>; unlike
- <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>, this won't choose a different byte array, and will always use the given
- <code>noiseData</code>. The "progressive" quality of the blue noise this uses is not well-preserved, meaning if you
- get the set of points with values under or over a certain value, that set doesn't usually resemble blue noise.</div>
+ places, like TV static. You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or
+ <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>; unlike <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>, this won't choose a different byte array, and will
+ always use the given <code>noiseData</code>. The "progressive" quality of the blue noise this uses is not
+ well-preserved, meaning if you get the set of points with values under or over a certain value, that set doesn't
+ usually resemble blue noise.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - x position, can be any int; results will not repeat for a very long time</dd>
 <dd><code>y</code> - y position, can be any int; results will not repeat for a very long time</dd>
 <dd><code>seed</code> - seed value, can be any int; should be the same for all calls that should be from the same 2D plane</dd>
-<dd><code>noiseData</code> - a byte array with minimum length 4096; probably from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a></dd>
+<dd><code>noiseData</code> - a byte array with minimum length 4096; probably from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or <a href="#TRI_NOISE"><code>TRI_NOISE</code></a></dd>
 <dt>Returns:</dt>
 <dd>a byte that obeys an almost-blue-noise distribution, so a value is only next to a similar value rarely</dd>
 </dl>
@@ -489,6 +567,26 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">blueSpill</span>&#8203;(<span class="parameters">int[][]&nbsp;toFill,
 int&nbsp;spillerLimit,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
+<dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
+<dd><code>rng</code> - a LaserRandom to generate random values during expansion</dd>
+<dt>Returns:</dt>
+<dd><code>toFill</code>, after modifications</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">
+<h3>blueSpill</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">blueSpill</span>&#8203;(<span class="parameters">int[][]&nbsp;toFill,
+int&nbsp;spillerLimit,
+com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+boolean&nbsp;triangular)</span></div>
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>

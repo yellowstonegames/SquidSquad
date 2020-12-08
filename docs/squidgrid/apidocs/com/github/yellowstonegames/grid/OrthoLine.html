@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -83,8 +83,7 @@ loadScripts(document, 'script');</script>
 extends java.lang.Object</pre>
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.
- Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!
- Created by Tommy Ettinger on 1/10/2016.</div>
+ Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -129,6 +128,18 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
@@ -141,7 +152,20 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
@@ -156,7 +180,17 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
@@ -168,8 +202,8 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
-<td class="col-first"><code>static java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int)">line</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;endX,
@@ -178,15 +212,26 @@ int&nbsp;endY)</code></th>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
-<td class="col-first"><code>static java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;endX,
+int&nbsp;endY,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></th>
+<td class="col-last">
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">line</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;end)</code></th>
 <td class="col-last">
 <div class="block">Draws a line from start to end using only N/S/E/W movement.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineArray(int,int,int,int)">lineArray</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
@@ -196,7 +241,7 @@ int&nbsp;endY)</code></th>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">lineArray</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;end)</code></th>
@@ -204,16 +249,16 @@ int&nbsp;endY)</code></th>
 <div class="block">Draws a line from start to end using only N/S/E/W movement.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static char[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineChars(com.github.yellowstonegames.grid.Coord%5B%5D)">lineChars</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]&nbsp;line)</code></th>
 <td class="col-last">
-<div class="block">Given an array of Coord as produced by <a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>lineArray(Coord, Coord)</code></a> or <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>, this
- gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
- given line.</div>
+<div class="block">Given an array of Coord as produced by <a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>lineArray(Coord, Coord)</code></a> or
+ <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>, this gets a char array of box-drawing characters that connect when drawn
+ at the corresponding Coord positions in the given line.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static char[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineChars(java.util.List)">lineChars</a></span>&#8203;(java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;line)</code></th>
 <td class="col-last">
@@ -257,11 +302,15 @@ int&nbsp;endY)</code></th>
 <li>
 <section class="detail" id="line(int,int,int,int)">
 <h3>line</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;endX,
 int&nbsp;endY)</span></div>
-<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns a List of Coord in order.</div>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+ Consider reusing an ObjectList instead of allocating a new one each time, if
+ possible; this method allocates an ObjectList per call, but
+ <a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)"><code>line(int, int, int, int, ObjectList)</code></a> does not.
+ Returns an ObjectList of Coord in order.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>startX</code> - x of starting point</dd>
@@ -269,7 +318,31 @@ int&nbsp;endY)</span></div>
 <dd><code>endX</code> - x of ending point</dd>
 <dd><code>endY</code> - y of ending point</dd>
 <dt>Returns:</dt>
-<dd>List of Coord, including (startX, startY) and (endX, endY) and all points walked between</dd>
+<dd>ObjectList of Coord, including (startX, startY) and (endX, endY) and all points walked between</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">
+<h3>line</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;endX,
+int&nbsp;endY,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+ If <code>buffer</code> is not null, it will be cleared and reused; if it is null, then
+ a new ObjectList will be allocated. Reusing <code>buffer</code> across multiple calls
+ is a good way to reduce GC pressure. Returns an ObjectList of Coord in order.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - x of starting point</dd>
+<dd><code>startY</code> - y of starting point</dd>
+<dd><code>endX</code> - x of ending point</dd>
+<dd><code>endY</code> - y of ending point</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dt>Returns:</dt>
+<dd>ObjectList of Coord, including (startX, startY) and (endX, endY) and all points walked between</dd>
 </dl>
 </section>
 </li>
@@ -367,17 +440,99 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
 </section>
 </li>
 <li>
+<section class="detail" id="isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">@Nonnull
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+@Nonnull
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
+ be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - the starting point</dd>
+<dd><code>target</code> - the target point</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isReachable(int,int,int,int,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
+ be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x-coordinate of the starting point</dd>
+<dd><code>startY</code> - the y-coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x-coordinate of the target point</dd>
+<dd><code>targetY</code> - the y-coordinate of the target point</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isReachable(int,int,int,int,int,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.
+ <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x-coordinate of the starting point</dd>
+<dd><code>startY</code> - the y-coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x-coordinate of the target point</dd>
+<dd><code>targetY</code> - the y-coordinate of the target point</dd>
+<dd><code>maxLength</code> - the maximum permitted length of a line of sight</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">
 <h3>line</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;end)</span></div>
-<div class="block">Draws a line from start to end using only N/S/E/W movement. Returns a List of Coord in order.</div>
+<div class="block">Draws a line from start to end using only N/S/E/W movement.
+ Consider reusing an ObjectList instead of allocating a new one each time, if
+ possible; this method allocates an ObjectList per call, but
+ <a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)"><code>line(int, int, int, int, ObjectList)</code></a> does not.
+ Returns an ObjectList of Coord in order.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>start</code> - starting point</dd>
 <dd><code>end</code> - ending point</dd>
 <dt>Returns:</dt>
-<dd>List of Coord, including start and end and all points walked between</dd>
+<dd>ObjectList of Coord, including start and end and all points walked between</dd>
 </dl>
 </section>
 </li>
@@ -388,7 +543,8 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
 int&nbsp;startY,
 int&nbsp;endX,
 int&nbsp;endY)</span></div>
-<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns an array of Coord in order.</div>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+ Allocates a new exactly-sized array of Coord, in order, and returns it.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>startX</code> - x of starting point</dd>
@@ -405,13 +561,14 @@ int&nbsp;endY)</span></div>
 <h3>lineArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</span>&nbsp;<span class="member-name">lineArray</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;end)</span></div>
-<div class="block">Draws a line from start to end using only N/S/E/W movement. Returns a List of Coord in order.</div>
+<div class="block">Draws a line from start to end using only N/S/E/W movement.
+ Allocates a new exactly-sized array of Coord, in order, and returns it.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>start</code> - starting point</dd>
 <dd><code>end</code> - ending point</dd>
 <dt>Returns:</dt>
-<dd>List of Coord, including start and end and all points walked between</dd>
+<dd>array of Coord, including start and end and all points walked between</dd>
 </dl>
 </section>
 </li>
@@ -419,14 +576,14 @@ int&nbsp;endY)</span></div>
 <section class="detail" id="lineChars(com.github.yellowstonegames.grid.Coord[])">
 <h3>lineChars</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[]</span>&nbsp;<span class="member-name">lineChars</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]&nbsp;line)</span></div>
-<div class="block">Given an array of Coord as produced by <a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>lineArray(Coord, Coord)</code></a> or <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>, this
- gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
- given line. This can be useful for drawing highlight lines or showing what path something will take, as long as
- it only uses 4-way orthogonal connections between Coords. Any connections that require a diagonal will not be
- handled by this method (returning a straight line without much accuracy), and any Coords that aren't adjacent
- will cause an <code>IllegalStateException</code> if this has to draw a line between them. If this method is called on
- the result of this class' lineArray() method, then it should always return a valid result; if it is called on a path
- made with some other method, then it shouldn't throw an
+<div class="block">Given an array of Coord as produced by <a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>lineArray(Coord, Coord)</code></a> or
+ <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>, this gets a char array of box-drawing characters that connect when drawn
+ at the corresponding Coord positions in the given line. This can be useful for drawing highlight lines or showing
+ what path something will take, as long as it only uses 4-way orthogonal connections between Coords. Any
+ connections that require a diagonal will not be handled by this method (returning a straight line without much
+ accuracy), and any Coords that aren't adjacent will cause an <code>IllegalStateException</code> if this has to draw a
+ line between them. If this method is called on the result of this class' lineArray() method, then it should
+ always return a valid result; if it is called on a path made with some other method, then it shouldn't throw an
  exception but may produce a low-quality (visually disconnected) line.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -448,8 +605,8 @@ int&nbsp;endY)</span></div>
  handled by this method (returning a straight line without much accuracy), and any Coords that aren't adjacent
  will cause an <code>IllegalStateException</code> if this has to draw a line between them. If this method is called on
  the result of this class' line() method, then it should always return a valid result; if it is called on a path
- made with some other method, then it shouldn't throw an
- exception but may produce a low-quality (visually disconnected) line.</div>
+ made with some other method, then it shouldn't throw an exception but may produce a low-quality (visually
+ disconnected) line.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>line</code> - a List of Coord where each Coord is orthogonally adjacent to its neighbor(s) in the List; usually

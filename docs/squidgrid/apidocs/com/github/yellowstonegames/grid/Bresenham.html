@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -103,6 +103,18 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
@@ -115,7 +127,20 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
@@ -130,7 +155,17 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+float[][]&nbsp;resistanceMap)</code></th>
+<td class="col-last">
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
@@ -142,8 +177,8 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
  <code>buffer</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
-<td class="col-first"><code>static java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int)">line</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
@@ -152,8 +187,8 @@ int&nbsp;targetY)</code></th>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
-<td class="col-first"><code>static java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int,int)">line</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
@@ -164,15 +199,39 @@ int&nbsp;maxLength)</code></th>
  the number of Coords returned reaches maxLength.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
-<td class="col-first"><code>static java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></th>
+<td class="col-last">
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line</a></span>&#8203;(int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></th>
+<td class="col-last">
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">line</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;a,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;b)</code></th>
 <td class="col-last">
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineArray(int,int,int,int)">lineArray</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
@@ -182,7 +241,7 @@ int&nbsp;targetY)</code></th>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineArray(int,int,int,int,int)">lineArray</a></span>&#8203;(int&nbsp;startX,
 int&nbsp;startY,
@@ -194,7 +253,7 @@ int&nbsp;maxLength)</code></th>
  the number of Coords returned reaches maxLength..</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">lineArray</a></span>&#8203;(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;a,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;b)</code></th>
@@ -223,11 +282,14 @@ int&nbsp;maxLength)</code></th>
 <li>
 <section class="detail" id="line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">
 <h3>line</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;a,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;a,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;b)</span></div>
-<div class="block">Generates a 2D Bresenham line between two points. If you don't need
- the <code>List</code> interface for the returned reference, consider
- using <a href="#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>lineArray(Coord, Coord)</code></a> to save some memory.</div>
+<div class="block">Generates a 2D Bresenham line between two points. If you want
+ to save some memory, you can use
+ <a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)"><code>line(int, int, int, int, ObjectList)</code></a>, which reuses
+ an ObjectList of Coord as a buffer. You can also use
+ <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>; although that allocates
+ a new array each time, having an array may be useful for some APIs.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>a</code> - the starting point</dd>
@@ -242,7 +304,9 @@ int&nbsp;maxLength)</code></th>
 <h3>lineArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</span>&nbsp;<span class="member-name">lineArray</span>&#8203;(<span class="parameters"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;a,
 <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;b)</span></div>
-<div class="block">Generates a 2D Bresenham line between two points.</div>
+<div class="block">Generates a 2D Bresenham line between two points.
+ This allocates a new array with each call, sized to fit the
+ line exactly.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>a</code> - the starting point</dd>
@@ -255,13 +319,16 @@ int&nbsp;maxLength)</code></th>
 <li>
 <section class="detail" id="line(int,int,int,int)">
 <h3>line</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
 int&nbsp;targetY)</span></div>
-<div class="block">Generates a 2D Bresenham line between two points. If you don't need
- the <code>List</code> interface for the returned reference, consider
- using <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a> to save some memory.
+<div class="block">Generates a 2D Bresenham line between two points. If you want
+ to save some memory, you can use
+ <a href="#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)"><code>line(int, int, int, int, ObjectList)</code></a>, which reuses
+ an ObjectList of Coord as a buffer. You can also use
+ <a href="#lineArray(int,int,int,int)"><code>lineArray(int, int, int, int)</code></a>; although that allocates
+ a new array each time, having an array may be useful for some APIs.
  <br>
  Uses ordinary Coord values for points, and these can be pooled
  if they are within what the current pool allows (it starts,
@@ -276,22 +343,25 @@ int&nbsp;targetY)</span></div>
 <dd><code>targetX</code> - the x coordinate of the target point</dd>
 <dd><code>targetY</code> - the y coordinate of the target point</dd>
 <dt>Returns:</dt>
-<dd>a List (internally, an ObjectList) of Coord points along the line</dd>
+<dd>a ObjectList of Coord points along the line</dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="line(int,int,int,int,int)">
 <h3>line</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
 int&nbsp;startY,
 int&nbsp;targetX,
 int&nbsp;targetY,
 int&nbsp;maxLength)</span></div>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
- the number of Coords returned reaches maxLength. If you don't need
- the <code>ObjectList</code> interface for the returned reference, consider
- using <a href="#lineArray(int,int,int,int,int)"><code>lineArray(int, int, int, int, int)</code></a> to save some memory.
+ the number of Coords returned reaches maxLength. If you want to save
+ some memory, you can use
+ <a href="#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)"><code>line(int, int, int, int, int, ObjectList)</code></a>, which reuses an
+ ObjectList of Coord as a buffer. You can also use
+ <a href="#lineArray(int,int,int,int,int)"><code>lineArray(int, int, int, int, int)</code></a>; although that allocates
+ a new array each time, having an array may be useful for some APIs.
  <br>
  Uses ordinary Coord values for points, and these can be pooled
  if they are within what the current pool allows (it starts,
@@ -306,6 +376,73 @@ int&nbsp;maxLength)</span></div>
 <dd><code>targetX</code> - the x coordinate of the target point</dd>
 <dd><code>targetY</code> - the y coordinate of the target point</dd>
 <dd><code>maxLength</code> - the largest count of Coord points this can return; will stop early if reached</dd>
+<dt>Returns:</dt>
+<dd>an ObjectList of Coord points along the line</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">
+<h3>line</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+<div class="block">Generates a 2D Bresenham line between two points. If you want to save
+ some memory, you can reuse an ObjectList of Coord, <code>buffer</code>,
+ which will be cleared and filled with the resulting line of Coord.
+ If <code>buffer</code> is null, this will create a new ObjectList of Coord
+ and return that.
+ <br>
+ Uses ordinary Coord values for points, and these can be pooled
+ if they are within what the current pool allows (it starts,
+ by default, pooling Coords with x and y between -3 and 255,
+ inclusive). If the Coords are pool-able, it can significantly
+ reduce the work the garbage collector needs to do, especially
+ on Android.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x coordinate of the starting point</dd>
+<dd><code>startY</code> - the y coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x coordinate of the target point</dd>
+<dd><code>targetY</code> - the y coordinate of the target point</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dt>Returns:</dt>
+<dd>an ObjectList of Coord points along the line</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">
+<h3>line</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="member-name">line</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength. If you want to save
+ some memory, you can reuse an ObjectList of Coord, <code>buffer</code>,
+ which will be cleared and filled with the resulting line of Coord.
+ If <code>buffer</code> is null, this will create a new ObjectList of Coord
+ and return that.
+ <br>
+ Uses ordinary Coord values for points, and these can be pooled
+ if they are within what the current pool allows (it starts,
+ by default, pooling Coords with x and y between -3 and 255,
+ inclusive). If the Coords are pool-able, it can significantly
+ reduce the work the garbage collector needs to do, especially
+ on Android.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x coordinate of the starting point</dd>
+<dd><code>startY</code> - the y coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x coordinate of the target point</dd>
+<dd><code>targetY</code> - the y coordinate of the target point</dd>
+<dd><code>maxLength</code> - the largest count of Coord points this can return; will stop early if reached</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
 <dt>Returns:</dt>
 <dd>an ObjectList of Coord points along the line</dd>
 </dl>
@@ -405,6 +542,84 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in c
 </section>
 </li>
 <li>
+<section class="detail" id="isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">@Nonnull
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+@Nonnull
+<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
+ be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - the starting point</dd>
+<dd><code>target</code> - the target point</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isReachable(int,int,int,int,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
+ be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x-coordinate of the starting point</dd>
+<dd><code>startY</code> - the y-coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x-coordinate of the target point</dd>
+<dd><code>targetY</code> - the y-coordinate of the target point</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isReachable(int,int,int,int,int,float[][])">
+<h3>isReachable</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReachable</span>&#8203;(<span class="parameters">int&nbsp;startX,
+int&nbsp;startY,
+int&nbsp;targetX,
+int&nbsp;targetY,
+int&nbsp;maxLength,
+@Nonnull
+float[][]&nbsp;resistanceMap)</span></div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.
+ <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance maps can with
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>. If the starting
+ point can see the target point, this returns true; otherwise this returns false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startX</code> - the x-coordinate of the starting point</dd>
+<dd><code>startY</code> - the y-coordinate of the starting point</dd>
+<dd><code>targetX</code> - the x-coordinate of the target point</dd>
+<dd><code>targetY</code> - the y-coordinate of the target point</dd>
+<dd><code>maxLength</code> - the maximum permitted length of a line of sight</dd>
+<dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
+<dt>Returns:</dt>
+<dd>true if the starting point can see the target point; false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="lineArray(int,int,int,int)">
 <h3>lineArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</span>&nbsp;<span class="member-name">lineArray</span>&#8203;(<span class="parameters">int&nbsp;startX,
@@ -413,6 +628,8 @@ int&nbsp;targetX,
 int&nbsp;targetY)</span></div>
 <div class="block">Generates a 2D Bresenham line between two points. Returns an array
  of Coord instead of a ObjectList.
+ This allocates a new array with each call, sized to fit the
+ line exactly.
  <br>
  Uses ordinary Coord values for points, and these can be pooled
  if they are within what the current pool allows (it starts,
@@ -441,7 +658,9 @@ int&nbsp;targetY,
 int&nbsp;maxLength)</span></div>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
  the number of Coords returned reaches maxLength.. Returns an array
- of Coord instead of a List.
+ of Coord instead of an ObjectList.
+ This allocates a new array with each call, sized to fit the
+ line exactly.
  <br>
  Uses ordinary Coord values for points, and these can be pooled
  if they are within what the current pool allows (it starts,

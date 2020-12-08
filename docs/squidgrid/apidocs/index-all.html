@@ -169,6 +169,12 @@ loadScripts(document, 'script');</script>
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">blueSpill(int[][], int, LaserRandom, boolean)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
+<dd>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#blueSpill(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill(int, int, int, LaserRandom)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
 <div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
@@ -724,8 +730,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#get(int,int,byte%5B%5D)">get(int, int, byte[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
-<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane
- of tiling 64x64 regions.</div>
+<div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane of tiling 64x64
+ regions.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#get(int,int,int)">get(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
@@ -748,6 +754,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getCellular(float,float,float)">getCellular(float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#getChosen(int,int,int)">getChosen(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
+<dd>
+<div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
+ artifacts detectable to the human eye.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#getChosen(int,int,int,byte%5B%5D%5B%5D)">getChosen(int, int, int, byte[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
 <div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
  artifacts detectable to the human eye.</div>
@@ -1577,6 +1588,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#isEmpty()">isEmpty()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
@@ -1589,6 +1610,16 @@ loadScripts(document, 'script');</script>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
@@ -1600,6 +1631,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
 <dd>
@@ -1705,6 +1746,19 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
  the number of Coords returned reaches maxLength.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">line(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
@@ -1740,9 +1794,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#lineChars(com.github.yellowstonegames.grid.Coord%5B%5D)">lineChars(Coord[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
 <dd>
-<div class="block">Given an array of Coord as produced by <a href="com/github/yellowstonegames/grid/OrthoLine.html#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>OrthoLine.lineArray(Coord, Coord)</code></a> or <a href="com/github/yellowstonegames/grid/OrthoLine.html#lineArray(int,int,int,int)"><code>OrthoLine.lineArray(int, int, int, int)</code></a>, this
- gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
- given line.</div>
+<div class="block">Given an array of Coord as produced by <a href="com/github/yellowstonegames/grid/OrthoLine.html#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>OrthoLine.lineArray(Coord, Coord)</code></a> or
+ <a href="com/github/yellowstonegames/grid/OrthoLine.html#lineArray(int,int,int,int)"><code>OrthoLine.lineArray(int, int, int, int)</code></a>, this gets a char array of box-drawing characters that connect when drawn
+ at the corresponding Coord positions in the given line.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#lineChars(java.util.List)">lineChars(List&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
 <dd>
@@ -2863,6 +2917,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Takes this Coord, adds x to its x and y to its y, limiting x from 0 to width and limiting y from 0 to height,
  and returns the Coord at that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#TRI_NOISE">TRI_NOISE</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
+<dd>
+<div class="block">Raw data this class uses for triangularly-distributed blue noise, as 64 1D byte arrays.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
