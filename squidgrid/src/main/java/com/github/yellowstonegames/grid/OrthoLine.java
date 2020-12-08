@@ -10,7 +10,10 @@ import java.util.List;
  * distances for measurements.
  * Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!
  */
-public class OrthoLine {
+public final class OrthoLine {
+
+    private OrthoLine(){}
+
     /**
      * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
      * Consider reusing an ObjectList instead of allocating a new one each time, if
@@ -390,7 +393,7 @@ public class OrthoLine {
      * the result of this class' line() method, then it should always return a valid result; if it is called on a path
      * made with some other method, then it shouldn't throw an exception but may produce a low-quality (visually
      * disconnected) line.
-     * 
+     *
      * @param line a List of Coord where each Coord is orthogonally adjacent to its neighbor(s) in the List; usually
      *             produced via {@link #line(Coord, Coord)} or {@link #line(int, int, int, int)}
      * @return a char array of box-drawing chars that will connect when drawn at the same points as in line

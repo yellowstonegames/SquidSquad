@@ -13,12 +13,12 @@ import java.util.List;
  * @author Tommy Ettinger
  * @author smelC
  */
-public class Bresenham {
+public final class BresenhamLine {
 
     /**
      * Prevents any instances from being created
      */
-    private Bresenham() {
+    private BresenhamLine() {
     }
 
     /**
@@ -78,8 +78,10 @@ public class Bresenham {
 
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
-     * the number of Coords returned reaches maxLength. If you want to save
-     * some memory, you can use
+     * the number of Coords returned reaches maxLength (measured using
+     * Chebyshev distance, where diagonally adjacent cells are considered
+     * exactly as distant as orthogonally-adjacent cells). If you want to
+     * save some memory, you can use
      * {@link #line(int, int, int, int, int, ObjectList)}, which reuses an
      * ObjectList of Coord as a buffer. You can also use
      * {@link #lineArray(int, int, int, int, int)}; although that allocates
@@ -128,7 +130,9 @@ public class Bresenham {
     }
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
-     * the number of Coords returned reaches maxLength. If you want to save
+     * the number of Coords returned reaches maxLength (measured using
+     * Chebyshev distance, where diagonally adjacent cells are considered
+     * exactly as distant as orthogonally-adjacent cells). If you want to save
      * some memory, you can reuse an ObjectList of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
      * If {@code buffer} is null, this will create a new ObjectList of Coord
@@ -210,6 +214,96 @@ public class Bresenham {
         return buffer;
     }
     /**
+     * Generates a 2D Bresenham line between two points, stopping early if
+     * the number of Coords returned reaches maxLength (measured using
+     * Euclidean distance, or "as the crow flies"). If you want to save
+     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * which will be cleared and filled with the resulting line of Coord.
+     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * and return that.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @param maxLength the largest count of Coord points this can return; will stop early if reached
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectList of Coord points along the line
+     */
+    public static ObjectList<Coord> lineEuclidean(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+        int dx = targetX - startX;
+        int dy = targetY - startY;
+
+        if(buffer == null) {
+            buffer = new ObjectList<>(Math.min((int)Math.sqrt(dx * dx + dy * dy) + 1, maxLength));
+        }
+        else {
+            buffer.clear();
+        }
+
+        int ax = Math.abs(dx);
+        int ay = Math.abs(dy);
+        int max2 = maxLength * maxLength;
+        ax <<= 1;
+        ay <<= 1;
+
+        int signX = (dx >> 31 | -dx >>> 31); // project nayuki signum
+        int signY = (dy >> 31 | -dy >>> 31); // project nayuki signum
+
+        int x = startX;
+        int y = startY;
+
+        int deltaX, deltaY;
+        dx = 0;
+        dy = 0;
+        if (ax >= ay) /* x dominant */ {
+            deltaY = ay - (ax >> 1);
+            while ((dx * dx + dy * dy) < max2) {
+                buffer.add(Coord.get(x, y));
+                if (x == targetX) {
+                    return buffer;
+                }
+
+                if (deltaY >= 0) {
+                    y += signY;
+                    deltaY -= ax;
+                    dy++;
+                }
+
+                x += signX;
+                deltaY += ay;
+                dx++;
+            }
+        } else /* y dominant */ {
+            deltaX = ax - (ay >> 1);
+            while ((dx * dx + dy * dy) < max2) {
+                buffer.add(Coord.get(x, y));
+                if (y == targetY) {
+                    return buffer;
+                }
+
+                if (deltaX >= 0) {
+                    x += signX;
+                    deltaX -= ay;
+                    dx++;
+                }
+
+
+                y += signY;
+                deltaX += ax;
+                dy++;
+            }
+        }
+        return buffer;
+    }
+    /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
      * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
@@ -252,7 +346,9 @@ public class Bresenham {
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
-     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * {@code buffer}. The {@code maxLength} is measured using Chebyshev distance, where diagonally adjacent cells are
+     * considered exactly as distant as orthogonally-adjacent cells.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
      * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
      * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
@@ -293,15 +389,15 @@ public class Bresenham {
         ax <<= 1;
         ay <<= 1;
 
-        int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
-        int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
+        int signX = (dx >> 31 | -dx >>> 31); // project nayuki signum
+        int signY = (dy >> 31 | -dy >>> 31); // project nayuki signum
 
         int x = startX;
         int y = startY;
 
-        int deltax, deltay;
+        int deltaX, deltaY;
         if (ax >= ay) /* x dominant */ {
-            deltay = ay - (ax >> 1);
+            deltaY = ay - (ax >> 1);
             while (buffer.size() < maxLength) {
                 buffer.add(Coord.get(x, y));
                 if (x == targetX) {
@@ -316,16 +412,16 @@ public class Bresenham {
                     return false;//too much resistance
                 }
 
-                if (deltay >= 0) {
-                    y += signy;
-                    deltay -= ax;
+                if (deltaY >= 0) {
+                    y += signY;
+                    deltaY -= ax;
                 }
 
-                x += signx;
-                deltay += ay;
+                x += signX;
+                deltaY += ay;
             }
         } else /* y dominant */ {
-            deltax = ax - (ay >> 1);
+            deltaX = ax - (ay >> 1);
             while (buffer.size() < maxLength) {
                 buffer.add(Coord.get(x, y));
                 if (y == targetY) {
@@ -340,14 +436,126 @@ public class Bresenham {
                     return false;//too much resistance
                 }
 
-                if (deltax >= 0) {
-                    x += signx;
-                    deltax -= ay;
+                if (deltaX >= 0) {
+                    x += signX;
+                    deltaX -= ay;
                 }
 
-                y += signy;
-                deltax += ax;
+                y += signY;
+                deltaX += ax;
 
+            }
+        }
+        return false;//never got to the target point
+    }
+    private static final float ROOT2 = (float) Math.sqrt(2f);
+    /**
+     * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. The {@code maxLength} is measured using Euclidean distance, where diagonally adjacent cells are
+     * considered about 1.4 times as distant as orthogonally-adjacent cells; this is the natural way in the real world.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param maxLength the maximum permitted length of a line of sight
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public static boolean isReachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
+                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+        int dx = targetX - startX;
+        int dy = targetY - startY;
+
+        int ax = Math.abs(dx);
+        int ay = Math.abs(dy);
+
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if(buffer == null) {
+            buffer = new ObjectList<>(Math.min((int) dist + 1, maxLength));
+        }
+        else {
+            buffer.clear();
+        }
+        if(maxLength <= 0) return false;
+
+        if(startX == targetX && startY == targetY) {
+            buffer.add(Coord.get(startX, startY));
+            return true; // already at the point; we can see our own feet just fine!
+        }
+        float currentBlockage = 0f;
+
+        ax <<= 1;
+        ay <<= 1;
+
+        int signX = (dx >> 31 | -dx >>> 31); // project nayuki signum
+        int signY = (dy >> 31 | -dy >>> 31); // project nayuki signum
+
+        int x = startX;
+        int y = startY;
+
+        int changeX = 0, changeY = 0;
+
+        int deltaX, deltaY;
+        if (ax >= ay) /* x dominant */ {
+            deltaY = ay - (ax >> 1);
+            while (buffer.size() < maxLength) {
+                buffer.add(Coord.get(x, y));
+                if (x == targetX) {
+                    return true;
+                }
+
+                if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
+                    currentBlockage += resistanceMap[x][y];
+                }
+
+                if (deltaY >= 0) {
+                    y += signY;
+                    deltaY -= ax;
+                    ++changeY;
+                }
+
+                x += signX;
+                deltaY += ay;
+                ++changeX;
+
+                if ((changeX * changeX + changeY * changeY) <= (currentBlockage * dist) * (currentBlockage * dist)) {
+                    return false;//too much resistance
+                }
+            }
+        } else /* y dominant */ {
+            deltaX = ax - (ay >> 1);
+            while (buffer.size() < maxLength) {
+                buffer.add(Coord.get(x, y));
+                if (y == targetY) {
+                    return true;
+                }
+
+                if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
+                    currentBlockage += resistanceMap[x][y];
+                }
+
+                if (deltaX >= 0) {
+                    x += signX;
+                    deltaX -= ay;
+                    ++changeX;
+                }
+
+                y += signY;
+                deltaX += ax;
+                ++changeY;
+
+                if ((changeX * changeX + changeY * changeY) <= (currentBlockage * dist) * (currentBlockage * dist)) {
+                    return false;//too much resistance
+                }
             }
         }
         return false;//never got to the target point

@@ -187,7 +187,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Reuses the existing light 2D array and fills it with a straight-line bouncing path of light that reflects its way
  through the given resistanceMap from startX, startY until it uses up the given distance.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">Bresenham</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">BresenhamLine</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">Provides a means to generate Bresenham lines in 2D and 3D.</div>
 </dd>
@@ -1588,7 +1588,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#isEmpty()">isEmpty()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -1598,7 +1598,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1610,7 +1610,7 @@ loadScripts(document, 'script');</script>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -1620,7 +1620,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1632,7 +1632,7 @@ loadScripts(document, 'script');</script>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -1642,7 +1642,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1651,6 +1651,12 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachableEuclidean(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachableEuclidean(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
@@ -1733,7 +1739,7 @@ loadScripts(document, 'script');</script>
  threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
  and so on until the last element includes almost all points.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
@@ -1741,17 +1747,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int,int)">line(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int,int)">line(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
- the number of Coords returned reaches maxLength.</div>
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
- the number of Coords returned reaches maxLength.</div>
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
@@ -1759,7 +1769,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">line(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">line(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
@@ -1771,7 +1781,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Simple linear interpolation.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#lineArray(int,int,int,int)">lineArray(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineArray(int,int,int,int)">lineArray(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
@@ -1779,12 +1789,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#lineArray(int,int,int,int,int)">lineArray(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineArray(int,int,int,int,int)">lineArray(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
  the number of Coords returned reaches maxLength..</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Bresenham.html#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">lineArray(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Bresenham.html" title="class in com.github.yellowstonegames.grid">Bresenham</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">lineArray(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
@@ -1803,6 +1813,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Given a List of Coord as produced by <a href="com/github/yellowstonegames/grid/OrthoLine.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>OrthoLine.line(Coord, Coord)</code></a> or <a href="com/github/yellowstonegames/grid/OrthoLine.html#line(int,int,int,int)"><code>OrthoLine.line(int, int, int, int)</code></a>, this
  gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
  given line.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineEuclidean(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">lineEuclidean(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Euclidean distance, or "as the crow flies").</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html#%3Cinit%3E()">LongImpl()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -2033,8 +2049,6 @@ loadScripts(document, 'script');</script>
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#%3Cinit%3E()">OrthoLine()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#OUTWARDS">OUTWARDS</a></span> - Static variable in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
 <div class="block">An array which holds all eight OUTWARDS directions.</div>
