@@ -9,11 +9,14 @@ import java.util.List;
  * A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  * distances for measurements.
  * Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!
- * Created by Tommy Ettinger on 1/10/2016.
  */
 public class OrthoLine {
     /**
-     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns an ObjectList of Coord in order.
+     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+     * Consider reusing an ObjectList instead of allocating a new one each time, if
+     * possible; this method allocates an ObjectList per call, but
+     * {@link #line(int, int, int, int, ObjectList)} does not.
+     * Returns an ObjectList of Coord in order.
      *
      * @param startX x of starting point
      * @param startY y of starting point
@@ -22,10 +25,32 @@ public class OrthoLine {
      * @return ObjectList of Coord, including (startX, startY) and (endX, endY) and all points walked between
      */
     public static ObjectList<Coord> line(int startX, int startY, int endX, int endY) {
+        return line(startX, startY, endX, endY, null);
+    }
+    /**
+     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+     * If {@code buffer} is not null, it will be cleared and reused; if it is null, then
+     * a new ObjectList will be allocated. Reusing {@code buffer} across multiple calls
+     * is a good way to reduce GC pressure. Returns an ObjectList of Coord in order.
+     *
+     * @param startX x of starting point
+     * @param startY y of starting point
+     * @param endX   x of ending point
+     * @param endY   y of ending point
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return ObjectList of Coord, including (startX, startY) and (endX, endY) and all points walked between
+     */
+    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY, ObjectList<Coord> buffer) {
         int dx = endX - startX, dy = endY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, workX = startX, workY = startY;
-        ObjectList<Coord> drawn = new ObjectList<>(1 + nx + ny);
-        drawn.add(Coord.get(startX, startY));
+        if(buffer == null) {
+            buffer = new ObjectList<>(1 + nx + ny);
+        }
+        else {
+            buffer.clear();
+            buffer.ensureCapacity(1 + nx + ny);
+        }
+        buffer.add(Coord.get(startX, startY));
         for (int ix = 0, iy = 0; ix < nx || iy < ny; ) {
             if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
                 workX += signX;
@@ -34,9 +59,9 @@ public class OrthoLine {
                 workY += signY;
                 iy++;
             }
-            drawn.add(Coord.get(workX, workY));
+            buffer.add(Coord.get(workX, workY));
         }
-        return drawn;
+        return buffer;
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
@@ -221,7 +246,12 @@ public class OrthoLine {
         return false;//never got to the target point
     }
     /**
-     * Draws a line from start to end using only N/S/E/W movement. Returns an ObjectList of Coord in order.
+     * Draws a line from start to end using only N/S/E/W movement.
+     * Consider reusing an ObjectList instead of allocating a new one each time, if
+     * possible; this method allocates an ObjectList per call, but
+     * {@link #line(int, int, int, int, ObjectList)} does not.
+     * Returns an ObjectList of Coord in order.
+     *
      * @param start starting point
      * @param end ending point
      * @return ObjectList of Coord, including start and end and all points walked between
@@ -231,7 +261,8 @@ public class OrthoLine {
         return line(start.x, start.y, end.x, end.y);
     }
     /**
-     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement. Returns an array of Coord in order.
+     * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
+     * Allocates a new exactly-sized array of Coord, in order, and returns it.
      *
      * @param startX x of starting point
      * @param startY y of starting point
@@ -258,7 +289,9 @@ public class OrthoLine {
     }
 
     /**
-     * Draws a line from start to end using only N/S/E/W movement. Returns an array of Coord in order.
+     * Draws a line from start to end using only N/S/E/W movement.
+     * Allocates a new exactly-sized array of Coord, in order, and returns it.
+     *
      * @param start starting point
      * @param end ending point
      * @return array of Coord, including start and end and all points walked between
@@ -269,15 +302,16 @@ public class OrthoLine {
     }
 
     /**
-     * Given an array of Coord as produced by {@link #lineArray(Coord, Coord)} or {@link #lineArray(int, int, int, int)}, this
-     * gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
-     * given line. This can be useful for drawing highlight lines or showing what path something will take, as long as
-     * it only uses 4-way orthogonal connections between Coords. Any connections that require a diagonal will not be
-     * handled by this method (returning a straight line without much accuracy), and any Coords that aren't adjacent
-     * will cause an {@link IllegalStateException} if this has to draw a line between them. If this method is called on
-     * the result of this class' lineArray() method, then it should always return a valid result; if it is called on a path
-     * made with some other method, then it shouldn't throw an
+     * Given an array of Coord as produced by {@link #lineArray(Coord, Coord)} or
+     * {@link #lineArray(int, int, int, int)}, this gets a char array of box-drawing characters that connect when drawn
+     * at the corresponding Coord positions in the given line. This can be useful for drawing highlight lines or showing
+     * what path something will take, as long as it only uses 4-way orthogonal connections between Coords. Any
+     * connections that require a diagonal will not be handled by this method (returning a straight line without much
+     * accuracy), and any Coords that aren't adjacent will cause an {@link IllegalStateException} if this has to draw a
+     * line between them. If this method is called on the result of this class' lineArray() method, then it should
+     * always return a valid result; if it is called on a path made with some other method, then it shouldn't throw an
      * exception but may produce a low-quality (visually disconnected) line.
+     *
      * @param line a Coord array where each Coord is orthogonally adjacent to its neighbor(s) in the array; usually
      *             produced via {@link #lineArray(Coord, Coord)} or {@link #lineArray(int, int, int, int)}
      * @return a char array of box-drawing chars that will connect when drawn at the same points as in line
@@ -354,8 +388,9 @@ public class OrthoLine {
      * handled by this method (returning a straight line without much accuracy), and any Coords that aren't adjacent
      * will cause an {@link IllegalStateException} if this has to draw a line between them. If this method is called on
      * the result of this class' line() method, then it should always return a valid result; if it is called on a path
-     * made with some other method, then it shouldn't throw an
-     * exception but may produce a low-quality (visually disconnected) line.
+     * made with some other method, then it shouldn't throw an exception but may produce a low-quality (visually
+     * disconnected) line.
+     * 
      * @param line a List of Coord where each Coord is orthogonally adjacent to its neighbor(s) in the List; usually
      *             produced via {@link #line(Coord, Coord)} or {@link #line(int, int, int, int)}
      * @return a char array of box-drawing chars that will connect when drawn at the same points as in line
