@@ -480,7 +480,7 @@ public final class BresenhamLine {
         int ax = Math.abs(dx);
         int ay = Math.abs(dy);
 
-        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+        float dist = Math.min((float) Math.sqrt(dx * dx + dy * dy), maxLength);
 
         if(buffer == null) {
             buffer = new ObjectList<>(Math.min((int) dist + 1, maxLength));
@@ -494,7 +494,7 @@ public final class BresenhamLine {
             buffer.add(Coord.get(startX, startY));
             return true; // already at the point; we can see our own feet just fine!
         }
-        float currentBlockage = 0f;
+        float currentBlockage = 1f;
 
         ax <<= 1;
         ay <<= 1;
@@ -517,7 +517,7 @@ public final class BresenhamLine {
                 }
 
                 if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
-                    currentBlockage += resistanceMap[x][y];
+                    currentBlockage -= resistanceMap[x][y];
                 }
 
                 if (deltaY >= 0) {
@@ -530,7 +530,7 @@ public final class BresenhamLine {
                 deltaY += ay;
                 ++changeX;
 
-                if ((changeX * changeX + changeY * changeY) <= (currentBlockage * dist) * (currentBlockage * dist)) {
+                if ((changeX * changeX + changeY * changeY) >= dist * dist * currentBlockage + 0.5f) {
                     return false;//too much resistance
                 }
             }
@@ -543,7 +543,7 @@ public final class BresenhamLine {
                 }
 
                 if (x != startX || y != startY) {//don't discount the start location even if on resistant cell
-                    currentBlockage += resistanceMap[x][y];
+                    currentBlockage -= resistanceMap[x][y];
                 }
 
                 if (deltaX >= 0) {
@@ -556,7 +556,7 @@ public final class BresenhamLine {
                 deltaX += ax;
                 ++changeY;
 
-                if ((changeX * changeX + changeY * changeY) <= (currentBlockage * dist) * (currentBlockage * dist)) {
+                if ((changeX * changeX + changeY * changeY) >= dist * dist * currentBlockage + 0.5f) {
                     return false;//too much resistance
                 }
             }
