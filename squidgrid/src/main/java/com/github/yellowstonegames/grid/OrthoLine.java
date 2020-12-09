@@ -54,7 +54,7 @@ public final class OrthoLine {
             buffer.ensureCapacity(1 + nx + ny);
         }
         buffer.add(Coord.get(startX, startY));
-        for (int ix = 0, iy = 0; ix < nx || iy < ny; ) {
+        for (int ix = 0, iy = 0; ix <= nx || iy <= ny; ) {
             if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
                 workX += signX;
                 ix++;
@@ -136,6 +136,8 @@ public final class OrthoLine {
         else {
             buffer.clear();
         }
+        if(maxLength <= 0) return false;
+
         if(startX == targetX && startY == targetY) {
             buffer.add(Coord.get(startX, startY));
             return true; // already at the point; we can see our own feet just fine!
@@ -143,9 +145,9 @@ public final class OrthoLine {
         float decay = 1f / dist;
         float currentForce = 1f;
 
-        for (int ix = 0, iy = 0; (ix < nx || iy < ny) && buffer.size() < maxLength; ) {
+        for (int ix = 0, iy = 0; (ix <= nx || iy <= ny) && buffer.size() < maxLength; ) {
             buffer.add(Coord.get(x, y));
-            if (x == targetX) {
+            if (x == targetX && y == targetY) {
                 return true;
             }
 
@@ -153,7 +155,7 @@ public final class OrthoLine {
                 currentForce -= resistanceMap[x][y];
             }
             currentForce -= decay;
-            if (currentForce <= 0) {
+            if (currentForce <= -0.001f) {
                 return false; //too much resistance
             }
 
@@ -214,6 +216,8 @@ public final class OrthoLine {
      */
     public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
                                       @Nonnull float[][] resistanceMap) {
+        if(maxLength <= 0) return false;
+
         int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, x = startX, y = startY;
 
@@ -224,9 +228,9 @@ public final class OrthoLine {
         float decay = 1f / dist;
         float currentForce = 1f;
 
-        for (int ix = 0, iy = 0; (ix < nx || iy < ny) && traveled < maxLength; ) {
+        for (int ix = 0, iy = 0; (ix <= nx || iy <= ny) && traveled < maxLength; ) {
             ++traveled;
-            if (x == targetX) {
+            if (x == targetX && y == targetY) {
                 return true;
             }
 
@@ -234,7 +238,7 @@ public final class OrthoLine {
                 currentForce -= resistanceMap[x][y];
             }
             currentForce -= decay;
-            if (currentForce <= 0) {
+            if (currentForce <= -0.001f) {
                 return false; //too much resistance
             }
 
@@ -278,7 +282,7 @@ public final class OrthoLine {
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, workX = startX, workY = startY;
         Coord[] drawn = new Coord[nx + ny + 1];
         drawn[0] = Coord.get(startX, startY);
-        for (int i = 1, ix = 0, iy = 0; ix < nx || iy < ny; i++) {
+        for (int i = 1, ix = 0, iy = 0; ix <= nx || iy <= ny; i++) {
             if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
                 workX += signX;
                 ix++;
