@@ -379,6 +379,9 @@ public final class BresenhamLine {
         else {
             buffer.clear();
         }
+        if(maxLength <= 0)
+            return false;
+
         if(startX == targetX && startY == targetY) {
             buffer.add(Coord.get(startX, startY));
             return true; // already at the point; we can see our own feet just fine!
@@ -408,7 +411,7 @@ public final class BresenhamLine {
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
-                if (currentForce <= 0) {
+                if (currentForce <= -0.001f) {
                     return false;//too much resistance
                 }
 
@@ -432,7 +435,7 @@ public final class BresenhamLine {
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
-                if (currentForce <= 0) {
+                if (currentForce <= -0.001f) {
                     return false;//too much resistance
                 }
 
@@ -448,7 +451,7 @@ public final class BresenhamLine {
         }
         return false;//never got to the target point
     }
-    private static final float ROOT2 = (float) Math.sqrt(2f);
+
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -607,6 +610,8 @@ public final class BresenhamLine {
      */
     public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
                                       @Nonnull float[][] resistanceMap) {
+        if(maxLength <= 0)
+            return false;
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -643,7 +648,7 @@ public final class BresenhamLine {
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
-                if (currentForce <= 0) {
+                if (currentForce <= -0.001f) {
                     return false;//too much resistance
                 }
 
@@ -667,7 +672,7 @@ public final class BresenhamLine {
                     currentForce -= resistanceMap[x][y];
                 }
                 currentForce -= decay;
-                if (currentForce <= 0) {
+                if (currentForce <= -0.001f) {
                     return false;//too much resistance
                 }
 
