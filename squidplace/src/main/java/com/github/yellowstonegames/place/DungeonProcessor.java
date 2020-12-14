@@ -143,6 +143,8 @@ public class DungeonProcessor implements PlaceGenerator{
     protected char[][] dungeon;
 
     protected int[][] environment;
+
+    private static final char[] passableChars = new char[]{'.', '"', '+', '/', '^', ',', '~', ':', '\ufefe', '\ufeff'};
     /**
      * Potentially important if you need to identify specific rooms, corridors, or cave areas in a map.
      */
@@ -797,8 +799,7 @@ public class DungeonProcessor implements PlaceGenerator{
         do {
             flooder.refill(map, '.');
             stairsUp = flooder.singleRandom(rng);
-            reuse.clear();
-            reuse.insert(stairsUp);
+            reuse.empty().insert(stairsUp);
             flooder.dijkstraScan(scan, reuse);
             frustrated++;
         }while (reuse.size() < width * height * 0.25f && frustrated < 15);
@@ -816,7 +817,22 @@ public class DungeonProcessor implements PlaceGenerator{
         stairsDown = reuse.refill(scan, (int) Math.ceil(maxDijkstra * 0.7),
                 Integer.MAX_VALUE - 1).singleRandom(rng);
         finder = new RoomFinder(map, environmentType);
-        return innerGenerate();
+        innerGenerate();
+        if(mazeFX > 0) {
+            if(lakeFX > 0) {
+                passableChars[passableChars.length - 2] = shallowLakeGlyph;
+                passableChars[passableChars.length - 1] = deepLakeGlyph;
+            } else {
+                passableChars[passableChars.length - 2] = '\ufefe';
+                passableChars[passableChars.length - 1] = '\ufeff';
+            }
+
+            flooder.refill(dungeon, passableChars);
+            reuse.empty().insert(stairsUp).flood(flooder, Integer.MAX_VALUE).not().writeCharsInto(dungeon, '#');
+            reuse.writeCharsInto(map, '#');
+            finder.reset(map, environmentType);
+        }
+        return dungeon;
     }
 
     /**
@@ -906,7 +922,15 @@ public class DungeonProcessor implements PlaceGenerator{
         stairsDown = reuse.refill(scan, (int) Math.ceil(maxDijkstra * 0.7),
                 Integer.MAX_VALUE - 1).singleRandom(rng);
         finder = new RoomFinder(map, env2);
-        return innerGenerate();
+        innerGenerate();
+        if(mazeFX > 0) {
+            flooder.refill(dungeon, passableChars);
+            reuse.empty().insert(stairsUp).flood(flooder, Integer.MAX_VALUE).not().writeCharsInto(dungeon, '#');
+            reuse.writeCharsInto(map, '#');
+            reuse.writeIntsInto(env2, DungeonTools.UNTOUCHED);
+            finder.reset(map, env2);
+        }
+        return dungeon;
     }
 
     /**
@@ -953,7 +977,15 @@ public class DungeonProcessor implements PlaceGenerator{
             }
         }
         finder = new RoomFinder(map, env2);
-        return innerGenerate();
+        innerGenerate();
+        if(mazeFX > 0) {
+            flooder.refill(dungeon, passableChars);
+            reuse.empty().insert(stairsUp).flood(flooder, Integer.MAX_VALUE).not().writeCharsInto(dungeon, '#');
+            reuse.writeCharsInto(map, '#');
+            reuse.writeIntsInto(env2, DungeonTools.UNTOUCHED);
+            finder.reset(map, env2);
+        }
+        return dungeon;
     }
 
 
@@ -1107,7 +1139,7 @@ public class DungeonProcessor implements PlaceGenerator{
                     minSize = sz;
                 }
             }
-            ConnectingMapGenerator cmg = new ConnectingMapGenerator(width, height, 1, 1, rng, 2);
+            ConnectingMapGenerator cmg = new ConnectingMapGenerator(width, height, 1, 1, rng, 1);
             char[][] cmgMap = cmg.generate();
             center = chosen.singleRandom(rng);
             flooded.empty().insert(center).spill(chosen, potentialMazeSize, rng).and(limit);
