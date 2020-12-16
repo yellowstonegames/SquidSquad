@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.grid.LineTools;
 
 public class SerpentMapGeneratorDemo {
 
@@ -9,7 +10,7 @@ public class SerpentMapGeneratorDemo {
         SerpentMapGenerator gen = new SerpentMapGenerator(80, 40, random, 0.07);
         gen.putWalledBoxRoomCarvers(4);
         gen.putCaveCarvers(1);
-        char[][] map = DungeonTools.hashesToLines(gen.generate());
+        char[][] map = LineTools.hashesToLines(gen.generate());
         DungeonTools.debugPrint(map);
     }
 }

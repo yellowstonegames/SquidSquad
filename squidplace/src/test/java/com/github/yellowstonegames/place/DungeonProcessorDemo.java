@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.grid.LineTools;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class DungeonProcessorDemo {
@@ -16,7 +17,7 @@ public class DungeonProcessorDemo {
         gen.addMaze(40);
         for(TilesetType tt : TilesetType.values()){
             System.out.println(tt.name());
-            DungeonTools.debugPrint(DungeonTools.hashesToLines(gen.generate(tt), true));
+            DungeonTools.debugPrint(LineTools.hashesToLines(gen.generate(tt), true));
         }
     }
 }

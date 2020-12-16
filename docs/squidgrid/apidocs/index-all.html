@@ -332,6 +332,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This can take an int produced by <code>someCoord.encode()</code> and get the original Coord back out of it.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#decode4x4(long)">decode4x4(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Produces a 4x4 2D char array by interpreting the bits of the given long as line information.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#decode4x4(long,char%5B%5D)">decode4x4(long, char[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Produces a 4x4 2D char array by interpreting the bits of the given long as line information.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#decodeInto4x4(long,char%5B%5D,char%5B%5D%5B%5D,int,int)">decodeInto4x4(long, char[], char[][], int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Fills a 4x4 area of the given 2D char array <code>into</code> by interpreting the bits of the given long as line
+ information.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#decompress(java.lang.String)">decompress(String)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Decompresses a String returned by <a href="com/github/yellowstonegames/grid/Region.html#toCompressedString()"><code>Region.toCompressedString()</code></a>, returning a new Region with identical
@@ -481,6 +494,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Something like hashCode(), but reversible with <code>Coord.decode()</code>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#encode4x4(char%5B%5D%5B%5D)">encode4x4(char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Reads a 2D char array <code>decoded</code>, which must be at least 4x4 in size, and returns a long that encodes the cells from 0,0 to
+ 3,3 in a way that this class can interpret and manipulate.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -536,6 +554,36 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#extend(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,int,boolean,int,int)">extend(Coord, Coord, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorCircleLarge">exteriorCircleLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorDiamondLarge">exteriorDiamondLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorPlus">exteriorPlus</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorPlusLarge">exteriorPlusLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorSquare">exteriorSquare</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#exteriorSquareLarge">exteriorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
@@ -592,6 +640,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#flip(boolean,boolean)">flip(boolean, boolean)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#flipHorizontal4x4(long)">flipHorizontal4x4(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Makes a variant on the given encoded 4x4 pattern so the left side is flipped to the right side and vice versa.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#flipVertical4x4(long)">flipVertical4x4(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Makes a variant on the given encoded 4x4 pattern so the top side is flipped to the bottom side and vice versa.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.Float2.html#%3Cinit%3E(float,float)">Float2(float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.Float2.html" title="class in com.github.yellowstonegames.grid">Noise.Float2</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.Float3.html#%3Cinit%3E(float,float,float)">Float3(float, float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.Float3.html" title="class in com.github.yellowstonegames.grid">Noise.Float3</a></dt>
@@ -1277,6 +1333,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#hashesToLines(char%5B%5D%5B%5D)">hashesToLines(char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+ drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
+ filled with more walls before) with space characters, ' '.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#hashesToLines(char%5B%5D%5B%5D,boolean)">hashesToLines(char[][], boolean)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+ drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
+ filled with more walls before) with space characters, ' '.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/FlawedPointHash.CubeHash.html#hashLongs(long,long,long)">hashLongs(long, long, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html#hashLongs(long,long,long)">hashLongs(long, long, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></dt>
@@ -1384,6 +1452,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#hasRight()">hasRight()</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#hasUp()">hasUp()</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavy">heavy</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavyAlt">heavyAlt</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#height">height</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -1529,6 +1601,36 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#instance8D">instance8D</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorCircleLarge">interiorCircleLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorDiamondLarge">interiorDiamondLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorPlus">interiorPlus</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorPlusLarge">interiorPlusLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorSquare">interiorSquare</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#interiorSquareLarge">interiorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#interleaveBits(int,int)">interleaveBits(int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Narrow-purpose; takes an x and a y value, each between 0 and 65535 inclusive, and interleaves their bits so the
@@ -1739,6 +1841,10 @@ loadScripts(document, 'script');</script>
  threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
  and so on until the last element includes almost all points.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#light">light</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#lightAlt">lightAlt</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
@@ -1820,6 +1926,16 @@ loadScripts(document, 'script');</script>
  the number of Coords returned reaches maxLength (measured using
  Euclidean distance, or "as the crow flies").</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#linesToHashes(char%5B%5D%5B%5D)">linesToHashes(char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Reverses most of the effects of hashesToLines().</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">LineTools</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">Tools for constructing patterns using box-drawing characters in grids.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#%3Cinit%3E()">LineTools()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html#%3Cinit%3E()">LongImpl()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html#%3Cinit%3E(int)">LongImpl(int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></dt>
@@ -2104,6 +2220,14 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/HilbertCurve.html#posToMoore(int,int)">posToMoore(int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></dt>
 <dd>
 <div class="block">Takes an x, y position and returns the length to travel along the 16x16 Moore curve to reach that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#pruneLines(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region,char%5B%5D%5B%5D)">pruneLines(char[][], Region, char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Adjusts an existing map that uses box-drawing characters so non-visible line segments aren't rendered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#pruneLines(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region,char%5B%5D,char%5B%5D%5B%5D)">pruneLines(char[][], Region, char[], char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Adjusts an existing map that uses box-drawing characters so non-visible line segments aren't rendered.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#pureEncode(int,int)">pureEncode(int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
@@ -2533,6 +2657,16 @@ loadScripts(document, 'script');</script>
 <div class="block">A static version of the current <a href="com/github/yellowstonegames/grid/Coord.html#hashCode()"><code>Coord.hashCode()</code></a> method of this class, taking x and y as parameters instead of
  requiring a Coord object.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#rotateClockwise(long)">rotateClockwise(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Makes a variant on the given encoded 4x4 pattern so the lines are rotated 90 degrees clockwise, changing their
+ positions as well as what chars they will decode to.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#rotateCounterclockwise(long)">rotateCounterclockwise(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Makes a variant on the given encoded 4x4 pattern so the lines are rotated 90 degrees counterclockwise, changing
+ their positions as well as what chars they will decode to.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#roughDistance(int,int)">roughDistance(int, int)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/FlawedPointHash.RugHash.html#%3Cinit%3E()">RugHash()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.RugHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.RugHash</a></dt>
@@ -2681,6 +2815,26 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#setY(int)">setY(int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#shallowerExteriorSquareLarge">shallowerExteriorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#shallowerInteriorSquareLarge">shallowerInteriorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#shallowExteriorSquareLarge">shallowExteriorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#shallowInteriorSquareLarge">shallowInteriorSquareLarge</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
+ would extend to touch cells adjacent to the 4x4 area.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#sharpness">sharpness</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#show(char,char)">show(char, char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2931,6 +3085,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Takes this Coord, adds x to its x and y to its y, limiting x from 0 to width and limiting y from 0 to height,
  and returns the Coord at that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#transpose4x4(long)">transpose4x4(long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">Makes a variant on the given encoded 4x4 pattern so the x and y axes are interchanged, making the top side become
+ the left side and vice versa, while the bottom side becomes the right side and vice versa.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#transposeLines(char%5B%5D%5B%5D)">transposeLines(char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>
+<div class="block">If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
+ connect as you expect.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#TRI_NOISE">TRI_NOISE</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>

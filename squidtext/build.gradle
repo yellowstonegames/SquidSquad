@@ -1,5 +1,11 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-eclipse.project.name = projectName + 'squidtext'
+ext.projectName = 'squidtext'
+eclipse.project.name = ext.projectName
+modifyPom {
+    project {
+        name ext.projectName
+    }
+}
 
 dependencies {
     api project(':squidcore')

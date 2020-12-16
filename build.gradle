@@ -18,6 +18,11 @@ apply plugin: 'maven'
 apply from: 'publish.gradle'
 
 def projectName = 'SquidSquad'
+modifyPom {
+    project {
+        name projectName
+    }
+}
 version '0.0.1-SNAPSHOT'
 group 'com.squidpony'
 
@@ -31,6 +36,7 @@ allprojects {
 configure(subprojects) {
     apply plugin: 'java-library'
     apply plugin: 'com.bmuschko.nexus'
+    apply from: '../publish.gradle'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     compileJava {
@@ -40,6 +46,7 @@ configure(subprojects) {
 
 subprojects {
 	version = "$parent.version"
+    group = parent.group
     ext.projectName = 'SquidSquad'
 	repositories {
 		mavenLocal()
@@ -62,7 +69,7 @@ if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
             // The -quiet is because of some sort of weird JDK JavaCompiler bug:
             // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
-            options.addStringOption('Xdoclint:all,-missing', '-quiet')
+            options.addStringOption('Xdoclint:none,-missing', '-quiet')
             options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
         }
     }

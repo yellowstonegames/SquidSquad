@@ -1,6 +1,5 @@
 modifyPom {
     project {
-        name 'SquidSquad'
         description "Connected libraries for procedural generation and roguelikes."
         url 'https://github.com/yellowstonegames/SquidSquad'
         inceptionYear '2020'
