@@ -1180,13 +1180,53 @@ public final class DescriptiveColor {
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
+     * <br>
+     * This overload will check the first character of description and may change how it parses depending on that char.
+     * If the first char is {@code #}, and there are 6 characters remaining, this parses those 6 characters as a hex
+     * color in RGB888 format. If the first char is {@code #} and there are 8 or more characters remaining, it parses
+     * 8 of those characters as an RGBA8888 hex color. If the first char is {@code |}, that char is ignored and the rest
+     * of the CharSequence is treated as a color description (this is to ease parsing markup for
+     * {@link #processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a color description.
      *
-     * @param description a color description, as a lower-case String matching the above format
+     * @param description a color description, as a lower-case String matching the above format, or a {@code #}-prefixed hex color
      * @return a packed IPT int color as described
      */
     public static int parseDescription(final CharSequence description) {
+        if(description.isEmpty()) return 0;
+        final char initial = description.charAt(0);
+        if(initial == '#') {
+            if (description.length() >= 7 && description.length() < 9)
+                return DigitTools.intFromHex(description, 1, 7) << 8 | 0xFF;
+            else if(description.length() >= 9)
+                return DigitTools.intFromHex(description, 1, 9);
+            return 0;
+        }
+        return parseDescription(description, initial == '|' ? 1 : 0, description.length());
+    }
+    /**
+     * Parses a color description and returns the approximate color it describes, as a packed IPT int color.
+     * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
+     * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
+     * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
+     * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
+     * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
+     * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
+     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. If a color name
+     * or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * and "lightest richer apricot-olive".
+     * <br>
+     * This overload always considers its input a color description, and won't parse hex colors.
+     *
+     * @param description a color description, as a lower-case String matching the above format
+     * @param start the first character of the description to read from
+     * @param length how much of description to attempt to parse
+     * @return a packed IPT int color as described
+     */
+    public static int parseDescription(final CharSequence description, int start, int length) {
         float intensity = 0f, saturation = 0f;
-        wordMatcher.setTarget(description);
+        wordMatcher.setTarget(description, start, length);
         final ArrayList<String> terms = wordMatcher.foundStrings();
         mixing.clear();
         for (int i = 0; i < terms.size(); i++) {
@@ -1297,7 +1337,7 @@ public final class DescriptiveColor {
         textBuffer.append(DigitTools.hex(describe(builder)));
         textBuffer.append(']');
     };
-    private static final Replacer rep = new Replacer(Pattern.compile("(?<!\\[)\\[\\|([^\\]]*)(?:\\]|$)", Pattern.IGNORE_CASE), sub);
+    private static final Replacer rep = new Replacer(Pattern.compile("(?<!\\[)\\[(\\|[^\\]]*)(?:\\]|$)", Pattern.IGNORE_CASE), sub);
 
     /**
      * Processes color markup of the form {@code [|description]}, where {@code description} is in the format that
