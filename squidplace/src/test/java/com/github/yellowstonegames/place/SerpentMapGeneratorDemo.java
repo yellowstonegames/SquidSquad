@@ -17,7 +17,7 @@ public class SerpentMapGeneratorDemo {
         System.out.println("------------------------------------------------------------");
         System.out.println("------------------------------------------------------------");
 
-        random.setState(0xB0BAFE77, 0xB055);
+        random.setState(0xB0BAFE77, 0xB055BA77L);
         SerpentDeepMapGenerator deepSerpent = new SerpentDeepMapGenerator(width, height, depth, random, 0.15);
         deepSerpent.putWalledBoxRoomCarvers(2);
         deepSerpent.putWalledRoundRoomCarvers(2);

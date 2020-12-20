@@ -71,12 +71,11 @@ public class SerpentDeepMapGenerator {
         this.height = height;
         this.depth = depth;
         int numLayers = (int)Math.ceil(depth / 4.0f);
-        long columnAlterations = random.nextLong(0x100000000L);
-        System.out.println(columnAlterations);
-        float columnBase = width / (Long.bitCount(columnAlterations) + 16.0f);
-        long rowAlterations = random.nextLong(0x100000000L);
-        System.out.println(rowAlterations);
-        float rowBase = height / (Long.bitCount(rowAlterations) + 16.0f);
+        long alterations = random.nextLong();
+        long columnAlterations = alterations & 0xFFFFFFFFL;
+        float columnBase = (width - 2) / (Long.bitCount(columnAlterations) + 16.0f);
+        long rowAlterations = alterations >>> 32;
+        float rowBase = (height - 2) / (Long.bitCount(rowAlterations) + 16.0f);
 
         columns = new int[16];
         rows = new int[16];
@@ -86,28 +85,11 @@ public class SerpentDeepMapGenerator {
             linksUp.add(new ObjectOrderedSet<>(80));
             linksDown.add(new ObjectOrderedSet<>(80));
         }
-        int csum = 0, rsum = 0;
+        float csum = 0, rsum = 0;
         long b = 3;
         for (int i = 0; i < 16; i++, b <<= 2) {
-            columns[i] = csum + (int)(columnBase * 0.5f * (1 + Long.bitCount(columnAlterations & b)));
-            csum += (int)(columnBase * (1 + Long.bitCount(columnAlterations & b)));
-            rows[i] = rsum + (int)(rowBase * 0.5f * (1 + Long.bitCount(rowAlterations & b)));
-            rsum += (int)(rowBase * (1 + Long.bitCount(rowAlterations & b)));
-        }
-        int cs = width - csum;
-        int rs = height - rsum;
-        int cs2 = cs, rs2 = rs, cs3 = cs, rs3 = rs;
-        for (int i = 0; i <= 7; i++) {
-            cs2= 0;
-            rs2 = 0;
-            columns[i] -= cs2;
-            rows[i] -= rs2;
-        }
-        for (int i = 15; i >= 8; i--) {
-            cs3 = cs3 * (i - 8) / 8;
-            rs3 = rs3 * (i - 8) / 8;
-            columns[i] += cs3;
-            rows[i] += rs3;
+            columns[i] = (int)((csum += columnBase * (1 + Long.bitCount(columnAlterations & b))));
+            rows[i] = (int)((rsum += rowBase * (1 + Long.bitCount(rowAlterations & b))));
         }
 
         ObjectList<ObjectObjectOrderedMap<Coord, ObjectList<Coord>>> connections = new ObjectList<>(depth);
@@ -336,7 +318,6 @@ public class SerpentDeepMapGenerator {
     public char[][][] generate()
     {
         char[][][] dungeon = new char[depth][][];
-//        short[][] floors = new short[depth][];
         Region[] floors = new Region[depth];
         int dlimit = (height + width) / 3;
         for (int i = 0; i < depth; i++) {
@@ -348,7 +329,6 @@ public class SerpentDeepMapGenerator {
         //using actual dungeon space per layer, not row/column 3D grid space
         ObjectList<ObjectOrderedSet<Coord>> ups = new ObjectList<>(depth),
                 downs = new ObjectList<>(depth);
-        int iteration = 0;
         for (int i = 0; i < depth; i++) {
             ups.add(new ObjectOrderedSet<>(40));
             downs.add(new ObjectOrderedSet<>(40));
@@ -361,15 +341,10 @@ public class SerpentDeepMapGenerator {
                 while(above.size() > 0)
                 {
                     nearAbove.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i - 1], dlimit);
-                    if(nearAbove.size() <= 1) {
-                        System.out.println("Problem on iteration " + iteration + ", nearAbove.size() == " + nearAbove.size());
-//                        return dungeon;
-                    }
-                    iteration++;
                     near.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i], dlimit).and(nearAbove);
-                    Coord[] subLink = near.randomPortion(random, 1);
-                    Collections.addAll(ups.get(i), subLink);
-                    Collections.addAll(downs.get(i-1), subLink);
+                    Coord subLink = near.singleRandom(random);
+                    ups.get(i).add(subLink);
+                    downs.get(i-1).add(subLink);
                     for(Coord abv : linksDown.get(i-1))
                     {
                         if(nearAbove.contains(columns[abv.x], rows[abv.y]))
