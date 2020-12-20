@@ -5,8 +5,7 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.core.DigitTools;
 import regexodus.*;
-
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A palette of predefined colors as packed IPT ints, and tools for obtaining IPT int colors from a description.
@@ -1227,7 +1226,7 @@ public final class DescriptiveColor {
     public static int parseDescription(final CharSequence description, int start, int length) {
         float intensity = 0f, saturation = 0f;
         wordMatcher.setTarget(description, start, length);
-        final ArrayList<String> terms = wordMatcher.foundStrings();
+        final List<String> terms = wordMatcher.foundStrings();
         mixing.clear();
         for (int i = 0; i < terms.size(); i++) {
             String term = terms.get(i);
