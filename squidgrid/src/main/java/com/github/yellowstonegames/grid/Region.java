@@ -3927,7 +3927,7 @@ public class Region implements Collection<Coord>, Serializable {
      */
     public Region flood(Region bounds) {
         Region result = this;
-        if (width < 2 || ySections <= 0 || bounds == null || bounds.width < 2 || bounds.ySections <= 0) {
+        if (width < 2 || ySections <= 0 || bounds == null || bounds.width < 2 || bounds.ySections <= 0 || !intersects(bounds)) {
         } else {
             final long[] next = new long[width * ySections];
             for (int a = 0; a < ySections && a < bounds.ySections; a++) {

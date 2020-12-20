@@ -9,6 +9,8 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.Region;
 
+import java.util.Collections;
+
 /**
  * Generate dungeons based on a random, winding, looping path through 3D space, requiring a character to move up and
  * down as well as north/south/east/west to get through the dungeon. Uses techniques from MixedGenerator.
@@ -70,8 +72,10 @@ public class SerpentDeepMapGenerator {
         this.depth = depth;
         int numLayers = (int)Math.ceil(depth / 4.0f);
         long columnAlterations = random.nextLong(0x100000000L);
+        System.out.println(columnAlterations);
         float columnBase = width / (Long.bitCount(columnAlterations) + 16.0f);
         long rowAlterations = random.nextLong(0x100000000L);
+        System.out.println(rowAlterations);
         float rowBase = height / (Long.bitCount(rowAlterations) + 16.0f);
 
         columns = new int[16];
@@ -338,11 +342,13 @@ public class SerpentDeepMapGenerator {
         for (int i = 0; i < depth; i++) {
             dungeon[i] = mix[i].generate();
             floors[i] = new Region(dungeon[i], '.');
+            floors[i].size();
         }
         Region near = new Region(width, height), nearAbove = new Region(width, height);
         //using actual dungeon space per layer, not row/column 3D grid space
         ObjectList<ObjectOrderedSet<Coord>> ups = new ObjectList<>(depth),
                 downs = new ObjectList<>(depth);
+        int iteration = 0;
         for (int i = 0; i < depth; i++) {
             ups.add(new ObjectOrderedSet<>(40));
             downs.add(new ObjectOrderedSet<>(40));
@@ -355,10 +361,15 @@ public class SerpentDeepMapGenerator {
                 while(above.size() > 0)
                 {
                     nearAbove.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i - 1], dlimit);
+                    if(nearAbove.size() <= 1) {
+                        System.out.println("Problem on iteration " + iteration + ", nearAbove.size() == " + nearAbove.size());
+//                        return dungeon;
+                    }
+                    iteration++;
                     near.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i], dlimit).and(nearAbove);
-                    Coord subLink = near.singleRandom(random);
-                    ups.get(i).add(subLink);
-                    downs.get(i-1).add(subLink);
+                    Coord[] subLink = near.randomPortion(random, 1);
+                    Collections.addAll(ups.get(i), subLink);
+                    Collections.addAll(downs.get(i-1), subLink);
                     for(Coord abv : linksDown.get(i-1))
                     {
                         if(nearAbove.contains(columns[abv.x], rows[abv.y]))

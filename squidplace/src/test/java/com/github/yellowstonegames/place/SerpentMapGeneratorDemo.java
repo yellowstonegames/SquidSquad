@@ -7,7 +7,7 @@ public class SerpentMapGeneratorDemo {
 
     public static void main(String[] args) {
         final int width = 60, height = 60, depth = 8;
-        LaserRandom random = new LaserRandom(0xB0BAFE77);
+        LaserRandom random = new LaserRandom(0xB0BAFE77, 0xB055);
         SerpentMapGenerator gen = new SerpentMapGenerator(width, height, random, 0.07);
         gen.putWalledBoxRoomCarvers(4);
         gen.putCaveCarvers(1);
@@ -17,7 +17,7 @@ public class SerpentMapGeneratorDemo {
         System.out.println("------------------------------------------------------------");
         System.out.println("------------------------------------------------------------");
 
-        random.setSeed(0xB0BAFE77);
+        random.setState(0xB0BAFE77, 0xB055);
         SerpentDeepMapGenerator deepSerpent = new SerpentDeepMapGenerator(width, height, depth, random, 0.15);
         deepSerpent.putWalledBoxRoomCarvers(2);
         deepSerpent.putWalledRoundRoomCarvers(2);
