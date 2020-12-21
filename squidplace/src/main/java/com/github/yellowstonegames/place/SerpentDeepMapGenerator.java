@@ -9,8 +9,6 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.Region;
 
-import java.util.Collections;
-
 /**
  * Generate dungeons based on a random, winding, looping path through 3D space, requiring a character to move up and
  * down as well as north/south/east/west to get through the dungeon. Uses techniques from MixedGenerator.
@@ -70,7 +68,7 @@ public class SerpentDeepMapGenerator {
         this.width = width;
         this.height = height;
         this.depth = depth;
-        int numLayers = (int)Math.ceil(depth / 4.0f);
+        int numLayers = (int)Math.ceil(depth / 4.0);
         long alterations = random.nextLong();
         long columnAlterations = alterations & 0xFFFFFFFFL;
         float columnBase = (width - 2) / (Long.bitCount(columnAlterations) + 16.0f);
@@ -98,7 +96,7 @@ public class SerpentDeepMapGenerator {
         }
         int m = random.nextInt(0x800 * numLayers);
         int x = HilbertCurve.getXMoore3D(m, numLayers), y = HilbertCurve.getYMoore3D(m, numLayers),
-                z = (int)Math.floor(HilbertCurve.getZMoore3D(m, numLayers) * depth / (8f * numLayers)),
+                z = (int)(HilbertCurve.getZMoore3D(m, numLayers) * depth / (8f * numLayers)),
                 sx = x, sy = y, sz = z, tz = z;
         int r = random.nextInt(12, 33);
         m += r;
@@ -332,11 +330,11 @@ public class SerpentDeepMapGenerator {
         for (int i = 0; i < depth; i++) {
             ups.add(new ObjectOrderedSet<>(40));
             downs.add(new ObjectOrderedSet<>(40));
-            ObjectOrderedSet<Coord> above;
+            ObjectOrderedSet<Coord> above = new ObjectOrderedSet<>();
             if (i > 0) {
-                above = new ObjectOrderedSet<>(linksDown.get(i - 1));
-                if(above.size() == 0)
+                if(linksDown.get(i - 1).size() == 0)
                     continue;
+                above.addAll(linksDown.get(i - 1));
                 Coord higher = above.random(random);
                 while(above.size() > 0)
                 {
