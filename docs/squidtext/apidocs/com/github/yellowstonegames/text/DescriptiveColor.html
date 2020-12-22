@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -614,6 +614,15 @@ int&nbsp;size)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i11">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parseDescription(java.lang.CharSequence,int,int)">parseDescription</a></span>&#8203;(java.lang.CharSequence&nbsp;description,
+int&nbsp;start,
+int&nbsp;length)</code></th>
+<td class="col-last">
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(java.lang.CharSequence&nbsp;markupString)</code></th>
 <td class="col-last">
@@ -622,14 +631,14 @@ int&nbsp;size)</code></th>
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#saturation(int)">saturation</a></span>&#8203;(int&nbsp;iptColor)</code></th>
 <td class="col-last">
 <div class="block">Gets the saturation of the given encoded color, as a float ranging from 0.0f to 1.0f, inclusive.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toRGBA8888(int)">toRGBA8888</a></span>&#8203;(int&nbsp;decoded)</code></th>
 <td class="col-last">
@@ -1751,10 +1760,47 @@ int&nbsp;size)</span></div>
  or adjective is invalid, it is considered the same as adding the color <a href="#TRANSPARENT"><code>TRANSPARENT</code></a>.
  <br>
  Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
- and "lightest richer apricot-olive".</div>
+ and "lightest richer apricot-olive".
+ <br>
+ This overload will check the first character of description and may change how it parses depending on that char.
+ If the first char is <code>#</code>, and there are 6 characters remaining, this parses those 6 characters as a hex
+ color in RGB888 format. If the first char is <code>#</code> and there are 8 or more characters remaining, it parses
+ 8 of those characters as an RGBA8888 hex color. If the first char is <code>|</code>, that char is ignored and the rest
+ of the CharSequence is treated as a color description (this is to ease parsing markup for
+ <a href="#processColorMarkup(java.lang.CharSequence)"><code>processColorMarkup(CharSequence)</code></a>). Otherwise, the whole CharSequence is parsed as a color description.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>description</code> - a color description, as a lower-case String matching the above format, or a <code>#</code>-prefixed hex color</dd>
+<dt>Returns:</dt>
+<dd>a packed IPT int color as described</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="parseDescription(java.lang.CharSequence,int,int)">
+<h3>parseDescription</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">parseDescription</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description,
+int&nbsp;start,
+int&nbsp;length)</span></div>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.
+ Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
+ spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
+ <a href="#NAMED"><code>NAMED</code></a> and tracked; if there is more than one of these color name words, the colors will be mixed using
+ <a href="#mix(int%5B%5D,int,int)"><code>mix(int[], int, int)</code></a>, or if there is just one color name word, then the corresponding color
+ will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
+ "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
+ adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. If a color name
+ or adjective is invalid, it is considered the same as adding the color <a href="#TRANSPARENT"><code>TRANSPARENT</code></a>.
+ <br>
+ Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+ and "lightest richer apricot-olive".
+ <br>
+ This overload always considers its input a color description, and won't parse hex colors.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>description</code> - a color description, as a lower-case String matching the above format</dd>
+<dd><code>start</code> - the first character of the description to read from</dd>
+<dd><code>length</code> - how much of description to attempt to parse</dd>
 <dt>Returns:</dt>
 <dd>a packed IPT int color as described</dd>
 </dl>

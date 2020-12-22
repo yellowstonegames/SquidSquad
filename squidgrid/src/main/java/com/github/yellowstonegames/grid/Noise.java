@@ -158,9 +158,11 @@ public class Noise implements Serializable {
     WHITE_NOISE = 7,
     /**
      * A simple kind of noise that gets a random float for each vertex of a square or cube, and interpolates between all
-     * of them to get a smoothly changing value (using cubic interpolation, also called {@link #HERMITE}, of course).
+     * of them to get a smoothly changing value using... uh... some kind of cubic or bicubic interpolation, the
+     * documentation for <a href="https://github.com/jobtalle/CubicNoise">CubicNoise</> is not specific.
      * If you're changing the point hashing algorithm with {@link #setPointHash(IPointHash)}, you should usually use
-     * this or {@link #CUBIC_FRACTAL} if you want to see any aesthetically-desirable artifacts in the hash.
+     * this or {@link #CUBIC_FRACTAL} if you want to see any aesthetically-desirable artifacts in the hash. This
+     * supports 2D, 3D, and 4D, currently.
      * <br>
      * <a href="https://i.imgur.com/foV90pn.png">Noise sample at left, FFT at right.</a>
      * <br>
@@ -169,10 +171,12 @@ public class Noise implements Serializable {
     CUBIC = 8,
     /**
      * A simple kind of noise that gets a random float for each vertex of a square or cube, and interpolates between all
-     * of them to get a smoothly changing value (using cubic interpolation, also called {@link #HERMITE}, of course).
+     * of them to get a smoothly changing value using... uh... some kind of cubic or bicubic interpolation, the
+     * documentation for <a href="https://github.com/jobtalle/CubicNoise">CubicNoise</> is not specific.
      * This version can use {@link #setFractalType(int)}, {@link #setFractalOctaves(int)}, and more.
      * If you're changing the point hashing algorithm with {@link #setPointHash(IPointHash)}, you should usually use
-     * this or {@link #CUBIC} if you want to see any aesthetically-desirable artifacts in the hash.
+     * this or {@link #CUBIC} if you want to see any aesthetically-desirable artifacts in the hash. This supports 2D,
+     * 3D, and 4D, currently.
      * <br>
      * <a href="https://i.imgur.com/foV90pn.png">Noise sample at left, FFT at right.</a>
      * <br>
@@ -597,24 +601,12 @@ public class Noise implements Serializable {
         return pointHash.hashWithState(x, y, z, w, u, v, s);
     }
 
-    private int hash32(int x, int y, int s){
-        return pointHash.hashWithState(x, y, s) >>> 27;
-    }
-
     protected int hash32(int x, int y, int z, int s){
         return pointHash.hashWithState(x, y, z, s) >>> 27;
     }
 
-    private int hash32(int x, int y, int z, int w, int s){
-        return pointHash.hashWithState(x, y, z, w, s) >>> 27;
-    }
-
-    private int hash32(int x, int y, int z, int w, int u, int s){
-        return pointHash.hashWithState(x, y, z, w, u, s) >>> 27;
-    }
-
-    private int hash32(int x, int y, int z, int w, int u, int v, int s){
-        return pointHash.hashWithState(x, y, z, w, u, v, s) >>> 27;
+    protected int hash64(int x, int y, int z, int w, int s){
+        return pointHash.hashWithState(x, y, z, w, s) >>> 26;
     }
 
     protected int hash256(int x, int y, int s){
@@ -796,29 +788,29 @@ public class Noise implements Serializable {
     }
 
     protected float gradCoord2D(int seed, int x, int y, float xd, float yd) {
-        final float[] g = grad2f[hash256(x, y, seed)];
-        return xd * g[0] + yd * g[1];
+        final Float2 g = GRADIENTS_2D[hashAll(x, y, seed) >>> 24];
+        return xd * g.x + yd * g.y;
     }
 
     protected float gradCoord3D(int seed, int x, int y, int z, float xd, float yd, float zd) {
-        final Float3 g = GRAD_3D[hash32(x, y, z, seed)];
+        final Float3 g = GRADIENTS_3D[hashAll(x, y, z, seed) >>> 27];
         return xd * g.x + yd * g.y + zd * g.z;
     }
 
     protected float gradCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
-        final int hash = hash256(x, y, z, w, seed) & 0xFC;
-        return xd * grad4f[hash] + yd * grad4f[hash + 1] + zd * grad4f[hash + 2] + wd * grad4f[hash + 3];
+        final Float4 g = GRADIENTS_4D[hashAll(x, y, z, w, seed) >>> 26];
+        return xd * g.x + yd * g.y + zd * g.z + wd * g.w;
     }
 
     protected float gradCoord5D(int seed, int x, int y, int z, int w, int u,
                                        float xd, float yd, float zd, float wd, float ud) {
-        final Float5 g = grad5f[hash256(x, y, z, w, u, seed)];
+        final Float5 g = GRADIENTS_5D[hashAll(x, y, z, w, u, seed) >>> 24];
         return xd * g.x + yd * g.y + zd * g.z + wd * g.w + ud * g.u;
     }
 
     protected float gradCoord6D(int seed, int x, int y, int z, int w, int u, int v,
                                        float xd, float yd, float zd, float wd, float ud, float vd) {
-        final Float6 g = grad6f[hash256(x, y, z, w, u, v, seed)];
+        final Float6 g = GRADIENTS_6D[hashAll(x, y, z, w, u, v, seed) >>> 24];
         return xd * g.x + yd * g.y + zd * g.z + wd * g.w + ud * g.u + vd * g.v;
     }
 
@@ -827,8 +819,8 @@ public class Noise implements Serializable {
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
      * {@link #setFrequency(float)}, {@link #setFractalOctaves(int)}, and {@link #setFractalType(int)}, among others,
      * you can call this method to get the particular variety of noise you specified, in 2D.
-     * @param x
-     * @param y
+     * @param x x position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param y y position, as a float; the range this should have depends on {@link #getFrequency()}
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y) {
@@ -920,9 +912,9 @@ public class Noise implements Serializable {
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
      * {@link #setFrequency(float)}, {@link #setFractalOctaves(int)}, and {@link #setFractalType(int)}, among others,
      * you can call this method to get the particular variety of noise you specified, in 3D.
-     * @param x
-     * @param y
-     * @param z
+     * @param x x position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param y y position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param z z position, as a float; the range this should have depends on {@link #getFrequency()}
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y, float z) {
@@ -1014,10 +1006,10 @@ public class Noise implements Serializable {
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
      * {@link #setFrequency(float)}, {@link #setFractalOctaves(int)}, and {@link #setFractalType(int)}, among others,
      * you can call this method to get the particular variety of noise you specified, in 4D.
-     * @param x
-     * @param y
-     * @param z
-     * @param w
+     * @param x x position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param y y position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param z z position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param w w position, as a float; the range this should have depends on {@link #getFrequency()}
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y, float z, float w) {
@@ -1091,6 +1083,18 @@ public class Noise implements Serializable {
 //                }
             case WHITE_NOISE:
                 return getWhiteNoise(x, y, z, w);
+            case CUBIC:
+                return singleCubic(seed, x, y, z, w);
+            case CUBIC_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleCubicFractalBillow(x, y, z, w);
+                    case RIDGED_MULTI:
+                        return singleCubicFractalRidgedMulti(x, y, z, w);
+                    default:
+                        return singleCubicFractalFBM(x, y, z, w);
+                }
+
             default:
                 return singleSimplex(seed, x, y, z, w);
         }
@@ -1100,11 +1104,11 @@ public class Noise implements Serializable {
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
      * {@link #setFrequency(float)}, {@link #setFractalOctaves(int)}, and {@link #setFractalType(int)}, among others,
      * you can call this method to get the particular variety of noise you specified, in 5D.
-     * @param x
-     * @param y
-     * @param z
-     * @param w
-     * @param u
+     * @param x x position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param y y position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param z z position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param w w position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param u u position, as a float; the range this should have depends on {@link #getFrequency()}
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y, float z, float w, float u) {
@@ -1179,12 +1183,12 @@ public class Noise implements Serializable {
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
      * {@link #setFrequency(float)}, {@link #setFractalOctaves(int)}, and {@link #setFractalType(int)}, among others,
      * you can call this method to get the particular variety of noise you specified, in 6D.
-     * @param x
-     * @param y
-     * @param z
-     * @param w
-     * @param u
-     * @param v
+     * @param x x position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param y y position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param z z position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param w w position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param u u position, as a float; the range this should have depends on {@link #getFrequency()}
+     * @param v v position, as a float; the range this should have depends on {@link #getFrequency()}
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y, float z, float w, float u, float v) {
@@ -4717,126 +4721,6 @@ public class Noise implements Serializable {
     }
 
     // Cubic Noise
-    public float getCubicFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleCubicFractalFBM(x, y, z);
-            case BILLOW:
-                return singleCubicFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleCubicFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleCubicFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleCubic(seed, x, y, z);
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleCubic(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleCubicFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleCubic(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleCubic(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleCubicFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleCubic(seed + i, x, y, z));
-            correction += (exp *= 0.5);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getCubic(float x, float y, float z) {
-        return singleCubic(seed, x * frequency, y * frequency, z * frequency);
-    }
-
-    private final static float CUBIC_3D_BOUNDING = 1 / (float) (1.5 * 1.5 * 1.5);
-
-    private float singleCubic(int seed, float x, float y, float z) {
-        int x1 = fastFloor(x);
-        int y1 = fastFloor(y);
-        int z1 = fastFloor(z);
-
-        int x0 = x1 - 1;
-        int y0 = y1 - 1;
-        int z0 = z1 - 1;
-        int x2 = x1 + 1;
-        int y2 = y1 + 1;
-        int z2 = z1 + 1;
-        int x3 = x1 + 2;
-        int y3 = y1 + 2;
-        int z3 = z1 + 2;
-
-        float xs = x - (float) x1;
-        float ys = y - (float) y1;
-        float zs = z - (float) z1;
-
-        return cubicLerp(
-                cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z0), valCoord3D(seed, x1, y0, z0), valCoord3D(seed, x2, y0, z0), valCoord3D(seed, x3, y0, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z0), valCoord3D(seed, x1, y1, z0), valCoord3D(seed, x2, y1, z0), valCoord3D(seed, x3, y1, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z0), valCoord3D(seed, x1, y2, z0), valCoord3D(seed, x2, y2, z0), valCoord3D(seed, x3, y2, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z0), valCoord3D(seed, x1, y3, z0), valCoord3D(seed, x2, y3, z0), valCoord3D(seed, x3, y3, z0), xs),
-                        ys),
-                cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z1), valCoord3D(seed, x1, y0, z1), valCoord3D(seed, x2, y0, z1), valCoord3D(seed, x3, y0, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z1), valCoord3D(seed, x1, y1, z1), valCoord3D(seed, x2, y1, z1), valCoord3D(seed, x3, y1, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z1), valCoord3D(seed, x1, y2, z1), valCoord3D(seed, x2, y2, z1), valCoord3D(seed, x3, y2, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z1), valCoord3D(seed, x1, y3, z1), valCoord3D(seed, x2, y3, z1), valCoord3D(seed, x3, y3, z1), xs),
-                        ys),
-                cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z2), valCoord3D(seed, x1, y0, z2), valCoord3D(seed, x2, y0, z2), valCoord3D(seed, x3, y0, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z2), valCoord3D(seed, x1, y1, z2), valCoord3D(seed, x2, y1, z2), valCoord3D(seed, x3, y1, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z2), valCoord3D(seed, x1, y2, z2), valCoord3D(seed, x2, y2, z2), valCoord3D(seed, x3, y2, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z2), valCoord3D(seed, x1, y3, z2), valCoord3D(seed, x2, y3, z2), valCoord3D(seed, x3, y3, z2), xs),
-                        ys),
-                cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z3), valCoord3D(seed, x1, y0, z3), valCoord3D(seed, x2, y0, z3), valCoord3D(seed, x3, y0, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z3), valCoord3D(seed, x1, y1, z3), valCoord3D(seed, x2, y1, z3), valCoord3D(seed, x3, y1, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z3), valCoord3D(seed, x1, y2, z3), valCoord3D(seed, x2, y2, z3), valCoord3D(seed, x3, y2, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z3), valCoord3D(seed, x1, y3, z3), valCoord3D(seed, x2, y3, z3), valCoord3D(seed, x3, y3, z3), xs),
-                        ys),
-                zs) * CUBIC_3D_BOUNDING;
-    }
-
 
     public float getCubicFractal(float x, float y) {
         x *= frequency;
@@ -4908,7 +4792,7 @@ public class Noise implements Serializable {
         return singleCubic(0, x, y);
     }
 
-    private final static float CUBIC_2D_BOUNDING = 1 / 2.25f;
+    private final static float CUBIC_2D_BOUNDING = 1f / 2.25f;
 
     private float singleCubic(int seed, float x, float y) {
         int x1 = fastFloor(x);
@@ -4934,6 +4818,335 @@ public class Noise implements Serializable {
                 cubicLerp(valCoord2D(seed, x0, y3), valCoord2D(seed, x1, y3), valCoord2D(seed, x2, y3), valCoord2D(seed, x3, y3),
                         xs),
                 ys) * CUBIC_2D_BOUNDING;
+    }
+
+    public float getCubicFractal(float x, float y, float z) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleCubicFractalFBM(x, y, z);
+            case BILLOW:
+                return singleCubicFractalBillow(x, y, z);
+            case RIDGED_MULTI:
+                return singleCubicFractalRidgedMulti(x, y, z);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleCubicFractalFBM(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = singleCubic(seed, x, y, z);
+        float amp = 1;
+        int i = 0;
+
+        while (++i < octaves) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += singleCubic(++seed, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleCubicFractalBillow(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(singleCubic(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+        int i = 0;
+
+        while (++i < octaves) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleCubic(++seed, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleCubicFractalRidgedMulti(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleCubic(seed + i, x, y, z));
+            correction += (exp *= 0.5);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getCubic(float x, float y, float z) {
+        return singleCubic(seed, x * frequency, y * frequency, z * frequency);
+    }
+
+    private final static float CUBIC_3D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f);
+
+    private float singleCubic(int seed, float x, float y, float z) {
+        int x1 = fastFloor(x);
+        int y1 = fastFloor(y);
+        int z1 = fastFloor(z);
+
+        int x0 = x1 - 1;
+        int y0 = y1 - 1;
+        int z0 = z1 - 1;
+        int x2 = x1 + 1;
+        int y2 = y1 + 1;
+        int z2 = z1 + 1;
+        int x3 = x1 + 2;
+        int y3 = y1 + 2;
+        int z3 = z1 + 2;
+
+        float xs = x - (float) x1;
+        float ys = y - (float) y1;
+        float zs = z - (float) z1;
+
+        return cubicLerp(
+                cubicLerp(
+                        cubicLerp(valCoord3D(seed, x0, y0, z0), valCoord3D(seed, x1, y0, z0), valCoord3D(seed, x2, y0, z0), valCoord3D(seed, x3, y0, z0), xs),
+                        cubicLerp(valCoord3D(seed, x0, y1, z0), valCoord3D(seed, x1, y1, z0), valCoord3D(seed, x2, y1, z0), valCoord3D(seed, x3, y1, z0), xs),
+                        cubicLerp(valCoord3D(seed, x0, y2, z0), valCoord3D(seed, x1, y2, z0), valCoord3D(seed, x2, y2, z0), valCoord3D(seed, x3, y2, z0), xs),
+                        cubicLerp(valCoord3D(seed, x0, y3, z0), valCoord3D(seed, x1, y3, z0), valCoord3D(seed, x2, y3, z0), valCoord3D(seed, x3, y3, z0), xs),
+                        ys),
+                cubicLerp(
+                        cubicLerp(valCoord3D(seed, x0, y0, z1), valCoord3D(seed, x1, y0, z1), valCoord3D(seed, x2, y0, z1), valCoord3D(seed, x3, y0, z1), xs),
+                        cubicLerp(valCoord3D(seed, x0, y1, z1), valCoord3D(seed, x1, y1, z1), valCoord3D(seed, x2, y1, z1), valCoord3D(seed, x3, y1, z1), xs),
+                        cubicLerp(valCoord3D(seed, x0, y2, z1), valCoord3D(seed, x1, y2, z1), valCoord3D(seed, x2, y2, z1), valCoord3D(seed, x3, y2, z1), xs),
+                        cubicLerp(valCoord3D(seed, x0, y3, z1), valCoord3D(seed, x1, y3, z1), valCoord3D(seed, x2, y3, z1), valCoord3D(seed, x3, y3, z1), xs),
+                        ys),
+                cubicLerp(
+                        cubicLerp(valCoord3D(seed, x0, y0, z2), valCoord3D(seed, x1, y0, z2), valCoord3D(seed, x2, y0, z2), valCoord3D(seed, x3, y0, z2), xs),
+                        cubicLerp(valCoord3D(seed, x0, y1, z2), valCoord3D(seed, x1, y1, z2), valCoord3D(seed, x2, y1, z2), valCoord3D(seed, x3, y1, z2), xs),
+                        cubicLerp(valCoord3D(seed, x0, y2, z2), valCoord3D(seed, x1, y2, z2), valCoord3D(seed, x2, y2, z2), valCoord3D(seed, x3, y2, z2), xs),
+                        cubicLerp(valCoord3D(seed, x0, y3, z2), valCoord3D(seed, x1, y3, z2), valCoord3D(seed, x2, y3, z2), valCoord3D(seed, x3, y3, z2), xs),
+                        ys),
+                cubicLerp(
+                        cubicLerp(valCoord3D(seed, x0, y0, z3), valCoord3D(seed, x1, y0, z3), valCoord3D(seed, x2, y0, z3), valCoord3D(seed, x3, y0, z3), xs),
+                        cubicLerp(valCoord3D(seed, x0, y1, z3), valCoord3D(seed, x1, y1, z3), valCoord3D(seed, x2, y1, z3), valCoord3D(seed, x3, y1, z3), xs),
+                        cubicLerp(valCoord3D(seed, x0, y2, z3), valCoord3D(seed, x1, y2, z3), valCoord3D(seed, x2, y2, z3), valCoord3D(seed, x3, y2, z3), xs),
+                        cubicLerp(valCoord3D(seed, x0, y3, z3), valCoord3D(seed, x1, y3, z3), valCoord3D(seed, x2, y3, z3), valCoord3D(seed, x3, y3, z3), xs),
+                        ys),
+                zs) * CUBIC_3D_BOUNDING;
+    }
+
+
+    public float getCubicFractal(float x, float y, float z, float w) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleCubicFractalFBM(x, y, z, w);
+            case BILLOW:
+                return singleCubicFractalBillow(x, y, z, w);
+            case RIDGED_MULTI:
+                return singleCubicFractalRidgedMulti(x, y, z, w);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleCubicFractalFBM(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = singleCubic(seed, x, y, z, w);
+        float amp = 1;
+        int i = 0;
+
+        while (++i < octaves) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += singleCubic(++seed, x, y, z, w) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleCubicFractalBillow(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = Math.abs(singleCubic(seed, x, y, z, w)) * 2 - 1;
+        float amp = 1;
+        int i = 0;
+
+        while (++i < octaves) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleCubic(++seed, x, y, z, w)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleCubicFractalRidgedMulti(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleCubic(seed + i, x, y, z, w));
+            correction += (exp *= 0.5);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getCubic(float x, float y, float z, float w) {
+        return singleCubic(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    }
+
+    private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f * 1.5f);
+
+    private float singleCubic(int seed, float x, float y, float z, float w) {
+        int x1 = fastFloor(x);
+        int y1 = fastFloor(y);
+        int z1 = fastFloor(z);
+        int w1 = fastFloor(w);
+
+        int x0 = x1 - 1;
+        int y0 = y1 - 1;
+        int z0 = z1 - 1;
+        int w0 = w1 - 1;
+        int x2 = x1 + 1;
+        int y2 = y1 + 1;
+        int z2 = z1 + 1;
+        int w2 = w1 + 1;
+        int x3 = x1 + 2;
+        int y3 = y1 + 2;
+        int z3 = z1 + 2;
+        int w3 = w1 + 2;
+
+        float xs = x - (float) x1;
+        float ys = y - (float) y1;
+        float zs = z - (float) z1;
+        float ws = w - (float) w1;
+
+        return cubicLerp(
+                cubicLerp(
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z0, w0), valCoord4D(seed, x1, y0, z0, w0), valCoord4D(seed, x2, y0, z0, w0), valCoord4D(seed, x3, y0, z0, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z0, w0), valCoord4D(seed, x1, y1, z0, w0), valCoord4D(seed, x2, y1, z0, w0), valCoord4D(seed, x3, y1, z0, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z0, w0), valCoord4D(seed, x1, y2, z0, w0), valCoord4D(seed, x2, y2, z0, w0), valCoord4D(seed, x3, y2, z0, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z0, w0), valCoord4D(seed, x1, y3, z0, w0), valCoord4D(seed, x2, y3, z0, w0), valCoord4D(seed, x3, y3, z0, w0), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z1, w0), valCoord4D(seed, x1, y0, z1, w0), valCoord4D(seed, x2, y0, z1, w0), valCoord4D(seed, x3, y0, z1, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z1, w0), valCoord4D(seed, x1, y1, z1, w0), valCoord4D(seed, x2, y1, z1, w0), valCoord4D(seed, x3, y1, z1, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z1, w0), valCoord4D(seed, x1, y2, z1, w0), valCoord4D(seed, x2, y2, z1, w0), valCoord4D(seed, x3, y2, z1, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z1, w0), valCoord4D(seed, x1, y3, z1, w0), valCoord4D(seed, x2, y3, z1, w0), valCoord4D(seed, x3, y3, z1, w0), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z2, w0), valCoord4D(seed, x1, y0, z2, w0), valCoord4D(seed, x2, y0, z2, w0), valCoord4D(seed, x3, y0, z2, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z2, w0), valCoord4D(seed, x1, y1, z2, w0), valCoord4D(seed, x2, y1, z2, w0), valCoord4D(seed, x3, y1, z2, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z2, w0), valCoord4D(seed, x1, y2, z2, w0), valCoord4D(seed, x2, y2, z2, w0), valCoord4D(seed, x3, y2, z2, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z2, w0), valCoord4D(seed, x1, y3, z2, w0), valCoord4D(seed, x2, y3, z2, w0), valCoord4D(seed, x3, y3, z2, w0), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z3, w0), valCoord4D(seed, x1, y0, z3, w0), valCoord4D(seed, x2, y0, z3, w0), valCoord4D(seed, x3, y0, z3, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z3, w0), valCoord4D(seed, x1, y1, z3, w0), valCoord4D(seed, x2, y1, z3, w0), valCoord4D(seed, x3, y1, z3, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z3, w0), valCoord4D(seed, x1, y2, z3, w0), valCoord4D(seed, x2, y2, z3, w0), valCoord4D(seed, x3, y2, z3, w0), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z3, w0), valCoord4D(seed, x1, y3, z3, w0), valCoord4D(seed, x2, y3, z3, w0), valCoord4D(seed, x3, y3, z3, w0), xs),
+                                ys),
+                        zs),
+                cubicLerp(
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z0, w1), valCoord4D(seed, x1, y0, z0, w1), valCoord4D(seed, x2, y0, z0, w1), valCoord4D(seed, x3, y0, z0, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z0, w1), valCoord4D(seed, x1, y1, z0, w1), valCoord4D(seed, x2, y1, z0, w1), valCoord4D(seed, x3, y1, z0, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z0, w1), valCoord4D(seed, x1, y2, z0, w1), valCoord4D(seed, x2, y2, z0, w1), valCoord4D(seed, x3, y2, z0, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z0, w1), valCoord4D(seed, x1, y3, z0, w1), valCoord4D(seed, x2, y3, z0, w1), valCoord4D(seed, x3, y3, z0, w1), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z1, w1), valCoord4D(seed, x1, y0, z1, w1), valCoord4D(seed, x2, y0, z1, w1), valCoord4D(seed, x3, y0, z1, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z1, w1), valCoord4D(seed, x1, y1, z1, w1), valCoord4D(seed, x2, y1, z1, w1), valCoord4D(seed, x3, y1, z1, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z1, w1), valCoord4D(seed, x1, y2, z1, w1), valCoord4D(seed, x2, y2, z1, w1), valCoord4D(seed, x3, y2, z1, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z1, w1), valCoord4D(seed, x1, y3, z1, w1), valCoord4D(seed, x2, y3, z1, w1), valCoord4D(seed, x3, y3, z1, w1), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z2, w1), valCoord4D(seed, x1, y0, z2, w1), valCoord4D(seed, x2, y0, z2, w1), valCoord4D(seed, x3, y0, z2, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z2, w1), valCoord4D(seed, x1, y1, z2, w1), valCoord4D(seed, x2, y1, z2, w1), valCoord4D(seed, x3, y1, z2, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z2, w1), valCoord4D(seed, x1, y2, z2, w1), valCoord4D(seed, x2, y2, z2, w1), valCoord4D(seed, x3, y2, z2, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z2, w1), valCoord4D(seed, x1, y3, z2, w1), valCoord4D(seed, x2, y3, z2, w1), valCoord4D(seed, x3, y3, z2, w1), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z3, w1), valCoord4D(seed, x1, y0, z3, w1), valCoord4D(seed, x2, y0, z3, w1), valCoord4D(seed, x3, y0, z3, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z3, w1), valCoord4D(seed, x1, y1, z3, w1), valCoord4D(seed, x2, y1, z3, w1), valCoord4D(seed, x3, y1, z3, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z3, w1), valCoord4D(seed, x1, y2, z3, w1), valCoord4D(seed, x2, y2, z3, w1), valCoord4D(seed, x3, y2, z3, w1), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z3, w1), valCoord4D(seed, x1, y3, z3, w1), valCoord4D(seed, x2, y3, z3, w1), valCoord4D(seed, x3, y3, z3, w1), xs),
+                                ys),
+                        zs),
+                cubicLerp(
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z0, w2), valCoord4D(seed, x1, y0, z0, w2), valCoord4D(seed, x2, y0, z0, w2), valCoord4D(seed, x3, y0, z0, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z0, w2), valCoord4D(seed, x1, y1, z0, w2), valCoord4D(seed, x2, y1, z0, w2), valCoord4D(seed, x3, y1, z0, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z0, w2), valCoord4D(seed, x1, y2, z0, w2), valCoord4D(seed, x2, y2, z0, w2), valCoord4D(seed, x3, y2, z0, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z0, w2), valCoord4D(seed, x1, y3, z0, w2), valCoord4D(seed, x2, y3, z0, w2), valCoord4D(seed, x3, y3, z0, w2), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z1, w2), valCoord4D(seed, x1, y0, z1, w2), valCoord4D(seed, x2, y0, z1, w2), valCoord4D(seed, x3, y0, z1, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z1, w2), valCoord4D(seed, x1, y1, z1, w2), valCoord4D(seed, x2, y1, z1, w2), valCoord4D(seed, x3, y1, z1, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z1, w2), valCoord4D(seed, x1, y2, z1, w2), valCoord4D(seed, x2, y2, z1, w2), valCoord4D(seed, x3, y2, z1, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z1, w2), valCoord4D(seed, x1, y3, z1, w2), valCoord4D(seed, x2, y3, z1, w2), valCoord4D(seed, x3, y3, z1, w2), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z2, w2), valCoord4D(seed, x1, y0, z2, w2), valCoord4D(seed, x2, y0, z2, w2), valCoord4D(seed, x3, y0, z2, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z2, w2), valCoord4D(seed, x1, y1, z2, w2), valCoord4D(seed, x2, y1, z2, w2), valCoord4D(seed, x3, y1, z2, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z2, w2), valCoord4D(seed, x1, y2, z2, w2), valCoord4D(seed, x2, y2, z2, w2), valCoord4D(seed, x3, y2, z2, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z2, w2), valCoord4D(seed, x1, y3, z2, w2), valCoord4D(seed, x2, y3, z2, w2), valCoord4D(seed, x3, y3, z2, w2), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z3, w2), valCoord4D(seed, x1, y0, z3, w2), valCoord4D(seed, x2, y0, z3, w2), valCoord4D(seed, x3, y0, z3, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z3, w2), valCoord4D(seed, x1, y1, z3, w2), valCoord4D(seed, x2, y1, z3, w2), valCoord4D(seed, x3, y1, z3, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z3, w2), valCoord4D(seed, x1, y2, z3, w2), valCoord4D(seed, x2, y2, z3, w2), valCoord4D(seed, x3, y2, z3, w2), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z3, w2), valCoord4D(seed, x1, y3, z3, w2), valCoord4D(seed, x2, y3, z3, w2), valCoord4D(seed, x3, y3, z3, w2), xs),
+                                ys),
+                        zs),
+                cubicLerp(
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z0, w3), valCoord4D(seed, x1, y0, z0, w3), valCoord4D(seed, x2, y0, z0, w3), valCoord4D(seed, x3, y0, z0, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z0, w3), valCoord4D(seed, x1, y1, z0, w3), valCoord4D(seed, x2, y1, z0, w3), valCoord4D(seed, x3, y1, z0, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z0, w3), valCoord4D(seed, x1, y2, z0, w3), valCoord4D(seed, x2, y2, z0, w3), valCoord4D(seed, x3, y2, z0, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z0, w3), valCoord4D(seed, x1, y3, z0, w3), valCoord4D(seed, x2, y3, z0, w3), valCoord4D(seed, x3, y3, z0, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z1, w3), valCoord4D(seed, x1, y0, z1, w3), valCoord4D(seed, x2, y0, z1, w3), valCoord4D(seed, x3, y0, z1, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z1, w3), valCoord4D(seed, x1, y1, z1, w3), valCoord4D(seed, x2, y1, z1, w3), valCoord4D(seed, x3, y1, z1, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z1, w3), valCoord4D(seed, x1, y2, z1, w3), valCoord4D(seed, x2, y2, z1, w3), valCoord4D(seed, x3, y2, z1, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z1, w3), valCoord4D(seed, x1, y3, z1, w3), valCoord4D(seed, x2, y3, z1, w3), valCoord4D(seed, x3, y3, z1, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z2, w3), valCoord4D(seed, x1, y0, z2, w3), valCoord4D(seed, x2, y0, z2, w3), valCoord4D(seed, x3, y0, z2, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z2, w3), valCoord4D(seed, x1, y1, z2, w3), valCoord4D(seed, x2, y1, z2, w3), valCoord4D(seed, x3, y1, z2, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z2, w3), valCoord4D(seed, x1, y2, z2, w3), valCoord4D(seed, x2, y2, z2, w3), valCoord4D(seed, x3, y2, z2, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z2, w3), valCoord4D(seed, x1, y3, z2, w3), valCoord4D(seed, x2, y3, z2, w3), valCoord4D(seed, x3, y3, z2, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(valCoord4D(seed, x0, y0, z3, w3), valCoord4D(seed, x1, y0, z3, w3), valCoord4D(seed, x2, y0, z3, w3), valCoord4D(seed, x3, y0, z3, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y1, z3, w3), valCoord4D(seed, x1, y1, z3, w3), valCoord4D(seed, x2, y1, z3, w3), valCoord4D(seed, x3, y1, z3, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y2, z3, w3), valCoord4D(seed, x1, y2, z3, w3), valCoord4D(seed, x2, y2, z3, w3), valCoord4D(seed, x3, y2, z3, w3), xs),
+                                cubicLerp(valCoord4D(seed, x0, y3, z3, w3), valCoord4D(seed, x1, y3, z3, w3), valCoord4D(seed, x2, y3, z3, w3), valCoord4D(seed, x3, y3, z3, w3), xs),
+                                ys),
+                        zs),
+                ws) * CUBIC_4D_BOUNDING;
     }
 
     // Cellular Noise
@@ -5914,266 +6127,266 @@ public class Noise implements Serializable {
         }
     }
 
-    protected static final float[][] grad2f = {
-            {0.6499429579167653f, 0.759982994187637f},
-            {-0.1551483029088119f, 0.9878911904175052f},
-            {-0.8516180517334043f, 0.5241628506120981f},
-            {-0.9518580082090311f, -0.30653928330368374f},
-            {-0.38568876701087174f, -0.9226289476282616f},
-            {0.4505066120763985f, -0.8927730912586049f},
-            {0.9712959670388622f, -0.23787421973396244f},
-            {0.8120673355833279f, 0.5835637432865366f},
-            {0.08429892519436613f, 0.9964405106232257f},
-            {-0.702488350003267f, 0.7116952424385647f},
-            {-0.9974536374007479f, -0.07131788861160528f},
-            {-0.5940875849508908f, -0.804400361391775f},
-            {0.2252075529515288f, -0.9743108118529653f},
-            {0.8868317111719171f, -0.4620925405802277f},
-            {0.9275724981153959f, 0.373643226540993f},
-            {0.3189067150428103f, 0.9477861083074618f},
-            {-0.5130301507665112f, 0.8583705868705491f},
-            {-0.9857873824221494f, 0.1679977281313266f},
-            {-0.7683809836504446f, -0.6399927061806058f},
-            {-0.013020236219374872f, -0.9999152331316848f},
-            {0.7514561619680513f, -0.6597830223946701f},
-            {0.9898275175279653f, 0.14227257481477412f},
-            {0.5352066871710182f, 0.8447211386057674f},
-            {-0.29411988281443646f, 0.9557685360657266f},
-            {-0.9175289804081126f, 0.39766892022290273f},
-            {-0.8985631161871687f, -0.43884430750324743f},
-            {-0.2505005588110731f, -0.968116454790094f},
-            {0.5729409678802212f, -0.8195966369650838f},
-            {0.9952584535626074f, -0.09726567026534665f},
-            {0.7207814785200723f, 0.6931623620930514f},
-            {-0.05832476124070039f, 0.998297662136006f},
-            {-0.7965970142012075f, 0.6045107087270838f},
-            {-0.977160478114496f, -0.21250270589112422f},
-            {-0.4736001288089817f, -0.8807399831914728f},
-            {0.36153434093875386f, -0.9323587937709286f},
-            {0.9435535266854258f, -0.3312200813348966f},
-            {0.8649775992346886f, 0.5018104750024599f},
-            {0.1808186720712497f, 0.9835164502083277f},
-            {-0.6299339540895539f, 0.7766487066139361f},
-            {-0.9996609468975833f, 0.02603826506945166f},
-            {-0.6695112313914258f, -0.7428019325774111f},
-            {0.12937272671950842f, -0.9915960354807594f},
-            {0.8376810167470904f, -0.5461597881403947f},
-            {0.959517028911149f, 0.28165061908243916f},
-            {0.4095816551369482f, 0.9122734610714476f},
-            {-0.42710760401484793f, 0.9042008043530463f},
-            {-0.9647728141412515f, 0.2630844295924223f},
-            {-0.8269869890664444f, -0.562221059650754f},
-            {-0.11021592552380209f, -0.9939076666174438f},
-            {0.6837188597775012f, -0.72974551782423f},
-            {0.998972441738333f, 0.04532174585508431f},
-            {0.6148313475439905f, 0.7886586169422362f},
-            {-0.1997618324529528f, 0.9798444827088829f},
-            {-0.8744989400706802f, 0.48502742583822706f},
-            {-0.9369870231562731f, -0.3493641630687752f},
-            {-0.3434772946489506f, -0.9391609809082988f},
-            {0.4905057254335028f, -0.8714379687143274f},
-            {0.9810787787756657f, -0.1936089611460388f},
-            {0.7847847614201463f, 0.6197684069414349f},
-            {0.03905187955516296f, 0.9992371844077906f},
-            {-0.7340217731995672f, 0.6791259356474049f},
-            {-0.9931964444524306f, -0.1164509455824639f},
-            {-0.5570202966000876f, -0.830498879695542f},
-            {0.2691336060685578f, -0.9631028512493016f},
-            {0.9068632806061f, -0.4214249521425399f},
-            {0.9096851999779008f, 0.4152984913783901f},
-            {0.27562369868737335f, 0.9612656119522284f},
-            {-0.5514058359842319f, 0.8342371389734039f},
-            {-0.9923883787916933f, 0.12314749546456379f},
-            {-0.7385858406439617f, -0.6741594440488484f},
-            {0.032311046904542805f, -0.9994778618098213f},
-            {0.7805865154410089f, -0.6250477517051506f},
-            {0.9823623706068018f, 0.18698709264487903f},
-            {0.49637249435561115f, 0.8681096398768929f},
-            {-0.3371347561867868f, 0.9414564016304079f},
-            {-0.9346092156607797f, 0.35567627697379833f},
-            {-0.877750600058892f, -0.47911781859606817f},
-            {-0.20636642697019966f, -0.9784747813917093f},
-            {0.6094977881394418f, -0.7927877687333024f},
-            {0.998644017504346f, -0.052058873429796634f},
-            {0.6886255051458764f, 0.7251171723677399f},
-            {-0.10350942208147358f, 0.9946284731196666f},
-            {-0.8231759450656516f, 0.567786371327519f},
-            {-0.9665253951623188f, -0.2565709658288005f},
-            {-0.43319680340129196f, -0.9012993562201753f},
-            {0.4034189716368784f, -0.9150153732716426f},
-            {0.9575954428121146f, -0.28811624026678895f},
-            {0.8413458575409575f, 0.5404971304259356f},
-            {0.13605818775026976f, 0.9907008476558967f},
-            {-0.664485735550556f, 0.7473009482463117f},
-            {-0.999813836664718f, -0.01929487014147803f},
-            {-0.6351581891853917f, -0.7723820781910558f},
-            {0.17418065221630152f, -0.984713714941304f},
-            {0.8615731658120597f, -0.5076334109892543f},
-            {0.945766171482902f, 0.32484819358982736f},
-            {0.3678149601703667f, 0.9298990026206456f},
-            {-0.4676486851245607f, 0.883914423064399f},
-            {-0.9757048995218635f, 0.2190889067228882f},
-            {-0.8006563717736747f, -0.5991238388999518f},
-            {-0.06505704156910719f, -0.9978815467490495f},
-            {0.716089639712196f, -0.6980083293893113f},
-            {0.9958918787052943f, 0.09055035024139549f},
-            {0.5784561871098056f, 0.8157134543418942f},
-            {-0.24396482815448167f, 0.9697840804135497f},
-            {-0.8955826311865743f, 0.4448952131872543f},
-            {-0.9201904205900768f, -0.39147105876968413f},
-            {-0.3005599364234082f, -0.9537629289384008f},
-            {0.5294967923694863f, -0.84831193960148f},
-            {0.9888453593035162f, -0.1489458135829932f},
-            {0.7558893631265085f, 0.6546993743025888f},
-            {-0.006275422246980369f, 0.9999803093439501f},
-            {-0.764046696121276f, 0.6451609459244744f},
-            {-0.9868981170802014f, -0.16134468229090512f},
-            {-0.5188082666339063f, -0.8548906260290385f},
-            {0.31250655826478446f, -0.9499156020623616f},
-            {0.9250311403279032f, -0.3798912863223621f},
-            {0.889928392754896f, 0.45610026942404636f},
-            {0.2317742435145519f, 0.9727696027545563f},
-            {-0.5886483179573486f, 0.8083892365475831f},
-            {-0.996949901406418f, 0.0780441803450664f},
-            {-0.707272817672466f, -0.7069407057042696f},
-            {0.07757592706207364f, -0.9969864470194466f},
-            {0.8081126726681943f, -0.5890279350532263f},
-            {0.9728783545459001f, 0.23131733021125322f},
-            {0.4565181982253288f, 0.8897140746830408f},
-            {-0.3794567783511009f, 0.9252094645881026f},
-            {-0.9497687200714887f, 0.31295267753091066f},
-            {-0.8551342041690687f, -0.5184066867432686f},
-            {-0.16180818807538452f, -0.9868222283024238f},
-            {0.6448020194233159f, -0.7643496292585048f},
-            {0.9999772516247822f, -0.006745089543285545f},
-            {0.6550543261176665f, 0.7555817823601425f},
-            {-0.14848135899860646f, 0.9889152066936411f},
-            {-0.848063153443784f, 0.5298951667745091f},
-            {-0.9539039899003245f, -0.300111942535184f},
-            {-0.3919032080850608f, -0.9200064540494471f},
-            {0.44447452934057863f, -0.8957914895596358f},
-            {0.9696693887216105f, -0.24442028675267172f},
-            {0.8159850520735595f, 0.5780730012658526f},
-            {0.0910180879994953f, 0.9958492394217692f},
-            {-0.6976719213969089f, 0.7164173993520435f},
-            {-0.9979119924958648f, -0.06458835214597858f},
-            {-0.5994998228898376f, -0.8003748886334786f},
-            {0.2186306161766729f, -0.9758076929755208f},
-            {0.8836946816279001f, -0.46806378802740584f},
-            {0.9300716543684309f, 0.36737816720699407f},
-            {0.32529236260160294f, 0.9456134933645286f},
-            {-0.5072286936943775f, 0.8618114946396893f},
-            {-0.9846317976415725f, 0.17464313062106204f},
-            {-0.7726803123417516f, -0.6347953488483143f},
-            {-0.019764457813331488f, -0.9998046640256011f},
-            {0.7469887719961158f, -0.6648366525032559f},
-            {0.9907646418168752f, 0.13559286310672486f},
-            {0.5408922318074902f, 0.8410919055432124f},
-            {-0.2876664477065717f, 0.9577306588304888f},
-            {-0.9148257956391065f, 0.40384868903250853f},
-            {-0.9015027194859215f, -0.4327734358292892f},
-            {-0.2570248925062563f, -0.9664047830139022f},
-            {0.5673996816983953f, -0.8234425306046317f},
-            {0.9945797473944409f, -0.10397656501736473f},
-            {0.7254405241129018f, 0.6882848581617921f},
-            {-0.05158982732517303f, 0.9986683582233687f},
-            {-0.7925014140531963f, 0.609870075281354f},
-            {-0.9785715990807187f, -0.20590683687679034f},
-            {-0.47953002522651733f, -0.8775254725113429f},
-            {0.35523727306945746f, -0.9347761656258549f},
-            {0.9412979532686209f, -0.33757689964259285f},
-            {0.868342678987353f, 0.4959647082697184f},
-            {0.18744846526420056f, 0.9822744386728669f},
-            {-0.6246810590458048f, 0.7808800000444446f},
-            {-0.9994625758058275f, 0.03278047534097766f},
-            {-0.674506266646887f, -0.738269121834361f},
-            {0.12268137965007223f, -0.9924461089082646f},
-            {0.8339780641890598f, -0.5517975973592748f},
-            {0.9613949601033843f, 0.2751721837101493f},
-            {0.41572570400265835f, 0.9094900433932711f},
-            {-0.42099897262033487f, 0.907061114287578f},
-            {-0.9629763390922247f, 0.2695859238694348f},
-            {-0.8307604078465821f, -0.5566301687427484f},
-            {-0.11691741449967302f, -0.9931416405461567f},
-            {0.6787811074228051f, -0.7343406622310046f},
-            {0.999255415972447f, 0.03858255628819732f},
-            {0.6201369341201711f, 0.7844935837468874f},
-            {-0.19314814942146824f, 0.9811696042861612f},
-            {-0.8712074932224428f, 0.4909149659086258f},
-            {-0.9393222007870077f, -0.34303615422962713f},
-            {-0.3498042060103595f, -0.9368228314134226f},
-            {0.4846166400948296f, -0.8747266499559725f},
-            {0.9797505510481769f, -0.20022202106859724f},
-            {0.7889473022428521f, 0.6144608647291752f},
-            {0.045790935472179155f, 0.9989510449609544f},
-            {-0.7294243101497431f, 0.684061529222753f},
-            {-0.9939593229024027f, -0.10974909756074072f},
-            {-0.562609414602539f, -0.8267228354174018f},
-            {0.26263126874523307f, -0.9648962724963078f},
-            {0.9040001019019392f, -0.4275322394408211f},
-            {0.9124657316291773f, 0.4091531358824348f},
-            {0.28210125132356934f, 0.9593846381935018f},
-            {-0.5457662881946498f, 0.8379374431723614f},
-            {-0.9915351626845509f, 0.12983844253579577f},
-            {-0.7431163048326799f, -0.6691622803863227f},
-            {0.02556874420628532f, -0.9996730662170076f},
-            {0.7763527553119807f, -0.6302986588273021f},
-            {0.9836012681423212f, 0.1803567168386515f},
-            {0.5022166799422209f, 0.8647418148718223f},
-            {-0.330776879188771f, 0.9437089891455613f},
-            {-0.9321888864830543f, 0.3619722087639923f},
-            {-0.8809623252471085f, -0.47318641305008735f},
-            {-0.21296163248563432f, -0.9770605626515961f},
-            {0.604136498566135f, -0.7968808512571063f},
-            {0.9982701582127194f, -0.05879363249495786f},
-            {0.6935008202914851f, 0.7204558364362367f},
-            {-0.09679820929680796f, 0.9953040272584711f},
-            {-0.8193274492343137f, 0.5733258505694586f},
-            {-0.9682340024187017f, -0.25004582891994304f},
-            {-0.4392662937408502f, -0.8983569018954422f},
-            {0.39723793388455464f, -0.9177156552457467f},
-            {0.9556302892322005f, -0.2945687530984589f},
-            {0.8449724198323217f, 0.5348098818484104f},
-            {0.14273745857559722f, 0.9897605861618151f},
-            {-0.6594300077680133f, 0.7517659641504648f},
-            {-0.9999212381512442f, -0.01255059735959867f},
-            {-0.6403535266476091f, -0.768080308893523f},
-            {0.16753470770767478f, -0.9858661784001437f},
-            {0.8581295336101056f, -0.5134332513054668f},
-            {0.9479357869928937f, 0.31846152630759517f},
-            {0.37407884501651706f, 0.9273969040875156f},
-            {-0.461675964944643f, 0.8870486477034012f},
-            {-0.9742049295269273f, 0.22566513972130173f},
-            {-0.8046793020829978f, -0.5937097108850584f},
-            {-0.07178636201352963f, -0.9974200309943962f},
-            {0.7113652211526822f, -0.7028225395748172f},
-            {0.9964799940037152f, 0.08383091047075403f},
-            {0.5839450884626246f, 0.8117931594072332f},
-            {-0.23741799789097484f, 0.9714075840127259f},
-            {-0.8925614000865144f, 0.45092587758477687f},
-            {-0.9228099950981292f, -0.38525538665538556f},
-            {-0.30698631553196837f, -0.95171392869712f},
-            {0.5237628071845146f, -0.8518641451605984f},
-            {0.9878182118285335f, -0.15561227580071732f},
-            {0.7602881737752754f, 0.6495859395164404f},
-            {4.6967723669845613E-4f, 0.9999998897016406f},
-            {-0.7596776469502666f, 0.6502998329417794f},
-            {-0.9879639510809196f, -0.15468429579171308f},
-            {-0.5245627784110601f, -0.8513717704420726f},
-            {0.3060921834538644f, -0.9520018777441807f},
-            {0.9224476966294768f, -0.3861220622846781f},
-            {0.8929845854878761f, 0.45008724718774934f},
-            {0.23833038910266038f, 0.9711841358002995f},
-            {-0.5831822693781987f, 0.8123413326200348f},
-            {-0.9964008074312266f, 0.0847669213219385f},
-            {-0.712025106726807f, -0.7021540054650968f},
-            {0.07084939947717452f, -0.9974870237721009f},
-            {0.8041212432524677f, -0.5944653279629567f},
-            {0.9744164792492415f, 0.22474991650168097f},
-            {0.462509014279733f, 0.8866145790082576f},
+    protected static final Float2[] GRADIENTS_2D = {
+            new Float2(0.6499429579167653f, 0.759982994187637f),
+            new Float2(-0.1551483029088119f, 0.9878911904175052f),
+            new Float2(-0.8516180517334043f, 0.5241628506120981f),
+            new Float2(-0.9518580082090311f, -0.30653928330368374f),
+            new Float2(-0.38568876701087174f, -0.9226289476282616f),
+            new Float2(0.4505066120763985f, -0.8927730912586049f),
+            new Float2(0.9712959670388622f, -0.23787421973396244f),
+            new Float2(0.8120673355833279f, 0.5835637432865366f),
+            new Float2(0.08429892519436613f, 0.9964405106232257f),
+            new Float2(-0.702488350003267f, 0.7116952424385647f),
+            new Float2(-0.9974536374007479f, -0.07131788861160528f),
+            new Float2(-0.5940875849508908f, -0.804400361391775f),
+            new Float2(0.2252075529515288f, -0.9743108118529653f),
+            new Float2(0.8868317111719171f, -0.4620925405802277f),
+            new Float2(0.9275724981153959f, 0.373643226540993f),
+            new Float2(0.3189067150428103f, 0.9477861083074618f),
+            new Float2(-0.5130301507665112f, 0.8583705868705491f),
+            new Float2(-0.9857873824221494f, 0.1679977281313266f),
+            new Float2(-0.7683809836504446f, -0.6399927061806058f),
+            new Float2(-0.013020236219374872f, -0.9999152331316848f),
+            new Float2(0.7514561619680513f, -0.6597830223946701f),
+            new Float2(0.9898275175279653f, 0.14227257481477412f),
+            new Float2(0.5352066871710182f, 0.8447211386057674f),
+            new Float2(-0.29411988281443646f, 0.9557685360657266f),
+            new Float2(-0.9175289804081126f, 0.39766892022290273f),
+            new Float2(-0.8985631161871687f, -0.43884430750324743f),
+            new Float2(-0.2505005588110731f, -0.968116454790094f),
+            new Float2(0.5729409678802212f, -0.8195966369650838f),
+            new Float2(0.9952584535626074f, -0.09726567026534665f),
+            new Float2(0.7207814785200723f, 0.6931623620930514f),
+            new Float2(-0.05832476124070039f, 0.998297662136006f),
+            new Float2(-0.7965970142012075f, 0.6045107087270838f),
+            new Float2(-0.977160478114496f, -0.21250270589112422f),
+            new Float2(-0.4736001288089817f, -0.8807399831914728f),
+            new Float2(0.36153434093875386f, -0.9323587937709286f),
+            new Float2(0.9435535266854258f, -0.3312200813348966f),
+            new Float2(0.8649775992346886f, 0.5018104750024599f),
+            new Float2(0.1808186720712497f, 0.9835164502083277f),
+            new Float2(-0.6299339540895539f, 0.7766487066139361f),
+            new Float2(-0.9996609468975833f, 0.02603826506945166f),
+            new Float2(-0.6695112313914258f, -0.7428019325774111f),
+            new Float2(0.12937272671950842f, -0.9915960354807594f),
+            new Float2(0.8376810167470904f, -0.5461597881403947f),
+            new Float2(0.959517028911149f, 0.28165061908243916f),
+            new Float2(0.4095816551369482f, 0.9122734610714476f),
+            new Float2(-0.42710760401484793f, 0.9042008043530463f),
+            new Float2(-0.9647728141412515f, 0.2630844295924223f),
+            new Float2(-0.8269869890664444f, -0.562221059650754f),
+            new Float2(-0.11021592552380209f, -0.9939076666174438f),
+            new Float2(0.6837188597775012f, -0.72974551782423f),
+            new Float2(0.998972441738333f, 0.04532174585508431f),
+            new Float2(0.6148313475439905f, 0.7886586169422362f),
+            new Float2(-0.1997618324529528f, 0.9798444827088829f),
+            new Float2(-0.8744989400706802f, 0.48502742583822706f),
+            new Float2(-0.9369870231562731f, -0.3493641630687752f),
+            new Float2(-0.3434772946489506f, -0.9391609809082988f),
+            new Float2(0.4905057254335028f, -0.8714379687143274f),
+            new Float2(0.9810787787756657f, -0.1936089611460388f),
+            new Float2(0.7847847614201463f, 0.6197684069414349f),
+            new Float2(0.03905187955516296f, 0.9992371844077906f),
+            new Float2(-0.7340217731995672f, 0.6791259356474049f),
+            new Float2(-0.9931964444524306f, -0.1164509455824639f),
+            new Float2(-0.5570202966000876f, -0.830498879695542f),
+            new Float2(0.2691336060685578f, -0.9631028512493016f),
+            new Float2(0.9068632806061f, -0.4214249521425399f),
+            new Float2(0.9096851999779008f, 0.4152984913783901f),
+            new Float2(0.27562369868737335f, 0.9612656119522284f),
+            new Float2(-0.5514058359842319f, 0.8342371389734039f),
+            new Float2(-0.9923883787916933f, 0.12314749546456379f),
+            new Float2(-0.7385858406439617f, -0.6741594440488484f),
+            new Float2(0.032311046904542805f, -0.9994778618098213f),
+            new Float2(0.7805865154410089f, -0.6250477517051506f),
+            new Float2(0.9823623706068018f, 0.18698709264487903f),
+            new Float2(0.49637249435561115f, 0.8681096398768929f),
+            new Float2(-0.3371347561867868f, 0.9414564016304079f),
+            new Float2(-0.9346092156607797f, 0.35567627697379833f),
+            new Float2(-0.877750600058892f, -0.47911781859606817f),
+            new Float2(-0.20636642697019966f, -0.9784747813917093f),
+            new Float2(0.6094977881394418f, -0.7927877687333024f),
+            new Float2(0.998644017504346f, -0.052058873429796634f),
+            new Float2(0.6886255051458764f, 0.7251171723677399f),
+            new Float2(-0.10350942208147358f, 0.9946284731196666f),
+            new Float2(-0.8231759450656516f, 0.567786371327519f),
+            new Float2(-0.9665253951623188f, -0.2565709658288005f),
+            new Float2(-0.43319680340129196f, -0.9012993562201753f),
+            new Float2(0.4034189716368784f, -0.9150153732716426f),
+            new Float2(0.9575954428121146f, -0.28811624026678895f),
+            new Float2(0.8413458575409575f, 0.5404971304259356f),
+            new Float2(0.13605818775026976f, 0.9907008476558967f),
+            new Float2(-0.664485735550556f, 0.7473009482463117f),
+            new Float2(-0.999813836664718f, -0.01929487014147803f),
+            new Float2(-0.6351581891853917f, -0.7723820781910558f),
+            new Float2(0.17418065221630152f, -0.984713714941304f),
+            new Float2(0.8615731658120597f, -0.5076334109892543f),
+            new Float2(0.945766171482902f, 0.32484819358982736f),
+            new Float2(0.3678149601703667f, 0.9298990026206456f),
+            new Float2(-0.4676486851245607f, 0.883914423064399f),
+            new Float2(-0.9757048995218635f, 0.2190889067228882f),
+            new Float2(-0.8006563717736747f, -0.5991238388999518f),
+            new Float2(-0.06505704156910719f, -0.9978815467490495f),
+            new Float2(0.716089639712196f, -0.6980083293893113f),
+            new Float2(0.9958918787052943f, 0.09055035024139549f),
+            new Float2(0.5784561871098056f, 0.8157134543418942f),
+            new Float2(-0.24396482815448167f, 0.9697840804135497f),
+            new Float2(-0.8955826311865743f, 0.4448952131872543f),
+            new Float2(-0.9201904205900768f, -0.39147105876968413f),
+            new Float2(-0.3005599364234082f, -0.9537629289384008f),
+            new Float2(0.5294967923694863f, -0.84831193960148f),
+            new Float2(0.9888453593035162f, -0.1489458135829932f),
+            new Float2(0.7558893631265085f, 0.6546993743025888f),
+            new Float2(-0.006275422246980369f, 0.9999803093439501f),
+            new Float2(-0.764046696121276f, 0.6451609459244744f),
+            new Float2(-0.9868981170802014f, -0.16134468229090512f),
+            new Float2(-0.5188082666339063f, -0.8548906260290385f),
+            new Float2(0.31250655826478446f, -0.9499156020623616f),
+            new Float2(0.9250311403279032f, -0.3798912863223621f),
+            new Float2(0.889928392754896f, 0.45610026942404636f),
+            new Float2(0.2317742435145519f, 0.9727696027545563f),
+            new Float2(-0.5886483179573486f, 0.8083892365475831f),
+            new Float2(-0.996949901406418f, 0.0780441803450664f),
+            new Float2(-0.707272817672466f, -0.7069407057042696f),
+            new Float2(0.07757592706207364f, -0.9969864470194466f),
+            new Float2(0.8081126726681943f, -0.5890279350532263f),
+            new Float2(0.9728783545459001f, 0.23131733021125322f),
+            new Float2(0.4565181982253288f, 0.8897140746830408f),
+            new Float2(-0.3794567783511009f, 0.9252094645881026f),
+            new Float2(-0.9497687200714887f, 0.31295267753091066f),
+            new Float2(-0.8551342041690687f, -0.5184066867432686f),
+            new Float2(-0.16180818807538452f, -0.9868222283024238f),
+            new Float2(0.6448020194233159f, -0.7643496292585048f),
+            new Float2(0.9999772516247822f, -0.006745089543285545f),
+            new Float2(0.6550543261176665f, 0.7555817823601425f),
+            new Float2(-0.14848135899860646f, 0.9889152066936411f),
+            new Float2(-0.848063153443784f, 0.5298951667745091f),
+            new Float2(-0.9539039899003245f, -0.300111942535184f),
+            new Float2(-0.3919032080850608f, -0.9200064540494471f),
+            new Float2(0.44447452934057863f, -0.8957914895596358f),
+            new Float2(0.9696693887216105f, -0.24442028675267172f),
+            new Float2(0.8159850520735595f, 0.5780730012658526f),
+            new Float2(0.0910180879994953f, 0.9958492394217692f),
+            new Float2(-0.6976719213969089f, 0.7164173993520435f),
+            new Float2(-0.9979119924958648f, -0.06458835214597858f),
+            new Float2(-0.5994998228898376f, -0.8003748886334786f),
+            new Float2(0.2186306161766729f, -0.9758076929755208f),
+            new Float2(0.8836946816279001f, -0.46806378802740584f),
+            new Float2(0.9300716543684309f, 0.36737816720699407f),
+            new Float2(0.32529236260160294f, 0.9456134933645286f),
+            new Float2(-0.5072286936943775f, 0.8618114946396893f),
+            new Float2(-0.9846317976415725f, 0.17464313062106204f),
+            new Float2(-0.7726803123417516f, -0.6347953488483143f),
+            new Float2(-0.019764457813331488f, -0.9998046640256011f),
+            new Float2(0.7469887719961158f, -0.6648366525032559f),
+            new Float2(0.9907646418168752f, 0.13559286310672486f),
+            new Float2(0.5408922318074902f, 0.8410919055432124f),
+            new Float2(-0.2876664477065717f, 0.9577306588304888f),
+            new Float2(-0.9148257956391065f, 0.40384868903250853f),
+            new Float2(-0.9015027194859215f, -0.4327734358292892f),
+            new Float2(-0.2570248925062563f, -0.9664047830139022f),
+            new Float2(0.5673996816983953f, -0.8234425306046317f),
+            new Float2(0.9945797473944409f, -0.10397656501736473f),
+            new Float2(0.7254405241129018f, 0.6882848581617921f),
+            new Float2(-0.05158982732517303f, 0.9986683582233687f),
+            new Float2(-0.7925014140531963f, 0.609870075281354f),
+            new Float2(-0.9785715990807187f, -0.20590683687679034f),
+            new Float2(-0.47953002522651733f, -0.8775254725113429f),
+            new Float2(0.35523727306945746f, -0.9347761656258549f),
+            new Float2(0.9412979532686209f, -0.33757689964259285f),
+            new Float2(0.868342678987353f, 0.4959647082697184f),
+            new Float2(0.18744846526420056f, 0.9822744386728669f),
+            new Float2(-0.6246810590458048f, 0.7808800000444446f),
+            new Float2(-0.9994625758058275f, 0.03278047534097766f),
+            new Float2(-0.674506266646887f, -0.738269121834361f),
+            new Float2(0.12268137965007223f, -0.9924461089082646f),
+            new Float2(0.8339780641890598f, -0.5517975973592748f),
+            new Float2(0.9613949601033843f, 0.2751721837101493f),
+            new Float2(0.41572570400265835f, 0.9094900433932711f),
+            new Float2(-0.42099897262033487f, 0.907061114287578f),
+            new Float2(-0.9629763390922247f, 0.2695859238694348f),
+            new Float2(-0.8307604078465821f, -0.5566301687427484f),
+            new Float2(-0.11691741449967302f, -0.9931416405461567f),
+            new Float2(0.6787811074228051f, -0.7343406622310046f),
+            new Float2(0.999255415972447f, 0.03858255628819732f),
+            new Float2(0.6201369341201711f, 0.7844935837468874f),
+            new Float2(-0.19314814942146824f, 0.9811696042861612f),
+            new Float2(-0.8712074932224428f, 0.4909149659086258f),
+            new Float2(-0.9393222007870077f, -0.34303615422962713f),
+            new Float2(-0.3498042060103595f, -0.9368228314134226f),
+            new Float2(0.4846166400948296f, -0.8747266499559725f),
+            new Float2(0.9797505510481769f, -0.20022202106859724f),
+            new Float2(0.7889473022428521f, 0.6144608647291752f),
+            new Float2(0.045790935472179155f, 0.9989510449609544f),
+            new Float2(-0.7294243101497431f, 0.684061529222753f),
+            new Float2(-0.9939593229024027f, -0.10974909756074072f),
+            new Float2(-0.562609414602539f, -0.8267228354174018f),
+            new Float2(0.26263126874523307f, -0.9648962724963078f),
+            new Float2(0.9040001019019392f, -0.4275322394408211f),
+            new Float2(0.9124657316291773f, 0.4091531358824348f),
+            new Float2(0.28210125132356934f, 0.9593846381935018f),
+            new Float2(-0.5457662881946498f, 0.8379374431723614f),
+            new Float2(-0.9915351626845509f, 0.12983844253579577f),
+            new Float2(-0.7431163048326799f, -0.6691622803863227f),
+            new Float2(0.02556874420628532f, -0.9996730662170076f),
+            new Float2(0.7763527553119807f, -0.6302986588273021f),
+            new Float2(0.9836012681423212f, 0.1803567168386515f),
+            new Float2(0.5022166799422209f, 0.8647418148718223f),
+            new Float2(-0.330776879188771f, 0.9437089891455613f),
+            new Float2(-0.9321888864830543f, 0.3619722087639923f),
+            new Float2(-0.8809623252471085f, -0.47318641305008735f),
+            new Float2(-0.21296163248563432f, -0.9770605626515961f),
+            new Float2(0.604136498566135f, -0.7968808512571063f),
+            new Float2(0.9982701582127194f, -0.05879363249495786f),
+            new Float2(0.6935008202914851f, 0.7204558364362367f),
+            new Float2(-0.09679820929680796f, 0.9953040272584711f),
+            new Float2(-0.8193274492343137f, 0.5733258505694586f),
+            new Float2(-0.9682340024187017f, -0.25004582891994304f),
+            new Float2(-0.4392662937408502f, -0.8983569018954422f),
+            new Float2(0.39723793388455464f, -0.9177156552457467f),
+            new Float2(0.9556302892322005f, -0.2945687530984589f),
+            new Float2(0.8449724198323217f, 0.5348098818484104f),
+            new Float2(0.14273745857559722f, 0.9897605861618151f),
+            new Float2(-0.6594300077680133f, 0.7517659641504648f),
+            new Float2(-0.9999212381512442f, -0.01255059735959867f),
+            new Float2(-0.6403535266476091f, -0.768080308893523f),
+            new Float2(0.16753470770767478f, -0.9858661784001437f),
+            new Float2(0.8581295336101056f, -0.5134332513054668f),
+            new Float2(0.9479357869928937f, 0.31846152630759517f),
+            new Float2(0.37407884501651706f, 0.9273969040875156f),
+            new Float2(-0.461675964944643f, 0.8870486477034012f),
+            new Float2(-0.9742049295269273f, 0.22566513972130173f),
+            new Float2(-0.8046793020829978f, -0.5937097108850584f),
+            new Float2(-0.07178636201352963f, -0.9974200309943962f),
+            new Float2(0.7113652211526822f, -0.7028225395748172f),
+            new Float2(0.9964799940037152f, 0.08383091047075403f),
+            new Float2(0.5839450884626246f, 0.8117931594072332f),
+            new Float2(-0.23741799789097484f, 0.9714075840127259f),
+            new Float2(-0.8925614000865144f, 0.45092587758477687f),
+            new Float2(-0.9228099950981292f, -0.38525538665538556f),
+            new Float2(-0.30698631553196837f, -0.95171392869712f),
+            new Float2(0.5237628071845146f, -0.8518641451605984f),
+            new Float2(0.9878182118285335f, -0.15561227580071732f),
+            new Float2(0.7602881737752754f, 0.6495859395164404f),
+            new Float2(4.6967723669845613E-4f, 0.9999998897016406f),
+            new Float2(-0.7596776469502666f, 0.6502998329417794f),
+            new Float2(-0.9879639510809196f, -0.15468429579171308f),
+            new Float2(-0.5245627784110601f, -0.8513717704420726f),
+            new Float2(0.3060921834538644f, -0.9520018777441807f),
+            new Float2(0.9224476966294768f, -0.3861220622846781f),
+            new Float2(0.8929845854878761f, 0.45008724718774934f),
+            new Float2(0.23833038910266038f, 0.9711841358002995f),
+            new Float2(-0.5831822693781987f, 0.8123413326200348f),
+            new Float2(-0.9964008074312266f, 0.0847669213219385f),
+            new Float2(-0.712025106726807f, -0.7021540054650968f),
+            new Float2(0.07084939947717452f, -0.9974870237721009f),
+            new Float2(0.8041212432524677f, -0.5944653279629567f),
+            new Float2(0.9744164792492415f, 0.22474991650168097f),
+            new Float2(0.462509014279733f, 0.8866145790082576f),
     };
 
-    private static final Float3[] GRAD_3D =
+    private static final Float3[] GRADIENTS_3D =
             {
                     new Float3(-0.448549002408981f,  1.174316525459290f,  0.000000000000001f  ),
                     new Float3(0.000000000000001f,  1.069324374198914f,  0.660878777503967f   ),
@@ -6210,72 +6423,72 @@ public class Noise implements Serializable {
             };
 
 
-    protected static final float[] grad4f =
+    protected static final Float4[] GRADIENTS_4D =
             {
-                    -0.5875167f, 1.4183908f, 1.4183908f, 1.4183908f,
-                    -0.5875167f, 1.4183908f, 1.4183908f, -1.4183908f,
-                    -0.5875167f, 1.4183908f, -1.4183908f, 1.4183908f,
-                    -0.5875167f, 1.4183908f, -1.4183908f, -1.4183908f,
-                    -0.5875167f, -1.4183908f, 1.4183908f, 1.4183908f,
-                    -0.5875167f, -1.4183908f, 1.4183908f, -1.4183908f,
-                    -0.5875167f, -1.4183908f, -1.4183908f, 1.4183908f,
-                    -0.5875167f, -1.4183908f, -1.4183908f, -1.4183908f,
-                    1.4183908f, -0.5875167f, 1.4183908f, 1.4183908f,
-                    1.4183908f, -0.5875167f, 1.4183908f, -1.4183908f,
-                    1.4183908f, -0.5875167f, -1.4183908f, 1.4183908f,
-                    1.4183908f, -0.5875167f, -1.4183908f, -1.4183908f,
-                    -1.4183908f, -0.5875167f, 1.4183908f, 1.4183908f,
-                    -1.4183908f, -0.5875167f, 1.4183908f, -1.4183908f,
-                    -1.4183908f, -0.5875167f, -1.4183908f, 1.4183908f,
-                    -1.4183908f, -0.5875167f, -1.4183908f, -1.4183908f,
-                    1.4183908f, 1.4183908f, -0.5875167f, 1.4183908f,
-                    1.4183908f, 1.4183908f, -0.5875167f, -1.4183908f,
-                    1.4183908f, -1.4183908f, -0.5875167f, 1.4183908f,
-                    1.4183908f, -1.4183908f, -0.5875167f, -1.4183908f,
-                    -1.4183908f, 1.4183908f, -0.5875167f, 1.4183908f,
-                    -1.4183908f, 1.4183908f, -0.5875167f, -1.4183908f,
-                    -1.4183908f, -1.4183908f, -0.5875167f, 1.4183908f,
-                    -1.4183908f, -1.4183908f, -0.5875167f, -1.4183908f,
-                    1.4183908f, 1.4183908f, 1.4183908f, -0.5875167f,
-                    1.4183908f, 1.4183908f, -1.4183908f, -0.5875167f,
-                    1.4183908f, -1.4183908f, 1.4183908f, -0.5875167f,
-                    1.4183908f, -1.4183908f, -1.4183908f, -0.5875167f,
-                    -1.4183908f, 1.4183908f, 1.4183908f, -0.5875167f,
-                    -1.4183908f, 1.4183908f, -1.4183908f, -0.5875167f,
-                    -1.4183908f, -1.4183908f, 1.4183908f, -0.5875167f,
-                    -1.4183908f, -1.4183908f, -1.4183908f, -0.5875167f,
-                    0.5875167f, 1.4183908f, 1.4183908f, 1.4183908f,
-                    0.5875167f, 1.4183908f, 1.4183908f, -1.4183908f,
-                    0.5875167f, 1.4183908f, -1.4183908f, 1.4183908f,
-                    0.5875167f, 1.4183908f, -1.4183908f, -1.4183908f,
-                    0.5875167f, -1.4183908f, 1.4183908f, 1.4183908f,
-                    0.5875167f, -1.4183908f, 1.4183908f, -1.4183908f,
-                    0.5875167f, -1.4183908f, -1.4183908f, 1.4183908f,
-                    0.5875167f, -1.4183908f, -1.4183908f, -1.4183908f,
-                    1.4183908f, 0.5875167f, 1.4183908f, 1.4183908f,
-                    1.4183908f, 0.5875167f, 1.4183908f, -1.4183908f,
-                    1.4183908f, 0.5875167f, -1.4183908f, 1.4183908f,
-                    1.4183908f, 0.5875167f, -1.4183908f, -1.4183908f,
-                    -1.4183908f, 0.5875167f, 1.4183908f, 1.4183908f,
-                    -1.4183908f, 0.5875167f, 1.4183908f, -1.4183908f,
-                    -1.4183908f, 0.5875167f, -1.4183908f, 1.4183908f,
-                    -1.4183908f, 0.5875167f, -1.4183908f, -1.4183908f,
-                    1.4183908f, 1.4183908f, 0.5875167f, 1.4183908f,
-                    1.4183908f, 1.4183908f, 0.5875167f, -1.4183908f,
-                    1.4183908f, -1.4183908f, 0.5875167f, 1.4183908f,
-                    1.4183908f, -1.4183908f, 0.5875167f, -1.4183908f,
-                    -1.4183908f, 1.4183908f, 0.5875167f, 1.4183908f,
-                    -1.4183908f, 1.4183908f, 0.5875167f, -1.4183908f,
-                    -1.4183908f, -1.4183908f, 0.5875167f, 1.4183908f,
-                    -1.4183908f, -1.4183908f, 0.5875167f, -1.4183908f,
-                    1.4183908f, 1.4183908f, 1.4183908f, 0.5875167f,
-                    1.4183908f, 1.4183908f, -1.4183908f, 0.5875167f,
-                    1.4183908f, -1.4183908f, 1.4183908f, 0.5875167f,
-                    1.4183908f, -1.4183908f, -1.4183908f, 0.5875167f,
-                    -1.4183908f, 1.4183908f, 1.4183908f, 0.5875167f,
-                    -1.4183908f, 1.4183908f, -1.4183908f, 0.5875167f,
-                    -1.4183908f, -1.4183908f, 1.4183908f, 0.5875167f,
-                    -1.4183908f, -1.4183908f, -1.4183908f, 0.5875167f,
+                    new Float4(-0.5875167f, 1.4183908f, 1.4183908f, 1.4183908f),
+                    new Float4(-0.5875167f, 1.4183908f, 1.4183908f, -1.4183908f),
+                    new Float4(-0.5875167f, 1.4183908f, -1.4183908f, 1.4183908f),
+                    new Float4(-0.5875167f, 1.4183908f, -1.4183908f, -1.4183908f),
+                    new Float4(-0.5875167f, -1.4183908f, 1.4183908f, 1.4183908f),
+                    new Float4(-0.5875167f, -1.4183908f, 1.4183908f, -1.4183908f),
+                    new Float4(-0.5875167f, -1.4183908f, -1.4183908f, 1.4183908f),
+                    new Float4(-0.5875167f, -1.4183908f, -1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, -0.5875167f, 1.4183908f, 1.4183908f),
+                    new Float4(1.4183908f, -0.5875167f, 1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, -0.5875167f, -1.4183908f, 1.4183908f),
+                    new Float4(1.4183908f, -0.5875167f, -1.4183908f, -1.4183908f),
+                    new Float4(-1.4183908f, -0.5875167f, 1.4183908f, 1.4183908f),
+                    new Float4(-1.4183908f, -0.5875167f, 1.4183908f, -1.4183908f),
+                    new Float4(-1.4183908f, -0.5875167f, -1.4183908f, 1.4183908f),
+                    new Float4(-1.4183908f, -0.5875167f, -1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, -0.5875167f, 1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, -0.5875167f, -1.4183908f),
+                    new Float4(1.4183908f, -1.4183908f, -0.5875167f, 1.4183908f),
+                    new Float4(1.4183908f, -1.4183908f, -0.5875167f, -1.4183908f),
+                    new Float4(-1.4183908f, 1.4183908f, -0.5875167f, 1.4183908f),
+                    new Float4(-1.4183908f, 1.4183908f, -0.5875167f, -1.4183908f),
+                    new Float4(-1.4183908f, -1.4183908f, -0.5875167f, 1.4183908f),
+                    new Float4(-1.4183908f, -1.4183908f, -0.5875167f, -1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, 1.4183908f, -0.5875167f),
+                    new Float4(1.4183908f, 1.4183908f, -1.4183908f, -0.5875167f),
+                    new Float4(1.4183908f, -1.4183908f, 1.4183908f, -0.5875167f),
+                    new Float4(1.4183908f, -1.4183908f, -1.4183908f, -0.5875167f),
+                    new Float4(-1.4183908f, 1.4183908f, 1.4183908f, -0.5875167f),
+                    new Float4(-1.4183908f, 1.4183908f, -1.4183908f, -0.5875167f),
+                    new Float4(-1.4183908f, -1.4183908f, 1.4183908f, -0.5875167f),
+                    new Float4(-1.4183908f, -1.4183908f, -1.4183908f, -0.5875167f),
+                    new Float4(0.5875167f, 1.4183908f, 1.4183908f, 1.4183908f),
+                    new Float4(0.5875167f, 1.4183908f, 1.4183908f, -1.4183908f),
+                    new Float4(0.5875167f, 1.4183908f, -1.4183908f, 1.4183908f),
+                    new Float4(0.5875167f, 1.4183908f, -1.4183908f, -1.4183908f),
+                    new Float4(0.5875167f, -1.4183908f, 1.4183908f, 1.4183908f),
+                    new Float4(0.5875167f, -1.4183908f, 1.4183908f, -1.4183908f),
+                    new Float4(0.5875167f, -1.4183908f, -1.4183908f, 1.4183908f),
+                    new Float4(0.5875167f, -1.4183908f, -1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, 0.5875167f, 1.4183908f, 1.4183908f),
+                    new Float4(1.4183908f, 0.5875167f, 1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, 0.5875167f, -1.4183908f, 1.4183908f),
+                    new Float4(1.4183908f, 0.5875167f, -1.4183908f, -1.4183908f),
+                    new Float4(-1.4183908f, 0.5875167f, 1.4183908f, 1.4183908f),
+                    new Float4(-1.4183908f, 0.5875167f, 1.4183908f, -1.4183908f),
+                    new Float4(-1.4183908f, 0.5875167f, -1.4183908f, 1.4183908f),
+                    new Float4(-1.4183908f, 0.5875167f, -1.4183908f, -1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, 0.5875167f, 1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, 0.5875167f, -1.4183908f),
+                    new Float4(1.4183908f, -1.4183908f, 0.5875167f, 1.4183908f),
+                    new Float4(1.4183908f, -1.4183908f, 0.5875167f, -1.4183908f),
+                    new Float4(-1.4183908f, 1.4183908f, 0.5875167f, 1.4183908f),
+                    new Float4(-1.4183908f, 1.4183908f, 0.5875167f, -1.4183908f),
+                    new Float4(-1.4183908f, -1.4183908f, 0.5875167f, 1.4183908f),
+                    new Float4(-1.4183908f, -1.4183908f, 0.5875167f, -1.4183908f),
+                    new Float4(1.4183908f, 1.4183908f, 1.4183908f, 0.5875167f),
+                    new Float4(1.4183908f, 1.4183908f, -1.4183908f, 0.5875167f),
+                    new Float4(1.4183908f, -1.4183908f, 1.4183908f, 0.5875167f),
+                    new Float4(1.4183908f, -1.4183908f, -1.4183908f, 0.5875167f),
+                    new Float4(-1.4183908f, 1.4183908f, 1.4183908f, 0.5875167f),
+                    new Float4(-1.4183908f, 1.4183908f, -1.4183908f, 0.5875167f),
+                    new Float4(-1.4183908f, -1.4183908f, 1.4183908f, 0.5875167f),
+                    new Float4(-1.4183908f, -1.4183908f, -1.4183908f, 0.5875167f),
             };
     private static final int[] SIMPLEX_4D = {0, 1, 3, 7, 0, 1, 7, 3,
             0, 0, 0, 0, 0, 3, 7, 1, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -6309,7 +6522,7 @@ public class Noise implements Serializable {
      * both the sequence and in space), the Gaussian points were more likely to be quasi-random as well, and far fewer
      * point sets needed to be rejected.
      */
-    protected static final Float5[] grad5f = {
+    protected static final Float5[] GRADIENTS_5D = {
             new Float5(-1.6797903571f, -0.0690921662f, -0.7098031356f, -0.5887570823f, +0.5683970756f),
             new Float5(-1.0516780588f, -0.2945340815f, -1.4440603796f, +0.7418854274f, -0.4141480030f),
             new Float5(+1.0641252713f, -1.5650070200f, +0.4156350353f, +0.1130875224f, +0.4825444684f),
@@ -6568,79 +6781,7 @@ public class Noise implements Serializable {
             new Float5(+1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f)
     };
 
-    private static final Float2[] CELL_2D =
-            {
-                    new Float2(-0.4313539279f, 0.1281943404f), new Float2(-0.1733316799f, 0.415278375f), new Float2(-0.2821957395f, -0.3505218461f), new Float2(-0.2806473808f, 0.3517627718f), new Float2(0.3125508975f, -0.3237467165f), new Float2(0.3383018443f, -0.2967353402f), new Float2(-0.4393982022f, -0.09710417025f), new Float2(-0.4460443703f, -0.05953502905f),
-                    new Float2(-0.302223039f, 0.3334085102f), new Float2(-0.212681052f, -0.3965687458f), new Float2(-0.2991156529f, 0.3361990872f), new Float2(0.2293323691f, 0.3871778202f), new Float2(0.4475439151f, -0.04695150755f), new Float2(0.1777518f, 0.41340573f), new Float2(0.1688522499f, -0.4171197882f), new Float2(-0.0976597166f, 0.4392750616f),
-                    new Float2(0.08450188373f, 0.4419948321f), new Float2(-0.4098760448f, -0.1857461384f), new Float2(0.3476585782f, -0.2857157906f), new Float2(-0.3350670039f, -0.30038326f), new Float2(0.2298190031f, -0.3868891648f), new Float2(-0.01069924099f, 0.449872789f), new Float2(-0.4460141246f, -0.05976119672f), new Float2(0.3650293864f, 0.2631606867f),
-                    new Float2(-0.349479423f, 0.2834856838f), new Float2(-0.4122720642f, 0.1803655873f), new Float2(-0.267327811f, 0.3619887311f), new Float2(0.322124041f, -0.3142230135f), new Float2(0.2880445931f, -0.3457315612f), new Float2(0.3892170926f, -0.2258540565f), new Float2(0.4492085018f, -0.02667811596f), new Float2(-0.4497724772f, 0.01430799601f),
-                    new Float2(0.1278175387f, -0.4314657307f), new Float2(-0.03572100503f, 0.4485799926f), new Float2(-0.4297407068f, -0.1335025276f), new Float2(-0.3217817723f, 0.3145735065f), new Float2(-0.3057158873f, 0.3302087162f), new Float2(-0.414503978f, 0.1751754899f), new Float2(-0.3738139881f, 0.2505256519f), new Float2(0.2236891408f, -0.3904653228f),
-                    new Float2(0.002967775577f, -0.4499902136f), new Float2(0.1747128327f, -0.4146991995f), new Float2(-0.4423772489f, -0.08247647938f), new Float2(-0.2763960987f, -0.355112935f), new Float2(-0.4019385906f, -0.2023496216f), new Float2(0.3871414161f, -0.2293938184f), new Float2(-0.430008727f, 0.1326367019f), new Float2(-0.03037574274f, -0.4489736231f),
-                    new Float2(-0.3486181573f, 0.2845441624f), new Float2(0.04553517144f, -0.4476902368f), new Float2(-0.0375802926f, 0.4484280562f), new Float2(0.3266408905f, 0.3095250049f), new Float2(0.06540017593f, -0.4452222108f), new Float2(0.03409025829f, 0.448706869f), new Float2(-0.4449193635f, 0.06742966669f), new Float2(-0.4255936157f, -0.1461850686f),
-                    new Float2(0.449917292f, 0.008627302568f), new Float2(0.05242606404f, 0.4469356864f), new Float2(-0.4495305179f, -0.02055026661f), new Float2(-0.1204775703f, 0.4335725488f), new Float2(-0.341986385f, -0.2924813028f), new Float2(0.3865320182f, 0.2304191809f), new Float2(0.04506097811f, -0.447738214f), new Float2(-0.06283465979f, 0.4455915232f),
-                    new Float2(0.3932600341f, -0.2187385324f), new Float2(0.4472261803f, -0.04988730975f), new Float2(0.3753571011f, -0.2482076684f), new Float2(-0.273662295f, 0.357223947f), new Float2(0.1700461538f, 0.4166344988f), new Float2(0.4102692229f, 0.1848760794f), new Float2(0.323227187f, -0.3130881435f), new Float2(-0.2882310238f, -0.3455761521f),
-                    new Float2(0.2050972664f, 0.4005435199f), new Float2(0.4414085979f, -0.08751256895f), new Float2(-0.1684700334f, 0.4172743077f), new Float2(-0.003978032396f, 0.4499824166f), new Float2(-0.2055133639f, 0.4003301853f), new Float2(-0.006095674897f, -0.4499587123f), new Float2(-0.1196228124f, -0.4338091548f), new Float2(0.3901528491f, -0.2242337048f),
-                    new Float2(0.01723531752f, 0.4496698165f), new Float2(-0.3015070339f, 0.3340561458f), new Float2(-0.01514262423f, -0.4497451511f), new Float2(-0.4142574071f, -0.1757577897f), new Float2(-0.1916377265f, -0.4071547394f), new Float2(0.3749248747f, 0.2488600778f), new Float2(-0.2237774255f, 0.3904147331f), new Float2(-0.4166343106f, -0.1700466149f),
-                    new Float2(0.3619171625f, 0.267424695f), new Float2(0.1891126846f, -0.4083336779f), new Float2(-0.3127425077f, 0.323561623f), new Float2(-0.3281807787f, 0.307891826f), new Float2(-0.2294806661f, 0.3870899429f), new Float2(-0.3445266136f, 0.2894847362f), new Float2(-0.4167095422f, -0.1698621719f), new Float2(-0.257890321f, -0.3687717212f),
-                    new Float2(-0.3612037825f, 0.2683874578f), new Float2(0.2267996491f, 0.3886668486f), new Float2(0.207157062f, 0.3994821043f), new Float2(0.08355176718f, -0.4421754202f), new Float2(-0.4312233307f, 0.1286329626f), new Float2(0.3257055497f, 0.3105090899f), new Float2(0.177701095f, -0.4134275279f), new Float2(-0.445182522f, 0.06566979625f),
-                    new Float2(0.3955143435f, 0.2146355146f), new Float2(-0.4264613988f, 0.1436338239f), new Float2(-0.3793799665f, -0.2420141339f), new Float2(0.04617599081f, -0.4476245948f), new Float2(-0.371405428f, -0.2540826796f), new Float2(0.2563570295f, -0.3698392535f), new Float2(0.03476646309f, 0.4486549822f), new Float2(-0.3065454405f, 0.3294387544f),
-                    new Float2(-0.2256979823f, 0.3893076172f), new Float2(0.4116448463f, -0.1817925206f), new Float2(-0.2907745828f, -0.3434387019f), new Float2(0.2842278468f, -0.348876097f), new Float2(0.3114589359f, -0.3247973695f), new Float2(0.4464155859f, -0.0566844308f), new Float2(-0.3037334033f, -0.3320331606f), new Float2(0.4079607166f, 0.1899159123f),
-                    new Float2(-0.3486948919f, -0.2844501228f), new Float2(0.3264821436f, 0.3096924441f), new Float2(0.3211142406f, 0.3152548881f), new Float2(0.01183382662f, 0.4498443737f), new Float2(0.4333844092f, 0.1211526057f), new Float2(0.3118668416f, 0.324405723f), new Float2(-0.272753471f, 0.3579183483f), new Float2(-0.422228622f, -0.1556373694f),
-                    new Float2(-0.1009700099f, -0.4385260051f), new Float2(-0.2741171231f, -0.3568750521f), new Float2(-0.1465125133f, 0.4254810025f), new Float2(0.2302279044f, -0.3866459777f), new Float2(-0.3699435608f, 0.2562064828f), new Float2(0.105700352f, -0.4374099171f), new Float2(-0.2646713633f, 0.3639355292f), new Float2(0.3521828122f, 0.2801200935f),
-                    new Float2(-0.1864187807f, -0.4095705534f), new Float2(0.1994492955f, -0.4033856449f), new Float2(0.3937065066f, 0.2179339044f), new Float2(-0.3226158377f, 0.3137180602f), new Float2(0.3796235338f, 0.2416318948f), new Float2(0.1482921929f, 0.4248640083f), new Float2(-0.407400394f, 0.1911149365f), new Float2(0.4212853031f, 0.1581729856f),
-                    new Float2(-0.2621297173f, 0.3657704353f), new Float2(-0.2536986953f, -0.3716678248f), new Float2(-0.2100236383f, 0.3979825013f), new Float2(0.3624152444f, 0.2667493029f), new Float2(-0.3645038479f, -0.2638881295f), new Float2(0.2318486784f, 0.3856762766f), new Float2(-0.3260457004f, 0.3101519002f), new Float2(-0.2130045332f, -0.3963950918f),
-                    new Float2(0.3814998766f, -0.2386584257f), new Float2(-0.342977305f, 0.2913186713f), new Float2(-0.4355865605f, 0.1129794154f), new Float2(-0.2104679605f, 0.3977477059f), new Float2(0.3348364681f, -0.3006402163f), new Float2(0.3430468811f, 0.2912367377f), new Float2(-0.2291836801f, -0.3872658529f), new Float2(0.2547707298f, -0.3709337882f),
-                    new Float2(0.4236174945f, -0.151816397f), new Float2(-0.15387742f, 0.4228731957f), new Float2(-0.4407449312f, 0.09079595574f), new Float2(-0.06805276192f, -0.444824484f), new Float2(0.4453517192f, -0.06451237284f), new Float2(0.2562464609f, -0.3699158705f), new Float2(0.3278198355f, -0.3082761026f), new Float2(-0.4122774207f, -0.1803533432f),
-                    new Float2(0.3354090914f, -0.3000012356f), new Float2(0.446632869f, -0.05494615882f), new Float2(-0.1608953296f, 0.4202531296f), new Float2(-0.09463954939f, 0.4399356268f), new Float2(-0.02637688324f, -0.4492262904f), new Float2(0.447102804f, -0.05098119915f), new Float2(-0.4365670908f, 0.1091291678f), new Float2(-0.3959858651f, 0.2137643437f),
-                    new Float2(-0.4240048207f, -0.1507312575f), new Float2(-0.3882794568f, 0.2274622243f), new Float2(-0.4283652566f, -0.1378521198f), new Float2(0.3303888091f, 0.305521251f), new Float2(0.3321434919f, -0.3036127481f), new Float2(-0.413021046f, -0.1786438231f), new Float2(0.08403060337f, -0.4420846725f), new Float2(-0.3822882919f, 0.2373934748f),
-                    new Float2(-0.3712395594f, -0.2543249683f), new Float2(0.4472363971f, -0.04979563372f), new Float2(-0.4466591209f, 0.05473234629f), new Float2(0.0486272539f, -0.4473649407f), new Float2(-0.4203101295f, -0.1607463688f), new Float2(0.2205360833f, 0.39225481f), new Float2(-0.3624900666f, 0.2666476169f), new Float2(-0.4036086833f, -0.1989975647f),
-                    new Float2(0.2152727807f, 0.3951678503f), new Float2(-0.4359392962f, -0.1116106179f), new Float2(0.4178354266f, 0.1670735057f), new Float2(0.2007630161f, 0.4027334247f), new Float2(-0.07278067175f, -0.4440754146f), new Float2(0.3644748615f, -0.2639281632f), new Float2(-0.4317451775f, 0.126870413f), new Float2(-0.297436456f, 0.3376855855f),
-                    new Float2(-0.2998672222f, 0.3355289094f), new Float2(-0.2673674124f, 0.3619594822f), new Float2(0.2808423357f, 0.3516071423f), new Float2(0.3498946567f, 0.2829730186f), new Float2(-0.2229685561f, 0.390877248f), new Float2(0.3305823267f, 0.3053118493f), new Float2(-0.2436681211f, -0.3783197679f), new Float2(-0.03402776529f, 0.4487116125f),
-                    new Float2(-0.319358823f, 0.3170330301f), new Float2(0.4454633477f, -0.06373700535f), new Float2(0.4483504221f, 0.03849544189f), new Float2(-0.4427358436f, -0.08052932871f), new Float2(0.05452298565f, 0.4466847255f), new Float2(-0.2812560807f, 0.3512762688f), new Float2(0.1266696921f, 0.4318041097f), new Float2(-0.3735981243f, 0.2508474468f),
-                    new Float2(0.2959708351f, -0.3389708908f), new Float2(-0.3714377181f, 0.254035473f), new Float2(-0.404467102f, -0.1972469604f), new Float2(0.1636165687f, -0.419201167f), new Float2(0.3289185495f, -0.3071035458f), new Float2(-0.2494824991f, -0.3745109914f), new Float2(0.03283133272f, 0.4488007393f), new Float2(-0.166306057f, -0.4181414777f),
-                    new Float2(-0.106833179f, 0.4371346153f), new Float2(0.06440260376f, -0.4453676062f), new Float2(-0.4483230967f, 0.03881238203f), new Float2(-0.421377757f, -0.1579265206f), new Float2(0.05097920662f, -0.4471030312f), new Float2(0.2050584153f, -0.4005634111f), new Float2(0.4178098529f, -0.167137449f), new Float2(-0.3565189504f, -0.2745801121f),
-                    new Float2(0.4478398129f, 0.04403977727f), new Float2(-0.3399999602f, -0.2947881053f), new Float2(0.3767121994f, 0.2461461331f), new Float2(-0.3138934434f, 0.3224451987f), new Float2(-0.1462001792f, -0.4255884251f), new Float2(0.3970290489f, -0.2118205239f), new Float2(0.4459149305f, -0.06049689889f), new Float2(-0.4104889426f, -0.1843877112f),
-                    new Float2(0.1475103971f, -0.4251360756f), new Float2(0.09258030352f, 0.4403735771f), new Float2(-0.1589664637f, -0.4209865359f), new Float2(0.2482445008f, 0.3753327428f), new Float2(0.4383624232f, -0.1016778537f), new Float2(0.06242802956f, 0.4456486745f), new Float2(0.2846591015f, -0.3485243118f), new Float2(-0.344202744f, -0.2898697484f),
-                    new Float2(0.1198188883f, -0.4337550392f), new Float2(-0.243590703f, 0.3783696201f), new Float2(0.2958191174f, -0.3391033025f), new Float2(-0.1164007991f, 0.4346847754f), new Float2(0.1274037151f, -0.4315881062f), new Float2(0.368047306f, 0.2589231171f), new Float2(0.2451436949f, 0.3773652989f), new Float2(-0.4314509715f, 0.12786735f),
-            };
-
-    private static final Float3[] CELL_3D =
-            {
-                    new Float3(0.1453787434f, -0.4149781685f, -0.0956981749f), new Float3(-0.01242829687f, -0.1457918398f, -0.4255470325f), new Float3(0.2877979582f, -0.02606483451f, -0.3449535616f), new Float3(-0.07732986802f, 0.2377094325f, 0.3741848704f), new Float3(0.1107205875f, -0.3552302079f, -0.2530858567f), new Float3(0.2755209141f, 0.2640521179f, -0.238463215f), new Float3(0.294168941f, 0.1526064594f, 0.3044271714f), new Float3(0.4000921098f, -0.2034056362f, 0.03244149937f),
-                    new Float3(-0.1697304074f, 0.3970864695f, -0.1265461359f), new Float3(-0.1483224484f, -0.3859694688f, 0.1775613147f), new Float3(0.2623596946f, -0.2354852944f, 0.2796677792f), new Float3(-0.2709003183f, 0.3505271138f, -0.07901746678f), new Float3(-0.03516550699f, 0.3885234328f, 0.2243054374f), new Float3(-0.1267712655f, 0.1920044036f, 0.3867342179f), new Float3(0.02952021915f, 0.4409685861f, 0.08470692262f), new Float3(-0.2806854217f, -0.266996757f, 0.2289725438f),
-                    new Float3(-0.171159547f, 0.2141185563f, 0.3568720405f), new Float3(0.2113227183f, 0.3902405947f, -0.07453178509f), new Float3(-0.1024352839f, 0.2128044156f, -0.3830421561f), new Float3(-0.3304249877f, -0.1566986703f, 0.2622305365f), new Float3(0.2091111325f, 0.3133278055f, -0.2461670583f), new Float3(0.344678154f, -0.1944240454f, -0.2142341261f), new Float3(0.1984478035f, -0.3214342325f, -0.2445373252f), new Float3(-0.2929008603f, 0.2262915116f, 0.2559320961f),
-                    new Float3(-0.1617332831f, 0.006314769776f, -0.4198838754f), new Float3(-0.3582060271f, -0.148303178f, -0.2284613961f), new Float3(-0.1852067326f, -0.3454119342f, -0.2211087107f), new Float3(0.3046301062f, 0.1026310383f, 0.314908508f), new Float3(-0.03816768434f, -0.2551766358f, -0.3686842991f), new Float3(-0.4084952196f, 0.1805950793f, 0.05492788837f), new Float3(-0.02687443361f, -0.2749741471f, 0.3551999201f), new Float3(-0.03801098351f, 0.3277859044f, 0.3059600725f),
-                    new Float3(0.2371120802f, 0.2900386767f, -0.2493099024f), new Float3(0.4447660503f, 0.03946930643f, 0.05590469027f), new Float3(0.01985147278f, -0.01503183293f, -0.4493105419f), new Float3(0.4274339143f, 0.03345994256f, -0.1366772882f), new Float3(-0.2072988631f, 0.2871414597f, -0.2776273824f), new Float3(-0.3791240978f, 0.1281177671f, 0.2057929936f), new Float3(-0.2098721267f, -0.1007087278f, -0.3851122467f), new Float3(0.01582798878f, 0.4263894424f, 0.1429738373f),
-                    new Float3(-0.1888129464f, -0.3160996813f, -0.2587096108f), new Float3(0.1612988974f, -0.1974805082f, -0.3707885038f), new Float3(-0.08974491322f, 0.229148752f, -0.3767448739f), new Float3(0.07041229526f, 0.4150230285f, -0.1590534329f), new Float3(-0.1082925611f, -0.1586061639f, 0.4069604477f), new Float3(0.2474100658f, -0.3309414609f, 0.1782302128f), new Float3(-0.1068836661f, -0.2701644537f, -0.3436379634f), new Float3(0.2396452163f, 0.06803600538f, -0.3747549496f),
-                    new Float3(-0.3063886072f, 0.2597428179f, 0.2028785103f), new Float3(0.1593342891f, -0.3114350249f, -0.2830561951f), new Float3(0.2709690528f, 0.1412648683f, -0.3303331794f), new Float3(-0.1519780427f, 0.3623355133f, 0.2193527988f), new Float3(0.1699773681f, 0.3456012883f, 0.2327390037f), new Float3(-0.1986155616f, 0.3836276443f, -0.1260225743f), new Float3(-0.1887482106f, -0.2050154888f, -0.353330953f), new Float3(0.2659103394f, 0.3015631259f, -0.2021172246f),
-                    new Float3(-0.08838976154f, -0.4288819642f, -0.1036702021f), new Float3(-0.04201869311f, 0.3099592485f, 0.3235115047f), new Float3(-0.3230334656f, 0.201549922f, -0.2398478873f), new Float3(0.2612720941f, 0.2759854499f, -0.2409749453f), new Float3(0.385713046f, 0.2193460345f, 0.07491837764f), new Float3(0.07654967953f, 0.3721732183f, 0.241095919f), new Float3(0.4317038818f, -0.02577753072f, 0.1243675091f), new Float3(-0.2890436293f, -0.3418179959f, -0.04598084447f),
-                    new Float3(-0.2201947582f, 0.383023377f, -0.08548310451f), new Float3(0.4161322773f, -0.1669634289f, -0.03817251927f), new Float3(0.2204718095f, 0.02654238946f, -0.391391981f), new Float3(-0.1040307469f, 0.3890079625f, -0.2008741118f), new Float3(-0.1432122615f, 0.371614387f, -0.2095065525f), new Float3(0.3978380468f, -0.06206669342f, 0.2009293758f), new Float3(-0.2599274663f, 0.2616724959f, -0.2578084893f), new Float3(0.4032618332f, -0.1124593585f, 0.1650235939f),
-                    new Float3(-0.08953470255f, -0.3048244735f, 0.3186935478f), new Float3(0.118937202f, -0.2875221847f, 0.325092195f), new Float3(0.02167047076f, -0.03284630549f, -0.4482761547f), new Float3(-0.3411343612f, 0.2500031105f, 0.1537068389f), new Float3(0.3162964612f, 0.3082064153f, -0.08640228117f), new Float3(0.2355138889f, -0.3439334267f, -0.1695376245f), new Float3(-0.02874541518f, -0.3955933019f, 0.2125550295f), new Float3(-0.2461455173f, 0.02020282325f, -0.3761704803f),
-                    new Float3(0.04208029445f, -0.4470439576f, 0.02968078139f), new Float3(0.2727458746f, 0.2288471896f, -0.2752065618f), new Float3(-0.1347522818f, -0.02720848277f, -0.4284874806f), new Float3(0.3829624424f, 0.1231931484f, -0.2016512234f), new Float3(-0.3547613644f, 0.1271702173f, 0.2459107769f), new Float3(0.2305790207f, 0.3063895591f, 0.2354968222f), new Float3(-0.08323845599f, -0.1922245118f, 0.3982726409f), new Float3(0.2993663085f, -0.2619918095f, -0.2103333191f),
-                    new Float3(-0.2154865723f, 0.2706747713f, 0.287751117f), new Float3(0.01683355354f, -0.2680655787f, -0.3610505186f), new Float3(0.05240429123f, 0.4335128183f, -0.1087217856f), new Float3(0.00940104872f, -0.4472890582f, 0.04841609928f), new Float3(0.3465688735f, 0.01141914583f, -0.2868093776f), new Float3(-0.3706867948f, -0.2551104378f, 0.003156692623f), new Float3(0.2741169781f, 0.2139972417f, -0.2855959784f), new Float3(0.06413433865f, 0.1708718512f, 0.4113266307f),
-                    new Float3(-0.388187972f, -0.03973280434f, -0.2241236325f), new Float3(0.06419469312f, -0.2803682491f, 0.3460819069f), new Float3(-0.1986120739f, -0.3391173584f, 0.2192091725f), new Float3(-0.203203009f, -0.3871641506f, 0.1063600375f), new Float3(-0.1389736354f, -0.2775901578f, -0.3257760473f), new Float3(-0.06555641638f, 0.342253257f, -0.2847192729f), new Float3(-0.2529246486f, -0.2904227915f, 0.2327739768f), new Float3(0.1444476522f, 0.1069184044f, 0.4125570634f),
-                    new Float3(-0.3643780054f, -0.2447099973f, -0.09922543227f), new Float3(0.4286142488f, -0.1358496089f, -0.01829506817f), new Float3(0.165872923f, -0.3136808464f, -0.2767498872f), new Float3(0.2219610524f, -0.3658139958f, 0.1393320198f), new Float3(0.04322940318f, -0.3832730794f, 0.2318037215f), new Float3(-0.08481269795f, -0.4404869674f, -0.03574965489f), new Float3(0.1822082075f, -0.3953259299f, 0.1140946023f), new Float3(-0.3269323334f, 0.3036542563f, 0.05838957105f),
-                    new Float3(-0.4080485344f, 0.04227858267f, -0.184956522f), new Float3(0.2676025294f, -0.01299671652f, 0.36155217f), new Float3(0.3024892441f, -0.1009990293f, -0.3174892964f), new Float3(0.1448494052f, 0.425921681f, -0.0104580805f), new Float3(0.4198402157f, 0.08062320474f, 0.1404780841f), new Float3(-0.3008872161f, -0.333040905f, -0.03241355801f), new Float3(0.3639310428f, -0.1291284382f, -0.2310412139f), new Float3(0.3295806598f, 0.0184175994f, -0.3058388149f),
-                    new Float3(0.2776259487f, -0.2974929052f, -0.1921504723f), new Float3(0.4149000507f, -0.144793182f, -0.09691688386f), new Float3(0.145016715f, -0.0398992945f, 0.4241205002f), new Float3(0.09299023471f, -0.299732164f, -0.3225111565f), new Float3(0.1028907093f, -0.361266869f, 0.247789732f), new Float3(0.2683057049f, -0.07076041213f, -0.3542668666f), new Float3(-0.4227307273f, -0.07933161816f, -0.1323073187f), new Float3(-0.1781224702f, 0.1806857196f, -0.3716517945f),
-                    new Float3(0.4390788626f, -0.02841848598f, -0.09435116353f), new Float3(0.2972583585f, 0.2382799621f, -0.2394997452f), new Float3(-0.1707002821f, 0.2215845691f, 0.3525077196f), new Float3(0.3806686614f, 0.1471852559f, -0.1895464869f), new Float3(-0.1751445661f, -0.274887877f, 0.3102596268f), new Float3(-0.2227237566f, -0.2316778837f, 0.3149912482f), new Float3(0.1369633021f, 0.1341343041f, -0.4071228836f), new Float3(-0.3529503428f, -0.2472893463f, -0.129514612f),
-                    new Float3(-0.2590744185f, -0.2985577559f, -0.2150435121f), new Float3(-0.3784019401f, 0.2199816631f, -0.1044989934f), new Float3(-0.05635805671f, 0.1485737441f, 0.4210102279f), new Float3(0.3251428613f, 0.09666046873f, -0.2957006485f), new Float3(-0.4190995804f, 0.1406751354f, -0.08405978803f), new Float3(-0.3253150961f, -0.3080335042f, -0.04225456877f), new Float3(0.2857945863f, -0.05796152095f, 0.3427271751f), new Float3(-0.2733604046f, 0.1973770973f, -0.2980207554f),
-                    new Float3(0.219003657f, 0.2410037886f, -0.3105713639f), new Float3(0.3182767252f, -0.271342949f, 0.1660509868f), new Float3(-0.03222023115f, -0.3331161506f, -0.300824678f), new Float3(-0.3087780231f, 0.1992794134f, -0.2596995338f), new Float3(-0.06487611647f, -0.4311322747f, 0.1114273361f), new Float3(0.3921171432f, -0.06294284106f, -0.2116183942f), new Float3(-0.1606404506f, -0.358928121f, -0.2187812825f), new Float3(-0.03767771199f, -0.2290351443f, 0.3855169162f),
-                    new Float3(0.1394866832f, -0.3602213994f, 0.2308332918f), new Float3(-0.4345093872f, 0.005751117145f, 0.1169124335f), new Float3(-0.1044637494f, 0.4168128432f, -0.1336202785f), new Float3(0.2658727501f, 0.2551943237f, 0.2582393035f), new Float3(0.2051461999f, 0.1975390727f, 0.3484154868f), new Float3(-0.266085566f, 0.23483312f, 0.2766800993f), new Float3(0.07849405464f, -0.3300346342f, -0.2956616708f), new Float3(-0.2160686338f, 0.05376451292f, -0.3910546287f),
-                    new Float3(-0.185779186f, 0.2148499206f, 0.3490352499f), new Float3(0.02492421743f, -0.3229954284f, -0.3123343347f), new Float3(-0.120167831f, 0.4017266681f, 0.1633259825f), new Float3(-0.02160084693f, -0.06885389554f, 0.4441762538f), new Float3(0.2597670064f, 0.3096300784f, 0.1978643903f), new Float3(-0.1611553854f, -0.09823036005f, 0.4085091653f), new Float3(-0.3278896792f, 0.1461670309f, 0.2713366126f), new Float3(0.2822734956f, 0.03754421121f, -0.3484423997f),
-                    new Float3(0.03169341113f, 0.347405252f, -0.2842624114f), new Float3(0.2202613604f, -0.3460788041f, -0.1849713341f), new Float3(0.2933396046f, 0.3031973659f, 0.1565989581f), new Float3(-0.3194922995f, 0.2453752201f, -0.200538455f), new Float3(-0.3441586045f, -0.1698856132f, -0.2349334659f), new Float3(0.2703645948f, -0.3574277231f, 0.04060059933f), new Float3(0.2298568861f, 0.3744156221f, 0.0973588921f), new Float3(0.09326603877f, -0.3170108894f, 0.3054595587f),
-                    new Float3(-0.1116165319f, -0.2985018719f, 0.3177080142f), new Float3(0.2172907365f, -0.3460005203f, -0.1885958001f), new Float3(0.1991339479f, 0.3820341668f, -0.1299829458f), new Float3(-0.0541918155f, -0.2103145071f, 0.39412061f), new Float3(0.08871336998f, 0.2012117383f, 0.3926114802f), new Float3(0.2787673278f, 0.3505404674f, 0.04370535101f), new Float3(-0.322166438f, 0.3067213525f, 0.06804996813f), new Float3(-0.4277366384f, 0.132066775f, 0.04582286686f),
-                    new Float3(0.240131882f, -0.1612516055f, 0.344723946f), new Float3(0.1448607981f, -0.2387819045f, 0.3528435224f), new Float3(-0.3837065682f, -0.2206398454f, 0.08116235683f), new Float3(-0.4382627882f, -0.09082753406f, -0.04664855374f), new Float3(-0.37728353f, 0.05445141085f, 0.2391488697f), new Float3(0.1259579313f, 0.348394558f, 0.2554522098f), new Float3(-0.1406285511f, -0.270877371f, -0.3306796947f), new Float3(-0.1580694418f, 0.4162931958f, -0.06491553533f),
-                    new Float3(0.2477612106f, -0.2927867412f, -0.2353514536f), new Float3(0.2916132853f, 0.3312535401f, 0.08793624968f), new Float3(0.07365265219f, -0.1666159848f, 0.411478311f), new Float3(-0.26126526f, -0.2422237692f, 0.2748965434f), new Float3(-0.3721862032f, 0.252790166f, 0.008634938242f), new Float3(-0.3691191571f, -0.255281188f, 0.03290232422f), new Float3(0.2278441737f, -0.3358364886f, 0.1944244981f), new Float3(0.363398169f, -0.2310190248f, 0.1306597909f),
-                    new Float3(-0.304231482f, -0.2698452035f, 0.1926830856f), new Float3(-0.3199312232f, 0.316332536f, -0.008816977938f), new Float3(0.2874852279f, 0.1642275508f, -0.304764754f), new Float3(-0.1451096801f, 0.3277541114f, -0.2720669462f), new Float3(0.3220090754f, 0.0511344108f, 0.3101538769f), new Float3(-0.1247400865f, -0.04333605335f, -0.4301882115f), new Float3(-0.2829555867f, -0.3056190617f, -0.1703910946f), new Float3(0.1069384374f, 0.3491024667f, -0.2630430352f),
-                    new Float3(-0.1420661144f, -0.3055376754f, -0.2982682484f), new Float3(-0.250548338f, 0.3156466809f, -0.2002316239f), new Float3(0.3265787872f, 0.1871229129f, 0.2466400438f), new Float3(0.07646097258f, -0.3026690852f, 0.324106687f), new Float3(0.3451771584f, 0.2757120714f, -0.0856480183f), new Float3(0.298137964f, 0.2852657134f, 0.179547284f), new Float3(0.2812250376f, 0.3466716415f, 0.05684409612f), new Float3(0.4390345476f, -0.09790429955f, -0.01278335452f),
-                    new Float3(0.2148373234f, 0.1850172527f, 0.3494474791f), new Float3(0.2595421179f, -0.07946825393f, 0.3589187731f), new Float3(0.3182823114f, -0.307355516f, -0.08203022006f), new Float3(-0.4089859285f, -0.04647718411f, 0.1818526372f), new Float3(-0.2826749061f, 0.07417482322f, 0.3421885344f), new Float3(0.3483864637f, 0.225442246f, -0.1740766085f), new Float3(-0.3226415069f, -0.1420585388f, -0.2796816575f), new Float3(0.4330734858f, -0.118868561f, -0.02859407492f),
-                    new Float3(-0.08717822568f, -0.3909896417f, -0.2050050172f), new Float3(-0.2149678299f, 0.3939973956f, -0.03247898316f), new Float3(-0.2687330705f, 0.322686276f, -0.1617284888f), new Float3(0.2105665099f, -0.1961317136f, -0.3459683451f), new Float3(0.4361845915f, -0.1105517485f, 0.004616608544f), new Float3(0.05333333359f, -0.313639498f, -0.3182543336f), new Float3(-0.05986216652f, 0.1361029153f, -0.4247264031f), new Float3(0.3664988455f, 0.2550543014f, -0.05590974511f),
-                    new Float3(-0.2341015558f, -0.182405731f, 0.3382670703f), new Float3(-0.04730947785f, -0.4222150243f, -0.1483114513f), new Float3(-0.2391566239f, -0.2577696514f, -0.2808182972f), new Float3(-0.1242081035f, 0.4256953395f, -0.07652336246f), new Float3(0.2614832715f, -0.3650179274f, 0.02980623099f), new Float3(-0.2728794681f, -0.3499628774f, 0.07458404908f), new Float3(0.007892900508f, -0.1672771315f, 0.4176793787f), new Float3(-0.01730330376f, 0.2978486637f, -0.3368779738f),
-                    new Float3(0.2054835762f, -0.3252600376f, -0.2334146693f), new Float3(-0.3231994983f, 0.1564282844f, -0.2712420987f), new Float3(-0.2669545963f, 0.2599343665f, -0.2523278991f), new Float3(-0.05554372779f, 0.3170813944f, -0.3144428146f), new Float3(-0.2083935713f, -0.310922837f, -0.2497981362f), new Float3(0.06989323478f, -0.3156141536f, 0.3130537363f), new Float3(0.3847566193f, -0.1605309138f, -0.1693876312f), new Float3(-0.3026215288f, -0.3001537679f, -0.1443188342f),
-                    new Float3(0.3450735512f, 0.08611519592f, 0.2756962409f), new Float3(0.1814473292f, -0.2788782453f, -0.3029914042f), new Float3(-0.03855010448f, 0.09795110726f, 0.4375151083f), new Float3(0.3533670318f, 0.2665752752f, 0.08105160988f), new Float3(-0.007945601311f, 0.140359426f, -0.4274764309f), new Float3(0.4063099273f, -0.1491768253f, -0.1231199324f), new Float3(-0.2016773589f, 0.008816271194f, -0.4021797064f), new Float3(-0.07527055435f, -0.425643481f, -0.1251477955f),
-            };
-
-    protected static final Float6[] grad6f = {
+    protected static final Float6[] GRADIENTS_6D = {
             new Float6(0.31733186658157f, 0.043599150809166f, -0.63578104939541f, 0.60224147484783f, -0.061995657882187f, 0.35587048501823f),
             new Float6(-0.54645425808647f, -0.75981513883963f, -0.035144342454363f, 0.13137365402959f, 0.29650029456531f, 0.13289887942467f),
             new Float6(0.72720729277573f, -0.0170513084554f, 0.10403853926717f, 0.57016794579524f, 0.10006650294475f, -0.35348266879289f),
@@ -6898,5 +7039,77 @@ public class Noise implements Serializable {
             new Float6(-0.02973230696179f, -0.51371026289118f, 0.34133522703692f, -0.41361792362786f, -0.51561746819514f, -0.4263412462482f),
             new Float6(0.51057171220039f, -0.23740201245544f, 0.26673587003088f, 0.5521767379032f, 0.16849318602455f, 0.52774964064755f)
     };
+
+    private static final Float2[] CELL_2D =
+            {
+                    new Float2(-0.4313539279f, 0.1281943404f), new Float2(-0.1733316799f, 0.415278375f), new Float2(-0.2821957395f, -0.3505218461f), new Float2(-0.2806473808f, 0.3517627718f), new Float2(0.3125508975f, -0.3237467165f), new Float2(0.3383018443f, -0.2967353402f), new Float2(-0.4393982022f, -0.09710417025f), new Float2(-0.4460443703f, -0.05953502905f),
+                    new Float2(-0.302223039f, 0.3334085102f), new Float2(-0.212681052f, -0.3965687458f), new Float2(-0.2991156529f, 0.3361990872f), new Float2(0.2293323691f, 0.3871778202f), new Float2(0.4475439151f, -0.04695150755f), new Float2(0.1777518f, 0.41340573f), new Float2(0.1688522499f, -0.4171197882f), new Float2(-0.0976597166f, 0.4392750616f),
+                    new Float2(0.08450188373f, 0.4419948321f), new Float2(-0.4098760448f, -0.1857461384f), new Float2(0.3476585782f, -0.2857157906f), new Float2(-0.3350670039f, -0.30038326f), new Float2(0.2298190031f, -0.3868891648f), new Float2(-0.01069924099f, 0.449872789f), new Float2(-0.4460141246f, -0.05976119672f), new Float2(0.3650293864f, 0.2631606867f),
+                    new Float2(-0.349479423f, 0.2834856838f), new Float2(-0.4122720642f, 0.1803655873f), new Float2(-0.267327811f, 0.3619887311f), new Float2(0.322124041f, -0.3142230135f), new Float2(0.2880445931f, -0.3457315612f), new Float2(0.3892170926f, -0.2258540565f), new Float2(0.4492085018f, -0.02667811596f), new Float2(-0.4497724772f, 0.01430799601f),
+                    new Float2(0.1278175387f, -0.4314657307f), new Float2(-0.03572100503f, 0.4485799926f), new Float2(-0.4297407068f, -0.1335025276f), new Float2(-0.3217817723f, 0.3145735065f), new Float2(-0.3057158873f, 0.3302087162f), new Float2(-0.414503978f, 0.1751754899f), new Float2(-0.3738139881f, 0.2505256519f), new Float2(0.2236891408f, -0.3904653228f),
+                    new Float2(0.002967775577f, -0.4499902136f), new Float2(0.1747128327f, -0.4146991995f), new Float2(-0.4423772489f, -0.08247647938f), new Float2(-0.2763960987f, -0.355112935f), new Float2(-0.4019385906f, -0.2023496216f), new Float2(0.3871414161f, -0.2293938184f), new Float2(-0.430008727f, 0.1326367019f), new Float2(-0.03037574274f, -0.4489736231f),
+                    new Float2(-0.3486181573f, 0.2845441624f), new Float2(0.04553517144f, -0.4476902368f), new Float2(-0.0375802926f, 0.4484280562f), new Float2(0.3266408905f, 0.3095250049f), new Float2(0.06540017593f, -0.4452222108f), new Float2(0.03409025829f, 0.448706869f), new Float2(-0.4449193635f, 0.06742966669f), new Float2(-0.4255936157f, -0.1461850686f),
+                    new Float2(0.449917292f, 0.008627302568f), new Float2(0.05242606404f, 0.4469356864f), new Float2(-0.4495305179f, -0.02055026661f), new Float2(-0.1204775703f, 0.4335725488f), new Float2(-0.341986385f, -0.2924813028f), new Float2(0.3865320182f, 0.2304191809f), new Float2(0.04506097811f, -0.447738214f), new Float2(-0.06283465979f, 0.4455915232f),
+                    new Float2(0.3932600341f, -0.2187385324f), new Float2(0.4472261803f, -0.04988730975f), new Float2(0.3753571011f, -0.2482076684f), new Float2(-0.273662295f, 0.357223947f), new Float2(0.1700461538f, 0.4166344988f), new Float2(0.4102692229f, 0.1848760794f), new Float2(0.323227187f, -0.3130881435f), new Float2(-0.2882310238f, -0.3455761521f),
+                    new Float2(0.2050972664f, 0.4005435199f), new Float2(0.4414085979f, -0.08751256895f), new Float2(-0.1684700334f, 0.4172743077f), new Float2(-0.003978032396f, 0.4499824166f), new Float2(-0.2055133639f, 0.4003301853f), new Float2(-0.006095674897f, -0.4499587123f), new Float2(-0.1196228124f, -0.4338091548f), new Float2(0.3901528491f, -0.2242337048f),
+                    new Float2(0.01723531752f, 0.4496698165f), new Float2(-0.3015070339f, 0.3340561458f), new Float2(-0.01514262423f, -0.4497451511f), new Float2(-0.4142574071f, -0.1757577897f), new Float2(-0.1916377265f, -0.4071547394f), new Float2(0.3749248747f, 0.2488600778f), new Float2(-0.2237774255f, 0.3904147331f), new Float2(-0.4166343106f, -0.1700466149f),
+                    new Float2(0.3619171625f, 0.267424695f), new Float2(0.1891126846f, -0.4083336779f), new Float2(-0.3127425077f, 0.323561623f), new Float2(-0.3281807787f, 0.307891826f), new Float2(-0.2294806661f, 0.3870899429f), new Float2(-0.3445266136f, 0.2894847362f), new Float2(-0.4167095422f, -0.1698621719f), new Float2(-0.257890321f, -0.3687717212f),
+                    new Float2(-0.3612037825f, 0.2683874578f), new Float2(0.2267996491f, 0.3886668486f), new Float2(0.207157062f, 0.3994821043f), new Float2(0.08355176718f, -0.4421754202f), new Float2(-0.4312233307f, 0.1286329626f), new Float2(0.3257055497f, 0.3105090899f), new Float2(0.177701095f, -0.4134275279f), new Float2(-0.445182522f, 0.06566979625f),
+                    new Float2(0.3955143435f, 0.2146355146f), new Float2(-0.4264613988f, 0.1436338239f), new Float2(-0.3793799665f, -0.2420141339f), new Float2(0.04617599081f, -0.4476245948f), new Float2(-0.371405428f, -0.2540826796f), new Float2(0.2563570295f, -0.3698392535f), new Float2(0.03476646309f, 0.4486549822f), new Float2(-0.3065454405f, 0.3294387544f),
+                    new Float2(-0.2256979823f, 0.3893076172f), new Float2(0.4116448463f, -0.1817925206f), new Float2(-0.2907745828f, -0.3434387019f), new Float2(0.2842278468f, -0.348876097f), new Float2(0.3114589359f, -0.3247973695f), new Float2(0.4464155859f, -0.0566844308f), new Float2(-0.3037334033f, -0.3320331606f), new Float2(0.4079607166f, 0.1899159123f),
+                    new Float2(-0.3486948919f, -0.2844501228f), new Float2(0.3264821436f, 0.3096924441f), new Float2(0.3211142406f, 0.3152548881f), new Float2(0.01183382662f, 0.4498443737f), new Float2(0.4333844092f, 0.1211526057f), new Float2(0.3118668416f, 0.324405723f), new Float2(-0.272753471f, 0.3579183483f), new Float2(-0.422228622f, -0.1556373694f),
+                    new Float2(-0.1009700099f, -0.4385260051f), new Float2(-0.2741171231f, -0.3568750521f), new Float2(-0.1465125133f, 0.4254810025f), new Float2(0.2302279044f, -0.3866459777f), new Float2(-0.3699435608f, 0.2562064828f), new Float2(0.105700352f, -0.4374099171f), new Float2(-0.2646713633f, 0.3639355292f), new Float2(0.3521828122f, 0.2801200935f),
+                    new Float2(-0.1864187807f, -0.4095705534f), new Float2(0.1994492955f, -0.4033856449f), new Float2(0.3937065066f, 0.2179339044f), new Float2(-0.3226158377f, 0.3137180602f), new Float2(0.3796235338f, 0.2416318948f), new Float2(0.1482921929f, 0.4248640083f), new Float2(-0.407400394f, 0.1911149365f), new Float2(0.4212853031f, 0.1581729856f),
+                    new Float2(-0.2621297173f, 0.3657704353f), new Float2(-0.2536986953f, -0.3716678248f), new Float2(-0.2100236383f, 0.3979825013f), new Float2(0.3624152444f, 0.2667493029f), new Float2(-0.3645038479f, -0.2638881295f), new Float2(0.2318486784f, 0.3856762766f), new Float2(-0.3260457004f, 0.3101519002f), new Float2(-0.2130045332f, -0.3963950918f),
+                    new Float2(0.3814998766f, -0.2386584257f), new Float2(-0.342977305f, 0.2913186713f), new Float2(-0.4355865605f, 0.1129794154f), new Float2(-0.2104679605f, 0.3977477059f), new Float2(0.3348364681f, -0.3006402163f), new Float2(0.3430468811f, 0.2912367377f), new Float2(-0.2291836801f, -0.3872658529f), new Float2(0.2547707298f, -0.3709337882f),
+                    new Float2(0.4236174945f, -0.151816397f), new Float2(-0.15387742f, 0.4228731957f), new Float2(-0.4407449312f, 0.09079595574f), new Float2(-0.06805276192f, -0.444824484f), new Float2(0.4453517192f, -0.06451237284f), new Float2(0.2562464609f, -0.3699158705f), new Float2(0.3278198355f, -0.3082761026f), new Float2(-0.4122774207f, -0.1803533432f),
+                    new Float2(0.3354090914f, -0.3000012356f), new Float2(0.446632869f, -0.05494615882f), new Float2(-0.1608953296f, 0.4202531296f), new Float2(-0.09463954939f, 0.4399356268f), new Float2(-0.02637688324f, -0.4492262904f), new Float2(0.447102804f, -0.05098119915f), new Float2(-0.4365670908f, 0.1091291678f), new Float2(-0.3959858651f, 0.2137643437f),
+                    new Float2(-0.4240048207f, -0.1507312575f), new Float2(-0.3882794568f, 0.2274622243f), new Float2(-0.4283652566f, -0.1378521198f), new Float2(0.3303888091f, 0.305521251f), new Float2(0.3321434919f, -0.3036127481f), new Float2(-0.413021046f, -0.1786438231f), new Float2(0.08403060337f, -0.4420846725f), new Float2(-0.3822882919f, 0.2373934748f),
+                    new Float2(-0.3712395594f, -0.2543249683f), new Float2(0.4472363971f, -0.04979563372f), new Float2(-0.4466591209f, 0.05473234629f), new Float2(0.0486272539f, -0.4473649407f), new Float2(-0.4203101295f, -0.1607463688f), new Float2(0.2205360833f, 0.39225481f), new Float2(-0.3624900666f, 0.2666476169f), new Float2(-0.4036086833f, -0.1989975647f),
+                    new Float2(0.2152727807f, 0.3951678503f), new Float2(-0.4359392962f, -0.1116106179f), new Float2(0.4178354266f, 0.1670735057f), new Float2(0.2007630161f, 0.4027334247f), new Float2(-0.07278067175f, -0.4440754146f), new Float2(0.3644748615f, -0.2639281632f), new Float2(-0.4317451775f, 0.126870413f), new Float2(-0.297436456f, 0.3376855855f),
+                    new Float2(-0.2998672222f, 0.3355289094f), new Float2(-0.2673674124f, 0.3619594822f), new Float2(0.2808423357f, 0.3516071423f), new Float2(0.3498946567f, 0.2829730186f), new Float2(-0.2229685561f, 0.390877248f), new Float2(0.3305823267f, 0.3053118493f), new Float2(-0.2436681211f, -0.3783197679f), new Float2(-0.03402776529f, 0.4487116125f),
+                    new Float2(-0.319358823f, 0.3170330301f), new Float2(0.4454633477f, -0.06373700535f), new Float2(0.4483504221f, 0.03849544189f), new Float2(-0.4427358436f, -0.08052932871f), new Float2(0.05452298565f, 0.4466847255f), new Float2(-0.2812560807f, 0.3512762688f), new Float2(0.1266696921f, 0.4318041097f), new Float2(-0.3735981243f, 0.2508474468f),
+                    new Float2(0.2959708351f, -0.3389708908f), new Float2(-0.3714377181f, 0.254035473f), new Float2(-0.404467102f, -0.1972469604f), new Float2(0.1636165687f, -0.419201167f), new Float2(0.3289185495f, -0.3071035458f), new Float2(-0.2494824991f, -0.3745109914f), new Float2(0.03283133272f, 0.4488007393f), new Float2(-0.166306057f, -0.4181414777f),
+                    new Float2(-0.106833179f, 0.4371346153f), new Float2(0.06440260376f, -0.4453676062f), new Float2(-0.4483230967f, 0.03881238203f), new Float2(-0.421377757f, -0.1579265206f), new Float2(0.05097920662f, -0.4471030312f), new Float2(0.2050584153f, -0.4005634111f), new Float2(0.4178098529f, -0.167137449f), new Float2(-0.3565189504f, -0.2745801121f),
+                    new Float2(0.4478398129f, 0.04403977727f), new Float2(-0.3399999602f, -0.2947881053f), new Float2(0.3767121994f, 0.2461461331f), new Float2(-0.3138934434f, 0.3224451987f), new Float2(-0.1462001792f, -0.4255884251f), new Float2(0.3970290489f, -0.2118205239f), new Float2(0.4459149305f, -0.06049689889f), new Float2(-0.4104889426f, -0.1843877112f),
+                    new Float2(0.1475103971f, -0.4251360756f), new Float2(0.09258030352f, 0.4403735771f), new Float2(-0.1589664637f, -0.4209865359f), new Float2(0.2482445008f, 0.3753327428f), new Float2(0.4383624232f, -0.1016778537f), new Float2(0.06242802956f, 0.4456486745f), new Float2(0.2846591015f, -0.3485243118f), new Float2(-0.344202744f, -0.2898697484f),
+                    new Float2(0.1198188883f, -0.4337550392f), new Float2(-0.243590703f, 0.3783696201f), new Float2(0.2958191174f, -0.3391033025f), new Float2(-0.1164007991f, 0.4346847754f), new Float2(0.1274037151f, -0.4315881062f), new Float2(0.368047306f, 0.2589231171f), new Float2(0.2451436949f, 0.3773652989f), new Float2(-0.4314509715f, 0.12786735f),
+            };
+
+    private static final Float3[] CELL_3D =
+            {
+                    new Float3(0.1453787434f, -0.4149781685f, -0.0956981749f), new Float3(-0.01242829687f, -0.1457918398f, -0.4255470325f), new Float3(0.2877979582f, -0.02606483451f, -0.3449535616f), new Float3(-0.07732986802f, 0.2377094325f, 0.3741848704f), new Float3(0.1107205875f, -0.3552302079f, -0.2530858567f), new Float3(0.2755209141f, 0.2640521179f, -0.238463215f), new Float3(0.294168941f, 0.1526064594f, 0.3044271714f), new Float3(0.4000921098f, -0.2034056362f, 0.03244149937f),
+                    new Float3(-0.1697304074f, 0.3970864695f, -0.1265461359f), new Float3(-0.1483224484f, -0.3859694688f, 0.1775613147f), new Float3(0.2623596946f, -0.2354852944f, 0.2796677792f), new Float3(-0.2709003183f, 0.3505271138f, -0.07901746678f), new Float3(-0.03516550699f, 0.3885234328f, 0.2243054374f), new Float3(-0.1267712655f, 0.1920044036f, 0.3867342179f), new Float3(0.02952021915f, 0.4409685861f, 0.08470692262f), new Float3(-0.2806854217f, -0.266996757f, 0.2289725438f),
+                    new Float3(-0.171159547f, 0.2141185563f, 0.3568720405f), new Float3(0.2113227183f, 0.3902405947f, -0.07453178509f), new Float3(-0.1024352839f, 0.2128044156f, -0.3830421561f), new Float3(-0.3304249877f, -0.1566986703f, 0.2622305365f), new Float3(0.2091111325f, 0.3133278055f, -0.2461670583f), new Float3(0.344678154f, -0.1944240454f, -0.2142341261f), new Float3(0.1984478035f, -0.3214342325f, -0.2445373252f), new Float3(-0.2929008603f, 0.2262915116f, 0.2559320961f),
+                    new Float3(-0.1617332831f, 0.006314769776f, -0.4198838754f), new Float3(-0.3582060271f, -0.148303178f, -0.2284613961f), new Float3(-0.1852067326f, -0.3454119342f, -0.2211087107f), new Float3(0.3046301062f, 0.1026310383f, 0.314908508f), new Float3(-0.03816768434f, -0.2551766358f, -0.3686842991f), new Float3(-0.4084952196f, 0.1805950793f, 0.05492788837f), new Float3(-0.02687443361f, -0.2749741471f, 0.3551999201f), new Float3(-0.03801098351f, 0.3277859044f, 0.3059600725f),
+                    new Float3(0.2371120802f, 0.2900386767f, -0.2493099024f), new Float3(0.4447660503f, 0.03946930643f, 0.05590469027f), new Float3(0.01985147278f, -0.01503183293f, -0.4493105419f), new Float3(0.4274339143f, 0.03345994256f, -0.1366772882f), new Float3(-0.2072988631f, 0.2871414597f, -0.2776273824f), new Float3(-0.3791240978f, 0.1281177671f, 0.2057929936f), new Float3(-0.2098721267f, -0.1007087278f, -0.3851122467f), new Float3(0.01582798878f, 0.4263894424f, 0.1429738373f),
+                    new Float3(-0.1888129464f, -0.3160996813f, -0.2587096108f), new Float3(0.1612988974f, -0.1974805082f, -0.3707885038f), new Float3(-0.08974491322f, 0.229148752f, -0.3767448739f), new Float3(0.07041229526f, 0.4150230285f, -0.1590534329f), new Float3(-0.1082925611f, -0.1586061639f, 0.4069604477f), new Float3(0.2474100658f, -0.3309414609f, 0.1782302128f), new Float3(-0.1068836661f, -0.2701644537f, -0.3436379634f), new Float3(0.2396452163f, 0.06803600538f, -0.3747549496f),
+                    new Float3(-0.3063886072f, 0.2597428179f, 0.2028785103f), new Float3(0.1593342891f, -0.3114350249f, -0.2830561951f), new Float3(0.2709690528f, 0.1412648683f, -0.3303331794f), new Float3(-0.1519780427f, 0.3623355133f, 0.2193527988f), new Float3(0.1699773681f, 0.3456012883f, 0.2327390037f), new Float3(-0.1986155616f, 0.3836276443f, -0.1260225743f), new Float3(-0.1887482106f, -0.2050154888f, -0.353330953f), new Float3(0.2659103394f, 0.3015631259f, -0.2021172246f),
+                    new Float3(-0.08838976154f, -0.4288819642f, -0.1036702021f), new Float3(-0.04201869311f, 0.3099592485f, 0.3235115047f), new Float3(-0.3230334656f, 0.201549922f, -0.2398478873f), new Float3(0.2612720941f, 0.2759854499f, -0.2409749453f), new Float3(0.385713046f, 0.2193460345f, 0.07491837764f), new Float3(0.07654967953f, 0.3721732183f, 0.241095919f), new Float3(0.4317038818f, -0.02577753072f, 0.1243675091f), new Float3(-0.2890436293f, -0.3418179959f, -0.04598084447f),
+                    new Float3(-0.2201947582f, 0.383023377f, -0.08548310451f), new Float3(0.4161322773f, -0.1669634289f, -0.03817251927f), new Float3(0.2204718095f, 0.02654238946f, -0.391391981f), new Float3(-0.1040307469f, 0.3890079625f, -0.2008741118f), new Float3(-0.1432122615f, 0.371614387f, -0.2095065525f), new Float3(0.3978380468f, -0.06206669342f, 0.2009293758f), new Float3(-0.2599274663f, 0.2616724959f, -0.2578084893f), new Float3(0.4032618332f, -0.1124593585f, 0.1650235939f),
+                    new Float3(-0.08953470255f, -0.3048244735f, 0.3186935478f), new Float3(0.118937202f, -0.2875221847f, 0.325092195f), new Float3(0.02167047076f, -0.03284630549f, -0.4482761547f), new Float3(-0.3411343612f, 0.2500031105f, 0.1537068389f), new Float3(0.3162964612f, 0.3082064153f, -0.08640228117f), new Float3(0.2355138889f, -0.3439334267f, -0.1695376245f), new Float3(-0.02874541518f, -0.3955933019f, 0.2125550295f), new Float3(-0.2461455173f, 0.02020282325f, -0.3761704803f),
+                    new Float3(0.04208029445f, -0.4470439576f, 0.02968078139f), new Float3(0.2727458746f, 0.2288471896f, -0.2752065618f), new Float3(-0.1347522818f, -0.02720848277f, -0.4284874806f), new Float3(0.3829624424f, 0.1231931484f, -0.2016512234f), new Float3(-0.3547613644f, 0.1271702173f, 0.2459107769f), new Float3(0.2305790207f, 0.3063895591f, 0.2354968222f), new Float3(-0.08323845599f, -0.1922245118f, 0.3982726409f), new Float3(0.2993663085f, -0.2619918095f, -0.2103333191f),
+                    new Float3(-0.2154865723f, 0.2706747713f, 0.287751117f), new Float3(0.01683355354f, -0.2680655787f, -0.3610505186f), new Float3(0.05240429123f, 0.4335128183f, -0.1087217856f), new Float3(0.00940104872f, -0.4472890582f, 0.04841609928f), new Float3(0.3465688735f, 0.01141914583f, -0.2868093776f), new Float3(-0.3706867948f, -0.2551104378f, 0.003156692623f), new Float3(0.2741169781f, 0.2139972417f, -0.2855959784f), new Float3(0.06413433865f, 0.1708718512f, 0.4113266307f),
+                    new Float3(-0.388187972f, -0.03973280434f, -0.2241236325f), new Float3(0.06419469312f, -0.2803682491f, 0.3460819069f), new Float3(-0.1986120739f, -0.3391173584f, 0.2192091725f), new Float3(-0.203203009f, -0.3871641506f, 0.1063600375f), new Float3(-0.1389736354f, -0.2775901578f, -0.3257760473f), new Float3(-0.06555641638f, 0.342253257f, -0.2847192729f), new Float3(-0.2529246486f, -0.2904227915f, 0.2327739768f), new Float3(0.1444476522f, 0.1069184044f, 0.4125570634f),
+                    new Float3(-0.3643780054f, -0.2447099973f, -0.09922543227f), new Float3(0.4286142488f, -0.1358496089f, -0.01829506817f), new Float3(0.165872923f, -0.3136808464f, -0.2767498872f), new Float3(0.2219610524f, -0.3658139958f, 0.1393320198f), new Float3(0.04322940318f, -0.3832730794f, 0.2318037215f), new Float3(-0.08481269795f, -0.4404869674f, -0.03574965489f), new Float3(0.1822082075f, -0.3953259299f, 0.1140946023f), new Float3(-0.3269323334f, 0.3036542563f, 0.05838957105f),
+                    new Float3(-0.4080485344f, 0.04227858267f, -0.184956522f), new Float3(0.2676025294f, -0.01299671652f, 0.36155217f), new Float3(0.3024892441f, -0.1009990293f, -0.3174892964f), new Float3(0.1448494052f, 0.425921681f, -0.0104580805f), new Float3(0.4198402157f, 0.08062320474f, 0.1404780841f), new Float3(-0.3008872161f, -0.333040905f, -0.03241355801f), new Float3(0.3639310428f, -0.1291284382f, -0.2310412139f), new Float3(0.3295806598f, 0.0184175994f, -0.3058388149f),
+                    new Float3(0.2776259487f, -0.2974929052f, -0.1921504723f), new Float3(0.4149000507f, -0.144793182f, -0.09691688386f), new Float3(0.145016715f, -0.0398992945f, 0.4241205002f), new Float3(0.09299023471f, -0.299732164f, -0.3225111565f), new Float3(0.1028907093f, -0.361266869f, 0.247789732f), new Float3(0.2683057049f, -0.07076041213f, -0.3542668666f), new Float3(-0.4227307273f, -0.07933161816f, -0.1323073187f), new Float3(-0.1781224702f, 0.1806857196f, -0.3716517945f),
+                    new Float3(0.4390788626f, -0.02841848598f, -0.09435116353f), new Float3(0.2972583585f, 0.2382799621f, -0.2394997452f), new Float3(-0.1707002821f, 0.2215845691f, 0.3525077196f), new Float3(0.3806686614f, 0.1471852559f, -0.1895464869f), new Float3(-0.1751445661f, -0.274887877f, 0.3102596268f), new Float3(-0.2227237566f, -0.2316778837f, 0.3149912482f), new Float3(0.1369633021f, 0.1341343041f, -0.4071228836f), new Float3(-0.3529503428f, -0.2472893463f, -0.129514612f),
+                    new Float3(-0.2590744185f, -0.2985577559f, -0.2150435121f), new Float3(-0.3784019401f, 0.2199816631f, -0.1044989934f), new Float3(-0.05635805671f, 0.1485737441f, 0.4210102279f), new Float3(0.3251428613f, 0.09666046873f, -0.2957006485f), new Float3(-0.4190995804f, 0.1406751354f, -0.08405978803f), new Float3(-0.3253150961f, -0.3080335042f, -0.04225456877f), new Float3(0.2857945863f, -0.05796152095f, 0.3427271751f), new Float3(-0.2733604046f, 0.1973770973f, -0.2980207554f),
+                    new Float3(0.219003657f, 0.2410037886f, -0.3105713639f), new Float3(0.3182767252f, -0.271342949f, 0.1660509868f), new Float3(-0.03222023115f, -0.3331161506f, -0.300824678f), new Float3(-0.3087780231f, 0.1992794134f, -0.2596995338f), new Float3(-0.06487611647f, -0.4311322747f, 0.1114273361f), new Float3(0.3921171432f, -0.06294284106f, -0.2116183942f), new Float3(-0.1606404506f, -0.358928121f, -0.2187812825f), new Float3(-0.03767771199f, -0.2290351443f, 0.3855169162f),
+                    new Float3(0.1394866832f, -0.3602213994f, 0.2308332918f), new Float3(-0.4345093872f, 0.005751117145f, 0.1169124335f), new Float3(-0.1044637494f, 0.4168128432f, -0.1336202785f), new Float3(0.2658727501f, 0.2551943237f, 0.2582393035f), new Float3(0.2051461999f, 0.1975390727f, 0.3484154868f), new Float3(-0.266085566f, 0.23483312f, 0.2766800993f), new Float3(0.07849405464f, -0.3300346342f, -0.2956616708f), new Float3(-0.2160686338f, 0.05376451292f, -0.3910546287f),
+                    new Float3(-0.185779186f, 0.2148499206f, 0.3490352499f), new Float3(0.02492421743f, -0.3229954284f, -0.3123343347f), new Float3(-0.120167831f, 0.4017266681f, 0.1633259825f), new Float3(-0.02160084693f, -0.06885389554f, 0.4441762538f), new Float3(0.2597670064f, 0.3096300784f, 0.1978643903f), new Float3(-0.1611553854f, -0.09823036005f, 0.4085091653f), new Float3(-0.3278896792f, 0.1461670309f, 0.2713366126f), new Float3(0.2822734956f, 0.03754421121f, -0.3484423997f),
+                    new Float3(0.03169341113f, 0.347405252f, -0.2842624114f), new Float3(0.2202613604f, -0.3460788041f, -0.1849713341f), new Float3(0.2933396046f, 0.3031973659f, 0.1565989581f), new Float3(-0.3194922995f, 0.2453752201f, -0.200538455f), new Float3(-0.3441586045f, -0.1698856132f, -0.2349334659f), new Float3(0.2703645948f, -0.3574277231f, 0.04060059933f), new Float3(0.2298568861f, 0.3744156221f, 0.0973588921f), new Float3(0.09326603877f, -0.3170108894f, 0.3054595587f),
+                    new Float3(-0.1116165319f, -0.2985018719f, 0.3177080142f), new Float3(0.2172907365f, -0.3460005203f, -0.1885958001f), new Float3(0.1991339479f, 0.3820341668f, -0.1299829458f), new Float3(-0.0541918155f, -0.2103145071f, 0.39412061f), new Float3(0.08871336998f, 0.2012117383f, 0.3926114802f), new Float3(0.2787673278f, 0.3505404674f, 0.04370535101f), new Float3(-0.322166438f, 0.3067213525f, 0.06804996813f), new Float3(-0.4277366384f, 0.132066775f, 0.04582286686f),
+                    new Float3(0.240131882f, -0.1612516055f, 0.344723946f), new Float3(0.1448607981f, -0.2387819045f, 0.3528435224f), new Float3(-0.3837065682f, -0.2206398454f, 0.08116235683f), new Float3(-0.4382627882f, -0.09082753406f, -0.04664855374f), new Float3(-0.37728353f, 0.05445141085f, 0.2391488697f), new Float3(0.1259579313f, 0.348394558f, 0.2554522098f), new Float3(-0.1406285511f, -0.270877371f, -0.3306796947f), new Float3(-0.1580694418f, 0.4162931958f, -0.06491553533f),
+                    new Float3(0.2477612106f, -0.2927867412f, -0.2353514536f), new Float3(0.2916132853f, 0.3312535401f, 0.08793624968f), new Float3(0.07365265219f, -0.1666159848f, 0.411478311f), new Float3(-0.26126526f, -0.2422237692f, 0.2748965434f), new Float3(-0.3721862032f, 0.252790166f, 0.008634938242f), new Float3(-0.3691191571f, -0.255281188f, 0.03290232422f), new Float3(0.2278441737f, -0.3358364886f, 0.1944244981f), new Float3(0.363398169f, -0.2310190248f, 0.1306597909f),
+                    new Float3(-0.304231482f, -0.2698452035f, 0.1926830856f), new Float3(-0.3199312232f, 0.316332536f, -0.008816977938f), new Float3(0.2874852279f, 0.1642275508f, -0.304764754f), new Float3(-0.1451096801f, 0.3277541114f, -0.2720669462f), new Float3(0.3220090754f, 0.0511344108f, 0.3101538769f), new Float3(-0.1247400865f, -0.04333605335f, -0.4301882115f), new Float3(-0.2829555867f, -0.3056190617f, -0.1703910946f), new Float3(0.1069384374f, 0.3491024667f, -0.2630430352f),
+                    new Float3(-0.1420661144f, -0.3055376754f, -0.2982682484f), new Float3(-0.250548338f, 0.3156466809f, -0.2002316239f), new Float3(0.3265787872f, 0.1871229129f, 0.2466400438f), new Float3(0.07646097258f, -0.3026690852f, 0.324106687f), new Float3(0.3451771584f, 0.2757120714f, -0.0856480183f), new Float3(0.298137964f, 0.2852657134f, 0.179547284f), new Float3(0.2812250376f, 0.3466716415f, 0.05684409612f), new Float3(0.4390345476f, -0.09790429955f, -0.01278335452f),
+                    new Float3(0.2148373234f, 0.1850172527f, 0.3494474791f), new Float3(0.2595421179f, -0.07946825393f, 0.3589187731f), new Float3(0.3182823114f, -0.307355516f, -0.08203022006f), new Float3(-0.4089859285f, -0.04647718411f, 0.1818526372f), new Float3(-0.2826749061f, 0.07417482322f, 0.3421885344f), new Float3(0.3483864637f, 0.225442246f, -0.1740766085f), new Float3(-0.3226415069f, -0.1420585388f, -0.2796816575f), new Float3(0.4330734858f, -0.118868561f, -0.02859407492f),
+                    new Float3(-0.08717822568f, -0.3909896417f, -0.2050050172f), new Float3(-0.2149678299f, 0.3939973956f, -0.03247898316f), new Float3(-0.2687330705f, 0.322686276f, -0.1617284888f), new Float3(0.2105665099f, -0.1961317136f, -0.3459683451f), new Float3(0.4361845915f, -0.1105517485f, 0.004616608544f), new Float3(0.05333333359f, -0.313639498f, -0.3182543336f), new Float3(-0.05986216652f, 0.1361029153f, -0.4247264031f), new Float3(0.3664988455f, 0.2550543014f, -0.05590974511f),
+                    new Float3(-0.2341015558f, -0.182405731f, 0.3382670703f), new Float3(-0.04730947785f, -0.4222150243f, -0.1483114513f), new Float3(-0.2391566239f, -0.2577696514f, -0.2808182972f), new Float3(-0.1242081035f, 0.4256953395f, -0.07652336246f), new Float3(0.2614832715f, -0.3650179274f, 0.02980623099f), new Float3(-0.2728794681f, -0.3499628774f, 0.07458404908f), new Float3(0.007892900508f, -0.1672771315f, 0.4176793787f), new Float3(-0.01730330376f, 0.2978486637f, -0.3368779738f),
+                    new Float3(0.2054835762f, -0.3252600376f, -0.2334146693f), new Float3(-0.3231994983f, 0.1564282844f, -0.2712420987f), new Float3(-0.2669545963f, 0.2599343665f, -0.2523278991f), new Float3(-0.05554372779f, 0.3170813944f, -0.3144428146f), new Float3(-0.2083935713f, -0.310922837f, -0.2497981362f), new Float3(0.06989323478f, -0.3156141536f, 0.3130537363f), new Float3(0.3847566193f, -0.1605309138f, -0.1693876312f), new Float3(-0.3026215288f, -0.3001537679f, -0.1443188342f),
+                    new Float3(0.3450735512f, 0.08611519592f, 0.2756962409f), new Float3(0.1814473292f, -0.2788782453f, -0.3029914042f), new Float3(-0.03855010448f, 0.09795110726f, 0.4375151083f), new Float3(0.3533670318f, 0.2665752752f, 0.08105160988f), new Float3(-0.007945601311f, 0.140359426f, -0.4274764309f), new Float3(0.4063099273f, -0.1491768253f, -0.1231199324f), new Float3(-0.2016773589f, 0.008816271194f, -0.4021797064f), new Float3(-0.07527055435f, -0.425643481f, -0.1251477955f),
+            };
 
 }
