@@ -1,16 +1,15 @@
-package com.github.yellowstonegames.text;
+package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.yellowstonegames.core.DigitTools;
 import regexodus.*;
 import java.util.List;
 
 /**
  * A palette of predefined colors as packed IPT ints, and tools for obtaining IPT int colors from a description.
  * An IPT int color isn't especially usable on its own, but you can pass one to {@link #toRGBA8888(int)} to get an RGBA
- * color as an int (typically used with {@link com.github.yellowstonegames.core.DigitTools#hex(int)} to get a value like
+ * color as an int (typically used with {@link DigitTools#hex(int)} to get a value like
  * FF7F00FF, which in RGBA8888 format is orange). The IPT color space is used here because allows mixing two or more
  * colors very smoothly, without introducing erroneous hues or having dips or ridges in lightness. IPT is a whole
  * complex color space, but most usage is probably going to only need {@link #describe(CharSequence)}, which sidesteps
@@ -840,7 +839,7 @@ public final class DescriptiveColor {
     }
 
     /**
-     * All names for colors in this palette, in alphabetical order. You can fetch the corresponding packed float color
+     * All names for colors in this palette, in alphabetical order. You can fetch the corresponding packed int color
      * by looking up a name in {@link #NAMED}.
      */
     public static final ObjectList<String> NAMES = NAMED.order();
@@ -852,12 +851,12 @@ public final class DescriptiveColor {
 
     /**
      * All names for colors in this palette, with grayscale first, then sorted by hue from red to yellow to green to
-     * blue. You can fetch the corresponding packed float color by looking up a name in {@link #NAMED}.
+     * blue. You can fetch the corresponding packed int color by looking up a name in {@link #NAMED}.
      */
     public static final ObjectList<String> NAMES_BY_HUE = new ObjectList<>(NAMES);
     /**
      * All names for colors in this palette, sorted by lightness from black to white. You can fetch the
-     * corresponding packed float color by looking up a name in {@link #NAMED}.
+     * corresponding packed int color by looking up a name in {@link #NAMED}.
      */
     public static final ObjectList<String> NAMES_BY_LIGHTNESS = new ObjectList<>(NAMES);
 
@@ -914,7 +913,7 @@ public final class DescriptiveColor {
     /**
      * Converts a packed IPT int color in the format used by constants in this class to an RGBA8888 int.
      * This format of int can be used with Pixmap and in some other places in libGDX.
-     * @param decoded a packed float color, as from a constant in this class
+     * @param decoded a packed int color, as from a constant in this class
      * @return an RGBA8888 int color
      */
     public static int toRGBA8888(final int decoded)
@@ -1028,9 +1027,9 @@ public final class DescriptiveColor {
      * necessarily keep the resulting color in-gamut; after performing some changes with this or other component-editing
      * methods, you may want to call {@link #limitToGamut(int)} to make sure the color can be rendered correctly.
      *
-     * @param s      the starting color as a packed float
+     * @param s      the starting color as a packed IPT int
      * @param change how much to go from start toward black, as a float between 0 and 1; higher means closer to black
-     * @return a packed float that represents a color between start and black
+     * @return a packed int that represents a color between start and black
      * @see #lighten(int, float) the counterpart method that lightens a float color
      */
     public static int darken(final int s, final float change) {
@@ -1039,13 +1038,13 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Brings the chromatic components of {@code s} closer to grayscale by {@code change} (desaturating them). While
+     * Brings the P and T components of {@code s} closer to grayscale by {@code change} (desaturating them). While
      * change should be between 0f (return s as-is) and 1f (return fully gray), s should be a packed IPT int color, as
      * from a constant in this class.
      *
      * @param s      the starting color as a packed IPT int
      * @param change how much to change start to a desaturated color, as a float between 0 and 1; higher means a less saturated result
-     * @return a packed float that represents a color between start and a desaturated color
+     * @return a packed int that represents a color between start and a desaturated color
      * @see #enrich(int, float) the counterpart method that makes an IPT int color more saturated
      */
     public static int dullen(final int s, final float change) {
@@ -1056,16 +1055,16 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Pushes the chromatic components of {@code start} away from grayscale by change (saturating them). While change
+     * Pushes the P and T components of {@code start} away from grayscale by change (saturating them). While change
      * should be between 0f (return start as-is) and 1f (return maximally saturated), start should be a packed color, as
-     * from a constant in this class. This usually changes only Cw and Cm, but higher values for {@code change} can
-     * force the color out of the gamut, which this corrects using {@link #limitToGamut(int)} (and that can change Y
-     * somewhat). If the color stays in-gamut, then Y won't change; alpha never changes.
+     * from a constant in this class. This usually changes only P and T, but higher values for {@code change} can
+     * force the color out of the gamut, which this corrects using {@link #limitToGamut(int)} (and that can change I
+     * somewhat). If the color stays in-gamut, then I won't change; alpha never changes.
      *
-     * @param s      the starting color as a packed float
+     * @param s      the starting color as a packed int color
      * @param change how much to change start to a saturated color, as a float between 0 and 1; higher means a more saturated result
-     * @return a packed float that represents a color between start and a saturated color
-     * @see #dullen(int, float) the counterpart method that makes a float color less saturated
+     * @return a packed int that represents a color between start and a saturated color
+     * @see #dullen(int, float) the counterpart method that makes an int color less saturated
      */
     public static int enrich(final int s, final float change) {
         return limitToGamut((s & 255) |
@@ -1106,40 +1105,41 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards end by change. Both start and end should be packed IPT
+     * Interpolates from the packed int color start towards end by change. Both start and end should be packed IPT
      * ints, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
      * of temporary Colors.
      *
-     * @param s      the starting color as a packed float
-     * @param e      the end/target color as a packed float
+     * @param s      the starting color as a packed int color
+     * @param e      the end/target color as a packed int color
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
      * @return a packed IPT int that represents a color between start and end
      */
-    public static int lerpIntColors(final int s, final int e, final float change) {
+    public static int lerpColors(final int s, final int e, final float change) {
         final int
-                ys = (s & 0xFF), cws = (s >>> 8) & 0xFF, cms = (s >>> 16) & 0xFF, as = s >>> 24 & 0xFE,
-                ye = (e & 0xFF), cwe = (e >>> 8) & 0xFF, cme = (e >>> 16) & 0xFF, ae = e >>> 24 & 0xFE;
-        return (((int) (ys + change * (ye - ys)) & 0xFF)
-                | (((int) (cws + change * (cwe - cws)) & 0xFF) << 8)
-                | (((int) (cms + change * (cme - cms)) & 0xFF) << 16)
+                xs = (s & 0xFF), ys = (s >>> 8) & 0xFF, zs = (s >>> 16) & 0xFF, as = s >>> 24 & 0xFE,
+                xe = (e & 0xFF), ye = (e >>> 8) & 0xFF, ze = (e >>> 16) & 0xFF, ae = e >>> 24 & 0xFE;
+        return (((int) (xs + change * (xe - xs)) & 0xFF)
+                | (((int) (ys + change * (ye - ys)) & 0xFF) << 8)
+                | (((int) (zs + change * (ze - zs)) & 0xFF) << 16)
                 | (((int) (as + change * (ae - as)) & 0xFE) << 24));
     }
 
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.
-     * If {@code colors} is null or has no items, this returns 0f (usually transparent in most color spaces).
+     * If {@code colors} is null or has no items, this returns 0 (usually transparent in most color spaces, but both
+     * transparent and out-of-gamut for IPT).
      *
-     * @param colors an array or varargs of packed float colors; all should use the same color space
+     * @param colors an array or varargs of packed int colors; all should use the same color space
      * @param offset the index of the first item in {@code colors} to use
      * @param size   how many items from {@code colors} to use
-     * @return an even mix of all colors given, as a packed float color
+     * @return an even mix of all colors given, as a packed int color in the same color space
      */
     public static int mix(int[] colors, int offset, int size) {
         if (colors == null || colors.length < offset + size || offset < 0 || size <= 0)
-            return TRANSPARENT;
+            return 0;
         int result = colors[offset];
         for (int i = offset + 1, o = offset + size, denom = 2; i < o; i++, denom++) {
-            result = lerpIntColors(result, colors[i], 1f / denom);
+            result = lerpColors(result, colors[i], 1f / denom);
         }
         return result;
     }
@@ -1210,8 +1210,11 @@ public final class DescriptiveColor {
      * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
      * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
      * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
-     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. If a color name
-     * or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. Technically,
+     * the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
+     * "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
+     * appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
+     * name or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
@@ -1236,6 +1239,8 @@ public final class DescriptiveColor {
                 case 'l':
                     if (len > 2 && term.charAt(2) == 'g') {
                         switch (len) {
+                            case 9:
+                                intensity += 0.125f;
                             case 8:
                                 intensity += 0.125f;
                             case 7:
@@ -1254,6 +1259,8 @@ public final class DescriptiveColor {
                 case 'r':
                     if (len > 1 && term.charAt(1) == 'i') {
                         switch (len) {
+                            case 8:
+                                saturation += 0.2f;
                             case 7:
                                 saturation += 0.2f;
                             case 6:
@@ -1272,6 +1279,8 @@ public final class DescriptiveColor {
                 case 'd':
                     if (len > 1 && term.charAt(1) == 'a') {
                         switch (len) {
+                            case 8:
+                                intensity -= 0.125f;
                             case 7:
                                 intensity -= 0.125f;
                             case 6:
@@ -1285,6 +1294,8 @@ public final class DescriptiveColor {
                         }
                     } else if (len > 1 && term.charAt(1) == 'u') {
                         switch (len) {
+                            case 9:
+                                saturation -= 0.2f;
                             case 7:
                                 saturation -= 0.2f;
                             case 6:
@@ -1330,13 +1341,14 @@ public final class DescriptiveColor {
 
     private static final StringBuilder builder = new StringBuilder(80);
     private static final Substitution sub = (MatchResult matchResult, TextBuffer textBuffer) -> {
-        matchResult.getGroup(1, builder, 1);
+        builder.setLength(0);
+        matchResult.getGroup(1, builder);
         textBuffer.append('[');
         textBuffer.append('#');
         textBuffer.append(DigitTools.hex(describe(builder)));
         textBuffer.append(']');
     };
-    private static final Replacer rep = new Replacer(Pattern.compile("(?<!\\[)\\[(\\|[^\\]]*)(?:\\]|$)", Pattern.IGNORE_CASE), sub);
+    private static final Replacer rep = new Replacer(Pattern.compile("(?<!\\[)\\[(\\|[^\\]]*)(?:\\]|$)"), sub);
 
     /**
      * Processes color markup of the form {@code [|description]}, where {@code description} is in the format that

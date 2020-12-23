@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Maker;
@@ -43,6 +44,7 @@ public class WildernessGenerator implements Serializable {
     public LaserRandom rng;
     public ObjectList<String> contentTypes;
     public ObjectList<String> floorTypes;
+    public ObjectLongMap<String> viewer;
     public final int[][] content, floors;
 
     /**
@@ -348,6 +350,71 @@ public class WildernessGenerator implements Serializable {
                 return new ObjectList<>(0);
         }
     }
+
+    public static ObjectLongMap<String> defaultViewer(){
+        ObjectLongMap<String> viewer = new ObjectLongMap<>(64);
+        // find:    new Basic\((.+?),
+        // replace: $1 | parse("") << 32);//
+        /*
+        viewer.put("snow path", '.' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.0f, -0.2f, -0.15f)));
+        viewer.put("dirt path", '.' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.275f, 0.17f)));
+        viewer.put("sand path", '.' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.17f, -0.075f)));
+        viewer.put("grass path", '.' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, -0.15f, -0.1f)));
+        viewer.put("stone path", '.' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.09f, -0.05f, 0.1f)));
+        viewer.put("wooden bridge", ':' | parse("") << 32);//BRUSHWOOD_DYED.toEditedFloat(0.0f, -0.275f, 0.05f)));
+
+        viewer.put("ice ledge", '¬' | parse("") << 32);//SColor.toEditedFloat(PALE_CORNFLOWER_BLUE, 0.0f, -0.1f, 0.1f)));
+        viewer.put("dirt ledge", '¬' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.175f, -0.18f)));
+        viewer.put("sand ledge", '¬' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.15f, -0.125f)));
+        viewer.put("grass ledge", '¬' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, -0.025f, -0.45f)));
+        viewer.put("stone ledge", '¬' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.07f, -0.1f, -0.25f)));
+
+        viewer.put("snow", '…' | parse("") << 32);//ALICE_BLUE));
+        viewer.put("ice", '-' | parse("") << 32);//SColor.lightenFloat(PALE_CORNFLOWER_BLUE, 0.3f)));
+        viewer.put("dirt", '·' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.075f, 0.02f)));
+        viewer.put("pebbles", '…' | parse("") << 32);//AURORA_WET_STONE.toEditedFloat(0.0f, 0.0f, 0.0f)));
+        viewer.put("dry grass", '\'' | parse("") << 32);//CW_FADED_BROWN.toEditedFloat(0.06f, 0.05f, 0.05f)));
+        viewer.put("fresh water", '~' | parse("") << 32);//AURORA_BLUE_EYE));
+        viewer.put("salt water", '≈' | parse("") << 32);//AURORA_PRUSSIAN_BLUE));
+        viewer.put("sand", '…' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.05f, 0.075f)));
+        viewer.put("leaves", '…' | parse("") << 32);//CHINESE_TEA_YELLOW.toEditedFloat(0.02f, -0.025f, 0.0f)));
+        viewer.put("grass", '"' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, 0.075f, -0.25f)));
+        viewer.put("mud", ',' | parse("") << 32);//DB_EARTH.toEditedFloat(0.03f, -0.15f, -0.03f)));
+        viewer.put("moss", '˝' | parse("") << 32);//AURORA_FERN_GREEN.toEditedFloat(0f, 0.0f, 0.0f)));
+        viewer.put("rubble", '‰' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.07f, 0.0f, -0.05f)));
+        viewer.put("empty space", '_' | parse("") << 32);//DB_INK));
+        viewer.put("snow mound", '∆' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0f, 0.05f, -0.1f)));
+        viewer.put("icy divot", '°' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.05f, 0.075f, 0.06f)));
+        viewer.put("powder snowdrift", '¨' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.0f, 0.0f, -0.07f)));
+        viewer.put("hillock", '∆' | parse("") << 32);//CW_DRAB_BROWN.toEditedFloat(0.1f, -0.05f, 0.25f)));
+        viewer.put("animal burrow", '¸' | parse("") << 32);//AURORA_ARMY_GREEN.toEditedFloat(0.05f, 0.0f, -0.05f)));
+        viewer.put("small bush 1", '♣' | parse("") << 32);//AURORA_AVOCADO.toEditedFloat(-0.055f, -0.025f, -0.225f)));
+        viewer.put("large bush 1", '♣' | parse("") << 32);//AURORA_FOREST_GLEN.toEditedFloat(-0.055f, -0.125f, -0.225f)));
+        viewer.put("evergreen tree 1", '♠' | parse("") << 32);//PINE_GREEN.toEditedFloat(-0.13f, -0.03f, -0.05f)));
+        viewer.put("evergreen tree 2", '♠' | parse("") << 32);//AURORA_EUCALYPTUS.toEditedFloat(-0.035f, -0.045f, -0.75f)));
+        viewer.put("small cactus 1", '‡' | parse("") << 32);//AURORA_FROG_GREEN.toEditedFloat(0.035f, 0.065f, -0.06f)));
+        viewer.put("large cactus 1", '‡' | parse("") << 32);//AURORA_MARSH.toEditedFloat(0.04f, 0.11f, -0.03f)));
+        viewer.put("succulent 1", '§' | parse("") << 32);//CW_FLUSH_JADE.toEditedFloat(-0.045f, -0.1f, 0.0f)));
+        viewer.put("seashell 1", 'ˋ' | parse("") << 32);//CW_LIGHT_APRICOT.toEditedFloat(0.0f, -0.095f, 0.07f)));
+        viewer.put("seashell 2", 'ˋ' | parse("") << 32);//CW_PALE_RED.toEditedFloat(0.0f, -0.2f, 0.1f)));
+        viewer.put("seashell 3", 'ˋ' | parse("") << 32);//CW_PALE_YELLOW.toEditedFloat(0.0f, 0.02f, 0.05f)));
+        viewer.put("seashell 4", 'ˋ' | parse("") << 32);//CW_PALE_VIOLET.toEditedFloat(0.0f, -0.080f, 0.11f)));
+        viewer.put("driftwood", '¿' | parse("") << 32);//AURORA_DRIFTWOOD.toEditedFloat(0.0f, -0.25f, 0.04f)));
+        viewer.put("boulder", '●' | parse("") << 32);//AURORA_SLOW_CREEK.toEditedFloat(0.0f, -0.01f, 0.0f)));
+        viewer.put("deciduous tree 1", '¥' | parse("") << 32);//AURORA_AVOCADO.toEditedFloat(-0.065f, 0.0f, -0.3f)));
+        viewer.put("small bush 2", '♣' | parse("") << 32);//AURORA_WOODLANDS.toEditedFloat(-0.045f, -0.05f, -0.025f)));
+        viewer.put("deciduous tree 2", '¥' | parse("") << 32);//AURORA_IVY_GREEN.toEditedFloat(-0.02f, 0.0f, 0.0f)));
+        viewer.put("deciduous tree 3", '¥' | parse("") << 32);//AURORA_ASPARAGUS.toEditedFloat(-0.015f, 0.055f, 0.02f)));
+        viewer.put("large bush 2", '♣' | parse("") << 32);//AURORA_VIRIDIAN.toEditedFloat(-0.03f, -0.05f, 0.03f)));
+        viewer.put("tropical tree 1", '¶' | parse("") << 32);//AURORA_FLORAL_FOAM.toEditedFloat(-0.05f, 0.025f, 0.075f)));
+        viewer.put("tropical tree 2", '¶' | parse("") << 32);//AURORA_MAIDENHAIR_FERN.toEditedFloat(0.0f, 0.0f, 0.02f)));
+        viewer.put("large bush 3", '♣' | parse("") << 32);//AURORA_KELLY_GREEN.toEditedFloat(0.0f, 0.025f, 0.02f)));
+        viewer.put("tropical tree 3", '¶' | parse("") << 32);//AURORA_SOFT_TEAL.toEditedFloat(-0.15f, -0.07f, -0.03f)));
+        viewer.put("tropical tree 4", '¶' | parse("") << 32);//AURORA_PRASE.toEditedFloat(-0.04f, -0.02f, -0.02f)));
+        */
+        return viewer;
+    }
+
 //                //COLDEST //COLDER        //COLD            //HOT                  //HOTTER              //HOTTEST
 //                "Ice",    "Ice",          "Grassland",      "Desert",              "Desert",             "Desert",             //DRYEST
 //                "Ice",    "Tundra",       "Grassland",      "Grassland",           "Desert",             "Desert",             //DRYER
@@ -375,13 +442,13 @@ public class WildernessGenerator implements Serializable {
     }
     public WildernessGenerator(int width, int height, int biome, LaserRandom rng)
     {
-        this(width, height, biome, rng, floorsByBiome(biome, rng), contentByBiome(biome, rng));
+        this(width, height, biome, rng, floorsByBiome(biome, rng), contentByBiome(biome, rng), defaultViewer());
     }
     public WildernessGenerator(int width, int height, int biome, LaserRandom rng, ObjectList<String> contentTypes)
     {
-        this(width, height, biome, rng, floorsByBiome(biome, rng), contentTypes);
+        this(width, height, biome, rng, floorsByBiome(biome, rng), contentTypes, defaultViewer());
     }
-    public WildernessGenerator(int width, int height, int biome, LaserRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes)
+    public WildernessGenerator(int width, int height, int biome, LaserRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes, ObjectLongMap<String> viewer)
     {
         this.width = width;
         this.height = height;
@@ -391,6 +458,7 @@ public class WildernessGenerator implements Serializable {
         floors = new int[width][height];
         this.floorTypes = floorTypes;
         this.contentTypes = contentTypes;
+        this.viewer = viewer;
     }
 
     /**
@@ -438,7 +506,7 @@ public class WildernessGenerator implements Serializable {
         
         public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, LaserRandom rng)
         {
-            super(northeast.width, northeast.height, northeast.biome, rng, new ObjectList<>(northeast.floorTypes), new ObjectList<>(northeast.contentTypes));
+            super(northeast.width, northeast.height, northeast.biome, rng, new ObjectList<>(northeast.floorTypes), new ObjectList<>(northeast.contentTypes), northeast.viewer);
             minFloors = new int[4];
             maxFloors = new int[4];
             minContents = new int[4];

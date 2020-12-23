@@ -9,7 +9,6 @@ modifyPom {
 
 dependencies {
     api project(':squidcore')
-    api "com.github.tommyettinger:regexodus:$regexodusVersion"
     testImplementation "junit:junit:4.13.1"
 }
 
