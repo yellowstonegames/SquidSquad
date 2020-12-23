@@ -10,6 +10,8 @@ import com.github.yellowstonegames.grid.Direction;
 
 import java.io.Serializable;
 
+import static com.github.yellowstonegames.core.DescriptiveColor.describe;
+
 /**
  * A finite 2D area map for some kind of wilderness, adapting to different ecosystems by changing its output.
  * Regional maps for wilderness areas have very different requirements from mostly-artificial dungeons. This is intended
@@ -353,65 +355,59 @@ public class WildernessGenerator implements Serializable {
 
     public static ObjectLongMap<String> defaultViewer(){
         ObjectLongMap<String> viewer = new ObjectLongMap<>(64);
-        // find:    new Basic\((.+?),
-        // replace: $1 | parse("") << 32);//
-        /*
-        viewer.put("snow path", '.' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.0f, -0.2f, -0.15f)));
-        viewer.put("dirt path", '.' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.275f, 0.17f)));
-        viewer.put("sand path", '.' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.17f, -0.075f)));
-        viewer.put("grass path", '.' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, -0.15f, -0.1f)));
-        viewer.put("stone path", '.' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.09f, -0.05f, 0.1f)));
-        viewer.put("wooden bridge", ':' | parse("") << 32);//BRUSHWOOD_DYED.toEditedFloat(0.0f, -0.275f, 0.05f)));
-
-        viewer.put("ice ledge", '¬' | parse("") << 32);//SColor.toEditedFloat(PALE_CORNFLOWER_BLUE, 0.0f, -0.1f, 0.1f)));
-        viewer.put("dirt ledge", '¬' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.175f, -0.18f)));
-        viewer.put("sand ledge", '¬' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.15f, -0.125f)));
-        viewer.put("grass ledge", '¬' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, -0.025f, -0.45f)));
-        viewer.put("stone ledge", '¬' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.07f, -0.1f, -0.25f)));
-
-        viewer.put("snow", '…' | parse("") << 32);//ALICE_BLUE));
-        viewer.put("ice", '-' | parse("") << 32);//SColor.lightenFloat(PALE_CORNFLOWER_BLUE, 0.3f)));
-        viewer.put("dirt", '·' | parse("") << 32);//CLOVE_BROWN.toEditedFloat(-0.005f, -0.075f, 0.02f)));
-        viewer.put("pebbles", '…' | parse("") << 32);//AURORA_WET_STONE.toEditedFloat(0.0f, 0.0f, 0.0f)));
-        viewer.put("dry grass", '\'' | parse("") << 32);//CW_FADED_BROWN.toEditedFloat(0.06f, 0.05f, 0.05f)));
-        viewer.put("fresh water", '~' | parse("") << 32);//AURORA_BLUE_EYE));
-        viewer.put("salt water", '≈' | parse("") << 32);//AURORA_PRUSSIAN_BLUE));
-        viewer.put("sand", '…' | parse("") << 32);//CW_PALE_ORANGE.toEditedFloat(0.05f, -0.05f, 0.075f)));
-        viewer.put("leaves", '…' | parse("") << 32);//CHINESE_TEA_YELLOW.toEditedFloat(0.02f, -0.025f, 0.0f)));
-        viewer.put("grass", '"' | parse("") << 32);//AURORA_DUSTY_GREEN.toEditedFloat(0.0f, 0.075f, -0.25f)));
-        viewer.put("mud", ',' | parse("") << 32);//DB_EARTH.toEditedFloat(0.03f, -0.15f, -0.03f)));
-        viewer.put("moss", '˝' | parse("") << 32);//AURORA_FERN_GREEN.toEditedFloat(0f, 0.0f, 0.0f)));
-        viewer.put("rubble", '‰' | parse("") << 32);//AURORA_CHIPPED_GRANITE.toEditedFloat(-0.07f, 0.0f, -0.05f)));
-        viewer.put("empty space", '_' | parse("") << 32);//DB_INK));
-        viewer.put("snow mound", '∆' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0f, 0.05f, -0.1f)));
-        viewer.put("icy divot", '°' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.05f, 0.075f, 0.06f)));
-        viewer.put("powder snowdrift", '¨' | parse("") << 32);//ALICE_BLUE.toEditedFloat(0.0f, 0.0f, -0.07f)));
-        viewer.put("hillock", '∆' | parse("") << 32);//CW_DRAB_BROWN.toEditedFloat(0.1f, -0.05f, 0.25f)));
-        viewer.put("animal burrow", '¸' | parse("") << 32);//AURORA_ARMY_GREEN.toEditedFloat(0.05f, 0.0f, -0.05f)));
-        viewer.put("small bush 1", '♣' | parse("") << 32);//AURORA_AVOCADO.toEditedFloat(-0.055f, -0.025f, -0.225f)));
-        viewer.put("large bush 1", '♣' | parse("") << 32);//AURORA_FOREST_GLEN.toEditedFloat(-0.055f, -0.125f, -0.225f)));
-        viewer.put("evergreen tree 1", '♠' | parse("") << 32);//PINE_GREEN.toEditedFloat(-0.13f, -0.03f, -0.05f)));
-        viewer.put("evergreen tree 2", '♠' | parse("") << 32);//AURORA_EUCALYPTUS.toEditedFloat(-0.035f, -0.045f, -0.75f)));
-        viewer.put("small cactus 1", '‡' | parse("") << 32);//AURORA_FROG_GREEN.toEditedFloat(0.035f, 0.065f, -0.06f)));
-        viewer.put("large cactus 1", '‡' | parse("") << 32);//AURORA_MARSH.toEditedFloat(0.04f, 0.11f, -0.03f)));
-        viewer.put("succulent 1", '§' | parse("") << 32);//CW_FLUSH_JADE.toEditedFloat(-0.045f, -0.1f, 0.0f)));
-        viewer.put("seashell 1", 'ˋ' | parse("") << 32);//CW_LIGHT_APRICOT.toEditedFloat(0.0f, -0.095f, 0.07f)));
-        viewer.put("seashell 2", 'ˋ' | parse("") << 32);//CW_PALE_RED.toEditedFloat(0.0f, -0.2f, 0.1f)));
-        viewer.put("seashell 3", 'ˋ' | parse("") << 32);//CW_PALE_YELLOW.toEditedFloat(0.0f, 0.02f, 0.05f)));
-        viewer.put("seashell 4", 'ˋ' | parse("") << 32);//CW_PALE_VIOLET.toEditedFloat(0.0f, -0.080f, 0.11f)));
-        viewer.put("driftwood", '¿' | parse("") << 32);//AURORA_DRIFTWOOD.toEditedFloat(0.0f, -0.25f, 0.04f)));
-        viewer.put("boulder", '●' | parse("") << 32);//AURORA_SLOW_CREEK.toEditedFloat(0.0f, -0.01f, 0.0f)));
-        viewer.put("deciduous tree 1", '¥' | parse("") << 32);//AURORA_AVOCADO.toEditedFloat(-0.065f, 0.0f, -0.3f)));
-        viewer.put("small bush 2", '♣' | parse("") << 32);//AURORA_WOODLANDS.toEditedFloat(-0.045f, -0.05f, -0.025f)));
-        viewer.put("deciduous tree 2", '¥' | parse("") << 32);//AURORA_IVY_GREEN.toEditedFloat(-0.02f, 0.0f, 0.0f)));
-        viewer.put("deciduous tree 3", '¥' | parse("") << 32);//AURORA_ASPARAGUS.toEditedFloat(-0.015f, 0.055f, 0.02f)));
-        viewer.put("large bush 2", '♣' | parse("") << 32);//AURORA_VIRIDIAN.toEditedFloat(-0.03f, -0.05f, 0.03f)));
-        viewer.put("tropical tree 1", '¶' | parse("") << 32);//AURORA_FLORAL_FOAM.toEditedFloat(-0.05f, 0.025f, 0.075f)));
-        viewer.put("tropical tree 2", '¶' | parse("") << 32);//AURORA_MAIDENHAIR_FERN.toEditedFloat(0.0f, 0.0f, 0.02f)));
-        viewer.put("large bush 3", '♣' | parse("") << 32);//AURORA_KELLY_GREEN.toEditedFloat(0.0f, 0.025f, 0.02f)));
-        viewer.put("tropical tree 3", '¶' | parse("") << 32);//AURORA_SOFT_TEAL.toEditedFloat(-0.15f, -0.07f, -0.03f)));
-        viewer.put("tropical tree 4", '¶' | parse("") << 32);//AURORA_PRASE.toEditedFloat(-0.04f, -0.02f, -0.02f)));
-        */
+        viewer.put("snow path", '.'     | (long)describe("lightest silver") << 32);
+        viewer.put("dirt path", '.' | (long)describe("lighter dullmost brick") << 32);
+        viewer.put("sand path", '.' | (long)describe("lightmost dullmost bronze") << 32);
+        viewer.put("grass path", '.' | (long)describe("lighter dullmost fern") << 32);
+        viewer.put("stone path", '.' | (long)describe("lighter dullmost cyan") << 32);
+        viewer.put("wooden bridge", ':' | (long)describe("darkest dullmost sage") << 32);
+        viewer.put("ice ledge", '¬' | (long)describe("lightmost dullmost cyan") << 32);
+        viewer.put("dirt ledge", '¬' | (long)describe("darkmost dullmost ember") << 32);
+        viewer.put("sand ledge", '¬' | (long)describe("dullest tan") << 32);
+        viewer.put("grass ledge", '¬' | (long)describe("darkmost dullmost fern") << 32);
+        viewer.put("stone ledge", '¬' | (long)describe("lighter dullmost fern") << 32);
+        viewer.put("snow", '…' | (long)describe("dullmost white") << 32);
+        viewer.put("ice", '-' | (long)describe("rich white") << 32);
+        viewer.put("dirt", '·' | (long)describe("lighter duller chocolate") << 32);
+        viewer.put("pebbles", '…' | (long)describe("lighter dullmost mauve") << 32);
+        viewer.put("dry grass", '\'' | (long)describe("light dullmost saffron") << 32);
+        viewer.put("fresh water", '~' | (long)describe("lightmost duller navy") << 32);
+        viewer.put("salt water", '≈' | (long)describe("light duller cobalt") << 32);
+        viewer.put("sand", '…' | (long)describe("lightest dullest butter") << 32);
+        viewer.put("leaves", '…' | (long)describe("darker dull peach") << 32);
+        viewer.put("grass", '"' | (long)describe("dark dullmost cactus") << 32);
+        viewer.put("mud", ',' | (long)describe("darkmost dullest peach") << 32);
+        viewer.put("moss", '˝' | (long)describe("darker dullmost cactus") << 32);
+        viewer.put("rubble", '‰' | (long)describe("dark dullmost cyan") << 32);
+        viewer.put("empty space", '_' | (long)describe("lighter rich black") << 32);
+        viewer.put("snow mound", '∆' | (long)describe("lightest dullmost sage") << 32);
+        viewer.put("icy divot", '°' | (long)describe("rich white") << 32);
+        viewer.put("powder snowdrift", '¨' | (long)describe("lightmost dullmost sage") << 32);
+        viewer.put("hillock", '∆' | (long)describe("lighter dullmost saffron") << 32);
+        viewer.put("animal burrow", '¸' | (long)describe("darkmost dullmost silver") << 32);
+        viewer.put("small bush 1", '♣' | (long)describe("darkmost dullmost chartreuse") << 32);
+        viewer.put("large bush 1", '♣' | (long)describe("darkest dullmost cactus") << 32);
+        viewer.put("evergreen tree 1", '♠' | (long)describe("darkest silver") << 32);
+        viewer.put("evergreen tree 2", '♠' | (long)describe("darkmost dullmost black") << 32);
+        viewer.put("small cactus 1", '‡' | (long)describe("light duller jade") << 32);
+        viewer.put("large cactus 1", '‡' | (long)describe("lighter duller fern") << 32);
+        viewer.put("succulent 1", '§' | (long)describe("lightmost dullest cactus") << 32);
+        viewer.put("seashell 1", 'ˋ' | (long)describe("lighter dullest butter") << 32);
+        viewer.put("seashell 2", 'ˋ' | (long)describe("lightmost dullest salmon") << 32);
+        viewer.put("seashell 3", 'ˋ' | (long)describe("dullmost white") << 32);
+        viewer.put("seashell 4", 'ˋ' | (long)describe("lightmost dullest lavender") << 32);
+        viewer.put("driftwood", '¿' | (long)describe("darkest white") << 32);
+        viewer.put("boulder", '●' | (long)describe("dark silver") << 32);
+        viewer.put("deciduous tree 1", '¥' | (long)describe("darkmost dullmost lime") << 32);
+        viewer.put("small bush 2", '♣' | (long)describe("dullmost brown") << 32);
+        viewer.put("deciduous tree 2", '¥' | (long)describe("darkest dullmost green") << 32);
+        viewer.put("deciduous tree 3", '¥' | (long)describe("darkest dullmost butter") << 32);
+        viewer.put("large bush 2", '♣' | (long)describe("darker silver") << 32);
+        viewer.put("tropical tree 1", '¶' | (long)describe("darkest dullest sage") << 32);
+        viewer.put("tropical tree 2", '¶' | (long)describe("light dullmost fern") << 32);
+        viewer.put("large bush 3", '♣' | (long)describe("dark dullmost lime") << 32);
+        viewer.put("tropical tree 3", '¶' | (long)describe("lighter dullmost fern") << 32);
+        viewer.put("tropical tree 4", '¶' | (long)describe("lightest dull fern") << 32);
         return viewer;
     }
 

@@ -1294,7 +1294,7 @@ public final class DescriptiveColor {
                         }
                     } else if (len > 1 && term.charAt(1) == 'u') {
                         switch (len) {
-                            case 9:
+                            case 8:
                                 saturation -= 0.2f;
                             case 7:
                                 saturation -= 0.2f;
