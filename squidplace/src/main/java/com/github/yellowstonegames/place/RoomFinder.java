@@ -139,7 +139,7 @@ public class RoomFinder {
             caves.put(allCaves, new ObjectList<>());
             connections = mouths = allCaves.copy().andNot(allCaves.copy().retract8way()).retract().asCoords();
             doorways = new Coord[0];
-            environment = allCaves.writeInts(environment, DungeonTools.CAVE_FLOOR);
+            environment = allCaves.writeInts(environment, DungeonTools.NATURAL_FLOOR);
 
         }
     }
@@ -167,7 +167,7 @@ public class RoomFinder {
         allFloors = new Region(basic, '.');
         allRooms = new Region(environment, DungeonTools.ROOM_FLOOR);
         allCorridors = new Region(environment, DungeonTools.CORRIDOR_FLOOR);
-        allCaves = new Region(environment, DungeonTools.CAVE_FLOOR);
+        allCaves = new Region(environment, DungeonTools.NATURAL_FLOOR);
         Region d = allCorridors.copy().fringe().and(allRooms),
                 m = allCaves.copy().fringe().and(allRooms.copy().or(allCorridors));
         doorways = d.asCoords();
@@ -285,7 +285,7 @@ public class RoomFinder {
             caves.put(allCaves, new ObjectList<>());
             connections = mouths = allCaves.copy().andNot(allCaves.copy().retract8way()).retract().asCoords();
             doorways = new Coord[0];
-            environment = allCaves.writeInts(environment, DungeonTools.CAVE_FLOOR);
+            environment = allCaves.writeInts(environment, DungeonTools.NATURAL_FLOOR);
         }
         return this;
     }
@@ -309,7 +309,7 @@ public class RoomFinder {
         allFloors.refill(basic, '.');
         allRooms.refill(this.environment, DungeonTools.ROOM_FLOOR);
         allCorridors.refill(this.environment, DungeonTools.CORRIDOR_FLOOR);
-        allCaves.refill(this.environment, DungeonTools.CAVE_FLOOR);
+        allCaves.refill(this.environment, DungeonTools.NATURAL_FLOOR);
 
         Region d = allCorridors.copy().fringe().and(allRooms),
                 m = allCaves.copy().fringe().and(allRooms.copy().or(allCorridors));

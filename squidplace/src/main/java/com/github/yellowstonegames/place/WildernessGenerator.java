@@ -2,6 +2,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
+import com.github.tommyettinger.ds.ObjectLongOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Maker;
@@ -39,7 +40,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.describe;
  * <br>
  * Created by Tommy Ettinger on 10/16/2019.
  */
-public class WildernessGenerator implements Serializable {
+public class WildernessGenerator implements PlaceGenerator, Serializable {
     private static final long serialVersionUID = 1L;
     public final int width, height;
     public int biome;
@@ -47,7 +48,8 @@ public class WildernessGenerator implements Serializable {
     public ObjectList<String> contentTypes;
     public ObjectList<String> floorTypes;
     public ObjectLongMap<String> viewer;
-    public final int[][] content, floors;
+    public final int[][] content, floors, colors, environment;
+    public final char[][] grid;
 
     /**
      * Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.
@@ -353,8 +355,8 @@ public class WildernessGenerator implements Serializable {
         }
     }
 
-    public static ObjectLongMap<String> defaultViewer(){
-        ObjectLongMap<String> viewer = new ObjectLongMap<>(64);
+    public static ObjectLongOrderedMap<String> defaultViewer(){
+        ObjectLongOrderedMap<String> viewer = new ObjectLongOrderedMap<>(64);
         viewer.put("snow path", '.'     | (long)describe("lightest silver") << 32);
         viewer.put("dirt path", '.' | (long)describe("lighter dullmost brick") << 32);
         viewer.put("sand path", '.' | (long)describe("lightmost dullmost bronze") << 32);
@@ -451,7 +453,10 @@ public class WildernessGenerator implements Serializable {
         this.biome = biome;
         this.rng = rng;
         content = ArrayTools.fill(-1, width, height);
+        environment = ArrayTools.fill(DungeonTools.NATURAL_FLOOR, width, height);
         floors = new int[width][height];
+        colors = new int[width][height];
+        grid = new char[width][height];
         this.floorTypes = floorTypes;
         this.contentTypes = contentTypes;
         this.viewer = viewer;
@@ -466,18 +471,52 @@ public class WildernessGenerator implements Serializable {
      * Virtually all of this method is a wrapper around functionality provided by {@link BlueNoise}, adjusted to fit
      * wilderness maps slightly.
      */
-    public void generate() {
+    public char[][] generate() {
         ArrayTools.fill(content, -1);
         final int seed = rng.nextInt();
         final int limit = contentTypes.size(), floorLimit = floorTypes.size();
         int b;
+        long pair;
         BlueNoise.blueSpill(floors, floorLimit, rng);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if((b = BlueNoise.getChosen(x, y, seed) + 128) < limit)
-                    content[x][y] = b;
+                {
+                    pair = viewer.get(contentTypes.get(content[x][y] = b));
+                    grid[x][y] = (char) pair;
+                    colors[x][y] = (int) (pair >>> 32);
+                }
+                else {
+                    pair = viewer.get(floorTypes.get(floors[x][y]));
+                    grid[x][y] = (char) pair;
+                    colors[x][y] = (int) (pair >>> 32);
+                }
             }
         }
+        return grid;
+    }
+
+    /**
+     * Gets the most recently-produced place as a 2D char array, usually produced by calling {@link #generate()} or
+     * some similar method present in a specific implementation. This normally passes a direct reference and not a
+     * copy, so you can normally modify the returned array to propagate changes back into this IPlaceGenerator.
+     *
+     * @return the most recently-produced dungeon/place as a 2D char array
+     */
+    @Override
+    public char[][] getPlaceGrid() {
+        return grid;
+    }
+
+    /**
+     * Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
+     * in {@link DungeonTools} like {@link DungeonTools#NATURAL_WALL} or {@link DungeonTools#ROOM_FLOOR}.
+     *
+     * @return the environment of the most recently-produced place, as a 2D int array
+     */
+    @Override
+    public int[][] getEnvironment() {
+        return environment;
     }
 
     /**
@@ -597,25 +636,32 @@ public class WildernessGenerator implements Serializable {
         }
 
         @Override
-        public void generate() {
+        public char[][] generate() {
             ArrayTools.fill(content, -1);
             for (int i = 0; i < pieces.length; i++) {
                 pieces[i].generate();
             }
             preparePieceMap();
             int p, c;
+            long pair;
             WildernessGenerator piece;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     p = pieceMap[x][y];
                     piece = pieces[p];
                     floors[x][y] = piece.floors[x][y] + minFloors[p];
-                    if((c = piece.content[x][y]) >= 0)
-                    {
-                        content[x][y] = c + minContents[p];
+                    if ((c = piece.content[x][y]) >= 0) {
+                        pair = viewer.get(contentTypes.get(content[x][y] = c + minContents[p]));
+                        grid[x][y] = (char) pair;
+                        colors[x][y] = (int) (pair >>> 32);
+                    } else {
+                        pair = viewer.get(floorTypes.get(floors[x][y]));
+                        grid[x][y] = (char) pair;
+                        colors[x][y] = (int) (pair >>> 32);
                     }
                 }
             }
+            return grid;
         }
     }
 }

@@ -221,7 +221,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
     /**
      * Gets an environment map as a 2D int array that {@link DungeonProcessor} can use along with the normal
      * 2D char array dungeon map to add dungeon features. This marks cells as either {@link DungeonTools#UNTOUCHED}
-     * (equal to 0), {@link DungeonTools#CAVE_FLOOR} (equal to 3), or {@link DungeonTools#CAVE_WALL} (equal to 4).
+     * (equal to 0), {@link DungeonTools#NATURAL_FLOOR} (equal to 3), or {@link DungeonTools#NATURAL_WALL} (equal to 4).
      * If the environment has not yet been retrieved since generate() was last called, this assigns the environment map
      * to match the dungeon map; otherwise it uses the cached environment map.
      * @return a 2D int array that can be used as an environment map with SectionDungeonGenerator.

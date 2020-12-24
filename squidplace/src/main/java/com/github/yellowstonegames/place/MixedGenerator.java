@@ -499,8 +499,8 @@ public class MixedGenerator implements PlaceGenerator {
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
 
                         for (int y = Math.max(0, j - 1); y <= Math.min(height - 1, j + 1); y++) {
-                            if (environment[x][y] == DungeonTools.CAVE_FLOOR) {
-                                markEnvironment(i, j, DungeonTools.CAVE_WALL);
+                            if (environment[x][y] == DungeonTools.NATURAL_FLOOR) {
+                                markEnvironment(i, j, DungeonTools.NATURAL_WALL);
                             }
                         }
                     }
@@ -559,7 +559,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param y y position to mark
      */
     protected void markEnvironmentCorridor(int x, int y) {
-        if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && environment[x][y] != DungeonTools.ROOM_FLOOR && environment[x][y] != DungeonTools.CAVE_FLOOR) {
+        if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && environment[x][y] != DungeonTools.ROOM_FLOOR && environment[x][y] != DungeonTools.NATURAL_FLOOR) {
             markEnvironment(x, y, DungeonTools.CORRIDOR_FLOOR);
         }
     }
@@ -582,7 +582,7 @@ public class MixedGenerator implements PlaceGenerator {
      */
     protected void markEnvironmentCave(int x, int y) {
         if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && environment[x][y] != DungeonTools.ROOM_FLOOR) {
-            markEnvironment(x, y, DungeonTools.CAVE_FLOOR);
+            markEnvironment(x, y, DungeonTools.NATURAL_FLOOR);
         }
     }
     /**

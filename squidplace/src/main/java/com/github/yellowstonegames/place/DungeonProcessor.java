@@ -12,13 +12,14 @@ import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * A good way to create a more-complete dungeon, layering different effects and modifications on top of a dungeon
  * produced by DungeonBoneGen or another dungeon without such effects. This class uses
  * environment information for the dungeons it is given (or quickly generates such information if using DungeonBoneGen),
  * and uses that information to only place effects like grass or water where you specify, like "only in caves", or
- * "doors should never be in caves". Ensures only connected regions of the map are used by filling unreachable areas
+ * "boulders should never be in rooms". Ensures only connected regions of the map are used by filling unreachable areas
  * with walls, and can find far-apart staircase positions if generate() is used or can keep existing staircases in a map
  * if generateRespectingStairs() is used.
  * <br>
@@ -44,14 +45,14 @@ import java.util.Arrays;
  * from the stairsUp and stairsDown fields, which are Coords that should be a long distance from each other but
  * connected in the dungeon. You may want to change those to staircase characters, but there's no requirement to do
  * anything with them. It's recommended that you keep the resulting char[][] maps in some collection that can be saved,
- * since DungeonProcessor only stores a temporary copy of the most recently-generated map. The DungeonTools
- * field of this class, utility, is a convenient way of accessing the non-static methods in that class, such as
- * randomFloor(), without needing to create another DungeonTools (this class creates one, so you don't have to).
- * Similarly, the Placement field of this class, placement, can be used to find parts of a dungeon that fit certain
- * qualities for the placement of items, terrain features, or NPCs.
+ * since DungeonProcessor only stores a temporary copy of the most recently-generated map. The Placement field of this
+ * class, placement, can be used to find parts of a dungeon that fit certain qualities for the placement of items,
+ * terrain features, or NPCs. If you don't need Placement, the simplest way to get random cells from the map is probably
+ * to use {@link Region#Region(char[][], char)} with the dungeon this made and {@code '.'} as the parameters, then call
+ * {@link Region#singleRandom(Random)} on that to choose random cells, optionally removing the chosen cells if you don't
+ * want duplicates.
  * <br>
  * Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25
- * @see DungeonTools this class exposes a DungeonTools member; DungeonTools also has many useful static methods
  *
  * @author Eben Howard - http://squidpony.com - howard@squidpony.com
  * @author Tommy Ettinger - https://github.com/tommyettinger
@@ -1017,7 +1018,7 @@ public class DungeonProcessor implements PlaceGenerator{
                     dungeon[x][y] = caveMap[x][y];
                 else if (lakesAndMazes[0][x][y] != '#') {
                     dungeon[x][y] = lakesAndMazes[0][x][y];
-                    finder.environment[x][y] = DungeonTools.CAVE_FLOOR;
+                    finder.environment[x][y] = DungeonTools.NATURAL_FLOOR;
                 }
             }
         }

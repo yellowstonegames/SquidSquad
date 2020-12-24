@@ -32,15 +32,17 @@ public class DungeonTools {
      */
     public static final int ROOM_WALL = 2;
     /**
-     * Constant for environment tiles that are floors for a cave. Value is 3.
-     * Used by several classes that distinguish types of dungeon environment.
+     * Constant for environment tiles that are floors for a cave or other natural part of a map.
+     * Value is 3. Used by several classes that distinguish types of dungeon environment. Also
+     * used by {@link WildernessGenerator} for almost everything it generates.
      */
-    public static final int CAVE_FLOOR = 3;
+    public static final int NATURAL_FLOOR = 3;
     /**
-     * Constant for environment tiles that are walls near a cave. Value is 4.
-     * Used by several classes that distinguish types of dungeon environment.
+     * Constant for environment tiles that are walls near a cave or other natural part of a map.
+     * Value is 4. Used by several classes that distinguish types of dungeon environment. May be
+     * used by {@link WildernessGenerator} for ledges and other natural obstacles.
      */
-    public static final int CAVE_WALL = 4;
+    public static final int NATURAL_WALL = 4;
     /**
      * Constant for environment tiles that are floors for a corridor. Value is 5.
      * Used by several classes that distinguish types of dungeon environment.
