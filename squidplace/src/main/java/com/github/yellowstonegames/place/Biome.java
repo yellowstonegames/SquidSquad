@@ -9,10 +9,29 @@ public class Biome implements Serializable {
     private static final long serialVersionUID = 0;
 
     public enum Heat {
-        COLDEST, COLDER, COLD, HOT, HOTTER, HOTTEST
+        COLDEST("coldest"), COLDER("colder"), COLD("cold"), HOT("hot"), HOTTER("hotter"), HOTTEST("hottest");
+        final String name;
+        Heat(final String n){
+            name = n;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
     public enum Moisture {
-        DRIEST, DRIER, DRY, WET, WETTER, WETTEST, COAST, RIVER, LAKE, OCEAN, STRANGE
+        DRIEST("driest"), DRIER("drier"), DRY("dry"), WET("wet"), WETTER("wetter"), WETTEST("wettest"),
+        COAST("coast"), RIVER("river"), LAKE("lake"), OCEAN("ocean"), STRANGE("strange");
+        final String name;
+        Moisture(final String n) {
+            name = n;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     public final Heat heat;
@@ -205,5 +224,10 @@ public class Biome implements Serializable {
     @Override
     public int hashCode() {
         return (29 * 29 * 29) * heat.hashCode() + (29 * 29) * moisture.hashCode() + (29) * name.hashCode() + colorDescription.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return heat.name + " " + moisture.name + " " + name;
     }
 }

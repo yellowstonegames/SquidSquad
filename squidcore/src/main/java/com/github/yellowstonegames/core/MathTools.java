@@ -396,45 +396,6 @@ public final class MathTools
     }
 
     /**
-     * Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
-     * the specified int value. Returns zero if the specified value has no one-bits in its two's complement binary
-     * representation, that is, if it is equal to zero.
-     * <br>
-     * Identical to {@link Integer#lowestOneBit(int)}, but super-sourced to act correctly on GWT. If you have GWT as a
-     * target and do bit manipulation work, double-check everything! An int can be higher than {@link Integer#MAX_VALUE}
-     * or lower than {@link Integer#MIN_VALUE} on GWT, without actually being a long (internally it's a double). This
-     * is especially relevant for the overload of this method that takes and returns a long;
-     * {@link Long#lowestOneBit(long)} does not provide correct results for certain inputs on GWT, such as
-     * -17592186044416L, which it mysteriously returns 0L on, so you should use {@link #lowestOneBit(long)}.
-     * @param num the value whose lowest one bit is to be computed
-     * @return an int value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-     *         or zero if the specified value is itself equal to zero.
-     */
-    public static int lowestOneBit(int num)
-    {
-        return num & -num;
-    }
-    /**
-     * Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
-     * the specified long value. Returns zero if the specified value has no one-bits in its two's complement binary
-     * representation, that is, if it is equal to zero.
-     * <br>
-     * Identical to {@link Long#lowestOneBit(long)}, but super-sourced to act correctly on GWT. If you have GWT as a
-     * target and do bit manipulation work, double-check everything! An int can be higher than {@link Integer#MAX_VALUE}
-     * or lower than {@link Integer#MIN_VALUE} on GWT, without actually being a long (internally it's a double). This
-     * is especially relevant for this overload (for longs more so than for ints); {@link Long#lowestOneBit(long)} does
-     * not provide correct results for certain inputs on GWT, such as -17592186044416L, which it mysteriously returns 0L
-     * on, so you should use this method.
-     * @param num the value whose lowest one bit is to be computed
-     * @return a long value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-     *         or zero if the specified value is itself equal to zero.
-     */
-    public static long lowestOneBit(long num)
-    {
-        return num & -num;
-    }
-
-    /**
      * Like {@link Math#floor}, but returns a long.
      * Doesn't consider "weird doubles" like INFINITY and NaN.
      *
@@ -489,5 +450,15 @@ public final class MathTools
      */
     public static int fastCeil(float t) {
         return t >= 0f ? -(int) -t + 1: -(int)-t;
+    }
+
+    /**
+     *  Linearly interpolates between fromValue to toValue on progress position.
+     * @param fromValue starting float value; can be any finite float
+     * @param toValue ending float value; can be any finite float
+     * @param progress how far the interpolation should go, between 0 (equal to fromValue) and 1 (equal to toValue)
+     */
+    public static float lerp (final float fromValue, final float toValue, final float progress) {
+        return fromValue + (toValue - fromValue) * progress;
     }
 }

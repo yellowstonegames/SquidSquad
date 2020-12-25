@@ -3,6 +3,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.BitConversion;
 import regexodus.*;
 import java.util.List;
 
@@ -861,16 +862,6 @@ public final class DescriptiveColor {
     public static final ObjectList<String> NAMES_BY_LIGHTNESS = new ObjectList<>(NAMES);
 
     /**
-     *  Linearly interpolates between fromValue to toValue on progress position.
-     * @param fromValue starting float value; can be any finite float
-     * @param toValue ending float value; can be any finite float
-     * @param progress how far the interpolation should go, between 0 (equal to fromValue) and 1 (equal to toValue)
-     */
-    public static float lerp (final float fromValue, final float toValue, final float progress) {
-        return fromValue + (toValue - fromValue) * progress;
-    }
-
-    /**
      * Used when converting from RGB to IPT, as an intermediate step.
      *
      * @param component one of the LMS channels to be converted to LMS Prime
@@ -1074,6 +1065,36 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Given a packed IPT int color {@code mainColor} and another IPT color that it should be made to contrast with,
+     * gets a packed IPT int color with roughly inverted intensity but the same chromatic channels and opacity (P and T
+     * are likely to be clamped if the result gets close to white or black). This won't ever produce black or other very
+     * dark colors, and also has a gap in the range it produces for intensity values between 0.5 and 0.55. That allows
+     * most of the colors this method produces to contrast well as a foreground when displayed on a background of
+     * {@code contrastingColor}, or vice versa. This will leave the intensity unchanged if the chromatic channels of the
+     * contrastingColor and those of the mainColor are already very different. This has nothing to do with the contrast
+     * channel of the tweak in ColorfulBatch; where that part of the tweak can make too-similar lightness values further
+     * apart by just a little, this makes a modification on {@code mainColor} to maximize its lightness difference from
+     * {@code contrastingColor} without losing its other qualities.
+     * @param mainColor a packed IPT int color, as from one of the constants in this class; this is the color that will be adjusted
+     * @param contrastingColor a packed IPT int color, as from one of the constants in this class; the adjusted mainColor will contrast with this
+     * @return a different IPT int color, based on mainColor but with potentially very different lightness
+     */
+    public static float inverseIntensity(final int mainColor, final int contrastingColor)
+    {
+        final int
+                i = (mainColor & 0xff),
+                p = (mainColor >>> 8 & 0xff),
+                t = (mainColor >>> 16 & 0xff),
+                ci = (contrastingColor & 0xff),
+                cp = (contrastingColor >>> 8 & 0xff),
+                ct = (contrastingColor >>> 16 & 0xff);
+        if((p - cp) * (p - cp) + (t - ct) * (t - ct) >= 0x2000)
+            return mainColor;
+        return limitToGamut(Math.max(0, Math.min(255, i + ((1|-(ci >>> 7)) * 5 * (255 - Math.abs(ci - i)) >>> 2))), p, t, mainColor >>> 24);
+    }
+
+
+    /**
      * Iteratively checks whether the given IPT color is in-gamut, and either brings the color closer to 50% gray if it
      * isn't in-gamut, or returns it as soon as it is in-gamut.
      *
@@ -1081,9 +1102,23 @@ public final class DescriptiveColor {
      * @return the first color this finds that is between the given IPT color and 50% gray, and is in-gamut
      */
     public static int limitToGamut(final int packed) {
-        final float i = (packed & 0xff) / 255f;
-        final float p = ((packed >>> 8 & 0xff) - 127.5f) / 127.5f;
-        final float t = ((packed >>> 16 & 0xff) - 127.5f) / 127.5f;
+        return limitToGamut(packed & 255, packed >>> 8 & 255, packed >>> 16 & 255, packed >>> 24);
+    }
+
+    /**
+     * Iteratively checks whether the given IPT color is in-gamut, and either brings the color closer to 50% gray if it
+     * isn't in-gamut, or returns it as soon as it is in-gamut.
+     *
+     * @param intensity from 0 to 255
+     * @param protan from 0 to 255; 127 or 128 is the approximate grayscale point
+     * @param tritan from 0 to 255; 127 or 128 is the approximate grayscale point
+     * @param alpha from 0 to 255; the least significant bit isn't used, so you can use 254 and get an opaque value
+     * @return the first color this finds that is between the given IPT color and 50% gray, and is in-gamut
+     */
+    public static int limitToGamut(final int intensity, final int protan, final int tritan, final int alpha) {
+        final float i = intensity / 255f;
+        final float p = (protan - 127.5f) / 127.5f;
+        final float t = (tritan - 127.5f) / 127.5f;
         float i2 = i, p2 = p, t2 = t;
         for (int attempt = 31; attempt >= 0; attempt--) {
             final float l = reverseTransform(i2 + 0.097569f * p2 + 0.205226f * t2);
@@ -1096,11 +1131,11 @@ public final class DescriptiveColor {
             if (r >= 0f && r <= 1f && g >= 0f && g <= 1f && b >= 0f && b <= 1f)
                 break;
             final float progress = attempt * 0x1p-5f;
-            i2 = lerp(0.55f, i, progress);
-            p2 = lerp(0, p, progress);
-            t2 = lerp(0, t, progress);
+            i2 = MathTools.lerp(0.55f, i, progress);
+            p2 = MathTools.lerp(0, p, progress);
+            t2 = MathTools.lerp(0, t, progress);
         }
-        return ((packed & 0xFE000000) | ((int) (t2 * 127.999f + 128f) << 16)
+        return ((alpha << 24 & 0xFE000000) | ((int) (t2 * 127.999f + 128f) << 16)
                 | ((int) (p2 * 127.999f + 128f) << 8) | ((int) (i2 * 255.999f)));
     }
 

@@ -2,6 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
 
@@ -3289,7 +3290,7 @@ public class Region implements Collection<Coord>, Serializable {
             result = random.nextLong();
         } else {
             boolean high = bitCount > 32;
-            int altered = (high ? 64 - bitCount : bitCount), lsb = MathTools.lowestOneBit(altered);
+            int altered = (high ? 64 - bitCount : bitCount), lsb = BitConversion.lowestOneBit(altered);
             long data = random.nextLong();
             for (int i = lsb << 1; i <= 16; i <<= 1) {
                 if ((altered & i) == 0)
@@ -4964,7 +4965,7 @@ public class Region implements Collection<Coord>, Serializable {
                     for (int x = 0; x < width; x++) {
                         if ((ct = counts[x * ySections + s]) > tmp) {
                             t = data[x * ySections + s];
-                            w = MathTools.lowestOneBit(t);
+                            w = BitConversion.lowestOneBit(t);
                             for (--ct; w != 0; ct--) {
                                 if (ct == tmp) {
                                     removeRectangle(x - minimumDistance,
@@ -4975,7 +4976,7 @@ public class Region implements Collection<Coord>, Serializable {
                                     continue MAIN_LOOP;
                                 }
                                 t ^= w;
-                                w = MathTools.lowestOneBit(t);
+                                w = BitConversion.lowestOneBit(t);
                             }
                         }
                     }
@@ -5117,7 +5118,7 @@ public class Region implements Collection<Coord>, Serializable {
         for (int x = 0; x < width; x++) {
             for (int s = 0; s < ySections; s++) {
                 if ((t = data[x * ySections + s]) != 0) {
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     while (w != 0) {
                         if (idx >= len) {
                             result = points;
@@ -5125,7 +5126,7 @@ public class Region implements Collection<Coord>, Serializable {
                         }
                         points[idx++] = Coord.get(x, (s << 6) | Long.numberOfTrailingZeros(w));
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                     if (result != null) break;
                 }
@@ -5146,11 +5147,11 @@ public class Region implements Collection<Coord>, Serializable {
             for (int s = 0; s < ySections; s++) {
                 if((t = data[x * ySections + s]) != 0)
                 {
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     while (w != 0) {
                         points[idx++] = Coord.pureEncode(x, (s << 6) | Long.numberOfTrailingZeros(w));
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5166,11 +5167,11 @@ public class Region implements Collection<Coord>, Serializable {
             for (int s = 0; s < ySections; s++) {
                 if((t = data[x * ySections + s]) != 0)
                 {
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     while (w != 0) {
                         points[idx++] =  ((s << 6) | Long.numberOfTrailingZeros(w)) * width + x;
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5250,12 +5251,12 @@ public class Region implements Collection<Coord>, Serializable {
             for (int x = 0; x < width; x++) {
                 if ((ct = counts[x * ySections + s]) > index) {
                     t = data[x * ySections + s];
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     for (--ct; w != 0; ct--) {
                         if (ct == index)
                             return Coord.get(x, (s << 6) | Long.numberOfTrailingZeros(w));
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5273,12 +5274,12 @@ public class Region implements Collection<Coord>, Serializable {
             for (int x = 0; x < width; x++) {
                 if ((ct = counts[x * ySections + s]) > tmp) {
                     t = data[x * ySections + s];
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     for (--ct; w != 0; ct--) {
                         if (ct == tmp)
                             return Coord.get(x, (s << 6) | Long.numberOfTrailingZeros(w));
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5297,12 +5298,12 @@ public class Region implements Collection<Coord>, Serializable {
             for (int s = 0; s < ySections; s++) {
                 if ((ct = counts[x * ySections + s]) > tmp) {
                     t = data[x * ySections + s];
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     for (--ct; w != 0; ct--) {
                         if (ct == tmp)
                             return ((s << 6) | Long.numberOfTrailingZeros(w)) * width + x;
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5332,7 +5333,7 @@ public class Region implements Collection<Coord>, Serializable {
                 if ((ct = counts[x * ySections + s]) > tmp) {
                     t = data[x * ySections + s] | 0L;
                     for (--ct; t != 0; ct--) {
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                         if (ct == tmp)
                             return Coord.get(x, (s << 6) | Long.bitCount(w-1));
                         t ^= w;
@@ -5351,12 +5352,12 @@ public class Region implements Collection<Coord>, Serializable {
             for (int x = 0; x < width; x++) {
                 if ((ct = counts[x * ySections + s]) > tmp) {
                     t = data[x * ySections + s];
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     for (--ct; w != 0; ct--) {
                         if (ct == tmp)
                             return ((s << 6) | Long.numberOfTrailingZeros(w)) * width + x;
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5505,14 +5506,14 @@ public class Region implements Collection<Coord>, Serializable {
             for (int x = 0; x < width; x++) {
                 if((t = data[x * ySections + s]) != 0)
                 {
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     while (w != 0) {
                         if (run++ == order[idx]) {
                             points[idx++] = Coord.get(x, (s << 6) | Long.numberOfTrailingZeros(w));
                             if (idx >= size) break ALL;
                         }
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -5536,7 +5537,7 @@ public class Region implements Collection<Coord>, Serializable {
             for (int x = 0; x < width; x++) {
                 if((t = data[x * ySections + s]) != 0)
                 {
-                    w = MathTools.lowestOneBit(t);
+                    w = BitConversion.lowestOneBit(t);
                     while (w != 0) {
                         if (run++ == order[idx]) {
                             if(++idx >= size) break ALL;
@@ -5546,7 +5547,7 @@ public class Region implements Collection<Coord>, Serializable {
                             data[x * ySections + s] &= ~(1L << Long.numberOfTrailingZeros(w));
                         }
                         t ^= w;
-                        w = MathTools.lowestOneBit(t);
+                        w = BitConversion.lowestOneBit(t);
                     }
                 }
             }
@@ -6329,7 +6330,7 @@ public class Region implements Collection<Coord>, Serializable {
                     if ((c = counts[x * ySections + s]) > index) {
                         t = data[x * ySections + s] | 0L;
                         for (--c; t != 0; c--) {
-                            w = MathTools.lowestOneBit(t);
+                            w = BitConversion.lowestOneBit(t);
                             if (c == index)
                             {
                                 index++;
