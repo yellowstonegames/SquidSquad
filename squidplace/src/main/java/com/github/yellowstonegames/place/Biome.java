@@ -82,7 +82,7 @@ public class Biome implements Serializable {
      */
     public static final String ROCKY_BIOME = "Rocky";
     /**
-     * Flowing freshwater of any size; may sometimes be considered the same as {@link #LAKE}.
+     * Flowing freshwater of any size; may sometimes be considered the same as {@link #LAKE_BIOME}.
      */
     public static final String RIVER_BIOME = "River";
     /**
@@ -182,10 +182,28 @@ public class Biome implements Serializable {
                     new Biome(HOTTER, OCEAN, "Ocean", "darkmost duller cobalt"),
                     new Biome(HOTTEST, OCEAN, "Ocean", "darkest duller navy"),
                     new Biome(COLDEST, STRANGE, "Space", "darkmost dullmost cobalt"),
-                    new Biome(COLDER, STRANGE, "Moon", "light silver"),
+                    new Biome(COLDER, STRANGE, "Moon", "dark white"),
                     new Biome(COLD, STRANGE, "Cavern", "darkest dullmost chocolate"),
                     new Biome(HOT, STRANGE, "Cavern", "darkmost dullmost plum"),
                     new Biome(HOTTER, STRANGE, "Exotic", "lighter richmost raspberry"),
                     new Biome(HOTTEST, STRANGE, "Volcano", "dark richmost ember"),
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Biome biome = (Biome) o;
+
+        if (heat != biome.heat) return false;
+        if (moisture != biome.moisture) return false;
+        if (!name.equals(biome.name)) return false;
+        return colorDescription.equals(biome.colorDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        return (29 * 29 * 29) * heat.hashCode() + (29 * 29) * moisture.hashCode() + (29) * name.hashCode() + colorDescription.hashCode();
+    }
 }

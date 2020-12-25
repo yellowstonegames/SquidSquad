@@ -43,7 +43,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.describe;
 public class WildernessGenerator implements PlaceGenerator, Serializable {
     private static final long serialVersionUID = 1L;
     public final int width, height;
-    public int biome;
+    public Biome biome;
     public LaserRandom rng;
     public ObjectList<String> contentTypes;
     public ObjectList<String> floorTypes;
@@ -106,81 +106,36 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
      * @param rng a LaserRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of floor that can appear here
      */
-    public static ObjectList<String> floorsByBiome(int biome, LaserRandom rng) {
-        biome &= 1023;
-        switch (biome) {
-            case 0: //Ice
-            case 1:
-            case 6:
-            case 12:
-            case 18:
-            case 24:
-            case 30:
-            case 42:
-            case 48:
+    public static ObjectList<String> floorsByBiome(Biome biome, LaserRandom rng) {
+        if(biome == null || biome.name == null) return new ObjectList<>(0);
+        switch (biome.name) {
+            case "Ice":
                 return makeShuffledRepeats(rng, "snow", 3, "ice", 1);
-            case 7: //Tundra
-            case 13:
-            case 19:
-            case 25:
+            case "Tundra":
                 return makeShuffledRepeats(rng, "dirt", 6, "pebbles", 1, "snow", 9, "dry grass", 4);
-            case 26: //BorealForest
-            case 31:
-            case 32:
+            case "BorealForest":
                 return makeShuffledRepeats(rng, "dirt", 3, "pebbles", 1, "snow", 11);
-            case 43: //River
-            case 44:
-            case 45:
-            case 46:
-            case 47:
-            case 49: //Lake
-            case 50:
-            case 51:
-            case 52:
-            case 53:
+            case "River":
+            case "Lake":
                 return Maker.list("fresh water");
-            case 54: //Ocean
-            case 55:
-            case 56:
-            case 57:
-            case 58:
-            case 59:
+            case "Ocean":
                 return Maker.list("salt water");
-            case 3: //Desert
-            case 4:
-            case 5:
-            case 10:
-            case 11:
-            case 17:
-            case 38: //Beach
-            case 39:
-            case 40:
-            case 41:
-                return Maker.list("sand");
-            case 2: //Grassland
-            case 8:
-            case 9:
+            case "Desert":
+            case "Beach":
+                return makeShuffledRepeats(rng, "sand", 9, "pebbles", 1);
+            case "Grassland":
                 return makeShuffledRepeats(rng, "dirt", 8, "dry grass", 13, "grass", 2);
-            case 14: //Woodland
-            case 15:
+            case "Woodland":
                 return makeShuffledRepeats(rng, "dirt", 11, "leaves", 3, "dry grass", 8);
-            case 16: //Savanna
-            case 22:
-            case 23:
-            case 29:
+            case "Savanna":
                 return makeShuffledRepeats(rng, "dirt", 4, "dry grass", 17);
-            case 20: //SeasonalForest
-            case 21:
+            case "SeasonalForest":
                 return makeShuffledRepeats(rng, "dirt", 9, "leaves", 6, "grass", 14);
-            case 27: //TemperateRainforest
-            case 33:
+            case "TemperateRainforest":
                 return makeShuffledRepeats(rng, "mud", 3, "leaves", 8, "grass", 10, "moss", 5);
-            case 28: //TropicalRainforest
-            case 34:
-            case 35:
+            case "TropicalRainforest":
                 return makeShuffledRepeats(rng, "mud", 7, "leaves", 6, "grass", 4, "moss", 11);
-            case 36: // Rocky
-            case 37:
+            case "Rocky":
                 return makeShuffledRepeats(rng, "pebbles", 5, "rubble", 1);
             default:
                 return Maker.list("empty space");
@@ -192,76 +147,32 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
      * @param biome an index into some biome table, WIP
      * @return an ObjectList that typically contains just the one or few types of path that can appear here
      */
-    public static ObjectList<String> pathsByBiome(int biome) {
-        biome &= 1023;
-        switch (biome) {
-            case 0: //Ice
-            case 1:
-            case 6:
-            case 12:
-            case 18:
-            case 24:
-            case 30:
-            case 42:
-            case 48:
+    public static ObjectList<String> pathsByBiome(Biome biome) {
+        if(biome == null || biome.name == null) return new ObjectList<>(0);
+        switch (biome.name) {
+            case "Ice":
                 return Maker.list("snow path");
-            case 7: //Tundra
-            case 13:
-            case 19:
-            case 25: 
-            case 26: //BorealForest
-            case 31:
-            case 32:
+            case "Tundra":
+            case "BorealForest":
                 return Maker.list("snow path", "dirt path");
-//            case 43: //River
-//            case 44:
-//            case 45:
-//            case 46:
-//            case 47:
-//            case 49:
-//            case 50:
-//            case 51:
-//            case 52:
-//            case 53:
-//            case 54: //Ocean
-//            case 55:
-//            case 56:
-//            case 57:
-//            case 58:
-//            case 59:
-//                return Maker.list("wooden bridge");
-            case 3: //Desert
-            case 4:
-            case 5:
-            case 10:
-            case 11:
-            case 17:
-            case 38: //Beach
-            case 39:
-            case 40:
-            case 41:
+            case "Desert":
                 return Maker.list("sand path");
-            case 2: //Grassland
-            case 8:
-            case 9:
-            case 14: //Woodland
-            case 15:
-            case 16: //Savanna
-            case 22:
-            case 23:
-            case 29:
+            case "Beach":
+                return Maker.list("sand path", "stone path");
+            case "Grassland":
+            case "Woodland":
+            case "Savanna":
+            case "TropicalRainforest":
                 return Maker.list("dirt path");
-            case 20: //SeasonalForest
-            case 21:
+            case "SeasonalForest":
                 return Maker.list("dirt path", "grass path");
-            case 27: //TemperateRainforest
-            case 33:
-            case 28: //TropicalRainforest
-            case 34:
-            case 35:
+            case "TemperateRainforest":
                 return Maker.list("grass path");
-            case 36: // Rocky
-            case 37:
+            case "Rocky":
+            case "Moon":
+            case "Volcano":
+            case "Exotic":
+            case "Cavern":
                 return Maker.list("stone path");
             default:
                 return Maker.list("wooden bridge");
@@ -274,81 +185,35 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
      * @param rng a LaserRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of terrain feature that can appear here
      */
-    public static ObjectList<String> contentByBiome(int biome, LaserRandom rng) {
-        biome &= 1023;
-        switch (biome) {
-            case 0: //Ice
-            case 1:
-            case 6:
-            case 12:
-            case 18:
-            case 24:
-            case 30:
-            case 42:
-            case 48:
+    public static ObjectList<String> contentByBiome(Biome biome, LaserRandom rng) {
+        if(biome == null || biome.name == null) return new ObjectList<>(0);
+        switch (biome.name) {
+            case "Ice":
                 return makeShuffledRepeats(rng, "snow mound", 5, "icy divot", 2, "powder snowdrift", 5);
-            case 7: //Tundra
-            case 13:
-            case 19:
-            case 25:
+            case "Tundra":
                 return makeShuffledRepeats(rng, "snow mound", 4, "hillock", 6, "animal burrow", 5, "small bush 1", 2);
-            case 26: //BorealForest
-            case 31:
-            case 32:
+            case "BorealForest":
                 return makeShuffledRepeats(rng, "snow mound", 3, "small bush 1", 5, "large bush 1", 3, "evergreen tree 1", 17, "evergreen tree 2", 12);
-//                case 43: //River
-//                case 44:
-//                case 45:
-//                case 46:
-//                case 47:
-//                case 49:
-//                case 50:
-//                case 51:
-//                case 52:
-//                case 53:
-//                case 54: //Ocean
-//                case 55:
-//                case 56:
-//                case 57:
-//                case 58:
-//                case 59:
+//                case "River":
+//                case "Ocean":
 //                    return new ObjectList<>(0);
-            case 3: //Desert
-            case 4:
-            case 5:
-            case 10:
-            case 11:
-            case 17:
+            case "Desert":
                 return makeShuffledRepeats(rng, "small cactus 1", 2, "large cactus 1", 2, "succulent 1", 1, "animal burrow", 2);
-            case 38: //Beach
-            case 39:
-            case 40:
-            case 41:
+            case "Beach":
                 return makeShuffledRepeats(rng, "seashell 1", 3, "seashell 2", 3, "seashell 3", 3, "seashell 4", 3, "driftwood", 5, "boulder", 3);
-            case 2: //Grassland
-            case 8:
-            case 9:
+            case "Grassland":
                 return makeShuffledRepeats(rng, "deciduous tree 1", 3, "small bush 1", 5, "small bush 2", 4, "large bush 1", 5, "animal burrow", 8, "hillock", 4);
-            case 14: //Woodland
-            case 15:
+            case "Woodland":
                 return makeShuffledRepeats(rng, "deciduous tree 1", 12, "deciduous tree 2", 9, "deciduous tree 3", 6, "small bush 1", 4, "small bush 2", 3, "animal burrow", 3);
-            case 16: //Savanna
-            case 22:
-            case 23:
-            case 29:
+            case "Savanna":
                 return makeShuffledRepeats(rng, "small bush 1", 8, "small bush 2", 5, "large bush 1", 2, "animal burrow", 3, "hillock", 6);
-            case 20: //SeasonalForest
-            case 21:
+            case "SeasonalForest":
                 return makeShuffledRepeats(rng, "deciduous tree 1", 15, "deciduous tree 2", 13, "deciduous tree 3", 12, "small bush 1", 3, "large bush 1", 5, "large bush 2", 4, "animal burrow", 3);
-            case 27: //TemperateRainforest
-            case 33:
+            case "TemperateRainforest":
                 return makeShuffledRepeats(rng, "tropical tree 1", 6, "tropical tree 2", 5, "deciduous tree 1", 13, "deciduous tree 2", 12, "small bush 1", 8, "large bush 1", 7, "large bush 2", 7, "large bush 3", 3, "animal burrow", 3);
-            case 28: //TropicalRainforest
-            case 34:
-            case 35:
+            case "TropicalRainforest":
                 return makeShuffledRepeats(rng, "tropical tree 1", 12, "tropical tree 2", 11, "tropical tree 3", 10, "tropical tree 4", 9, "small bush 1", 6, "small bush 2", 5, "large bush 1", 6, "large bush 2", 5, "large bush 3", 3, "animal burrow", 9, "boulder", 1);
-            case 36: // Rocky
-            case 37:
+            case "Rocky":
                 return makeShuffledRepeats(rng, "seashell 1", 3, "seashell 2", 2, "seashell 3", 2, "driftwood", 6, "boulder", 9);
             default:
                 return new ObjectList<>(0);
@@ -357,7 +222,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
 
     public static ObjectLongOrderedMap<String> defaultViewer(){
         ObjectLongOrderedMap<String> viewer = new ObjectLongOrderedMap<>(64);
-        viewer.put("snow path", '.'     | (long)describe("lightest silver") << 32);
+        viewer.put("snow path", '.' | (long)describe("lightest silver") << 32);
         viewer.put("dirt path", '.' | (long)describe("lighter dullmost brick") << 32);
         viewer.put("sand path", '.' | (long)describe("lightmost dullmost bronze") << 32);
         viewer.put("grass path", '.' | (long)describe("lighter dullmost fern") << 32);
@@ -381,7 +246,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         viewer.put("mud", ',' | (long)describe("darkmost dullest peach") << 32);
         viewer.put("moss", '˝' | (long)describe("darker dullmost cactus") << 32);
         viewer.put("rubble", '‰' | (long)describe("dark dullmost cyan") << 32);
-        viewer.put("empty space", '_' | (long)describe("lighter rich black") << 32);
+        viewer.put("empty space", ' ' | (long)describe("lighter rich black") << 32);
         viewer.put("snow mound", '∆' | (long)describe("lightest dullmost sage") << 32);
         viewer.put("icy divot", '°' | (long)describe("rich white") << 32);
         viewer.put("powder snowdrift", '¨' | (long)describe("lightmost dullmost sage") << 32);
@@ -428,25 +293,25 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
 
     public WildernessGenerator()
     {
-        this(128, 128, 21);
+        this(128, 128, Biome.TABLE[21]);
     }
-    public WildernessGenerator(int width, int height, int biome)
+    public WildernessGenerator(int width, int height, Biome biome)
     {
         this(width, height, biome, new LaserRandom());
     }
-    public WildernessGenerator(int width, int height, int biome, long seedA, long seedB)
+    public WildernessGenerator(int width, int height, Biome biome, long seedA, long seedB)
     {
         this(width, height, biome, new LaserRandom(seedA, seedB));
     }
-    public WildernessGenerator(int width, int height, int biome, LaserRandom rng)
+    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng)
     {
         this(width, height, biome, rng, floorsByBiome(biome, rng), contentByBiome(biome, rng), defaultViewer());
     }
-    public WildernessGenerator(int width, int height, int biome, LaserRandom rng, ObjectList<String> contentTypes)
+    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng, ObjectList<String> contentTypes)
     {
         this(width, height, biome, rng, floorsByBiome(biome, rng), contentTypes, defaultViewer());
     }
-    public WildernessGenerator(int width, int height, int biome, LaserRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes, ObjectLongMap<String> viewer)
+    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes, ObjectLongMap<String> viewer)
     {
         this.width = width;
         this.height = height;
