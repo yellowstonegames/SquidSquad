@@ -133,7 +133,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
             case 45:
             case 46:
             case 47:
-            case 49:
+            case 49: //Lake
             case 50:
             case 51:
             case 52:
@@ -422,10 +422,10 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
 //                "Ice",    "BorealForest", "BorealForest",   "TemperateRainforest", "TropicalRainforest", "TropicalRainforest", //WETTEST
 //                "Rocky",  "Rocky",        "Beach",          "Beach",               "Beach",              "Beach",              //COASTS
 //                "Ice",    "River",        "River",          "River",               "River",              "River",              //RIVERS
-//                "Ice",    "River",        "River",          "River",               "River",              "River",              //LAKES
+//                "Ice",    "Lake",         "Lake",           "Lake",                "Lake",               "Lake",               //LAKES
 //                "Ocean",  "Ocean",        "Ocean",          "Ocean",               "Ocean",              "Ocean",              //OCEAN
-//                "Empty",                                                                                                       //SPACE
-    
+//                "Space",  "Moon"          "Cavern",         "Cavern",              "Exotic",             "Volcano"             //SPACE
+
     public WildernessGenerator()
     {
         this(128, 128, 21);
