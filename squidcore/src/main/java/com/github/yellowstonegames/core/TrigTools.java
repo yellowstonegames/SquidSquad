@@ -573,99 +573,90 @@ public final class TrigTools {
     }
 
     /**
-     * Arc sine approximation with very low error, based on a simplified version of {@link #atan2(double, double)}.
-     * This method is usually much faster than {@link Math#asin(double)}, but is somewhat less precise than Math's
-     * implementation). It is currently more precise than libGDX's approximation in their MathUtils, but this isn't
-     * quite as fast; the difference in precision is hard to spot but can be noticeable in some usage.
-     * @param n an input to the inverse sine function, from -1 to 1 inclusive
+     * Arc sine approximation with very low error, using an algorithm from the 1955 research study
+     * "Approximations for Digital Computers," by RAND Corporation (this is sheet 35's algorithm, which is the fastest
+     * and least precise). This method is usually much faster than {@link Math#asin(double)}, but is somewhat less
+     * precise than Math's implementation. It is currently much more precise than libGDX's approximation in their
+     * MathUtils, and is a little faster.
+     * @param x an input to the inverse sine function, from -1 to 1 inclusive
      * @return an output from the inverse sine function, from PI/-2.0 to PI/2.0 inclusive.
      */
-    public static float asin(final float n)
-    {
-        final float ax = (float) Math.sqrt(1f - n * n), ay = Math.abs(n);
-        if(ax < ay)
-        {
-            final float a = ax / ay, s = a * a,
-                    r = 1.57079637f - (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a);
-            return (n < 0f) ? -r : r;
+    public static float asin(final float x) {
+        final float x2 = x * x;
+        final float x3 = x * x2;
+        if (x >= 0f) {
+            return 1.5707963267948966f - (float) Math.sqrt(1f - x) *
+                    (1.5707288f - 0.2121144f * x + 0.0742610f * x2 - 0.0187293f * x3);
         }
         else {
-            final float a = ay / ax, s = a * a,
-                    r = (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a);
-            return (n < 0f) ? -r : r;
+            return -1.5707963267948966f + (float) Math.sqrt(1f + x) *
+                    (1.5707288f + 0.2121144f * x + 0.0742610f * x2 + 0.0187293f * x3);
+        }
+    }
+    /**
+     * Arc cosine approximation with very low error, using an algorithm from the 1955 research study
+     * "Approximations for Digital Computers," by RAND Corporation (this is sheet 35's algorithm, which is the fastest
+     * and least precise). This method is usually much faster than {@link Math#acos(double)}, but is somewhat less
+     * precise than Math's implementation. It is currently much more precise than libGDX's approximation in their
+     * MathUtils, and is a little faster.
+     * <br>
+     * Accuracy: absolute error 0.000028450, relative error -0.000000011, max error 0.000067548 .
+     * @param x an input to the inverse cosine function, from -1 to 1 inclusive
+     * @return an output from the inverse cosine function, from 0 to PI inclusive.
+     */
+    public static float acos(final float x) {
+        final float x2 = x * x;
+        final float x3 = x * x2;
+        if (x >= 0f) {
+            return (float) Math.sqrt(1f - x) * (1.5707288f - 0.2121144f * x + 0.0742610f * x2 - 0.0187293f * x3);
+        }
+        else {
+            return 3.14159265358979323846f - (float) Math.sqrt(1f + x) * (1.5707288f + 0.2121144f * x + 0.0742610f * x2 + 0.0187293f * x3);
         }
     }
 
     /**
-     * Arc sine approximation with very low error, based on a simplified version of {@link #atan2(float, float)}.
-     * This method is usually much faster than {@link Math#asin(double)}, but is somewhat less precise than Math's
-     * implementation). It is currently more precise than libGDX's approximation in their MathUtils, but this isn't
-     * quite as fast; the difference in precision is hard to spot but can be noticeable in some usage.
-     * @param n an input to the inverse sine function, from -1 to 1 inclusive
+     * Arc sine approximation with very low error, using an algorithm from the 1955 research study
+     * "Approximations for Digital Computers," by RAND Corporation (this is sheet 35's algorithm, which is the fastest
+     * and least precise). This method is usually much faster than {@link Math#asin(double)}, but is somewhat less
+     * precise than Math's implementation. It is currently much more precise than libGDX's approximation in their
+     * MathUtils, and is a little faster.
+     * <br>
+     * Accuracy: absolute error 0.000028447, relative error -0.000000033, max error 0.000067592 .
+     * @param x an input to the inverse sine function, from -1 to 1 inclusive
      * @return an output from the inverse sine function, from PI/-2.0 to PI/2.0 inclusive.
      */
-    public static double asin(final double n)
-    {
-        final double ax = Math.sqrt(1.0 - n * n), ay = Math.abs(n);
-        if(ax < ay)
-        {
-            final double a = ax / ay, s = a * a,
-                    r = 1.57079637 - (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a);
-            return (n < 0.0) ? -r : r;
+    public static double asin(final double x) {
+        final double x2 = x * x;
+        final double x3 = x * x2;
+        if (x >= 0.0) {
+            return 1.5707963267948966 - Math.sqrt(1.0 - x) *
+                    (1.5707288 - 0.2121144 * x + 0.0742610 * x2 - 0.0187293 * x3);
         }
         else {
-            final double a = ay / ax, s = a * a,
-                    r = (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a);
-            return (n < 0.0) ? -r : r;
+            return -1.5707963267948966 + Math.sqrt(1.0 + x) *
+                    (1.5707288 + 0.2121144 * x + 0.0742610 * x2 + 0.0187293 * x3);
         }
     }
     /**
-     * Arc cosine approximation with very low error, based on a simplified version of {@link #atan2(double, double)}.
-     * This method is usually much faster than {@link Math#acos(double)}, but is somewhat less precise than Math's
-     * implementation). It is currently more precise than libGDX's approximation in their MathUtils, but this isn't
-     * quite as fast; the difference in precision is hard to spot but can be noticeable in some usage.
-     * @param n an input to the inverse cosine function, from -1 to 1 inclusive
+     * Arc cosine approximation with very low error, using an algorithm from the 1955 research study
+     * "Approximations for Digital Computers," by RAND Corporation (this is sheet 35's algorithm, which is the fastest
+     * and least precise). This method is usually much faster than {@link Math#acos(double)}, but is somewhat less
+     * precise than Math's implementation. It is currently much more precise than libGDX's approximation in their
+     * MathUtils, and is a little faster.
+     * @param x an input to the inverse cosine function, from -1 to 1 inclusive
      * @return an output from the inverse cosine function, from 0 to PI inclusive.
      */
-    public static double acos(final double n)
-    {
-        final double ax = Math.abs(n), ay = Math.sqrt(1.0 - n * n);
-        if(ax < ay)
-        {
-            final double a = ax / ay, s = a * a,
-                    r = 1.57079637 - (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a);
-            return (n < 0.0) ? Math.PI - r : r;
+    public static double acos(final double x) {
+        final double x2 = x * x;
+        final double x3 = x * x2;
+        if (x >= 0.0) {
+            return Math.sqrt(1.0 - x) * (1.5707288 - 0.2121144 * x + 0.0742610 * x2 - 0.0187293 * x3);
         }
         else {
-            final double a = ay / ax, s = a * a,
-                    r = (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a);
-            return (n < 0.0) ? Math.PI - r : r;
+            return 3.14159265358979323846 - Math.sqrt(1.0 + x) * (1.5707288 + 0.2121144 * x + 0.0742610 * x2 + 0.0187293 * x3);
         }
     }
-    /**
-     * Arc cosine approximation with very low error, based on a simplified version of {@link #atan2(float, float)}.
-     * This method is usually much faster than {@link Math#acos(double)}, but is somewhat less precise than Math's
-     * implementation). It is currently more precise than libGDX's approximation in their MathUtils, but this isn't
-     * quite as fast; the difference in precision is hard to spot but can be noticeable in some usage.
-     * @param n an input to the inverse cosine function, from -1 to 1 inclusive
-     * @return an output from the inverse cosine function, from 0 to PI inclusive.
-     */
-    public static float acos(final float n)
-    {
-        final float ax = Math.abs(n), ay = (float) Math.sqrt(1f - n * n);
-        if(ax < ay)
-        {
-            final float a = ax / ay, s = a * a,
-                    r = 1.57079637f - (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a);
-            return (n < 0f) ? 3.14159265358979323846f - r : r;
-        }
-        else {
-            final float a = ay / ax, s = a * a,
-                    r = (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a);
-            return (n < 0.0) ? 3.14159265358979323846f - r : r;
-        }
-    }
-
     /**
      * Inverse sine function (arcsine) but with output measured in turns instead of radians. Possible results for this
      * range from 0.75 (inclusive) to 1.0 (exclusive), and continuing past that to 0.0 (inclusive) to 0.25 (inclusive).
@@ -769,7 +760,9 @@ public final class TrigTools {
 //     * Arc sine approximation with fairly low error while still being faster than {@link NumberTools#sin(double)}.
 //     * This formula is number 201 in <a href=">http://www.fastcode.dk/fastcodeproject/articles/index.htm">Dennis
 //     * Kjaer Christensen's unfinished math work on arc sine approximation</a>. This method is about 40 times faster
-//     * than {@link Math#asin(double)}. Fast but imprecise.
+//     * than {@link Math#asin(double)}. Fast but imprecise.  This is what libGDX uses as of version 1.9.12.
+//     * <br>
+//     * Accuracy: absolute error 0.007147891, relative error -0.000007316, max error 0.023241536
 //     * @param a an input to the inverse sine function, from -1 to 1 inclusive (error is higher approaching -1 or 1)
 //     * @return an output from the inverse sine function, from -PI/2 to PI/2 inclusive.
 //     */
@@ -781,7 +774,10 @@ public final class TrigTools {
 //     * Arc sine approximation with fairly low error while still being faster than {@link NumberTools#sin(float)}.
 //     * This formula is number 201 in <a href=">http://www.fastcode.dk/fastcodeproject/articles/index.htm">Dennis
 //     * Kjaer Christensen's unfinished math work on arc sine approximation</a>. This method is about 40 times faster
-//     * than {@link Math#asin(double)}, and takes and returns a float. Fast but imprecise.
+//     * than {@link Math#asin(double)}, and takes and returns a float. Fast but imprecise.  This is what libGDX uses as
+//     * of version 1.9.12.
+//     * <br>
+//     * Accuracy: absolute error 0.007147891, relative error -0.000007316, max error 0.023241536
 //     * @param a an input to the inverse sine function, from -1 to 1 inclusive (error is higher approaching -1 or 1)
 //     * @return an output from the inverse sine function, from -PI/2 to PI/2 inclusive.
 //     */
@@ -794,7 +790,10 @@ public final class TrigTools {
 //     * Arc cosine approximation with fairly low error while still being faster than {@link NumberTools#cos(double)}.
 //     * This formula is number 201 in <a href=">http://www.fastcode.dk/fastcodeproject/articles/index.htm">Dennis
 //     * Kjaer Christensen's unfinished math work on arc sine approximation</a>, with a basic change to go from arc sine
-//     * to arc cosine. This method is faster than {@link Math#acos(double)}. Fast but imprecise.
+//     * to arc cosine. This method is faster than {@link Math#acos(double)}. Fast but imprecise. This is what libGDX
+//     * uses as of version 1.9.12.
+//     * <br>
+//     * Accuracy: absolute error 0.007147890, relative error 0.000007273, max error 0.023241493
 //     * @param a an input to the inverse cosine function, from -1 to 1 inclusive (error is higher approaching -1 or 1)
 //     * @return an output from the inverse cosine function, from 0 to PI inclusive.
 //     */
@@ -808,7 +807,9 @@ public final class TrigTools {
 //     * This formula is number 201 in <a href=">http://www.fastcode.dk/fastcodeproject/articles/index.htm">Dennis
 //     * Kjaer Christensen's unfinished math work on arc sine approximation</a>, with a basic change to go from arc sine
 //     * to arc cosine. This method is faster than {@link Math#acos(double)}, and takes and returns a float. Fast but
-//     * imprecise.
+//     * imprecise. This is what libGDX uses as of version 1.9.12.
+//     * <br>
+//     * Accuracy: absolute error 0.007147890, relative error 0.000007273, max error 0.023241493
 //     * @param a an input to the inverse cosine function, from -1 to 1 inclusive (error is higher approaching -1 or 1)
 //     * @return an output from the inverse cosine function, from 0 to PI inclusive.
 //     */
