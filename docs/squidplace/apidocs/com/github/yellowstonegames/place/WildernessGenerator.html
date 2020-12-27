@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":9,"i5":9,"i6":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":9,"i7":9,"i8":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code></dd>
+<dd><code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code>, <code>java.io.Serializable</code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public class <span class="type-name-label">WildernessGenerator</span>
 extends java.lang.Object
-implements java.io.Serializable</pre>
+implements <a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a>, java.io.Serializable</pre>
 <div class="block">A finite 2D area map for some kind of wilderness, adapting to different ecosystems by changing its output.
  Regional maps for wilderness areas have very different requirements from mostly-artificial dungeons. This is intended
  to work alongside the squidworld module to produce local outdoor maps for specified biomes in a large map, for
@@ -167,18 +167,28 @@ implements java.io.Serializable</pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>int</code></td>
+<td class="col-first"><code><a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#biome">biome</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>int[][]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#content">content</a></span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#colors">colors</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#content">content</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contentTypes">contentTypes</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#environment">environment</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
@@ -192,21 +202,26 @@ implements java.io.Serializable</pre>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>char[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#grid">grid</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#height">height</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>com.github.tommyettinger.ds.support.LaserRandom</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>com.github.tommyettinger.ds.ObjectLongMap&lt;java.lang.String&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#viewer">viewer</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#width">width</a></span></code></th>
 <td class="col-last">&nbsp;</td>
@@ -235,38 +250,38 @@ implements java.io.Serializable</pre>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,int)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome)</code></th>
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,int,long,long)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,long,long)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 long&nbsp;seedA,
 long&nbsp;seedB)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;contentTypes)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;floorTypes,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;contentTypes,
@@ -296,27 +311,27 @@ com.github.tommyettinger.ds.ObjectLongMap&lt;java.lang.String&gt;&nbsp;viewer)</
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contentByBiome(int,com.github.tommyettinger.ds.support.LaserRandom)">contentByBiome</a></span>&#8203;(int&nbsp;biome,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">contentByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 <td class="col-last">
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectLongMap&lt;java.lang.String&gt;</code></td>
+<td class="col-first"><code>static com.github.tommyettinger.ds.ObjectLongOrderedMap&lt;java.lang.String&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#defaultViewer()">defaultViewer</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#floorsByBiome(int,com.github.tommyettinger.ds.support.LaserRandom)">floorsByBiome</a></span>&#8203;(int&nbsp;biome,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">floorsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 <td class="col-last">
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code>void</code></td>
+<td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generate()">generate</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Produces a map by filling the <a href="#floors"><code>floors</code></a> 2D array with indices into <a href="#floorTypes"><code>floorTypes</code></a>, and similarly
@@ -324,21 +339,37 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i4">
+<td class="col-first"><code>int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getEnvironment()">getEnvironment</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
+ in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code>char[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getPlaceGrid()">getPlaceGrid</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Gets the most recently-produced place as a 2D char array, usually produced by calling <a href="#generate()"><code>generate()</code></a> or
+ some similar method present in a specific implementation.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeRepeats(java.lang.Object...)">makeRepeats</a></span>&#8203;(java.lang.Object...&nbsp;rest)</code></th>
 <td class="col-last">
 <div class="block">Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeShuffledRepeats(com.github.tommyettinger.ds.support.LaserRandom,java.lang.Object...)">makeShuffledRepeats</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
 java.lang.Object...&nbsp;rest)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#pathsByBiome(int)">pathsByBiome</a></span>&#8203;(int&nbsp;biome)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#pathsByBiome(com.github.yellowstonegames.place.Biome)">pathsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</code></th>
 <td class="col-last">
 <div class="block">Gets a list of Strings that are really just the names of types of path tile for wilderness areas.</div>
 </td>
@@ -376,7 +407,7 @@ java.lang.Object...&nbsp;rest)</code></th>
 <li>
 <section class="detail" id="biome">
 <h3>biome</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">biome</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></span>&nbsp;<span class="member-name">biome</span></div>
 </section>
 </li>
 <li>
@@ -415,6 +446,24 @@ java.lang.Object...&nbsp;rest)</code></th>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">floors</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="colors">
+<h3>colors</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">colors</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="environment">
+<h3>environment</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">environment</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="grid">
+<h3>grid</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="member-name">grid</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -430,48 +479,48 @@ java.lang.Object...&nbsp;rest)</code></th>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">WildernessGenerator</span>&#8203;(<span class="parameters">int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome)</span></div>
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,long,long)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,long,long)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">WildernessGenerator</span>&#8203;(<span class="parameters">int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 long&nbsp;seedA,
 long&nbsp;seedB)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">WildernessGenerator</span>&#8203;(<span class="parameters">int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">WildernessGenerator</span>&#8203;(<span class="parameters">int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;contentTypes)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">WildernessGenerator</span>&#8203;(<span class="parameters">int&nbsp;width,
 int&nbsp;height,
-int&nbsp;biome,
+<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;floorTypes,
 com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;&nbsp;contentTypes,
@@ -509,9 +558,9 @@ java.lang.Object...&nbsp;rest)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="floorsByBiome(int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
 <h3>floorsByBiome</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">floorsByBiome</span>&#8203;(<span class="parameters">int&nbsp;biome,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">floorsByBiome</span>&#8203;(<span class="parameters"><a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 <dl class="notes">
@@ -524,9 +573,9 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="pathsByBiome(int)">
+<section class="detail" id="pathsByBiome(com.github.yellowstonegames.place.Biome)">
 <h3>pathsByBiome</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">pathsByBiome</span>&#8203;(<span class="parameters">int&nbsp;biome)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">pathsByBiome</span>&#8203;(<span class="parameters"><a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</span></div>
 <div class="block">Gets a list of Strings that are really just the names of types of path tile for wilderness areas.
  Not currently used.</div>
 <dl class="notes">
@@ -538,9 +587,9 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="contentByBiome(int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
 <h3>contentByBiome</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">contentByBiome</span>&#8203;(<span class="parameters">int&nbsp;biome,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">contentByBiome</span>&#8203;(<span class="parameters"><a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
 com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 <dl class="notes">
@@ -555,13 +604,13 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
 <li>
 <section class="detail" id="defaultViewer()">
 <h3>defaultViewer</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectLongMap&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">defaultViewer</span>()</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectLongOrderedMap&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">defaultViewer</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="generate()">
 <h3>generate</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">generate</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="member-name">generate</span>()</div>
 <div class="block">Produces a map by filling the <a href="#floors"><code>floors</code></a> 2D array with indices into <a href="#floorTypes"><code>floorTypes</code></a>, and similarly
  filling the <a href="#content"><code>content</code></a> 2D array with indices into <a href="#contentTypes"><code>contentTypes</code></a>. You only need to call this method
  when you first generate a map with the specific parameters you want, such as biome, and later if you want another
@@ -569,6 +618,41 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
  <br>
  Virtually all of this method is a wrapper around functionality provided by <code>BlueNoise</code>, adjusted to fit
  wilderness maps slightly.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PlaceGenerator.html#generate()">generate</a></code>&nbsp;in interface&nbsp;<code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code></dd>
+<dt>Returns:</dt>
+<dd>a 2D char array representing some kind of map, probably using standard conventions for walls/floors</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPlaceGrid()">
+<h3>getPlaceGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="member-name">getPlaceGrid</span>()</div>
+<div class="block">Gets the most recently-produced place as a 2D char array, usually produced by calling <a href="#generate()"><code>generate()</code></a> or
+ some similar method present in a specific implementation. This normally passes a direct reference and not a
+ copy, so you can normally modify the returned array to propagate changes back into this IPlaceGenerator.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PlaceGenerator.html#getPlaceGrid()">getPlaceGrid</a></code>&nbsp;in interface&nbsp;<code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code></dd>
+<dt>Returns:</dt>
+<dd>the most recently-produced dungeon/place as a 2D char array</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEnvironment()">
+<h3>getEnvironment</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">getEnvironment</span>()</div>
+<div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
+ in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PlaceGenerator.html#getEnvironment()">getEnvironment</a></code>&nbsp;in interface&nbsp;<code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code></dd>
+<dt>Returns:</dt>
+<dd>the environment of the most recently-produced place, as a 2D int array</dd>
+</dl>
 </section>
 </li>
 </ul>

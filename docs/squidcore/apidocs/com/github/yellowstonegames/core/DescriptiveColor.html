@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -566,11 +566,12 @@ float&nbsp;change)</code></th>
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code>static float</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lerp(float,float,float)">lerp</a></span>&#8203;(float&nbsp;fromValue,
-float&nbsp;toValue,
-float&nbsp;progress)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#inverseIntensity(int,int)">inverseIntensity</a></span>&#8203;(int&nbsp;mainColor,
+int&nbsp;contrastingColor)</code></th>
 <td class="col-last">
-<div class="block">Linearly interpolates between fromValue to toValue on progress position.</div>
+<div class="block">Given a packed IPT int color <code>mainColor</code> and another IPT color that it should be made to contrast with,
+ gets a packed IPT int color with roughly inverted intensity but the same chromatic channels and opacity (P and T
+ are likely to be clamped if the result gets close to white or black).</div>
 </td>
 </tr>
 <tr class="alt-color" id="i6">
@@ -600,6 +601,17 @@ float&nbsp;change)</code></th>
 </tr>
 <tr class="row-color" id="i9">
 <td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;intensity,
+int&nbsp;protan,
+int&nbsp;tritan,
+int&nbsp;alpha)</code></th>
+<td class="col-last">
+<div class="block">Iteratively checks whether the given IPT color is in-gamut, and either brings the color closer to 50% gray if it
+ isn't in-gamut, or returns it as soon as it is in-gamut.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mix(int%5B%5D,int,int)">mix</a></span>&#8203;(int[]&nbsp;colors,
 int&nbsp;offset,
 int&nbsp;size)</code></th>
@@ -607,14 +619,14 @@ int&nbsp;size)</code></th>
 <div class="block">Given several colors, this gets an even mix of all colors in equal measure.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parseDescription(java.lang.CharSequence)">parseDescription</a></span>&#8203;(java.lang.CharSequence&nbsp;description)</code></th>
 <td class="col-last">
 <div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parseDescription(java.lang.CharSequence,int,int)">parseDescription</a></span>&#8203;(java.lang.CharSequence&nbsp;description,
 int&nbsp;start,
@@ -623,7 +635,7 @@ int&nbsp;length)</code></th>
 <div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(java.lang.CharSequence&nbsp;markupString)</code></th>
 <td class="col-last">
@@ -632,14 +644,14 @@ int&nbsp;length)</code></th>
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#saturation(int)">saturation</a></span>&#8203;(int&nbsp;iptColor)</code></th>
 <td class="col-last">
 <div class="block">Gets the saturation of the given encoded color, as a float ranging from 0.0f to 1.0f, inclusive.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toRGBA8888(int)">toRGBA8888</a></span>&#8203;(int&nbsp;decoded)</code></th>
 <td class="col-last">
@@ -1559,21 +1571,6 @@ int&nbsp;length)</code></th>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="lerp(float,float,float)">
-<h3>lerp</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">lerp</span>&#8203;(<span class="parameters">float&nbsp;fromValue,
-float&nbsp;toValue,
-float&nbsp;progress)</span></div>
-<div class="block">Linearly interpolates between fromValue to toValue on progress position.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>fromValue</code> - starting float value; can be any finite float</dd>
-<dd><code>toValue</code> - ending float value; can be any finite float</dd>
-<dd><code>progress</code> - how far the interpolation should go, between 0 (equal to fromValue) and 1 (equal to toValue)</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="toRGBA8888(int)">
 <h3>toRGBA8888</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">toRGBA8888</span>&#8203;(<span class="parameters">int&nbsp;decoded)</span></div>
@@ -1696,6 +1693,30 @@ float&nbsp;change)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="inverseIntensity(int,int)">
+<h3>inverseIntensity</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">inverseIntensity</span>&#8203;(<span class="parameters">int&nbsp;mainColor,
+int&nbsp;contrastingColor)</span></div>
+<div class="block">Given a packed IPT int color <code>mainColor</code> and another IPT color that it should be made to contrast with,
+ gets a packed IPT int color with roughly inverted intensity but the same chromatic channels and opacity (P and T
+ are likely to be clamped if the result gets close to white or black). This won't ever produce black or other very
+ dark colors, and also has a gap in the range it produces for intensity values between 0.5 and 0.55. That allows
+ most of the colors this method produces to contrast well as a foreground when displayed on a background of
+ <code>contrastingColor</code>, or vice versa. This will leave the intensity unchanged if the chromatic channels of the
+ contrastingColor and those of the mainColor are already very different. This has nothing to do with the contrast
+ channel of the tweak in ColorfulBatch; where that part of the tweak can make too-similar lightness values further
+ apart by just a little, this makes a modification on <code>mainColor</code> to maximize its lightness difference from
+ <code>contrastingColor</code> without losing its other qualities.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mainColor</code> - a packed IPT int color, as from one of the constants in this class; this is the color that will be adjusted</dd>
+<dd><code>contrastingColor</code> - a packed IPT int color, as from one of the constants in this class; the adjusted mainColor will contrast with this</dd>
+<dt>Returns:</dt>
+<dd>a different IPT int color, based on mainColor but with potentially very different lightness</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="limitToGamut(int)">
 <h3>limitToGamut</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">limitToGamut</span>&#8203;(<span class="parameters">int&nbsp;packed)</span></div>
@@ -1704,6 +1725,26 @@ float&nbsp;change)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>packed</code> - a packed IPT int color; often this color is not in-gamut</dd>
+<dt>Returns:</dt>
+<dd>the first color this finds that is between the given IPT color and 50% gray, and is in-gamut</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="limitToGamut(int,int,int,int)">
+<h3>limitToGamut</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">limitToGamut</span>&#8203;(<span class="parameters">int&nbsp;intensity,
+int&nbsp;protan,
+int&nbsp;tritan,
+int&nbsp;alpha)</span></div>
+<div class="block">Iteratively checks whether the given IPT color is in-gamut, and either brings the color closer to 50% gray if it
+ isn't in-gamut, or returns it as soon as it is in-gamut.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>intensity</code> - from 0 to 255</dd>
+<dd><code>protan</code> - from 0 to 255; 127 or 128 is the approximate grayscale point</dd>
+<dd><code>tritan</code> - from 0 to 255; 127 or 128 is the approximate grayscale point</dd>
+<dd><code>alpha</code> - from 0 to 255; the least significant bit isn't used, so you can use 254 and get an opaque value</dd>
 <dt>Returns:</dt>
 <dd>the first color this finds that is between the given IPT color and 50% gray, and is in-gamut</dd>
 </dl>

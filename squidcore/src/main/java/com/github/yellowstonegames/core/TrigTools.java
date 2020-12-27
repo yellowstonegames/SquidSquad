@@ -369,7 +369,7 @@ public final class TrigTools {
         double ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         double z = invert ? ax / ay : ay / ax;
-        z = ((((0.141499  * z) - 0.343315 ) * z - 0.016224 ) * z + 1.003839 ) * z - 0.000158 ;
+        z = (((0.141499  * z - 0.343315 ) * z - 0.016224 ) * z + 1.003839 ) * z - 0.000158 ;
         if (invert) z = 1.5707963267948966 - z;
         if (x < 0) z = 3.141592653589793 - z;
         return Math.copySign(z, y);
@@ -397,7 +397,7 @@ public final class TrigTools {
         float ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         float z = invert ? ax / ay : ay / ax;
-        z = ((((0.141499f * z) - 0.343315f) * z - 0.016224f) * z + 1.003839f) * z - 0.000158f;
+        z = (((0.141499f * z - 0.343315f) * z - 0.016224f) * z + 1.003839f) * z - 0.000158f;
         if (invert) z = 1.5707963267948966f - z;
         if (x < 0) z = 3.141592653589793f - z;
         return Math.copySign(z, y);
@@ -424,7 +424,7 @@ public final class TrigTools {
         double ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         double z = invert ? ax/ay : ay/ax;
-        z = (((((0.022520265292560102) * z) - (0.054640279287594046)) * z - (0.0025821297967229097)) * z + (0.1597659389184251)) * z - (0.000025146481008519463);
+        z = (((0.022520265292560102 * z - 0.054640279287594046) * z - 0.0025821297967229097) * z + 0.1597659389184251) * z - 0.000025146481008519463;
         if(invert) z = 0.25 - z;
         if(x < 0) z = 0.5 - z;
         return y < 0 ? (int)(1+z) - z : z;
@@ -451,7 +451,7 @@ public final class TrigTools {
         float ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         float z = invert ? ax/ay : ay/ax;
-        z = (((((0.022520265292560102f) * z) - (0.054640279287594046f)) * z - (0.0025821297967229097f)) * z + (0.1597659389184251f)) * z - (0.000025146481008519463f);
+        z = (((0.022520265292560102f * z - 0.054640279287594046f) * z - 0.0025821297967229097f) * z + 0.1597659389184251f) * z - 0.000025146481008519463f;
         if(invert) z = 0.25f - z;
         if(x < 0) z = 0.5f - z;
         return y < 0 ? (int)(1+z) - z : z;
@@ -480,7 +480,7 @@ public final class TrigTools {
         double ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         double z = invert ? ax / ay : ay / ax;
-        z = (((((8.107295505321636)  * z) - (19.670500543533855) ) * z - (0.9295667268202475) ) * z + (57.51573801063304) ) * z - (0.009052733163067006) ;
+        z = (((8.107295505321636 * z - 19.670500543533855) * z - 0.9295667268202475) * z + 57.51573801063304) * z - 0.009052733163067006;
         if (invert) z = 90 - z;
         if (x < 0) z = 180 - z;
         return Math.copySign(z, y);
@@ -509,7 +509,7 @@ public final class TrigTools {
         float ax = Math.abs(x), ay = Math.abs(y);
         boolean invert = ay > ax;
         float z = invert ? ax / ay : ay / ax;
-        z = (((((8.107295505321636f)  * z) - (19.670500543533855f) ) * z - (0.9295667268202475f) ) * z + (57.51573801063304f) ) * z - (0.009052733163067006f) ;
+        z = (((8.107295505321636f * z - 19.670500543533855f) * z - 0.9295667268202475f) * z + 57.51573801063304f) * z - 0.009052733163067006f;
         if (invert) z = 90 - z;
         if (x < 0) z = 180 - z;
         return Math.copySign(z, y);
@@ -538,7 +538,7 @@ public final class TrigTools {
         double ay = Math.abs(y), ax = Math.abs(x);
         boolean invert = ay > ax;
         double z = invert ? ax / ay : ay / ax;
-        z = (((((8.107295505321636)  * z) - (19.670500543533855) ) * z - (0.9295667268202475) ) * z + (57.51573801063304) ) * z - (0.009052733163067006) ;
+        z = (((8.107295505321636 * z - 19.670500543533855) * z - 0.9295667268202475) * z + 57.51573801063304) * z - 0.009052733163067006;
         if (invert) z = 90 - z;
         if (x < 0) z = 180 - z;
         return y < 0 ? 360 - z : z;
@@ -566,7 +566,7 @@ public final class TrigTools {
         float ax = Math.abs(x), ay = Math.abs(y);
         boolean invert = ay > ax;
         float z = invert ? ax / ay : ay / ax;
-        z = (((((8.107295505321636f)  * z) - (19.670500543533855f) ) * z - (0.9295667268202475f) ) * z + (57.51573801063304f) ) * z - (0.009052733163067006f) ;
+        z = (((8.107295505321636f * z - 19.670500543533855f) * z - 0.9295667268202475f) * z + 57.51573801063304f) * z - 0.009052733163067006f;
         if (invert) z = 90 - z;
         if (x < 0) z = 180 - z;
         return y < 0 ? 360 - z : z;
@@ -589,7 +589,7 @@ public final class TrigTools {
                     (1.5707288f - 0.2121144f * x + 0.0742610f * x2 - 0.0187293f * x3);
         }
         else {
-            return -1.5707963267948966f + (float) Math.sqrt(1f + x) *
+            return -1.5707964f + (float) Math.sqrt(1f + x) *
                     (1.5707288f + 0.2121144f * x + 0.0742610f * x2 + 0.0187293f * x3);
         }
     }
@@ -662,23 +662,20 @@ public final class TrigTools {
      * range from 0.75 (inclusive) to 1.0 (exclusive), and continuing past that to 0.0 (inclusive) to 0.25 (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param n a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
+     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
      * @return one of the values that would produce {@code n} if it were passed to {@link #sin_(double)}
      */
-    public static double asin_(final double n)
+    public static double asin_(final double x)
     {
-        if(n == 0.0) return 0.0;
-        final double ax = Math.sqrt(1.0 - n * n), ay = Math.abs(n);
-        if(ax < ay)
-        {
-            final double a = ax / ay, s = a * a,
-                    r = 0.25 - (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a) * 0.15915494309189535;
-            return (n < 0.0) ? 1.0 - r : r;
+        final double x2 = x * x;
+        final double x3 = x * x2;
+        if (x >= 0.0) {
+            return 0.25 - Math.sqrt(1.0 - x) *
+                    (0.24998925277680106 - 0.033759055260971525 * x + 0.01181900522894724 * x2 - 0.0029808606756510357 * x3);
         }
         else {
-            final double a = ay / ax, s = a * a,
-                    r = (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a) * 0.15915494309189535;
-            return (n < 0.0) ? 1.0 - r : r;
+            return 0.75 + Math.sqrt(1.0 + x) *
+                    (0.24998925277680106 + 0.033759055260971525 * x + 0.01181900522894724 * x2 + 0.0029808606756510357 * x3);
         }
     }
     /**
@@ -686,22 +683,18 @@ public final class TrigTools {
      * range from 0.0 (inclusive) to 0.5 (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param n a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
+     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
      * @return one of the values that would produce {@code n} if it were passed to {@link #cos_(double)}
      */
-    public static double acos_(final double n)
+    public static double acos_(final double x)
     {
-        final double ax = Math.abs(n), ay = Math.sqrt(1.0 - n * n);
-        if(ax < ay)
-        {
-            final double a = ax / ay, s = a * a,
-                    r = 0.25 - (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a) * 0.15915494309189535;
-            return (n < 0.0) ? 0.5 - r : r;
+        final double x2 = x * x;
+        final double x3 = x * x2;
+        if (x >= 0.0) {
+            return Math.sqrt(1.0 - x) * (0.24998925277680106 - 0.033759055260971525 * x + 0.01181900522894724 * x2 - 0.0029808606756510357 * x3);
         }
         else {
-            final double a = ay / ax, s = a * a,
-                    r = (((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a) * 0.15915494309189535;
-            return (n < 0.0) ? 0.5 - r : r;
+            return 0.5 - Math.sqrt(1.0 + x) * (0.24998925277680106 + 0.033759055260971525 * x + 0.01181900522894724 * x2 + 0.0029808606756510357 * x3);
         }
     }
 
@@ -712,23 +705,20 @@ public final class TrigTools {
      * (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param n a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
+     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
      * @return one of the values that would produce {@code n} if it were passed to {@link #sin_(float)}
      */
-    public static float asin_(final float n)
+    public static float asin_(final float x)
     {
-        if(n == 0.0f) return 0.0f;
-        final float ax = (float) Math.sqrt(1f - n * n), ay = Math.abs(n);
-        if(ax < ay)
-        {
-            final float a = ax / ay, s = a * a,
-                    r = 0.25f - (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a) * 0.15915494309189535f;
-            return (n < 0.0f) ? 1.0f - r : r;
+        final float x2 = x * x;
+        final float x3 = x * x2;
+        if (x >= 0f) {
+            return 0.25f - (float) Math.sqrt(1f - x) *
+                    (0.24998925277680106f - 0.033759055260971525f * x + 0.01181900522894724f * x2 - 0.0029808606756510357f * x3);
         }
         else {
-            final float a = ay / ax, s = a * a,
-                    r = (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a) * 0.15915494309189535f;
-            return (n < 0.0f) ? 1.0f - r : r;
+            return 0.75f + (float) Math.sqrt(1f + x) *
+                    (0.24998925277680106f + 0.033759055260971525f * x + 0.01181900522894724f * x2 + 0.0029808606756510357f * x3);
         }
     }
     /**
@@ -736,22 +726,18 @@ public final class TrigTools {
      * range from 0.0f (inclusive) to 0.5f (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param n a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
+     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
      * @return one of the values that would produce {@code n} if it were passed to {@link #cos_(float)}
      */
-    public static float acos_(final float n)
+    public static float acos_(final float x)
     {
-        final float ax = Math.abs(n), ay = (float) Math.sqrt(1f - n * n);
-        if(ax < ay)
-        {
-            final float a = ax / ay, s = a * a,
-                    r = 0.25f - (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a) * 0.15915494309189535f;
-            return (n < 0.0f) ? 0.5f - r : r;
+        final float x2 = x * x;
+        final float x3 = x * x2;
+        if (x >= 0f) {
+            return (float) Math.sqrt(1f - x) * (0.24998925277680106f - 0.033759055260971525f * x + 0.01181900522894724f * x2 - 0.0029808606756510357f * x3);
         }
         else {
-            final float a = ay / ax, s = a * a,
-                    r = (((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a) * 0.15915494309189535f;
-            return (n < 0.0f) ? 0.5f - r : r;
+            return 0.5f - (float) Math.sqrt(1f + x) * (0.24998925277680106f + 0.033759055260971525f * x + 0.01181900522894724f * x2 + 0.0029808606756510357f * x3);
         }
     }
 

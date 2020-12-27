@@ -105,20 +105,6 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CAVE_FLOOR">CAVE_FLOOR</a></span></code></th>
-<td class="col-last">
-<div class="block">Constant for environment tiles that are floors for a cave.</div>
-</td>
-</tr>
-<tr class="row-color">
-<td class="col-first"><code>static int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CAVE_WALL">CAVE_WALL</a></span></code></th>
-<td class="col-last">
-<div class="block">Constant for environment tiles that are walls near a cave.</div>
-</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CORRIDOR_FLOOR">CORRIDOR_FLOOR</a></span></code></th>
 <td class="col-last">
 <div class="block">Constant for environment tiles that are floors for a corridor.</div>
@@ -129,6 +115,20 @@ extends java.lang.Object</pre>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CORRIDOR_WALL">CORRIDOR_WALL</a></span></code></th>
 <td class="col-last">
 <div class="block">Constant for environment tiles that are walls near a corridor.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#NATURAL_FLOOR">NATURAL_FLOOR</a></span></code></th>
+<td class="col-last">
+<div class="block">Constant for environment tiles that are floors for a cave or other natural part of a map.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#NATURAL_WALL">NATURAL_WALL</a></span></code></th>
+<td class="col-last">
+<div class="block">Constant for environment tiles that are walls near a cave or other natural part of a map.</div>
 </td>
 </tr>
 <tr class="alt-color">
@@ -367,26 +367,28 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 </section>
 </li>
 <li>
-<section class="detail" id="CAVE_FLOOR">
-<h3>CAVE_FLOOR</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">CAVE_FLOOR</span></div>
-<div class="block">Constant for environment tiles that are floors for a cave. Value is 3.
- Used by several classes that distinguish types of dungeon environment.</div>
+<section class="detail" id="NATURAL_FLOOR">
+<h3>NATURAL_FLOOR</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">NATURAL_FLOOR</span></div>
+<div class="block">Constant for environment tiles that are floors for a cave or other natural part of a map.
+ Value is 3. Used by several classes that distinguish types of dungeon environment. Also
+ used by <a href="WildernessGenerator.html" title="class in com.github.yellowstonegames.place"><code>WildernessGenerator</code></a> for almost everything it generates.</div>
 <dl class="notes">
 <dt>See Also:</dt>
-<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.place.DungeonTools.CAVE_FLOOR">Constant Field Values</a></dd>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.place.DungeonTools.NATURAL_FLOOR">Constant Field Values</a></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="CAVE_WALL">
-<h3>CAVE_WALL</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">CAVE_WALL</span></div>
-<div class="block">Constant for environment tiles that are walls near a cave. Value is 4.
- Used by several classes that distinguish types of dungeon environment.</div>
+<section class="detail" id="NATURAL_WALL">
+<h3>NATURAL_WALL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">NATURAL_WALL</span></div>
+<div class="block">Constant for environment tiles that are walls near a cave or other natural part of a map.
+ Value is 4. Used by several classes that distinguish types of dungeon environment. May be
+ used by <a href="WildernessGenerator.html" title="class in com.github.yellowstonegames.place"><code>WildernessGenerator</code></a> for ledges and other natural obstacles.</div>
 <dl class="notes">
 <dt>See Also:</dt>
-<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.place.DungeonTools.CAVE_WALL">Constant Field Values</a></dd>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.place.DungeonTools.NATURAL_WALL">Constant Field Values</a></dd>
 </dl>
 </section>
 </li>

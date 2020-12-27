@@ -91,7 +91,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  produced by DungeonBoneGen or another dungeon without such effects. This class uses
  environment information for the dungeons it is given (or quickly generates such information if using DungeonBoneGen),
  and uses that information to only place effects like grass or water where you specify, like "only in caves", or
- "doors should never be in caves". Ensures only connected regions of the map are used by filling unreachable areas
+ "boulders should never be in rooms". Ensures only connected regions of the map are used by filling unreachable areas
  with walls, and can find far-apart staircase positions if generate() is used or can keep existing staircases in a map
  if generateRespectingStairs() is used.
  <br>
@@ -117,17 +117,14 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  from the stairsUp and stairsDown fields, which are Coords that should be a long distance from each other but
  connected in the dungeon. You may want to change those to staircase characters, but there's no requirement to do
  anything with them. It's recommended that you keep the resulting char[][] maps in some collection that can be saved,
- since DungeonProcessor only stores a temporary copy of the most recently-generated map. The DungeonTools
- field of this class, utility, is a convenient way of accessing the non-static methods in that class, such as
- randomFloor(), without needing to create another DungeonTools (this class creates one, so you don't have to).
- Similarly, the Placement field of this class, placement, can be used to find parts of a dungeon that fit certain
- qualities for the placement of items, terrain features, or NPCs.
+ since DungeonProcessor only stores a temporary copy of the most recently-generated map. The Placement field of this
+ class, placement, can be used to find parts of a dungeon that fit certain qualities for the placement of items,
+ terrain features, or NPCs. If you don't need Placement, the simplest way to get random cells from the map is probably
+ to use <code>Region(char[][], char)</code> with the dungeon this made and <code>'.'</code> as the parameters, then call
+ <code>Region.singleRandom(Random)</code> on that to choose random cells, optionally removing the chosen cells if you don't
+ want duplicates.
  <br>
  Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>this class exposes a DungeonTools member; DungeonTools also has many useful static methods</code></a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -535,7 +532,7 @@ int[][]&nbsp;environment)</code></th>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getEnvironment()">getEnvironment</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
- in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#CAVE_WALL"><code>DungeonTools.CAVE_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
+ in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i16">
@@ -985,7 +982,7 @@ int[][]&nbsp;environment)</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">getEnvironment</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PlaceGenerator.html#getEnvironment()">PlaceGenerator</a></code></span></div>
 <div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
- in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#CAVE_WALL"><code>DungeonTools.CAVE_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
+ in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PlaceGenerator.html#getEnvironment()">getEnvironment</a></code>&nbsp;in interface&nbsp;<code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code></dd>

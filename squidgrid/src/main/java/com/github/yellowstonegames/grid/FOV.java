@@ -373,7 +373,7 @@ public class FOV implements Serializable {
         light[startX][startY] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
         angle *= 0.002777777777777778f;
         angle -= MathTools.fastFloor(angle);
-        span = span * 0.002777777777777778f;
+        span *= 0.002777777777777778f;
 
 
         light = shadowCastLimited(1, 1.0f, 0.0f, 0, 1, 1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, angle, span);
@@ -437,7 +437,7 @@ public class FOV implements Serializable {
         lightWorkspace.resizeAndEmpty(light.length, light[0].length);
         angle *= 0.002777777777777778f;
         angle -= MathTools.fastFloor(angle);
-        span = span * 0.002777777777777778f;
+        span *= 0.002777777777777778f;
         doRippleFOV(light, MathTools.clamp(rippleLooseness, 1, 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique, angle, span);
         return light;
     }
