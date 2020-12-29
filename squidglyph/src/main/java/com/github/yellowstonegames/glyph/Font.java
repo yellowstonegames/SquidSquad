@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.yellowstonegames.core.DigitTools;
-    
+
 public class Font {
     public IntObjectMap<TextureRegion> mapping;
     public Texture parentTexture;
@@ -36,14 +36,14 @@ public class Font {
             throw new RuntimeException("Missing font file: " + fntName);
         }
         int idx = indexAfter(fnt, "\nchars count=", 0);
-        int size = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+        int size = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
         mapping = new IntObjectMap<>(size);
         for (int i = 0; i < size ; i++) {
-            int c = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\n x=", idx));
-            int x = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\n y=", idx));
-            int y = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\n width=", idx));
-            int w = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\n height=", idx));
-            int h = DigitTools.intFromBin(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+            int c = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " x=", idx));
+            int x = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " y=", idx));
+            int y = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " width=", idx));
+            int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " height=", idx));
+            int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
     }

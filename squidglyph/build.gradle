@@ -13,6 +13,8 @@ dependencies {
     api project(':squidgrid')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "junit:junit:4.13.1"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 jar {
