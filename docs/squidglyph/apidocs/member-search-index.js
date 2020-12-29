@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"com.github.yellowstonegames.glyph","c":"Font","l":"Font(String, String, boolean)","u":"%3Cinit%3E(java.lang.String,java.lang.String,boolean)"},{"p":"com.github.yellowstonegames.glyph","c":"Font","l":"mapping"},{"p":"com.github.yellowstonegames.glyph","c":"Font","l":"parentTexture"}];updateSearchResults();

@@ -10,7 +10,7 @@ public class Biome implements Serializable {
 
     public enum Heat {
         COLDEST("coldest"), COLDER("colder"), COLD("cold"), HOT("hot"), HOTTER("hotter"), HOTTEST("hottest");
-        final String name;
+        public final String name;
         Heat(final String n){
             name = n;
         }
@@ -23,7 +23,7 @@ public class Biome implements Serializable {
     public enum Moisture {
         DRIEST("driest"), DRIER("drier"), DRY("dry"), WET("wet"), WETTER("wetter"), WETTEST("wettest"),
         COAST("coast"), RIVER("river"), LAKE("lake"), OCEAN("ocean"), STRANGE("strange");
-        final String name;
+        public final String name;
         Moisture(final String n) {
             name = n;
         }

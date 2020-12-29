@@ -1,0 +1,23 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+ext.projectName = 'squidglyph'
+eclipse.project.name = ext.projectName
+modifyPom {
+    project {
+        name ext.projectName
+    }
+}
+sourceSets.test.resources.srcDirs += [ file('../assets').path ]
+
+dependencies {
+    api project(':squidcore')
+    api project(':squidgrid')
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    testImplementation "junit:junit:4.13.1"
+}
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
