@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.github.tommyettinger.ds.IntObjectMap;
@@ -18,6 +17,8 @@ public class Font {
     public boolean isMSDF;
     public float msdfCrispness = 1.2f;
     public float cellWidth = 1f, cellHeight = 1f;
+
+    private final float[] vertices = new float[20];
 
     public static final String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n"
             + "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n"
@@ -137,6 +138,53 @@ public class Font {
         batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
         for (int i = 0, n = text.length(); i < n; i++, x += cellWidth) {
             batch.draw(mapping.get(text.charAt(i)), x, y, cellWidth, cellHeight);
+        }
+    }
+
+    public void drawBlocks(Batch batch, int[][] colors, float x, float y) {
+        final TextureRegion block = mapping.get(0);
+
+        assert block != null;
+
+        final float u = block.getU() + (block.getU2() - block.getU()) * 0.25f,
+                v = block.getV() + (block.getV2() - block.getV()) * 0.25f,
+                u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f,
+                v2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
+        vertices[0] = x;
+        vertices[1] = y;
+        //vertices[2] = color;
+        vertices[3] = u;
+        vertices[4] = v;
+
+        vertices[5] = x;
+        vertices[6] = y + cellHeight;
+        //vertices[7] = color;
+        vertices[8] = u;
+        vertices[9] = v2;
+
+        vertices[10] = x + cellWidth;
+        vertices[11] = y + cellHeight;
+        //vertices[12] = color;
+        vertices[13] = u2;
+        vertices[14] = v2;
+
+        vertices[15] = x + cellWidth;
+        vertices[16] = y;
+        //vertices[17] = color;
+        vertices[18] = u2;
+        vertices[19] = v;
+        for (int xi = 0, xn = colors.length, yn = colors[0].length; xi < xn; xi++) {
+            for (int yi = 0; yi < yn; yi++) {
+                vertices[2] = vertices[7] = vertices[12] = vertices[17] =
+                        BitConversion.reversedIntBitsToFloat(colors[xi][yi] & -2);
+                batch.draw(parentTexture, vertices, 0, 20);
+                vertices[1] = vertices[16] += cellHeight;
+                vertices[6] = vertices[11] += cellHeight;
+            }
+            vertices[0] = vertices[5] += cellWidth;
+            vertices[10] = vertices[15] += cellWidth;
+            vertices[1] = vertices[16] = y;
+            vertices[6] = vertices[11] = y + cellHeight;
         }
     }
 }

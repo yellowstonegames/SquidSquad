@@ -15,6 +15,7 @@ public class FontTest extends ApplicationAdapter {
     Font font;
     SpriteBatch batch;
     LaserRandom random;
+    int[][] backgrounds;
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
@@ -29,22 +30,43 @@ public class FontTest extends ApplicationAdapter {
         random = new LaserRandom();
         batch = new SpriteBatch();
 //        font = new Font("Cozette.fnt", "Cozette.png", false);
-        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(2f, 2f);
+        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
+        backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
+        int nw = DescriptiveColor.describe("darker sage"), ne = DescriptiveColor.describe("dark rich cactus"),
+                sw = DescriptiveColor.describe("dull peach butter"), se = DescriptiveColor.describe("dark brown");
+        backgrounds[0][0] = sw;
+        backgrounds[0][backgrounds[0].length - 1] = nw;
+        backgrounds[backgrounds.length - 1][0] = se;
+        backgrounds[backgrounds.length - 1][backgrounds[0].length - 1] = ne;
+        for (int x = 1; x < backgrounds.length - 1; x++) {
+            backgrounds[x][0] = DescriptiveColor.lerpColors(sw, se, x / (float)backgrounds.length);
+            backgrounds[x][backgrounds[0].length - 1] = DescriptiveColor.lerpColors(nw, ne, x / (float)backgrounds.length);
+        }
+        for (int x = 0; x < backgrounds.length; x++) {
+            int s = backgrounds[x][0], e = backgrounds[x][backgrounds[0].length - 1];
+            for (int y = 1; y < backgrounds[0].length - 1; y++) {
+                backgrounds[x][y] = DescriptiveColor.lerpColors(s, e, y / (float)backgrounds[0].length);
+            }
+        }
     }
 
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 5, y = 200;
+        float x = 0, y = font.cellHeight * 3;
         batch.begin();
         font.enableShader(batch);
+
+        font.drawBlocks(batch, backgrounds, 0f, 0f);
+
         font.drawText(batch, "Hello, World!", x, y,
+                DescriptiveColor.lerpColors(
                 DescriptiveColor.lerpColors(
                         (int)((System.currentTimeMillis() >>> 10) * 0x9E3779B0 | 0xFE),
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
-                ));
+                ), 0x000000FF, 0.375f));
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
