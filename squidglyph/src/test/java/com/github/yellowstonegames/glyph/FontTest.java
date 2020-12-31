@@ -36,27 +36,15 @@ public class FontTest extends ApplicationAdapter {
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = 200, w = font.cellWidth, h = font.cellHeight;
+        float x = 5, y = 200;
         batch.begin();
         font.enableShader(batch);
-        batch.setPackedColor(BitConversion.reversedIntBitsToFloat(DescriptiveColor.lerpColors(
-                (int)((System.currentTimeMillis() >>> 10) * 0x9E377B00 | 0xFE),
-                (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E377B00 | 0xFE),
-                (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
-                )));
-        batch.draw(font.mapping.get('H'), x += w, y, w, h);
-        batch.draw(font.mapping.get('e'), x += w, y, w, h);
-        batch.draw(font.mapping.get('l'), x += w, y, w, h);
-        batch.draw(font.mapping.get('l'), x += w, y, w, h);
-        batch.draw(font.mapping.get('o'), x += w, y, w, h);
-        batch.draw(font.mapping.get(','), x += w, y, w, h);
-        x += w;
-        batch.draw(font.mapping.get('W'), x += w, y, w, h);
-        batch.draw(font.mapping.get('o'), x += w, y, w, h);
-        batch.draw(font.mapping.get('r'), x += w, y, w, h);
-        batch.draw(font.mapping.get('l'), x += w, y, w, h);
-        batch.draw(font.mapping.get('d'), x += w, y, w, h);
-        batch.draw(font.mapping.get('!'), x += w, y, w, h);
+        font.drawText(batch, "Hello, World!", x, y,
+                DescriptiveColor.lerpColors(
+                        (int)((System.currentTimeMillis() >>> 10) * 0x9E3779B0 | 0xFE),
+                        (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
+                        (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
+                ));
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

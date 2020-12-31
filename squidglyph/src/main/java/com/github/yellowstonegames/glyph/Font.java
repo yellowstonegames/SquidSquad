@@ -2,11 +2,14 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 
 public class Font {
@@ -93,6 +96,13 @@ public class Font {
         msdfCrispness = (msdfCrispness - 1f) / Math.max(horizontal, vertical) + 1f;
         return this;
     }
+
+    /**
+     * Must be called before drawing anything with an MSDF font; does not need to be called for other fonts unless you
+     * are mixing them with MSDF fonts or other shaders. This also resets the Batch color to white, in case it had been
+     * left with a different setting before.
+     * @param batch the Batch to instruct to use the appropriate shader for this font; often a SpriteBatch
+     */
     public void enableShader(Batch batch) {
         if(isMSDF){
             if(!batch.getShader().equals(msdfShader))
@@ -101,6 +111,32 @@ public class Font {
         }
         else {
             batch.setShader(null);
+        }
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+    }
+
+    /**
+     * Draws the specified text at the given x,y position (in world space) with a white foreground.
+     * @param batch typically a SpriteBatch
+     * @param text typically a String, but this can also be a StringBuilder or some custom class
+     * @param x the x position in world space to start drawing the text at (lower left corner)
+     * @param y the y position in world space to start drawing the text at (lower left corner)
+     */
+    public void drawText(Batch batch, CharSequence text, float x, float y) {
+        drawText(batch, text, x, y, -2);
+    }
+    /**
+     * Draws the specified text at the given x,y position (in world space) with a white foreground.
+     * @param batch typically a SpriteBatch
+     * @param text typically a String, but this can also be a StringBuilder or some custom class
+     * @param x the x position in world space to start drawing the text at (lower left corner)
+     * @param y the y position in world space to start drawing the text at (lower left corner)
+     * @param color an int color; typically this is RGBA, but custom shaders or Batches can use other kinds of color
+     */
+    public void drawText(Batch batch, CharSequence text, float x, float y, int color) {
+        batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
+        for (int i = 0, n = text.length(); i < n; i++, x += cellWidth) {
+            batch.draw(mapping.get(text.charAt(i)), x, y, cellWidth, cellHeight);
         }
     }
 }
