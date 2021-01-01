@@ -7,16 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 
-public class Font {
+public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
     public Texture parentTexture;
     public boolean isMSDF;
     public float msdfCrispness = 1.2f;
-    public float cellWidth = 1f, cellHeight = 1f;
+    public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f;
 
     private final float[] vertices = new float[20];
 
@@ -90,11 +91,19 @@ public class Font {
             cellHeight = h;
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
+        originalCellWidth = cellWidth;
+        originalCellHeight = cellHeight;
     }
     public Font scale(float horizontal, float vertical) {
         cellWidth *= horizontal;
         cellHeight *= vertical;
-        msdfCrispness = (msdfCrispness - 1f) / Math.max(horizontal, vertical) + 1f;
+//        msdfCrispness = (msdfCrispness - 1f) * vertical + 1f;
+        return this;
+    }
+    public Font scaleTo(float width, float height) {
+//        msdfCrispness = (msdfCrispness - 1f) * (height / cellHeight) + 1f;
+        cellWidth  = width;
+        cellHeight = height;
         return this;
     }
 
@@ -108,7 +117,8 @@ public class Font {
         if(isMSDF){
             if(!batch.getShader().equals(msdfShader))
                 batch.setShader(msdfShader);
-            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellWidth);
+            msdfShader.setUniformf("u_smoothing", 3.75f / (msdfCrispness));
+//            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellHeight);
         }
         else {
             batch.setShader(null);
@@ -127,7 +137,7 @@ public class Font {
         drawText(batch, text, x, y, -2);
     }
     /**
-     * Draws the specified text at the given x,y position (in world space) with a white foreground.
+     * Draws the specified text at the given x,y position (in world space) with the given foreground color.
      * @param batch typically a SpriteBatch
      * @param text typically a String, but this can also be a StringBuilder or some custom class
      * @param x the x position in world space to start drawing the text at (lower left corner)
@@ -141,6 +151,37 @@ public class Font {
         }
     }
 
+    /**
+     * Draws a single char with a foreground color, encoded in one long, at the given x,y position in world space.
+     * The {@code colorGlyph} parameter is a long that contains two separate values in its upper 32 and lower 32 bits;
+     * the upper 32 bits store a color, usually as RGBA, while the lower 32 bits store a codepoint, or more commonly, a
+     * char that will be drawn with that color. Some code may return long values with this format to pass around chars
+     * with colors without creating objects to store them.
+     * @param batch typically a SpriteBatch
+     * @param colorGlyph a long encoding a color (usually RGBA) in its upper 32 bits, and a char or codepoint in its lower 32 bits.
+     * @param x the x position in world space to draw the text at (lower left corner)
+     * @param y the y position in world space to draw the text at (lower left corner)
+     */
+    public void drawGlyph(Batch batch, long colorGlyph, float x, float y) {
+        batch.setPackedColor(BitConversion.reversedIntBitsToFloat((int) (colorGlyph >>> 32) & -2));
+        batch.draw(mapping.get((int) colorGlyph), x, y, cellWidth, cellHeight);
+    }
+
+    /**
+     * Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.
+     * The {@code colors} parameter should be a rectangular 2D array, and because any colors that are the default int
+     * value {@code 0} will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
+     * then nothing will be drawn there. This is usually called before other methods that draw foreground text.
+     * <br>
+     * Internally, this is substantially more complex than the other drawing methods; it uses
+     * {@link Batch#draw(Texture, float[], int, int)} to draw each rectangle with minimal overhead, and this also means
+     * it is unaffected by the batch color. If you want to alter the colors using a shader, the shader will receive each
+     * color in {@code colors} as its {@code a_color} attribute, the same as if it was passed via the batch color.
+     * @param batch typically a SpriteBatch
+     * @param colors a 2D rectangular array of int colors (typically RGBA)
+     * @param x the x position in world space to draw the text at (lower left corner)
+     * @param y the y position in world space to draw the text at (lower left corner)
+     */
     public void drawBlocks(Batch batch, int[][] colors, float x, float y) {
         final TextureRegion block = mapping.get(0);
 
@@ -186,5 +227,14 @@ public class Font {
             vertices[1] = vertices[16] = y;
             vertices[6] = vertices[11] = y + cellHeight;
         }
+    }
+
+    /**
+     * Releases all resources of this object.
+     */
+    @Override
+    public void dispose() {
+        mapping = null;
+        parentTexture.dispose();
     }
 }
