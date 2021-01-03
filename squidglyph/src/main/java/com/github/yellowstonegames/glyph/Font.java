@@ -117,7 +117,7 @@ public class Font implements Disposable {
         if(isMSDF){
             if(!batch.getShader().equals(msdfShader))
                 batch.setShader(msdfShader);
-            msdfShader.setUniformf("u_smoothing", 3.5f * cellHeight / (msdfCrispness * originalCellHeight));
+            msdfShader.setUniformf("u_smoothing", 5f * msdfCrispness * (cellHeight / originalCellHeight + cellWidth / originalCellWidth));
 //            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellHeight);
         }
         else {

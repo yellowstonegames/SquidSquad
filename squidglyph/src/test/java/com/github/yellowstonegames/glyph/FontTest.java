@@ -30,7 +30,9 @@ public class FontTest extends ApplicationAdapter {
         random = new LaserRandom();
         batch = new SpriteBatch();
 //        font = new Font("Cozette.fnt", "Cozette.png", false);
-        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
+        font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.75f, 0.75f);
+//        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.75f, 0.75f);
+//        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
         backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
         int nw = DescriptiveColor.describe("darker sage"), ne = DescriptiveColor.describe("dark rich cactus"),
                 sw = DescriptiveColor.describe("dull peach butter"), se = DescriptiveColor.describe("dark brown");
