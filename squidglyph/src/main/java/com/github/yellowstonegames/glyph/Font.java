@@ -16,7 +16,7 @@ public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
     public Texture parentTexture;
     public boolean isMSDF;
-    public float msdfCrispness = 1.2f;
+    public float msdfCrispness = 1f;
     public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f;
 
     private final float[] vertices = new float[20];
@@ -117,7 +117,7 @@ public class Font implements Disposable {
         if(isMSDF){
             if(!batch.getShader().equals(msdfShader))
                 batch.setShader(msdfShader);
-            msdfShader.setUniformf("u_smoothing", 3.75f / (msdfCrispness));
+            msdfShader.setUniformf("u_smoothing", 3.5f * cellHeight / (msdfCrispness * originalCellHeight));
 //            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellHeight);
         }
         else {

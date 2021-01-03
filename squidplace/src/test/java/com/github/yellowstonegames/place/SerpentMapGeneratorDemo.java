@@ -25,6 +25,7 @@ public class SerpentMapGeneratorDemo {
         char[][][] map3D = deepSerpent.generate();
         DungeonProcessor[] gens = new DungeonProcessor[depth];
         for (int i = 0; i < depth; i++) {
+            System.out.println("--------------------------------------------------- depth " + i);
             gens[i] = new DungeonProcessor(width, height, random);
             gens[i].addWater(3, random.nextInt(25));
             gens[i].addGrass(0, random.nextInt(15));
@@ -33,7 +34,6 @@ public class SerpentMapGeneratorDemo {
             gens[i].generateRespectingStairs(map3D[i], deepSerpent.getEnvironment(i));
             gens[i].setDungeon(LineTools.hashesToLines(gens[i].getPlaceGrid(), true));
             System.out.println(gens[i]);
-            System.out.println("------------------------------------------------------------");
         }
 
     }
