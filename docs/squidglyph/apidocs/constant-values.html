@@ -52,8 +52,42 @@ loadScripts(document, 'script');</script>
 <h1 title="Constant Field Values" class="title">Constant Field Values</h1>
 <section class="packages">
 <h2 title="Contents">Contents</h2>
+<ul>
+<li><a href="#com.github">com.github.*</a></li>
+</ul>
 </section>
 </div>
+<section class="constants-summary" id="com.github">
+<h2 title="com.github">com.github.*</h2>
+<ul class="block-list">
+<li>
+<div class="constants-summary">
+<table class="summary-table">
+<caption><span>com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Constant Field</th>
+<th class="col-last" scope="col">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.msdfFragmentShader">public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#msdfFragmentShader">msdfFragmentShader</a></code></th>
+<td class="col-last"><code>"#ifdef GL_ES\n\tprecision mediump float;\n\tprecision mediump int;\n#endif\n\nuniform sampler2D u_texture;\nuniform float u_smoothing;\nvarying vec4 v_color;\nvarying vec2 v_texCoords;\n\nvoid main() {\n  vec3 sdf = texture2D(u_texture, v_texCoords).rgb;\n  gl_FragColor = vec4(v_color.rgb, clamp((max(min(sdf.r, sdf.g), min(max(sdf.r, sdf.g), sdf.b)) - 0.5) * u_smoothing + 0.5, 0.0, 1.0) * v_color.a);\n}\n"</code></td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.vertexShader">public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#vertexShader">vertexShader</a></code></th>
+<td class="col-last"><code>"attribute vec4 a_position;\nattribute vec4 a_color;\nattribute vec2 a_texCoord0;\nuniform mat4 u_projTrans;\nvarying vec4 v_color;\nvarying vec2 v_texCoords;\n\nvoid main() {\n\tv_color = a_color;\n\tv_color.a = v_color.a * (255.0/254.0);\n\tv_texCoords = a_texCoord0;\n\tgl_Position =  u_projTrans * a_position;\n}\n"</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</section>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">

@@ -477,9 +477,9 @@ public class Thesaurus implements Serializable{
         m.getGroup(MatchResult.TARGET, dest);
 
         if(alterations.isEmpty())
-            return StringTools.replace(TextTools.correctABeforeVowel(dest.sb), "\t", "");
+            return StringTools.replace(StringTools.correctABeforeVowel(dest.sb), "\t", "");
         else
-            return StringTools.replace(modify(TextTools.correctABeforeVowel(dest.sb)), "\t", "");
+            return StringTools.replace(modify(StringTools.correctABeforeVowel(dest.sb)), "\t", "");
     }
 
     public String lookup(String word)
@@ -987,7 +987,7 @@ public class Thesaurus implements Serializable{
         int frustration = 0;
         while (frustration++ < 8 && similarFinder.matches(working))
             working = process(potionTermShuffler.next());
-        return TextTools.correctABeforeVowel(working);
+        return StringTools.correctABeforeVowel(working);
     }
 
     /**

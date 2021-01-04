@@ -15,7 +15,13 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../";
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var altColor = "alt-color";
+var rowColor = "row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -48,7 +54,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search">SEARCH:</label>
@@ -72,9 +78,14 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.glyph.Font</div>
 </div>
 <section class="description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code>com.badlogic.gdx.utils.Disposable</code></dd>
+</dl>
 <hr>
 <pre>public class <span class="type-name-label">Font</span>
-extends java.lang.Object</pre>
+extends java.lang.Object
+implements com.badlogic.gdx.utils.Disposable</pre>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -94,13 +105,58 @@ extends java.lang.Object</pre>
 </thead>
 <tbody>
 <tr class="alt-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cellHeight">cellHeight</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cellWidth">cellWidth</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isMSDF">isMSDF</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>com.github.tommyettinger.ds.IntObjectMap&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mapping">mapping</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfCrispness">msdfCrispness</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfFragmentShader">msdfFragmentShader</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static com.badlogic.gdx.graphics.glutils.ShaderProgram</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfShader">msdfShader</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellHeight">originalCellHeight</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellWidth">originalCellWidth</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>com.badlogic.gdx.graphics.Texture</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parentTexture">parentTexture</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#vertexShader">vertexShader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -137,6 +193,102 @@ boolean&nbsp;isMSDF)</code></th>
 <li>
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
+<div class="member-summary" id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel">
+<table class="summary-table" aria-labelledby="t0">
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color" id="i0">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#dispose()">dispose</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Releases all resources of this object.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawBlocks(com.badlogic.gdx.graphics.g2d.Batch,int%5B%5D%5B%5D,float,float)">drawBlocks</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+int[][]&nbsp;colors,
+float&nbsp;x,
+float&nbsp;y)</code></th>
+<td class="col-last">
+<div class="block">Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">drawGlyph</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+long&nbsp;colorGlyph,
+float&nbsp;x,
+float&nbsp;y)</code></th>
+<td class="col-last">
+<div class="block">Draws a single char with a foreground color, encoded in one long, at the given x,y position in world space.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawMarkupText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.String,float,float)">drawMarkupText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.String&nbsp;text,
+float&nbsp;x,
+float&nbsp;y)</code></th>
+<td class="col-last">
+<div class="block">Draws the specified text at the given x,y position (in world space), parsing an extension of libGDX markup
+ and using it to determine color, size, position, shape, strikethrough, underline, and case of the given
+ CharSequence.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float)">drawText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.CharSequence&nbsp;text,
+float&nbsp;x,
+float&nbsp;y)</code></th>
+<td class="col-last">
+<div class="block">Draws the specified text at the given x,y position (in world space) with a white foreground.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float,int)">drawText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.CharSequence&nbsp;text,
+float&nbsp;x,
+float&nbsp;y,
+int&nbsp;color)</code></th>
+<td class="col-last">
+<div class="block">Draws the specified text at the given x,y position (in world space) with the given foreground color.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enableShader(com.badlogic.gdx.graphics.g2d.Batch)">enableShader</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch)</code></th>
+<td class="col-last">
+<div class="block">Must be called before drawing anything with an MSDF font; does not need to be called for other fonts unless you
+ are mixing them with MSDF fonts or other shaders.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><code><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scale(float,float)">scale</a></span>&#8203;(float&nbsp;horizontal,
+float&nbsp;vertical)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scaleTo(float,float)">scaleTo</a></span>&#8203;(float&nbsp;width,
+float&nbsp;height)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></div>
@@ -163,6 +315,68 @@ boolean&nbsp;isMSDF)</code></th>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="member-name">parentTexture</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="isMSDF">
+<h3>isMSDF</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isMSDF</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="msdfCrispness">
+<h3>msdfCrispness</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">msdfCrispness</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="cellWidth">
+<h3>cellWidth</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">cellWidth</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="cellHeight">
+<h3>cellHeight</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">cellHeight</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="originalCellWidth">
+<h3>originalCellWidth</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">originalCellWidth</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="originalCellHeight">
+<h3>originalCellHeight</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">originalCellHeight</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="vertexShader">
+<h3>vertexShader</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">vertexShader</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.glyph.Font.vertexShader">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="msdfFragmentShader">
+<h3>msdfFragmentShader</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">msdfFragmentShader</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.glyph.Font.msdfFragmentShader">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="msdfShader">
+<h3>msdfShader</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.glutils.ShaderProgram</span>&nbsp;<span class="member-name">msdfShader</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -177,6 +391,173 @@ boolean&nbsp;isMSDF)</code></th>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">Font</span>&#8203;(<span class="parameters">java.lang.String&nbsp;fntName,
 java.lang.String&nbsp;textureName,
 boolean&nbsp;isMSDF)</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method.detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="scale(float,float)">
+<h3>scale</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></span>&nbsp;<span class="member-name">scale</span>&#8203;(<span class="parameters">float&nbsp;horizontal,
+float&nbsp;vertical)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="scaleTo(float,float)">
+<h3>scaleTo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></span>&nbsp;<span class="member-name">scaleTo</span>&#8203;(<span class="parameters">float&nbsp;width,
+float&nbsp;height)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="enableShader(com.badlogic.gdx.graphics.g2d.Batch)">
+<h3>enableShader</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">enableShader</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch)</span></div>
+<div class="block">Must be called before drawing anything with an MSDF font; does not need to be called for other fonts unless you
+ are mixing them with MSDF fonts or other shaders. This also resets the Batch color to white, in case it had been
+ left with a different setting before.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - the Batch to instruct to use the appropriate shader for this font; often a SpriteBatch</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float)">
+<h3>drawText</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawText</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.CharSequence&nbsp;text,
+float&nbsp;x,
+float&nbsp;y)</span></div>
+<div class="block">Draws the specified text at the given x,y position (in world space) with a white foreground.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - typically a SpriteBatch</dd>
+<dd><code>text</code> - typically a String, but this can also be a StringBuilder or some custom class</dd>
+<dd><code>x</code> - the x position in world space to start drawing the text at (lower left corner)</dd>
+<dd><code>y</code> - the y position in world space to start drawing the text at (lower left corner)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float,int)">
+<h3>drawText</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawText</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.CharSequence&nbsp;text,
+float&nbsp;x,
+float&nbsp;y,
+int&nbsp;color)</span></div>
+<div class="block">Draws the specified text at the given x,y position (in world space) with the given foreground color.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - typically a SpriteBatch</dd>
+<dd><code>text</code> - typically a String, but this can also be a StringBuilder or some custom class</dd>
+<dd><code>x</code> - the x position in world space to start drawing the text at (lower left corner)</dd>
+<dd><code>y</code> - the y position in world space to start drawing the text at (lower left corner)</dd>
+<dd><code>color</code> - an int color; typically this is RGBA, but custom shaders or Batches can use other kinds of color</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">
+<h3>drawGlyph</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawGlyph</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+long&nbsp;colorGlyph,
+float&nbsp;x,
+float&nbsp;y)</span></div>
+<div class="block">Draws a single char with a foreground color, encoded in one long, at the given x,y position in world space.
+ The <code>colorGlyph</code> parameter is a long that contains two separate values in its upper 32 and lower 32 bits;
+ the upper 32 bits store a color, usually as RGBA, while the lower 32 bits store a codepoint, or more commonly, a
+ char that will be drawn with that color. Some code may return long values with this format to pass around chars
+ with colors without creating objects to store them.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - typically a SpriteBatch</dd>
+<dd><code>colorGlyph</code> - a long encoding a color (usually RGBA) in its upper 32 bits, and a char or codepoint in its lower 32 bits.</dd>
+<dd><code>x</code> - the x position in world space to draw the text at (lower left corner)</dd>
+<dd><code>y</code> - the y position in world space to draw the text at (lower left corner)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawBlocks(com.badlogic.gdx.graphics.g2d.Batch,int[][],float,float)">
+<h3>drawBlocks</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawBlocks</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+int[][]&nbsp;colors,
+float&nbsp;x,
+float&nbsp;y)</span></div>
+<div class="block">Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.
+ The <code>colors</code> parameter should be a rectangular 2D array, and because any colors that are the default int
+ value <code>0</code> will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
+ then nothing will be drawn there. This is usually called before other methods that draw foreground text.
+ <br>
+ Internally, this is substantially more complex than the other drawing methods; it uses
+ <code>Batch.draw(Texture, float[], int, int)</code> to draw each rectangle with minimal overhead, and this also means
+ it is unaffected by the batch color. If you want to alter the colors using a shader, the shader will receive each
+ color in <code>colors</code> as its <code>a_color</code> attribute, the same as if it was passed via the batch color.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - typically a SpriteBatch</dd>
+<dd><code>colors</code> - a 2D rectangular array of int colors (typically RGBA)</dd>
+<dd><code>x</code> - the x position in world space to draw the text at (lower left corner)</dd>
+<dd><code>y</code> - the y position in world space to draw the text at (lower left corner)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawMarkupText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.String,float,float)">
+<h3>drawMarkupText</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawMarkupText</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+java.lang.String&nbsp;text,
+float&nbsp;x,
+float&nbsp;y)</span></div>
+<div class="block">Draws the specified text at the given x,y position (in world space), parsing an extension of libGDX markup
+ and using it to determine color, size, position, shape, strikethrough, underline, and case of the given
+ CharSequence. The text drawn will start as white, with the normal size as by <a href="#cellWidth"><code>cellWidth</code></a> and
+ <a href="#cellHeight"><code>cellHeight</code></a>, normal case, and without bold, italic, superscript, subscript, strikethrough, or
+ underline. Markup starts with <code>[</code>; the next non-letter character determines what that piece of markup
+ toggles. Markup this knows:
+ <ul>
+     <li><code>[[</code> escapes a literal left bracket.</li>
+     <li><code>[]</code> clears all markup to the initial state without any applied.</li>
+     <li><code>[*]</code> toggles bold mode.</li>
+     <li><code>[/]</code> toggles italic (technically, oblique) mode.</li>
+     <li><code>[^]</code> toggles superscript mode (and turns off subscript mode).</li>
+     <li><code>[.]</code> toggles subscript mode (and turns off superscript mode).</li>
+     <li><code>[_]</code> toggles underline mode.</li>
+     <li><code>[~]</code> toggles strikethrough mode.</li>
+     <li><code>[!]</code> toggles all upper case mode.</li>
+     <li><code>[,]</code> toggles all lower case mode.</li>
+     <li><code>[;]</code> toggles capitalize each word mode.</li>
+     <li><code>[#HHHHHHHH]</code>, where HHHHHHHH is an RGBA8888 int color with optional alpha, changes the color.</li>
+     <li><code>[|some description]</code>, where "some description" is a lower-case color description as per
+     <code>DescriptiveColor.parseDescription(CharSequence, int, int)</code>,
+     changes the color. You don't have to include the "|" character, since this is the default.</li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>batch</code> - typically a SpriteBatch</dd>
+<dd><code>text</code> - typically a String with markup, but this can also be a StringBuilder or some custom class</dd>
+<dd><code>x</code> - the x position in world space to start drawing the text at (lower left corner)</dd>
+<dd><code>y</code> - the y position in world space to start drawing the text at (lower left corner)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="dispose()">
+<h3>dispose</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">dispose</span>()</div>
+<div class="block">Releases all resources of this object.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -213,7 +594,7 @@ boolean&nbsp;isMSDF)</span></div>
 <li>Detail:&nbsp;</li>
 <li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 </div>

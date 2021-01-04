@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -47,13 +47,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -82,13 +82,231 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public class <span class="type-name-label">StringTools</span>
 extends java.lang.Object</pre>
-<div class="block">Various utility functions for dealing with Strings, CharSequences, and char[]s. This has tools to join arrays and
- Iterables of various items into long Strings, split/search/count occurrences of literal char arrays or CharSequences
- without using any regex, and generally tidy up generated text. This last step includes padding left and right
- (including a "strict" option that truncates Strings that are longer than the padded size).</div>
+<div class="block">Various utility functions for handling readable natural-language text. This has tools to wrap long
+ CharSequences to fit in a maximum width, and generally tidy up generated text. This last step includes padding left
+ and right (including a "strict" option that truncates Strings that are longer than the padded size), Capitalizing
+ Each Word, Capitalizing the first word in a sentence, replacing "a improper usage of a" with "an improved
+ replacement using an," etc. This also has a lot of predefined categories of chars that are considered widely enough
+ supported by fonts, like <a href="#COMMON_PUNCTUATION"><code>COMMON_PUNCTUATION</code></a> and <a href="#LATIN_LETTERS_UPPER"><code>LATIN_LETTERS_UPPER</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field.summary">
+<h2>Field Summary</h2>
+<div class="member-summary">
+<table class="summary-table">
+<caption><span>Fields</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Field</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#BOX_DRAWING">BOX_DRAWING</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#BOX_DRAWING_DOUBLE">BOX_DRAWING_DOUBLE</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#BOX_DRAWING_SINGLE">BOX_DRAWING_SINGLE</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#COMMON_PUNCTUATION">COMMON_PUNCTUATION</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CURRENCY">CURRENCY</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CYRILLIC_LETTERS">CYRILLIC_LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CYRILLIC_LETTERS_LOWER">CYRILLIC_LETTERS_LOWER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#CYRILLIC_LETTERS_UPPER">CYRILLIC_LETTERS_UPPER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#DIGITS">DIGITS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#ENGLISH_LETTERS">ENGLISH_LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#ENGLISH_LETTERS_LOWER">ENGLISH_LETTERS_LOWER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#ENGLISH_LETTERS_UPPER">ENGLISH_LETTERS_UPPER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GREEK_LETTERS">GREEK_LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GREEK_LETTERS_LOWER">GREEK_LETTERS_LOWER</a></span></code></th>
+<td class="col-last">
+<div class="block">Includes both lower-case forms for Sigma, 'ς' and 'σ', but this matches the two upper-case Sigma in
+ <a href="#GREEK_LETTERS_UPPER"><code>GREEK_LETTERS_UPPER</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GREEK_LETTERS_UPPER">GREEK_LETTERS_UPPER</a></span></code></th>
+<td class="col-last">
+<div class="block">Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in <a href="#GREEK_LETTERS_LOWER"><code>GREEK_LETTERS_LOWER</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GROUPING_SIGNS_CLOSE">GROUPING_SIGNS_CLOSE</a></span></code></th>
+<td class="col-last">
+<div class="block">An index in <a href="#GROUPING_SIGNS_OPEN"><code>GROUPING_SIGNS_OPEN</code></a> can be used here to find the closing char for that opening one.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GROUPING_SIGNS_OPEN">GROUPING_SIGNS_OPEN</a></span></code></th>
+<td class="col-last">
+<div class="block">Can be used to match an index with one in <a href="#GROUPING_SIGNS_CLOSE"><code>GROUPING_SIGNS_CLOSE</code></a> to find the closing char (this way only).</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_EXTENDED_LETTERS">LATIN_EXTENDED_LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_EXTENDED_LETTERS_LOWER">LATIN_EXTENDED_LETTERS_LOWER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_EXTENDED_LETTERS_UPPER">LATIN_EXTENDED_LETTERS_UPPER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_LETTERS">LATIN_LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_LETTERS_LOWER">LATIN_LETTERS_LOWER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LATIN_LETTERS_UPPER">LATIN_LETTERS_UPPER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LETTERS">LETTERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LETTERS_AND_NUMBERS">LETTERS_AND_NUMBERS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LETTERS_LOWER">LETTERS_LOWER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LETTERS_UPPER">LETTERS_UPPER</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#MARKS">MARKS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#MODERN_PUNCTUATION">MODERN_PUNCTUATION</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static regexodus.Pattern</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nonSpacePattern">nonSpacePattern</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#PERMISSIBLE_CHARS">PERMISSIBLE_CHARS</a></span></code></th>
+<td class="col-last">
+<div class="block">A constant containing only chars that are reasonably likely to be supported by broad fonts and thus display-able.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#PUNCTUATION">PUNCTUATION</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SPACING">SPACING</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#TECHNICAL_PUNCTUATION">TECHNICAL_PUNCTUATION</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#UNCOMMON_PUNCTUATION">UNCOMMON_PUNCTUATION</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#VISUAL_SYMBOLS">VISUAL_SYMBOLS</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static regexodus.Pattern</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#whitespacePattern">whitespacePattern</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor.summary">
@@ -129,6 +347,13 @@ extends java.lang.Object</pre>
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#capitalize(java.lang.CharSequence)">capitalize</a></span>&#8203;(java.lang.CharSequence&nbsp;original)</code></th>
+<td class="col-last">
+<div class="block">Capitalizes Each Word In The Parameter <code>original</code>, Returning A New String.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contains(java.lang.CharSequence,char%5B%5D)">contains</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 char[]&nbsp;search)</code></th>
@@ -136,7 +361,7 @@ char[]&nbsp;search)</code></th>
 <div class="block">Searches text for the exact contents of the char array search; returns true if text contains search.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contains(java.lang.CharSequence,java.lang.CharSequence)">contains</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 java.lang.CharSequence&nbsp;search)</code></th>
@@ -144,7 +369,7 @@ java.lang.CharSequence&nbsp;search)</code></th>
 <div class="block">Searches text for the exact contents of the char array search; returns true if text contains search.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,char%5B%5D)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 char[]&nbsp;search)</code></th>
@@ -154,7 +379,7 @@ char[]&nbsp;search)</code></th>
  part of search (0 if not found).</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,char%5B%5D,java.lang.CharSequence,java.lang.CharSequence)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 char[]&nbsp;search,
@@ -165,7 +390,7 @@ java.lang.CharSequence&nbsp;suffix)</code></th>
  CharSequences for some reason and search is a char array.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containsPart(java.lang.CharSequence,java.lang.CharSequence)">containsPart</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 java.lang.CharSequence&nbsp;search)</code></th>
@@ -175,7 +400,16 @@ java.lang.CharSequence&nbsp;search)</code></th>
  part of search (0 if not found).</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#correctABeforeVowel(java.lang.CharSequence)">correctABeforeVowel</a></span>&#8203;(java.lang.CharSequence&nbsp;text)</code></th>
+<td class="col-last">
+<div class="block">A simple method that looks for any occurrences of the word 'a' followed by some non-zero amount of whitespace and
+ then any vowel starting the following word (such as 'a item'), then replaces each such improper 'a' with 'an'
+ (such as 'an item').</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;search)</code></th>
@@ -185,7 +419,7 @@ int&nbsp;search)</code></th>
  null.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,int,int,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;search,
@@ -197,7 +431,7 @@ int&nbsp;endIndex)</code></th>
  the number of instances of search that were found, or 0 if source is null or if the searched area is empty.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,java.lang.String)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;search)</code></th>
@@ -207,7 +441,7 @@ java.lang.String&nbsp;search)</code></th>
  search is null or empty.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#count(java.lang.String,java.lang.String,int,int)">count</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;search,
@@ -219,61 +453,87 @@ int&nbsp;endIndex)</code></th>
  number of instances of search that were found, or 0 if source or search is null or if the searched area is empty.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#indexOf(java.lang.CharSequence,java.lang.String)">indexOf</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+java.lang.String&nbsp;regex)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i12">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#indexOf(java.lang.CharSequence,java.lang.String,int)">indexOf</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+java.lang.String&nbsp;regex,
+int&nbsp;beginIndex)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i13">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#indexOf(java.lang.CharSequence,regexodus.Pattern)">indexOf</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+regexodus.Pattern&nbsp;regex)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i14">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#indexOf(java.lang.CharSequence,regexodus.Pattern,int)">indexOf</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
+regexodus.Pattern&nbsp;regex,
+int&nbsp;beginIndex)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,boolean...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 boolean...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,byte...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 byte...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,char...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 char...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,double...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 double...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,float...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 float...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,int...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 int...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,long...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,short...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 short...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.CharSequence...)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.CharSequence...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.Iterable)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
@@ -282,7 +542,7 @@ java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
  null items), and separating each item with <code>delimiter</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.CharSequence,java.lang.Object%5B%5D)">join</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 java.lang.Object[]&nbsp;elements)</code></th>
@@ -291,98 +551,14 @@ java.lang.Object[]&nbsp;elements)</code></th>
  null items), and separating each item with <code>delimiter</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,boolean...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-boolean...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i21">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,byte...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-byte...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i22">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,char...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-char...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i23">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,char%5B%5D...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-char[]...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i24">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,double...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-double...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i25">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,float...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-float...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
 <tr class="alt-color" id="i26">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,int...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-int...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i27">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,long...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-long...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i28">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,short...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-short...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i29">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.CharSequence...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.CharSequence...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i30">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Iterable)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.Iterable&lt;?&gt;&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i31">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Object...)">join</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.Object...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i32">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(boolean...)">joinAlt</a></span>&#8203;(boolean...&nbsp;elements)</code></th>
 <td class="col-last">
 <div class="block">Joins the boolean array <code>elements</code> without delimiters into a String, using "1" for true and "0" for false.</div>
 </td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.CharSequence,long...)">joinAlt</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 long...&nbsp;elements)</code></th>
@@ -390,26 +566,13 @@ long...&nbsp;elements)</code></th>
 <div class="block">Like <a href="#join(java.lang.CharSequence,long...)"><code>join(CharSequence, long...)</code></a>, but this appends an 'L' to each number so they can be read in by Java.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i34">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.StringBuilder,boolean...)">joinAlt</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-boolean...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i35">
-<td class="col-first"><code>static java.lang.StringBuilder</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinAlt(java.lang.StringBuilder,java.lang.CharSequence,long...)">joinAlt</a></span>&#8203;(java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-long...&nbsp;elements)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i36">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#joinArrays(java.lang.CharSequence,char%5B%5D...)">joinArrays</a></span>&#8203;(java.lang.CharSequence&nbsp;delimiter,
 char[]...&nbsp;elements)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i37">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeft(java.lang.String,char,int)">padLeft</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -419,7 +582,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i38">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeft(java.lang.String,int)">padLeft</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;minimumLength)</code></th>
@@ -428,7 +591,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="row-color" id="i39">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeftStrict(java.lang.String,char,int)">padLeftStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -438,7 +601,7 @@ int&nbsp;totalLength)</code></th>
  its left side with padChar until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i40">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padLeftStrict(java.lang.String,int)">padLeftStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;totalLength)</code></th>
@@ -447,7 +610,7 @@ int&nbsp;totalLength)</code></th>
  its left side with spaces until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="row-color" id="i41">
+<tr class="row-color" id="i33">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRight(java.lang.String,char,int)">padRight</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -457,7 +620,7 @@ int&nbsp;minimumLength)</code></th>
  until it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i42">
+<tr class="alt-color" id="i34">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRight(java.lang.String,int)">padRight</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;minimumLength)</code></th>
@@ -466,7 +629,7 @@ int&nbsp;minimumLength)</code></th>
  it reaches that length; otherwise it simply returns text.</div>
 </td>
 </tr>
-<tr class="row-color" id="i43">
+<tr class="row-color" id="i35">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRightStrict(java.lang.String,char,int)">padRightStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 char&nbsp;padChar,
@@ -476,7 +639,7 @@ int&nbsp;totalLength)</code></th>
  its right side with padChar until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i44">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#padRightStrict(java.lang.String,int)">padRightStrict</a></span>&#8203;(java.lang.String&nbsp;text,
 int&nbsp;totalLength)</code></th>
@@ -485,14 +648,14 @@ int&nbsp;totalLength)</code></th>
  its right side with spaces until totalLength is reached.</div>
 </td>
 </tr>
-<tr class="row-color" id="i45">
+<tr class="row-color" id="i37">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replace(java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)">replace</a></span>&#8203;(java.lang.CharSequence&nbsp;text,
 java.lang.CharSequence&nbsp;before,
 java.lang.CharSequence&nbsp;after)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i46">
+<tr class="alt-color" id="i38">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#safeSubstring(java.lang.String,int,int)">safeSubstring</a></span>&#8203;(java.lang.String&nbsp;source,
 int&nbsp;beginIndex,
@@ -501,12 +664,40 @@ int&nbsp;endIndex)</code></th>
 <div class="block">Like <code>String.substring(int, int)</code> but returns "" instead of throwing any sort of Exception.</div>
 </td>
 </tr>
-<tr class="row-color" id="i47">
+<tr class="row-color" id="i39">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentenceCase(java.lang.CharSequence)">sentenceCase</a></span>&#8203;(java.lang.CharSequence&nbsp;original)</code></th>
+<td class="col-last">
+<div class="block">Attempts to scan for sentences in <code>original</code>, capitalizes the first letter of each sentence, and otherwise
+ leaves the CharSequence untouched as it returns it as a String.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i40">
 <td class="col-first"><code>static java.lang.String[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#split(java.lang.String,java.lang.String)">split</a></span>&#8203;(java.lang.String&nbsp;source,
 java.lang.String&nbsp;delimiter)</code></th>
 <td class="col-last">
 <div class="block">Like <code>String.split(String)</code> but doesn't use any regex for splitting (delimiter is a literal String).</div>
+</td>
+</tr>
+<tr class="row-color" id="i41">
+<td class="col-first"><code>static java.util.List&lt;java.lang.String&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#wrap(java.lang.CharSequence,int)">wrap</a></span>&#8203;(java.lang.CharSequence&nbsp;longText,
+int&nbsp;width)</code></th>
+<td class="col-last">
+<div class="block">Word-wraps the given String (or other CharSequence, such as a StringBuilder) so it is split into zero or more
+ Strings as lines of text, with the given width as the maximum width for a line.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i42">
+<td class="col-first"><code>static java.util.List&lt;java.lang.String&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#wrap(java.util.List,java.lang.CharSequence,int)">wrap</a></span>&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;receiving,
+java.lang.CharSequence&nbsp;longText,
+int&nbsp;width)</code></th>
+<td class="col-last">
+<div class="block">Word-wraps the given String (or other CharSequence, such as a StringBuilder) so it is split into zero or more
+ Strings as lines of text, with the given width as the maximum width for a line; appends the word-wrapped lines to
+ the given List of Strings and does not create a new List.</div>
 </td>
 </tr>
 </tbody>
@@ -522,6 +713,389 @@ java.lang.String&nbsp;delimiter)</code></th>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field.detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="whitespacePattern">
+<h3>whitespacePattern</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">regexodus.Pattern</span>&nbsp;<span class="member-name">whitespacePattern</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="nonSpacePattern">
+<h3>nonSpacePattern</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">regexodus.Pattern</span>&nbsp;<span class="member-name">nonSpacePattern</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="PERMISSIBLE_CHARS">
+<h3>PERMISSIBLE_CHARS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">PERMISSIBLE_CHARS</span></div>
+<div class="block">A constant containing only chars that are reasonably likely to be supported by broad fonts and thus display-able.
+ This assumes the font supports Latin, Greek, and Cyrillic alphabets, with good support for extended Latin (at
+ least for European languages) but not required to be complete enough to support the very large Vietnamese set of
+ extensions to Latin, nor to support any International Phonetic Alphabet (IPA) chars. It also assumes box drawing
+ characters are supported and a handful of common dingbats, such as male and female signs. It does not include
+ the tab, newline, or carriage return characters, since these don't usually make sense on a grid of chars.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.PERMISSIBLE_CHARS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BOX_DRAWING_SINGLE">
+<h3>BOX_DRAWING_SINGLE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">BOX_DRAWING_SINGLE</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.BOX_DRAWING_SINGLE">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BOX_DRAWING_DOUBLE">
+<h3>BOX_DRAWING_DOUBLE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">BOX_DRAWING_DOUBLE</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.BOX_DRAWING_DOUBLE">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BOX_DRAWING">
+<h3>BOX_DRAWING</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">BOX_DRAWING</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.BOX_DRAWING">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="VISUAL_SYMBOLS">
+<h3>VISUAL_SYMBOLS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">VISUAL_SYMBOLS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.VISUAL_SYMBOLS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DIGITS">
+<h3>DIGITS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">DIGITS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.DIGITS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MARKS">
+<h3>MARKS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">MARKS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.MARKS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GROUPING_SIGNS_OPEN">
+<h3>GROUPING_SIGNS_OPEN</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">GROUPING_SIGNS_OPEN</span></div>
+<div class="block">Can be used to match an index with one in <a href="#GROUPING_SIGNS_CLOSE"><code>GROUPING_SIGNS_CLOSE</code></a> to find the closing char (this way only).</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.GROUPING_SIGNS_OPEN">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GROUPING_SIGNS_CLOSE">
+<h3>GROUPING_SIGNS_CLOSE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">GROUPING_SIGNS_CLOSE</span></div>
+<div class="block">An index in <a href="#GROUPING_SIGNS_OPEN"><code>GROUPING_SIGNS_OPEN</code></a> can be used here to find the closing char for that opening one.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.GROUPING_SIGNS_CLOSE">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="COMMON_PUNCTUATION">
+<h3>COMMON_PUNCTUATION</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">COMMON_PUNCTUATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.COMMON_PUNCTUATION">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MODERN_PUNCTUATION">
+<h3>MODERN_PUNCTUATION</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">MODERN_PUNCTUATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.MODERN_PUNCTUATION">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="UNCOMMON_PUNCTUATION">
+<h3>UNCOMMON_PUNCTUATION</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">UNCOMMON_PUNCTUATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.UNCOMMON_PUNCTUATION">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="TECHNICAL_PUNCTUATION">
+<h3>TECHNICAL_PUNCTUATION</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">TECHNICAL_PUNCTUATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.TECHNICAL_PUNCTUATION">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="PUNCTUATION">
+<h3>PUNCTUATION</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">PUNCTUATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.PUNCTUATION">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="CURRENCY">
+<h3>CURRENCY</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">CURRENCY</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.CURRENCY">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SPACING">
+<h3>SPACING</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">SPACING</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.SPACING">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="ENGLISH_LETTERS_UPPER">
+<h3>ENGLISH_LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">ENGLISH_LETTERS_UPPER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.ENGLISH_LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="ENGLISH_LETTERS_LOWER">
+<h3>ENGLISH_LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">ENGLISH_LETTERS_LOWER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.ENGLISH_LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="ENGLISH_LETTERS">
+<h3>ENGLISH_LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">ENGLISH_LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.ENGLISH_LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_EXTENDED_LETTERS_UPPER">
+<h3>LATIN_EXTENDED_LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_EXTENDED_LETTERS_UPPER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_EXTENDED_LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_EXTENDED_LETTERS_LOWER">
+<h3>LATIN_EXTENDED_LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_EXTENDED_LETTERS_LOWER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_EXTENDED_LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_EXTENDED_LETTERS">
+<h3>LATIN_EXTENDED_LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_EXTENDED_LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_EXTENDED_LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_LETTERS_UPPER">
+<h3>LATIN_LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_LETTERS_UPPER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_LETTERS_LOWER">
+<h3>LATIN_LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_LETTERS_LOWER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LATIN_LETTERS">
+<h3>LATIN_LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LATIN_LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LATIN_LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GREEK_LETTERS_UPPER">
+<h3>GREEK_LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">GREEK_LETTERS_UPPER</span></div>
+<div class="block">Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in <a href="#GREEK_LETTERS_LOWER"><code>GREEK_LETTERS_LOWER</code></a>. This
+ lets you use one index for both lower and upper case, like with Latin and Cyrillic.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.GREEK_LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GREEK_LETTERS_LOWER">
+<h3>GREEK_LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">GREEK_LETTERS_LOWER</span></div>
+<div class="block">Includes both lower-case forms for Sigma, 'ς' and 'σ', but this matches the two upper-case Sigma in
+ <a href="#GREEK_LETTERS_UPPER"><code>GREEK_LETTERS_UPPER</code></a>. This lets you use one index for both lower and upper case, like with Latin and
+ Cyrillic.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.GREEK_LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GREEK_LETTERS">
+<h3>GREEK_LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">GREEK_LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.GREEK_LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="CYRILLIC_LETTERS_UPPER">
+<h3>CYRILLIC_LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">CYRILLIC_LETTERS_UPPER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.CYRILLIC_LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="CYRILLIC_LETTERS_LOWER">
+<h3>CYRILLIC_LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">CYRILLIC_LETTERS_LOWER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.CYRILLIC_LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="CYRILLIC_LETTERS">
+<h3>CYRILLIC_LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">CYRILLIC_LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.CYRILLIC_LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LETTERS_UPPER">
+<h3>LETTERS_UPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LETTERS_UPPER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LETTERS_UPPER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LETTERS_LOWER">
+<h3>LETTERS_LOWER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LETTERS_LOWER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LETTERS_LOWER">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LETTERS">
+<h3>LETTERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LETTERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LETTERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LETTERS_AND_NUMBERS">
+<h3>LETTERS_AND_NUMBERS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">LETTERS_AND_NUMBERS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.StringTools.LETTERS_AND_NUMBERS">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor.detail">
@@ -549,25 +1123,9 @@ java.lang.CharSequence...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.CharSequence...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.CharSequence...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="joinArrays(java.lang.CharSequence,char[]...)">
 <h3>joinArrays</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">joinArrays</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
-char[]...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,char[]...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
 char[]...&nbsp;elements)</span></div>
 </section>
 </li>
@@ -579,25 +1137,9 @@ long...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,long...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-long...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="join(java.lang.CharSequence,double...)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
-double...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,double...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
 double...&nbsp;elements)</span></div>
 </section>
 </li>
@@ -609,25 +1151,9 @@ int...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,int...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-int...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="join(java.lang.CharSequence,float...)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
-float...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,float...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
 float...&nbsp;elements)</span></div>
 </section>
 </li>
@@ -639,25 +1165,9 @@ short...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,short...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-short...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="join(java.lang.CharSequence,char...)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
-char...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,char...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
 char...&nbsp;elements)</span></div>
 </section>
 </li>
@@ -669,25 +1179,9 @@ byte...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,byte...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-byte...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="join(java.lang.CharSequence,boolean...)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
-boolean...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,boolean...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
 boolean...&nbsp;elements)</span></div>
 </section>
 </li>
@@ -711,14 +1205,6 @@ java.lang.Object[]&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Object...)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.Object...&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="join(java.lang.CharSequence,java.lang.Iterable)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;delimiter,
@@ -737,14 +1223,6 @@ java.lang.Iterable&lt;?&gt;&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="join(java.lang.StringBuilder,java.lang.CharSequence,java.lang.Iterable)">
-<h3>join</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">join</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-java.lang.Iterable&lt;?&gt;&nbsp;elements)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="joinAlt(boolean...)">
 <h3>joinAlt</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">joinAlt</span>&#8203;(<span class="parameters">boolean...&nbsp;elements)</span></div>
@@ -755,13 +1233,6 @@ java.lang.Iterable&lt;?&gt;&nbsp;elements)</span></div>
 <dt>Returns:</dt>
 <dd>a String using 1 for true elements and 0 for false, or "N" if elements is null</dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="joinAlt(java.lang.StringBuilder,boolean...)">
-<h3>joinAlt</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">joinAlt</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-boolean...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
@@ -776,14 +1247,6 @@ long...&nbsp;elements)</span></div>
 <dd><code>elements</code> - </dd>
 <dt>Returns:</dt>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="joinAlt(java.lang.StringBuilder,java.lang.CharSequence,long...)">
-<h3>joinAlt</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">joinAlt</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;stringBuilder,
-java.lang.CharSequence&nbsp;delimiter,
-long...&nbsp;elements)</span></div>
 </section>
 </li>
 <li>
@@ -1132,6 +1595,142 @@ int&nbsp;totalLength)</span></div>
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="wrap(java.lang.CharSequence,int)">
+<h3>wrap</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">wrap</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;longText,
+int&nbsp;width)</span></div>
+<div class="block">Word-wraps the given String (or other CharSequence, such as a StringBuilder) so it is split into zero or more
+ Strings as lines of text, with the given width as the maximum width for a line. This correctly splits most (all?)
+ text in European languages on spaces (treating all whitespace characters matched by the regex '\\s' as breaking),
+ and also uses the English-language rule (probably used in other languages as well) of splitting on hyphens and
+ other dash characters (Unicode category Pd) in the middle of a word. This means for a phrase like "UN Secretary
+ General Ban-Ki Moon", if the width was 12, then the Strings in the List returned would be
+ <br>
+ <pre>
+ "UN Secretary"
+ "General Ban-"
+ "Ki Moon"
+ </pre>
+ Spaces are not preserved if they were used to split something into two lines, but dashes are.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>longText</code> - a probably-large piece of text that needs to be split into multiple lines with a max width</dd>
+<dd><code>width</code> - the max width to use for any line, removing trailing whitespace at the end of a line</dd>
+<dt>Returns:</dt>
+<dd>a List of Strings for the lines after word-wrapping</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="wrap(java.util.List,java.lang.CharSequence,int)">
+<h3>wrap</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.util.List&lt;java.lang.String&gt;</span>&nbsp;<span class="member-name">wrap</span>&#8203;(<span class="parameters">java.util.List&lt;java.lang.String&gt;&nbsp;receiving,
+java.lang.CharSequence&nbsp;longText,
+int&nbsp;width)</span></div>
+<div class="block">Word-wraps the given String (or other CharSequence, such as a StringBuilder) so it is split into zero or more
+ Strings as lines of text, with the given width as the maximum width for a line; appends the word-wrapped lines to
+ the given List of Strings and does not create a new List. This correctly splits most (all?) text in European
+ languages on spaces (treating all whitespace characters matched by the regex '\\s' as breaking), and also uses
+ the English-language rule (probably used in other languages as well) of splitting on hyphens and other dash
+ characters (Unicode category Pd) in the middle of a word. This means for a phrase like "UN Secretary General
+ Ban-Ki Moon", if the width was 12, then the Strings in the List returned would be
+ <br>
+ <pre>
+ "UN Secretary"
+ "General Ban-"
+ "Ki Moon"
+ </pre>
+ Spaces are not preserved if they were used to split something into two lines, but dashes are.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>receiving</code> - the List of String to append the word-wrapped lines to</dd>
+<dd><code>longText</code> - a probably-large piece of text that needs to be split into multiple lines with a max width</dd>
+<dd><code>width</code> - the max width to use for any line, removing trailing whitespace at the end of a line</dd>
+<dt>Returns:</dt>
+<dd>the given <code>receiving</code> parameter, after appending the lines from word-wrapping</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="indexOf(java.lang.CharSequence,regexodus.Pattern,int)">
+<h3>indexOf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">indexOf</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+regexodus.Pattern&nbsp;regex,
+int&nbsp;beginIndex)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="indexOf(java.lang.CharSequence,java.lang.String,int)">
+<h3>indexOf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">indexOf</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+java.lang.String&nbsp;regex,
+int&nbsp;beginIndex)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="indexOf(java.lang.CharSequence,regexodus.Pattern)">
+<h3>indexOf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">indexOf</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+regexodus.Pattern&nbsp;regex)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="indexOf(java.lang.CharSequence,java.lang.String)">
+<h3>indexOf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">indexOf</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text,
+java.lang.String&nbsp;regex)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="capitalize(java.lang.CharSequence)">
+<h3>capitalize</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">capitalize</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;original)</span></div>
+<div class="block">Capitalizes Each Word In The Parameter <code>original</code>, Returning A New String.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>original</code> - a CharSequence, such as a StringBuilder or String, which could have CrAzY capitalization</dd>
+<dt>Returns:</dt>
+<dd>A String With Each Word Capitalized At The Start And The Rest In Lower Case</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="sentenceCase(java.lang.CharSequence)">
+<h3>sentenceCase</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentenceCase</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;original)</span></div>
+<div class="block">Attempts to scan for sentences in <code>original</code>, capitalizes the first letter of each sentence, and otherwise
+ leaves the CharSequence untouched as it returns it as a String. Sentences are detected with a crude heuristic of
+ "does it have periods, exclamation marks, or question marks at the end, or does it reach the end of input? If
+ yes, it's a sentence."</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>original</code> - a CharSequence that is expected to contain sentence-like data that needs capitalization; existing upper-case letters will stay upper-case.</dd>
+<dt>Returns:</dt>
+<dd>a String where the first letter of each sentence (detected as best this can) is capitalized.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="correctABeforeVowel(java.lang.CharSequence)">
+<h3>correctABeforeVowel</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">correctABeforeVowel</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;text)</span></div>
+<div class="block">A simple method that looks for any occurrences of the word 'a' followed by some non-zero amount of whitespace and
+ then any vowel starting the following word (such as 'a item'), then replaces each such improper 'a' with 'an'
+ (such as 'an item'). The regex used here isn't bulletproof, but it should be fairly robust, handling when you
+ have multiple whitespace chars, different whitespace chars (like carriage return and newline), accented vowels in
+ the following word (but not in the initial 'a', which is expected to use English spelling rules), and the case of
+ the initial 'a' or 'A'.
+ <br>
+ Gotta love Regexodus; this is a two-liner that uses features specific to that regular expression library.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - the (probably generated English) multi-word text to search for 'a' in and possibly replace with 'an'</dd>
+<dt>Returns:</dt>
+<dd>a new String with every improper 'a' replaced</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -1159,13 +1758,13 @@ int&nbsp;totalLength)</span></div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
