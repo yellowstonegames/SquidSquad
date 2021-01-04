@@ -261,23 +261,29 @@ public class Font implements Disposable {
      */
     public void drawMarkupText(Batch batch, String text, float x, float y) {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        boolean bold = false, oblique = false;
+        boolean bold = false, oblique = false, underline = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
         float color = Color.WHITE_FLOAT_BITS, d = 0f;
-        final TextureRegion block = mapping.get(0);
-        TextureRegion tr = block;
-        assert block != null;
-        final float bu = block.getU() + (block.getU2() - block.getU()) * 0.25f,
-                bv = block.getV() + (block.getV2() - block.getV()) * 0.25f,
-                bu2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f,
-                bv2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
+        final TextureRegion under = mapping.get('_');
+        assert under != null;
+        final TextureRegion dash = mapping.get('-');
+        assert dash != null;
+        TextureRegion tr = under;
+        final float underU = under.getU() + (under.getU2() - under.getU()) * 0.375f,
+                underV = under.getV(),
+                underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
+                underV2 = under.getV2();
+        final float dashU = dash.getU() + (dash.getU2() - dash.getU()) * 0.375f,
+                dashV = dash.getV(),
+                dashU2 = dash.getU2() - (dash.getU2() - dash.getU()) * 0.375f,
+                dashV2 = dash.getV2();
         float u, v, u2, v2;
-        u = block.getU() + (block.getU2() - block.getU()) * 0.25f;
-        v = block.getV() + (block.getV2() - block.getV()) * 0.25f;
-        u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f;
-        v2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
+        u = under.getU() + (under.getU2() - under.getU()) * 0.25f;
+        v = under.getV() + (under.getV2() - under.getV()) * 0.25f;
+        u2 = under.getU2() - (under.getU2() - under.getU()) * 0.25f;
+        v2 = under.getV2() - (under.getV2() - under.getV()) * 0.25f;
         vertices[0] = x;
         vertices[1] = y + cellHeight;
         vertices[2] = color;
@@ -320,6 +326,7 @@ public class Font implements Disposable {
                             x2 += cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
                         }
+                        underline = false;
                         ++i;
                         continue;
                     }
@@ -348,6 +355,9 @@ public class Font implements Disposable {
                             x2 += cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
                         }
+                        break;
+                        case '_':
+                            underline = !underline;
                         break;
                         case '#': {
                             if (len >= 7 && len < 9)
@@ -402,6 +412,32 @@ public class Font implements Disposable {
                 vertices[18] = u2;
                 vertices[19] = v;
                 batch.draw(parentTexture, vertices, 0, 20);
+                if(underline){
+                    vertices[0] = x + d;
+                    vertices[1] = y + cellHeight;
+                    vertices[2] = color;
+                    vertices[3] = underU;
+                    vertices[4] = underV;
+
+                    vertices[5] = x + d;
+                    vertices[6] = y;
+                    vertices[7] = color;
+                    vertices[8] = underU;
+                    vertices[9] = underV2;
+
+                    vertices[10] = x + cellWidth + d;
+                    vertices[11] = y;
+                    vertices[12] = color;
+                    vertices[13] = underU2;
+                    vertices[14] = underV2;
+
+                    vertices[15] = x + cellWidth + d;
+                    vertices[16] = y + cellHeight;
+                    vertices[17] = color;
+                    vertices[18] = underU2;
+                    vertices[19] = underV;
+                    batch.draw(parentTexture, vertices, 0, 20);
+                }
             }
         }
 
