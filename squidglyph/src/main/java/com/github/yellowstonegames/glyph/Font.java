@@ -261,7 +261,7 @@ public class Font implements Disposable {
      */
     public void drawMarkupText(Batch batch, String text, float x, float y) {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        boolean bold = false;
+        boolean bold = false, oblique = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -279,25 +279,25 @@ public class Font implements Disposable {
         u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f;
         v2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
         vertices[0] = x;
-        vertices[1] = y;
+        vertices[1] = y + cellHeight;
         vertices[2] = color;
         vertices[3] = u;
         vertices[4] = v;
 
         vertices[5] = x;
-        vertices[6] = y + cellHeight;
+        vertices[6] = y;
         vertices[7] = color;
         vertices[8] = u;
         vertices[9] = v2;
 
         vertices[10] = x + cellWidth;
-        vertices[11] = y + cellHeight;
+        vertices[11] = y;
         vertices[12] = color;
         vertices[13] = u2;
         vertices[14] = v2;
 
         vertices[15] = x + cellWidth;
-        vertices[16] = y;
+        vertices[16] = y + cellHeight;
         vertices[17] = color;
         vertices[18] = u2;
         vertices[19] = v;
@@ -311,6 +311,13 @@ public class Font implements Disposable {
                             x0 += cellWidth * 0.2f;
                             x1 += cellWidth * 0.2f;
                             x2 -= cellWidth * 0.2f;
+                            x3 -= cellWidth * 0.2f;
+                        }
+                        if(oblique){
+                            oblique = false;
+                            x0 -= cellWidth * 0.2f;
+                            x1 += cellWidth * 0.2f;
+                            x2 += cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
                         }
                         ++i;
@@ -329,8 +336,19 @@ public class Font implements Disposable {
                             x2 -= cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
                         }
-
-                            break;
+                        break;
+                        case '/': if(oblique = !oblique) {
+                            x0 += cellWidth * 0.2f;
+                            x1 -= cellWidth * 0.2f;
+                            x2 -= cellWidth * 0.2f;
+                            x3 += cellWidth * 0.2f;
+                        } else {
+                            x0 -= cellWidth * 0.2f;
+                            x1 += cellWidth * 0.2f;
+                            x2 += cellWidth * 0.2f;
+                            x3 -= cellWidth * 0.2f;
+                        }
+                        break;
                         case '#': {
                             if (len >= 7 && len < 9)
                                 color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));

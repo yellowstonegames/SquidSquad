@@ -34,8 +34,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.75f, 0.75f);
 //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
         backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
-        int nw = DescriptiveColor.describe("darker sage"), ne = DescriptiveColor.describe("dark rich cactus"),
-                sw = DescriptiveColor.describe("dull peach butter"), se = DescriptiveColor.describe("dark brown");
+        int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
+                nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown");
         backgrounds[0][0] = sw;
         backgrounds[0][backgrounds[0].length - 1] = nw;
         backgrounds[backgrounds.length - 1][0] = se;
@@ -69,7 +69,7 @@ public class FontTest extends ApplicationAdapter {
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
                 ), 0x000000FF, 0.375f));
-        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight);
+        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
