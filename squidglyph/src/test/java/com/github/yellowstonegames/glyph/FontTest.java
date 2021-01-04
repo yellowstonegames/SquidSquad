@@ -69,7 +69,7 @@ public class FontTest extends ApplicationAdapter {
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
                 ), 0x000000FF, 0.375f));
-        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [|lighter blue mint]WENDIGO[] appears!", 0, font.cellHeight);
+        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

@@ -186,9 +186,7 @@ public class Font implements Disposable {
      */
     public void drawBlocks(Batch batch, int[][] colors, float x, float y) {
         final TextureRegion block = mapping.get(0);
-
         assert block != null;
-
         final float u = block.getU() + (block.getU2() - block.getU()) * 0.25f,
                 v = block.getV() + (block.getV2() - block.getV()) * 0.25f,
                 u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f,
@@ -263,40 +261,129 @@ public class Font implements Disposable {
      */
     public void drawMarkupText(Batch batch, String text, float x, float y) {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+        boolean bold = false;
+        float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
+        float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
-        for (int i = 0, n = text.length(); i < n; i++, x += cellWidth) {
+        float color = Color.WHITE_FLOAT_BITS, d = 0f;
+        final TextureRegion block = mapping.get(0);
+        TextureRegion tr = block;
+        assert block != null;
+        final float bu = block.getU() + (block.getU2() - block.getU()) * 0.25f,
+                bv = block.getV() + (block.getV2() - block.getV()) * 0.25f,
+                bu2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f,
+                bv2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
+        float u, v, u2, v2;
+        u = block.getU() + (block.getU2() - block.getU()) * 0.25f;
+        v = block.getV() + (block.getV2() - block.getV()) * 0.25f;
+        u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f;
+        v2 = block.getV2() - (block.getV2() - block.getV()) * 0.25f;
+        vertices[0] = x;
+        vertices[1] = y;
+        vertices[2] = color;
+        vertices[3] = u;
+        vertices[4] = v;
+
+        vertices[5] = x;
+        vertices[6] = y + cellHeight;
+        vertices[7] = color;
+        vertices[8] = u;
+        vertices[9] = v2;
+
+        vertices[10] = x + cellWidth;
+        vertices[11] = y + cellHeight;
+        vertices[12] = color;
+        vertices[13] = u2;
+        vertices[14] = v2;
+
+        vertices[15] = x + cellWidth;
+        vertices[16] = y;
+        vertices[17] = color;
+        vertices[18] = u2;
+        vertices[19] = v;
+        for (int i = 0, n = text.length(); i < n; i++, d += cellWidth) {
             if(text.charAt(i) == '['){
                 if(++i < n && (c = text.charAt(i)) != '['){
                     if(c == ']'){
-                        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+                        color = (Color.WHITE_FLOAT_BITS);
+                        if(bold){
+                            bold = false;
+                            x0 += cellWidth * 0.2f;
+                            x1 += cellWidth * 0.2f;
+                            x2 -= cellWidth * 0.2f;
+                            x3 -= cellWidth * 0.2f;
+                        }
                         ++i;
                         continue;
                     }
                     int len = text.indexOf(']', i) - i;
                     switch (c){
+                        case '*': if(bold = !bold) {
+                            x0 -= cellWidth * 0.2f;
+                            x1 -= cellWidth * 0.2f;
+                            x2 += cellWidth * 0.2f;
+                            x3 += cellWidth * 0.2f;
+                        } else {
+                            x0 += cellWidth * 0.2f;
+                            x1 += cellWidth * 0.2f;
+                            x2 -= cellWidth * 0.2f;
+                            x3 -= cellWidth * 0.2f;
+                        }
+
+                            break;
                         case '#': {
                             if (len >= 7 && len < 9)
-                                batch.setPackedColor(BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));
+                                color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));
                             else if(len >= 9)
-                                batch.setPackedColor(BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 9) & -2));
+                                color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 9) & -2));
                             else
-                                batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+                                color = (Color.WHITE_FLOAT_BITS);
                             break;
                         }
                         case '|':
-                            batch.setPackedColor(BitConversion.reversedIntBitsToFloat(
+                            color = (BitConversion.reversedIntBitsToFloat(
                                     DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i + 1, len)) & -2));
                             break;
                         default:
-                            batch.setPackedColor(BitConversion.reversedIntBitsToFloat(
+                            color = (BitConversion.reversedIntBitsToFloat(
                                     DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i, len)) & -2));
                     }
                     i += len;
-                    x -= cellWidth;
+                    d -= cellWidth;
                 }
-                else batch.draw(mapping.get('['), x, y, cellWidth, cellHeight);
+                else {
+                    batch.draw(mapping.get('['), x, y, cellWidth, cellHeight);
+                }
             } else {
-                batch.draw(mapping.get(text.charAt(i)), x, y, cellWidth, cellHeight);
+                tr = mapping.get(text.charAt(i));
+                u = tr.getU();
+                v = tr.getV();
+                u2 = tr.getU2();
+                v2 = tr.getV2();
+                vertices[0] = x + x0 + d;
+                vertices[1] = y + y0 + cellHeight;
+                vertices[2] = color;
+                vertices[3] = u;
+                vertices[4] = v;
+
+                vertices[5] = x + x1 + d;
+                vertices[6] = y + y1;
+                vertices[7] = color;
+                vertices[8] = u;
+                vertices[9] = v2;
+
+                vertices[10] = x + x2 + cellWidth + d;
+                vertices[11] = y + y2;
+                vertices[12] = color;
+                vertices[13] = u2;
+                vertices[14] = v2;
+
+                vertices[15] = x + x3 + cellWidth + d;
+                vertices[16] = y + y3 + cellHeight;
+                vertices[17] = color;
+                vertices[18] = u2;
+                vertices[19] = v;
+                batch.draw(parentTexture, vertices, 0, 20);
             }
         }
 
