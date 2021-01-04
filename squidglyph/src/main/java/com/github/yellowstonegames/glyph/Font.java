@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.StringTools;
 
 public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
@@ -228,6 +230,78 @@ public class Font implements Disposable {
             vertices[6] = vertices[11] = y + cellHeight;
         }
     }
+
+
+    /**
+     * Draws the specified text at the given x,y position (in world space), parsing an extension of libGDX markup
+     * and using it to determine color, size, position, shape, strikethrough, underline, and case of the given
+     * CharSequence. The text drawn will start as white, with the normal size as by {@link #cellWidth} and
+     * {@link #cellHeight}, normal case, and without bold, italic, superscript, subscript, strikethrough, or
+     * underline. Markup starts with {@code [}; the next non-letter character determines what that piece of markup
+     * toggles. Markup this knows:
+     * <ul>
+     *     <li>{@code [[} escapes a literal left bracket.</li>
+     *     <li>{@code []} clears all markup to the initial state without any applied.</li>
+     *     <li>{@code [*]} toggles bold mode.</li>
+     *     <li>{@code [/]} toggles italic (technically, oblique) mode.</li>
+     *     <li>{@code [^]} toggles superscript mode (and turns off subscript mode).</li>
+     *     <li>{@code [.]} toggles subscript mode (and turns off superscript mode).</li>
+     *     <li>{@code [_]} toggles underline mode.</li>
+     *     <li>{@code [~]} toggles strikethrough mode.</li>
+     *     <li>{@code [!]} toggles all upper case mode.</li>
+     *     <li>{@code [,]} toggles all lower case mode.</li>
+     *     <li>{@code [;]} toggles capitalize each word mode.</li>
+     *     <li>{@code [#HHHHHHHH]}, where HHHHHHHH is an RGBA8888 int color with optional alpha, changes the color.</li>
+     *     <li>{@code [|some description]}, where "some description" is a lower-case color description as per
+     *     {@link com.github.yellowstonegames.core.DescriptiveColor#parseDescription(CharSequence, int, int)},
+     *     changes the color. You don't have to include the "|" character, since this is the default.</li>
+     * </ul>
+     * @param batch typically a SpriteBatch
+     * @param text typically a String with markup, but this can also be a StringBuilder or some custom class
+     * @param x the x position in world space to start drawing the text at (lower left corner)
+     * @param y the y position in world space to start drawing the text at (lower left corner)
+     */
+    public void drawMarkupText(Batch batch, String text, float x, float y) {
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+        int c;
+        for (int i = 0, n = text.length(); i < n; i++, x += cellWidth) {
+            if(text.charAt(i) == '['){
+                if(++i < n && (c = text.charAt(i)) != '['){
+                    if(c == ']'){
+                        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+                        ++i;
+                        continue;
+                    }
+                    int len = text.indexOf(']', i) - i;
+                    switch (c){
+                        case '#': {
+                            if (len >= 7 && len < 9)
+                                batch.setPackedColor(BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));
+                            else if(len >= 9)
+                                batch.setPackedColor(BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 9) & -2));
+                            else
+                                batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+                            break;
+                        }
+                        case '|':
+                            batch.setPackedColor(BitConversion.reversedIntBitsToFloat(
+                                    DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i + 1, len)) & -2));
+                            break;
+                        default:
+                            batch.setPackedColor(BitConversion.reversedIntBitsToFloat(
+                                    DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i, len)) & -2));
+                    }
+                    i += len;
+                    x -= cellWidth;
+                }
+                else batch.draw(mapping.get('['), x, y, cellWidth, cellHeight);
+            } else {
+                batch.draw(mapping.get(text.charAt(i)), x, y, cellWidth, cellHeight);
+            }
+        }
+
+    }
+
 
     /**
      * Releases all resources of this object.

@@ -30,7 +30,7 @@ public class FontTest extends ApplicationAdapter {
         random = new LaserRandom();
         batch = new SpriteBatch();
 //        font = new Font("Cozette.fnt", "Cozette.png", false);
-        font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.75f, 0.75f);
+        font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.375f, 0.375f);
 //        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.75f, 0.75f);
 //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
         backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
@@ -69,6 +69,7 @@ public class FontTest extends ApplicationAdapter {
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
                 ), 0x000000FF, 0.375f));
+        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [|lighter blue mint]WENDIGO[] appears!", 0, font.cellHeight);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

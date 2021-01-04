@@ -1263,7 +1263,7 @@ public final class DescriptiveColor {
      */
     public static int parseDescription(final CharSequence description, int start, int length) {
         float intensity = 0f, saturation = 0f;
-        wordMatcher.setTarget(description, start, length);
+        wordMatcher.setTarget(description.subSequence(start, start + length));
         final List<String> terms = wordMatcher.foundStrings();
         mixing.clear();
         for (int i = 0; i < terms.size(); i++) {
