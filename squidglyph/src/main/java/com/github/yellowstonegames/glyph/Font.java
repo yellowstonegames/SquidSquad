@@ -323,10 +323,14 @@ public class Font implements Disposable {
                         color = (Color.WHITE_FLOAT_BITS);
                         if(bold) {
                             bold = false;
-                            x0 += cellWidth * 0.2f;
-                            x1 += cellWidth * 0.2f;
-                            x2 -= cellWidth * 0.2f;
-                            x3 -= cellWidth * 0.2f;
+                            x0 += cellWidth * 0.125f;
+                            x1 += cellWidth * 0.125f;
+                            x2 -= cellWidth * 0.125f;
+                            x3 -= cellWidth * 0.125f;
+                            y0 -= cellHeight * 0.09375f;
+                            y1 += cellHeight * 0.09375f;
+                            y2 += cellHeight * 0.09375f;
+                            y3 -= cellHeight * 0.09375f;
                         }
                         if(oblique) {
                             oblique = false;
@@ -350,15 +354,24 @@ public class Font implements Disposable {
                     int len = text.indexOf(']', i) - i;
                     switch (c){
                         case '*': if(bold = !bold) {
-                            x0 -= cellWidth * 0.2f;
-                            x1 -= cellWidth * 0.2f;
-                            x2 += cellWidth * 0.2f;
-                            x3 += cellWidth * 0.2f;
+                            x0 -= cellWidth * 0.125f;
+                            x1 -= cellWidth * 0.125f;
+                            x2 += cellWidth * 0.125f;
+                            x3 += cellWidth * 0.125f;
+                            y0 += cellHeight * 0.09375f;
+                            y1 -= cellHeight * 0.09375f;
+                            y2 -= cellHeight * 0.09375f;
+                            y3 += cellHeight * 0.09375f;
                         } else {
-                            x0 += cellWidth * 0.2f;
-                            x1 += cellWidth * 0.2f;
-                            x2 -= cellWidth * 0.2f;
-                            x3 -= cellWidth * 0.2f;
+                            x0 += cellWidth * 0.125f;
+                            x1 += cellWidth * 0.125f;
+                            x2 -= cellWidth * 0.125f;
+                            x3 -= cellWidth * 0.125f;
+                            y0 -= cellHeight * 0.09375f;
+                            y1 += cellHeight * 0.09375f;
+                            y2 += cellHeight * 0.09375f;
+                            y3 -= cellHeight * 0.09375f;
+
                         }
                         break;
                         case '/': if(oblique = !oblique) {
