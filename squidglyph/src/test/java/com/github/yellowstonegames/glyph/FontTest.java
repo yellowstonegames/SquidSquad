@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.LineTools;
 
 public class FontTest extends ApplicationAdapter {
@@ -70,13 +71,13 @@ public class FontTest extends ApplicationAdapter {
                 font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, font.cellHeight * (9 - yy));
             }
         }
-        font.drawText(batch, "Hello, World!", x, y,
-                DescriptiveColor.lerpColors(
+        int color = DescriptiveColor.lerpColors(
                 DescriptiveColor.lerpColors(
                         (int)((System.currentTimeMillis() >>> 10) * 0x9E3779B0 | 0xFE),
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
-                ), 0x000000FF, 0.375f));
+                ), 0x000000FF, 0.375f);
+        font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe!", x, y);
         font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight * 2);
         font.drawMarkupText(batch, "The [_][dark dull blue purple]BLADE[] of [*][/][|darker richest yellow]KINGS[] strikes!", 0, font.cellHeight);
         batch.end();

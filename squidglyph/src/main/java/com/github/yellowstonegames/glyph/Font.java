@@ -93,7 +93,7 @@ public class Font implements Disposable {
             cellHeight = h;
             if(isMSDF) {
                 // TODO: Figure out a way to edit fonts and put this change in them.
-                x += 3;
+                x += 4;
                 y += 1;
                 w -= 4;
                 h -= 7;
@@ -268,7 +268,8 @@ public class Font implements Disposable {
      */
     public void drawMarkupText(Batch batch, String text, float x, float y) {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        boolean bold = false, oblique = false, underline = false;
+        boolean bold = false, oblique = false,
+                underline = false, strikethrough = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -334,7 +335,8 @@ public class Font implements Disposable {
                             x3 -= cellWidth * 0.2f;
                         }
                         underline = false;
-                        ++i;
+                        strikethrough = false;
+                        d -= cellWidth;
                         continue;
                     }
                     int len = text.indexOf(']', i) - i;
@@ -365,6 +367,9 @@ public class Font implements Disposable {
                         break;
                         case '_':
                             underline = !underline;
+                        break;
+                        case '~':
+                            strikethrough = !strikethrough;
                         break;
                         case '#': {
                             if (len >= 7 && len < 9)
@@ -443,6 +448,32 @@ public class Font implements Disposable {
                     vertices[17] = color;
                     vertices[18] = underU2;
                     vertices[19] = underV;
+                    batch.draw(parentTexture, vertices, 0, 20);
+                }
+                if(strikethrough){
+                    vertices[0] = x + d;
+                    vertices[1] = y + cellHeight;
+                    vertices[2] = color;
+                    vertices[3] = dashU;
+                    vertices[4] = dashV;
+
+                    vertices[5] = x + d;
+                    vertices[6] = y;
+                    vertices[7] = color;
+                    vertices[8] = dashU;
+                    vertices[9] = dashV2;
+
+                    vertices[10] = x + cellWidth + d;
+                    vertices[11] = y;
+                    vertices[12] = color;
+                    vertices[13] = dashU2;
+                    vertices[14] = dashV2;
+
+                    vertices[15] = x + cellWidth + d;
+                    vertices[16] = y + cellHeight;
+                    vertices[17] = color;
+                    vertices[18] = dashU2;
+                    vertices[19] = dashV;
                     batch.draw(parentTexture, vertices, 0, 20);
                 }
             }
