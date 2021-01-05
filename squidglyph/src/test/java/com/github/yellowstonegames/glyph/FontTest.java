@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.grid.LineTools;
 
 public class FontTest extends ApplicationAdapter {
 
@@ -16,6 +17,7 @@ public class FontTest extends ApplicationAdapter {
     SpriteBatch batch;
     LaserRandom random;
     int[][] backgrounds;
+    char[][] lines;
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
@@ -27,11 +29,13 @@ public class FontTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        random = new LaserRandom();
+        random = new LaserRandom(1L);
+        lines = LineTools.decode4x4(random.nextLong() | LineTools.exteriorSquare, LineTools.light);
+//        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
 //        font = new Font("Cozette.fnt", "Cozette.png", false);
         font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.375f, 0.375f);
-//        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.75f, 0.75f);
+//        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.55f, 0.55f);
 //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
         backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
@@ -61,7 +65,11 @@ public class FontTest extends ApplicationAdapter {
         font.enableShader(batch);
 
         font.drawBlocks(batch, backgrounds, 0f, 0f);
-
+        for (int xx = 0; xx < 4; xx++) {
+            for (int yy = 0; yy < 4; yy++) {
+                font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, font.cellHeight * (9 - yy));
+            }
+        }
         font.drawText(batch, "Hello, World!", x, y,
                 DescriptiveColor.lerpColors(
                 DescriptiveColor.lerpColors(

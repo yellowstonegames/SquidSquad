@@ -91,6 +91,13 @@ public class Font implements Disposable {
             int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
             cellWidth = w;
             cellHeight = h;
+            if(isMSDF) {
+                // TODO: Figure out a way to edit fonts and put this change in them.
+                x += 3;
+                y += 1;
+                w -= 4;
+                h -= 7;
+            }
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
         originalCellWidth = cellWidth;

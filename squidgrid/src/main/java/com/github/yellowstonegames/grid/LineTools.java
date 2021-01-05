@@ -6,6 +6,8 @@ package com.github.yellowstonegames.grid;
  * character, like any of {@code "╴╵┘╶─└┴╷┐│┤┌┬├┼"} to determine which wall graphic to draw at a position.
  */
 public class LineTools {
+    private LineTools(){
+    }
     public static final char[] lightAlt = " ╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),
                                heavyAlt = " ╸╹┛╺━┗┻╻┓┃┫┏┳┣╋".toCharArray(),
                                light    = " ─│┘──└┴│┐│┤┌┬├┼".toCharArray(),
@@ -15,7 +17,7 @@ public class LineTools {
     /**
      * A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
      * would extend to touch cells adjacent to the 4x4 area. Meant to restrict cells within the square area by using
-     * bitwise AND with an existing encoded pattern as another long, as with {@code LineKit.interiorSquare & encoded}.
+     * bitwise AND with an existing encoded pattern as another long, as with {@code LineTools.interiorSquare & encoded}.
      * If you limit the area to the square with this, you may sometimes want to add a border, and for that you can use
      * {@link #exteriorSquare} and bitwise OR that with the restricted area.
      * <br>This looks like:
@@ -31,8 +33,8 @@ public class LineTools {
     /**
      * A constant that represents the encoded pattern for a 4x4 square with only the lines along the border. Meant to
      * either restrict cells to the border by using bitwise AND with an existing encoded pattern as another long, as
-     * with {@code LineKit.exteriorSquare & encoded}, or to add a border to an existing pattern with bitwise OR, as with
-     * {@code LineKit.exteriorSquare | encoded}.
+     * with {@code LineTools.exteriorSquare & encoded}, or to add a border to an existing pattern with bitwise OR, as with
+     * {@code LineTools.exteriorSquare | encoded}.
      * <br>This looks like: 
      * <pre>
      * "┌──┐"
@@ -46,7 +48,7 @@ public class LineTools {
      * A constant that represents the encoded pattern for a 4x4 plus pattern with only the lines along the border. This
      * pattern has no lines in the corners of the 4x4 area, but has some lines in all other cells, though none that
      * would touch cells adjacent to this 4x4 area. Meant to restrict cells to the border by using bitwise AND with an
-     * existing encoded pattern as another long, as with {@code LineKit.interiorPlus & encoded}.
+     * existing encoded pattern as another long, as with {@code LineTools.interiorPlus & encoded}.
      * <br>This looks like: 
      * <pre>
      * " ┌┐ "
@@ -60,8 +62,8 @@ public class LineTools {
      * A constant that represents the encoded pattern for a 4x4 plus pattern with only the lines along the border. This
      * pattern has no lines in the corners of the 4x4 area, but has some lines in all other cells, though none that
      * would touch cells adjacent to this 4x4 area. Meant to either restrict cells to the border by using bitwise AND
-     * with an existing encoded pattern as another long, as with {@code LineKit.exteriorPlus & encoded}, or to add a
-     * border to an existing pattern with bitwise OR, as with {@code LineKit.exteriorPlus | encoded}.
+     * with an existing encoded pattern as another long, as with {@code LineTools.exteriorPlus & encoded}, or to add a
+     * border to an existing pattern with bitwise OR, as with {@code LineTools.exteriorPlus | encoded}.
      * <br>This looks like: 
      * <pre>
      * " ┌┐ "
@@ -76,9 +78,9 @@ public class LineTools {
      * the upper or left borders, but they do extend into the lower and right borders. This is expected to be flipped
      * using {@link #flipHorizontal4x4(long)} and/or {@link #flipVertical4x4(long)} to make the other corners. If middle
      * pieces are wanted that touch everything but the upper border, you can use
-     * {@code (LineKit.interiorSquareLarge | LineKit.flipHorizontal4x4(LineKit.interiorSquareLarge))}. If you want it to
+     * {@code (LineTools.interiorSquareLarge | LineTools.flipHorizontal4x4(LineTools.interiorSquareLarge))}. If you want it to
      * touch everything but the left border, you can use
-     * {@code (LineKit.interiorSquareLarge | LineKit.flipVertical4x4(LineKit.interiorSquareLarge))}.
+     * {@code (LineTools.interiorSquareLarge | LineTools.flipVertical4x4(LineTools.interiorSquareLarge))}.
      * <br>This looks like: 
      * <pre>
      * "┌┬┬┬"
