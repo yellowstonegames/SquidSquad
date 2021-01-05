@@ -269,7 +269,8 @@ public class Font implements Disposable {
     public void drawMarkupText(Batch batch, String text, float x, float y) {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         boolean bold = false, oblique = false,
-                underline = false, strikethrough = false;
+                underline = false, strikethrough = false,
+                superscript = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -278,7 +279,7 @@ public class Font implements Disposable {
         assert under != null;
         final TextureRegion dash = mapping.get('-');
         assert dash != null;
-        TextureRegion tr = under;
+        TextureRegion tr;
         final float underU = under.getU() + (under.getU2() - under.getU()) * 0.375f,
                 underV = under.getV(),
                 underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
@@ -320,19 +321,26 @@ public class Font implements Disposable {
                 if(++i < n && (c = text.charAt(i)) != '['){
                     if(c == ']'){
                         color = (Color.WHITE_FLOAT_BITS);
-                        if(bold){
+                        if(bold) {
                             bold = false;
                             x0 += cellWidth * 0.2f;
                             x1 += cellWidth * 0.2f;
                             x2 -= cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
                         }
-                        if(oblique){
+                        if(oblique) {
                             oblique = false;
                             x0 -= cellWidth * 0.2f;
                             x1 += cellWidth * 0.2f;
                             x2 += cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
+                        }
+                        if(superscript) {
+                            superscript = false;
+                            x2 += cellWidth * 0.5f;
+                            x3 += cellWidth * 0.5f;
+                            y1 -= cellHeight * 0.5f;
+                            y2 -= cellHeight * 0.5f;
                         }
                         underline = false;
                         strikethrough = false;
@@ -363,6 +371,18 @@ public class Font implements Disposable {
                             x1 += cellWidth * 0.2f;
                             x2 += cellWidth * 0.2f;
                             x3 -= cellWidth * 0.2f;
+                        }
+                        break;
+                        case '^': if(superscript = !superscript) {
+                            x2 -= cellWidth * 0.5f;
+                            x3 -= cellWidth * 0.5f;
+                            y1 += cellHeight * 0.5f;
+                            y2 += cellHeight * 0.5f;
+                        } else {
+                            x2 += cellWidth * 0.5f;
+                            x3 += cellWidth * 0.5f;
+                            y1 -= cellHeight * 0.5f;
+                            y2 -= cellHeight * 0.5f;
                         }
                         break;
                         case '_':
