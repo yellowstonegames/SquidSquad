@@ -22,7 +22,7 @@ public class FontTest extends ApplicationAdapter {
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
-        config.setWindowedMode(640, 480);
+        config.setWindowedMode(800, 640);
         config.disableAudio(true);
         config.useVsync(false);
         new Lwjgl3Application(new FontTest(), config);
@@ -38,7 +38,7 @@ public class FontTest extends ApplicationAdapter {
         font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.375f, 0.375f);
 //        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.55f, 0.55f);
 //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
-        backgrounds = new int[(int)Math.ceil(640 / font.cellWidth)][(int)Math.ceil(480 / font.cellHeight)];
+        backgrounds = new int[(int)Math.ceil(800 / font.cellWidth)][(int)Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
                 nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown");
         backgrounds[0][0] = sw;
@@ -61,7 +61,7 @@ public class FontTest extends ApplicationAdapter {
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = font.cellHeight * 3;
+        float x = 0, y = font.cellHeight * 4;
         batch.begin();
         font.enableShader(batch);
 
@@ -78,8 +78,9 @@ public class FontTest extends ApplicationAdapter {
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
                 ), 0x000000FF, 0.375f);
         font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]α[^]2[^]!", x, y);
-        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight * 2);
-        font.drawMarkupText(batch, "The [_][dark dull blue purple]BLADE[] of [*][/][|darker richest yellow]KINGS[] strikes!", 0, font.cellHeight);
+        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight * 3);
+        font.drawMarkupText(batch, "The [_][dark dull blue purple]BLADE[] of [*][/][|darker richest yellow]KINGS[] strikes!", 0, font.cellHeight * 2);
+        font.drawMarkupText(batch, "[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", 0, font.cellHeight);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

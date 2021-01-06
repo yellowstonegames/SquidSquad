@@ -13,6 +13,7 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.StringTools;
+import regexodus.Category;
 
 public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
@@ -270,7 +271,8 @@ public class Font implements Disposable {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         boolean bold = false, oblique = false,
                 underline = false, strikethrough = false,
-                superscript = false, subscript = false;
+                superscript = false, subscript = false,
+                capitalize = false, previousWasLetter = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -355,92 +357,99 @@ public class Font implements Disposable {
                         }
                         underline = false;
                         strikethrough = false;
+                        capitalize = false;
                         d -= cellWidth;
                         continue;
                     }
                     int len = text.indexOf(']', i) - i;
-                    switch (c){
-                        case '*': if(bold = !bold) {
-                            x0 -= cellWidth * 0.125f;
-                            x1 -= cellWidth * 0.125f;
-                            x2 += cellWidth * 0.125f;
-                            x3 += cellWidth * 0.125f;
-                            y0 += cellHeight * 0.09375f;
-                            y1 -= cellHeight * 0.09375f;
-                            y2 -= cellHeight * 0.09375f;
-                            y3 += cellHeight * 0.09375f;
-                        } else {
-                            x0 += cellWidth * 0.125f;
-                            x1 += cellWidth * 0.125f;
-                            x2 -= cellWidth * 0.125f;
-                            x3 -= cellWidth * 0.125f;
-                            y0 -= cellHeight * 0.09375f;
-                            y1 += cellHeight * 0.09375f;
-                            y2 += cellHeight * 0.09375f;
-                            y3 -= cellHeight * 0.09375f;
-                        }
-                        break;
-                        case '/': if(oblique = !oblique) {
-                            x0 += cellWidth * 0.2f;
-                            x1 -= cellWidth * 0.2f;
-                            x2 -= cellWidth * 0.2f;
-                            x3 += cellWidth * 0.2f;
-                        } else {
-                            x0 -= cellWidth * 0.2f;
-                            x1 += cellWidth * 0.2f;
-                            x2 += cellWidth * 0.2f;
-                            x3 -= cellWidth * 0.2f;
-                        }
-                        break;
-                        case '^': if(superscript = !superscript) {
-                            x2 -= cellWidth * 0.5f;
-                            x3 -= cellWidth * 0.5f;
-                            y1 += cellHeight * 0.5f;
-                            y2 += cellHeight * 0.5f;
-                            if(subscript){
-                                subscript = false;
-                                x2 += cellWidth * 0.5f;
-                                x3 += cellWidth * 0.5f;
-                                y0 += cellHeight * 0.5f;
-                                y3 += cellHeight * 0.5f;
+                    switch (c) {
+                        case '*':
+                            if (bold = !bold) {
+                                x0 -= cellWidth * 0.125f;
+                                x1 -= cellWidth * 0.125f;
+                                x2 += cellWidth * 0.125f;
+                                x3 += cellWidth * 0.125f;
+                                y0 += cellHeight * 0.09375f;
+                                y1 -= cellHeight * 0.09375f;
+                                y2 -= cellHeight * 0.09375f;
+                                y3 += cellHeight * 0.09375f;
+                            } else {
+                                x0 += cellWidth * 0.125f;
+                                x1 += cellWidth * 0.125f;
+                                x2 -= cellWidth * 0.125f;
+                                x3 -= cellWidth * 0.125f;
+                                y0 -= cellHeight * 0.09375f;
+                                y1 += cellHeight * 0.09375f;
+                                y2 += cellHeight * 0.09375f;
+                                y3 -= cellHeight * 0.09375f;
                             }
-                        } else {
-                            x2 += cellWidth * 0.5f;
-                            x3 += cellWidth * 0.5f;
-                            y1 -= cellHeight * 0.5f;
-                            y2 -= cellHeight * 0.5f;
-                        }
-                        break;
-                        case '.': if(subscript = !subscript) {
-                            x2 -= cellWidth * 0.5f;
-                            x3 -= cellWidth * 0.5f;
-                            y0 -= cellHeight * 0.5f;
-                            y3 -= cellHeight * 0.5f;
-                            if(superscript) {
-                                superscript = false;
+                            break;
+                        case '/':
+                            if (oblique = !oblique) {
+                                x0 += cellWidth * 0.2f;
+                                x1 -= cellWidth * 0.2f;
+                                x2 -= cellWidth * 0.2f;
+                                x3 += cellWidth * 0.2f;
+                            } else {
+                                x0 -= cellWidth * 0.2f;
+                                x1 += cellWidth * 0.2f;
+                                x2 += cellWidth * 0.2f;
+                                x3 -= cellWidth * 0.2f;
+                            }
+                            break;
+                        case '^':
+                            if (superscript = !superscript) {
+                                x2 -= cellWidth * 0.5f;
+                                x3 -= cellWidth * 0.5f;
+                                y1 += cellHeight * 0.5f;
+                                y2 += cellHeight * 0.5f;
+                                if (subscript) {
+                                    subscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y0 += cellHeight * 0.5f;
+                                    y3 += cellHeight * 0.5f;
+                                }
+                            } else {
                                 x2 += cellWidth * 0.5f;
                                 x3 += cellWidth * 0.5f;
                                 y1 -= cellHeight * 0.5f;
                                 y2 -= cellHeight * 0.5f;
                             }
-                        }
-                        else {
-                            x2 += cellWidth * 0.5f;
-                            x3 += cellWidth * 0.5f;
-                            y0 += cellHeight * 0.5f;
-                            y3 += cellHeight * 0.5f;
-                        }
-                        break;
+                            break;
+                        case '.':
+                            if (subscript = !subscript) {
+                                x2 -= cellWidth * 0.5f;
+                                x3 -= cellWidth * 0.5f;
+                                y0 -= cellHeight * 0.5f;
+                                y3 -= cellHeight * 0.5f;
+                                if (superscript) {
+                                    superscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y1 -= cellHeight * 0.5f;
+                                    y2 -= cellHeight * 0.5f;
+                                }
+                            } else {
+                                x2 += cellWidth * 0.5f;
+                                x3 += cellWidth * 0.5f;
+                                y0 += cellHeight * 0.5f;
+                                y3 += cellHeight * 0.5f;
+                            }
+                            break;
                         case '_':
                             underline = !underline;
-                        break;
+                            break;
                         case '~':
                             strikethrough = !strikethrough;
-                        break;
+                            break;
+                        case ';':
+                            capitalize = !capitalize;
+                            break;
                         case '#': {
                             if (len >= 7 && len < 9)
                                 color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));
-                            else if(len >= 9)
+                            else if (len >= 9)
                                 color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 9) & -2));
                             else
                                 color = (Color.WHITE_FLOAT_BITS);
@@ -451,8 +460,9 @@ public class Font implements Disposable {
                                     DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i + 1, len)) & -2));
                             break;
                         default:
-                            color = (BitConversion.reversedIntBitsToFloat(
-                                    DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i, len)) & -2));
+                            if (c >= 'a' && c <= 'z')
+                                color = (BitConversion.reversedIntBitsToFloat(
+                                        DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i, len)) & -2));
                     }
                     i += len;
                     d -= cellWidth;
@@ -461,7 +471,20 @@ public class Font implements Disposable {
                     batch.draw(mapping.get('['), x, y, cellWidth, cellHeight);
                 }
             } else {
-                tr = mapping.get(text.charAt(i));
+                char ch = text.charAt(i);
+                if(Category.L.contains(ch)) {
+                    if(capitalize) {
+                        if(previousWasLetter)
+                            ch = Character.toLowerCase(ch);
+                        else
+                            ch = Character.toUpperCase(ch);
+                    }
+                    previousWasLetter = true;
+                }
+                else {
+                    previousWasLetter = false;
+                }
+                tr = mapping.get(ch);
                 u = tr.getU();
                 v = tr.getV();
                 u2 = tr.getU2();
