@@ -56,7 +56,27 @@ public class Font implements Disposable {
     private static int indexAfter(String text, String search, int from){
         return ((from = text.indexOf(search, from)) < 0 ? text.length() : from + search.length());
     }
-    public Font(String fntName, String textureName, boolean isMSDF) {
+    public Font(String fntName, String textureName, boolean isMSDF){
+        this(fntName, textureName, isMSDF, 0f, 0f, 0f, 0f);
+    }
+
+    public Font(Font toCopy){
+        isMSDF = toCopy.isMSDF;
+        msdfCrispness = toCopy.msdfCrispness;
+        parentTexture = toCopy.parentTexture;
+        cellWidth = toCopy.cellWidth;
+        cellHeight = toCopy.cellHeight;
+        originalCellWidth = toCopy.originalCellWidth;
+        originalCellHeight = toCopy.originalCellHeight;
+        mapping = new IntObjectMap<>(toCopy.mapping.size());
+        for(IntObjectMap.Entry<TextureRegion> e : toCopy.mapping){
+            if(e.value == null) continue;
+            mapping.put(e.key, new TextureRegion(parentTexture, e.value.getU(), e.value.getV(), e.value.getU2(), e.value.getV2()));
+        }
+    }
+
+    public Font(String fntName, String textureName, boolean isMSDF,
+                float xAdjust, float yAdjust, float widthAdjust, float heightAdjust) {
         this.isMSDF = isMSDF;
         if(isMSDF && msdfShader == null) {
             msdfShader = new ShaderProgram(vertexShader, msdfFragmentShader);
@@ -90,15 +110,14 @@ public class Font implements Disposable {
             int y = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " width=", idx));
             int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " height=", idx));
             int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+            if(isMSDF) {
+                x += xAdjust;
+                y += yAdjust;
+                w += widthAdjust;
+                h += heightAdjust;
+            }
             cellWidth = w;
             cellHeight = h;
-            if(isMSDF) {
-                // TODO: Figure out a way to edit fonts and put this change in them.
-                x += 4;
-                y += 1;
-                w -= 4;
-                h -= 7;
-            }
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
         originalCellWidth = cellWidth;
