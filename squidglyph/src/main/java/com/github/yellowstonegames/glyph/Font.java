@@ -272,7 +272,8 @@ public class Font implements Disposable {
         boolean bold = false, oblique = false,
                 underline = false, strikethrough = false,
                 superscript = false, subscript = false,
-                capitalize = false, previousWasLetter = false;
+                capitalize = false, previousWasLetter = false,
+                capsLock = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -358,6 +359,7 @@ public class Font implements Disposable {
                         underline = false;
                         strikethrough = false;
                         capitalize = false;
+                        capsLock = false;
                         d -= cellWidth;
                         continue;
                     }
@@ -445,6 +447,11 @@ public class Font implements Disposable {
                             break;
                         case ';':
                             capitalize = !capitalize;
+                            capsLock = false;
+                            break;
+                        case '!':
+                            capsLock = !capsLock;
+                            capitalize = false;
                             break;
                         case '#': {
                             if (len >= 7 && len < 9)
@@ -478,6 +485,9 @@ public class Font implements Disposable {
                             ch = Character.toLowerCase(ch);
                         else
                             ch = Character.toUpperCase(ch);
+                    }
+                    else if(capsLock) {
+                        ch = Character.toUpperCase(ch);
                     }
                     previousWasLetter = true;
                 }
