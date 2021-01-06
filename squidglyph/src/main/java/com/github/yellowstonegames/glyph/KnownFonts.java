@@ -57,6 +57,40 @@ public class KnownFonts implements LifecycleListener {
     }
 
     /**
+     * A nice old standby font with very broad language support, DejaVu Sans Mono is fixed-width and can be clearly
+     * readable but doesn't do anything unusual stylistically. It really does handle a lot of glyphs; not only does this
+     * have practically all Latin glyphs in Unicode (enough to support everything from Icelandic to Vietnamese), it has
+     * Greek (including Extended), Cyrillic (including some optional glyphs), IPA, Armenian (maybe the only font here to
+     * do so), Georgian (which won't be treated correctly by some case-insensitive code, so it should only be used if
+     * case doesn't matter), and Lao. It has full box drawing and Braille support, handles a wide variety of math
+     * symbols, technical marks, and dingbats, etc.
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Inconsolata LGC using MSDF
+     */
+    public static Font getDejaVuSansMono()
+    {
+        initialize();
+        if(instance.dejaVuSansMono == null)
+        {
+            try {
+                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", true, 1f, 4f, -1.5f, -4f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.dejaVuSansMono != null)
+            return new Font(instance.dejaVuSansMono);
+        throw new RuntimeException("Assets for getDejaVuSansMono() not found.");
+    }
+
+
+    /**
      * A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
      * Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
      * Inconsolata is by Raph Levien, and various other contributors added support for other languages.
@@ -85,77 +119,77 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getInconsolataLGC() not found.");
     }
 
-//    /**
-//     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
-//     * and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
-//     * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
-//     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
-//     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
-//     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
-//     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
-//     * sharper edges and precise corners instead of rounded tips on strokes.
-//     * <br>
-//     * Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
-//     * <br>
-//     * Needs files:
-//     * <ul>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.fnt</li>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.png</li>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
-//     * </ul>
-//     * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
-//     */
-//    public static Font getIosevka()
-//    {
-//        initialize();
-//        if(instance.iosevka == null)
-//        {
-//            try {
-//                instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if(instance.iosevka != null)
-//            return new Font(instance.iosevka);
-//        throw new RuntimeException("Assets for getIosevka() not found.");
-//    }
-//
-//    /**
-//     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
-//     * and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
-//     * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
-//     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
-//     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
-//     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
-//     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
-//     * sharper edges and precise corners instead of rounded tips on strokes.
-//     * <br>
-//     * Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
-//     * <br>
-//     * Needs files:
-//     * <ul>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.fnt</li>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.png</li>
-//     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
-//     * </ul>
-//     * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
-//     */
-//    public static Font getIosevkaSlab()
-//    {
-//        initialize();
-//        if(instance.iosevkaSlab == null)
-//        {
-//            try {
-//                instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if(instance.iosevkaSlab != null)
-//            return new Font(instance.iosevkaSlab);
-//        throw new RuntimeException("Assets for getIosevkaSlab() not found.");
-//    }
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
+     * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
+     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
+     * sharper edges and precise corners instead of rounded tips on strokes.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
+     */
+    public static Font getIosevka()
+    {
+        initialize();
+        if(instance.iosevka == null)
+        {
+            try {
+                instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", true, 3f, 6, -4f, -7);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevka != null)
+            return new Font(instance.iosevka);
+        throw new RuntimeException("Assets for getIosevka() not found.");
+    }
+
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
+     * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
+     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
+     * sharper edges and precise corners instead of rounded tips on strokes.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
+     */
+    public static Font getIosevkaSlab()
+    {
+        initialize();
+        if(instance.iosevkaSlab == null)
+        {
+            try {
+                instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", true, 3f, 6, -4f, -7);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevkaSlab != null)
+            return new Font(instance.iosevkaSlab);
+        throw new RuntimeException("Assets for getIosevkaSlab() not found.");
+    }
 
     @Override
     public void pause() {

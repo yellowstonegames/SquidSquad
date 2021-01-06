@@ -338,14 +338,14 @@ public final class MathTools
      * @return the cube root of x, approximated
      */
     public static float cbrt(float x) {
-        int ix = Float.floatToRawIntBits(x);
+        int ix = BitConversion.floatToRawIntBits(x);
         final int sign = ix & 0x80000000;
         ix &= 0x7FFFFFFF;
         final float x0 = x;
         ix = (ix>>>2) + (ix>>>4);
         ix += (ix>>>4);
         ix = ix + (ix>>>8) + 0x2A5137A0 | sign;
-        x  = Float.intBitsToFloat(ix);
+        x  = BitConversion.intBitsToFloat(ix);
         x  = 0.33333334f*(2f * x + x0/(x*x));
         x  = 0.33333334f*(2f * x + x0/(x*x));
         return x;

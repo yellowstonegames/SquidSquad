@@ -35,7 +35,10 @@ public class FontTest extends ApplicationAdapter {
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
 //        font = KnownFonts.getInconsolataLGC().scale(0.375f, 0.375f);
-        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
+//        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
+//        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
+//        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
+        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = new Font("Cozette.fnt", "Cozette.png", false);
 //        font = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true).scale(0.375f, 0.375f);
 //        font = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true).scale(0.55f, 0.55f);
