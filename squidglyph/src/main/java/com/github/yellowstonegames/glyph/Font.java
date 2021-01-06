@@ -270,7 +270,7 @@ public class Font implements Disposable {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         boolean bold = false, oblique = false,
                 underline = false, strikethrough = false,
-                superscript = false;
+                superscript = false, subscript = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -346,6 +346,13 @@ public class Font implements Disposable {
                             y1 -= cellHeight * 0.5f;
                             y2 -= cellHeight * 0.5f;
                         }
+                        if(subscript) {
+                            subscript = false;
+                            x2 += cellWidth * 0.5f;
+                            x3 += cellWidth * 0.5f;
+                            y0 += cellHeight * 0.5f;
+                            y3 += cellHeight * 0.5f;
+                        }
                         underline = false;
                         strikethrough = false;
                         d -= cellWidth;
@@ -371,7 +378,6 @@ public class Font implements Disposable {
                             y1 += cellHeight * 0.09375f;
                             y2 += cellHeight * 0.09375f;
                             y3 -= cellHeight * 0.09375f;
-
                         }
                         break;
                         case '/': if(oblique = !oblique) {
@@ -391,11 +397,38 @@ public class Font implements Disposable {
                             x3 -= cellWidth * 0.5f;
                             y1 += cellHeight * 0.5f;
                             y2 += cellHeight * 0.5f;
+                            if(subscript){
+                                subscript = false;
+                                x2 += cellWidth * 0.5f;
+                                x3 += cellWidth * 0.5f;
+                                y0 += cellHeight * 0.5f;
+                                y3 += cellHeight * 0.5f;
+                            }
                         } else {
                             x2 += cellWidth * 0.5f;
                             x3 += cellWidth * 0.5f;
                             y1 -= cellHeight * 0.5f;
                             y2 -= cellHeight * 0.5f;
+                        }
+                        break;
+                        case '.': if(subscript = !subscript) {
+                            x2 -= cellWidth * 0.5f;
+                            x3 -= cellWidth * 0.5f;
+                            y0 -= cellHeight * 0.5f;
+                            y3 -= cellHeight * 0.5f;
+                            if(superscript) {
+                                superscript = false;
+                                x2 += cellWidth * 0.5f;
+                                x3 += cellWidth * 0.5f;
+                                y1 -= cellHeight * 0.5f;
+                                y2 -= cellHeight * 0.5f;
+                            }
+                        }
+                        else {
+                            x2 += cellWidth * 0.5f;
+                            x3 += cellWidth * 0.5f;
+                            y0 += cellHeight * 0.5f;
+                            y3 += cellHeight * 0.5f;
                         }
                         break;
                         case '_':
