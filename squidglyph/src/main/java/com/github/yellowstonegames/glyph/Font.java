@@ -273,7 +273,7 @@ public class Font implements Disposable {
                 underline = false, strikethrough = false,
                 superscript = false, subscript = false,
                 capitalize = false, previousWasLetter = false,
-                capsLock = false;
+                capsLock = false, lowerCase = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
@@ -360,6 +360,7 @@ public class Font implements Disposable {
                         strikethrough = false;
                         capitalize = false;
                         capsLock = false;
+                        lowerCase = false;
                         d -= cellWidth;
                         continue;
                     }
@@ -448,12 +449,19 @@ public class Font implements Disposable {
                         case ';':
                             capitalize = !capitalize;
                             capsLock = false;
+                            lowerCase = false;
                             break;
                         case '!':
                             capsLock = !capsLock;
                             capitalize = false;
+                            lowerCase = false;
                             break;
-                        case '#': {
+                        case ',':
+                            lowerCase = !lowerCase;
+                            capitalize = false;
+                            capsLock = false;
+                            break;
+                        case '#':
                             if (len >= 7 && len < 9)
                                 color = (BitConversion.reversedIntBitsToFloat(DigitTools.intFromHex(text, i + 1, i + 7) << 8 | 0xFE));
                             else if (len >= 9)
@@ -461,7 +469,6 @@ public class Font implements Disposable {
                             else
                                 color = (Color.WHITE_FLOAT_BITS);
                             break;
-                        }
                         case '|':
                             color = (BitConversion.reversedIntBitsToFloat(
                                     DescriptiveColor.toRGBA8888(DescriptiveColor.parseDescription(text, i + 1, len)) & -2));
@@ -479,15 +486,21 @@ public class Font implements Disposable {
                 }
             } else {
                 char ch = text.charAt(i);
-                if(Category.L.contains(ch)) {
-                    if(capitalize) {
-                        if(previousWasLetter)
-                            ch = Character.toLowerCase(ch);
-                        else
-                            ch = Character.toUpperCase(ch);
+                if(Category.Ll.contains(ch)) {
+                    if(capitalize && !previousWasLetter) {
+                        ch = Character.toUpperCase(ch);
                     }
                     else if(capsLock) {
                         ch = Character.toUpperCase(ch);
+                    }
+                    previousWasLetter = true;
+                }
+                else if(Category.Lu.contains(ch)) {
+                    if(capitalize && previousWasLetter) {
+                        ch = Character.toLowerCase(ch);
+                    }
+                    else if(lowerCase) {
+                        ch = Character.toLowerCase(ch);
                     }
                     previousWasLetter = true;
                 }
@@ -495,6 +508,7 @@ public class Font implements Disposable {
                     previousWasLetter = false;
                 }
                 tr = mapping.get(ch);
+                if(tr == null) continue;
                 u = tr.getU();
                 v = tr.getV();
                 u2 = tr.getU2();
