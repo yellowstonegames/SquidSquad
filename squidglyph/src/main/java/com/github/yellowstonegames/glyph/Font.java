@@ -12,7 +12,6 @@ import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.StringTools;
 import regexodus.Category;
 
 public class Font implements Disposable {
@@ -51,7 +50,7 @@ public class Font implements Disposable {
             + "  vec3 sdf = texture2D(u_texture, v_texCoords).rgb;\n"
             + "  gl_FragColor = vec4(v_color.rgb, clamp((max(min(sdf.r, sdf.g), min(max(sdf.r, sdf.g), sdf.b)) - 0.5) * u_smoothing + 0.5, 0.0, 1.0) * v_color.a);\n"
             + "}\n";
-    public static ShaderProgram msdfShader = null;
+    public ShaderProgram shader = null;
 
     private static int indexAfter(String text, String search, int from){
         return ((from = text.indexOf(search, from)) < 0 ? text.length() : from + search.length());
@@ -74,13 +73,18 @@ public class Font implements Disposable {
             mapping.put(e.key, new TextureRegion(parentTexture, e.value.getU(), e.value.getV(), e.value.getU2(), e.value.getV2()));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
+        if(toCopy.shader != null)
+            shader = new ShaderProgram(toCopy.shader.getVertexShaderSource(),
+                    toCopy.shader.getFragmentShaderSource());
     }
 
     public Font(String fntName, String textureName, boolean isMSDF,
                 float xAdjust, float yAdjust, float widthAdjust, float heightAdjust) {
         this.isMSDF = isMSDF;
-        if(isMSDF && msdfShader == null) {
-            msdfShader = new ShaderProgram(vertexShader, msdfFragmentShader);
+        if(isMSDF) {
+            shader = new ShaderProgram(vertexShader, msdfFragmentShader);
+            if(!shader.isCompiled())
+                Gdx.app.error("squidglyph", "Font shader failed to compile: " + shader.getLog());
         }
         FileHandle fntHandle, textureHandle;
         String fnt;
@@ -143,11 +147,12 @@ public class Font implements Disposable {
      * @param batch the Batch to instruct to use the appropriate shader for this font; often a SpriteBatch
      */
     public void enableShader(Batch batch) {
-        if(isMSDF){
-            if(!batch.getShader().equals(msdfShader))
-                batch.setShader(msdfShader);
-            msdfShader.setUniformf("u_smoothing", 5f * msdfCrispness * (cellHeight / originalCellHeight + cellWidth / originalCellWidth));
+        if(isMSDF) {
+            if (batch.getShader() != shader) {
+                batch.setShader(shader);
+                shader.setUniformf("u_smoothing", 5f * msdfCrispness * (cellHeight / originalCellHeight + cellWidth / originalCellWidth));
 //            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellHeight);
+            }
         }
         else {
             batch.setShader(null);
