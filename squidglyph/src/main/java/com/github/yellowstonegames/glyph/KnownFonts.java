@@ -6,7 +6,7 @@ import com.badlogic.gdx.LifecycleListener;
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
 
-    private Font cozette, cascadiaMono, dejaVuSansMono, inconsolataLGC, iosevka, iosevkaSlab;
+    private Font cozette, astarry, cascadiaMono, dejaVuSansMono, inconsolataLGC, iosevka, iosevkaSlab;
 
     private KnownFonts() {
         if(Gdx.app == null)
@@ -21,11 +21,77 @@ public class KnownFonts implements LifecycleListener {
     }
 
     /**
+     * Returns a Font configured to use a cozy fixed-width bitmap font,
+     * <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
+     * including Greek, Cyrillic, Braille, and tech-related icons. This does not scale except to integer
+     * multiples, but it should look very crisp at its default size of 7x13 pixels.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-license.txt</li>
+     * </ul>
+     * @return the Font object that represents the 7x13px font Cozette
+     */
+    public static Font getCozette()
+    {
+        initialize();
+        if(instance.cozette == null)
+        {
+            try {
+                instance.cozette = new Font("Cozette.fnt", "Cozette.png", false, 1, 1, 0, -1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.cozette != null)
+            return new Font(instance.cozette);
+        throw new RuntimeException("Assets for getCozette() not found.");
+    }
+
+    /**
+     * Returns a Font already configured to use a square font with 45-degree angled sections, based on the
+     * typeface used on the Atari ST console, that should scale cleanly to many sizes. This font only supports ASCII,
+     * but it supports all of it. Caches the result for later calls. The font is "a-starry", based on "Atari ST
+     * (low-res)" by Damien Guard; it is available under a CC-BY-SA-3.0 license, which requires attribution to Damien
+     * Guard (and technically Tommy Ettinger, because he made changes in a-starry) if you use it.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-license.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font A Starry using MSDF
+     */
+    public static Font getAStarry()
+    {
+        initialize();
+        if(instance.astarry == null)
+        {
+            try {
+                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", true, 0, 1, 0, 0).scaleTo(18, 18);
+                instance.astarry.msdfCrispness = 3f;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.astarry != null)
+            return new Font(instance.astarry);
+        throw new RuntimeException("Assets for getAStarry() not found.");
+    }
+
+    /**
      * Returns a Font already configured to use a quirky fixed-width font with good Unicode support
      * and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).
      * Caches the result for later calls. The font used is Cascadia Code Mono, an open-source (SIL Open Font
      * License) typeface by Microsoft (see https://github.com/microsoft/cascadia-code ). It supports a lot of glyphs,
-     * including most extended Latin (though it doesn't support a handful of chars used by  FakeLanguageGen), Greek,
+     * including most extended Latin (though it doesn't support a handful of chars used by FakeLanguageGen), Greek,
      * Braille, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
@@ -203,17 +269,30 @@ public class KnownFonts implements LifecycleListener {
 
     @Override
     public void dispose() {
+
+        if(cozette != null){
+            cozette.dispose();
+            cozette = null;
+        }
+        if(astarry != null){
+            astarry.dispose();
+            astarry = null;
+        }
         if(cascadiaMono != null){
             cascadiaMono.dispose();
             cascadiaMono = null;
         }
-        if(iosevka != null){
-            iosevka.dispose();
-            iosevka = null;
+        if(dejaVuSansMono != null){
+            dejaVuSansMono.dispose();
+            dejaVuSansMono = null;
         }
         if(inconsolataLGC != null){
             inconsolataLGC.dispose();
             inconsolataLGC = null;
+        }
+        if(iosevka != null){
+            iosevka.dispose();
+            iosevka = null;
         }
         if(iosevkaSlab != null){
             iosevkaSlab.dispose();

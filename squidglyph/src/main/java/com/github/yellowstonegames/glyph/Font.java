@@ -73,6 +73,7 @@ public class Font implements Disposable {
             if(e.value == null) continue;
             mapping.put(e.key, new TextureRegion(parentTexture, e.value.getU(), e.value.getV(), e.value.getU2(), e.value.getV2()));
         }
+        mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
     }
 
     public Font(String fntName, String textureName, boolean isMSDF,
@@ -110,16 +111,15 @@ public class Font implements Disposable {
             int y = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " width=", idx));
             int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " height=", idx));
             int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
-            if(isMSDF) {
-                x += xAdjust;
-                y += yAdjust;
-                w += widthAdjust;
-                h += heightAdjust;
-            }
+            x += xAdjust;
+            y += yAdjust;
+            w += widthAdjust;
+            h += heightAdjust;
             cellWidth = w;
             cellHeight = h;
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
+        mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         originalCellWidth = cellWidth;
         originalCellHeight = cellHeight;
     }
