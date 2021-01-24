@@ -274,8 +274,9 @@ public class Font implements Disposable {
      *     <li>{@code []} clears all markup to the initial state without any applied.</li>
      *     <li>{@code [*]} toggles bold mode.</li>
      *     <li>{@code [/]} toggles italic (technically, oblique) mode.</li>
-     *     <li>{@code [^]} toggles superscript mode (and turns off subscript mode).</li>
-     *     <li>{@code [.]} toggles subscript mode (and turns off superscript mode).</li>
+     *     <li>{@code [^]} toggles superscript mode (and turns off subscript or midscript mode).</li>
+     *     <li>{@code [=]} toggles midscript mode (and turns off superscript or subscript mode).</li>
+     *     <li>{@code [.]} toggles subscript mode (and turns off superscript or midscript mode).</li>
      *     <li>{@code [_]} toggles underline mode.</li>
      *     <li>{@code [~]} toggles strikethrough mode.</li>
      *     <li>{@code [!]} toggles all upper case mode.</li>
@@ -295,7 +296,7 @@ public class Font implements Disposable {
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         boolean bold = false, oblique = false,
                 underline = false, strikethrough = false,
-                superscript = false, subscript = false,
+                superscript = false, midscript = false, subscript = false,
                 capitalize = false, previousWasLetter = false,
                 capsLock = false, lowerCase = false;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
@@ -368,13 +369,25 @@ public class Font implements Disposable {
                         }
                         if(superscript) {
                             superscript = false;
+                            midscript = false;
                             x2 += cellWidth * 0.5f;
                             x3 += cellWidth * 0.5f;
                             y1 -= cellHeight * 0.5f;
                             y2 -= cellHeight * 0.5f;
                         }
+                        if(midscript) {
+                            superscript = false;
+                            subscript = false;
+                            x2 += cellWidth * 0.5f;
+                            x3 += cellWidth * 0.5f;
+                            y0 += cellHeight * 0.25f;
+                            y1 -= cellHeight * 0.25f;
+                            y2 -= cellHeight * 0.25f;
+                            y3 += cellHeight * 0.25f;
+                        }
                         if(subscript) {
                             subscript = false;
+                            midscript = false;
                             x2 += cellWidth * 0.5f;
                             x3 += cellWidth * 0.5f;
                             y0 += cellHeight * 0.5f;
@@ -437,6 +450,15 @@ public class Font implements Disposable {
                                     y0 += cellHeight * 0.5f;
                                     y3 += cellHeight * 0.5f;
                                 }
+                                if(midscript){
+                                    midscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y0 += cellHeight * 0.25f;
+                                    y1 -= cellHeight * 0.25f;
+                                    y2 -= cellHeight * 0.25f;
+                                    y3 += cellHeight * 0.25f;
+                                }
                             } else {
                                 x2 += cellWidth * 0.5f;
                                 x3 += cellWidth * 0.5f;
@@ -457,11 +479,52 @@ public class Font implements Disposable {
                                     y1 -= cellHeight * 0.5f;
                                     y2 -= cellHeight * 0.5f;
                                 }
+                                if(midscript){
+                                    midscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y0 += cellHeight * 0.25f;
+                                    y1 -= cellHeight * 0.25f;
+                                    y2 -= cellHeight * 0.25f;
+                                    y3 += cellHeight * 0.25f;
+                                }
                             } else {
                                 x2 += cellWidth * 0.5f;
                                 x3 += cellWidth * 0.5f;
                                 y0 += cellHeight * 0.5f;
                                 y3 += cellHeight * 0.5f;
+                            }
+                            break;
+                        case '=':
+                            if(midscript = !midscript) {
+                                x2 -= cellWidth * 0.5f;
+                                x3 -= cellWidth * 0.5f;
+                                y0 -= cellHeight * 0.25f;
+                                y1 += cellHeight * 0.25f;
+                                y2 += cellHeight * 0.25f;
+                                y3 -= cellHeight * 0.25f;
+                                if (superscript) {
+                                    superscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y1 -= cellHeight * 0.5f;
+                                    y2 -= cellHeight * 0.5f;
+                                }
+                                if (subscript) {
+                                    subscript = false;
+                                    x2 += cellWidth * 0.5f;
+                                    x3 += cellWidth * 0.5f;
+                                    y0 += cellHeight * 0.5f;
+                                    y3 += cellHeight * 0.5f;
+                                }
+                            }
+                            else {
+                                x2 += cellWidth * 0.5f;
+                                x3 += cellWidth * 0.5f;
+                                y0 += cellHeight * 0.25f;
+                                y1 -= cellHeight * 0.25f;
+                                y2 -= cellHeight * 0.25f;
+                                y3 += cellHeight * 0.25f;
                             }
                             break;
                         case '_':

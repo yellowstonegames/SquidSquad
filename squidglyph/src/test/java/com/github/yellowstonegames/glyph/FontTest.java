@@ -82,7 +82,7 @@ public class FontTest extends ApplicationAdapter {
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
                 ), 0x000000FF, 0.375f);
-        font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]α[^]2[^]!", x, y);
+        font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]♪[=]♪[^]♪[^]!", x, y);
         font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight * 3);
         font.drawMarkupText(batch, "The [_][dark dull blue purple]BLADE[] of [*][/][|darker richest yellow]KINGS[] strikes!", 0, font.cellHeight * 2);
         font.drawMarkupText(batch, "[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", 0, font.cellHeight);
