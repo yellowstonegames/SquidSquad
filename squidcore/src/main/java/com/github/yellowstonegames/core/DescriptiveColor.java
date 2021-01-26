@@ -3,7 +3,6 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.BitConversion;
 import regexodus.*;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
  * IPT entirely and returns an RGBA8888 int, or maybe some operations on entries in the palette. The aforementioned
  * describe() is used by {@link #processColorMarkup(CharSequence)}, which also takes a color description and translates
  * it to a libGDX-compatible color markup tag. The syntax for color descriptions is in
- * {@link #parseDescription(CharSequence)}; it looks like "lighter rich pink orange", to give an idea of it.
+ * {@link #describe(CharSequence)}; it looks like "lighter rich pink orange", to give an idea of it.
  * <br>
  * For the palette, you can access colors by their constant name, such as {@code cactus}, by the {@link #NAMED} map
  * using {@code NAMED.get("cactus")}, by getting a color by its name's position in alphabetical order with
@@ -1199,10 +1198,10 @@ public final class DescriptiveColor {
 
 
     private static final IntList mixing = new IntList(4);
-    private static final Matcher wordMatcher = Pattern.compile("[a-z]+", Pattern.IGNORE_CASE).matcher();
+    private static final Matcher wordMatcher = Pattern.compile("[a-z]+").matcher();
 
     /**
-     * Parses a color description and returns the approximate color it describes, as a packed IPT int color.
+     * Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
      * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
      * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
      * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
@@ -1215,17 +1214,18 @@ public final class DescriptiveColor {
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
      * <br>
-     * This overload will check the first character of description and may change how it parses depending on that char.
+     * This method will check the first character of description and may change how it parses depending on that char.
      * If the first char is {@code #}, and there are 6 characters remaining, this parses those 6 characters as a hex
      * color in RGB888 format. If the first char is {@code #} and there are 8 or more characters remaining, it parses
      * 8 of those characters as an RGBA8888 hex color. If the first char is {@code |}, that char is ignored and the rest
      * of the CharSequence is treated as a color description (this is to ease parsing markup for
-     * {@link #processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a color description.
+     * {@link #processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a color description,
+     * and the result is converted to an RGBA int.
      *
      * @param description a color description, as a lower-case String matching the above format, or a {@code #}-prefixed hex color
-     * @return a packed IPT int color as described
+     * @return a packed RGBA int color as described
      */
-    public static int parseDescription(final CharSequence description) {
+    public static int describe(final CharSequence description) {
         if(description.isEmpty()) return 0;
         final char initial = description.charAt(0);
         if(initial == '#') {
@@ -1235,7 +1235,7 @@ public final class DescriptiveColor {
                 return DigitTools.intFromHex(description, 1, 9);
             return 0;
         }
-        return parseDescription(description, initial == '|' ? 1 : 0, description.length());
+        return toRGBA8888(describeIPT(description, initial == '|' ? 1 : 0, description.length()));
     }
     /**
      * Parses a color description and returns the approximate color it describes, as a packed IPT int color.
@@ -1261,7 +1261,7 @@ public final class DescriptiveColor {
      * @param length how much of description to attempt to parse
      * @return a packed IPT int color as described
      */
-    public static int parseDescription(final CharSequence description, int start, int length) {
+    public static int describeIPT(final CharSequence description, int start, int length) {
         float intensity = 0f, saturation = 0f;
         wordMatcher.setTarget(description, start, length);
         final List<String> terms = wordMatcher.foundStrings();
@@ -1363,17 +1363,6 @@ public final class DescriptiveColor {
         return result;
     }
 
-    /**
-     * A quick utility method that calls {@link #parseDescription(CharSequence)} and then passes that off to
-     * {@link #toRGBA8888(int)}, getting an RGBA-format int from a color description.
-     * @see #parseDescription(CharSequence) the syntax for color descriptions is here
-     * @param description a color description, as a lower-case String matching the format in {@link #parseDescription(CharSequence)}
-     * @return an RGBA8888-format int matching the described color
-     */
-    public static int describe(final CharSequence description) {
-        return toRGBA8888(parseDescription(description));
-    }
-
     private static final StringBuilder builder = new StringBuilder(80);
     private static final Substitution sub = (MatchResult matchResult, TextBuffer textBuffer) -> {
         builder.setLength(0);
@@ -1387,7 +1376,7 @@ public final class DescriptiveColor {
 
     /**
      * Processes color markup of the form {@code [|description]}, where {@code description} is in the format that
-     * {@link #parseDescription(CharSequence)} understands (such as "light dullest green cyan"), and changes the markup
+     * {@link #describe(CharSequence)} understands (such as "light dullest green cyan"), and changes the markup
      * to a format libGDX can use, {@code [#FF7F00FF]}. The only addition this makes to libGDX markup is the {@code [|}
      * starting character combination, which here marks a color description rather than a named color from libGDX's
      * Colors class (which are all upper-case, so they wouldn't conflict anyway).
