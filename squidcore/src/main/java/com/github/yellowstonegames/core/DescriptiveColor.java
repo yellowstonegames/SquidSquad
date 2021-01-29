@@ -1226,7 +1226,7 @@ public final class DescriptiveColor {
      * @return a packed RGBA int color as described
      */
     public static int describe(final CharSequence description) {
-        if(description.isEmpty()) return 0;
+        if(description == null || description.length() == 0) return 0;
         final char initial = description.charAt(0);
         if(initial == '#') {
             if (description.length() >= 7 && description.length() < 9)
