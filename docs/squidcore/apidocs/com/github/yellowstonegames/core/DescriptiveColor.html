@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -91,7 +91,7 @@ extends java.lang.Object</pre>
  IPT entirely and returns an RGBA8888 int, or maybe some operations on entries in the palette. The aforementioned
  describe() is used by <a href="#processColorMarkup(java.lang.CharSequence)"><code>processColorMarkup(CharSequence)</code></a>, which also takes a color description and translates
  it to a libGDX-compatible color markup tag. The syntax for color descriptions is in
- <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a>; it looks like "lighter rich pink orange", to give an idea of it.
+ <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a>; it looks like "lighter rich pink orange", to give an idea of it.
  <br>
  For the palette, you can access colors by their constant name, such as <code>cactus</code>, by the <a href="#NAMED"><code>NAMED</code></a> map
  using <code>NAMED.get("cactus")</code>, by getting a color by its name's position in alphabetical order with
@@ -536,11 +536,19 @@ float&nbsp;change)</code></th>
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describe(java.lang.CharSequence)">describe</a></span>&#8203;(java.lang.CharSequence&nbsp;description)</code></th>
 <td class="col-last">
-<div class="block">A quick utility method that calls <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a> and then passes that off to
- <a href="#toRGBA8888(int)"><code>toRGBA8888(int)</code></a>, getting an RGBA-format int from a color description.</div>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeIPT(java.lang.CharSequence,int,int)">describeIPT</a></span>&#8203;(java.lang.CharSequence&nbsp;description,
+int&nbsp;start,
+int&nbsp;length)</code></th>
+<td class="col-last">
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#dullen(int,float)">dullen</a></span>&#8203;(int&nbsp;s,
 float&nbsp;change)</code></th>
@@ -548,7 +556,7 @@ float&nbsp;change)</code></th>
 <div class="block">Brings the P and T components of <code>s</code> closer to grayscale by <code>change</code> (desaturating them).</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enrich(int,float)">enrich</a></span>&#8203;(int&nbsp;s,
 float&nbsp;change)</code></th>
@@ -556,7 +564,7 @@ float&nbsp;change)</code></th>
 <div class="block">Pushes the P and T components of <code>start</code> away from grayscale by change (saturating them).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hue(int)">hue</a></span>&#8203;(int&nbsp;iptColor)</code></th>
 <td class="col-last">
@@ -564,7 +572,7 @@ float&nbsp;change)</code></th>
  to 1f (exclusive, red and approaching purple if decreased).</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#inverseIntensity(int,int)">inverseIntensity</a></span>&#8203;(int&nbsp;mainColor,
 int&nbsp;contrastingColor)</code></th>
@@ -574,7 +582,7 @@ int&nbsp;contrastingColor)</code></th>
  are likely to be clamped if the result gets close to white or black).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lerpColors(int,int,float)">lerpColors</a></span>&#8203;(int&nbsp;s,
 int&nbsp;e,
@@ -583,7 +591,7 @@ float&nbsp;change)</code></th>
 <div class="block">Interpolates from the packed int color start towards end by change.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lighten(int,float)">lighten</a></span>&#8203;(int&nbsp;s,
 float&nbsp;change)</code></th>
@@ -591,7 +599,7 @@ float&nbsp;change)</code></th>
 <div class="block">Interpolates from the packed IPT int color s towards white by change.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int)">limitToGamut</a></span>&#8203;(int&nbsp;packed)</code></th>
 <td class="col-last">
@@ -599,7 +607,7 @@ float&nbsp;change)</code></th>
  isn't in-gamut, or returns it as soon as it is in-gamut.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;intensity,
 int&nbsp;protan,
@@ -610,7 +618,7 @@ int&nbsp;alpha)</code></th>
  isn't in-gamut, or returns it as soon as it is in-gamut.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mix(int%5B%5D,int,int)">mix</a></span>&#8203;(int[]&nbsp;colors,
 int&nbsp;offset,
@@ -619,39 +627,23 @@ int&nbsp;size)</code></th>
 <div class="block">Given several colors, this gets an even mix of all colors in equal measure.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
-<td class="col-first"><code>static int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parseDescription(java.lang.CharSequence)">parseDescription</a></span>&#8203;(java.lang.CharSequence&nbsp;description)</code></th>
-<td class="col-last">
-<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
-</td>
-</tr>
 <tr class="alt-color" id="i12">
-<td class="col-first"><code>static int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parseDescription(java.lang.CharSequence,int,int)">parseDescription</a></span>&#8203;(java.lang.CharSequence&nbsp;description,
-int&nbsp;start,
-int&nbsp;length)</code></th>
-<td class="col-last">
-<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
-</td>
-</tr>
-<tr class="row-color" id="i13">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(java.lang.CharSequence&nbsp;markupString)</code></th>
 <td class="col-last">
 <div class="block">Processes color markup of the form <code>[|description]</code>, where <code>description</code> is in the format that
- <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
+ <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#saturation(int)">saturation</a></span>&#8203;(int&nbsp;iptColor)</code></th>
 <td class="col-last">
 <div class="block">Gets the saturation of the given encoded color, as a float ranging from 0.0f to 1.0f, inclusive.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toRGBA8888(int)">toRGBA8888</a></span>&#8203;(int&nbsp;decoded)</code></th>
 <td class="col-last">
@@ -1789,10 +1781,10 @@ int&nbsp;size)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="parseDescription(java.lang.CharSequence)">
-<h3>parseDescription</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">parseDescription</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description)</span></div>
-<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.
+<section class="detail" id="describe(java.lang.CharSequence)">
+<h3>describe</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">describe</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description)</span></div>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
  Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
  spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
  <a href="#NAMED"><code>NAMED</code></a> and tracked; if there is more than one of these color name words, the colors will be mixed using
@@ -1805,24 +1797,25 @@ int&nbsp;size)</span></div>
  Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
  and "lightest richer apricot-olive".
  <br>
- This overload will check the first character of description and may change how it parses depending on that char.
+ This method will check the first character of description and may change how it parses depending on that char.
  If the first char is <code>#</code>, and there are 6 characters remaining, this parses those 6 characters as a hex
  color in RGB888 format. If the first char is <code>#</code> and there are 8 or more characters remaining, it parses
  8 of those characters as an RGBA8888 hex color. If the first char is <code>|</code>, that char is ignored and the rest
  of the CharSequence is treated as a color description (this is to ease parsing markup for
- <a href="#processColorMarkup(java.lang.CharSequence)"><code>processColorMarkup(CharSequence)</code></a>). Otherwise, the whole CharSequence is parsed as a color description.</div>
+ <a href="#processColorMarkup(java.lang.CharSequence)"><code>processColorMarkup(CharSequence)</code></a>). Otherwise, the whole CharSequence is parsed as a color description,
+ and the result is converted to an RGBA int.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>description</code> - a color description, as a lower-case String matching the above format, or a <code>#</code>-prefixed hex color</dd>
 <dt>Returns:</dt>
-<dd>a packed IPT int color as described</dd>
+<dd>a packed RGBA int color as described</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="parseDescription(java.lang.CharSequence,int,int)">
-<h3>parseDescription</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">parseDescription</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description,
+<section class="detail" id="describeIPT(java.lang.CharSequence,int,int)">
+<h3>describeIPT</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">describeIPT</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description,
 int&nbsp;start,
 int&nbsp;length)</span></div>
 <div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.
@@ -1853,27 +1846,11 @@ int&nbsp;length)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="describe(java.lang.CharSequence)">
-<h3>describe</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">describe</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description)</span></div>
-<div class="block">A quick utility method that calls <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a> and then passes that off to
- <a href="#toRGBA8888(int)"><code>toRGBA8888(int)</code></a>, getting an RGBA-format int from a color description.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>description</code> - a color description, as a lower-case String matching the format in <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a></dd>
-<dt>Returns:</dt>
-<dd>an RGBA8888-format int matching the described color</dd>
-<dt>See Also:</dt>
-<dd><a href="#parseDescription(java.lang.CharSequence)"><code>the syntax for color descriptions is here</code></a></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="processColorMarkup(java.lang.CharSequence)">
 <h3>processColorMarkup</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">processColorMarkup</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;markupString)</span></div>
 <div class="block">Processes color markup of the form <code>[|description]</code>, where <code>description</code> is in the format that
- <a href="#parseDescription(java.lang.CharSequence)"><code>parseDescription(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
+ <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
  to a format libGDX can use, <code>[#FF7F00FF]</code>. The only addition this makes to libGDX markup is the <code>[|</code>
  starting character combination, which here marks a color description rather than a named color from libGDX's
  Colors class (which are all upper-case, so they wouldn't conflict anyway).</div>

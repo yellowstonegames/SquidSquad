@@ -600,8 +600,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#describe(java.lang.CharSequence)">describe(CharSequence)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
 <dd>
-<div class="block">A quick utility method that calls <a href="com/github/yellowstonegames/core/DescriptiveColor.html#parseDescription(java.lang.CharSequence)"><code>DescriptiveColor.parseDescription(CharSequence)</code></a> and then passes that off to
- <a href="com/github/yellowstonegames/core/DescriptiveColor.html#toRGBA8888(int)"><code>DescriptiveColor.toRGBA8888(int)</code></a>, getting an RGBA-format int from a color description.</div>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#describeIPT(java.lang.CharSequence,int,int)">describeIPT(CharSequence, int, int)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
+<dd>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core"><span class="type-name-link">DescriptiveColor</span></a> - Class in <a href="com/github/yellowstonegames/core/package-summary.html">com.github.yellowstonegames.core</a></dt>
 <dd>
@@ -1709,14 +1712,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/Hasher.html#paimon_">paimon_</a></span> - Static variable in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#parseDescription(java.lang.CharSequence)">parseDescription(CharSequence)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
-<dd>
-<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#parseDescription(java.lang.CharSequence,int,int)">parseDescription(CharSequence, int, int)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
-<dd>
-<div class="block">Parses a color description and returns the approximate color it describes, as a packed IPT int color.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#PEACH">PEACH</a></span> - Static variable in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
 <dd>
 <div class="block">This color constant "peach" has RGBA8888 code <code>FFBF81FF</code>, intensity 0.78039217, protan 0.5686275, tritan 0.6392157, alpha 1.0, hue 0.082601294, and saturation 0.49658114.</div>
@@ -1767,7 +1762,7 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/DescriptiveColor.html#processColorMarkup(java.lang.CharSequence)">processColorMarkup(CharSequence)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></dt>
 <dd>
 <div class="block">Processes color markup of the form <code>[|description]</code>, where <code>description</code> is in the format that
- <a href="com/github/yellowstonegames/core/DescriptiveColor.html#parseDescription(java.lang.CharSequence)"><code>DescriptiveColor.parseDescription(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
+ <a href="com/github/yellowstonegames/core/DescriptiveColor.html#describe(java.lang.CharSequence)"><code>DescriptiveColor.describe(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/Hasher.html#psi">psi</a></span> - Static variable in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></dt>

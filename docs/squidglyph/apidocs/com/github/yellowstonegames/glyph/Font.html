@@ -135,23 +135,23 @@ implements com.badlogic.gdx.utils.Disposable</pre>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>static com.badlogic.gdx.graphics.glutils.ShaderProgram</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfShader">msdfShader</a></span></code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellHeight">originalCellHeight</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellWidth">originalCellWidth</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>com.badlogic.gdx.graphics.Texture</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parentTexture">parentTexture</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>com.badlogic.gdx.graphics.glutils.ShaderProgram</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shader">shader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
@@ -179,9 +179,23 @@ implements com.badlogic.gdx.utils.Disposable</pre>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font)">Font</a></span>&#8203;(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;toCopy)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,boolean)">Font</a></span>&#8203;(java.lang.String&nbsp;fntName,
 java.lang.String&nbsp;textureName,
 boolean&nbsp;isMSDF)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,boolean,float,float,float,float)">Font</a></span>&#8203;(java.lang.String&nbsp;fntName,
+java.lang.String&nbsp;textureName,
+boolean&nbsp;isMSDF,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -372,9 +386,9 @@ float&nbsp;height)</code></th>
 </section>
 </li>
 <li>
-<section class="detail" id="msdfShader">
-<h3>msdfShader</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.glutils.ShaderProgram</span>&nbsp;<span class="member-name">msdfShader</span></div>
+<section class="detail" id="shader">
+<h3>shader</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.glutils.ShaderProgram</span>&nbsp;<span class="member-name">shader</span></div>
 </section>
 </li>
 </ul>
@@ -391,6 +405,24 @@ float&nbsp;height)</code></th>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">Font</span>&#8203;(<span class="parameters">java.lang.String&nbsp;fntName,
 java.lang.String&nbsp;textureName,
 boolean&nbsp;isMSDF)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.glyph.Font)">
+<h3>Font</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">Font</span>&#8203;(<span class="parameters"><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;toCopy)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,boolean,float,float,float,float)">
+<h3>Font</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">Font</span>&#8203;(<span class="parameters">java.lang.String&nbsp;fntName,
+java.lang.String&nbsp;textureName,
+boolean&nbsp;isMSDF,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</span></div>
 </section>
 </li>
 </ul>
@@ -528,8 +560,9 @@ float&nbsp;y)</span></div>
      <li><code>[]</code> clears all markup to the initial state without any applied.</li>
      <li><code>[*]</code> toggles bold mode.</li>
      <li><code>[/]</code> toggles italic (technically, oblique) mode.</li>
-     <li><code>[^]</code> toggles superscript mode (and turns off subscript mode).</li>
-     <li><code>[.]</code> toggles subscript mode (and turns off superscript mode).</li>
+     <li><code>[^]</code> toggles superscript mode (and turns off subscript or midscript mode).</li>
+     <li><code>[=]</code> toggles midscript mode (and turns off superscript or subscript mode).</li>
+     <li><code>[.]</code> toggles subscript mode (and turns off superscript or midscript mode).</li>
      <li><code>[_]</code> toggles underline mode.</li>
      <li><code>[~]</code> toggles strikethrough mode.</li>
      <li><code>[!]</code> toggles all upper case mode.</li>
@@ -537,7 +570,7 @@ float&nbsp;y)</span></div>
      <li><code>[;]</code> toggles capitalize each word mode.</li>
      <li><code>[#HHHHHHHH]</code>, where HHHHHHHH is an RGBA8888 int color with optional alpha, changes the color.</li>
      <li><code>[|some description]</code>, where "some description" is a lower-case color description as per
-     <code>DescriptiveColor.parseDescription(CharSequence, int, int)</code>,
+     <code>DescriptiveColor.describeIPT(CharSequence, int, int)</code>,
      changes the color. You don't have to include the "|" character, since this is the default.</li>
  </ul></div>
 <dl class="notes">
