@@ -303,6 +303,8 @@ public class Font implements Disposable {
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         int c;
         float color = Color.WHITE_FLOAT_BITS, d = 0f;
+        final float xPx = 1f, xPx2 = xPx + xPx;
+//        final float yPx = cellHeight / (originalCellHeight * parentTexture.getHeight());
         final TextureRegion under = mapping.get('_');
         assert under != null;
         final TextureRegion dash = mapping.get('-');
@@ -351,14 +353,14 @@ public class Font implements Disposable {
                         color = (Color.WHITE_FLOAT_BITS);
                         if(bold) {
                             bold = false;
-                            x0 += cellWidth * 0.125f;
-                            x1 += cellWidth * 0.125f;
-                            x2 -= cellWidth * 0.125f;
-                            x3 -= cellWidth * 0.125f;
-                            y0 -= cellHeight * 0.09375f;
-                            y1 += cellHeight * 0.09375f;
-                            y2 += cellHeight * 0.09375f;
-                            y3 -= cellHeight * 0.09375f;
+//                            x0 += cellWidth * 0.125f;
+//                            x1 += cellWidth * 0.125f;
+//                            x2 -= cellWidth * 0.125f;
+//                            x3 -= cellWidth * 0.125f;
+//                            y0 -= cellHeight * 0.09375f;
+//                            y1 += cellHeight * 0.09375f;
+//                            y2 += cellHeight * 0.09375f;
+//                            y3 -= cellHeight * 0.09375f;
                         }
                         if(oblique) {
                             oblique = false;
@@ -405,23 +407,23 @@ public class Font implements Disposable {
                     switch (c) {
                         case '*':
                             if (bold = !bold) {
-                                x0 -= cellWidth * 0.125f;
-                                x1 -= cellWidth * 0.125f;
-                                x2 += cellWidth * 0.125f;
-                                x3 += cellWidth * 0.125f;
-                                y0 += cellHeight * 0.09375f;
-                                y1 -= cellHeight * 0.09375f;
-                                y2 -= cellHeight * 0.09375f;
-                                y3 += cellHeight * 0.09375f;
+//                                x0 -= cellWidth * 0.125f;
+//                                x1 -= cellWidth * 0.125f;
+//                                x2 += cellWidth * 0.125f;
+//                                x3 += cellWidth * 0.125f;
+//                                y0 += cellHeight * 0.09375f;
+//                                y1 -= cellHeight * 0.09375f;
+//                                y2 -= cellHeight * 0.09375f;
+//                                y3 += cellHeight * 0.09375f;
                             } else {
-                                x0 += cellWidth * 0.125f;
-                                x1 += cellWidth * 0.125f;
-                                x2 -= cellWidth * 0.125f;
-                                x3 -= cellWidth * 0.125f;
-                                y0 -= cellHeight * 0.09375f;
-                                y1 += cellHeight * 0.09375f;
-                                y2 += cellHeight * 0.09375f;
-                                y3 -= cellHeight * 0.09375f;
+//                                x0 += cellWidth * 0.125f;
+//                                x1 += cellWidth * 0.125f;
+//                                x2 -= cellWidth * 0.125f;
+//                                x3 -= cellWidth * 0.125f;
+//                                y0 -= cellHeight * 0.09375f;
+//                                y1 += cellHeight * 0.09375f;
+//                                y2 += cellHeight * 0.09375f;
+//                                y3 -= cellHeight * 0.09375f;
                             }
                             break;
                         case '/':
@@ -624,6 +626,18 @@ public class Font implements Disposable {
                 vertices[18] = u2;
                 vertices[19] = v;
                 batch.draw(parentTexture, vertices, 0, 20);
+                if(bold){
+                    vertices[0] += xPx;
+                    vertices[5] += xPx;
+                    vertices[10] += xPx;
+                    vertices[15] += xPx;
+                    batch.draw(parentTexture, vertices, 0, 20);
+                    vertices[0] -= xPx2;
+                    vertices[5] -= xPx2;
+                    vertices[10] -= xPx2;
+                    vertices[15] -= xPx2;
+                    batch.draw(parentTexture, vertices, 0, 20);
+                }
                 if(underline){
                     vertices[0] = x + d;
                     vertices[1] = y + cellHeight;
