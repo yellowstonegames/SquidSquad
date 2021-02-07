@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
@@ -693,6 +694,135 @@ public class Font implements Disposable {
             }
         }
 
+    }
+
+    /**
+     * Reads markup from text, along with the chars to receive markup, processes it, and appends into appendTo.
+     * More here later.
+     * @param text text with markup
+     * @param appendTo a LongList that stores color, font effects, and a char in each long
+     * @return appendTo, for chaining
+     */
+    public LongList markup(String text, LongList appendTo) {
+        boolean capitalize = false, previousWasLetter = false,
+                capsLock = false, lowerCase = false;
+        final long BOLD = 1L << 31, OBLIQUE = 1L << 30,
+                UNDERLINE = 1L << 29, STRIKETHROUGH = 1L << 28,
+                SUBSCRIPT = 1L << 26, MIDSCRIPT = 2L << 26, SUPERSCRIPT = 3L << 26;
+        int c;
+        long color = 0xFFFFFFFF00000000L;
+        final long COLOR_MASK = color;
+        long current = color;
+        for (int i = 0, n = text.length(); i < n; i++) {
+            if(text.charAt(i) == '['){
+                if(++i < n && (c = text.charAt(i)) != '['){
+                    if(c == ']'){
+                        color = 0xFFFFFFFF00000000L;
+                        current = color;
+                        capitalize = false;
+                        capsLock = false;
+                        lowerCase = false;
+                        continue;
+                    }
+                    int len = text.indexOf(']', i) - i;
+                    switch (c) {
+                        case '*':
+                            current ^= BOLD;
+                            break;
+                        case '/':
+                            current ^= OBLIQUE;
+                            break;
+                        case '^':
+                            if((current & SUPERSCRIPT) == SUPERSCRIPT)
+                                current &= ~SUPERSCRIPT;
+                            else
+                                current |= SUPERSCRIPT;
+                            break;
+                        case '.':
+                            if((current & SUPERSCRIPT) == SUBSCRIPT)
+                                current &= ~SUBSCRIPT;
+                            else
+                                current = (current & ~SUPERSCRIPT) | SUBSCRIPT;
+                            break;
+                        case '=':
+                            if((current & SUPERSCRIPT) == MIDSCRIPT)
+                                current &= ~MIDSCRIPT;
+                            else
+                                current = (current & ~SUPERSCRIPT) | MIDSCRIPT;
+                            break;
+                        case '_':
+                            current ^= UNDERLINE;
+                            break;
+                        case '~':
+                            current ^= STRIKETHROUGH;
+                            break;
+                        case ';':
+                            capitalize = !capitalize;
+                            capsLock = false;
+                            lowerCase = false;
+                            break;
+                        case '!':
+                            capsLock = !capsLock;
+                            capitalize = false;
+                            lowerCase = false;
+                            break;
+                        case ',':
+                            lowerCase = !lowerCase;
+                            capitalize = false;
+                            capsLock = false;
+                            break;
+                        case '#':
+                            if (len >= 7 && len < 9)
+                                color = DigitTools.longFromHex(text, i + 1, i + 7) << 40 | 0xFF00000000L;
+                            else if (len >= 9)
+                                color = DigitTools.longFromHex(text, i + 1, i + 9) << 32;
+                            else
+                                color = COLOR_MASK;
+                            current = (current & ~COLOR_MASK) | color;
+                            break;
+                        case '|':
+                            color = (long) DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i + 1, len)) << 32;
+                            current = (current & ~COLOR_MASK) | color;
+                            break;
+                        default:
+                            if (c >= 'a' && c <= 'z')
+                            {
+                                color = (long) DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i, len)) << 32;
+                                current = (current & ~COLOR_MASK) | color;
+                            }
+                    }
+                    i += len;
+                }
+                else {
+                    appendTo.add(current | '[');
+                }
+            } else {
+                char ch = text.charAt(i);
+                if(Category.Ll.contains(ch)) {
+                    if(capitalize && !previousWasLetter) {
+                        ch = Character.toUpperCase(ch);
+                    }
+                    else if(capsLock) {
+                        ch = Character.toUpperCase(ch);
+                    }
+                    previousWasLetter = true;
+                }
+                else if(Category.Lu.contains(ch)) {
+                    if(capitalize && previousWasLetter) {
+                        ch = Character.toLowerCase(ch);
+                    }
+                    else if(lowerCase) {
+                        ch = Character.toLowerCase(ch);
+                    }
+                    previousWasLetter = true;
+                }
+                else {
+                    previousWasLetter = false;
+                }
+                appendTo.add(current | ch);
+            }
+        }
+        return appendTo;
     }
 
 
