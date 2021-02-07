@@ -21,6 +21,9 @@ public class Font implements Disposable {
     public boolean isMSDF;
     public float msdfCrispness = 1f;
     public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f;
+    public static final long BOLD = 1L << 31, OBLIQUE = 1L << 30,
+            UNDERLINE = 1L << 29, STRIKETHROUGH = 1L << 28,
+            SUBSCRIPT = 1L << 26, MIDSCRIPT = 2L << 26, SUPERSCRIPT = 3L << 26;
 
     private final float[] vertices = new float[20];
 
@@ -187,22 +190,6 @@ public class Font implements Disposable {
     }
 
     /**
-     * Draws a single char with a foreground color, encoded in one long, at the given x,y position in world space.
-     * The {@code colorGlyph} parameter is a long that contains two separate values in its upper 32 and lower 32 bits;
-     * the upper 32 bits store a color, usually as RGBA, while the lower 32 bits store a codepoint, or more commonly, a
-     * char that will be drawn with that color. Some code may return long values with this format to pass around chars
-     * with colors without creating objects to store them.
-     * @param batch typically a SpriteBatch
-     * @param colorGlyph a long encoding a color (usually RGBA) in its upper 32 bits, and a char or codepoint in its lower 32 bits.
-     * @param x the x position in world space to draw the text at (lower left corner)
-     * @param y the y position in world space to draw the text at (lower left corner)
-     */
-    public void drawGlyph(Batch batch, long colorGlyph, float x, float y) {
-        batch.setPackedColor(BitConversion.reversedIntBitsToFloat((int) (colorGlyph >>> 32) & -2));
-        batch.draw(mapping.get((int) colorGlyph), x, y, cellWidth, cellHeight);
-    }
-
-    /**
      * Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.
      * The {@code colors} parameter should be a rectangular 2D array, and because any colors that are the default int
      * value {@code 0} will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
@@ -261,7 +248,6 @@ public class Font implements Disposable {
             vertices[6] = vertices[11] = y + cellHeight;
         }
     }
-
 
     /**
      * Draws the specified text at the given x,y position (in world space), parsing an extension of libGDX markup
@@ -697,6 +683,132 @@ public class Font implements Disposable {
     }
 
     /**
+     * Draws the specified glyph with a Batch at the given x, y position. The glyph contains multiple types of data all
+     * packed into one {@code long}: the bottom 16 bits store a {@code char}, the roughly 16 bits above that store
+     * formatting (bold, underline, superscript, etc.), and the remaining upper 32 bits store color as RGBA.
+     * @param batch typically a SpriteBatch
+     * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongList
+     * @param x the x position in world space to start drawing the glyph at (lower left corner)
+     * @param y the y position in world space to start drawing the glyph at (lower left corner)
+     */
+    public void drawGlyph(Batch batch, long glyph, float x, float y) {
+        float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
+        float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
+        float color = BitConversion.reversedIntBitsToFloat((int) (glyph >>> 32) & -2);
+        final float xPx = 1f, xPx2 = xPx + xPx;
+        TextureRegion tr = mapping.get((char) glyph);
+        if (tr == null) return;
+        float u, v, u2, v2;
+        u = tr.getU();
+        v = tr.getV();
+        u2 = tr.getU2();
+        v2 = tr.getV2();
+        vertices[0] = x + x0;
+        vertices[1] = y + y0 + cellHeight;
+        vertices[2] = color;
+        vertices[3] = u;
+        vertices[4] = v;
+
+        vertices[5] = x + x1;
+        vertices[6] = y + y1;
+        vertices[7] = color;
+        vertices[8] = u;
+        vertices[9] = v2;
+
+        vertices[10] = x + x2 + cellWidth;
+        vertices[11] = y + y2;
+        vertices[12] = color;
+        vertices[13] = u2;
+        vertices[14] = v2;
+
+        vertices[15] = x + x3 + cellWidth;
+        vertices[16] = y + y3 + cellHeight;
+        vertices[17] = color;
+        vertices[18] = u2;
+        vertices[19] = v;
+        batch.draw(parentTexture, vertices, 0, 20);
+        if ((glyph & BOLD) != 0L) {
+            vertices[0] += xPx;
+            vertices[5] += xPx;
+            vertices[10] += xPx;
+            vertices[15] += xPx;
+            batch.draw(parentTexture, vertices, 0, 20);
+            vertices[0] -= xPx2;
+            vertices[5] -= xPx2;
+            vertices[10] -= xPx2;
+            vertices[15] -= xPx2;
+            batch.draw(parentTexture, vertices, 0, 20);
+        }
+        if ((glyph & UNDERLINE) != 0L) {
+            final TextureRegion under = mapping.get('_');
+            if (under != null) {
+                final float underU = under.getU() + (under.getU2() - under.getU()) * 0.375f,
+                        underV = under.getV(),
+                        underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
+                        underV2 = under.getV2();
+                vertices[0] = x;
+                vertices[1] = y + cellHeight;
+                vertices[2] = color;
+                vertices[3] = underU;
+                vertices[4] = underV;
+
+                vertices[5] = x;
+                vertices[6] = y;
+                vertices[7] = color;
+                vertices[8] = underU;
+                vertices[9] = underV2;
+
+                vertices[10] = x + cellWidth;
+                vertices[11] = y;
+                vertices[12] = color;
+                vertices[13] = underU2;
+                vertices[14] = underV2;
+
+                vertices[15] = x + cellWidth;
+                vertices[16] = y + cellHeight;
+                vertices[17] = color;
+                vertices[18] = underU2;
+                vertices[19] = underV;
+                batch.draw(parentTexture, vertices, 0, 20);
+            }
+        }
+        if ((glyph & STRIKETHROUGH) != 0L) {
+            final TextureRegion dash = mapping.get('-');
+            if (dash != null) {
+                final float dashU = dash.getU() + (dash.getU2() - dash.getU()) * 0.375f,
+                        dashV = dash.getV(),
+                        dashU2 = dash.getU2() - (dash.getU2() - dash.getU()) * 0.375f,
+                        dashV2 = dash.getV2();
+
+                vertices[0] = x;
+                vertices[1] = y + cellHeight;
+                vertices[2] = color;
+                vertices[3] = dashU;
+                vertices[4] = dashV;
+
+                vertices[5] = x;
+                vertices[6] = y;
+                vertices[7] = color;
+                vertices[8] = dashU;
+                vertices[9] = dashV2;
+
+                vertices[10] = x + cellWidth;
+                vertices[11] = y;
+                vertices[12] = color;
+                vertices[13] = dashU2;
+                vertices[14] = dashV2;
+
+                vertices[15] = x + cellWidth;
+                vertices[16] = y + cellHeight;
+                vertices[17] = color;
+                vertices[18] = dashU2;
+                vertices[19] = dashV;
+                batch.draw(parentTexture, vertices, 0, 20);
+            }
+        }
+    }
+
+    /**
      * Reads markup from text, along with the chars to receive markup, processes it, and appends into appendTo.
      * More here later.
      * @param text text with markup
@@ -706,9 +818,6 @@ public class Font implements Disposable {
     public LongList markup(String text, LongList appendTo) {
         boolean capitalize = false, previousWasLetter = false,
                 capsLock = false, lowerCase = false;
-        final long BOLD = 1L << 31, OBLIQUE = 1L << 30,
-                UNDERLINE = 1L << 29, STRIKETHROUGH = 1L << 28,
-                SUBSCRIPT = 1L << 26, MIDSCRIPT = 2L << 26, SUPERSCRIPT = 3L << 26;
         int c;
         long color = 0xFFFFFFFF00000000L;
         final long COLOR_MASK = color;
