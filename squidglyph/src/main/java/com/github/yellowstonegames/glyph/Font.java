@@ -284,7 +284,7 @@ public class Font implements Disposable {
      *     <li>{@code [;]} toggles capitalize each word mode.</li>
      *     <li>{@code [#HHHHHHHH]}, where HHHHHHHH is an RGBA8888 int color with optional alpha, changes the color.</li>
      *     <li>{@code [|some description]}, where "some description" is a lower-case color description as per
-     *     {@link com.github.yellowstonegames.core.DescriptiveColor#describeIPT(CharSequence, int, int)},
+     *     {@link com.github.yellowstonegames.core.DescriptiveColor#describeOklab(CharSequence, int, int)},
      *     changes the color. You don't have to include the "|" character, since this is the default.</li>
      * </ul>
      * @param batch typically a SpriteBatch
@@ -560,12 +560,12 @@ public class Font implements Disposable {
                             break;
                         case '|':
                             color = (BitConversion.reversedIntBitsToFloat(
-                                    DescriptiveColor.toRGBA8888(DescriptiveColor.describeIPT(text, i + 1, len)) & -2));
+                                    DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i + 1, len)) & -2));
                             break;
                         default:
                             if (c >= 'a' && c <= 'z')
                                 color = (BitConversion.reversedIntBitsToFloat(
-                                        DescriptiveColor.toRGBA8888(DescriptiveColor.describeIPT(text, i, len)) & -2));
+                                        DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i, len)) & -2));
                     }
                     i += len;
                     d -= cellWidth;
