@@ -347,6 +347,34 @@ public class Font implements Disposable {
         v = tr.getV();
         u2 = tr.getU2();
         v2 = tr.getV2();
+        if ((glyph & OBLIQUE) != 0L) {
+            x0 += cellWidth * 0.2f;
+            x1 -= cellWidth * 0.2f;
+            x2 -= cellWidth * 0.2f;
+            x3 += cellWidth * 0.2f;
+        }
+        final long script = (glyph & SUPERSCRIPT);
+        if (script == SUPERSCRIPT) {
+            x2 -= cellWidth * 0.5f;
+            x3 -= cellWidth * 0.5f;
+            y1 += cellHeight * 0.5f;
+            y2 += cellHeight * 0.5f;
+        }
+        else if (script == SUBSCRIPT) {
+            x2 -= cellWidth * 0.5f;
+            x3 -= cellWidth * 0.5f;
+            y0 -= cellHeight * 0.5f;
+            y3 -= cellHeight * 0.5f;
+        }
+        else if(script == MIDSCRIPT) {
+            x2 -= cellWidth * 0.5f;
+            x3 -= cellWidth * 0.5f;
+            y0 -= cellHeight * 0.25f;
+            y1 += cellHeight * 0.25f;
+            y2 += cellHeight * 0.25f;
+            y3 -= cellHeight * 0.25f;
+        }
+
         vertices[0] = x + x0;
         vertices[1] = y + y0 + cellHeight;
         vertices[2] = color;
