@@ -1309,16 +1309,18 @@ public final class DescriptiveColor {
      */
     public static int inverseLightness(final int mainColor, final int contrastingColor)
     {
-        final int
-                L = (mainColor & 0xff),
-                A = (mainColor >>> 8 & 0xff),
-                B = (mainColor >>> 16 & 0xff),
-                cL = (contrastingColor & 0xff),
-                cA = (contrastingColor >>> 8 & 0xff),
-                cB = (contrastingColor >>> 16 & 0xff);
-        if((A - cA) * (A - cA) + (B - cB) * (B - cB) >= 0x10000)
-            return mainColor;
-        return (mainColor & 0xFEFFFF00) | (int) (cL < 128 ? L * 0.45f + 140 : 127 - L * 0.45f);
+        return limitToGamut((mainColor & 0xFFFFFF00) | (contrastingColor + 128 & 0xFF) + (mainColor & 0xFF) >>> 1);
+    }
+
+    /**
+     * Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
+     * then averages that with the original L.
+     * This means light colors become dark colors and vice versa, but the black and white both become 50% gray.
+     * @param oklab a packed Oklab int color
+     * @return a different packed Oklab int color, with its L channel changed and limited to the correct gamut
+     */
+    public static int offsetLightness(final int oklab) {
+        return limitToGamut((oklab & 0xFFFFFF00) | (oklab + 128 & 0xFF) + (oklab & 0xFF) >>> 1);
     }
 
 }

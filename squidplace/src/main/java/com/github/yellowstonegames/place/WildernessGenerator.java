@@ -236,22 +236,22 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         viewer.put("sand ledge", '¬' | (long)describeOklab("dark dullmost saffron") << 32);
         viewer.put("grass ledge", '¬' | (long)describeOklab("darker dull moss") << 32);
         viewer.put("stone ledge", '¬' | (long)describeOklab("lighter dullmost cobalt") << 32);
-        viewer.put("snow", '…' | (long)describeOklab("lightmost dullmost butter") << 32);
-        viewer.put("ice", '-' | (long)describeOklab("lightmost dullmost mint") << 32);
-        viewer.put("dirt", '·' | (long)describeOklab("dark dullest cinnamon") << 32);
+        viewer.put("snow", '…' | (long)describeOklab("lightmost dullmost sky white") << 32);
+        viewer.put("ice", '-' | (long)describeOklab("lightmost dull mint") << 32);
+        viewer.put("dirt", '·' | (long)describeOklab("dark duller cinnamon brown") << 32);
         viewer.put("pebbles", '…' | (long)describeOklab("dark dullmost peach") << 32);
-        viewer.put("dry grass", '\'' | (long)describeOklab("lighter dull tan") << 32);
+        viewer.put("dry grass", '\'' | (long)describeOklab("lighter duller brown") << 32);
         viewer.put("fresh water", '~' | (long)describeOklab("rich denim") << 32);
         viewer.put("salt water", '≈' | (long)describeOklab("dull cobalt") << 32);
         viewer.put("sand", '…' | (long)describeOklab("lightest dullest butter") << 32);
-        viewer.put("leaves", '…' | (long)describeOklab("darker butter") << 32);
+        viewer.put("leaves", '…' | (long)describeOklab("pear chocolate brown") << 32);
         viewer.put("grass", '"' | (long)describeOklab("darkest dullest green") << 32);
-        viewer.put("mud", ',' | (long)describeOklab("light dull chocolate") << 32);
+        viewer.put("mud", ',' | (long)describeOklab("dull chocolate") << 32);
         viewer.put("moss", '˝' | (long)describeOklab("darker cactus") << 32);
         viewer.put("rubble", '‰' | (long)describeOklab("dullest turquoise") << 32);
         viewer.put("empty space", ' ' | (long)describeOklab("darkest dullmost indigo") << 32);
         viewer.put("snow mound", '∆' | (long)describeOklab("lightmost dullmost sky") << 32);
-        viewer.put("icy divot", '°' | (long)describeOklab("dullmost white") << 32);
+        viewer.put("icy divot", '°' | (long)describeOklab("lighter white denim") << 32);
         viewer.put("powder snowdrift", '¨' | (long)describeOklab("lightmost rich silver") << 32);
         viewer.put("hillock", '∆' | (long)describeOklab("lighter dullest pear") << 32);
         viewer.put("animal burrow", '¸' | (long)describeOklab("darkest duller lime") << 32);
@@ -464,14 +464,14 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
                 {
                     pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;
-                    colors[x][y] = toRGBA8888((rng.nextInt() & 0x00030303) ^ (int) (viewer.get(floorTypes.get(floors[x][y])) >>> 32));
-                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888((int)(pair >>> 32)) << 32;
+                    colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floors[x][y])) >>> 32));
+                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.inverseLightness((int)(pair >>> 32), color)) << 32;
                 }
                 else {
                     pair = viewer.get(floorTypes.get(floors[x][y]));
                     grid[x][y] = (char) pair;
-                    colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00030303) ^ (int) (pair >>> 32));
-                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.inverseLightness(color, color)) << 32;
+                    colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
+                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.offsetLightness(color)) << 32;
                 }
             }
         }
