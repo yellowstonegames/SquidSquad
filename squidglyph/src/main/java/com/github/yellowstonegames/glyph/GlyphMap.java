@@ -85,10 +85,10 @@ public class GlyphMap {
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
-        final int h = backgrounds[0].length - 1;
+//        final int h = backgrounds[0].length - 1;
         for(IntLongMap.Entry e : map) {
             pos = e.key;
-            font.drawGlyph(batch, e.value, x + extractX(pos) * font.cellWidth, y + (h - extractY(pos)) * font.cellHeight);
+            font.drawGlyph(batch, e.value, x + extractX(pos) * font.cellWidth, y + (extractY(pos)) * font.cellHeight);
         }
     }
 }
