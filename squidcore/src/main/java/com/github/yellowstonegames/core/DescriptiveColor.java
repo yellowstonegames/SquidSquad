@@ -1136,6 +1136,31 @@ public final class DescriptiveColor {
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
      * <br>
+     * This always considers its input a color description, won't parse hex colors, and always uses the full text.
+     *
+     * @param description a color description, as a lower-case String matching the above format
+     * @return a packed Oklab int color as described
+     */
+    public static int describeOklab(final CharSequence description) {
+        return describeOklab(description, 0, description.length());
+    }
+    /**
+     * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
+     * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
+     * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
+     * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
+     * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
+     * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
+     * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
+     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. Technically,
+     * the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
+     * "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
+     * appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
+     * name or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * and "lightest richer apricot-olive".
+     * <br>
      * This overload always considers its input a color description, and won't parse hex colors.
      *
      * @param description a color description, as a lower-case String matching the above format
@@ -1269,4 +1294,31 @@ public final class DescriptiveColor {
         builder.setLength(0);
         return rep.replace(markupString);
     }
+
+    /**
+     * Given a packed int Oklab color {@code mainColor} and another Oklab color that it should be made to contrast with,
+     * gets a packed int Oklab color with roughly inverted L but the same chromatic channels and opacity (A and B
+     * are likely to be clamped if the result gets close to white or black). This won't ever produce black or other very
+     * dark colors, and also has a gap in the range it produces for L values between 0.5 and 0.55. That allows
+     * most of the colors this method produces to contrast well as a foreground when displayed on a background of
+     * {@code contrastingColor}, or vice versa. This will leave the L unchanged if the chromatic channels of the
+     * contrastingColor and those of the mainColor are already very different.
+     * @param mainColor a packed Oklab int color; this is the color that will be adjusted
+     * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with this
+     * @return a different packed Oklab int color, based on mainColor but with potentially very different lightness
+     */
+    public static int inverseLightness(final int mainColor, final int contrastingColor)
+    {
+        final int
+                L = (mainColor & 0xff),
+                A = (mainColor >>> 8 & 0xff),
+                B = (mainColor >>> 16 & 0xff),
+                cL = (contrastingColor & 0xff),
+                cA = (contrastingColor >>> 8 & 0xff),
+                cB = (contrastingColor >>> 16 & 0xff);
+        if((A - cA) * (A - cA) + (B - cB) * (B - cB) >= 0x10000)
+            return mainColor;
+        return (mainColor & 0xFEFFFF00) | (int) (cL < 128 ? L * 0.45f + 140 : 127 - L * 0.45f);
+    }
+
 }
