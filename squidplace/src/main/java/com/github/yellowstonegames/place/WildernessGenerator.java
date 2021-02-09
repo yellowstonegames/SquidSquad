@@ -222,59 +222,171 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
 
     public static ObjectLongOrderedMap<String> defaultViewer(){
         ObjectLongOrderedMap<String> viewer = new ObjectLongOrderedMap<>(64);
-        viewer.put("snow path", '.' | (long)describe("lightest silver") << 32);
-        viewer.put("dirt path", '.' | (long)describe("lighter dullmost brick") << 32);
-        viewer.put("sand path", '.' | (long)describe("lightmost dullmost bronze") << 32);
-        viewer.put("grass path", '.' | (long)describe("lighter dullmost fern") << 32);
-        viewer.put("stone path", '.' | (long)describe("lighter dullmost cyan") << 32);
-        viewer.put("wooden bridge", ':' | (long)describe("darkest dullmost sage") << 32);
-        viewer.put("ice ledge", '¬' | (long)describe("lightmost dullmost cyan") << 32);
-        viewer.put("dirt ledge", '¬' | (long)describe("darkmost dullmost ember") << 32);
-        viewer.put("sand ledge", '¬' | (long)describe("dullest tan") << 32);
-        viewer.put("grass ledge", '¬' | (long)describe("darkmost dullmost fern") << 32);
-        viewer.put("stone ledge", '¬' | (long)describe("lighter dullmost fern") << 32);
-        viewer.put("snow", '…' | (long)describe("dullmost white") << 32);
-        viewer.put("ice", '-' | (long)describe("rich white") << 32);
-        viewer.put("dirt", '·' | (long)describe("lighter duller chocolate") << 32);
-        viewer.put("pebbles", '…' | (long)describe("lighter dullmost mauve") << 32);
-        viewer.put("dry grass", '\'' | (long)describe("light dullmost saffron") << 32);
-        viewer.put("fresh water", '~' | (long)describe("lightmost duller navy") << 32);
-        viewer.put("salt water", '≈' | (long)describe("light duller cobalt") << 32);
+
+        viewer.put("snow path", '.' | (long)describe("light dullmost silver") << 32);
+        viewer.put("dirt path", '.' | (long)describe("lightmost dullest chocolate") << 32);
+        viewer.put("sand path", '.' | (long)describe("dark dullmost butter") << 32);
+        viewer.put("grass path", '.' | (long)describe("darker dullmost lime") << 32);
+        viewer.put("stone path", '.' | (long)describe("lightmost dullest cyan") << 32);
+        viewer.put("wooden bridge", ':' | (long)describe("dark dullmost ember") << 32);
+        viewer.put("ice ledge", '¬' | (long)describe("lightest dullmost cyan") << 32);
+        viewer.put("dirt ledge", '¬' | (long)describe("dark duller chocolate") << 32);
+        viewer.put("sand ledge", '¬' | (long)describe("dark dullmost saffron") << 32);
+        viewer.put("grass ledge", '¬' | (long)describe("darker dull moss") << 32);
+        viewer.put("stone ledge", '¬' | (long)describe("lighter dullmost cobalt") << 32);
+        viewer.put("snow", '…' | (long)describe("lightmost dullmost butter") << 32);
+        viewer.put("ice", '-' | (long)describe("lightmost dullmost mint") << 32);
+        viewer.put("dirt", '·' | (long)describe("dark dullest cinnamon") << 32);
+        viewer.put("pebbles", '…' | (long)describe("dark dullmost peach") << 32);
+        viewer.put("dry grass", '\'' | (long)describe("lighter dull tan") << 32);
+        viewer.put("fresh water", '~' | (long)describe("rich denim") << 32);
+        viewer.put("salt water", '≈' | (long)describe("dull cobalt") << 32);
         viewer.put("sand", '…' | (long)describe("lightest dullest butter") << 32);
-        viewer.put("leaves", '…' | (long)describe("darker dull peach") << 32);
-        viewer.put("grass", '"' | (long)describe("dark dullmost cactus") << 32);
-        viewer.put("mud", ',' | (long)describe("darkmost dullest peach") << 32);
-        viewer.put("moss", '˝' | (long)describe("darker dullmost cactus") << 32);
-        viewer.put("rubble", '‰' | (long)describe("dark dullmost cyan") << 32);
-        viewer.put("empty space", ' ' | (long)describe("lighter rich black") << 32);
-        viewer.put("snow mound", '∆' | (long)describe("lightest dullmost sage") << 32);
-        viewer.put("icy divot", '°' | (long)describe("rich white") << 32);
-        viewer.put("powder snowdrift", '¨' | (long)describe("lightmost dullmost sage") << 32);
-        viewer.put("hillock", '∆' | (long)describe("lighter dullmost saffron") << 32);
-        viewer.put("animal burrow", '¸' | (long)describe("darkmost dullmost silver") << 32);
-        viewer.put("small bush 1", '♣' | (long)describe("darkmost dullmost chartreuse") << 32);
-        viewer.put("large bush 1", '♣' | (long)describe("darkest dullmost cactus") << 32);
-        viewer.put("evergreen tree 1", '♠' | (long)describe("darkest silver") << 32);
+        viewer.put("leaves", '…' | (long)describe("darker butter") << 32);
+        viewer.put("grass", '"' | (long)describe("darkest dullest green") << 32);
+        viewer.put("mud", ',' | (long)describe("light dull chocolate") << 32);
+        viewer.put("moss", '˝' | (long)describe("darker cactus") << 32);
+        viewer.put("rubble", '‰' | (long)describe("dullest turquoise") << 32);
+        viewer.put("empty space", ' ' | (long)describe("darkest dullmost indigo") << 32);
+        viewer.put("snow mound", '∆' | (long)describe("lightmost dullmost sky") << 32);
+        viewer.put("icy divot", '°' | (long)describe("dullmost white") << 32);
+        viewer.put("powder snowdrift", '¨' | (long)describe("lightmost rich silver") << 32);
+        viewer.put("hillock", '∆' | (long)describe("lighter dullest pear") << 32);
+        viewer.put("animal burrow", '¸' | (long)describe("darkest duller lime") << 32);
+        viewer.put("small bush 1", '♣' | (long)describe("darkest duller pear") << 32);
+        viewer.put("large bush 1", '♣' | (long)describe("darker richer fern") << 32);
+        viewer.put("evergreen tree 1", '♠' | (long)describe("darkest green") << 32);
         viewer.put("evergreen tree 2", '♠' | (long)describe("darkmost dullmost black") << 32);
-        viewer.put("small cactus 1", '‡' | (long)describe("light duller jade") << 32);
-        viewer.put("large cactus 1", '‡' | (long)describe("lighter duller fern") << 32);
-        viewer.put("succulent 1", '§' | (long)describe("lightmost dullest cactus") << 32);
-        viewer.put("seashell 1", 'ˋ' | (long)describe("lighter dullest butter") << 32);
-        viewer.put("seashell 2", 'ˋ' | (long)describe("lightmost dullest salmon") << 32);
-        viewer.put("seashell 3", 'ˋ' | (long)describe("dullmost white") << 32);
-        viewer.put("seashell 4", 'ˋ' | (long)describe("lightmost dullest lavender") << 32);
-        viewer.put("driftwood", '¿' | (long)describe("darkest white") << 32);
-        viewer.put("boulder", '●' | (long)describe("dark silver") << 32);
-        viewer.put("deciduous tree 1", '¥' | (long)describe("darkmost dullmost lime") << 32);
-        viewer.put("small bush 2", '♣' | (long)describe("dullmost brown") << 32);
-        viewer.put("deciduous tree 2", '¥' | (long)describe("darkest dullmost green") << 32);
-        viewer.put("deciduous tree 3", '¥' | (long)describe("darkest dullmost butter") << 32);
-        viewer.put("large bush 2", '♣' | (long)describe("darker silver") << 32);
-        viewer.put("tropical tree 1", '¶' | (long)describe("darkest dullest sage") << 32);
-        viewer.put("tropical tree 2", '¶' | (long)describe("light dullmost fern") << 32);
-        viewer.put("large bush 3", '♣' | (long)describe("dark dullmost lime") << 32);
-        viewer.put("tropical tree 3", '¶' | (long)describe("lighter dullmost fern") << 32);
-        viewer.put("tropical tree 4", '¶' | (long)describe("lightest dull fern") << 32);
+        viewer.put("small cactus 1", '‡' | (long)describe("light rich cactus") << 32);
+        viewer.put("large cactus 1", '‡' | (long)describe("darker duller celery") << 32);
+        viewer.put("succulent 1", '§' | (long)describe("light rich jade") << 32);
+        viewer.put("seashell 1", 'ˋ' | (long)describe("lightest dullest saffron") << 32);
+        viewer.put("seashell 2", 'ˋ' | (long)describe("lightmost dullest tan") << 32);
+        viewer.put("seashell 3", 'ˋ' | (long)describe("lightmost dullest yellow") << 32);
+        viewer.put("seashell 4", 'ˋ' | (long)describe("lightest dullest pink") << 32);
+        viewer.put("driftwood", '¿' | (long)describe("dullmost gray") << 32);
+        viewer.put("boulder", '●' | (long)describe("lighter dullmost teal") << 32);
+        viewer.put("deciduous tree 1", '¥' | (long)describe("darker dull olive") << 32);
+        viewer.put("small bush 2", '♣' | (long)describe("darkest duller pear") << 32);
+        viewer.put("deciduous tree 2", '¥' | (long)describe("dark cactus") << 32);
+        viewer.put("deciduous tree 3", '¥' | (long)describe("lightest moss") << 32);
+        viewer.put("large bush 2", '♣' | (long)describe("darker dullmost green") << 32);
+        viewer.put("tropical tree 1", '¶' | (long)describe("richest fern") << 32);
+        viewer.put("tropical tree 2", '¶' | (long)describe("dull fern") << 32);
+        viewer.put("large bush 3", '♣' | (long)describe("duller cactus") << 32);
+        viewer.put("tropical tree 3", '¶' | (long)describe("richmost fern") << 32);
+        viewer.put("tropical tree 4", '¶' | (long)describe("light rich cactus") << 32);
+
+        //// old values
+//        viewer.put("snow path", '.' | (long)describe("lightest silver") << 32);
+//        viewer.put("dirt path", '.' | (long)describe("lighter dullmost brick") << 32);
+//        viewer.put("sand path", '.' | (long)describe("lightmost dullmost bronze") << 32);
+//        viewer.put("grass path", '.' | (long)describe("lighter dullmost fern") << 32);
+//        viewer.put("stone path", '.' | (long)describe("lighter dullmost cyan") << 32);
+//        viewer.put("wooden bridge", ':' | (long)describe("darkest dullmost sage") << 32);
+//        viewer.put("ice ledge", '¬' | (long)describe("lightmost dullmost cyan") << 32);
+//        viewer.put("dirt ledge", '¬' | (long)describe("darkmost dullmost ember") << 32);
+//        viewer.put("sand ledge", '¬' | (long)describe("dullest tan") << 32);
+//        viewer.put("grass ledge", '¬' | (long)describe("darkmost dullmost fern") << 32);
+//        viewer.put("stone ledge", '¬' | (long)describe("lighter dullmost fern") << 32);
+//        viewer.put("snow", '…' | (long)describe("dullmost white") << 32);
+//        viewer.put("ice", '-' | (long)describe("rich white") << 32);
+//        viewer.put("dirt", '·' | (long)describe("lighter duller chocolate") << 32);
+//        viewer.put("pebbles", '…' | (long)describe("lighter dullmost mauve") << 32);
+//        viewer.put("dry grass", '\'' | (long)describe("light dullmost saffron") << 32);
+//        viewer.put("fresh water", '~' | (long)describe("lightmost duller navy") << 32);
+//        viewer.put("salt water", '≈' | (long)describe("light duller cobalt") << 32);
+//        viewer.put("sand", '…' | (long)describe("lightest dullest butter") << 32);
+//        viewer.put("leaves", '…' | (long)describe("darker dull peach") << 32);
+//        viewer.put("grass", '"' | (long)describe("dark dullmost cactus") << 32);
+//        viewer.put("mud", ',' | (long)describe("darkmost dullest peach") << 32);
+//        viewer.put("moss", '˝' | (long)describe("darker dullmost cactus") << 32);
+//        viewer.put("rubble", '‰' | (long)describe("dark dullmost cyan") << 32);
+//        viewer.put("empty space", ' ' | (long)describe("lighter rich black") << 32);
+//        viewer.put("snow mound", '∆' | (long)describe("lightest dullmost sage") << 32);
+//        viewer.put("icy divot", '°' | (long)describe("rich white") << 32);
+//        viewer.put("powder snowdrift", '¨' | (long)describe("lightmost dullmost sage") << 32);
+//        viewer.put("hillock", '∆' | (long)describe("lighter dullmost saffron") << 32);
+//        viewer.put("animal burrow", '¸' | (long)describe("darkmost dullmost silver") << 32);
+//        viewer.put("small bush 1", '♣' | (long)describe("darkmost dullmost chartreuse") << 32);
+//        viewer.put("large bush 1", '♣' | (long)describe("darkest dullmost cactus") << 32);
+//        viewer.put("evergreen tree 1", '♠' | (long)describe("darkest silver") << 32);
+//        viewer.put("evergreen tree 2", '♠' | (long)describe("darkmost dullmost black") << 32);
+//        viewer.put("small cactus 1", '‡' | (long)describe("light duller jade") << 32);
+//        viewer.put("large cactus 1", '‡' | (long)describe("lighter duller fern") << 32);
+//        viewer.put("succulent 1", '§' | (long)describe("lightmost dullest cactus") << 32);
+//        viewer.put("seashell 1", 'ˋ' | (long)describe("lighter dullest butter") << 32);
+//        viewer.put("seashell 2", 'ˋ' | (long)describe("lightmost dullest salmon") << 32);
+//        viewer.put("seashell 3", 'ˋ' | (long)describe("dullmost white") << 32);
+//        viewer.put("seashell 4", 'ˋ' | (long)describe("lightmost dullest lavender") << 32);
+//        viewer.put("driftwood", '¿' | (long)describe("darkest white") << 32);
+//        viewer.put("boulder", '●' | (long)describe("dark silver") << 32);
+//        viewer.put("deciduous tree 1", '¥' | (long)describe("darkmost dullmost lime") << 32);
+//        viewer.put("small bush 2", '♣' | (long)describe("dullmost brown") << 32);
+//        viewer.put("deciduous tree 2", '¥' | (long)describe("darkest dullmost green") << 32);
+//        viewer.put("deciduous tree 3", '¥' | (long)describe("darkest dullmost butter") << 32);
+//        viewer.put("large bush 2", '♣' | (long)describe("darker silver") << 32);
+//        viewer.put("tropical tree 1", '¶' | (long)describe("darkest dullest sage") << 32);
+//        viewer.put("tropical tree 2", '¶' | (long)describe("light dullmost fern") << 32);
+//        viewer.put("large bush 3", '♣' | (long)describe("dark dullmost lime") << 32);
+//        viewer.put("tropical tree 3", '¶' | (long)describe("lighter dullmost fern") << 32);
+//        viewer.put("tropical tree 4", '¶' | (long)describe("lightest dull fern") << 32);
+
+        /* //// incomplete, used to fill in data
+        viewer.put("snow path", '.'
+        viewer.put("dirt path", '.'
+        viewer.put("sand path", '.'
+        viewer.put("grass path", '.'
+        viewer.put("stone path", '.'
+        viewer.put("wooden bridge", ':'
+        viewer.put("ice ledge", '¬'
+        viewer.put("dirt ledge", '¬'
+        viewer.put("sand ledge", '¬'
+        viewer.put("grass ledge", '¬'
+        viewer.put("stone ledge", '¬'
+        viewer.put("snow", '…'
+        viewer.put("ice", '-'
+        viewer.put("dirt", '·'
+        viewer.put("pebbles", '…'
+        viewer.put("dry grass", '\''
+        viewer.put("fresh water", '~'
+        viewer.put("salt water", '≈'
+        viewer.put("sand", '…'
+        viewer.put("leaves", '…'
+        viewer.put("grass", '"'
+        viewer.put("mud", ','
+        viewer.put("moss", '˝'
+        viewer.put("rubble", '‰'
+        viewer.put("empty space", ' '
+        viewer.put("snow mound", '∆'
+        viewer.put("icy divot", '°'
+        viewer.put("powder snowdrift", '¨'
+        viewer.put("hillock", '∆'
+        viewer.put("animal burrow", '¸'
+        viewer.put("small bush 1", '♣'
+        viewer.put("large bush 1", '♣'
+        viewer.put("evergreen tree 1", '♠'
+        viewer.put("evergreen tree 2", '♠'
+        viewer.put("small cactus 1", '‡'
+        viewer.put("large cactus 1", '‡'
+        viewer.put("succulent 1", '§'
+        viewer.put("seashell 1", 'ˋ'
+        viewer.put("seashell 2", 'ˋ'
+        viewer.put("seashell 3", 'ˋ'
+        viewer.put("seashell 4", 'ˋ'
+        viewer.put("driftwood", '¿'
+        viewer.put("boulder", '●'
+        viewer.put("deciduous tree 1", '¥'
+        viewer.put("small bush 2", '♣'
+        viewer.put("deciduous tree 2", '¥'
+        viewer.put("deciduous tree 3", '¥'
+        viewer.put("large bush 2", '♣'
+        viewer.put("tropical tree 1", '¶'
+        viewer.put("tropical tree 2", '¶'
+        viewer.put("large bush 3", '♣'
+        viewer.put("tropical tree 3", '¶'
+        viewer.put("tropical tree 4", '¶'
+ */
         return viewer;
     }
 
