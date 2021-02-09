@@ -50,6 +50,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
     public ObjectLongMap<String> viewer;
     public final int[][] content, floors, colors, environment;
     public final char[][] grid;
+    public final long[][] glyphs;
 
     /**
      * Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.
@@ -434,6 +435,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         floors = new int[width][height];
         colors = new int[width][height];
         grid = new char[width][height];
+        glyphs = new long[width][height];
         this.floorTypes = floorTypes;
         this.contentTypes = contentTypes;
         this.viewer = viewer;
@@ -459,12 +461,12 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
             for (int y = 0; y < height; y++) {
                 if((b = BlueNoise.getChosen(x, y, seed) + 128) < limit)
                 {
-                    pair = viewer.get(contentTypes.get(content[x][y] = b));
+                    glyphs[x][y] = pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;
                     colors[x][y] = (int) (pair >>> 32);
                 }
                 else {
-                    pair = viewer.get(floorTypes.get(floors[x][y]));
+                    glyphs[x][y] = pair = viewer.get(floorTypes.get(floors[x][y]));
                     grid[x][y] = (char) pair;
                     colors[x][y] = (int) (pair >>> 32);
                 }
