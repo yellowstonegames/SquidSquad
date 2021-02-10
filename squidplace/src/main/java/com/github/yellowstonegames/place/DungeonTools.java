@@ -292,6 +292,8 @@ public class DungeonTools {
 
     /**
      * For when you want to print a 2D char array. Prints on multiple lines, with a trailing newline.
+     * To match how libGDX displays on the screen, this prints with the y-axis pointing up, that is,
+     * row 0 is at the bottom and the highest y-value is at the top.
      *
      * @param level a 2D char array to print with a trailing newline
      */
@@ -299,7 +301,7 @@ public class DungeonTools {
         if (level == null || level.length == 0 || level[0].length == 0)
             System.out.println("INVALID DUNGEON LEVEL");
         else {
-            for (int y = 0; y < level[0].length; y++) {
+            for (int y = level[0].length - 1; y >= 0; y--) {
                 for (int x = 0; x < level.length; x++) {
                     System.out.print(level[x][y]);
                 }

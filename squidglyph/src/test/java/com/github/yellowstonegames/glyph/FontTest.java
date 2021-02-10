@@ -33,7 +33,7 @@ public class FontTest extends ApplicationAdapter {
         lines = LineTools.decode4x4(random.nextLong() | LineTools.exteriorSquare, LineTools.light);
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
-        font = KnownFonts.getInconsolataLGC().scale(0.375f, 0.375f);
+        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
@@ -73,7 +73,7 @@ public class FontTest extends ApplicationAdapter {
         font.drawBlocks(batch, backgrounds, 0f, 0f);
         for (int xx = 0; xx < 4; xx++) {
             for (int yy = 0; yy < 4; yy++) {
-                font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, font.cellHeight * (9 - yy));
+                font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, font.cellHeight * (9 + yy));
             }
         }
         int color = DescriptiveColor.lerpColors(

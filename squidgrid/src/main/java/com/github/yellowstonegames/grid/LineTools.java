@@ -8,10 +8,14 @@ package com.github.yellowstonegames.grid;
 public class LineTools {
     private LineTools(){
     }
-    public static final char[] lightAlt = " ╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),
-                               heavyAlt = " ╸╹┛╺━┗┻╻┓┃┫┏┳┣╋".toCharArray(),
-                               light    = " ─│┘──└┴│┐│┤┌┬├┼".toCharArray(),
-                               heavy    = " ━┃┛━━┗┻┃┓┃┫┏┳┣╋".toCharArray();
+    public static final char[] lightA0  = " ╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),
+                               lightAlt = " ╴╷┐╶─┌┬╵┘│┤└┴├┼".toCharArray(),
+                               heavyA0  = " ╸╹┛╺━┗┻╻┓┃┫┏┳┣╋".toCharArray(),
+                               heavyAlt = " ╸╻┓╺━┏┳╹┛┃┫┗┻┣╋".toCharArray(),
+                               light0   = " ─│┘──└┴│┐│┤┌┬├┼".toCharArray(),
+                               light    = " ─│┐──┌┬│┘│┤└┴├┼".toCharArray(),
+                               heavy0   = " ━┃┛━━┗┻┃┓┃┫┏┳┣╋".toCharArray(),
+                               heavy    = " ━┃┓━━┏┳┃┛┃┫┗┻┣╋".toCharArray();
     //                                     0123456789ABCDEF
 
     /**
@@ -694,10 +698,9 @@ public class LineTools {
         for (int i = 1; i < width - 1; i++) {
             for (int j = 1; j < height - 1; j++) {
                 if (dungeon[i][j] == '\1') {
-                    portion[i - 1][j - 1] = ' ';
+                    portion[i - 1][height - j - 2] = ' ';
                 } else {
-                    // ┼┌┘
-                    portion[i - 1][j - 1] = dungeon[i][j];
+                    portion[i - 1][height - j - 2] = dungeon[i][j];
                 }
             }
         }
