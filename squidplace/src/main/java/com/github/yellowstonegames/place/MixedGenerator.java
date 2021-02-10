@@ -838,7 +838,7 @@ public class MixedGenerator implements PlaceGenerator {
                 else
                 {
                     dx2 = 0;
-                    dy2 *= -1;
+                    dy2 = -dy2;
                 }
             }
             dir = Direction.getCardinalDirection(dx2, dy2);
@@ -856,19 +856,19 @@ public class MixedGenerator implements PlaceGenerator {
             }
             else if (r < weight + (1 - weight) * 0.5)
             {
-                dx *= -1;
+                dx = -dx;
                 dy = 0;
             }
             else
             {
                 dx = 0;
-                dy *= -1;
+                dy = -dy;
             }
             dir = Direction.getCardinalDirection(dx, dy);
         }
         if(current.x + dir.deltaX <= 0 || current.x + dir.deltaX >= width - 1) {
-            if (current.y < target.y) dir = Direction.DOWN;
-            else if (current.y > target.y) dir = Direction.UP;
+            if (current.y < target.y) dir = Direction.UP;
+            else if (current.y > target.y) dir = Direction.DOWN;
         }
         else if(current.y + dir.deltaY <= 0 || current.y + dir.deltaY >= height - 1) {
             if (current.x < target.x) dir = Direction.RIGHT;

@@ -13,7 +13,7 @@ import com.github.yellowstonegames.core.TrigTools;
  */
 public enum Direction {
 
-    UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0), UP_LEFT(-1, -1), UP_RIGHT(1, -1), DOWN_LEFT(-1, 1), DOWN_RIGHT(1, 1), NONE(0, 0);
+    UP(0, 1), DOWN(0, -1), LEFT(-1, 0), RIGHT(1, 0), UP_LEFT(-1, 1), UP_RIGHT(1, 1), DOWN_LEFT(-1, -1), DOWN_RIGHT(1, -1), NONE(0, 0);
     /**
      * An array which holds only the four cardinal directions.
      */
@@ -69,7 +69,7 @@ public enum Direction {
      */
     public static Direction getDirection(int x, int y) {
         if ((x | y) == 0) return NONE;
-        return CLOCKWISE[(int)(TrigTools.atan2_(y, x) * 8f + 2.5f) & 7];
+        return COUNTERCLOCKWISE[(int)(TrigTools.atan2_(y, x) * 8f + 6.5f) & 7];
     }
 
     /**
@@ -93,22 +93,22 @@ public enum Direction {
             case -1:
                 switch (y)
                 {
-                    case 1: return DOWN_LEFT;
-                    case -1: return UP_LEFT;
+                    case -1: return DOWN_LEFT;
+                    case 1: return UP_LEFT;
                     default: return LEFT;
                 }
             case 1:
                 switch (y)
                 {
-                    case 1: return DOWN_RIGHT;
-                    case -1: return UP_RIGHT;
+                    case -1: return DOWN_RIGHT;
+                    case 1: return UP_RIGHT;
                     default: return RIGHT;
                 }
             default:
                 switch (y)
                 {
-                    case 1: return DOWN;
-                    case -1: return UP;
+                    case -1: return DOWN;
+                    case 1: return UP;
                     default: return NONE;
                 }
         }
@@ -123,22 +123,14 @@ public enum Direction {
      * origin point to an event point, such as a mouse click on a grid.
      * If the point given is directly diagonal then the direction clockwise is
      * returned.
-     * <br>
-     * This method returned an incorrect value for several years (the bug was found on
-     * April 28, 2020 but the method hadn't been modified for a long time), and other
-     * code in SquidLib had workarounds in use before the bug was fixed. The nature of
-     * the bug was simply that {@link #UP} was returned when {@link #DOWN} should have
-     * been, and vice versa; the workaround used in various places was to negate y.
-     * Now you should no longer have to negate y or treat it differently than x, and
-     * earlier code should account for the vertical axis being corrected.
-     * 
+     *
      * @param x the x position relative to the origin (0,0)
      * @param y the y position relative to the origin (0,0)
      * @return the closest matching cardinal Direction enum, which may also be {@link #NONE}
      */
     public static Direction getCardinalDirection(int x, int y) {
         if ((x | y) == 0) return NONE;
-        return CARDINALS_CLOCKWISE[(int)(TrigTools.atan2_(y, x) * 4f + 1.5f) & 3];
+        return CARDINALS_COUNTERCLOCKWISE[(int)(TrigTools.atan2_(y, x) * 4f + 3.5f) & 3];
     }
 
 	/**
@@ -257,7 +249,7 @@ public enum Direction {
      * @return Whether this is a cardinal-direction move.
      */
     public boolean isCardinal() {
-        return (deltaX + deltaY & 1) != 0;
+        return (deltaX + deltaY & 1) == 1;
     }
 
 	/**
@@ -265,19 +257,13 @@ public enum Direction {
 	 */
 	public boolean hasUp() {
 		switch (this) {
-		case UP:
-		case UP_LEFT:
-		case UP_RIGHT:
-			return true;
-		case DOWN:
-		case DOWN_LEFT:
-		case DOWN_RIGHT:
-		case LEFT:
-		case NONE:
-		case RIGHT:
-			return false;
-		}
-		throw new IllegalStateException("Unmatched Direction: " + this);
+            case UP:
+            case UP_LEFT:
+            case UP_RIGHT:
+                return true;
+            default:
+                return false;
+        }
 	}
 
 	/**
@@ -285,19 +271,13 @@ public enum Direction {
 	 */
 	public boolean hasDown() {
 		switch (this) {
-		case DOWN:
-		case DOWN_LEFT:
-		case DOWN_RIGHT:
-			return true;
-		case LEFT:
-		case NONE:
-		case RIGHT:
-		case UP:
-		case UP_LEFT:
-		case UP_RIGHT:
-			return false;
-		}
-		throw new IllegalStateException("Unmatched Direction: " + this);
+            case DOWN:
+            case DOWN_LEFT:
+            case DOWN_RIGHT:
+                return true;
+            default:
+                return false;
+        }
 	}
 
 	/**
@@ -305,19 +285,13 @@ public enum Direction {
 	 */
 	public boolean hasLeft() {
 		switch (this) {
-		case DOWN_LEFT:
-		case LEFT:
-		case UP_LEFT:
-			return true;
-		case DOWN:
-		case DOWN_RIGHT:
-		case NONE:
-		case RIGHT:
-		case UP:
-		case UP_RIGHT:
-			return false;
-		}
-		throw new IllegalStateException("Unmatched Direction: " + this);
+            case DOWN_LEFT:
+            case LEFT:
+            case UP_LEFT:
+                return true;
+            default:
+                return false;
+        }
 	}
 
 	/**
@@ -325,19 +299,13 @@ public enum Direction {
 	 */
 	public boolean hasRight() {
 		switch (this) {
-		case RIGHT:
-		case DOWN_RIGHT:
-		case UP_RIGHT:
-			return true;
-		case DOWN:
-		case NONE:
-		case UP:
-		case DOWN_LEFT:
-		case LEFT:
-		case UP_LEFT:
-			return false;
-		}
-		throw new IllegalStateException("Unmatched Direction: " + this);
+            case RIGHT:
+            case DOWN_RIGHT:
+            case UP_RIGHT:
+                return true;
+            default:
+                return false;
+        }
 	}
 
     Direction(int x, int y) {

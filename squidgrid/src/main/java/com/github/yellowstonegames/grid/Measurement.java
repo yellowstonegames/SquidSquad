@@ -28,10 +28,8 @@ public enum Measurement {
 	EUCLIDEAN;
 
 	public double heuristic(Direction target) {
-		if (this == Measurement.EUCLIDEAN) {
-			if (target == Direction.DOWN_LEFT || target == Direction.DOWN_RIGHT || target == Direction.UP_LEFT || target == Direction.UP_RIGHT) {
-				return 1.4142135623730951; //Math.sqrt(2.0);
-			}
+		if (this == Measurement.EUCLIDEAN && (target == Direction.DOWN_LEFT || target == Direction.DOWN_RIGHT || target == Direction.UP_LEFT || target == Direction.UP_RIGHT)) {
+			return 1.4142135623730951; //Math.sqrt(2.0);
 		}
 		return 1.0;
 	}

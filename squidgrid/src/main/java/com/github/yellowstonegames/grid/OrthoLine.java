@@ -343,9 +343,9 @@ public final class OrthoLine {
                 case RIGHT:
                     switch (current.toGoTo(next))
                     {
-                        case UP: cs[i] = '┘';
+                        case DOWN: cs[i] = '┘';
                             break;
-                        case DOWN: cs[i] = '┐';
+                        case UP: cs[i] = '┐';
                             break;
                         default: cs[i] = '─';
                             break;
@@ -354,9 +354,9 @@ public final class OrthoLine {
                 case LEFT:
                     switch (current.toGoTo(next))
                     {
-                        case UP: cs[i] = '└';
+                        case DOWN: cs[i] = '└';
                             break;
-                        case DOWN: cs[i] = '┌';
+                        case UP: cs[i] = '┌';
                             break;
                         default: cs[i] = '─';
                             break;
@@ -422,9 +422,9 @@ public final class OrthoLine {
                 case RIGHT:
                     switch (current.toGoTo(next))
                     {
-                        case UP: cs[i] = '┘';
+                        case DOWN: cs[i] = '┘';
                             break;
-                        case DOWN: cs[i] = '┐';
+                        case UP: cs[i] = '┐';
                             break;
                         default: cs[i] = '─';
                             break;
@@ -433,9 +433,9 @@ public final class OrthoLine {
                 case LEFT:
                     switch (current.toGoTo(next))
                     {
-                        case UP: cs[i] = '└';
+                        case DOWN: cs[i] = '└';
                             break;
-                        case DOWN: cs[i] = '┌';
+                        case UP: cs[i] = '┌';
                             break;
                         default: cs[i] = '─';
                             break;

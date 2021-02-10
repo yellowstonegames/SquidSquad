@@ -1394,24 +1394,30 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
     /**
+     * Given a StringBuilder, this appends to it a readable representation of the map this stores.
+     * The first line appended is the one with the highest y-coordinates, matching y-axis-up behavior.
+     * The last line appended is the one where y is 0. Lines are separated by newline chars.
+     * @param sb a StringBuilder this will append to
+     * @return sb, after modifications, for chaining
+     */
+    public StringBuilder appendTo(StringBuilder sb) {
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                sb.append(dungeon[x][y]);
+            }
+            sb.append('\n');
+        }
+        return sb;
+    }
+
+    /**
      * Provides a string representation of the latest generated dungeon.
      *
      * @return a printable string version of the latest generated dungeon.
      */
     @Override
 	public String toString() {
-        char[][] trans = new char[height][width];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                trans[y][x] = dungeon[x][y];
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < height; row++) {
-            sb.append(trans[row]);
-            sb.append('\n');
-        }
-        return sb.toString();
+        return appendTo(new StringBuilder((width + 1) * height)).toString();
     }
 
 }

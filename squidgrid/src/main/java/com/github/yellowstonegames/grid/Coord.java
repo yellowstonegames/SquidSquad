@@ -7,10 +7,12 @@ import java.io.Serializable;
 
 /**
  * A 2D coordinate with (constant) x and y fields. Coord objects are immutable; a single pool of Coord values, with
- * x and y each ranging from -3 to 255, is shared by all users of Coord. This pool helps reduce pressure on the
- * garbage collector when many Coord values would have been created for some purpose and quickly discarded; instead
- * of creating a new Coord with a constructor, you use the static method {@link #get(int, int)}, which retrieves an
- * already-existing Coord from the pool if possible, and always returns a usable Coord.
+ * x and y each ranging from -3 to 255, is shared by all users of Coord (the upper limit of 255 can be increased as
+ * needed). This pool helps reduce pressure on the garbage collector when many Coord values would have been created for
+ * some purpose and quickly discarded; instead of creating a new Coord with a constructor, you use the static method
+ * {@link #get(int, int)}, which retrieves an already-existing Coord from the pool if possible, and always returns a
+ * usable Coord. This class has various instance methods, but none of them modify the current Coord; if they change
+ * anything, they do so by returning another Coord with different x and y values via {@link #get(int, int)}.
  * <br>
  * More on the Coord pool used by this class:  Coords can't always be retrieved from the pool; Coord.get constructs a
  * new Coord if one of x or y is unusually large (greater than 255) or too negative (below -3). The upper limit of 255
@@ -21,7 +23,7 @@ import java.io.Serializable;
  * could easily cause crashes on Android after resuming an application that had previously shrunken the pool due to
  * platform quirks. Long story short, you should only expand the pool size when your game needs a larger set of 2D
  * points it will commonly use, and in most cases you shouldn't need to change it at all.
- * 
+ * <br>
  * Created by Tommy Ettinger on 8/12/2015.
  */
 public class Coord implements Serializable {
@@ -58,12 +60,7 @@ public class Coord implements Serializable {
      * When only y is different and {@code to.y} is less than {@code from.y}, this returns 270.
      * In cases between these, the angle is between those values; it cannot be 360 but it can be very close. This never
      * returns a negative angle. Keep in mind, "up" depends on how your code orients the y-axis, and SquidLib generally
-     * defaults to positive y going toward the bottom of the screen, like how later lines in a paragraph are further
-     * down on the page.
-     * <br>
-     * As a compatibility note, before SquidLib 3.0.0 stable, this used an odd rotation of the normal degrees where 0
-     * degrees were used when {@code to.y} was greater than {@code from.y} and x was equal. Because that typically runs
-     * counter to expectations from actual math, the behavior was changed. 
+     * defaults to positive y going toward the top of the screen, like in most textbook geometry.
 	 * @param from the starting Coord to measure from
 	 * @param to the ending Coord to measure to
 	 * @return The degree from {@code from} to {@code to}; 0 is up
