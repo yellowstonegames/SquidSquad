@@ -918,8 +918,9 @@ public class DungeonProcessor implements PlaceGenerator{
 
             }
         }
-        if(maxDijkstra < width * height * 0.1f)
-            return generate(baseDungeon, environment);
+        if(maxDijkstra < (width + height) >>> 2) {
+            return generate();
+        }
         stairsDown = reuse.refill(scan, (int) Math.ceil(maxDijkstra * 0.7),
                 Integer.MAX_VALUE - 1).singleRandom(rng);
         finder = new RoomFinder(map, env2);
