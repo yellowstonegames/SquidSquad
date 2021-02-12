@@ -20,9 +20,9 @@ import javax.annotation.Nonnull;
 public class BresenhamLine implements LineDrawer {
 
     public final ObjectList<Coord> lastLine;
-    
+
     /**
-     *
+     * Makes a new BresenhamLine and initializes its only state, {@link #lastLine}.
      */
     public BresenhamLine() {
         lastLine = new ObjectList<>();
@@ -1119,5 +1119,4 @@ public class BresenhamLine implements LineDrawer {
     public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY, int maxLength) {
         return lineArray(startX, startY, targetX, targetY, maxLength);
     }
-
 }
