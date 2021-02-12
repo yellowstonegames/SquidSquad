@@ -3,7 +3,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectList;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Provides a means to generate Bresenham lines in 2D and 3D.
@@ -13,12 +12,15 @@ import java.util.List;
  * @author Tommy Ettinger
  * @author smelC
  */
-public final class BresenhamLine {
+public class BresenhamLine {
 
+    public final ObjectList<Coord> lastLine;
+    
     /**
-     * Prevents any instances from being created
+     *
      */
-    private BresenhamLine() {
+    public BresenhamLine() {
+        lastLine = new ObjectList<>();
     }
 
     /**
@@ -36,6 +38,7 @@ public final class BresenhamLine {
     public static ObjectList<Coord> line(Coord a, Coord b) {
         return line(a.x, a.y, b.x, b.y);
     }
+
 
     /**
      * Generates a 2D Bresenham line between two points.
@@ -104,6 +107,7 @@ public final class BresenhamLine {
     public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength) {
         return line(startX, startY, targetX, targetY, maxLength, null);
     }
+
     /**
      * Generates a 2D Bresenham line between two points. If you want to save
      * some memory, you can reuse an ObjectList of Coord, {@code buffer},
@@ -128,6 +132,7 @@ public final class BresenhamLine {
     public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
         return line(startX, startY, targetX, targetY, 0x7FFFFFFF, buffer);
     }
+
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
      * the number of Coords returned reaches maxLength (measured using
@@ -169,7 +174,7 @@ public final class BresenhamLine {
 
         ax <<= 1;
         ay <<= 1;
-        
+
         int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
         int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
 
@@ -213,6 +218,7 @@ public final class BresenhamLine {
         }
         return buffer;
     }
+
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
      * the number of Coords returned reaches maxLength (measured using
@@ -318,10 +324,11 @@ public final class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
-                                      ObjectList<Coord> buffer){
-        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
+    public static boolean reachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
+                                    ObjectList<Coord> buffer){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
+
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -339,10 +346,11 @@ public final class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
-                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
-        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
+    public static boolean reachable(int startX, int startY, int targetX, int targetY,
+                                    @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
+
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -363,8 +371,8 @@ public final class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                                    @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -472,8 +480,8 @@ public final class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
-                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public static boolean reachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
+                                             @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -574,8 +582,8 @@ public final class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
-        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
+    public static boolean reachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
@@ -590,10 +598,11 @@ public final class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
-                                      @Nonnull float[][] resistanceMap){
-        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
+    public static boolean reachable(int startX, int startY, int targetX, int targetY,
+                                    @Nonnull float[][] resistanceMap){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
     }
+
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
      * to determine whether the line of sight is obstructed, without storing the line of points along the way.
@@ -608,8 +617,8 @@ public final class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                      @Nonnull float[][] resistanceMap) {
+    public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                                    @Nonnull float[][] resistanceMap) {
         if(maxLength <= 0)
             return false;
         int dx = targetX - startX;
@@ -689,7 +698,6 @@ public final class BresenhamLine {
         return false;//never got to the target point
     }
 
-
     /**
      * Generates a 2D Bresenham line between two points. Returns an array
      * of Coord instead of a ObjectList.
@@ -713,7 +721,6 @@ public final class BresenhamLine {
         // largest positive int for maxLength; it is extremely unlikely that this could be reached
         return lineArray(startX, startY, targetX, targetY, 0x7fffffff);
     }
-
 
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
@@ -782,6 +789,320 @@ public final class BresenhamLine {
             }
             return result;
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Generates a 2D Bresenham line between two points. Reuses {@link #lastLine}
+     * and returns it as the buffer; later calls to drawLine() without a buffer
+     * will probably clear lastLine (which is the same ObjectList this returns)
+     * as they are run.
+     * @param a the starting point
+     * @param b the ending point
+     * @return The path between {@code a} and {@code b}.
+     */
+    public ObjectList<Coord> drawLine(Coord a, Coord b) {
+        lastLine.clear();
+        return line(a.x, a.y, b.x, b.y, 0x7FFFFFFF, lastLine);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points. Reuses {@link #lastLine}
+     * and returns it as the buffer; later calls to drawLine() without a buffer
+     * will probably clear lastLine (which is the same ObjectList this returns)
+     * as they are run.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @return a ObjectList of Coord points along the line
+     */
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
+        lastLine.clear();
+        // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
+        return line(startX, startY, targetX, targetY, 0x7fffffff, lastLine);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points, stopping early if
+     * the number of Coords returned reaches maxLength (measured using
+     * Chebyshev distance, where diagonally adjacent cells are considered
+     * exactly as distant as orthogonally-adjacent cells). Reuses {@link #lastLine}
+     * and returns it as the buffer; later calls to drawLine() without a buffer
+     * will probably clear lastLine (which is the same ObjectList this returns)
+     * as they are run.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @return a ObjectList of Coord points along the line
+     */
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
+        lastLine.clear();
+        return line(startX, startY, targetX, targetY, maxLength, lastLine);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points. If you want to save
+     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * which will be cleared and filled with the resulting line of Coord.
+     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * and return that.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectList of Coord points along the line
+     */
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
+        return line(startX, startY, targetX, targetY, 0x7FFFFFFF, buffer);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param start the starting point
+     * @param target the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
+                               ObjectList<Coord> buffer){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points, stopping early if
+     * the number of Coords returned reaches maxLength (measured using
+     * Chebyshev distance, where diagonally adjacent cells are considered
+     * exactly as distant as orthogonally-adjacent cells). If you want to save
+     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * which will be cleared and filled with the resulting line of Coord.
+     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * and return that.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @param maxLength the largest count of Coord points this can return; will stop early if reached
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectList of Coord points along the line
+     */
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+        return line(startX, startY, targetX, targetY, maxLength, buffer);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(int startX, int startY, int targetX, int targetY,
+                               @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+     * {@code buffer}. The {@code maxLength} is measured using Chebyshev distance, where diagonally adjacent cells are
+     * considered exactly as distant as orthogonally-adjacent cells.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
+     * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
+     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
+     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
+     * returns false and buffer will only contain up to and including the point that blocked the line of sight.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param maxLength the maximum permitted length of a line of sight
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                               @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+        return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap, buffer);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
+     * the line of sight is obstructed, without storing the line of points along the way. {@code resistanceMap} must not
+     * be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param start the starting point
+     * @param target the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, without storing the line of points along the way.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(int startX, int startY, int targetX, int targetY,
+                               @Nonnull float[][] resistanceMap){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
+    }
+
+    /**
+     * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
+     * to determine whether the line of sight is obstructed, without storing the line of points along the way.
+     * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance maps can with
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}. If the starting
+     * point can see the target point, this returns true; otherwise this returns false.
+     * @param startX the x-coordinate of the starting point
+     * @param startY  the y-coordinate of the starting point
+     * @param targetX the x-coordinate of the target point
+     * @param targetY  the y-coordinate of the target point
+     * @param maxLength the maximum permitted length of a line of sight
+     * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
+     * @return true if the starting point can see the target point; false otherwise
+     */
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                               @Nonnull float[][] resistanceMap){
+        return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap);
+    }
+    /**
+     * Generates a 2D Bresenham line between two points.
+     * This allocates a new array with each call, sized to fit the
+     * line exactly. It does not change {@link #lastLine}.
+     *
+     * @param a the starting point
+     * @param b the ending point
+     * @return The path between {@code a} and {@code b}.
+     */
+    public Coord[] drawLineArray(Coord a, Coord b) {
+        return lineArray(a.x, a.y, b.x, b.y, 0x7FFFFFFF);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points. Returns an array
+     * of Coord instead of a ObjectList.
+     * This allocates a new array with each call, sized to fit the
+     * line exactly.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @return an array of Coord points along the line
+     */
+    public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY) {
+        // largest positive int for maxLength; it is extremely unlikely that this could be reached
+        return lineArray(startX, startY, targetX, targetY, 0x7fffffff);
+    }
+
+    /**
+     * Generates a 2D Bresenham line between two points, stopping early if
+     * the number of Coords returned reaches maxLength.. Returns an array
+     * of Coord instead of an ObjectList.
+     * This allocates a new array with each call, sized to fit the
+     * line exactly.
+     * <br>
+     * Uses ordinary Coord values for points, and these can be pooled
+     * if they are within what the current pool allows (it starts,
+     * by default, pooling Coords with x and y between -3 and 255,
+     * inclusive). If the Coords are pool-able, it can significantly
+     * reduce the work the garbage collector needs to do, especially
+     * on Android.
+     *
+     * @param startX the x coordinate of the starting point
+     * @param startY the y coordinate of the starting point
+     * @param targetX the x coordinate of the target point
+     * @param targetY the y coordinate of the target point
+     * @param maxLength the largest count of Coord points this can return; will stop early if reached
+     * @return an array of Coord points along the line
+     */
+    public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY, int maxLength) {
+        return lineArray(startX, startY, targetX, targetY, maxLength);
     }
 
 }

@@ -247,8 +247,8 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         viewer.put("leaves", '…' | (long)describeOklab("pear chocolate brown") << 32);
         viewer.put("grass", '"' | (long)describeOklab("darkest dullest green") << 32);
         viewer.put("mud", ',' | (long)describeOklab("dull chocolate") << 32);
-        viewer.put("moss", '˝' | (long)describeOklab("darker cactus") << 32);
-        viewer.put("rubble", '‰' | (long)describeOklab("dullest turquoise") << 32);
+        viewer.put("moss", '˝' | (long)describeOklab("darkest fern") << 32);
+        viewer.put("rubble", '‰' | (long)describeOklab("dullmost tan turquoise") << 32);
         viewer.put("empty space", ' ' | (long)describeOklab("darkest dullmost indigo") << 32);
         viewer.put("snow mound", '∆' | (long)describeOklab("lightmost dullmost sky") << 32);
         viewer.put("icy divot", '°' | (long)describeOklab("lighter white denim") << 32);

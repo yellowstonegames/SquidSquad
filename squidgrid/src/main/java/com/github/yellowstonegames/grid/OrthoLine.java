@@ -81,9 +81,9 @@ public final class OrthoLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
-                                      ObjectList<Coord> buffer){
-        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
+    public static boolean reachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
+                                    ObjectList<Coord> buffer){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
@@ -102,9 +102,9 @@ public final class OrthoLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
-                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
-        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
+    public static boolean reachable(int startX, int startY, int targetX, int targetY,
+                                    @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
@@ -124,8 +124,8 @@ public final class OrthoLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                      @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                                    @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
         int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, x = startX, y = startY;
 
@@ -180,8 +180,8 @@ public final class OrthoLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
-        return isReachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
+    public static boolean reachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
@@ -196,9 +196,9 @@ public final class OrthoLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY,
-                                      @Nonnull float[][] resistanceMap){
-        return isReachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
+    public static boolean reachable(int startX, int startY, int targetX, int targetY,
+                                    @Nonnull float[][] resistanceMap){
+        return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
@@ -214,8 +214,8 @@ public final class OrthoLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                      @Nonnull float[][] resistanceMap) {
+    public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
+                                    @Nonnull float[][] resistanceMap) {
         if(maxLength <= 0) return false;
 
         int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);

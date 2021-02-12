@@ -20,7 +20,7 @@ public class LOSTest {
             ArrayTools.insert(interior, grid, 1, 1);
             for (int x = 1; x < 20; x++) {
                 for (int y = 1; y < 20; y++) {
-                    grid[x][y] = (BresenhamLine.isReachable(10, 10, x, y, length, res)) ? '*' : '0';
+                    grid[x][y] = (BresenhamLine.reachable(10, 10, x, y, length, res)) ? '*' : '0';
                 }
             }
             for (int y = 0; y < 21; y++) {
@@ -47,7 +47,7 @@ public class LOSTest {
             ArrayTools.insert(interior, grid, 1, 1);
             for (int x = 1; x < 20; x++) {
                 for (int y = 1; y < 20; y++) {
-                    grid[x][y] = (BresenhamLine.isReachableEuclidean(10, 10, x, y, length, res, buffer)) ? '*' : '0';
+                    grid[x][y] = (BresenhamLine.reachableEuclidean(10, 10, x, y, length, res, buffer)) ? '*' : '0';
                 }
             }
             for (int y = 0; y < 21; y++) {
@@ -73,7 +73,7 @@ public class LOSTest {
             ArrayTools.insert(interior, grid, 1, 1);
             for (int x = 1; x < 20; x++) {
                 for (int y = 1; y < 20; y++) {
-                    grid[x][y] = (OrthoLine.isReachable(10, 10, x, y, length, res, buffer)) ? '*' : '0';
+                    grid[x][y] = (OrthoLine.reachable(10, 10, x, y, length, res, buffer)) ? '*' : '0';
                 }
             }
             for (int y = 0; y < 21; y++) {
