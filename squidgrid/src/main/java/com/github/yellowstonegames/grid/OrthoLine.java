@@ -12,7 +12,18 @@ import java.util.List;
  */
 public final class OrthoLine {
 
-    private OrthoLine(){}
+    /**
+     * A buffer of Coord as an ObjectList; this is cleared and reused by the drawLine() methods, so its state can only
+     * be certain until you make another call to one of those methods. The drawLine() overloads that explicitly take a
+     * buffer argument don't use this field.
+     */
+    public final ObjectList<Coord> lastLine;
+    /**
+     * Makes a new OrthoLine and initializes its only state, {@link #lastLine}.
+     */
+    public OrthoLine(){
+        lastLine = new ObjectList<>();
+    }
 
     /**
      * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.

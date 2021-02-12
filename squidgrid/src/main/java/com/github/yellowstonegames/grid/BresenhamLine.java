@@ -5,14 +5,19 @@ import com.github.tommyettinger.ds.ObjectList;
 import javax.annotation.Nonnull;
 
 /**
- * Provides a means to generate Bresenham lines in 2D and 3D.
+ * Provides a means to generate Bresenham lines in 2D.
+ * You can use the static methods {@link #line(Coord, Coord)}, {@link #lineArray(Coord, Coord)},
+ * and {@link #reachable(Coord, Coord, float[][])} (with many overloads possible), or their
+ * equivalents using the {@link LineDrawer} interface: {@link #drawLine(Coord, Coord)},
+ * {@link #drawLineArray(Coord, Coord)}, or {@link #isReachable(Coord, Coord, float[][])}.
+ * The more verbose name of the pair is the instance method.
  *
  * @author Eben Howard - http://squidpony.com - howard@squidpony.com
  * @author Lewis Potter
  * @author Tommy Ettinger
  * @author smelC
  */
-public class BresenhamLine {
+public class BresenhamLine implements LineDrawer {
 
     public final ObjectList<Coord> lastLine;
     
@@ -791,19 +796,15 @@ public class BresenhamLine {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Gets the last line drawn using the internal buffer this carries, rather than an explicitly-specified buffer.
+     *
+     * @return an ObjectList of Coord that contains the last line drawn with this BresenhamLine's internal buffer
+     */
+    @Override
+    public ObjectList<Coord> getLastLine() {
+        return lastLine;
+    }
 
     /**
      * Generates a 2D Bresenham line between two points. Reuses {@link #lastLine}
@@ -814,6 +815,7 @@ public class BresenhamLine {
      * @param b the ending point
      * @return The path between {@code a} and {@code b}.
      */
+    @Override
     public ObjectList<Coord> drawLine(Coord a, Coord b) {
         lastLine.clear();
         return line(a.x, a.y, b.x, b.y, 0x7FFFFFFF, lastLine);
@@ -838,6 +840,7 @@ public class BresenhamLine {
      * @param targetY the y coordinate of the target point
      * @return a ObjectList of Coord points along the line
      */
+    @Override
     public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
         lastLine.clear();
         // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
@@ -866,6 +869,7 @@ public class BresenhamLine {
      * @param targetY the y coordinate of the target point
      * @return a ObjectList of Coord points along the line
      */
+    @Override
     public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
         lastLine.clear();
         return line(startX, startY, targetX, targetY, maxLength, lastLine);
@@ -892,6 +896,7 @@ public class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return an ObjectList of Coord points along the line
      */
+    @Override
     public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
         return line(startX, startY, targetX, targetY, 0x7FFFFFFF, buffer);
     }
@@ -911,6 +916,7 @@ public class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap,
                                ObjectList<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
@@ -941,6 +947,7 @@ public class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return an ObjectList of Coord points along the line
      */
+    @Override
     public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
         return line(startX, startY, targetX, targetY, maxLength, buffer);
     }
@@ -962,6 +969,7 @@ public class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY,
                                @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
@@ -987,6 +995,7 @@ public class BresenhamLine {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
                                @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
         return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap, buffer);
@@ -1003,6 +1012,7 @@ public class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(@Nonnull Coord start, @Nonnull Coord target, @Nonnull float[][] resistanceMap){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
@@ -1020,6 +1030,7 @@ public class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY,
                                @Nonnull float[][] resistanceMap){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
@@ -1039,6 +1050,7 @@ public class BresenhamLine {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
+    @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
                                @Nonnull float[][] resistanceMap){
         return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap);
@@ -1052,6 +1064,7 @@ public class BresenhamLine {
      * @param b the ending point
      * @return The path between {@code a} and {@code b}.
      */
+    @Override
     public Coord[] drawLineArray(Coord a, Coord b) {
         return lineArray(a.x, a.y, b.x, b.y, 0x7FFFFFFF);
     }
@@ -1075,6 +1088,7 @@ public class BresenhamLine {
      * @param targetY the y coordinate of the target point
      * @return an array of Coord points along the line
      */
+    @Override
     public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY) {
         // largest positive int for maxLength; it is extremely unlikely that this could be reached
         return lineArray(startX, startY, targetX, targetY, 0x7fffffff);
@@ -1101,6 +1115,7 @@ public class BresenhamLine {
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
      * @return an array of Coord points along the line
      */
+    @Override
     public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY, int maxLength) {
         return lineArray(startX, startY, targetX, targetY, maxLength);
     }
