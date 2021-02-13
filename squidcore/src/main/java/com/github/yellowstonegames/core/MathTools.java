@@ -461,4 +461,256 @@ public final class MathTools
     public static float lerp (final float fromValue, final float toValue, final float progress) {
         return fromValue + (toValue - fromValue) * progress;
     }
+
+
+    /**
+     * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
+     * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
+     * {@code QUINTIC} interpolation. This interpolation is slightly flatter at peaks and valleys than a sine wave is.
+     * <br>
+     * An input of any even number should produce something very close to -1.0, any odd number should produce something
+     * very close to 1.0, and any number halfway between two incremental integers (like 8.5 or -10.5) should produce 0.0
+     * or a very small fraction. In the (unlikely) event that this is given a double that is too large to represent
+     * many or any non-integer values, this will simply return -1.0 or 1.0.
+     * @param value any double other than NaN or infinite values; extremely large values can't work properly
+     * @return a double from -1.0 (inclusive) to 1.0 (inclusive)
+     */
+    public static double sway(double value)
+    {
+        long floor = (value >= 0.0 ? (long) value : (long) value - 1L);
+        value -= floor;
+        floor = (-(floor & 1L) | 1L);
+        return value * value * value * (value * (value * 6.0 - 15.0) + 10.0) * (floor << 1) - floor;
+    }
+
+    /**
+     * Very similar to {@link TrigTools#sin_(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
+     * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
+     * {@code QUINTIC} interpolation. This interpolation is slightly flatter at peaks and valleys than a sine wave is.
+     * <br>
+     * An input of any even number should produce something very close to -1f, any odd number should produce something
+     * very close to 1f, and any number halfway between two incremental integers (like 8.5f or -10.5f) should produce 0f
+     * or a very small fraction. In the (unlikely) event that this is given a float that is too large to represent
+     * many or any non-integer values, this will simply return -1f or 1f.
+     * @param value any float other than NaN or infinite values; extremely large values can't work properly
+     * @return a float from -1f (inclusive) to 1f (inclusive)
+     */
+    public static float sway(float value)
+    {
+        int floor = (value >= 0f ? (int) value : (int) value - 1);
+        value -= floor;
+        floor = (-(floor & 1) | 1);
+        return value * value * value * (value * (value * 6f - 15f) + 10f) * (floor << 1) - floor;
+    }
+
+    /**
+     * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
+     * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
+     * {@code HERMITE} interpolation. This interpolation is rounder at peaks and valleys than a sine wave is; it is
+     * also called {@code smoothstep} in GLSL, and is called Cubic here because it gets the third power of a value.
+     * <br>
+     * An input of any even number should produce something very close to -1.0, any odd number should produce something
+     * very close to 1.0, and any number halfway between two incremental integers (like 8.5 or -10.5) should produce 0.0
+     * or a very small fraction. In the (unlikely) event that this is given a double that is too large to represent
+     * many or any non-integer values, this will simply return -1.0 or 1.0.
+     * @param value any double other than NaN or infinite values; extremely large values can't work properly
+     * @return a double from -1.0 (inclusive) to 1.0 (inclusive)
+     */
+    public static double swayCubic(double value)
+    {
+        long floor = (value >= 0.0 ? (long) value : (long) value - 1L);
+        value -= floor;
+        floor = (-(floor & 1L) | 1L);
+        return value * value * (3.0 - value * 2.0) * (floor << 1) - floor;
+    }
+
+    /**
+     * Very similar to {@link TrigTools#sin_(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
+     * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
+     * {@code HERMITE} interpolation. This interpolation is rounder at peaks and valleys than a sine wave is; it is
+     * also called {@code smoothstep} in GLSL, and is called Cubic here because it gets the third power of a value.
+     * <br>
+     * An input of any even number should produce something very close to -1f, any odd number should produce something
+     * very close to 1f, and any number halfway between two incremental integers (like 8.5f or -10.5f) should produce 0f
+     * or a very small fraction. In the (unlikely) event that this is given a float that is too large to represent
+     * many or any non-integer values, this will simply return -1f or 1f.
+     * @param value any float other than NaN or infinite values; extremely large values can't work properly
+     * @return a float from -1f (inclusive) to 1f (inclusive)
+     */
+    public static float swayCubic(float value)
+    {
+        int floor = (value >= 0f ? (int) value : (int) value - 1);
+        value -= floor;
+        floor = (-(floor & 1) | 1);
+        return value * value * (3f - value * 2f) * (floor << 1) - floor;
+    }
+
+    /**
+     * Limited-use; takes any float and produces a float in the 0f to 1f range, with a graph of input to output that
+     * looks much like a sine wave, curving to have a flat slope when given an integer input and a steep slope when the
+     * input is halfway between two integers, smoothly curving at any points between those extremes. This is meant for
+     * noise, where it may be useful to limit the amount of change between nearby points' noise values and prevent both
+     * sudden "jumps" in noise value and "cracks" where a line takes a sudden jagged movement at an angle.
+     * <br>
+     * An input of any even number should produce something very close to 0f, any odd number should produce something
+     * very close to 1f, and any number halfway between two incremental integers (like 8.5f or -10.5f) should produce
+     * 0.5f. In the (unlikely) event that this is given a float that is too large to represent many or any non-integer
+     * values, this will simply return 0f or 1f. This version is called "Tight" because its range is tighter than
+     * {@link #sway(float)}.
+     * @param value any float other than NaN or infinite values; extremely large values can't work properly
+     * @return a float from 0f (inclusive) to 1f (inclusive)
+     */
+    public static float swayTight(float value)
+    {
+        int floor = (value >= 0f ? (int) value : (int) value - 1);
+        value -= floor;
+        floor &= 1;
+        return value * value * value * (value * (value * 6f - 15f) + 10f) * (-floor | 1) + floor;
+    }
+
+    /**
+     * Limited-use; takes any double and produces a double in the 0.0 to 1.0 range, with a graph of input to output that
+     * looks much like a sine wave, curving to have a flat slope when given an integer input and a steep slope when the
+     * input is halfway between two integers, smoothly curving at any points between those extremes. This is meant for
+     * noise, where it may be useful to limit the amount of change between nearby points' noise values and prevent both
+     * sudden "jumps" in noise value and "cracks" where a line takes a sudden jagged movement at an angle.
+     * <br>
+     * An input of any even number should produce something very close to 0.0, any odd number should produce something
+     * very close to 1.0, and any number halfway between two incremental integers (like 8.5 or -10.5) should produce
+     * 0.5f. In the (unlikely) event that this is given a double that is too large to represent many or any non-integer
+     * values, this will simply return 0.0 or 1.0. This version is called "Tight" because its range is tighter than
+     * {@link #sway(double)}.
+     * @param value any double other than NaN or infinite values; extremely large values can't work properly
+     * @return a double from 0.0 (inclusive) to 1.0 (inclusive)
+     */
+    public static double swayTight(double value)
+    {
+        long floor = (value >= 0.0 ? (long) value : (long) value - 1L);
+        value -= floor;
+        floor &= 1L;
+        return value * value * value * (value * (value * 6.0 - 15.0) + 10.0) * (-floor | 1L) + floor;
+    }
+
+    /**
+     * A mix of the smooth transitions of {@link #sway(double)} with (seeded) random peaks and valleys between -1.0 and
+     * 1.0 (both exclusive). The pattern this will produces will be completely different if the seed changes, and it is
+     * suitable for 1D noise. Uses a simple method of cubic interpolation between random values, where a random value is
+     * used without modification when given an integer for {@code value}. Note that this uses a different type of
+     * interpolation than {@link #sway(double)}, which uses quintic (this causes swayRandomized() to produce more
+     * outputs in the mid-range and less at extremes; it is also slightly faster and simpler).
+     * <br>
+     * Performance note: HotSpot seems to be much more able to optimize swayRandomized(long, float) than
+     * swayRandomized(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
+     * reverse should be expected because floats must be emulated there.
+     * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a double that typically changes slowly, by less than 1.0, with direction changes at integer inputs
+     * @return a pseudo-random double between -1.0 and 1.0 (both exclusive), smoothly changing with value
+     */
+    public static double swayRandomized(long seed, double value)
+    {
+        final long floor = value >= 0.0 ? (long) value : (long) value - 1L; // the closest long that is less than value
+        // gets a random start and endpoint. there's a sequence of start and end values for each seed, and changing the
+        // seed changes the start and end values unpredictably (so use the same seed for one curving line).
+        final double start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L)) * 0x0.fffffffffffffbp-63,
+                end = (((seed += 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L)) * 0x0.fffffffffffffbp-63;
+        // gets the fractional part of value
+        value -= floor;
+        // cubic interpolation to smooth the curve
+        value *= value * (3.0 - 2.0 * value);
+        // interpolate between start and end based on how far we are between the start and end points of this section
+        return (1.0 - value) * start + value * end;
+    }
+
+    /**
+     * A mix of the smooth transitions of {@link #sway(float)} with (seeded) random peaks and valleys between -1f and
+     * 1f (both exclusive). The pattern this will produces will be completely different if the seed changes, and it is
+     * suitable for 1D noise. Uses a simple method of cubic interpolation between random values, where a random value is
+     * used without modification when given an integer for {@code value}. Note that this uses a different type of
+     * interpolation than {@link #sway(float)}, which uses quintic (this causes swayRandomized() to produce more
+     * outputs in the mid-range and less at extremes; it is also slightly faster and simpler).
+     * <br>
+     * Performance note: HotSpot seems to be much more able to optimize swayRandomized(long, float) than
+     * swayRandomized(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
+     * reverse should be expected because floats must be emulated there.
+     * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
+     * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
+     */
+    public static float swayRandomized(long seed, float value)
+    {
+        final long floor = value >= 0f ? (long) value : (long) value - 1L;
+        final float start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L)) * 0x0.ffffffp-63f,
+                end = (((seed += 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L)) * 0x0.ffffffp-63f;
+        value -= floor;
+        value *= value * (3f - 2f * value);
+        return (1f - value) * start + value * end;
+    }
+
+    /**
+     * A variant on {@link #swayRandomized(long, double)} that takes an int seed instead of a long, and is optimized for
+     * usage on GWT. Like the version with a long seed, this uses cubic interpolation between random peak or valley
+     * points; only the method of generating those random peaks and valleys has changed.
+     * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a double that typically changes slowly, by less than 2.0, with direction changes at integer inputs
+     * @return a pseudo-random double between -1.0 and 1.0 (both exclusive), smoothly changing with value
+     */
+    public static double swayRandomized(final int seed, double value)
+    {
+        final int floor = value >= 0.0 ? (int) value : (int) value - 1;
+        int z = seed + floor;
+        final double start = (((z = (z ^ 0xD1B54A35) * 0x1D2BC3)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z ^ z << 11) * 0x0.ffffffp-31,
+                end = (((z = (seed + floor + 1 ^ 0xD1B54A35) * 0x1D2BC3)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z ^ z << 11) * 0x0.ffffffp-31;
+        value -= floor;
+        value *= value * (3.0 - 2.0 * value);
+        return (1.0 - value) * start + value * end;
+    }
+
+    /**
+     * A variant on {@link #swayRandomized(long, float)} that takes an int seed instead of a long, and is optimized for
+     * usage on GWT. Like the version with a long seed, this uses cubic interpolation between random peak or valley
+     * points; only the method of generating those random peaks and valleys has changed.
+     * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
+     * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
+     */
+    public static float swayRandomized(final int seed, float value)
+    {
+        final int floor = value >= 0f ? (int) value : (int) value - 1;
+        int z = seed + floor;
+        final float start = (((z = (z ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f,
+                end = (((z = (seed + floor + 1 ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f;
+        value -= floor;
+        value *= value * (3 - 2 * value);
+        return (1 - value) * start + value * end;
+    }
+    /**
+     * A 1D "noise" method that produces smooth transitions like {@link #sway(float)}, but also wrapping around at pi *
+     * 2 so this can be used to get smoothly-changing random angles. Has (seeded) random peaks and valleys where it
+     * slows its range of change, but can return any value from 0 to 6.283185307179586f, or pi * 2. The pattern this
+     * will produces will be completely different if the seed changes, and the value is expected to be something other
+     * than an angle, like time. Uses a simple method of cubic interpolation between random values, where a random value
+     * is used without modification when given an integer for {@code value}. Note that this uses a different type of
+     * interpolation than {@link #sway(float)}, which uses quintic (this causes swayAngleRandomized() to be slightly
+     * faster and simpler).
+     * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 1.0, with possible direction changes at integer inputs
+     * @return a pseudo-random float between 0f and 283185307179586f (both inclusive), smoothly changing with value and wrapping
+     */
+    public static float swayAngleRandomized(long seed, float value)
+    {
+        final long floor = value >= 0f ? (long) value : (long) value - 1L;
+        float start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L) >>> 1) * 0x0.ffffffp-62f,
+                end = (((seed += 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L) >>> 1) * 0x0.ffffffp-62f;
+        value -= floor;
+        value *= value * (3f - 2f * value);
+        end = end - start + 1.5f;
+        end -= (long)end + 0.5f;
+        start += end * value + 1;
+        return (start - (long)start) * 6.283185307179586f;
+    }
+
 }
