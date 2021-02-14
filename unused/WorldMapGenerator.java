@@ -11,7 +11,7 @@
  * rectangle (like this class) and an ellipse (like EllipticalMap), with all-round sides.
  * <a href="http://yellowstonegames.github.io/SquidLib/SphereWorld.png" >Example map</a>.
  */
-public static class SphereMap extends WorldMapGenerator {
+public static class StretchMap extends WorldMapGenerator {
     protected static final double terrainFreq = 1.45, terrainRidgedFreq = 2.6, heatFreq = 2.1, moistureFreq = 2.125, otherFreq = 3.375;
     //protected static final double terrainFreq = 1.65, terrainRidgedFreq = 1.8, heatFreq = 2.1, moistureFreq = 2.125, otherFreq = 3.375, riverRidgedFreq = 21.7;
     private double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
@@ -30,10 +30,10 @@ public static class SphereMap extends WorldMapGenerator {
      * have significantly-exaggerated-in-size features while the equator is not distorted.
      * Always makes a 256x128 map.
      * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-     * If you were using {@link SphereMap#SphereMap(long, int, int, Noise3D, double)}, then this would be the
+     * If you were using {@link StretchMap#StretchMap(long, int, int, Noise3D, double)}, then this would be the
      * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0}.
      */
-    public SphereMap() {
+    public StretchMap() {
         this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0);
     }
 
@@ -49,7 +49,7 @@ public static class SphereMap extends WorldMapGenerator {
      * @param mapWidth  the width of the map(s) to generate; cannot be changed later
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
-    public SphereMap(int mapWidth, int mapHeight) {
+    public StretchMap(int mapWidth, int mapHeight) {
         this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
     }
 
@@ -66,7 +66,7 @@ public static class SphereMap extends WorldMapGenerator {
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
-    public SphereMap(long initialSeed, int mapWidth, int mapHeight) {
+    public StretchMap(long initialSeed, int mapWidth, int mapHeight) {
         this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
     }
 
@@ -84,7 +84,7 @@ public static class SphereMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
      */
-    public SphereMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+    public StretchMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
         this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
     }
 
@@ -102,7 +102,7 @@ public static class SphereMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public SphereMap(long initialSeed, int mapWidth, int mapHeight, Noise3D noiseGenerator) {
+    public StretchMap(long initialSeed, int mapWidth, int mapHeight, Noise3D noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
     }
 
@@ -128,7 +128,7 @@ public static class SphereMap extends WorldMapGenerator {
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
      */
-    public SphereMap(long initialSeed, int mapWidth, int mapHeight, Noise3D noiseGenerator, double octaveMultiplier) {
+    public StretchMap(long initialSeed, int mapWidth, int mapHeight, Noise3D noiseGenerator, double octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new double[width][height];
         yPositions = new double[width][height];
@@ -168,11 +168,11 @@ public static class SphereMap extends WorldMapGenerator {
     }
 
     /**
-     * Copies the SphereMap {@code other} to construct a new one that is exactly the same. References will only be
+     * Copies the StretchMap {@code other} to construct a new one that is exactly the same. References will only be
      * shared to Noise classes.
-     * @param other a SphereMap to copy
+     * @param other a StretchMap to copy
      */
-    public SphereMap(SphereMap other)
+    public StretchMap(StretchMap other)
     {
         super(other);
         terrain = other.terrain;
@@ -2686,7 +2686,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
  * {@link #generate()} in those classes, since it doesn't remake the map data at a slightly different rotation and
  * instead keeps a single map in use the whole time, using sections of it. This uses an
  * <a href="https://en.wikipedia.org/wiki/Orthographic_projection_in_cartography">Orthographic projection</a> with
- * the latitude always at the equator; the internal map is stored as a {@link SphereMap}, which uses a
+ * the latitude always at the equator; the internal map is stored as a {@link StretchMap}, which uses a
  * <a href="https://en.wikipedia.org/wiki/Cylindrical_equal-area_projection#Discussion">cylindrical equal-area
  * projection</a>, specifically the Smyth equal-surface projection.
  * <br>
@@ -2702,7 +2702,7 @@ public static class RotatingSpaceMap extends WorldMapGenerator {
             yPositions,
             zPositions;
     protected final int[] edges;
-    public final SphereMap storedMap;
+    public final StretchMap storedMap;
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
      * showing only one hemisphere at a time.
@@ -2807,7 +2807,7 @@ public static class RotatingSpaceMap extends WorldMapGenerator {
         yPositions = new double[mapWidth][mapHeight];
         zPositions = new double[mapWidth][mapHeight];
         edges = new int[height << 1];
-        storedMap = new SphereMap(initialSeed, mapWidth << 1, mapHeight, noiseGenerator, octaveMultiplier);
+        storedMap = new StretchMap(initialSeed, mapWidth << 1, mapHeight, noiseGenerator, octaveMultiplier);
     }
 
     /**
@@ -2828,7 +2828,7 @@ public static class RotatingSpaceMap extends WorldMapGenerator {
         yPositions = ArrayTools.copy(other.yPositions);
         zPositions = ArrayTools.copy(other.zPositions);
         edges = Arrays.copyOf(other.edges, other.edges.length);
-        storedMap = new SphereMap(other.storedMap);
+        storedMap = new StretchMap(other.storedMap);
     }
 
 
