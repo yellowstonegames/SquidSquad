@@ -728,6 +728,44 @@ public class Noise implements Serializable {
         return r;
     }
 
+    public float getNoiseWithSeed(float x, float y, long seed) {
+        final int s = this.seed;
+        this.seed = (int) (seed ^ seed >>> 32);
+        float r = getConfiguredNoise(x, y);
+        this.seed = s;
+        return r;
+    }
+    public float getNoiseWithSeed(float x, float y, float z, long seed) {
+        final int s = this.seed;
+        this.seed = (int) (seed ^ seed >>> 32);
+        float r = getConfiguredNoise(x, y, z);
+        this.seed = s;
+        return r;
+    }
+    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+        final int s = this.seed;
+        this.seed = (int) (seed ^ seed >>> 32);
+        float r = getConfiguredNoise(x, y, z, w);
+        this.seed = s;
+        return r;
+    }
+
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
+        final int s = this.seed;
+        this.seed = (int) (seed ^ seed >>> 32);
+        float r = getConfiguredNoise(x, y, z, w, u);
+        this.seed = s;
+        return r;
+    }
+
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
+        final int s = this.seed;
+        this.seed = (int) (seed ^ seed >>> 32);
+        float r = getConfiguredNoise(x, y, z, w, u, v);
+        this.seed = s;
+        return r;
+    }
+
     protected static int fastFloor(float f) {
         return (f >= 0 ? (int) f : (int) f - 1);
     }

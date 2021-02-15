@@ -44,15 +44,15 @@ public abstract class WorldMapGenerator implements Serializable {
     public long cacheA;
     public long cacheB;
     public LaserRandom rng;
-    public final double[][] heightData, heatData, moistureData;
+    public final float[][] heightData, heatData, moistureData;
     public final Region landData;
     public final int[][] heightCodeData;
-    public double landModifier = -1.0, heatModifier = 1.0,
-            minHeight = Double.POSITIVE_INFINITY, maxHeight = Double.NEGATIVE_INFINITY,
-            minHeightActual = Double.POSITIVE_INFINITY, maxHeightActual = Double.NEGATIVE_INFINITY,
-            minHeat = Double.POSITIVE_INFINITY, maxHeat = Double.NEGATIVE_INFINITY,
-            minWet = Double.POSITIVE_INFINITY, maxWet = Double.NEGATIVE_INFINITY;
-    protected double centerLongitude;
+    public float landModifier = -1f, heatModifier = 1f,
+            minHeight = Float.POSITIVE_INFINITY, maxHeight = Float.NEGATIVE_INFINITY,
+            minHeightActual = Float.POSITIVE_INFINITY, maxHeightActual = Float.NEGATIVE_INFINITY,
+            minHeat = Float.POSITIVE_INFINITY, maxHeat = Float.NEGATIVE_INFINITY,
+            minWet = Float.POSITIVE_INFINITY, maxWet = Float.NEGATIVE_INFINITY;
+    protected float centerLongitude;
 
     public int zoom, startX, startY, usedWidth, usedHeight;
     protected IntList startCacheX = new IntList(8), startCacheY = new IntList(8);
@@ -112,45 +112,39 @@ public abstract class WorldMapGenerator implements Serializable {
      * Gets the longitude line the map is centered on, which should usually be between 0 and 2 * PI.
      * @return the longitude line the map is centered on, in radians from 0 to 2 * PI
      */
-    public double getCenterLongitude() {
+    public float getCenterLongitude() {
         return centerLongitude;
     }
 
     /**
      * Sets the center longitude line to a longitude measured in radians, from 0 to 2 * PI. Positive arguments will be
      * corrected with modulo, but negative ones may not always act as expected, and are strongly discouraged.
-     * @param centerLongitude the longitude to center the map projection on, from 0 to 2 * PI (can be any non-negative double).
+     * @param centerLongitude the longitude to center the map projection on, from 0 to 2 * PI (can be any non-negative float).
      */
-    public void setCenterLongitude(double centerLongitude) {
-        this.centerLongitude = centerLongitude % 6.283185307179586;
+    public void setCenterLongitude(float centerLongitude) {
+        this.centerLongitude = centerLongitude % 6.283185307179586f;
     }
 
-    public static final double
-            deepWaterLower = -1.0, deepWaterUpper = -0.7,        // 0
-            mediumWaterLower = -0.7, mediumWaterUpper = -0.3,    // 1
-            shallowWaterLower = -0.3, shallowWaterUpper = -0.1,  // 2
-            coastalWaterLower = -0.1, coastalWaterUpper = 0.02,   // 3
-            sandLower = 0.02, sandUpper = 0.12,                   // 4
-            grassLower = 0.14, grassUpper = 0.35,                // 5
-            forestLower = 0.35, forestUpper = 0.6,               // 6
-            rockLower = 0.6, rockUpper = 0.8,                    // 7
-            snowLower = 0.8, snowUpper = 1.0;                    // 8
+    public static final float
+            deepWaterLower = -1f, deepWaterUpper = -0.7f,        // 0
+            mediumWaterLower = -0.7f, mediumWaterUpper = -0.3f,    // 1
+            shallowWaterLower = -0.3f, shallowWaterUpper = -0.1f,  // 2
+            coastalWaterLower = -0.1f, coastalWaterUpper = 0.02f,   // 3
+            sandLower = 0.02f, sandUpper = 0.12f,                   // 4
+            grassLower = 0.14f, grassUpper = 0.35f,                // 5
+            forestLower = 0.35f, forestUpper = 0.6f,               // 6
+            rockLower = 0.6f, rockUpper = 0.8f,                    // 7
+            snowLower = 0.8f, snowUpper = 1f;                    // 8
 
-    protected static double removeExcess(double radians)
+    protected static float removeExcess(float radians)
     {
-        radians *= 0.6366197723675814;
-        final int floor = (radians >= 0.0 ? (int) radians : (int) radians - 1);
-        return (radians - (floor & -2) - ((floor & 1) << 1)) * (Math.PI);
-//        if(radians < -Math.PI || radians > Math.PI)
-//            System.out.println("UH OH, radians produced: " + radians);
-//        if(Math.random() < 0.00001)
-//            System.out.println(radians);
-//        return radians;
-
+        radians *= 0.6366197723675814f;
+        final int floor = (radians >= 0f ? (int) radians : (int) radians - 1);
+        return (radians - (floor & -2) - ((floor & 1) << 1)) * TrigTools.PI;
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, float, float, long, long)}).
      * Always makes a 256x256 map. If you were using {@link WorldMapGenerator#WorldMapGenerator(long, int, int)}, then
      * this would be the same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 256}.
      */
@@ -160,7 +154,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, float, float, long, long)}).
      * Takes only the width/height of the map. The initial seed is set to the same large long
      * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
      * height of the map cannot be changed after the fact, but you can zoom in.
@@ -174,7 +168,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, float, float, long, long)}).
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -194,9 +188,9 @@ public abstract class WorldMapGenerator implements Serializable {
         cacheA = ~seedA;
         cacheB = ~seedB;
         rng = new LaserRandom(seedA, seedB);
-        heightData = new double[width][height];
-        heatData = new double[width][height];
-        moistureData = new double[width][height];
+        heightData = new float[width][height];
+        heatData = new float[width][height];
+        moistureData = new float[width][height];
         landData = new Region(width, height);
         heightCodeData = new int[width][height];
 
@@ -210,7 +204,7 @@ public abstract class WorldMapGenerator implements Serializable {
     /**
      * Generates a world using a random RNG state and all parameters randomized.
      * The worlds this produces will always have width and height as specified in the constructor (default 256x256).
-     * You can call {@link #zoomIn(int, int, int)} to double the resolution and center on the specified area, but the width
+     * You can call {@link #zoomIn(int, int, int)} to float the resolution and center on the specified area, but the width
      * and height of the 2D arrays this changed, such as {@link #heightData} and {@link #moistureData} will be the same.
      */
     public void generate()
@@ -222,27 +216,27 @@ public abstract class WorldMapGenerator implements Serializable {
      * Generates a world using the specified RNG state as a long. Other parameters will be randomized, using the same
      * RNG state to start with.
      * The worlds this produces will always have width and height as specified in the constructor (default 256x256).
-     * You can call {@link #zoomIn(int, int, int)} to double the resolution and center on the specified area, but the width
+     * You can call {@link #zoomIn(int, int, int)} to float the resolution and center on the specified area, but the width
      * and height of the 2D arrays this changed, such as {@link #heightData} and {@link #moistureData} will be the same.
      * @param stateA the first part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      * @param stateB the second part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      */
     public void generate(long stateA, long stateB) {
-        generate(-1.0, -1.0, stateA, stateB | 1L);
+        generate(-1f, -1f, stateA, stateB | 1L);
     }
 
     /**
      * Generates a world using the specified RNG state as a long, with specific land and heat modifiers that affect
      * the land-water ratio and the average temperature, respectively.
      * The worlds this produces will always have width and height as specified in the constructor (default 256x256).
-     * You can call {@link #zoomIn(int, int, int)} to double the resolution and center on the specified area, but the width
+     * You can call {@link #zoomIn(int, int, int)} to float the resolution and center on the specified area, but the width
      * and height of the 2D arrays this changed, such as {@link #heightData} and {@link #moistureData} will be the same.
-     * @param landMod 1.0 is Earth-like, less than 1 is more-water, more than 1 is more-land; a random value will be used if this is negative
-     * @param heatMod 1.125 is Earth-like, less than 1 is cooler, more than 1 is hotter; a random value will be used if this is negative
+     * @param landMod 1f is Earth-like, less than 1 is more-water, more than 1 is more-land; a random value will be used if this is negative
+     * @param heatMod 1.125f is Earth-like, less than 1 is cooler, more than 1 is hotter; a random value will be used if this is negative
      * @param stateA the first part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      * @param stateB the second part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      */
-    public void generate(double landMod, double heatMod, long stateA, long stateB)
+    public void generate(float landMod, float heatMod, long stateA, long stateB)
     {
         if(cacheA != stateA || cacheB != (stateB | 1L) ||
                 landMod != landModifier || heatMod != heatModifier)
@@ -266,7 +260,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
 
     /**
-     * Halves the resolution of the map and doubles the area it covers; the 2D arrays this uses keep their sizes. This
+     * Halves the resolution of the map and floats the area it covers; the 2D arrays this uses keep their sizes. This
      * version of zoomOut always zooms out from the center of the currently used area.
      * <br>
      * Only has an effect if you have previously zoomed in using {@link #zoomIn(int, int, int)} or its overload.
@@ -276,7 +270,7 @@ public abstract class WorldMapGenerator implements Serializable {
         zoomOut(1, width >> 1, height >> 1);
     }
     /**
-     * Halves the resolution of the map and doubles the area it covers repeatedly, halving {@code zoomAmount} times; the
+     * Halves the resolution of the map and floats the area it covers repeatedly, halving {@code zoomAmount} times; the
      * 2D arrays this uses keep their sizes. This version of zoomOut allows you to specify where the zoom should be
      * centered, using the current coordinates (if the map size is 256x256, then coordinates should be between 0 and
      * 255, and will refer to the currently used area and not necessarily the full world size).
@@ -326,7 +320,7 @@ public abstract class WorldMapGenerator implements Serializable {
 
     }
     /**
-     * Doubles the resolution of the map and halves the area it covers; the 2D arrays this uses keep their sizes. This
+     * Floats the resolution of the map and halves the area it covers; the 2D arrays this uses keep their sizes. This
      * version of zoomIn always zooms in to the center of the currently used area.
      * <br>
      * Although there is no technical restriction on maximum zoom, zooming in more than 5 times (64x scale or greater)
@@ -338,7 +332,7 @@ public abstract class WorldMapGenerator implements Serializable {
         zoomIn(1, width >> 1, height >> 1);
     }
     /**
-     * Doubles the resolution of the map and halves the area it covers repeatedly, doubling {@code zoomAmount} times;
+     * Floats the resolution of the map and halves the area it covers repeatedly, doubling {@code zoomAmount} times;
      * the 2D arrays this uses keep their sizes. This version of zoomIn allows you to specify where the zoom should be
      * centered, using the current coordinates (if the map size is 256x256, then coordinates should be between 0 and
      * 255, and will refer to the currently used area and not necessarily the full world size).
@@ -390,7 +384,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
 
     protected abstract void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                       double landMod, double heatMod, long stateA, long stateB);
+                                       float landMod, float heatMod, long stateA, long stateB);
     /**
      * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
      * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
@@ -399,16 +393,16 @@ public abstract class WorldMapGenerator implements Serializable {
      * If this is a supported operation and the parameters are valid, this returns a Coord with x between 0 and
      * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
      * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
-     * @param latitude the latitude, from {@code Math.PI * -0.5} to {@code Math.PI * 0.5}
-     * @param longitude the longitude, from {@code 0.0} to {@code Math.PI * 2.0}
+     * @param latitude the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
+     * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
      * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
      */
-    public Coord project(double latitude, double longitude)
+    public Coord project(float latitude, float longitude)
     {
         return null;
     }
 
-    public int codeHeight(final double high)
+    public int codeHeight(final float high)
     {
         if(high < deepWaterUpper)
             return 0;
@@ -450,12 +444,12 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class StretchMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        private double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        private float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
 
@@ -465,12 +459,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Always makes a 256x128 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link StretchMap#StretchMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link StretchMap#StretchMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f}.
          */
         public StretchMap() {
-            this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -480,13 +474,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public StretchMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -496,14 +490,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public StretchMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -518,9 +512,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public StretchMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public StretchMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -531,7 +525,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
@@ -539,7 +533,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public StretchMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -548,44 +542,44 @@ public abstract class WorldMapGenerator implements Serializable {
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed, the width/height of the map, and parameters for noise
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public StretchMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public StretchMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
 
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
         }
         @Override
@@ -601,14 +595,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * If this is a supported operation and the parameters are valid, this returns a Coord with x between 0 and
          * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
          * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
-         * @param latitude the latitude, from {@code Math.PI * -0.5} to {@code Math.PI * 0.5}
-         * @param longitude the longitude, from {@code 0.0} to {@code Math.PI * 2.0}
+         * @param latitude the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
+         * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
          * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
          */
         @Override
-        public Coord project(double latitude, double longitude) {
-            int x = (int)((((longitude - getCenterLongitude()) + 12.566370614359172) % 6.283185307179586) * 0.15915494309189535 * width),
-                    y = (int)((TrigTools.sin(latitude) * 0.5 + 0.5) * height);
+        public Coord project(float latitude, float longitude) {
+            int x = (int)((((longitude - getCenterLongitude()) + 12.566370614359172f) % 6.283185307179586f) * 0.15915494309189535f * width),
+                    y = (int)((TrigTools.sin(latitude) * 0.5f + 0.5f) * height);
             return Coord.get(
                     wrapX(x, y),
                     wrapY(x, y));
@@ -639,23 +633,23 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -664,25 +658,25 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.29) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp,
-                    i_w = 6.283185307179586 / width, i_h = 2.0 / (height+2.0),//(3.141592653589793) / (height+2.0),
-                    xPos = startX, yPos, i_uw = usedWidth / (double)width, i_uh = usedHeight * i_h / (height+2.0);
-            final double[] trigTable = new double[width << 1];
+                    i_w = 6.283185307179586f / width, i_h = 2f / (height+2f),//(3.141592653589793f) / (height+2f),
+                    xPos = startX, yPos, i_uw = usedWidth / (float)width, i_uh = usedHeight * i_h / (height+2f);
+            final float[] trigTable = new float[width << 1];
             for (int x = 0; x < width; x++, xPos += i_uw) {
                 p = xPos * i_w + centerLongitude;
-                // 0.7978845608028654 1.2533141373155001
-                trigTable[x<<1]   = TrigTools.sin(p);// * 1.2533141373155001;
-                trigTable[x<<1|1] = TrigTools.cos(p);// * 0.7978845608028654;
+                // 0.7978845608028654f 1.2533141373155001f
+                trigTable[x<<1]   = TrigTools.sin(p);// * 1.2533141373155001f;
+                trigTable[x<<1|1] = TrigTools.cos(p);// * 0.7978845608028654f;
             }
             yPos = startY * i_h + i_uh;
             for (int y = 0; y < height; y++, yPos += i_uh) {
-                qs = -1 + yPos;//-1.5707963267948966 + yPos;
+                qs = -1 + yPos;//-1.5707963267948966f + yPos;
                 qc = TrigTools.cos(TrigTools.asin(qs));
                 for (int x = 0, xt = 0; x < width; x++) {
                     ps = trigTable[xt++] * qc;//TrigTools.sin(p);
@@ -691,13 +685,13 @@ public abstract class WorldMapGenerator implements Serializable {
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                            ps, qs, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
 
                     minHeightActual = Math.min(minHeightActual, h);
@@ -717,42 +711,42 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod;
             yPos = startY * i_h + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
-                temp = Math.abs(yPos - 1.0);
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp = Math.abs(yPos - 1f);
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -765,10 +759,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -803,12 +797,12 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class EllipticalMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
         protected final int[] edges;
@@ -818,12 +812,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Always makes a 200x100 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link EllipticalMap#EllipticalMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link EllipticalMap#EllipticalMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f}.
          */
         public EllipticalMap() {
-            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -832,13 +826,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public EllipticalMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -847,14 +841,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public EllipticalMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -868,9 +862,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public EllipticalMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public EllipticalMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -880,7 +874,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
@@ -889,7 +883,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public EllipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -897,44 +891,44 @@ public abstract class WorldMapGenerator implements Serializable {
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public EllipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public EllipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
             edges = new int[height << 1];
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
         }
 
@@ -979,23 +973,23 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -1004,24 +998,24 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.2) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp, yPos, xPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
-                    th, thx, thy, lon, lat, ipi = 0.99999 / Math.PI,
-                    rx = width * 0.25, irx = 1.0 / rx, hw = width * 0.5,
-                    ry = height * 0.5, iry = 1.0 / ry;
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
+                    th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
+                    rx = width * 0.25f, irx = 1f / rx, hw = width * 0.5f,
+                    ry = height * 0.5f, iry = 1f / ry;
 
             yPos = startY - ry;
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 thx = TrigTools.asin((yPos) * iry);
-                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? thx : Math.PI * irx * 0.5 / TrigTools.cos(thx);
-                thy = thx * 2.0;
+                lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+                thy = thx * 2f;
                 lat = TrigTools.asin((thy + TrigTools.sin(thy)) * ipi);
 
                 qc = TrigTools.cos(lat);
@@ -1031,7 +1025,7 @@ public abstract class WorldMapGenerator implements Serializable {
                 xPos = startX;
                 for (int x = 0; x < width; x++, xPos += i_uw) {
                     th = lon * (xPos - hw);
-                    if(th < -3.141592653589793 || th > 3.141592653589793) {
+                    if(th < -3.141592653589793f || th > 3.141592653589793f) {
                         heightCodeData[x][y] = 10000;
                         inSpace = true;
                         continue;
@@ -1049,13 +1043,13 @@ public abstract class WorldMapGenerator implements Serializable {
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                            ps, qs, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
@@ -1074,18 +1068,18 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod,
-                    halfHeight = (height - 1) * 0.5, i_half = 1.0 / halfHeight;
+                    halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
             yPos = startY + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 temp = Math.abs(yPos - halfHeight) * i_half;
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     if(heightCodeData[x][y] == 10000) {
@@ -1094,28 +1088,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     else
                         heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -1128,10 +1122,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -1174,13 +1168,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that should look like Earth using an elliptical projection
          * (specifically, a Mollweide projection).
          * Always makes a 512x256 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link MimicMap#MimicMap(long, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link MimicMap#MimicMap(long, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, DEFAULT_NOISE, 1f}.
          */
         public MimicMap() {
             this(0x1337BABE1337D00DL
-                    , DEFAULT_NOISE, 1.0);
+                    , DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -1188,12 +1182,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * The initial seed is set to the same large long every time, and it's likely that you would set the seed when
          * you call {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          */
         public MimicMap(Region toMimic) {
-            this(0x1337BABE1337D00DL, toMimic,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, toMimic,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -1202,13 +1196,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the Region containing land positions. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          */
         public MimicMap(long initialSeed, Region toMimic) {
-            this(initialSeed, toMimic, DEFAULT_NOISE, 1.0);
+            this(initialSeed, toMimic, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -1222,9 +1216,9 @@ public abstract class WorldMapGenerator implements Serializable {
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public MimicMap(long initialSeed, Region toMimic, double octaveMultiplier) {
+        public MimicMap(long initialSeed, Region toMimic, float octaveMultiplier) {
             this(initialSeed, toMimic, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -1238,14 +1232,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * and Noise make sense to use for {@code noiseGenerator}, and the seed it's constructed with doesn't matter
          * because this will change the seed several times at different scales of noise (it's fine to use the static
          * {@link Noise#instance} or {@link Noise#instance} because they have no changing state between runs
-         * of the program). Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * of the program). Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
          */
         public MimicMap(long initialSeed, Region toMimic, Noise noiseGenerator) {
-            this(initialSeed, toMimic, noiseGenerator, 1.0);
+            this(initialSeed, toMimic, noiseGenerator, 1f);
         }
 
         /**
@@ -1253,22 +1247,22 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * Takes an initial seed, the Region containing land positions, parameters for noise generation (a
          * {@link Noise} implementation, which is usually {@link Noise#instance}, and a multiplier on how many
-         * octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers producing even more
+         * octaves of noise to use, with 1f being normal (high) detail and higher multipliers producing even more
          * detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public MimicMap(long initialSeed, Region toMimic, Noise noiseGenerator, double octaveMultiplier) {
+        public MimicMap(long initialSeed, Region toMimic, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, toMimic.width, toMimic.height, noiseGenerator, octaveMultiplier);
             earth = toMimic;
             earthOriginal = earth.copy();
@@ -1280,7 +1274,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Stores a 512x256 Region that shows an Earth map with elliptical (Mollweide) projection, in a format
          * that can be read back with {@link Region#decompress(String)}. By using Region's compression,
          * this takes up a lot less room than it would with most text-based formats, and even beats uncompressed binary
-         * storage of the map by a factor of 5.8. The map data won't change here, so this should stay compatible.
+         * storage of the map by a factor of 5.8f. The map data won't change here, so this should stay compatible.
          */
         public static final String EARTH_ENCODED = "Ƥ䊅⑃л䢤㱢ġ٤Ȩࠪ捘Ϝᇌᐰࡐဣ₈䁭âŴനð᱀ᄣϢĢሢŤ\u0087倰…䇍Ĉథ䠨䇰ᢐ࠲ࠨ¨I䗴₧≠だₐ‴䞑ห攠℡ı©ý 傠ʓᤣ窠猡ᄡᤣഡढ愠祒㈡戢ቴ摊╓̀⫀ᄡ亨䜅ਁ灑㢠扠㏁唼⽪䐡㘢ᄡ碠䑅♁儰\u0EA8ӤϻıĒ䁤\u0A7E〨ᠪ䔲ੂƲ您䀪⁝Ꭱ䮦⁄Њǰᅺ兎⊱๚䮯㞵⌱祥䆠ౠ↤\u2E75সסˀӄઃق※瀣ǥ呔²Œ屚ౠ⿈ᄦ䄸ˤűᕱÈ䁁ݕ㮱ࠥ否噂ő<ɠኰ`⤠䍠⸳Ӱᒛ ᠪ䐝⬬֨台䑆ื䊈摤အᐡ祰ᾳ䠠樢ぞĩ昫䋮♡⊓攔㲫₧䆨※ࠨ䉒Ṗࡊ孱⡠Ằܨ㔐湖⍰ᇊ֦٠灆䣝ཤĄ䂦\u2BE3Ƒ⪱ؤ掴ᅺ‥㠯䌙⮘⢯≓䅴፧▪ᄬͼ㊀མ㍹䍁刲⋹䋨掞䭠⁅Ỽᱭ䨡䲠ℶᧄđ\u0090怼䠤向⡍ڪ䋕ڊ佈䈱ޔ 䊱⮛ࣷ䔙:†涽ࢴ䵂ಀ愠Š⪠瘮囼䉐Ԭρ䧂ᡕ䞩y⁊ࠡ䨠㵞⚯灱僋㕰جɁ&⁕㓄eĂ厠䒓ᆶ㏣ᵢô䁘〩㈥⁃\u0E5C䧀ᆝ┽ឨ嚤ᴶ䗣䌰\u173Dᔄǅ$⇷[㏋ᤰ̴İȬ䈠䩀∨Ź¨အ䬡楩้ུ\u0ABA偒\u0A4A济Ђf‡С㪀⮱Ƞ彠⸨懚㦄焐෨䄠⧀ᒠ昤အ™穝䄻尮⠲ၠฤԴ琧吅ै䋱Yࠩ所䀡⠬䒈…吧̚ȴw\u2064\u0E66\u0096瀴䕡E倠䏁䀷ࠨ䄠Ḁᔤ\u0084䀨\u2062歵䮡灱ॢॴ*ၠՒԕT䠡欀㲡䈰䐺⤜摱₹ࢽ朆睐抈笹悜ȼ䝂䀺ᠭⴘܣ㔰҈ć\u0084ƤA䂄檢b 抸䨳⏠禡Ű㜳䀤ᰲ䁩扚С㒠稻႐䀻⠠ₔ‸ᆢ珎ӑ㬭ⷒ㨻䇚ഥჼ\u202DⰤ窵ㄧ眀塀䈼ᘣᢨဠآၠªѡE〱ȠN∨»¼҃㨭ဠ䄡灅ओ繶愊倷ޢ\u0092ᠾ䕹2瀫ኌ∰2Ġ❀×₠നྠ㓞ښѠښڐ曞掁湧́<倳Ƽ͡Җ䀳㠥僨⚪രጨ攠◌ტ抨န硆ᄦᛈဠ㌣⭤ࠢ流ࡀ͔ƄȲ揸䀢堮Ӡ壩ⴘㅘ䄠㝀ᔤâ䁅ୁ㕓仲噄泩戬ू噱♌㋿ٓ㜯࣪㒑٣⩥䢢\u009D恂ǋ棎ө㛁嚅⟓䂀ᗍ勥῀ʬɈ䲡卪卐䐰廼䋀᮲噰䀷䠤ℨ㨨砱㭀煐ٰⷤፗ愠㽀ᄤc䂐⡠獑䠣熡࠴枤䩀ȴΪ\u2D29ێ咨䋍ล戵ⱼ䝬Ⲫ䂀ೃʙ䐰ŊxḨÛºᔥ䂠ỰФᒕ丫㎻㏪桬ମ㈉Â⡎ޠⰄཐ梨『ဤ䝼࠸䴀䳓⠱慠\u0B98ЊṂ瑡⾀⊰䐧¿ᡌ灁\u2438徵-〱ᤰ俿煈崊㏀Ҭ䢆祡\u2D76䐺愎朰W8ԩᠡ䄞ԑ垰䋀㷵⺇Ӡ䀥㘥媄˰䎯棡暼匳ǆဠ㤠Ⓕ沋ἡ䤯恁㊴彬ƶ䘇梉戁Ῡ䐭嶱ㅕ䆰⍁ᢅᚐク䄈Ԩ㸳ǌᡀ㡀Ͼ3ᳲ¦≠捁呪䅐⭭擘ཀ䐡खᢠ䴡䮙\u18AC\u2060ՄȢっ獍Ϡ䌡Ẻ䇡罥樜劺偐⭈ᨄJ怤ᅐ‰⡓☨縊壎䓡ᨢᄠް\u0A49ᤰǘₐ䍠娿䴨䦠⠼ؠ㸈¢!倫\u2060⏰㩂ПᖃЦ㔰ࡈ¹䁝匒ⴠ㠰䂤尻ㅬ幤ࠫၺ↦\u0560τʀ⽀၆ᓰस㉢ఴ絪⤚䢪K〱ĠᅰÁ夿䵤ဣ媡劬䇓䡩縦ˣބ⽠дǢ⢦㔼䯀牥↿洍࠰\u009Dòပᤲ䳹ŃⰦ⧤Ḧ㲔Өᘅ⣂ɼ\u0A29儠ǘఢ挰ť\u0092᩵⠰Ø䀤Ս⬭屔⺲6࠭㴱崠碲䃰‡⨠ࡊ\u202D…ᘣ⋂䈠ᇀಊC戮䣑ဣ羡࠰Ò䄘\u0B59派䃮唢I瀿䎝ୱ療÷ᙥⳞ吠祀ᄤ;怿ͪ㥬y恀☠☨ᡂ5倩₱\u0984ᴧ砭⫃䑵Ӱ歌榚◠㜦䁘რ⻈劳\u1CA5ࡠ\u07BAŚ⾥穌䙀ㆥᢍ桠儣⍁᧡Әႈ尮᭪〞⅁䂙Ӱᤡᠸ\u0382瀴ᅯᙣ桠ьGᵁ睺煒榯䁵䄱\u0BBC㶜ጢ扩䁴榤摠ƺቀ⑨အ呠ଇ䠸ρᏩ䅸塂呧ͬਐ၊䲘፣䠺䨝ᄯ汯 ⶁ劄ᴧ猢جΧૡࠠ⺠ፉ䂠ϼ؞学撐䵃ⴹ恀\u2BF4䮅烒ࠨ⭬灰䀥␤\u2060۬ˀᎃ䑥Ӑ⅏゚ᛠ到č$ౢത秆ಠᗎࢹ⌤\u2060ö̂灳恄➦䐧傚Ⓚ嬹ᬲᄣ纥⛀Ⴠ稬ʮ溮䊫ฺ砥䢤啂倢⒠䆅羐♱ྷ淮Ȁුロ⟘⮌媚枧籠畴䐫ĕ戻ٰj䄈\u0ADC䆰Ԡࠐੈ໕Ġᴈਙ害素ரཔ爸ᠴ㖂剈䍬⍄E偘䊢畤桯\u08C0㎫䱤ঀᠰ䴠ᯨڈ稱ǆ⥡灔柔ണ㬧䉩䰨/䁾◬咨ý灠ጶħҠٴЊ竉烈̰᰾悋¢=࠱᧐㡈瑀º[ᐇ䝧㈑㍑擃䞈إচⶑ妷慈ဣŁ࠰Ĩ䁺ॠ㳢㳨ဠ甠☵⌈ᄢ3ဨ䇾ሃ嬰䈸➬惧༖㐊䂠तզ䰫䈌䲲㕯ƨ〡䬡䶯〮Ӳ[ࠨ㵘〣\u0081⠼㰏ƢF㠫䆨ᑡ䗕←‧ᡡ₀䱮ॅ砿䋸⫧‴Α㈿Ô\u1FF0伶䊄‧务瘵㈸֒ࡔܰᾤ\u20F1䊇᳃䃸ᔢ*〪入\u1CA9瀾䡨怢帠ࠫȠⓀᬗ改坊⍄ށؤبJ\u2064ݢ⎃夦␁磣憨㢠桽ሠᭀ\u0C65⨢㕈ᔇ犖\u0EFC甡₶χ峣壄ǁ℥傅\u1CA7䢭Ȱ⤭䢱đ䲳₭䭻搲㉺㎤ᾔӮ䘌攀丑≍⫉ʼ㌲沟ᐂ灘㿠ㆦ摌Áᤞ⃮䓲娾昱⪬ĮЮ℣ᐔ١廹曀■⁼ዔ․ḡ㨕䅬⥴㫞囘⤩䡅ডୣĠ\u1778ศ༠ᆄᎅ埀Ϛþ所濗♀†弢娐㗀怢䴢ᑊ←⭡屒☪⤤ᬌ\u0D51唰ǳ¤⠡庠Ըి᪡姲娑䅢R㠪嵘\u09DB攺݂…ㅁ䙆䂜∥㧏䤭䙭⠽懠㐭嵈š  ";
 
@@ -1290,7 +1284,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator
          * @param octaveMultiplier
          */
-        public MimicMap(long initialSeed, Noise noiseGenerator, double octaveMultiplier)
+        public MimicMap(long initialSeed, Noise noiseGenerator, float octaveMultiplier)
         {
             this(initialSeed,
                     Region.decompress(EARTH_ENCODED), noiseGenerator, octaveMultiplier);
@@ -1320,21 +1314,21 @@ public abstract class WorldMapGenerator implements Serializable {
         public static Region reprojectToElliptical(Region rectangular) {
             int width = rectangular.width, height = rectangular.height;
             Region t = new Region(width, height);
-            double yPos, xPos,
-                    th, thx, thy, lon, lat, ipi = 0.99999 / Math.PI,
-                    rx = width * 0.25, irx = 1.0 / rx, hw = width * 0.5,
-                    ry = height * 0.5, iry = 1.0 / ry;
+            float yPos, xPos,
+                    th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
+                    rx = width * 0.25f, irx = 1f / rx, hw = width * 0.5f,
+                    ry = height * 0.5f, iry = 1f / ry;
 
             yPos = -ry;
             for (int y = 0; y < height; y++, yPos++) {
                 thx = TrigTools.asin((yPos) * iry);
-                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? thx : Math.PI * irx * 0.5 / TrigTools.cos(thx);
-                thy = thx * 2.0;
+                lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+                thy = thx * 2f;
                 lat = TrigTools.asin((thy + TrigTools.sin(thy)) * ipi);
                 xPos = 0;
                 for (int x = 0; x < width; x++, xPos++) {
                     th = lon * (xPos - hw);
-                    if (th >= -3.141592653589793 && th <= 3.141592653589793
+                    if (th > -TrigTools.PI && th < TrigTools.PI
                             && rectangular.contains((int) ((th + 1) * hw), (int) ((lat + 1) * ry))) {
                         t.insert(x, y);
                     }
@@ -1359,23 +1353,23 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -1384,8 +1378,8 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.29) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
             earth.remake(earthOriginal);
 
@@ -1404,21 +1398,21 @@ public abstract class WorldMapGenerator implements Serializable {
                 coast.remake(earth).not().fringe(2);
                 shallow.remake(earth).fringe(2);
             }
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp, yPos, xPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
-                    th, thx, thy, lon, lat, ipi = 0.99999 / Math.PI,
-                    rx = width * 0.25, irx = 1.0 / rx, hw = width * 0.5,
-                    ry = height * 0.5, iry = 1.0 / ry;
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
+                    th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
+                    rx = width * 0.25f, irx = 1f / rx, hw = width * 0.5f,
+                    ry = height * 0.5f, iry = 1f / ry;
             yPos = startY - ry;
             for (int y = 0; y < height; y++, yPos += i_uh) {
 
                 thx = TrigTools.asin((yPos) * iry);
-                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? thx : Math.PI * irx * 0.5 / TrigTools.cos(thx);
-                thy = thx * 2.0;
+                lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+                thy = thx * 2f;
                 lat = TrigTools.asin((thy + TrigTools.sin(thy)) * ipi);
 
                 qc = TrigTools.cos(lat);
@@ -1428,7 +1422,7 @@ public abstract class WorldMapGenerator implements Serializable {
                 xPos = startX;
                 for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
                     th = lon * (xPos - hw);
-                    if(th < -3.141592653589793 || th > 3.141592653589793) {
+                    if(th < -3.141592653589793f || th > 3.141592653589793f) {
                         heightCodeData[x][y] = 10000;
                         inSpace = true;
                         continue;
@@ -1446,28 +1440,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     zPositions[x][y] = qs;
                     if(earth.contains(x, y))
                     {
-                        h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                                ps, qs, seedA)) * 0.85;
+                        h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                                ps, qs, seedA)) * 0.85f;
                         if(coast.contains(x, y))
-                            h += 0.05;
+                            h += 0.05f;
                         else
-                            h += 0.15;
+                            h += 0.15f;
                     }
                     else
                     {
-                        h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                                ps, qs, seedA)) * -0.9;
+                        h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                                ps, qs, seedA)) * -0.9f;
                         if(shallow.contains(x, y))
-                            h = (h - 0.08) * 0.375;
+                            h = (h - 0.08f) * 0.375f;
                         else
-                            h = (h - 0.125) * 0.75;
+                            h = (h - 0.125f) * 0.75f;
                     }
                     heightData[x][y] = h;
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
@@ -1486,23 +1480,23 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double heightDiff = 2.0 / (maxHeightActual - minHeightActual),
-                    heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float heightDiff = 2f / (maxHeightActual - minHeightActual),
+                    heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod,
-                    halfHeight = (height - 1) * 0.5, i_half = 1.0 / (halfHeight);
-            double minHeightActual0 = minHeightActual;
-            double maxHeightActual0 = maxHeightActual;
+                    halfHeight = (height - 1) * 0.5f, i_half = 1f / (halfHeight);
+            float minHeightActual0 = minHeightActual;
+            float maxHeightActual0 = maxHeightActual;
             yPos = startY + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
-                temp = Math.pow(Math.abs(yPos - halfHeight) * i_half, 1.5);
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp = (float) Math.pow(Math.abs(yPos - halfHeight) * i_half, 1.5f);
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
-//                    heightData[x][y] = (h = (heightData[x][y] - minHeightActual) * heightDiff - 1.0);
+//                    heightData[x][y] = (h = (heightData[x][y] - minHeightActual) * heightDiff - 1f);
 //                    minHeightActual0 = Math.min(minHeightActual0, h);
 //                    maxHeightActual0 = Math.max(maxHeightActual0, h);
                     h = heightData[x][y];
@@ -1512,28 +1506,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     else
                         heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -1546,10 +1540,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -1585,12 +1579,12 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class SpaceViewMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
         protected final int[] edges;
@@ -1599,12 +1593,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Always makes a 100x100 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link SpaceViewMap#SpaceViewMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link SpaceViewMap#SpaceViewMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f}.
          */
         public SpaceViewMap() {
-            this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -1613,13 +1607,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public SpaceViewMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -1628,14 +1622,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -1649,9 +1643,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -1661,7 +1655,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
@@ -1669,7 +1663,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -1677,44 +1671,44 @@ public abstract class WorldMapGenerator implements Serializable {
          * showing only one hemisphere at a time.
          * Takes an initial seed, the width/height of the map, and parameters for noise
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public SpaceViewMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
             edges = new int[height << 1];
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
         }
 
@@ -1754,28 +1748,28 @@ public abstract class WorldMapGenerator implements Serializable {
             return Math.max(0, Math.min(y, height - 1));
         }
 
-        //private static final double root2 = Math.sqrt(2.0), inverseRoot2 = 1.0 / root2, halfInverseRoot2 = 0.5 / root2;
+        //private static final float root2 = Math.sqrt(2f), inverseRoot2 = 1f / root2, halfInverseRoot2 = 0.5f / root2;
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeightActual = Double.POSITIVE_INFINITY;
-                maxHeightActual = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeightActual = Float.POSITIVE_INFINITY;
+                maxHeightActual = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -1784,18 +1778,18 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.2) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp, yPos, xPos, iyPos, ixPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
                     th, lon, lat, rho,
-                    rx = width * 0.5, irx = i_uw / rx,
-                    ry = height * 0.5, iry = i_uh / ry;
+                    rx = width * 0.5f, irx = i_uw / rx,
+                    ry = height * 0.5f, iry = i_uh / ry;
 
             yPos = startY - ry;
             iyPos = yPos / ry;
@@ -1805,8 +1799,8 @@ public abstract class WorldMapGenerator implements Serializable {
                 xPos = startX - rx;
                 ixPos = xPos / rx;
                 for (int x = 0; x < width; x++, xPos += i_uw, ixPos += irx) {
-                    rho = Math.sqrt(ixPos * ixPos + iyPos * iyPos);
-                    if(rho > 1.0) {
+                    rho = (float) Math.sqrt(ixPos * ixPos + iyPos * iyPos);
+                    if(rho > 1f) {
                         heightCodeData[x][y] = 10000;
                         inSpace = true;
                         continue;
@@ -1831,17 +1825,17 @@ public abstract class WorldMapGenerator implements Serializable {
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                            ps, qs, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
 //                    heightData[x][y] = (h = terrain4D.getNoiseWithSeed(pc, ps, qs,
 //                            (terrainLayered.getNoiseWithSeed(pc, ps, qs, seedB - seedA)
-//                                    + terrain.getNoiseWithSeed(pc, ps, qs, seedC - seedB)) * 0.5,
+//                                    + terrain.getNoiseWithSeed(pc, ps, qs, seedC - seedB)) * 0.5f,
 //                            seedA) * landModifier);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
@@ -1860,18 +1854,18 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod,
-                    halfHeight = (height - 1) * 0.5, i_half = 1.0 / halfHeight;
+                    halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
             yPos = startY + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 temp = Math.abs(yPos - halfHeight) * i_half;
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     if(heightCodeData[x][y] == 10000) {
@@ -1880,28 +1874,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     else
                         heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -1914,10 +1908,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -1954,12 +1948,12 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class RoundSideMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
         protected final int[] edges;
@@ -1969,12 +1963,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Always makes a 200x100 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link RoundSideMap#RoundSideMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link RoundSideMap#RoundSideMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f}.
          */
         public RoundSideMap() {
-            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -1983,13 +1977,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public RoundSideMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -1998,14 +1992,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public RoundSideMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2019,9 +2013,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public RoundSideMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public RoundSideMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -2031,7 +2025,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
@@ -2040,7 +2034,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public RoundSideMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -2048,44 +2042,44 @@ public abstract class WorldMapGenerator implements Serializable {
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public RoundSideMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public RoundSideMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
             edges = new int[height << 1];
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
         }
 
@@ -2130,25 +2124,25 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeightActual = Double.POSITIVE_INFINITY;
-                maxHeightActual = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeightActual = Float.POSITIVE_INFINITY;
+                maxHeightActual = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -2157,27 +2151,27 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.2) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp, yPos, xPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
                     th, thb, thx, thy, lon, lat,
-                    rx = width * 0.25, irx = 1.326500428177002 / rx, hw = width * 0.5,
-                    ry = height * 0.5, iry = 1.0 / ry;
+                    rx = width * 0.25f, irx = 1.326500428177002f / rx, hw = width * 0.5f,
+                    ry = height * 0.5f, iry = 1f / ry;
 
             yPos = startY - ry;
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 thy = yPos * iry;//TrigTools.sin(thb);
                 thb = TrigTools.asin(thy);
                 thx = TrigTools.cos(thb);
-                //1.3265004 0.7538633073600218  1.326500428177002
-                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? 0x1.0p100 : irx / (0.42223820031577125 * (1.0 + thx));
-                qs = (thb + (thx + 2.0) * thy) * 0.2800495767557787;
+                //1.3265004f 0.7538633073600218f  1.326500428177002f
+                lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? 0x1.0p70f : irx / (0.42223820031577125f * (1f + thx));
+                qs = (thb + (thx + 2f) * thy) * 0.2800495767557787f;
                 lat = TrigTools.asin(qs);
 
                 qc = TrigTools.cos(lat);
@@ -2186,7 +2180,7 @@ public abstract class WorldMapGenerator implements Serializable {
                 xPos = startX - hw;
                 for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
                     th = lon * xPos;
-                    if(th < -3.141592653589793 || th > 3.141592653589793) {
+                    if(th < -3.141592653589793f || th > 3.141592653589793f) {
                         heightCodeData[x][y] = 10000;
                         inSpace = true;
                         continue;
@@ -2204,13 +2198,13 @@ public abstract class WorldMapGenerator implements Serializable {
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5,
-                            ps, qs, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(pc, ps, qs,seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs,seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
@@ -2229,18 +2223,18 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod,
-                    halfHeight = (height - 1) * 0.5, i_half = 1.0 / halfHeight;
+                    halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
             yPos = startY + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 temp = Math.abs(yPos - halfHeight) * i_half;
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     if(heightCodeData[x][y] == 10000) {
@@ -2249,28 +2243,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     else
                         heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -2283,10 +2277,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -2323,30 +2317,30 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class HyperellipticalMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
         protected final int[] edges;
-        private final double alpha, kappa, epsilon;
-        private final double[] Z;
+        private final float alpha, kappa, epsilon;
+        private final float[] Z;
 
 
         /**
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Always makes a 200x100 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link HyperellipticalMap#HyperellipticalMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link HyperellipticalMap#HyperellipticalMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f}.
          * <a href="http://yellowstonegames.github.io/SquidLib/HyperellipseWorld.png" >Example map, showing special shape</a>
          */
         public HyperellipticalMap() {
-            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2355,13 +2349,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public HyperellipticalMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -2370,14 +2364,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2391,9 +2385,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -2403,7 +2397,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
@@ -2412,7 +2406,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -2420,24 +2414,24 @@ public abstract class WorldMapGenerator implements Serializable {
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier){
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, octaveMultiplier, 0.0625, 2.5);
+        public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier){
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, octaveMultiplier, 0.0625f, 2.5f);
         }
 
         /**
@@ -2445,54 +2439,54 @@ public abstract class WorldMapGenerator implements Serializable {
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
-         * @param alpha one of the Tobler parameters;  0.0625 is the default and this can range from 0.0 to 1.0 at least
-         * @param kappa one of the Tobler parameters; 2.5 is the default but 2.0-5.0 range values are also often used
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
+         * @param alpha one of the Tobler parameters;  0.0625f is the default and this can range from 0f to 1f at least
+         * @param kappa one of the Tobler parameters; 2.5f is the default but 2f-5f range values are also often used
          */
         public HyperellipticalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator,
-                                  double octaveMultiplier, double alpha, double kappa){
+                                  float octaveMultiplier, float alpha, float kappa){
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
             edges = new int[height << 1];
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
 
             this.alpha = alpha;
             this.kappa = kappa;
-            this.Z = new double[height << 2];
-            this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0.0, 1.0, 0.25 / height, kappa);
-            ProjectionTools.simpsonODESolveHyperellipse(1, this.Z, 0.25 / height, alpha, kappa, epsilon);
+            this.Z = new float[height << 2];
+            this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
+            ProjectionTools.simpsonODESolveHyperellipse(1, this.Z, 0.25f / height, alpha, kappa, epsilon);
         }
         /**
          * Copies the HyperellipticalMap {@code other} to construct a new one that is exactly the same. References will only
@@ -2548,46 +2542,46 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
          * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
          *
-         * @param latitude  the latitude, from {@code Math.PI * -0.5} to {@code Math.PI * 0.5}
-         * @param longitude the longitude, from {@code 0.0} to {@code Math.PI * 2.0}
+         * @param latitude the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
+         * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
          * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
          */
         @Override
-        public Coord project(double latitude, double longitude) {
-            final double z0 = Math.abs(TrigTools.sin(latitude));
+        public Coord project(float latitude, float longitude) {
+            final float z0 = Math.abs(TrigTools.sin(latitude));
             final int i = Arrays.binarySearch(Z, z0);
-            final double y;
+            final float y;
             if (i >= 0)
-                y = i/(Z.length-1.);
+                y = i/(Z.length-1f);
             else if (-i-1 >= Z.length)
                 y = Z[Z.length-1];
             else
-                y = ((z0-Z[-i-2])/(Z[-i-1]-Z[-i-2]) + (-i-2))/(Z.length-1.);
-            final int xx = (int)(((longitude - getCenterLongitude() + 12.566370614359172) % 6.283185307179586) * Math.abs(alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(y),kappa), 1/kappa)) + 0.5);
-            final int yy = (int)(y * Math.signum(latitude) * height * 0.5 + 0.5);
+                y = ((z0-Z[-i-2])/(Z[-i-1]-Z[-i-2]) + (-i-2))/(Z.length-1f);
+            final int xx = (int)(((longitude - getCenterLongitude() + 12.566370614359172f) % 6.283185307179586f) * Math.abs(alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(y),kappa), 1/kappa)) + 0.5f);
+            final int yy = (int)(y * Math.signum(latitude) * height * 0.5f + 0.5f);
             return Coord.get(wrapX(xx, yy), wrapY(xx, yy));
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeightActual = Double.POSITIVE_INFINITY;
-                maxHeightActual = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeightActual = Float.POSITIVE_INFINITY;
+                maxHeightActual = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -2596,42 +2590,30 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.2) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp, yPos, xPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
                     th, lon,
-                    rx = width * 0.5, irx = Math.PI / rx, hw = width * 0.5,
-                    ry = height * 0.5, iry = 1.0 / ry;
+                    rx = width * 0.5f, irx = TrigTools.PI / rx, hw = width * 0.5f,
+                    ry = height * 0.5f, iry = 1f / ry;
 
             yPos = startY - ry;
             for (int y = 0; y < height; y++, yPos += i_uh) {
-//                thy = yPos * iry;//TrigTools.sin(thb);
-//                thb = asin(thy);
-//                thx = TrigTools.cos(thb);
-//                //1.3265004 0.7538633073600218  1.326500428177002
-//                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? 0x1.0p100 : irx / (0.42223820031577125 * (1.0 + thx));
-//                qs = (thb + (thx + 2.0) * thy) * 0.2800495767557787;
-//                lat = asin(qs);
-//
-//                qc = TrigTools.cos(lat);
-
-                lon = TrigTools.asin(Z[(int)(0.5 + Math.abs(yPos*iry)*(Z.length-1))])*Math.signum(yPos);
+                lon = TrigTools.asin(Z[(int)(0.5f + Math.abs(yPos*iry)*(Z.length-1))])*Math.signum(yPos);
                 qs = TrigTools.sin(lon);
                 qc = TrigTools.cos(lon);
 
                 boolean inSpace = true;
                 xPos = startX - hw;
                 for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
-                    //th = lon * xPos;
                     th = xPos * irx / Math.abs(alpha + (1-alpha)*ProjectionTools.hyperellipse(yPos * iry, kappa));
-                    if(th < -3.141592653589793 || th > 3.141592653589793) {
-                        //if(th < -2.0 || th > 2.0) {
+                    if(th < -3.141592653589793f || th > 3.141592653589793f) {
                         heightCodeData[x][y] = 10000;
                         inSpace = true;
                         continue;
@@ -2649,13 +2631,13 @@ public abstract class WorldMapGenerator implements Serializable {
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                    terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5,
-                            ps, qs, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
                             , qs, seedB));
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                    + 0.375 * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC));
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
@@ -2674,18 +2656,18 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod,
-                    halfHeight = (height - 1) * 0.5, i_half = 1.0 / halfHeight;
+                    halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
             yPos = startY + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 temp = Math.abs(yPos - halfHeight) * i_half;
-                temp *= (2.4 - temp);
-                temp = 2.2 - temp;
+                temp *= (2.4f - temp);
+                temp = 2.2f - temp;
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     if(heightCodeData[x][y] == 10000) {
@@ -2694,28 +2676,28 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     else
                         heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6) * temp);
+                    heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -2728,10 +2710,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -2762,7 +2744,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * world, showing only one hemisphere, that should be as wide as it is tall (its outline is a circle). It should
      * look as a world would when viewed from space, and implements rotation differently to allow the planet to be
      * rotated without recalculating all the data, though it cannot zoom. Note that calling
-     * {@link #setCenterLongitude(double)} does a lot more work than in other classes, but less than fully calling
+     * {@link #setCenterLongitude(float)} does a lot more work than in other classes, but less than fully calling
      * {@link #generate()} in those classes, since it doesn't remake the map data at a slightly different rotation and
      * instead keeps a single map in use the whole time, using sections of it. This uses an
      * <a href="https://en.wikipedia.org/wiki/Orthographic_projection_in_cartography">Orthographic projection</a> with
@@ -2775,11 +2757,11 @@ public abstract class WorldMapGenerator implements Serializable {
      */
     public static class RotatingSpaceMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
         protected final int[] edges;
@@ -2788,12 +2770,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Always makes a 100x100 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link RotatingSpaceMap#RotatingSpaceMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link RotatingSpaceMap#RotatingSpaceMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f}.
          */
         public RotatingSpaceMap() {
-            this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2802,13 +2784,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public RotatingSpaceMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2817,14 +2799,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -2838,9 +2820,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -2850,7 +2832,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
@@ -2858,7 +2840,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -2866,27 +2848,27 @@ public abstract class WorldMapGenerator implements Serializable {
          * showing only one hemisphere at a time.
          * Takes an initial seed, the width/height of the map, and parameters for noise
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public RotatingSpaceMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[mapWidth][mapHeight];
-            yPositions = new double[mapWidth][mapHeight];
-            zPositions = new double[mapWidth][mapHeight];
+            xPositions = new float[mapWidth][mapHeight];
+            yPositions = new float[mapWidth][mapHeight];
+            zPositions = new float[mapWidth][mapHeight];
             edges = new int[height << 1];
             storedMap = new StretchMap(initialSeed, mapWidth << 1, mapHeight, noiseGenerator, octaveMultiplier);
         }
@@ -2925,19 +2907,19 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         @Override
-        public void setCenterLongitude(double centerLongitude) {
+        public void setCenterLongitude(float centerLongitude) {
             super.setCenterLongitude(centerLongitude);
             int ax, ay;
-            double
+            float
                     ps, pc,
                     qs, qc,
                     h, yPos, xPos, iyPos, ixPos,
-                    i_uw = usedWidth / (double)width,
-                    i_uh = usedHeight / (double)height,
+                    i_uw = usedWidth / (float)width,
+                    i_uh = usedHeight / (float)height,
                     th, lon, lat, rho,
-                    i_pi = 1.0 / Math.PI,
-                    rx = width * 0.5, irx = i_uw / rx,
-                    ry = height * 0.5, iry = i_uh / ry;
+                    i_pi = 1f / TrigTools.PI,
+                    rx = width * 0.5f, irx = i_uw / rx,
+                    ry = height * 0.5f, iry = i_uh / ry;
 
             yPos = startY - ry;
             iyPos = yPos / ry;
@@ -2948,12 +2930,12 @@ public abstract class WorldMapGenerator implements Serializable {
                 lat = TrigTools.asin(iyPos);
                 for (int x = 0; x < width; x++, xPos += i_uw, ixPos += irx) {
                     rho = (ixPos * ixPos + iyPos * iyPos);
-                    if(rho > 1.0) {
+                    if(rho > 1f) {
                         heightCodeData[x][y] = 1000;
                         inSpace = true;
                         continue;
                     }
-                    rho = Math.sqrt(rho);
+                    rho = (float) Math.sqrt(rho);
                     if(inSpace)
                     {
                         inSpace = false;
@@ -2961,38 +2943,38 @@ public abstract class WorldMapGenerator implements Serializable {
                     }
                     edges[y << 1 | 1] = x;
                     th = TrigTools.asin(rho); // c
-                    lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cos(th)))) * 0.5);
+                    lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cos(th)))) * 0.5f);
 
-                    qs = lat * 0.6366197723675814;
-                    qc = qs + 1.0;
-                    int sf = (qs >= 0.0 ? (int) qs : (int) qs - 1) & -2;
-                    int cf = (qc >= 0.0 ? (int) qc : (int) qc - 1) & -2;
+                    qs = lat * 0.6366197723675814f;
+                    qc = qs + 1f;
+                    int sf = (qs >= 0f ? (int) qs : (int) qs - 1) & -2;
+                    int cf = (qc >= 0f ? (int) qc : (int) qc - 1) & -2;
                     qs -= sf;
                     qc -= cf;
-                    qs *= 2.0 - qs;
-                    qc *= 2.0 - qc;
-                    qs = qs * (-0.775 - 0.225 * qs) * ((sf & 2) - 1);
-                    qc = qc * (-0.775 - 0.225 * qc) * ((cf & 2) - 1);
+                    qs *= 2f - qs;
+                    qc *= 2f - qc;
+                    qs = qs * (-0.775f - 0.225f * qs) * ((sf & 2) - 1);
+                    qc = qc * (-0.775f - 0.225f * qc) * ((cf & 2) - 1);
 
 
-                    ps = lon * 0.6366197723675814;
-                    pc = ps + 1.0;
-                    sf = (ps >= 0.0 ? (int) ps : (int) ps - 1) & -2;
-                    cf = (pc >= 0.0 ? (int) pc : (int) pc - 1) & -2;
+                    ps = lon * 0.6366197723675814f;
+                    pc = ps + 1f;
+                    sf = (ps >= 0f ? (int) ps : (int) ps - 1) & -2;
+                    cf = (pc >= 0f ? (int) pc : (int) pc - 1) & -2;
                     ps -= sf;
                     pc -= cf;
-                    ps *= 2.0 - ps;
-                    pc *= 2.0 - pc;
-                    ps = ps * (-0.775 - 0.225 * ps) * ((sf & 2) - 1);
-                    pc = pc * (-0.775 - 0.225 * pc) * ((cf & 2) - 1);
+                    ps *= 2f - ps;
+                    pc *= 2f - pc;
+                    ps = ps * (-0.775f - 0.225f * ps) * ((sf & 2) - 1);
+                    pc = pc * (-0.775f - 0.225f * pc) * ((cf & 2) - 1);
 
-                    ax = (int)((lon * i_pi + 1.0) * width);
-                    ay = (int)((qs + 1.0) * ry);
+                    ax = (int)((lon * i_pi + 1f) * width);
+                    ay = (int)((qs + 1f) * ry);
 
 //                    // Hammer projection, not an inverse projection like we usually use
-//                    z = 1.0 / Math.sqrt(1 + qc * TrigTools.cos(lon * 0.5));
-//                    ax = (int)((qc * TrigTools.sin(lon * 0.5) * z + 1.0) * width);
-//                    ay = (int)((qs * z + 1.0) * height * 0.5);
+//                    z = 1f / Math.sqrt(1 + qc * TrigTools.cos(lon * 0.5f));
+//                    ax = (int)((qc * TrigTools.sin(lon * 0.5f) * z + 1f) * width);
+//                    ay = (int)((qs * z + 1f) * height * 0.5f);
 
                     if(ax >= storedMap.width || ax < 0 || ay >= storedMap.height || ay < 0)
                     {
@@ -3024,13 +3006,13 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             if(cacheA != stateA || cacheB != stateB)// || landMod != storedMap.landModifier || coolMod != storedMap.coolingModifier)
             {
                 storedMap.regenerate(0, 0, width << 1, height, landMod, heatMod, stateA, stateB);
-                minHeightActual = Double.POSITIVE_INFINITY;
-                maxHeightActual = Double.NEGATIVE_INFINITY;
+                minHeightActual = Float.POSITIVE_INFINITY;
+                maxHeightActual = Float.NEGATIVE_INFINITY;
 
                 minHeight = storedMap.minHeight;
                 maxHeight = storedMap.maxHeight;
@@ -3066,12 +3048,12 @@ public abstract class WorldMapGenerator implements Serializable {
     public static class LocalMap extends WorldMapGenerator {
         private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-        protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
-                minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
-                minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
+        protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+                minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
+                minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
         public final Noise terrain, otherRidged, heat, moisture, terrainLayered;
-        public final double[][] xPositions,
+        public final float[][] xPositions,
                 yPositions,
                 zPositions;
 
@@ -3081,12 +3063,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Always makes a 256x128 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link LocalMap#LocalMap(long, int, int, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link LocalMap#LocalMap(long, int, int, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f}.
          */
         public LocalMap() {
-            this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1.0);
+            this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -3096,13 +3078,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes only the width/height of the map. The initial seed is set to the same large long
          * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param mapWidth  the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          */
         public LocalMap(int mapWidth, int mapHeight) {
-            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, mapWidth, mapHeight,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -3112,14 +3094,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
          */
         public LocalMap(long initialSeed, int mapWidth, int mapHeight) {
-            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0);
+            this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -3134,9 +3116,9 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
          * @param mapHeight   the height of the map(s) to generate; cannot be changed later
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public LocalMap(long initialSeed, int mapWidth, int mapHeight, double octaveMultiplier) {
+        public LocalMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
             this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -3147,7 +3129,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
-         * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth    the width of the map(s) to generate; cannot be changed later
@@ -3155,7 +3137,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
          */
         public LocalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
-            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0);
+            this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
         }
 
         /**
@@ -3164,44 +3146,44 @@ public abstract class WorldMapGenerator implements Serializable {
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed, the width/height of the map, and parameters for noise
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
-         * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
+         * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param mapWidth the width of the map(s) to generate; cannot be changed later
          * @param mapHeight the height of the map(s) to generate; cannot be changed later
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public LocalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, double octaveMultiplier) {
+        public LocalMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, mapWidth, mapHeight);
-            xPositions = new double[width][height];
-            yPositions = new double[width][height];
-            zPositions = new double[width][height];
+            xPositions = new float[width][height];
+            yPositions = new float[width][height];
+            zPositions = new float[width][height];
 
 
             terrain = new Noise(noiseGenerator); terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5 + octaveMultiplier * 10));
+            terrain.setNoiseType(terrain.getNoiseType() | 1); terrain.setFractalOctaves((int)(0.5f + octaveMultiplier * 10));
             terrain.setFractalType(Noise.RIDGED_MULTI);
 
             terrainLayered = new Noise(noiseGenerator); terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5 + octaveMultiplier * 8));
+            terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1); terrainLayered.setFractalOctaves((int)(0.5f + octaveMultiplier * 8));
 
             heat = new Noise(noiseGenerator); heat.setFrequency(heat.getFrequency() * heatFreq);
-            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5 + octaveMultiplier * 3));
+            heat.setNoiseType(heat.getNoiseType() | 1); heat.setFractalOctaves((int)(0.5f + octaveMultiplier * 3));
 
             moisture = new Noise(noiseGenerator); moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5 + octaveMultiplier * 4));
+            moisture.setNoiseType(moisture.getNoiseType() | 1); moisture.setFractalOctaves((int)(0.5f + octaveMultiplier * 4));
 
             otherRidged = new Noise(noiseGenerator); otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5 + octaveMultiplier * 6));
+            otherRidged.setNoiseType(otherRidged.getNoiseType() | 1); otherRidged.setFractalOctaves((int)(0.5f + octaveMultiplier * 6));
             otherRidged.setFractalType(Noise.RIDGED_MULTI);
         }
 
@@ -3240,23 +3222,23 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -3265,28 +3247,28 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.29) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp,
-                    i_w = 1.0 / width, i_h = 1.0 / (height),  ii = Math.max(i_w, i_h),
+                    i_w = 1f / width, i_h = 1f / (height),  ii = Math.max(i_w, i_h),
                     i_uw = usedWidth * i_w * ii, i_uh = usedHeight * i_h * ii, xPos, yPos = startY * i_h;
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 xPos = startX * i_w;
                 for (int x = 0; x < width; x++, xPos += i_uw) {
                     xPositions[x][y] = xPos;
                     yPositions[x][y] = yPos;
-                    zPositions[x][y] = 0.0;
+                    zPositions[x][y] = 0f;
                     heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(xPos +
-                                    terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5,
-                            yPos, seedA) + landModifier - 1.0);
+                                    terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
+                            yPos, seedA) + landModifier - 1f);
                     heatData[x][y] = (p = heat.getNoiseWithSeed(xPos, yPos
-                                    + 0.375 * otherRidged.getNoiseWithSeed(xPos, yPos, seedB + seedC),
+                                    + 0.375f * otherRidged.getNoiseWithSeed(xPos, yPos, seedB + seedC),
                             seedB));
-                    temp = 0.375 * otherRidged.getNoiseWithSeed(xPos, yPos, seedC + seedA);
+                    temp = 0.375f * otherRidged.getNoiseWithSeed(xPos, yPos, seedC + seedA);
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(xPos - temp, yPos + temp, seedC));
 
                     minHeightActual = Math.min(minHeightActual, h);
@@ -3306,39 +3288,39 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod;
             yPos = startY * i_h + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = ((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6);
+                    heatData[x][y] = (h = ((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -3351,10 +3333,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {
@@ -3394,13 +3376,13 @@ public abstract class WorldMapGenerator implements Serializable {
         /**
          * Constructs a concrete WorldMapGenerator for a map that should look like Australia, without projecting the
          * land positions or changing heat by latitude. Always makes a 256x256 map.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
-         * If you were using {@link LocalMimicMap#LocalMimicMap(long, Noise, double)}, then this would be the
-         * same as passing the parameters {@code 0x1337BABE1337D00DL, DEFAULT_NOISE, 1.0}.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
+         * If you were using {@link LocalMimicMap#LocalMimicMap(long, Noise, float)}, then this would be the
+         * same as passing the parameters {@code 0x1337BABE1337D00DL, DEFAULT_NOISE, 1f}.
          */
         public LocalMimicMap() {
             this(0x1337BABE1337D00DL
-                    , DEFAULT_NOISE, 1.0);
+                    , DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -3408,12 +3390,12 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, without projecting the land positions or changing heat by latitude.
          * The initial seed is set to the same large long every time, and it's likely that you would set the seed when
          * you call {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          */
         public LocalMimicMap(Region toMimic) {
-            this(0x1337BABE1337D00DL, toMimic,  DEFAULT_NOISE,1.0);
+            this(0x1337BABE1337D00DL, toMimic,  DEFAULT_NOISE,1f);
         }
 
         /**
@@ -3422,13 +3404,13 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed and the Region containing land positions. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
-         * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
+         * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          */
         public LocalMimicMap(long initialSeed, Region toMimic) {
-            this(initialSeed, toMimic, DEFAULT_NOISE, 1.0);
+            this(initialSeed, toMimic, DEFAULT_NOISE, 1f);
         }
 
         /**
@@ -3442,9 +3424,9 @@ public abstract class WorldMapGenerator implements Serializable {
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public LocalMimicMap(long initialSeed, Region toMimic, double octaveMultiplier) {
+        public LocalMimicMap(long initialSeed, Region toMimic, float octaveMultiplier) {
             this(initialSeed, toMimic, DEFAULT_NOISE, octaveMultiplier);
         }
 
@@ -3458,14 +3440,14 @@ public abstract class WorldMapGenerator implements Serializable {
          * and Noise make sense to use for {@code noiseGenerator}, and the seed it's constructed with doesn't matter
          * because this will change the seed several times at different scales of noise (it's fine to use the static
          * {@link Noise#instance} or {@link Noise#instance} because they have no changing state between runs
-         * of the program). Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
+         * of the program). Uses the given noise generator, with 1f as the octave multiplier affecting detail.
          *
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
          */
         public LocalMimicMap(long initialSeed, Region toMimic, Noise noiseGenerator) {
-            this(initialSeed, toMimic, noiseGenerator, 1.0);
+            this(initialSeed, toMimic, noiseGenerator, 1f);
         }
 
         /**
@@ -3473,22 +3455,22 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * Takes an initial seed, the Region containing land positions, parameters for noise generation (a
          * {@link Noise} implementation, which is usually {@link Noise#instance}, and a multiplier on how many
-         * octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers producing even more
+         * octaves of noise to use, with 1f being normal (high) detail and higher multipliers producing even more
          * detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
          * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
          * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
-         * probably be no lower than 0.5, but can be arbitrarily high if you're willing to spend much more time on
-         * generating detail only noticeable at very high zoom; normally 1.0 is fine and may even be too high for maps
+         * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+         * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
          * that don't require zooming.
          * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
          * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
-         * @param octaveMultiplier used to adjust the level of detail, with 0.5 at the bare-minimum detail and 1.0 normal
+         * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
          */
-        public LocalMimicMap(long initialSeed, Region toMimic, Noise noiseGenerator, double octaveMultiplier) {
+        public LocalMimicMap(long initialSeed, Region toMimic, Noise noiseGenerator, float octaveMultiplier) {
             super(initialSeed, toMimic.width, toMimic.height, noiseGenerator, octaveMultiplier);
             earth = toMimic;
             earthOriginal = earth.copy();
@@ -3499,7 +3481,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Stores a 256x256 Region that shows an unprojected map of Australia, in a format that can be read back
          * with {@link Region#decompress(String)}. By using Region's compression, this takes up a lot less
          * room than it would with most text-based formats, and even beats uncompressed binary storage of the map by a
-         * factor of 9.4. The map data won't change here, so this should stay compatible.
+         * factor of 9.4f. The map data won't change here, so this should stay compatible.
          */
         public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮰囨䈢ħ䐤࠰ࠨ•Ⱙအ䎢ŘňÆ䴣ȢؤF䭠゠ᔤ∠偰ഀ\u0560₠ኼܨā᭮笁\u242AЦᇅ扰रࠦ吠䠪ࠦ䠧娮⠬䠬❁Ềក\u1CAA͠敠ἒ慽Ê䄄洡儠䋻䨡㈠䙬坈མŨྈ䞻䛊哚晪⁞倰h·䡂Ļæ抂㴢္\u082E搧䈠ᇩᒠ᩠ɀ༨ʨڤʃ奲ࢠ፠ᆙả䝆䮳りĩ(ॠી᧰྄e॑ᤙ䒠剠⁌ဥࠩФΝ䂂⢴ᑠ㺀ᢣ䗨dBqÚ扜冢\u0FE5\u0A62䐠劣ေ¯䂍䞀ၰ\u0E67ᐓ〈ᄠ塠Ѡ̀ာ⠤ᡤŒęጓ憒‱〿䌳℔ᐼ䊢⁚䤿ӣ◚㙀\u0C74Ӹ抠⣀ĨǊǸ䁃း₺Ý䂁ᜤ䢑V⁄樫焠\u0A60\u2E78⎲Ĉ䁎勯戡璠悈ᠥ嘡⩩‰ನ檨㡕䶪၁@恑ࠣ䘣ࢠᅀᡎ劰桠Өॢಸ熛փࢸ䀹ఽ䅠勖ਰ۴̄ጺಢ䈠ᙠᨭ\u2FE0焠Ӡܼ䇂䒠ᯀԨĠ愜᪅䦥㶐ୀ\u09C5Ƣ*䂕ॹ∠咠р\u0604У無~⁆Г椠痠\u1CA9Ⱓס㩖ᝋ司楠२ญⳘ䬣汤ǿã㱩ᖷ掠Àݒ㑁c‾䮴,\u2452僢ᰣ缠ɋ乨\u0378䁡绑ס傓䁔瀾ሺÑ䀤ो刡开烀\u0A76Ё䈠䈰״Áj⁑䠡戢碠㘀አ䃉㪙嘈ʂø⸪௰₈㐲暤ƩDᬿ䂖剙書\u0FE0㴢\u0089㘩Ĉ䰵掀栰杁4〡Ƞ⭀\u1AE0㠰㹨Zコത\u009E䂖ࠠⴠ縣吠ᆠʡ㡀䀧否䣝Ӧ愠Ⓚ\u1CA2ಠո*①ӈԥ獀խ@㟬箬㐱\u31BE簽Ɛᩆᇞ稯禚⟶⣑аβǚ㥎Ḇ⌢㑆 搡⁗ဣ刣\u0C45䑒8怺₵⤦a5ਵ㏰ᩄ猢ฦ䬞㐷䈠呠カ愠ۀ\u1C92傠ᅼ߃ᙊ䢨ၠླྀš亀ƴ̰刷ʼ墨愠  ";
 
@@ -3509,7 +3491,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * @param noiseGenerator
          * @param octaveMultiplier
          */
-        public LocalMimicMap(long initialSeed, Noise noiseGenerator, double octaveMultiplier)
+        public LocalMimicMap(long initialSeed, Noise noiseGenerator, float octaveMultiplier)
         {
             this(initialSeed,
                     Region.decompress(AUSTRALIA_ENCODED), noiseGenerator, octaveMultiplier);
@@ -3532,23 +3514,23 @@ public abstract class WorldMapGenerator implements Serializable {
 
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, long stateA, long stateB)
+                                  float landMod, float heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
             {
-                minHeight = Double.POSITIVE_INFINITY;
-                maxHeight = Double.NEGATIVE_INFINITY;
-                minHeat0 = Double.POSITIVE_INFINITY;
-                maxHeat0 = Double.NEGATIVE_INFINITY;
-                minHeat1 = Double.POSITIVE_INFINITY;
-                maxHeat1 = Double.NEGATIVE_INFINITY;
-                minHeat = Double.POSITIVE_INFINITY;
-                maxHeat = Double.NEGATIVE_INFINITY;
-                minWet0 = Double.POSITIVE_INFINITY;
-                maxWet0 = Double.NEGATIVE_INFINITY;
-                minWet = Double.POSITIVE_INFINITY;
-                maxWet = Double.NEGATIVE_INFINITY;
+                minHeight = Float.POSITIVE_INFINITY;
+                maxHeight = Float.NEGATIVE_INFINITY;
+                minHeat0 = Float.POSITIVE_INFINITY;
+                maxHeat0 = Float.NEGATIVE_INFINITY;
+                minHeat1 = Float.POSITIVE_INFINITY;
+                maxHeat1 = Float.NEGATIVE_INFINITY;
+                minHeat = Float.POSITIVE_INFINITY;
+                maxHeat = Float.NEGATIVE_INFINITY;
+                minWet0 = Float.POSITIVE_INFINITY;
+                maxWet0 = Float.NEGATIVE_INFINITY;
+                minWet = Float.POSITIVE_INFINITY;
+                maxWet = Float.NEGATIVE_INFINITY;
                 cacheA = stateA;
                 cacheB = stateB;
                 fresh = true;
@@ -3557,8 +3539,8 @@ public abstract class WorldMapGenerator implements Serializable {
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
             int t;
 
-            landModifier = (landMod <= 0) ? rng.nextDouble(0.29) + 0.91 : landMod;
-            heatModifier = (heatMod <= 0) ? rng.nextDouble(0.45) * (rng.nextDouble()-0.5) + 1.1 : heatMod;
+            landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+            heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat()-0.5f) + 1.1f : heatMod;
 
             earth.remake(earthOriginal);
 
@@ -3577,45 +3559,45 @@ public abstract class WorldMapGenerator implements Serializable {
                 coast.remake(earth).not().fringe(2);
                 shallow.remake(earth).fringe(2);
             }
-            double p,
+            float p,
                     ps, pc,
                     qs, qc,
                     h, temp,
-                    i_w = 1.0 / width, i_h = 1.0 / (height),
+                    i_w = 1f / width, i_h = 1f / (height),
                     i_uw = usedWidth * i_w * i_w, i_uh = usedHeight * i_h * i_h, xPos, yPos = startY * i_h;
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 xPos = startX * i_w;
                 for (int x = 0; x < width; x++, xPos += i_uw) {
-                    xPositions[x][y] = (xPos - .5) * 2.0;
-                    yPositions[x][y] = (yPos - .5) * 2.0;
-                    zPositions[x][y] = 0.0;
+                    xPositions[x][y] = (xPos - .5f) * 2f;
+                    yPositions[x][y] = (yPos - .5f) * 2f;
+                    zPositions[x][y] = 0f;
 
                     if(earth.contains(x, y))
                     {
                         h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(xPos +
-                                        terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5,
-                                yPos, seedA)) * 0.85;
+                                        terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
+                                yPos, seedA)) * 0.85f;
                         if(coast.contains(x, y))
-                            h += 0.05;
+                            h += 0.05f;
                         else
-                            h += 0.15;
+                            h += 0.15f;
                     }
                     else
                     {
                         h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(xPos +
-                                        terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5,
-                                yPos, seedA)) * -0.9;
+                                        terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
+                                yPos, seedA)) * -0.9f;
                         if(shallow.contains(x, y))
-                            h = (h - 0.08) * 0.375;
+                            h = (h - 0.08f) * 0.375f;
                         else
-                            h = (h - 0.125) * 0.75;
+                            h = (h - 0.125f) * 0.75f;
                     }
-                    //h += landModifier - 1.0;
+                    //h += landModifier - 1f;
                     heightData[x][y] = h;
                     heatData[x][y] = (p = heat.getNoiseWithSeed(xPos, yPos
-                                    + 0.375 * otherRidged.getNoiseWithSeed(xPos, yPos, seedB + seedC),
+                                    + 0.375f * otherRidged.getNoiseWithSeed(xPos, yPos, seedB + seedC),
                             seedB));
-                    temp = 0.375 * otherRidged.getNoiseWithSeed(xPos, yPos, seedC + seedA);
+                    temp = 0.375f * otherRidged.getNoiseWithSeed(xPos, yPos, seedC + seedA);
                     moistureData[x][y] = (temp = moisture.getNoiseWithSeed(xPos - temp, yPos + temp, seedC));
 
                     minHeightActual = Math.min(minHeightActual, h);
@@ -3635,39 +3617,39 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
             }
-            double  heatDiff = 0.8 / (maxHeat0 - minHeat0),
-                    wetDiff = 1.0 / (maxWet0 - minWet0),
+            float  heatDiff = 0.8f / (maxHeat0 - minHeat0),
+                    wetDiff = 1f / (maxWet0 - minWet0),
                     hMod;
             yPos = startY * i_h + i_uh;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
             for (int y = 0; y < height; y++, yPos += i_uh) {
                 for (int x = 0; x < width; x++) {
                     h = heightData[x][y];
                     heightCodeData[x][y] = (t = codeHeight(h));
-                    hMod = 1.0;
+                    hMod = 1f;
                     switch (t) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
-                            h = 0.4;
-                            hMod = 0.2;
+                            h = 0.4f;
+                            hMod = 0.2f;
                             break;
                         case 6:
-                            h = -0.1 * (h - forestLower - 0.08);
+                            h = -0.1f * (h - forestLower - 0.08f);
                             break;
                         case 7:
-                            h *= -0.25;
+                            h *= -0.25f;
                             break;
                         case 8:
-                            h *= -0.4;
+                            h *= -0.4f;
                             break;
                         default:
-                            h *= 0.05;
+                            h *= 0.05f;
                     }
-                    heatData[x][y] = (h = ((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6);
+                    heatData[x][y] = (h = ((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f);
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0
                         pc = Math.max(pc, h); //maxHeat0
@@ -3680,10 +3662,10 @@ public abstract class WorldMapGenerator implements Serializable {
                 maxHeat1 = pc;
             }
             heatDiff = heatModifier / (maxHeat1 - minHeat1);
-            qs = Double.POSITIVE_INFINITY;
-            qc = Double.NEGATIVE_INFINITY;
-            ps = Double.POSITIVE_INFINITY;
-            pc = Double.NEGATIVE_INFINITY;
+            qs = Float.POSITIVE_INFINITY;
+            qc = Float.NEGATIVE_INFINITY;
+            ps = Float.POSITIVE_INFINITY;
+            pc = Float.NEGATIVE_INFINITY;
 
 
             for (int y = 0; y < height; y++) {

@@ -5,6 +5,10 @@ package com.github.yellowstonegames.core;
  * {@link #sin_(float)}, which takes an argument in turns instead of radians (1 turn equals 2PI radians).
  */
 public final class TrigTools {
+
+    public static final float PI = 3.14159265358979323846f;
+    public static final float HALF_PI = 1.5707964f;
+    public static final float PI2 = 6.2831855f;
     /**
      * A fairly-close approximation of {@link Math#sin(double)} that can be significantly faster (between 8x and 80x
      * faster sin() calls in benchmarking; if you have access to libGDX you should consider its sometimes-more-precise

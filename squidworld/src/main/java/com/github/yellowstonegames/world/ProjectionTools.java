@@ -40,7 +40,7 @@ public class ProjectionTools {
      * @param kappa the kappa value of the hyperellipse
      * @return some magic stuff needed for Tobler Hyperelliptical maps
      */
-    public static double simpsonIntegrateHyperellipse(double a, double b, double h, double kappa) {
+    public static float simpsonIntegrateHyperellipse(double a, double b, double h, double kappa) {
         double sum = 0, ik = 1/kappa;
         for (double x = a; x < b; x += h) {
             if (x+h > b) h = b-x;
@@ -48,7 +48,7 @@ public class ProjectionTools {
                     + 4*Math.pow(1 - Math.pow(Math.abs(x + h * 0.5), kappa), ik) 
                     + Math.pow(1 - Math.pow(Math.abs(x + h), kappa), ik));
         }
-        return sum;
+        return (float) sum;
     }
 
     /**
@@ -62,7 +62,7 @@ public class ProjectionTools {
      * @param epsilon calculated beforehand using {@link #simpsonIntegrateHyperellipse(double, double, double, double)}
      * @return y, after modifications
      */
-    public static double[] simpsonODESolveHyperellipse(final double T, final double[] y, final double h, final double alpha, final double kappa, final double epsilon)
+    public static float[] simpsonODESolveHyperellipse(final double T, final float[] y, final double h, final double alpha, final double kappa, final double epsilon)
     {
         final int m = y.length - 1, n = m + 1;
         double t = 0;
@@ -70,12 +70,12 @@ public class ProjectionTools {
         for (int i = 0; i <= m; i++) {
             while (t < i * T / n) {
                 final double tph = Math.min(t + h, i * T / n);
-                sum += (tph - t) / 6 * (Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(t), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
-                        + 4 * Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs((t + tph) * 0.5), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
+                sum += (tph - t) / 6.0 * (Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(t), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
+                        + 4.0 * Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs((t + tph) * 0.5), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
                         + Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(tph), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon)));
                 t = tph;
             }
-            y[i] = sum;
+            y[i] = (float) sum;
         }
         return y;
     }
@@ -87,8 +87,8 @@ public class ProjectionTools {
      * @param kappa one of the Tobler parameters
      * @return I'm guessing the actual y used after hyperelliptical distortion; not sure
      */
-    public static double hyperellipse(double y, double kappa) {
-        return Math.pow(1 - Math.pow(Math.abs(y),kappa), 1/kappa);
+    public static float hyperellipse(double y, double kappa) {
+        return (float) Math.pow(1.0 - Math.pow(Math.abs(y),kappa), 1.0/kappa);
     }
 
 }
