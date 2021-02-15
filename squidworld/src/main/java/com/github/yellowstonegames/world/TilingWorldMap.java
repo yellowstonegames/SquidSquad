@@ -5,7 +5,7 @@ import com.github.yellowstonegames.grid.Noise;
 
 /**
  * A concrete implementation of {@link WorldMapGenerator} that tiles both east-to-west and north-to-south. It tends
- * to not appear distorted like StretchMap does in some areas, even though this is inaccurate for a
+ * to not appear distorted like {@link StretchWorldMap} does in some areas, even though this is inaccurate for a
  * rectangular projection of a spherical world (that inaccuracy is likely what players expect in a map, though).
  * The map this makes wraps toroidally, which matches the behavior in many older games, but nothing in the real world.
  * You may want LocalMap instead, for non-world maps that don't tile.
