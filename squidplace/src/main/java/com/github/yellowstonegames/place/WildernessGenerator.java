@@ -403,7 +403,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
 //                "Ice",    "River",        "River",          "River",               "River",              "River",              //RIVERS
 //                "Ice",    "Lake",         "Lake",           "Lake",                "Lake",               "Lake",               //LAKES
 //                "Ocean",  "Ocean",        "Ocean",          "Ocean",               "Ocean",              "Ocean",              //OCEAN
-//                "Space",  "Moon"          "Cavern",         "Cavern",              "Exotic",             "Volcano"             //SPACE
+//                "Space",  "Moon",         "Cavern",         "Cavern",              "Exotic",             "Volcano"             //STRANGE
 
     public WildernessGenerator()
     {
