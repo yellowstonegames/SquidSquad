@@ -39,7 +39,10 @@ import java.util.Arrays;
 public abstract class WorldMapGenerator implements Serializable {
     private static final long serialVersionUID = 1L;
     public final int width, height;
-    public int seedA, seedB, cacheA, cacheB;
+    public long seedA;
+    public long seedB;
+    public long cacheA;
+    public long cacheB;
     public LaserRandom rng;
     public final double[][] heightData, heatData, moistureData;
     public final Region landData;
@@ -147,7 +150,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, int, int)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
      * Always makes a 256x256 map. If you were using {@link WorldMapGenerator#WorldMapGenerator(long, int, int)}, then
      * this would be the same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 256}.
      */
@@ -157,9 +160,9 @@ public abstract class WorldMapGenerator implements Serializable {
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, int, int)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
      * Takes only the width/height of the map. The initial seed is set to the same large long
-     * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+     * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
      * height of the map cannot be changed after the fact, but you can zoom in.
      *
      * @param mapWidth the width of the map(s) to generate; cannot be changed later
@@ -171,9 +174,9 @@ public abstract class WorldMapGenerator implements Serializable {
     }
     /**
      * Constructs a WorldMapGenerator (this class is abstract, so you should typically call this from a subclass or as
-     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, int, int)}).
+     * part of an anonymous class that implements {@link #regenerate(int, int, int, int, double, double, long, long)}).
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-     * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+     * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      *
      * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
@@ -186,8 +189,8 @@ public abstract class WorldMapGenerator implements Serializable {
         height = mapHeight;
         usedWidth = width;
         usedHeight = height;
-        seedA = (int) (initialSeed & 0xFFFFFFFFL);
-        seedB = (int) (initialSeed >>> 32);
+        seedA = initialSeed;
+        seedB = initialSeed + 0xC6BC279692B5C323L | 1L;
         cacheA = ~seedA;
         cacheB = ~seedB;
         rng = new LaserRandom(seedA, seedB);
@@ -212,7 +215,7 @@ public abstract class WorldMapGenerator implements Serializable {
      */
     public void generate()
     {
-        generate(rng.nextLong());
+        generate(rng.nextLong(), rng.nextLong() | 1L);
     }
 
     /**
@@ -221,10 +224,11 @@ public abstract class WorldMapGenerator implements Serializable {
      * The worlds this produces will always have width and height as specified in the constructor (default 256x256).
      * You can call {@link #zoomIn(int, int, int)} to double the resolution and center on the specified area, but the width
      * and height of the 2D arrays this changed, such as {@link #heightData} and {@link #moistureData} will be the same.
-     * @param state the state to give this generator's RNG; if the same as the last call, this will reuse data
+     * @param stateA the first part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
+     * @param stateB the second part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      */
-    public void generate(long state) {
-        generate(-1.0, -1.0, state);
+    public void generate(long stateA, long stateB) {
+        generate(-1.0, -1.0, stateA, stateB | 1L);
     }
 
     /**
@@ -235,15 +239,16 @@ public abstract class WorldMapGenerator implements Serializable {
      * and height of the 2D arrays this changed, such as {@link #heightData} and {@link #moistureData} will be the same.
      * @param landMod 1.0 is Earth-like, less than 1 is more-water, more than 1 is more-land; a random value will be used if this is negative
      * @param heatMod 1.125 is Earth-like, less than 1 is cooler, more than 1 is hotter; a random value will be used if this is negative
-     * @param state the state to give this generator's RNG; if the same as the last call, this will reuse data
+     * @param stateA the first part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
+     * @param stateB the second part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      */
-    public void generate(double landMod, double heatMod, long state)
+    public void generate(double landMod, double heatMod, long stateA, long stateB)
     {
-        if(cacheA != (int) (state & 0xFFFFFFFFL) || cacheB != (int) (state >>> 32) ||
+        if(cacheA != stateA || cacheB != (stateB | 1L) ||
                 landMod != landModifier || heatMod != heatModifier)
         {
-            seedA = (int) (state & 0xFFFFFFFFL);
-            seedB = (int) (state >>> 32);
+            seedA = stateA;
+            seedB = stateB | 1L;
             zoom = 0;
             startCacheX.clear();
             startCacheY.clear();
@@ -292,7 +297,7 @@ public abstract class WorldMapGenerator implements Serializable {
         {
             if(cacheA != seedA || cacheB != seedB)
             {
-                generate(rng.nextLong());
+                generate(rng.nextLong(), rng.nextLong() | 1L);
             }
             zoomStartX = Math.min(Math.max(
                     (zoomStartX + (zoomCenterX - (width >> 1))) >> zoomAmount,
@@ -354,7 +359,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
         if(seedA != cacheA || seedB != cacheB)
         {
-            generate(rng.nextLong());
+            generate(rng.nextLong(), rng.nextLong() | 1L);
         }
         zoomStartX = Math.min(Math.max(
                 (zoomStartX + zoomCenterX - (width >> 1) << zoomAmount),
@@ -385,7 +390,7 @@ public abstract class WorldMapGenerator implements Serializable {
     }
 
     protected abstract void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                       double landMod, double heatMod, int stateA, int stateB);
+                                       double landMod, double heatMod, long stateA, long stateB);
     /**
      * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
      * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
@@ -630,8 +635,7 @@ public abstract class WorldMapGenerator implements Serializable {
                         continue;
                     }
                     int hc, mc;
-                    boolean isLake = false,// world.generateRivers && heightCode >= 4 && fresh > 0.65 && fresh + moist * 2.35 > 2.75,//world.partialLakeData.contains(x, y) && heightCode >= 4,
-                            isRiver = false;// world.generateRivers && !isLake && heightCode >= 4 && fresh > 0.55 && fresh + moist * 2.2 > 2.15;//world.partialRiverData.contains(x, y) && heightCode >= 4;
+                    boolean isLake = false;
                     if(heightCode < 4) {
                         mc = 9;
                     }
@@ -895,9 +899,7 @@ public abstract class WorldMapGenerator implements Serializable {
                     hot = heatData[x][y];
                     moist = moistureData[x][y];
                     high = heightData[x][y];
-//                    fresh = world.freshwaterData[x][y];
-                    boolean isLake = false,//world.generateRivers && heightCode >= 4 && fresh > 0.65 && fresh + moist * 2.35 > 2.75,//world.partialLakeData.contains(x, y) && heightCode >= 4,
-                            isRiver = false;//world.generateRivers && !isLake && heightCode >= 4 && fresh > 0.55 && fresh + moist * 2.2 > 2.15;//world.partialRiverData.contains(x, y) && heightCode >= 4;
+                    boolean isLake = false;
                     if (moist >= (wettestValueUpper - (wetterValueUpper - wetterValueLower) * 0.2)) {
                         mc = 5;
                     } else if (moist >= (wetterValueUpper - (wetValueUpper - wetValueLower) * 0.2)) {
@@ -982,6 +984,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="http://yellowstonegames.github.io/SquidLib/DetailedWorldMapDemo.png" >Example map</a>.
      */
     public static class TilingMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 0.95f, terrainRidgedFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         private double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -1004,7 +1007,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used as a tiling, wrapping east-to-west as well
          * as north-to-south.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1019,7 +1022,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used as a tiling, wrapping east-to-west as well
          * as north-to-south.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1036,7 +1039,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * as north-to-south. Takes an initial seed, the width/height of the map, and a noise generator (a
          * {@link Noise} implementation, which is usually {@link Noise#instance}. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call
-         * {@link #generate(long)}. The width and height of the map cannot be changed after the fact, but you can zoom
+         * {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact, but you can zoom
          * in. Any seed supplied to the Noise given to this (if it takes one) will be ignored, and
          * {@link Noise#getNoiseWithSeed(double, double, double, double, long)} will be used to specify the seed many
          * times. The detail level, which is the {@code octaveMultiplier} parameter that can be passed to another
@@ -1057,7 +1060,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Any seed supplied to the Noise given to this (if it takes one) will be ignored, and
          * {@link Noise#getNoiseWithSeed(double, double, double, double, long)} will be used to specify the seed many
          * times. The {@code octaveMultiplier} parameter should probably be no lower than 0.5, but can be arbitrarily
@@ -1114,7 +1117,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -1280,6 +1283,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="http://yellowstonegames.github.io/SquidLib/SphereWorld.png" >Example map</a>.
      */
     public static class StretchMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         private double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -1309,7 +1313,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1325,7 +1329,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1342,7 +1346,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -1360,7 +1364,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1381,7 +1385,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -1470,7 +1474,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -1632,6 +1636,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="http://yellowstonegames.github.io/SquidLib/EllipseWorld.png" >Example map</a>.
      */
     public static class EllipticalMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -1660,7 +1665,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1675,7 +1680,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -1691,7 +1696,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -1708,7 +1713,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}.
@@ -1729,7 +1734,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -1809,7 +1814,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -1995,6 +2000,7 @@ public abstract class WorldMapGenerator implements Serializable {
      */
     public static class MimicMap extends EllipticalMap
     {
+        private static final long serialVersionUID = 1L;
         public Region earth;
         public Region shallow;
         public Region coast;
@@ -2016,7 +2022,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that should have land in roughly the same places as the
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * The initial seed is set to the same large long every time, and it's likely that you would set the seed when
-         * you call {@link #generate(long)}. The width and height of the map cannot be changed after the fact.
+         * you call {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
@@ -2029,7 +2035,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that should have land in roughly the same places as the
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * Takes an initial seed and the Region containing land positions. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2045,7 +2051,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, using an elliptical projection (specifically, a Mollweide projection).
          * Takes an initial seed, the Region containing land positions, and a multiplier that affects the level
          * of detail by increasing or decreasing the number of octaves of noise used. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -2063,7 +2069,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed, the Region containing land positions, and parameters for noise generation (a
          * {@link Noise} implementation, which is usually {@link Noise#instance}. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call
-         * {@link #generate(long)}. The width and height of the map cannot be changed after the fact. Both Noise
+         * {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact. Both Noise
          * and Noise make sense to use for {@code noiseGenerator}, and the seed it's constructed with doesn't matter
          * because this will change the seed several times at different scales of noise (it's fine to use the static
          * {@link Noise#instance} or {@link Noise#instance} because they have no changing state between runs
@@ -2084,7 +2090,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, which is usually {@link Noise#instance}, and a multiplier on how many
          * octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers producing even more
          * detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -2188,7 +2194,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -2412,6 +2418,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * from afar</a>
      */
     public static class SpaceViewMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -2439,7 +2446,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2454,7 +2461,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2470,7 +2477,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -2487,7 +2494,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2507,7 +2514,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -2585,7 +2592,7 @@ public abstract class WorldMapGenerator implements Serializable {
         //private static final double root2 = Math.sqrt(2.0), inverseRoot2 = 1.0 / root2, halfInverseRoot2 = 0.5 / root2;
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -2780,6 +2787,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="https://yellowstonegames.github.io/SquidLib/RoundSideWorldMap.png">Example map</a>
      */
     public static class RoundSideMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -2808,7 +2816,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2823,7 +2831,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -2839,7 +2847,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -2856,7 +2864,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}
@@ -2877,7 +2885,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -2957,7 +2965,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -3148,6 +3156,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="">Example map</a>
      */
     public static class HyperellipticalMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -3179,7 +3188,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3194,7 +3203,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3210,7 +3219,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -3227,7 +3236,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
          * ellipse without distortion of the sizes of features but with significant distortion of shape.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail. The suggested Noise
          * implementation to use is {@link Noise#instance}.
@@ -3248,7 +3257,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -3273,7 +3282,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -3395,7 +3404,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -3600,6 +3609,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="https://i.imgur.com/NV5IMd6.gifv">Another example</a>.
      */
     public static class RotatingSpaceMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
                 minWet0 = Double.POSITIVE_INFINITY, maxWet0 = Double.NEGATIVE_INFINITY;
@@ -3625,7 +3635,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3640,7 +3650,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3656,7 +3666,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -3673,7 +3683,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
          * showing only one hemisphere at a time.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3693,7 +3703,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -3849,7 +3859,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             if(cacheA != stateA || cacheB != stateB)// || landMod != storedMap.landModifier || coolMod != storedMap.coolingModifier)
             {
@@ -3889,6 +3899,7 @@ public abstract class WorldMapGenerator implements Serializable {
      * <a href="http://yellowstonegames.github.io/SquidLib/LocalMap.png" >Example map, showing lack of polar ice</a>
      */
     public static class LocalMap extends WorldMapGenerator {
+        private static final long serialVersionUID = 1L;
         protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
         protected double minHeat0 = Double.POSITIVE_INFINITY, maxHeat0 = Double.NEGATIVE_INFINITY,
                 minHeat1 = Double.POSITIVE_INFINITY, maxHeat1 = Double.NEGATIVE_INFINITY,
@@ -3918,7 +3929,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes only the width/height of the map. The initial seed is set to the same large long
-         * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
+         * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
          * height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3934,7 +3945,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3951,7 +3962,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -3969,7 +3980,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
          * have significantly-exaggerated-in-size features while the equator is not distorted.
          * Takes an initial seed and the width/height of the map. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact, but you can zoom in.
          * Uses the given noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -3990,7 +4001,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
          * multiplier on how many octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers
          * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -4064,7 +4075,7 @@ public abstract class WorldMapGenerator implements Serializable {
         }
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
@@ -4210,6 +4221,7 @@ public abstract class WorldMapGenerator implements Serializable {
      */
     public static class LocalMimicMap extends LocalMap
     {
+        private static final long serialVersionUID = 1L;
         public Region earth;
         public Region shallow;
         public Region coast;
@@ -4230,7 +4242,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that should have land in roughly the same places as the
          * given Region's "on" cells, without projecting the land positions or changing heat by latitude.
          * The initial seed is set to the same large long every time, and it's likely that you would set the seed when
-         * you call {@link #generate(long)}. The width and height of the map cannot be changed after the fact.
+         * you call {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
          * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
@@ -4243,7 +4255,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Constructs a concrete WorldMapGenerator for a map that should have land in roughly the same places as the
          * given Region's "on" cells, without projecting the land positions or changing heat by latitude.
          * Takes an initial seed and the Region containing land positions. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
          *
@@ -4259,7 +4271,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * given Region's "on" cells, without projecting the land positions or changing heat by latitude.
          * Takes an initial seed, the Region containing land positions, and a multiplier that affects the level
          * of detail by increasing or decreasing the number of octaves of noise used. The {@code initialSeed}
-         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
+         * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
          * The width and height of the map cannot be changed after the fact.
          * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
          *
@@ -4277,7 +4289,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * Takes an initial seed, the Region containing land positions, and parameters for noise generation (a
          * {@link Noise} implementation, which is usually {@link Noise#instance}. The {@code initialSeed}
          * parameter may or may not be used, since you can specify the seed to use when you call
-         * {@link #generate(long)}. The width and height of the map cannot be changed after the fact. Both Noise
+         * {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact. Both Noise
          * and Noise make sense to use for {@code noiseGenerator}, and the seed it's constructed with doesn't matter
          * because this will change the seed several times at different scales of noise (it's fine to use the static
          * {@link Noise#instance} or {@link Noise#instance} because they have no changing state between runs
@@ -4298,7 +4310,7 @@ public abstract class WorldMapGenerator implements Serializable {
          * {@link Noise} implementation, which is usually {@link Noise#instance}, and a multiplier on how many
          * octaves of noise to use, with 1.0 being normal (high) detail and higher multipliers producing even more
          * detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
-         * since you can specify the seed to use when you call {@link #generate(long)}. The width and height of the map
+         * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
          * cannot be changed after the fact.  Noise will be the fastest 3D generator to use for
          * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
          * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
@@ -4355,7 +4367,7 @@ public abstract class WorldMapGenerator implements Serializable {
 
 
         protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
-                                  double landMod, double heatMod, int stateA, int stateB)
+                                  double landMod, double heatMod, long stateA, long stateB)
         {
             boolean fresh = false;
             if(cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier)
