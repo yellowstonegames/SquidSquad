@@ -2,22 +2,20 @@ package com.github.yellowstonegames.world;
 
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.TrigTools;
-import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Noise;
 
+import java.util.Arrays;
+
 /**
- * A concrete implementation of {@link WorldMapGenerator} that distorts the map as it nears the poles, expanding the
- * smaller-diameter latitude lines in extreme north and south regions so they take up the same space as the equator.
- * Like all of the WorldMapGenerator implementations, this generator allows configuring a {@link Noise}, which is
- * used for most of the generation. This type of map is ideal for projecting onto a 3D
- * sphere, which could squash the poles to counteract the stretch this does. You might also want to produce an oval
- * map that more-accurately represents the changes in the diameter of a latitude line on a spherical world; you
- * should use {@link EllipticalWorldMap} for this.
- * {@link HyperellipticalWorldMap} is also a nice option because it can project onto a shape between a
- * rectangle (like this class) and an ellipse (like EllipticalWorldMap), with all-round sides.
- * <a href="http://yellowstonegames.github.io/SquidLib/SphereWorld.png" >Example map</a>.
+ * A concrete implementation of {@link WorldMapGenerator} that projects the world map onto a shape with a flat top
+ * and bottom but near-circular sides. This is an equal-area projection, like EllipticalWorldMap, so effects that fill
+ * areas on a map like PoliticalMapper will fill (almost) equally on any part of the map. This has less
+ * distortion on the far left and far right edges of the map than EllipticalWorldMap, but the flat top and bottom are
+ * probably very distorted in a small area near the poles.
+ * This uses the <a href="https://en.wikipedia.org/wiki/Eckert_IV_projection">Eckert IV projection</a>.
+ * <a href="https://yellowstonegames.github.io/SquidLib/RoundSideWorldMap.png">Example map</a>
  */
-public class StretchWorldMap extends WorldMapGenerator {
+public class RoundSideWorldMap extends WorldMapGenerator {
     private static final long serialVersionUID = 1L;
     protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
@@ -28,25 +26,24 @@ public class StretchWorldMap extends WorldMapGenerator {
     public final float[][] xPositions,
             yPositions,
             zPositions;
+    protected final int[] edges;
 
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
-     * Always makes a 256x128 map.
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
+     * Always makes a 200x100 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link StretchWorldMap#StretchWorldMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f}.
+     * If you were using {@link RoundSideWorldMap#RoundSideWorldMap(long, int, int, Noise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f}.
      */
-    public StretchWorldMap() {
-        this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f);
+    public RoundSideWorldMap() {
+        this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f);
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
      * Takes only the width/height of the map. The initial seed is set to the same large long
      * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
      * height of the map cannot be changed after the fact, but you can zoom in.
@@ -55,14 +52,13 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapWidth  the width of the map(s) to generate; cannot be changed later
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
-    public StretchWorldMap(int mapWidth, int mapHeight) {
+    public RoundSideWorldMap(int mapWidth, int mapHeight) {
         this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -72,14 +68,13 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight) {
+    public RoundSideWorldMap(long initialSeed, int mapWidth, int mapHeight) {
         this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -90,34 +85,33 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
+    public RoundSideWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
         this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
-     * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
+     * Uses the given noise generator, with 1f as the octave multiplier affecting detail. The suggested Noise
+     * implementation to use is {@link Noise#instance}
      *
      * @param initialSeed    the seed for the LaserRandom this uses; this may also be set per-call to generate
      * @param mapWidth       the width of the map(s) to generate; cannot be changed later
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public RoundSideWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
-     * Takes an initial seed, the width/height of the map, and parameters for noise
-     * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
+     * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
+     * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
      * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
      * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
      * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
@@ -132,15 +126,15 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
-     * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
+     * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
+    public RoundSideWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
         yPositions = new float[width][height];
         zPositions = new float[width][height];
-
+        edges = new int[height << 1];
 
         terrain = new Noise(noiseGenerator);
         terrain.setFrequency(terrain.getFrequency() * terrainFreq);
@@ -170,40 +164,13 @@ public class StretchWorldMap extends WorldMapGenerator {
         otherRidged.setFractalType(Noise.RIDGED_MULTI);
     }
 
-    @Override
-    public int wrapY(final int x, final int y) {
-        return Math.max(0, Math.min(y, height - 1));
-    }
-
     /**
-     * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
-     * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
-     * generator does not represent a globe (if it is toroidal, for instance) or if there is no "good way" to calculate
-     * the projection for a given lat-lon coordinate, this returns null. This implementation never returns null.
-     * If this is a supported operation and the parameters are valid, this returns a Coord with x between 0 and
-     * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
-     * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
+     * Copies the RoundSideWorldMap {@code other} to construct a new one that is exactly the same. References will only
+     * be shared to Noise classes.
      *
-     * @param latitude  the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
-     * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
-     * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
+     * @param other a RoundSideWorldMap to copy
      */
-    @Override
-    public Coord project(float latitude, float longitude) {
-        int x = (int) ((((longitude - getCenterLongitude()) + 12.566370614359172f) % 6.283185307179586f) * 0.15915494309189535f * width),
-                y = (int) ((TrigTools.sin(latitude) * 0.5f + 0.5f) * height);
-        return Coord.get(
-                wrapX(x, y),
-                wrapY(x, y));
-    }
-
-    /**
-     * Copies the StretchWorldMap {@code other} to construct a new one that is exactly the same. References will only be
-     * shared to Noise classes.
-     *
-     * @param other a StretchWorldMap to copy
-     */
-    public StretchWorldMap(StretchWorldMap other) {
+    public RoundSideWorldMap(RoundSideWorldMap other) {
         super(other);
         terrain = other.terrain;
         terrainLayered = other.terrainLayered;
@@ -219,6 +186,22 @@ public class StretchWorldMap extends WorldMapGenerator {
         xPositions = ArrayTools.copy(other.xPositions);
         yPositions = ArrayTools.copy(other.yPositions);
         zPositions = ArrayTools.copy(other.zPositions);
+        edges = Arrays.copyOf(other.edges, other.edges.length);
+    }
+
+    @Override
+    public int wrapX(final int x, int y) {
+        y = Math.max(0, Math.min(y, height - 1));
+        if (x < edges[y << 1])
+            return edges[y << 1 | 1];
+        else if (x > edges[y << 1 | 1])
+            return edges[y << 1];
+        else return x;
+    }
+
+    @Override
+    public int wrapY(final int x, final int y) {
+        return Math.max(0, Math.min(y, height - 1));
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
@@ -227,6 +210,8 @@ public class StretchWorldMap extends WorldMapGenerator {
         if (cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier) {
             minHeight = Float.POSITIVE_INFINITY;
             maxHeight = Float.NEGATIVE_INFINITY;
+            minHeightActual = Float.POSITIVE_INFINITY;
+            maxHeightActual = Float.NEGATIVE_INFINITY;
             minHeat0 = Float.POSITIVE_INFINITY;
             maxHeat0 = Float.NEGATIVE_INFINITY;
             minHeat1 = Float.POSITIVE_INFINITY;
@@ -245,29 +230,48 @@ public class StretchWorldMap extends WorldMapGenerator {
         long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
         int t;
 
-        landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+        landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
         heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat() - 0.5f) + 1.1f : heatMod;
 
         float p,
                 ps, pc,
                 qs, qc,
-                h, temp,
-                i_w = 6.283185307179586f / width, i_h = 2f / (height + 2f),//(3.141592653589793f) / (height+2f),
-                xPos = startX, yPos, i_uw = usedWidth / (float) width, i_uh = usedHeight * i_h / (height + 2f);
-        final float[] trigTable = new float[width << 1];
-        for (int x = 0; x < width; x++, xPos += i_uw) {
-            p = xPos * i_w + centerLongitude;
-            // 0.7978845608028654f 1.2533141373155001f
-            trigTable[x << 1] = TrigTools.sin(p);// * 1.2533141373155001f;
-            trigTable[x << 1 | 1] = TrigTools.cos(p);// * 0.7978845608028654f;
-        }
-        yPos = startY * i_h + i_uh;
+                h, temp, yPos, xPos,
+                i_uw = usedWidth / (float) width,
+                i_uh = usedHeight / (float) height,
+                th, thb, thx, thy, lon, lat,
+                rx = width * 0.25f, irx = 1.326500428177002f / rx, hw = width * 0.5f,
+                ry = height * 0.5f, iry = 1f / ry;
+
+        yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            qs = -1 + yPos;//-1.5707963267948966f + yPos;
-            qc = TrigTools.cos(TrigTools.asin(qs));
-            for (int x = 0, xt = 0; x < width; x++) {
-                ps = trigTable[xt++] * qc;//TrigTools.sin(p);
-                pc = trigTable[xt++] * qc;//TrigTools.cos(p);
+            thy = yPos * iry;//TrigTools.sin(thb);
+            thb = TrigTools.asin(thy);
+            thx = TrigTools.cos(thb);
+            //1.3265004f 0.7538633073600218f  1.326500428177002f
+            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? 0x1.0p70f : irx / (0.42223820031577125f * (1f + thx));
+            qs = (thb + (thx + 2f) * thy) * 0.2800495767557787f;
+            lat = TrigTools.asin(qs);
+
+            qc = TrigTools.cos(lat);
+
+            boolean inSpace = true;
+            xPos = startX - hw;
+            for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
+                th = lon * xPos;
+                if (th < -3.141592653589793f || th > 3.141592653589793f) {
+                    heightCodeData[x][y] = 10000;
+                    inSpace = true;
+                    continue;
+                }
+                if (inSpace) {
+                    inSpace = false;
+                    edges[y << 1] = x;
+                }
+                edges[y << 1 | 1] = x;
+                th += centerLongitude;
+                ps = TrigTools.sin(th) * qc;
+                pc = TrigTools.cos(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
@@ -280,7 +284,6 @@ public class StretchWorldMap extends WorldMapGenerator {
                 moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                         , seedC));
-
                 minHeightActual = Math.min(minHeightActual, h);
                 maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
@@ -300,18 +303,23 @@ public class StretchWorldMap extends WorldMapGenerator {
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),
                 wetDiff = 1f / (maxWet0 - minWet0),
-                hMod;
-        yPos = startY * i_h + i_uh;
+                hMod,
+                halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
+        yPos = startY + i_uh;
         ps = Float.POSITIVE_INFINITY;
         pc = Float.NEGATIVE_INFINITY;
 
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            temp = Math.abs(yPos - 1f);
+            temp = Math.abs(yPos - halfHeight) * i_half;
             temp *= (2.4f - temp);
             temp = 2.2f - temp;
             for (int x = 0; x < width; x++) {
                 h = heightData[x][y];
-                heightCodeData[x][y] = (t = codeHeight(h));
+                if (heightCodeData[x][y] == 10000) {
+                    heightCodeData[x][y] = 1000;
+                    continue;
+                } else
+                    heightCodeData[x][y] = (t = codeHeight(h));
                 hMod = 1f;
                 switch (t) {
                     case 0:
