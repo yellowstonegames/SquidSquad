@@ -4,7 +4,7 @@
  * A concrete implementation of {@link WorldMapGenerator} that projects the world map onto an ellipse that should be
  * twice as wide as it is tall (although you can stretch it by width and height that don't have that ratio).
  * This uses the <a href="https://en.wikipedia.org/wiki/Hammer_projection">Hammer projection</a>, so the latitude
- * lines are curved instead of flat. The Mollweide projection that {@link EllipticalMap} uses has flat lines, but
+ * lines are curved instead of flat. The Mollweide projection that {@link EllipticalWorldMap} uses has flat lines, but
  * the two projection are otherwise very similar, and are both equal-area (Hammer tends to have less significant
  * distortion around the edges, but the curvature of the latitude lines can be hard to visualize).
  * <a href="https://i.imgur.com/nmN6lMK.gifv">Preview image link of a world rotating</a>.
@@ -26,7 +26,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Always makes a 200x100 map.
      * Uses Noise as its noise generator, with 1.0 as the octave multiplier affecting detail.
@@ -40,7 +40,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Takes only the width/height of the map. The initial seed is set to the same large long
      * every time, and it's likely that you would set the seed when you call {@link #generate(long)}. The width and
@@ -57,7 +57,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
@@ -75,7 +75,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
@@ -94,7 +94,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long)}.
@@ -114,7 +114,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
      * ellipse without distortion of the sizes of features but with significant distortion of shape. This is very
-     * similar to {@link EllipticalMap}, but has curved latitude lines instead of flat ones (it also may see more
+     * similar to {@link EllipticalWorldMap}, but has curved latitude lines instead of flat ones (it also may see more
      * internal usage because some operations on this projection are much faster and simpler).
      * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
      * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a

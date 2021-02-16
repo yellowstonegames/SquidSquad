@@ -1297,25 +1297,23 @@ public final class DescriptiveColor {
 
     /**
      * Given a packed int Oklab color {@code mainColor} and another Oklab color that it should be made to contrast with,
-     * gets a packed int Oklab color with roughly inverted L but the same chromatic channels and opacity (A and B
-     * are likely to be clamped if the result gets close to white or black). This won't ever produce black or other very
-     * dark colors, and also has a gap in the range it produces for L values between 0.5 and 0.55. That allows
-     * most of the colors this method produces to contrast well as a foreground when displayed on a background of
-     * {@code contrastingColor}, or vice versa. This will leave the L unchanged if the chromatic channels of the
-     * contrastingColor and those of the mainColor are already very different.
+     * gets a packed int Oklab color with L that should be quite different from {@code contrastingColor}'s L, but the
+     * same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
+     * black). This allows most of the colors this method produces to contrast well as a foreground when displayed on a
+     * background of {@code contrastingColor}, or vice versa.
      * @param mainColor a packed Oklab int color; this is the color that will be adjusted
-     * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with this
-     * @return a different packed Oklab int color, based on mainColor but with potentially very different lightness
+     * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with the L of this
+     * @return a different packed Oklab int color, based on mainColor but typically with different lightness
      */
-    public static int inverseLightness(final int mainColor, final int contrastingColor)
+    public static int differentiateLightness(final int mainColor, final int contrastingColor)
     {
         return limitToGamut((mainColor & 0xFFFFFF00) | (contrastingColor + 128 & 0xFF) + (mainColor & 0xFF) >>> 1);
     }
 
     /**
      * Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
-     * then averages that with the original L.
-     * This means light colors become dark colors and vice versa, but the black and white both become 50% gray.
+     * then averages that with the original L. This means light colors become darker, and dark colors become lighter,
+     * with almost all results in the middle-range of possible lightness.
      * @param oklab a packed Oklab int color
      * @return a different packed Oklab int color, with its L channel changed and limited to the correct gamut
      */

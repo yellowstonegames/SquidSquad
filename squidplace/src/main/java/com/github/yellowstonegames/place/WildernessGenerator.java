@@ -465,7 +465,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
                     pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;
                     colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floors[x][y])) >>> 32));
-                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.inverseLightness((int)(pair >>> 32), color)) << 32;
+                    glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.differentiateLightness((int)(pair >>> 32), color)) << 32;
                 }
                 else {
                     pair = viewer.get(floorTypes.get(floors[x][y]));
