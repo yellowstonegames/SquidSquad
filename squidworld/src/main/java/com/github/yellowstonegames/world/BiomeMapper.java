@@ -134,20 +134,20 @@ public interface BiomeMapper {
             return Biome.TABLE;
         }
 
-        public static final double
-                coldestValueLower = 0.0,   coldestValueUpper = 0.15, // 0
-                colderValueLower = 0.15,   colderValueUpper = 0.31,  // 1
-                coldValueLower = 0.31,     coldValueUpper = 0.5,     // 2
-                warmValueLower = 0.5,      warmValueUpper = 0.69,    // 3
-                warmerValueLower = 0.69,   warmerValueUpper = 0.85,  // 4
-                warmestValueLower = 0.85,  warmestValueUpper = 1.0,  // 5
+        public static final float
+                coldestValueLower = 0.0f,   coldestValueUpper = 0.15f, // 0
+                colderValueLower = 0.15f,   colderValueUpper = 0.31f,  // 1
+                coldValueLower = 0.31f,     coldValueUpper = 0.5f,     // 2
+                warmValueLower = 0.5f,      warmValueUpper = 0.69f,    // 3
+                warmerValueLower = 0.69f,   warmerValueUpper = 0.85f,  // 4
+                warmestValueLower = 0.85f,  warmestValueUpper = 1.0f,  // 5
 
-        driestValueLower = 0.0,    driestValueUpper  = 0.27, // 0
-                drierValueLower = 0.27,    drierValueUpper   = 0.4,  // 1
-                dryValueLower = 0.4,       dryValueUpper     = 0.6,  // 2
-                wetValueLower = 0.6,       wetValueUpper     = 0.8,  // 3
-                wetterValueLower = 0.8,    wetterValueUpper  = 0.9,  // 4
-                wettestValueLower = 0.9,   wettestValueUpper = 1.0;  // 5
+        driestValueLower = 0.0f,    driestValueUpper  = 0.27f, // 0
+                drierValueLower = 0.27f,    drierValueUpper   = 0.4f,  // 1
+                dryValueLower = 0.4f,       dryValueUpper     = 0.6f,  // 2
+                wetValueLower = 0.6f,       wetValueUpper     = 0.8f,  // 3
+                wetterValueLower = 0.8f,    wetterValueUpper  = 0.9f,  // 4
+                wettestValueLower = 0.9f,   wettestValueUpper = 1.0f;  // 5
 
         /**
          * The default biome table to use with biome codes from {@link #biomeCodeData}. Biomes are assigned based on
@@ -198,10 +198,10 @@ public interface BiomeMapper {
                 moistureCodeData = new int[world.width][world.height];
             if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
                 biomeCodeData = new int[world.width][world.height];
-            final double i_hot = (world.maxHeat == world.minHeat) ? 1.0 : 1.0 / (world.maxHeat - world.minHeat);
+            final float i_hot = (world.maxHeat == world.minHeat) ? 1f : 1f / (world.maxHeat - world.minHeat);
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
-                    final double hot = (world.heatData[x][y] - world.minHeat) * i_hot, moist = world.moistureData[x][y];
+                    final float hot = (world.heatData[x][y] - world.minHeat) * i_hot, moist = world.moistureData[x][y];
                     final int heightCode = world.heightCodeData[x][y];
                     if(heightCode == 1000) {
                         biomeCodeData[x][y] = 60;
@@ -261,7 +261,7 @@ public interface BiomeMapper {
      * {@link #extractBiomeB(int)}, {@link #extractPartA(int)}, {@link #extractPartB(int)}, and
      * {@link #extractMixAmount(int)}). You can get predefined Biomes using the extractBiome methods, or raw indices
      * into some (usually 66-element) collection or array with the extractPart methods. The extractMixAmount() method
-     * gets a float that is the amount by which biome B affects biome A; if this is higher than 0.5, then biome B is the
+     * gets a float that is the amount by which biome B affects biome A; if this is higher than 0.5f, then biome B is the
      * "dominant" biome in the area.
      */
     class DetailedBiomeMapper implements BiomeMapper
@@ -288,7 +288,7 @@ public interface BiomeMapper {
          * Gets the biome code for the dominant biome at a given x,y position. This is equivalent to getting the raw
          * biome code from {@link #biomeCodeData}, calling {@link #extractMixAmount(int)} on that raw biome code, and
          * chooosing whether to call {@link #extractPartA(int)} or {@link #extractPartB(int)} based on whether the mix
-         * amount is lower than 0.5 (yielding part A) or higher (yielding part B).
+         * amount is lower than 0.5f (yielding part A) or higher (yielding part B).
          * @param x the x-coordinate on the map
          * @param y the y-coordinate on the map
          * @return the biome code for the dominant biome part at the given location
@@ -330,20 +330,20 @@ public interface BiomeMapper {
             return Biome.TABLE;
         }
 
-        public static final double
-                coldestValueLower = 0.0,   coldestValueUpper = 0.15, // 0
-                colderValueLower = 0.15,   colderValueUpper = 0.31,  // 1
-                coldValueLower = 0.31,     coldValueUpper = 0.5,     // 2
-                warmValueLower = 0.5,      warmValueUpper = 0.69,     // 3
-                warmerValueLower = 0.69,    warmerValueUpper = 0.85,   // 4
-                warmestValueLower = 0.85,   warmestValueUpper = 1.0,  // 5
+        public static final float
+                coldestValueLower = 0.0f,   coldestValueUpper = 0.15f, // 0
+                colderValueLower = 0.15f,   colderValueUpper = 0.31f,  // 1
+                coldValueLower = 0.31f,     coldValueUpper = 0.5f,     // 2
+                warmValueLower = 0.5f,      warmValueUpper = 0.69f,     // 3
+                warmerValueLower = 0.69f,    warmerValueUpper = 0.85f,   // 4
+                warmestValueLower = 0.85f,   warmestValueUpper = 1.0f,  // 5
 
-        driestValueLower = 0.0,    driestValueUpper  = 0.27, // 0
-                drierValueLower = 0.27,    drierValueUpper   = 0.4,  // 1
-                dryValueLower = 0.4,       dryValueUpper     = 0.6,  // 2
-                wetValueLower = 0.6,       wetValueUpper     = 0.8,  // 3
-                wetterValueLower = 0.8,    wetterValueUpper  = 0.9,  // 4
-                wettestValueLower = 0.9,   wettestValueUpper = 1.0;  // 5
+        driestValueLower = 0.0f,    driestValueUpper  = 0.27f, // 0
+                drierValueLower = 0.27f,    drierValueUpper   = 0.4f,  // 1
+                dryValueLower = 0.4f,       dryValueUpper     = 0.6f,  // 2
+                wetValueLower = 0.6f,       wetValueUpper     = 0.8f,  // 3
+                wetterValueLower = 0.8f,    wetterValueUpper  = 0.9f,  // 4
+                wettestValueLower = 0.9f,   wettestValueUpper = 1.0f;  // 5
         /**
          * Gets the int stored in part A of the given biome code, which can be used as an index into other collections.
          * This int should almost always range from 0 to 65 (both inclusive), so collections this is used as an index
@@ -437,9 +437,9 @@ public interface BiomeMapper {
             if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
                 biomeCodeData = new int[world.width][world.height];
             final int[][] heightCodeData = world.heightCodeData;
-            final double[][] heatData = world.heatData, moistureData = world.moistureData, heightData = world.heightData;
+            final float[][] heatData = world.heatData, moistureData = world.moistureData, heightData = world.heightData;
             int hc, mc, heightCode, bc;
-            double hot, moist, high, i_hot = 1.0 / world.maxHeat;
+            float hot, moist, high, i_hot = 1f / world.maxHeat;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
 
@@ -452,29 +452,29 @@ public interface BiomeMapper {
                     moist = moistureData[x][y];
                     high = heightData[x][y];
                     boolean isLake = false;
-                    if (moist >= (wettestValueUpper - (wetterValueUpper - wetterValueLower) * 0.2)) {
+                    if (moist >= (wettestValueUpper - (wetterValueUpper - wetterValueLower) * 0.2f)) {
                         mc = 5;
-                    } else if (moist >= (wetterValueUpper - (wetValueUpper - wetValueLower) * 0.2)) {
+                    } else if (moist >= (wetterValueUpper - (wetValueUpper - wetValueLower) * 0.2f)) {
                         mc = 4;
-                    } else if (moist >= (wetValueUpper - (dryValueUpper - dryValueLower) * 0.2)) {
+                    } else if (moist >= (wetValueUpper - (dryValueUpper - dryValueLower) * 0.2f)) {
                         mc = 3;
-                    } else if (moist >= (dryValueUpper - (drierValueUpper - drierValueLower) * 0.2)) {
+                    } else if (moist >= (dryValueUpper - (drierValueUpper - drierValueLower) * 0.2f)) {
                         mc = 2;
-                    } else if (moist >= (drierValueUpper - (driestValueUpper) * 0.2)) {
+                    } else if (moist >= (drierValueUpper - (driestValueUpper) * 0.2f)) {
                         mc = 1;
                     } else {
                         mc = 0;
                     }
 
-                    if (hot >= (warmestValueUpper - (warmerValueUpper - warmerValueLower) * 0.2) * i_hot) {
+                    if (hot >= (warmestValueUpper - (warmerValueUpper - warmerValueLower) * 0.2f) * i_hot) {
                         hc = 5;
-                    } else if (hot >= (warmerValueUpper - (warmValueUpper - warmValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (warmerValueUpper - (warmValueUpper - warmValueLower) * 0.2f) * i_hot) {
                         hc = 4;
-                    } else if (hot >= (warmValueUpper - (coldValueUpper - coldValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (warmValueUpper - (coldValueUpper - coldValueLower) * 0.2f) * i_hot) {
                         hc = 3;
-                    } else if (hot >= (coldValueUpper - (colderValueUpper - colderValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (coldValueUpper - (colderValueUpper - colderValueLower) * 0.2f) * i_hot) {
                         hc = 2;
-                    } else if (hot >= (colderValueUpper - (coldestValueUpper) * 0.2) * i_hot) {
+                    } else if (hot >= (colderValueUpper - (coldestValueUpper) * 0.2f) * i_hot) {
                         hc = 1;
                     } else {
                         hc = 0;
@@ -489,29 +489,29 @@ public interface BiomeMapper {
                     if(heightCode < 4) {
                         mc = 9;
                     }
-                    else if (moist >= (wetterValueUpper + (wettestValueUpper - wettestValueLower) * 0.2)) {
+                    else if (moist >= (wetterValueUpper + (wettestValueUpper - wettestValueLower) * 0.2f)) {
                         mc = 5;
-                    } else if (moist >= (wetValueUpper + (wetterValueUpper - wetterValueLower) * 0.2)) {
+                    } else if (moist >= (wetValueUpper + (wetterValueUpper - wetterValueLower) * 0.2f)) {
                         mc = 4;
-                    } else if (moist >= (dryValueUpper + (wetValueUpper - wetValueLower) * 0.2)) {
+                    } else if (moist >= (dryValueUpper + (wetValueUpper - wetValueLower) * 0.2f)) {
                         mc = 3;
-                    } else if (moist >= (drierValueUpper + (dryValueUpper - dryValueLower) * 0.2)) {
+                    } else if (moist >= (drierValueUpper + (dryValueUpper - dryValueLower) * 0.2f)) {
                         mc = 2;
-                    } else if (moist >= (driestValueUpper + (drierValueUpper - drierValueLower) * 0.2)) {
+                    } else if (moist >= (driestValueUpper + (drierValueUpper - drierValueLower) * 0.2f)) {
                         mc = 1;
                     } else {
                         mc = 0;
                     }
 
-                    if (hot >= (warmerValueUpper + (warmestValueUpper - warmestValueLower) * 0.2) * i_hot) {
+                    if (hot >= (warmerValueUpper + (warmestValueUpper - warmestValueLower) * 0.2f) * i_hot) {
                         hc = 5;
-                    } else if (hot >= (warmValueUpper + (warmerValueUpper - warmerValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (warmValueUpper + (warmerValueUpper - warmerValueLower) * 0.2f) * i_hot) {
                         hc = 4;
-                    } else if (hot >= (coldValueUpper + (warmValueUpper - warmValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (coldValueUpper + (warmValueUpper - warmValueLower) * 0.2f) * i_hot) {
                         hc = 3;
-                    } else if (hot >= (colderValueUpper + (coldValueUpper - coldValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (colderValueUpper + (coldValueUpper - coldValueLower) * 0.2f) * i_hot) {
                         hc = 2;
-                    } else if (hot >= (coldestValueUpper + (colderValueUpper - colderValueLower) * 0.2) * i_hot) {
+                    } else if (hot >= (coldestValueUpper + (colderValueUpper - colderValueLower) * 0.2f) * i_hot) {
                         hc = 1;
                     } else {
                         hc = 0;
@@ -519,10 +519,10 @@ public interface BiomeMapper {
 
                     bc |= (hc + mc * 6) << 10;
                     if(heightCode < 4)
-                        biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0) * 1000.0) << 20;
+                        biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0f) * 1000.0f) << 20;
                     else biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
-                            ? (WorldMapGenerator.sandUpper - high) * 10240.0 // multiplier affected by changes to sandLower
-                            : MathTools.sway((high + moist) * (4.1 + high - hot)) * 512 + 512) << 20;
+                            ? (WorldMapGenerator.sandUpper - high) * 10240.0f // multiplier affected by changes to sandLower
+                            : MathTools.sway((high + moist) * (4.1f + high - hot)) * 512 + 512) << 20;
                 }
             }
         }
