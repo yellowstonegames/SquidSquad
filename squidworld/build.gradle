@@ -7,8 +7,7 @@ modifyPom {
     }
 }
 
-compileJava.exclude("emu")
-javadoc.exclude("emu")
+sourceSets.test.resources.srcDirs += [ file('../assets').path ]
 
 dependencies {
     api project(':squidcore')
