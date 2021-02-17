@@ -37,12 +37,14 @@ public class Biome implements Serializable {
     public final Heat heat;
     public final Moisture moisture;
     public final String name, colorDescription;
+    public final char representation;
 
     private Biome(){
         heat = Heat.COLDEST;
         moisture = Moisture.STRANGE;
         name = "Space";
         colorDescription = "darkmost dullmost cobalt";
+        representation = '.';
     }
 
     private Biome(Heat h, Moisture m, String n, String c) {
@@ -50,6 +52,16 @@ public class Biome implements Serializable {
         moisture = m;
         name = n;
         colorDescription = c;
+        representation = '.';
+    }
+
+
+    private Biome(Heat h, Moisture m, char representation, String n, String c) {
+        heat = h;
+        moisture = m;
+        name = n;
+        colorDescription = c;
+        this.representation = representation;
     }
 
     /**
@@ -140,72 +152,72 @@ public class Biome implements Serializable {
      * empty space, moonscape, cavern, "exotic" (a catch-all for supernatural biomes), and volcano biomes.
      */
     public static final Biome[] TABLE = new Biome[]{
-            new Biome(COLDEST, DRIEST, "Ice", "lightmost dullmost butter"),               //0
-            new Biome(COLDER, DRIEST, "Ice", "lightmost dullmost butter"),
-            new Biome(COLD, DRIEST, "Grassland", "dark dullest pear"),
-            new Biome(HOT, DRIEST, "Desert", "lightest dullest saffron"),
-            new Biome(HOTTER, DRIEST, "Desert", "lightest dullest saffron"),
-            new Biome(HOTTEST, DRIEST, "Desert", "lightest dullest saffron"),
-            new Biome(COLDEST, DRIER, "Ice", "lightmost dullmost butter"),
-            new Biome(COLDER, DRIER, "Tundra", "lightmost dullest fern"),
-            new Biome(COLD, DRIER, "Grassland", "lightest fern"),
-            new Biome(HOT, DRIER, "Grassland", "dark dullest lime"),
-            new Biome(HOTTER, DRIER, "Desert", "lightest dullest saffron"),               //10
-            new Biome(HOTTEST, DRIER, "Desert", "lightest dullest saffron"),
-            new Biome(COLDEST, DRY, "Ice", "lightmost dullmost butter"),
-            new Biome(COLDER, DRY, "Tundra", "dark dullmost celery"),
-            new Biome(COLD, DRY, "Woodland", "dull cactus"),
-            new Biome(HOT, DRY, "Woodland", "lighter richest fern"),
-            new Biome(HOTTER, DRY, "Savanna", "dark duller yellow"),
-            new Biome(HOTTEST, DRY, "Desert", "lightest dullest saffron"),
-            new Biome(COLDEST, WET, "Ice", "lightmost dullmost mint"),
-            new Biome(COLDER, WET, "Tundra", "light dullmost jade"),
-            new Biome(COLD, WET, "SeasonalForest", "lighter rich moss"),                  //20
-            new Biome(HOT, WET, "SeasonalForest", "dark duller cactus"),
-            new Biome(HOTTER, WET, "Savanna", "dark duller yellow"),
-            new Biome(HOTTEST, WET, "Savanna", "lightmost dull olive"),
-            new Biome(COLDEST, WETTER, "Ice", "lightmost rich silver"),
-            new Biome(COLDER, WETTER, "Tundra", "lightest dullest fern"),
-            new Biome(COLD, WETTER, "BorealForest", "darkest dullest celery"),
-            new Biome(HOT, WETTER, "TemperateRainforest", "darker duller jade"),
-            new Biome(HOTTER, WETTER, "TropicalRainforest", "darkest dull celery"),
-            new Biome(HOTTEST, WETTER, "Savanna", "dark duller pear"),
-            new Biome(COLDEST, WETTEST, "Ice", "dark rich white"),                        //30
-            new Biome(COLDER, WETTEST, "BorealForest", "light dull moss"),
-            new Biome(COLD, WETTEST, "BorealForest", "dark fern"),
-            new Biome(HOT, WETTEST, "TemperateRainforest", "dark rich fern"),
-            new Biome(HOTTER, WETTEST, "TropicalRainforest", "darkest green"),
-            new Biome(HOTTEST, WETTEST, "TropicalRainforest", "darker cactus"),
-            new Biome(COLDEST, COAST, "Rocky", "dark dullmost chartreuse"),
-            new Biome(COLDER, COAST, "Rocky", "lightest dullmost cactus"),
-            new Biome(COLD, COAST, "Beach", "lighter dullest saffron"),
-            new Biome(HOT, COAST, "Beach", "lightmost dullest saffron"),
-            new Biome(HOTTER, COAST, "Beach", "lightmost dullest saffron"),               //40
-            new Biome(HOTTEST, COAST, "Beach", "lightmost dullest saffron"),
-            new Biome(COLDEST, RIVER, "Ice", "lightest dullmost sage"),
-            new Biome(COLDER, RIVER, "River", "light rich denim"),
-            new Biome(COLD, RIVER, "River", "light rich denim"),
-            new Biome(HOT, RIVER, "River", "dark dull sky"),
-            new Biome(HOTTER, RIVER, "River", "dark dull sky"),
-            new Biome(HOTTEST, RIVER, "River", "rich denim"),
-            new Biome(COLDEST, LAKE, "Ice", "lightmost silver"),
-            new Biome(COLDER, LAKE, "Lake", "light dull denim"),
-            new Biome(COLD, LAKE, "Lake", "light rich denim"),                            //50
-            new Biome(HOT, LAKE, "Lake", "dark dull sky"),
-            new Biome(HOTTER, LAKE, "Lake", "rich denim"),
-            new Biome(HOTTEST, LAKE, "Lake", "richer denim"),
-            new Biome(COLDEST, OCEAN, "Ocean", "dark duller cobalt"),
-            new Biome(COLDER, OCEAN, "Ocean", "light duller navy"),
-            new Biome(COLD, OCEAN, "Ocean", "dark duller cobalt"),
-            new Biome(HOT, OCEAN, "Ocean", "darker dull cobalt"),
-            new Biome(HOTTER, OCEAN, "Ocean", "rich navy"),
-            new Biome(HOTTEST, OCEAN, "Ocean", "dark rich navy"),
-            new Biome(COLDEST, STRANGE, "Space", "darkmost dullest mauve"),               //60
-            new Biome(COLDER, STRANGE, "Moon", "dark dullmost white"),
-            new Biome(COLD, STRANGE, "Cavern", "darkmost dullmost ember"),
-            new Biome(HOT, STRANGE, "Cavern", "darker dullest chocolate"),
-            new Biome(HOTTER, STRANGE, "Exotic", "lighter richest raspberry"),
-            new Biome(HOTTEST, STRANGE, "Volcano", "dark ember"),
+            new Biome(COLDEST, DRIEST, '-', "Ice", "lightmost dullmost butter"),               //0
+            new Biome(COLDER, DRIEST, '-', "Ice", "lightmost dullmost butter"),
+            new Biome(COLD, DRIEST, '\"',  "Grassland", "dark dullest pear"),
+            new Biome(HOT, DRIEST, '…',  "Desert", "lightest dullest saffron"),
+            new Biome(HOTTER, DRIEST, '…',  "Desert", "lightest dullest saffron"),
+            new Biome(HOTTEST, DRIEST, '…',  "Desert", "lightest dullest saffron"),
+            new Biome(COLDEST, DRIER, '-', "Ice", "lightmost dullmost butter"),
+            new Biome(COLDER, DRIER, '.',  "Tundra", "lightmost dullest fern"),
+            new Biome(COLD, DRIER, '\"',  "Grassland", "lightest fern"),
+            new Biome(HOT, DRIER, '\"',  "Grassland", "dark dullest lime"),
+            new Biome(HOTTER, DRIER, '…',  "Desert", "lightest dullest saffron"),               //10
+            new Biome(HOTTEST, DRIER, '…',  "Desert", "lightest dullest saffron"),
+            new Biome(COLDEST, DRY, '-', "Ice", "lightmost dullmost butter"),
+            new Biome(COLDER, DRY, '.',  "Tundra", "dark dullmost celery"),
+            new Biome(COLD, DRY, '♣',  "Woodland", "dull cactus"),
+            new Biome(HOT, DRY, '♣',  "Woodland", "lighter richest fern"),
+            new Biome(HOTTER, DRY, '„',  "Savanna", "dark duller yellow"),
+            new Biome(HOTTEST, DRY, '…',  "Desert", "lightest dullest saffron"),
+            new Biome(COLDEST, WET, '-', "Ice", "lightmost dullmost mint"),
+            new Biome(COLDER, WET, '.',  "Tundra", "light dullmost jade"),
+            new Biome(COLD, WET, '♣',  "SeasonalForest", "lighter rich moss"),                  //20
+            new Biome(HOT, WET, '♣',  "SeasonalForest", "dark duller cactus"),
+            new Biome(HOTTER, WET, '„',  "Savanna", "dark duller yellow"),
+            new Biome(HOTTEST, WET, '„',  "Savanna", "lightmost dull olive"),
+            new Biome(COLDEST, WETTER, '-',  "Ice", "lightmost rich silver"),
+            new Biome(COLDER, WETTER, '.',  "Tundra", "lightest dullest fern"),
+            new Biome(COLD, WETTER, '♠',  "BorealForest", "darkest dullest celery"),
+            new Biome(HOT, WETTER, '¥',  "TemperateRainforest", "darker duller jade"),
+            new Biome(HOTTER, WETTER, '¶',  "TropicalRainforest", "darkest dull celery"),
+            new Biome(HOTTEST, WETTER, '„',  "Savanna", "dark duller pear"),
+            new Biome(COLDEST, WETTEST, '-', "Ice", "dark rich white"),                        //30
+            new Biome(COLDER, WETTEST, '♠',  "BorealForest", "light dull moss"),
+            new Biome(COLD, WETTEST, '♠',  "BorealForest", "dark fern"),
+            new Biome(HOT, WETTEST, '¥',  "TemperateRainforest", "dark rich fern"),
+            new Biome(HOTTER, WETTEST, '¶',  "TropicalRainforest", "darkest green"),
+            new Biome(HOTTEST, WETTEST, '¶',  "TropicalRainforest", "darker cactus"),
+            new Biome(COLDEST, COAST, '‰',  "Rocky", "dark dullmost chartreuse"),
+            new Biome(COLDER, COAST, '‰',  "Rocky", "lightest dullmost cactus"),
+            new Biome(COLD, COAST, '…',  "Beach", "lighter dullest saffron"),
+            new Biome(HOT, COAST, '…',  "Beach", "lightmost dullest saffron"),
+            new Biome(HOTTER, COAST, '…',  "Beach", "lightmost dullest saffron"),               //40
+            new Biome(HOTTEST, COAST, '…',  "Beach", "lightmost dullest saffron"),
+            new Biome(COLDEST, RIVER, '-', "Ice", "lightest dullmost sage"),
+            new Biome(COLDER, RIVER, '~',  "River", "light rich denim"),
+            new Biome(COLD, RIVER, '~',  "River", "light rich denim"),
+            new Biome(HOT, RIVER, '~',  "River", "dark dull sky"),
+            new Biome(HOTTER, RIVER, '~',  "River", "dark dull sky"),
+            new Biome(HOTTEST, RIVER, '~',  "River", "rich denim"),
+            new Biome(COLDEST, LAKE, '-', "Ice", "lightmost silver"),
+            new Biome(COLDER, LAKE, '~', "Lake", "light dull denim"),
+            new Biome(COLD, LAKE, '~', "Lake", "light rich denim"),                            //50
+            new Biome(HOT, LAKE, '~', "Lake", "dark dull sky"),
+            new Biome(HOTTER, LAKE, '~', "Lake", "rich denim"),
+            new Biome(HOTTEST, LAKE, '~', "Lake", "richer denim"),
+            new Biome(COLDEST, OCEAN, '≈', "Ocean", "dark duller cobalt"),
+            new Biome(COLDER, OCEAN, '≈', "Ocean", "light duller navy"),
+            new Biome(COLD, OCEAN, '≈', "Ocean", "dark duller cobalt"),
+            new Biome(HOT, OCEAN, '≈', "Ocean", "darker dull cobalt"),
+            new Biome(HOTTER, OCEAN, '≈', "Ocean", "rich navy"),
+            new Biome(HOTTEST, OCEAN, '≈', "Ocean", "dark rich navy"),
+            new Biome(COLDEST, STRANGE, ' ', "Space", "darkmost dullest mauve"),               //60
+            new Biome(COLDER, STRANGE, '¬', "Moon", "dark dullmost white"),
+            new Biome(COLD, STRANGE, '□', "Cavern", "darkmost dullmost ember"),
+            new Biome(HOT, STRANGE, '□', "Cavern", "darker dullest chocolate"),
+            new Biome(HOTTER, STRANGE, '?', "Exotic", "lighter richest raspberry"),
+            new Biome(HOTTEST, STRANGE, '∆', "Volcano", "dark ember"),
     };
 
     @Override

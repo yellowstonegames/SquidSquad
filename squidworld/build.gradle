@@ -14,7 +14,11 @@ dependencies {
     api project(':squidcore')
     api project(':squidgrid')
     api project(':squidplace')
+    testImplementation project(':squidglyph')
+    testImplementation project(':squidtext')
     testImplementation "junit:junit:4.13.1"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 jar {
