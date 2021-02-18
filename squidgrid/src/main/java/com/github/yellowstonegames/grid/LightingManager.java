@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
+import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import java.io.Serializable;
@@ -152,7 +153,8 @@ public class LightingManager implements Serializable {
         fovResult = new float[width][height];
         tempFOV = new float[width][height];
         losResult = new float[width][height];
-        colorLighting = SColor.blankColoredLighting(width, height);
+        colorLighting = ArrayTools.fill(DescriptiveColor.WHITE, width, height);
+        lightingStrength = new float[width][height];
         tempColorLighting = new int[width][height];
         tempLightingStrength = new float[width][height];
         Coord.expandPoolTo(width, height);
@@ -407,7 +409,8 @@ public class LightingManager implements Serializable {
     public void update()
     {
         Radiance radiance;
-        SColor.eraseColoredLighting(colorLighting);
+        ArrayTools.fill(lightingStrength, 0f);
+        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
         Coord pos;
         for (int i = 0; i < sz; i++) {
@@ -444,7 +447,8 @@ public class LightingManager implements Serializable {
                 }
             }
         }
-        SColor.eraseColoredLighting(colorLighting);
+        ArrayTools.fill(lightingStrength, 0f);
+        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
         Coord pos;
         for (int i = 0; i < sz; i++) {
@@ -577,7 +581,8 @@ public class LightingManager implements Serializable {
         minY = Math.min(Math.max(minY, 0), height);
         maxY = Math.min(Math.max(maxY, 0), height);
         FOV.reuseFOV(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
-        SColor.eraseColoredLighting(colorLighting);
+        ArrayTools.fill(lightingStrength, 0f);
+        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
         float maxRange = 0, range;
         Coord pos;

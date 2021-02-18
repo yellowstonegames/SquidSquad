@@ -86,7 +86,7 @@ public class Radiance implements Serializable {
      */
     public Radiance()
     {
-        this(0f, 0xFE8080FF, 0f, 0f, 0f, 0f);
+        this(0f, DescriptiveColor.WHITE, 0f, 0f, 0f, 0f);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Radiance implements Serializable {
      */
     public Radiance(float range)
     {
-        this(range, 0xFE8080FF, 0f, 0f, 0f, 0f);
+        this(range, DescriptiveColor.WHITE, 0f, 0f, 0f, 0f);
     }
 
     /**
