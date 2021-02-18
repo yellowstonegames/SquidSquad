@@ -1047,7 +1047,7 @@ public final class DescriptiveColor {
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
      * @return a packed float that represents a color between start and end
      */
-    public static float lerpColorsBlended(final int start, final int end, float change) {
+    public static int lerpColorsBlended(final int start, final int end, float change) {
         final int
                 sL = (start & 0xFF), sA = (start >>> 8) & 0xFF, sB = (start >>> 16) & 0xFF, sAlpha = start & 0xFE000000,
                 eL = (end & 0xFF), eA = (end >>> 8) & 0xFF, eB = (end >>> 16) & 0xFF, eAlpha = end >>> 25;
