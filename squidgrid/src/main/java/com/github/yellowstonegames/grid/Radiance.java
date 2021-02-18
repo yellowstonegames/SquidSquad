@@ -45,7 +45,7 @@ public class Radiance implements Serializable {
      */
     public float range;
     /**
-     * The color of light as an RGBA8888 int; typically opaque and lighter than the glowing object's symbol.
+     * The color of light as an Oklab int; typically opaque and lighter than the glowing object's symbol.
      */
     public int color;
     /**
@@ -80,26 +80,30 @@ public class Radiance implements Serializable {
     private final int seed;
 
     /**
-     * All-default constructor; makes a single-cell unchanging white light.
+     * All-default constructor; makes a single-cell unchanging white light. This assumes the color is being treated as
+     * Oklab; if you treat this as RGBA8888 without first converting with {@link DescriptiveColor#toRGBA8888(int)}, this
+     * will look like light red.
      */
     public Radiance()
     {
-        this(0f, 0xFFFFFFFF, 0f, 0f, 0f, 0f);
+        this(0f, 0xFE8080FF, 0f, 0f, 0f, 0f);
     }
 
     /**
-     * Makes an unchanging white light with the specified range in cells.
+     * Makes an unchanging white light with the specified range in cells. This assumes the color is being treated as
+     * Oklab; if you treat this as RGBA8888 without first converting with {@link DescriptiveColor#toRGBA8888(int)}, this
+     * will look like light red.
      * @param range possibly-non-integer radius to light, in cells
      */
     public Radiance(float range)
     {
-        this(range, 0xFFFFFFFF, 0f, 0f, 0f, 0f);
+        this(range, 0xFE8080FF, 0f, 0f, 0f, 0f);
     }
 
     /**
-     * Makes an unchanging light with the given color (as an RGBA8888 int) and the specified range in cells.
+     * Makes an unchanging light with the given color (as an Oklab int) and the specified range in cells.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an RGBA8888 int color
+     * @param color an Oklab int color
      */
     public Radiance(float range, int color)
     {
@@ -107,10 +111,10 @@ public class Radiance implements Serializable {
     }
 
     /**
-     * Makes a flickering light with the given color (as an RGBA8888 int) and the specified range in cells; the flicker
+     * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
      * parameter affects the rate at which this will randomly reduce its range and return to normal.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an RGBA8888 int color
+     * @param color an Oklab int color
      * @param flicker the rate at which to flicker, as a non-negative float
      */
     public Radiance(float range, int color, float flicker)
@@ -118,12 +122,12 @@ public class Radiance implements Serializable {
         this(range, color, flicker, 0f, 0f, 0f);
     }
     /**
-     * Makes a flickering light with the given color (as an RGBA8888 int) and the specified range in cells; the flicker
+     * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
      * parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
      * parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
      * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an RGBA8888 int color
+     * @param color an Oklab int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      */
@@ -138,24 +142,24 @@ public class Radiance implements Serializable {
      * range and return to normal. Usually one of flicker or strobe is 0; if both are non-0, the radius will be smaller
      * than normal.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color a String that describes a color as per {@link DescriptiveColor#describe(CharSequence)}
+     * @param color a String that describes a color as per {@link DescriptiveColor#describeOklab(CharSequence)}
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      */
     public Radiance(float range, String color, float flicker, float strobe)
     {
-        this(range, DescriptiveColor.describe(color), flicker, strobe, 0f, 0f);
+        this(range, DescriptiveColor.describeOklab(color), flicker, strobe, 0f, 0f);
     }
 
     /**
-     * Makes a flickering light with the given color (as an RGBA8888 int) and the specified range in cells; the flicker
+     * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
      * parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
      * parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
      * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
      * from 0f to 1f, and is almost always 0f unless this is part of a group of related Radiance objects; it affects
      * when strobe and flicker hit "high points" and "low points", and should usually be used with strobe.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an RGBA8888 int color
+     * @param color an Oklab int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      * @param delay a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f
@@ -165,7 +169,7 @@ public class Radiance implements Serializable {
         this(range, color, flicker, strobe, delay, 0f);
     }
     /**
-     * Makes a flickering light with the given color (as an RGBA8888 int) and the specified range in cells; the flicker
+     * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
      * parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
      * parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
      * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
@@ -175,7 +179,7 @@ public class Radiance implements Serializable {
      * makes the most sense to set when an event should brighten a Radiance, not in the constructor. Valid values for
      * flare are usually between 0f and 1f.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an RGBA8888 int color
+     * @param color an Oklab int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      * @param delay a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f
@@ -225,7 +229,7 @@ public class Radiance implements Serializable {
      * This chain is an array of Radiance where the order matters.
      * @param length how many Radiance objects should be in the returned array
      * @param range in cells, how far each Radiance should expand from its start at its greatest radius
-     * @param color as an RGBA8888 int color
+     * @param color as an Oklab int color
      * @param strobe the rate at which the chain will pulse; should be greater than 0
      * @return an array of Radiance objects that will pulse in sequence.
      */

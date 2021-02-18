@@ -1037,6 +1037,28 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Interpolates from the packed Oklab int color start towards the Oklan int color end by change, but keeps the alpha
+     * of start and uses the alpha of end as an extra factor that can affect how much to change. Both start and end
+     * should be packed Oklab int colors, as from {@link #describeOklab(CharSequence)} or any of the color constants
+     * here, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
+     * of temporary Colors. You will probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
+     * @param start the starting color as a packed Oklab int; alpha will be preserved
+     * @param end the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change
+     * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
+     * @return a packed float that represents a color between start and end
+     */
+    public static float lerpColorsBlended(final int start, final int end, float change) {
+        final int
+                sL = (start & 0xFF), sA = (start >>> 8) & 0xFF, sB = (start >>> 16) & 0xFF, sAlpha = start & 0xFE000000,
+                eL = (end & 0xFF), eA = (end >>> 8) & 0xFF, eB = (end >>> 16) & 0xFF, eAlpha = end >>> 25;
+        change *= eAlpha * 0.007874016f;
+        return (((int) (sL + change * (eL - sL)) & 0xFF)
+                | (((int) (sA + change * (eA - sA)) & 0xFF) << 8)
+                | (((int) (sB + change * (eB - sB)) & 0xFF) << 16)
+                | sAlpha);
+    }
+
+    /**
      * Given several colors, this gets an even mix of all colors in equal measure.
      * If {@code colors} is null or has no items, this returns {@link #TRANSPARENT}.
      *
