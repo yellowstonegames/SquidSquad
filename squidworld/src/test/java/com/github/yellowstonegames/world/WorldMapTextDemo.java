@@ -5,24 +5,24 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.glyph.Font;
 import com.github.yellowstonegames.glyph.GlyphMap;
 import com.github.yellowstonegames.glyph.KnownFonts;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Thesaurus;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.differentiateLightness;
 import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
@@ -34,42 +34,6 @@ import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
  * and height maps can all be requested from it).
  */
 public class WorldMapTextDemo extends ApplicationAdapter {
-    public static final char[]  terrainChars = {
-            '¿', //sand
-            '„', //lush grass
-            '♣', //jungle
-            '‚', //barren grass
-            '¥', //forest
-            '¥', //forest
-            '♣', //jungle
-            '¥', //forest
-            '‚', //barren grass
-            '¤', //ice
-            '.', //sand
-            '∆', //rocky
-            '~', //shallow
-            '≈', //ocean
-            ' ', //empty space
-            '□', //empty city
-    };
-//public static final char[]  terrainChars = {
-//        '.', //sand
-//        '"', //lush grass
-//        '?', //jungle
-//        '\'', //barren grass
-//        '$', //forest
-//        '$', //forest
-//        '?', //jungle
-//        '$', //forest
-//        '‚', //barren grass
-//        '*', //ice
-//        '.', //sand
-//        '^', //rocky
-//        '~', //shallow
-//        '~', //ocean
-//        ' ', //empty space
-//        '#', //empty city
-//};
     //private static final int bigWidth = 314 * 3, bigHeight = 300;
 //    private static final int bigWidth = 256, bigHeight = 256;
 //    private static final int bigWidth = 1024, bigHeight = 512;
@@ -89,7 +53,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 //    private WorldMapGenerator.MimicMap world;
     private HyperellipticalWorldMap world;
     private WorldMapView wmv;
-//    private PoliticalMapper pm;
+    private Thesaurus thesaurus;
+    private PoliticalMapper pm;
+    private ObjectList<PoliticalMapper.Faction> factions;
     private IntObjectOrderedMap<Language> atlas;
     private ObjectObjectOrderedMap<Coord, String> cities;
     private long counter;
@@ -139,8 +105,10 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, WorldMapGenerator.DEFAULT_NOISE, 0.8f);
         wmv = new WorldMapView(world);
-//        pm = new PoliticalMapper(FakeLanguageGen.SIMPLISH.word(rng, true));
+        thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
+        pm = new PoliticalMapper();
         atlas = new IntObjectOrderedMap<>(80);
+        factions = new ObjectList<>(80);
         cities = new ObjectObjectOrderedMap<>(96);
         position = new Vector3(bigWidth * cellWidth * 0.5f, bigHeight * cellHeight * 0.5f, 0);
         previousPosition = position.cpy();
@@ -227,30 +195,32 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         world.seedB = seedB;
         wmv.generate();
         wmv.show();
-//        atlas.clear();
-//        for (int i = 0; i < 64; i++) {
-//            atlas.put(ArrayTools.letterAt(i),
-//                    rng.getRandomElement(FakeLanguageGen.romanizedHumanLanguages).mix(rng.getRandomElement(FakeLanguageGen.romanizedHumanLanguages), rng.nextFloat()).removeAccents());
-//        }
-//        final char[][] political = pm.generate(world, atlas, 1.0);
-//        cities.clear();
-//        Coord[] points = world.landData
-//                .copy() // don't want to edit the actual land map
-//                .removeEdges() // don't want cities on the edge of the map
-//                .separatedRegionBlue(0.1, 500) // get 500 points in a regularly-tiling but unpredictable, sparse pattern
-//                .randomPortion(rng,112); // randomly select less than 1/4 of those points, breaking the pattern
-//        for (int i = 0; i < points.length; i++) {
-//            char p = political[points[i].x][points[i].y];
-//            if(p == '~' || p == '%')
-//                continue;
-//            FakeLanguageGen lang = atlas.get(p);
-//            if(lang != null)
-//            {
-//                cities.put(points[i], lang.word(rng, false)
-//                );
-////                        .toUpperCase());
-//            }
-//        }
+        atlas.clear();
+        for (int i = 0; i < 64; i++) {
+            Language lang = rng.randomElement(Language.romanizedHumanLanguages)
+                    .mix(rng.randomElement(Language.romanizedHumanLanguages), rng.nextFloat()).removeAccents();
+            factions.add(new PoliticalMapper.Faction(lang, thesaurus.makeNationName(lang)));
+            atlas.put(ArrayTools.letterAt(i), lang);
+        }
+        final char[][] political = pm.generate(rng.nextLong(), world, wmv.getBiomeMapper(), factions, 64, 1f);
+        cities.clear();
+        Coord[] points = world.landData
+                .copy() // don't want to edit the actual land map
+                .removeEdges() // don't want cities on the edge of the map
+                .separatedRegionBlue(0.1f, 500) // get 500 points in a regularly-tiling but unpredictable, sparse pattern
+                .randomPortion(rng,112); // randomly select less than 1/4 of those points, breaking the pattern
+        for (int i = 0; i < points.length; i++) {
+            char p = political[points[i].x][points[i].y];
+            if(p == '~' || p == '%')
+                continue;
+            Language lang = atlas.get(p);
+            if(lang != null)
+            {
+                cities.put(points[i], lang.word(rng, false)
+                );
+//                        .toUpperCase());
+            }
+        }
         //counter = 0L;
         ttg = System.currentTimeMillis() - startTime;
     }
@@ -310,13 +280,21 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                 }
             }
         }
-//        for (int i = 0; i < cities.size(); i++) {
-//            Coord ct = cities.keyAt(i);
-//            String cname = cities.getAt(i);
-//            display.put(ct.x, ct.y, '□', SColor.SOOTY_WILLOW_BAMBOO);
-////            display.put(ct.x, ct.y, '#', SColor.SOOTY_WILLOW_BAMBOO);
-//            display.put(ct.x - (cname.length() >> 1), ct.y - 1, cname, SColor.CW_FADED_YELLOW, SColor.SOOTY_WILLOW_BAMBOO);
-//        }
+        int dark = toRGBA8888(0xFE7F7F40);
+        for (int i = 0; i < cities.size(); i++) {
+            Coord ct = cities.keyAt(i);
+            String cname = cities.getAt(i);
+            if(cname == null) continue;
+            int nationColor = toRGBA8888(differentiateLightness(
+                    DescriptiveColor.COLORS_BY_HUE.get((int) ((pm.politicalMap[ct.x][ct.y] * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
+                    0xFE7F7F40)); // dark gray
+            display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, display.backgrounds[ct.x][ct.y])));
+            if(ct.y >= display.backgrounds[0].length - 1) continue;
+            for (int pos = ct.x - (cname.length() >> 1), j = 0; j < cname.length(); pos++, j++) {
+                display.backgrounds[pos][ct.y + 1] = dark;
+                display.put(pos, ct.y + 1, cname.charAt(j), nationColor);
+            }
+        }
     }
     @Override
     public void render() {
