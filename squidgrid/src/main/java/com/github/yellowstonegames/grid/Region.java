@@ -4211,6 +4211,25 @@ public class Region implements Collection<Coord>, Serializable {
     }
 
     /**
+     * A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
+     * inside the "on" cells of {@code bounds}. This Region acts as the initial state, and often contains just one cell
+     * before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
+     * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, Random)} fills a whole volume.
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @return this, after expanding randomly once, for chaining
+     */
+    public Region splash(Region bounds, Random rng) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 1 && bounds.ySections > 0) {
+            Region t = new Region(this).fringe().and(bounds);
+            if (t.size() > 0) {
+                insert(t.singleRandom(rng));
+            }
+        }
+        return this;
+    }
+
+    /**
      * A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
      * the "on" cells of {@code bounds}, until {@link #size()} is equal to {@code volume} or there are no more cells
      * this can expand into. This Region acts as the initial state, and often contains just one cell before this
@@ -4222,17 +4241,14 @@ public class Region implements Collection<Coord>, Serializable {
      */
     public Region spill(Region bounds, int volume, Random rng) {
         Region result = this;
-        if (width < 2 || ySections <= 0 || bounds == null || bounds.width < 2 || bounds.ySections <= 0) {
-        } else {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             int current = size();
-            if (current >= volume) {
-            } else {
+            if (current < volume) {
                 Region t = new Region(this).notAnd(bounds);
                 long[] b2 = new long[t.data.length];
                 System.arraycopy(t.data, 0, b2, 0, b2.length);
                 t.remake(this).fringe().and(bounds).tally();
-                if (t.ct <= 0) {
-                } else {
+                if (t.ct > 0) {
                     Coord c;
                     int x, y, p;
                     for (int i = current; i < volume; i++) {
