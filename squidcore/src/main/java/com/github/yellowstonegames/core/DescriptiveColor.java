@@ -1081,8 +1081,8 @@ public final class DescriptiveColor {
     static {
         NAMES_BY_HUE.sort((o1, o2) -> {
             final int c1 = NAMED.get(o1), c2 = NAMED.get(o2);
-            if((c1 & 0x80) == 0) return -10000;
-            else if((c2 & 0x80) == 0) return 10000;
+            if(c1 >= 0) return -10000;
+            else if(c2 >= 0) return 10000;
 
             final float s1 = chroma(c1), s2 = chroma(c2);
             if (s1 <= 0x1p-6f && s2 > 0x1p-6f)
@@ -1098,7 +1098,7 @@ public final class DescriptiveColor {
         for(String name : NAMES_BY_HUE) {
             COLORS_BY_HUE.add(NAMED.get(name));
         }
-        NAMES_BY_LIGHTNESS.sort((o1, o2) -> (NAMED.get(o1) & 255) - (NAMED.get(o2) & 255));
+        NAMES_BY_LIGHTNESS.sort((o1, o2) -> (NAMED.get(o1) + 0x80000000 & 0x800000FF) - (NAMED.get(o2) + 0x80000000 & 0x800000FF));
     }
 
     private static final IntList mixing = new IntList(4);
