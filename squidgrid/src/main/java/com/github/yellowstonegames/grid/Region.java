@@ -4220,11 +4220,8 @@ public class Region implements Collection<Coord>, Serializable {
      * @return this, after expanding randomly once, for chaining
      */
     public Region splash(Region bounds, Random rng) {
-        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 1 && bounds.ySections > 0) {
-            Region t = new Region(this).fringe().and(bounds);
-            if (t.size() > 0) {
-                insert(t.singleRandom(rng));
-            }
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+            insert(new Region(this).fringe().and(bounds).singleRandom(rng));
         }
         return this;
     }
