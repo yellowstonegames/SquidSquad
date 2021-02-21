@@ -284,19 +284,77 @@ public class Coord implements Serializable {
 		return Coord.get(x * i, y * j);
 	}
 
-    public double distance(final double x2, final double y2)
+    /**
+     * Gets the distance from this Coord to the given x2,y2 Coord, as a float.
+     * @param x2 x of a different Coord
+     * @param y2 y of a different Coord
+     * @return Euclidean distance from this Coord to the other given Coord, as a float
+     */
+    public float distance(final float x2, final float y2)
     {
-        return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
+        return (float) Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
     }
-    public double distance(final Coord co)
+    /**
+     * Gets the distance from this Coord to the given Coord, as a float.
+     * @param co a different Coord
+     * @return Euclidean distance from this Coord to the other given Coord, as a float
+     */
+    public float distance(final Coord co)
     {
-        return Math.sqrt((co.x - x) * (co.x - x) + (co.y - y) * (co.y - y));
+        return (float) Math.sqrt((co.x - x) * (co.x - x) + (co.y - y) * (co.y - y));
     }
-    public double distanceSq(final double x2, final double y2)
+    /**
+     * Gets the squared distance from this Coord to the given x2,y2 Coord, as a float.
+     * @param x2 x of a different Coord
+     * @param y2 y of a different Coord
+     * @return squared Euclidean distance from this Coord to the other given Coord, as a float
+     */
+    public float distanceSq(final float x2, final float y2)
     {
         return (x2 - x) * (x2 - x) + (y2 - y) * (y2 - y);
     }
-    public double distanceSq(final Coord co) { return (co.x - x) * (co.x - x) + (co.y - y) * (co.y - y); }
+    /**
+     * Gets the squared distance from this Coord to the given Coord, as a float.
+     * @param co a different Coord
+     * @return squared Euclidean distance from this Coord to the other given Coord, as a float
+     */
+    public float distanceSq(final Coord co) { return (co.x - x) * (co.x - x) + (co.y - y) * (co.y - y); }
+
+    /**
+     * Gets the distance from this Coord to the given x2,y2 Coord, as a double.
+     * @param x2 x of a different Coord
+     * @param y2 y of a different Coord
+     * @return Euclidean distance from this Coord to the other given Coord, as a double
+     */
+    public double distanceD(final double x2, final double y2)
+    {
+        return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
+    }
+    /**
+     * Gets the distance from this Coord to the given Coord, as a double.
+     * @param co a different Coord
+     * @return Euclidean distance from this Coord to the other given Coord, as a double
+     */
+    public double distanceD(final Coord co)
+    {
+        return Math.sqrt((co.x - x) * (co.x - x) + (co.y - y) * (co.y - y));
+    }
+    /**
+     * Gets the squared distance from this Coord to the given x2,y2 Coord, as a double.
+     * @param x2 x of a different Coord
+     * @param y2 y of a different Coord
+     * @return squared Euclidean distance from this Coord to the other given Coord, as a double
+     */
+    public double distanceSqD(final double x2, final double y2)
+    {
+        return (x2 - x) * (x2 - x) + (y2 - y) * (y2 - y);
+    }
+    /**
+     * Gets the squared distance from this Coord to the given Coord, as a double.
+     * @param co a different Coord
+     * @return squared Euclidean distance from this Coord to the other given Coord, as a double
+     */
+    public double distanceSqD(final Coord co) { return (co.x - x) * (co.x - x) + (co.y - y) * (co.y - y); }
 
     /**
      * Gets a Coord based off this instance but with odd values for x and/or y decreased to the nearest even number

@@ -187,7 +187,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
                     for(Coord rc : right)
                     {
                         Coord rc2 = Coord.get(width - 1 - rc.x, height - 1 - rc.y);
-                        double dist = lc.distance(rc2);
+                        double dist = lc.distanceD(rc2);
                         if(dist < 0.001)
                             continue;
                         if(dist < lowest1)
