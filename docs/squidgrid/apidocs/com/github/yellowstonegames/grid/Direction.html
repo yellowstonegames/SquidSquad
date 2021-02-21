@@ -606,15 +606,7 @@ int&nbsp;y)</span></div>
  This can be used to get the primary cardinal direction from an
  origin point to an event point, such as a mouse click on a grid.
  If the point given is directly diagonal then the direction clockwise is
- returned.
- <br>
- This method returned an incorrect value for several years (the bug was found on
- April 28, 2020 but the method hadn't been modified for a long time), and other
- code in SquidLib had workarounds in use before the bug was fixed. The nature of
- the bug was simply that <a href="#UP"><code>UP</code></a> was returned when <a href="#DOWN"><code>DOWN</code></a> should have
- been, and vice versa; the workaround used in various places was to negate y.
- Now you should no longer have to negate y or treat it differently than x, and
- earlier code should account for the vertical axis being corrected.</div>
+ returned.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - the x position relative to the origin (0,0)</dd>

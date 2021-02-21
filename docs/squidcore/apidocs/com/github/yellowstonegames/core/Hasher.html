@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":10,"i53":10,"i54":9,"i55":9,"i56":9,"i57":9,"i58":9,"i59":9,"i60":9,"i61":9,"i62":9,"i63":9,"i64":9,"i65":9,"i66":9,"i67":9,"i68":9,"i69":9,"i70":9,"i71":9,"i72":9,"i73":9,"i74":9,"i75":10,"i76":10,"i77":10,"i78":10,"i79":10,"i80":10,"i81":10,"i82":10,"i83":10,"i84":9,"i85":9,"i86":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":10,"i53":10,"i54":10,"i55":10,"i56":10,"i57":10,"i58":9,"i59":9,"i60":9,"i61":9,"i62":9,"i63":9,"i64":9,"i65":9,"i66":9,"i67":9,"i68":9,"i69":9,"i70":9,"i71":9,"i72":9,"i73":9,"i74":9,"i75":9,"i76":9,"i77":9,"i78":9,"i79":10,"i80":10,"i81":10,"i82":10,"i83":10,"i84":10,"i85":10,"i86":10,"i87":10,"i88":9,"i89":9,"i90":9,"i91":9,"i92":9,"i93":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -102,7 +102,15 @@ extends java.lang.Object</pre>
  sometimes, due to it using JavaScript. If we use mainly longs, though, GWT emulates
  the longs with a more complex technique behind-the-scenes, that behaves the same on
  the web as it does on desktop or on a phone. Since CrossHash is supposed to be stable
- cross-platform, this is the way we need to go, despite it being slightly slower.</div>
+ cross-platform, this is the way we need to go, despite it being slightly slower.
+ <br>
+ This class also provides static <a href="#determine(long)"><code>determine(long)</code></a> and <a href="#randomize(long)"><code>randomize(long)</code></a>
+ methods, which are unary hashes (hashes of one item, a number) with variants such as
+ <a href="#determineBounded(long,int)"><code>determineBounded(long, int)</code></a> and <a href="#randomizeFloat(long)"><code>randomizeFloat(long)</code></a>. The determine()
+ methods are faster but more sensitive to patterns in their input; they are meant to
+ work well on sequential inputs, like 1, 2, 3, etc. The randomize() methods are
+ more-involved, but should be able to handle any kind of input pattern while returning]
+ random results.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -1183,26 +1191,59 @@ extends java.lang.Object</pre>
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code>static long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#determine(long)">determine</a></span>&#8203;(long&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Fast static randomizing method that takes its state as a parameter; state is expected to change between calls to
+ this.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#determineBounded(long,int)">determineBounded</a></span>&#8203;(long&nbsp;state,
+int&nbsp;bound)</code></th>
+<td class="col-last">
+<div class="block">Fast static randomizing method that takes its state as a parameter and limits output to an int between 0
+ (inclusive) and bound (exclusive); state is expected to change between calls to this.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>static double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#determineDouble(long)">determineDouble</a></span>&#8203;(long&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+ will return the same float.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#determineFloat(long)">determineFloat</a></span>&#8203;(long&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
+ return the same float.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(boolean%5B%5D)">hash</a></span>&#8203;(boolean[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(byte%5B%5D)">hash</a></span>&#8203;(byte[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(char%5B%5D)">hash</a></span>&#8203;(char[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(char%5B%5D%5B%5D)">hash</a></span>&#8203;(char[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(char%5B%5D,int,int)">hash</a></span>&#8203;(char[]&nbsp;data,
 int&nbsp;start,
@@ -1211,67 +1252,67 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(double%5B%5D)">hash</a></span>&#8203;(double[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(float%5B%5D)">hash</a></span>&#8203;(float[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(int%5B%5D)">hash</a></span>&#8203;(int[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(int%5B%5D%5B%5D)">hash</a></span>&#8203;(int[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(int%5B%5D,int)">hash</a></span>&#8203;(int[]&nbsp;data,
 int&nbsp;length)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long%5B%5D)">hash</a></span>&#8203;(long[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long%5B%5D%5B%5D)">hash</a></span>&#8203;(long[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,boolean%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 boolean[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,byte%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 byte[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,char%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 char[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,char%5B%5D%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 char[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,char%5B%5D,int,int)">hash</a></span>&#8203;(long&nbsp;seed,
 char[]&nbsp;data,
@@ -1281,74 +1322,74 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,double%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 double[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,float%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 float[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,int%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 int[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,int%5B%5D%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 int[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,int%5B%5D,int)">hash</a></span>&#8203;(long&nbsp;seed,
 int[]&nbsp;data,
 int&nbsp;length)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,long%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 long[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,long%5B%5D%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 long[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,short%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 short[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.CharSequence)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.CharSequence%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.CharSequence%5B%5D...)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence[]...&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i28">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.CharSequence,int,int)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence&nbsp;data,
@@ -1358,51 +1399,51 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="row-color" id="i33">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.Iterable)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.Iterable&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="alt-color" id="i34">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.Object)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.Object&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="row-color" id="i35">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.lang.Object%5B%5D)">hash</a></span>&#8203;(long&nbsp;seed,
 java.lang.Object[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i32">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(long,java.util.List)">hash</a></span>&#8203;(long&nbsp;seed,
 java.util.List&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="row-color" id="i37">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(short%5B%5D)">hash</a></span>&#8203;(short[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i34">
+<tr class="alt-color" id="i38">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.CharSequence)">hash</a></span>&#8203;(java.lang.CharSequence&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i35">
+<tr class="row-color" id="i39">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.CharSequence%5B%5D)">hash</a></span>&#8203;(java.lang.CharSequence[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i36">
+<tr class="alt-color" id="i40">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.CharSequence%5B%5D...)">hash</a></span>&#8203;(java.lang.CharSequence[]...&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i37">
+<tr class="row-color" id="i41">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.CharSequence,int,int)">hash</a></span>&#8203;(java.lang.CharSequence&nbsp;data,
 int&nbsp;start,
@@ -1411,47 +1452,47 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i38">
+<tr class="alt-color" id="i42">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.Iterable)">hash</a></span>&#8203;(java.lang.Iterable&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i39">
+<tr class="row-color" id="i43">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.Object)">hash</a></span>&#8203;(java.lang.Object&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i40">
+<tr class="alt-color" id="i44">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.lang.Object%5B%5D)">hash</a></span>&#8203;(java.lang.Object[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i41">
+<tr class="row-color" id="i45">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash(java.util.List)">hash</a></span>&#8203;(java.util.List&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i42">
+<tr class="alt-color" id="i46">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(boolean%5B%5D)">hash64</a></span>&#8203;(boolean[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i43">
+<tr class="row-color" id="i47">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(byte%5B%5D)">hash64</a></span>&#8203;(byte[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i44">
+<tr class="alt-color" id="i48">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(char%5B%5D)">hash64</a></span>&#8203;(char[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i45">
+<tr class="row-color" id="i49">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(char%5B%5D%5B%5D)">hash64</a></span>&#8203;(char[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i46">
+<tr class="alt-color" id="i50">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(char%5B%5D,int,int)">hash64</a></span>&#8203;(char[]&nbsp;data,
 int&nbsp;start,
@@ -1460,67 +1501,67 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i47">
+<tr class="row-color" id="i51">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(double%5B%5D)">hash64</a></span>&#8203;(double[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i48">
+<tr class="alt-color" id="i52">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(float%5B%5D)">hash64</a></span>&#8203;(float[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i49">
+<tr class="row-color" id="i53">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(int%5B%5D)">hash64</a></span>&#8203;(int[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i50">
+<tr class="alt-color" id="i54">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(int%5B%5D%5B%5D)">hash64</a></span>&#8203;(int[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i51">
+<tr class="row-color" id="i55">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(int%5B%5D,int)">hash64</a></span>&#8203;(int[]&nbsp;data,
 int&nbsp;length)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i52">
+<tr class="alt-color" id="i56">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long%5B%5D)">hash64</a></span>&#8203;(long[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i53">
+<tr class="row-color" id="i57">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long%5B%5D%5B%5D)">hash64</a></span>&#8203;(long[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i54">
+<tr class="alt-color" id="i58">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,boolean%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 boolean[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i55">
+<tr class="row-color" id="i59">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,byte%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 byte[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i56">
+<tr class="alt-color" id="i60">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,char%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 char[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i57">
+<tr class="row-color" id="i61">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,char%5B%5D%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 char[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i58">
+<tr class="alt-color" id="i62">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,char%5B%5D,int,int)">hash64</a></span>&#8203;(long&nbsp;seed,
 char[]&nbsp;data,
@@ -1530,74 +1571,74 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i59">
+<tr class="row-color" id="i63">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,double%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 double[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i60">
+<tr class="alt-color" id="i64">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,float%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 float[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i61">
+<tr class="row-color" id="i65">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,int%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 int[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i62">
+<tr class="alt-color" id="i66">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,int%5B%5D%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 int[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i63">
+<tr class="row-color" id="i67">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,int%5B%5D,int)">hash64</a></span>&#8203;(long&nbsp;seed,
 int[]&nbsp;data,
 int&nbsp;length)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i64">
+<tr class="alt-color" id="i68">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,long%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 long[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i65">
+<tr class="row-color" id="i69">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,long%5B%5D%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 long[][]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i66">
+<tr class="alt-color" id="i70">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,short%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 short[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i67">
+<tr class="row-color" id="i71">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.CharSequence)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i68">
+<tr class="alt-color" id="i72">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.CharSequence%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i69">
+<tr class="row-color" id="i73">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.CharSequence%5B%5D...)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence[]...&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i70">
+<tr class="alt-color" id="i74">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.CharSequence,int,int)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.CharSequence&nbsp;data,
@@ -1607,51 +1648,51 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i71">
+<tr class="row-color" id="i75">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.Iterable)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.Iterable&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i72">
+<tr class="alt-color" id="i76">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.Object)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.Object&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i73">
+<tr class="row-color" id="i77">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.lang.Object%5B%5D)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.lang.Object[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i74">
+<tr class="alt-color" id="i78">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(long,java.util.List)">hash64</a></span>&#8203;(long&nbsp;seed,
 java.util.List&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i75">
+<tr class="row-color" id="i79">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(short%5B%5D)">hash64</a></span>&#8203;(short[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i76">
+<tr class="alt-color" id="i80">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.CharSequence)">hash64</a></span>&#8203;(java.lang.CharSequence&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i77">
+<tr class="row-color" id="i81">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.CharSequence%5B%5D)">hash64</a></span>&#8203;(java.lang.CharSequence[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i78">
+<tr class="alt-color" id="i82">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.CharSequence%5B%5D...)">hash64</a></span>&#8203;(java.lang.CharSequence[]...&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i79">
+<tr class="row-color" id="i83">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.CharSequence,int,int)">hash64</a></span>&#8203;(java.lang.CharSequence&nbsp;data,
 int&nbsp;start,
@@ -1660,27 +1701,27 @@ int&nbsp;end)</code></th>
 <div class="block">Hashes only a subsection of the given data, starting at start (inclusive) and ending before end (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i80">
+<tr class="alt-color" id="i84">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.Iterable)">hash64</a></span>&#8203;(java.lang.Iterable&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i81">
+<tr class="row-color" id="i85">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.Object)">hash64</a></span>&#8203;(java.lang.Object&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i82">
+<tr class="alt-color" id="i86">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.lang.Object%5B%5D)">hash64</a></span>&#8203;(java.lang.Object[]&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i83">
+<tr class="row-color" id="i87">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hash64(java.util.List)">hash64</a></span>&#8203;(java.util.List&lt;? extends java.lang.CharSequence&gt;&nbsp;data)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i84">
+<tr class="alt-color" id="i88">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mum(long,long)">mum</a></span>&#8203;(long&nbsp;a,
 long&nbsp;b)</code></th>
@@ -1689,15 +1730,40 @@ long&nbsp;b)</code></th>
  that is technically a long and mixes the bits of the inputs.</div>
 </td>
 </tr>
-<tr class="row-color" id="i85">
+<tr class="row-color" id="i89">
 <td class="col-first"><code>static long</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomize(long)">randomize</a></span>&#8203;(long&nbsp;seed)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomize(long)">randomize</a></span>&#8203;(long&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Very similar to Pelican and related unary hashes; uses "xor rotate xor rotate" as an early step to mix any
- clustered bits all around the result, then the rest is like MurmurHash3's mixer.</div>
+<div class="block">High-quality static randomizing method that takes its state as a parameter; state is expected to change between
+ calls to this.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i86">
+<tr class="alt-color" id="i90">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomizeBounded(long,int)">randomizeBounded</a></span>&#8203;(long&nbsp;state,
+int&nbsp;bound)</code></th>
+<td class="col-last">
+<div class="block">High-quality static randomizing method that takes its state as a parameter and limits output to an int between 0
+ (inclusive) and bound (exclusive); state is expected to change between calls to this.</div>
+</td>
+</tr>
+<tr class="row-color" id="i91">
+<td class="col-first"><code>static double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomizeDouble(long)">randomizeDouble</a></span>&#8203;(long&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+ will return the same float.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i92">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomizeFloat(long)">randomizeFloat</a></span>&#8203;(long&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
+ return the same float.</div>
+</td>
+</tr>
+<tr class="row-color" id="i93">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#wow(long,long)">wow</a></span>&#8203;(long&nbsp;a,
 long&nbsp;b)</code></th>
@@ -2985,16 +3051,216 @@ long&nbsp;b)</code></th>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="randomize(long)">
-<h3>randomize</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">randomize</span>&#8203;(<span class="parameters">long&nbsp;seed)</span></div>
-<div class="block">Very similar to Pelican and related unary hashes; uses "xor rotate xor rotate" as an early step to mix any
- clustered bits all around the result, then the rest is like MurmurHash3's mixer.</div>
+<section class="detail" id="determine(long)">
+<h3>determine</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">determine</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">Fast static randomizing method that takes its state as a parameter; state is expected to change between calls to
+ this. It is recommended that you use <code>DiverRNG.determine(++state)</code> or <code>DiverRNG.determine(--state)</code>
+ to produce a sequence of different numbers, and you may have slightly worse quality with increments or decrements
+ other than 1. All longs are accepted by this method, and all longs can be produced; unlike several other classes'
+ determine() methods, passing 0 here does not return 0.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>seed</code> - any long; there is no fix point at 0</dd>
+<dd><code>state</code> - any long; subsequent calls should change by an odd number, such as with <code>++state</code></dd>
 <dt>Returns:</dt>
 <dd>any long</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="randomize(long)">
+<h3>randomize</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">randomize</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">High-quality static randomizing method that takes its state as a parameter; state is expected to change between
+ calls to this. It is suggested that you use <code>DiverRNG.randomize(++state)</code> or
+ <code>DiverRNG.randomize(--state)</code> to produce a sequence of different numbers, but any increments are allowed
+ (even-number increments won't be able to produce all outputs, but their quality will be fine for the numbers they
+ can produce). All longs are accepted by this method, and all longs can be produced; unlike several other classes'
+ determine() methods, passing 0 here does not return 0.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - any long; subsequent calls should change by an odd number, such as with <code>++state</code></dd>
+<dt>Returns:</dt>
+<dd>any long</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="determineBounded(long,int)">
+<h3>determineBounded</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">determineBounded</span>&#8203;(<span class="parameters">long&nbsp;state,
+int&nbsp;bound)</span></div>
+<div class="block">Fast static randomizing method that takes its state as a parameter and limits output to an int between 0
+ (inclusive) and bound (exclusive); state is expected to change between calls to this. It is recommended that you
+ use <code>DiverRNG.determineBounded(++state, bound)</code> or <code>DiverRNG.determineBounded(--state, bound)</code> to
+ produce a sequence of different numbers. All longs are accepted
+ by this method, but not all ints between 0 and bound are guaranteed to be produced with equal likelihood (for any
+ odd-number values for bound, this isn't possible for most generators). The bound can be negative.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - any long; subsequent calls should change by an odd number, such as with <code>++state</code></dd>
+<dd><code>bound</code> - the outer exclusive bound, as an int</dd>
+<dt>Returns:</dt>
+<dd>an int between 0 (inclusive) and bound (exclusive)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="randomizeBounded(long,int)">
+<h3>randomizeBounded</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">randomizeBounded</span>&#8203;(<span class="parameters">long&nbsp;state,
+int&nbsp;bound)</span></div>
+<div class="block">High-quality static randomizing method that takes its state as a parameter and limits output to an int between 0
+ (inclusive) and bound (exclusive); state is expected to change between calls to this. It is suggested that you
+ use <code>DiverRNG.randomizeBounded(++state)</code> or <code>DiverRNG.randomize(--state)</code> to produce a sequence of
+ different numbers, but any increments are allowed (even-number increments won't be able to produce all outputs,
+ but their quality will be fine for the numbers they can produce). All longs are accepted by this method, but not
+ all ints between 0 and bound are guaranteed to be produced with equal likelihood (for any odd-number values for
+ bound, this isn't possible for most generators). The bound can be negative.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - any long; subsequent calls should change by an odd number, such as with <code>++state</code></dd>
+<dd><code>bound</code> - the outer exclusive bound, as an int</dd>
+<dt>Returns:</dt>
+<dd>an int between 0 (inclusive) and bound (exclusive)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="determineFloat(long)">
+<h3>determineFloat</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">determineFloat</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
+ return the same float. This is expected to be called with a changing variable, e.g.
+ <code>determineFloat(++state)</code>, where the increment for state should generally be 1. The period is 2 to the 64
+ if you increment or decrement by 1, but there are only 2 to the 30 possible floats between 0 and 1.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - a variable that should be different every time you want a different random result;
+              using <code>determineFloat(++state)</code> is recommended to go forwards or
+              <code>determineFloat(--state)</code> to generate numbers in reverse order</dd>
+<dt>Returns:</dt>
+<dd>a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by <code>state</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="randomizeFloat(long)">
+<h3>randomizeFloat</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">randomizeFloat</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
+ return the same float. This is expected to be called with a changing variable, e.g.
+ <code>randomizeFloat(++state)</code>, where the increment for state can be any value and should usually be odd
+ (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by any odd
+ number, but there are only 2 to the 30 possible floats between 0 and 1.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - a variable that should be different every time you want a different random result;
+              using <code>randomizeFloat(++state)</code> is recommended to go forwards or
+              <code>randomizeFloat(--state)</code> to generate numbers in reverse order</dd>
+<dt>Returns:</dt>
+<dd>a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by <code>state</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="determineDouble(long)">
+<h3>determineDouble</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">determineDouble</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+ will return the same float. This is expected to be called with a changing variable, e.g.
+ <code>determineDouble(++state)</code>, where the increment for state should generally be 1. The period is 2 to the 64
+ if you increment or decrement by 1, but there are only 2 to the 62 possible doubles between 0 and 1.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - a variable that should be different every time you want a different random result;
+              using <code>determineDouble(++state)</code> is recommended to go forwards or
+              <code>determineDouble(--state)</code> to generate numbers in reverse order</dd>
+<dt>Returns:</dt>
+<dd>a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by <code>state</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="randomizeDouble(long)">
+<h3>randomizeDouble</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">randomizeDouble</span>&#8203;(<span class="parameters">long&nbsp;state)</span></div>
+<div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+ will return the same float. This is expected to be called with a changing variable, e.g.
+ <code>randomizeDouble(++state)</code>, where the increment for state can be any number but should usually be odd
+ (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by 1, but
+ there are only 2 to the 62 possible doubles between 0 and 1.
+ <br>
+ You have a choice between determine() and randomize() in this class. <code>determine()</code> is simpler, and will
+ behave well when the inputs are sequential, while <code>randomize()</code> is a completely different algorithm based
+ on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
+ <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
+ testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
+ input but will be about 30% slower than <code>determine()</code>. Both determine() and randomize() will produce all
+ long outputs if given all possible longs as input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>state</code> - a variable that should be different every time you want a different random result;
+              using <code>randomizeDouble(++state)</code> is recommended to go forwards or
+              <code>randomizeDouble(--state)</code> to generate numbers in reverse order</dd>
+<dt>Returns:</dt>
+<dd>a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by <code>state</code></dd>
 </dl>
 </section>
 </li>

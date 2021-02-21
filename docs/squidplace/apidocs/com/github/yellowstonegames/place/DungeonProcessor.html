@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -478,13 +478,20 @@ int&nbsp;islandSpacing)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i9">
+<td class="col-first"><code>java.lang.StringBuilder</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#appendTo(java.lang.StringBuilder)">appendTo</a></span>&#8203;(java.lang.StringBuilder&nbsp;sb)</code></th>
+<td class="col-last">
+<div class="block">Given a StringBuilder, this appends to it a readable representation of the map this stores.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
 <td class="col-first"><code><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clearEffects()">clearEffects</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Removes any door, water, or trap insertion effects that this DungeonGenerator would put in future dungeons.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generate()">generate</a></span>()</code></th>
 <td class="col-last">
@@ -492,7 +499,7 @@ int&nbsp;islandSpacing)</code></th>
  of ruins or a partially constructed dungeon.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generate(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">generate</a></span>&#8203;(char[][]&nbsp;baseDungeon,
 int[][]&nbsp;environment)</code></th>
@@ -501,7 +508,7 @@ int[][]&nbsp;environment)</code></th>
  environment as an int[][], which can be obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generate(com.github.yellowstonegames.place.tileset.TilesetType)">generate</a></span>&#8203;(<a href="tileset/TilesetType.html" title="enum in com.github.yellowstonegames.place.tileset">TilesetType</a>&nbsp;kind)</code></th>
 <td class="col-last">
@@ -509,7 +516,7 @@ int[][]&nbsp;environment)</code></th>
  each TilesetType value could be used for in a game.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generateRespectingStairs(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">generateRespectingStairs</a></span>&#8203;(char[][]&nbsp;baseDungeon,
 int[][]&nbsp;environment)</code></th>
@@ -519,7 +526,7 @@ int[][]&nbsp;environment)</code></th>
  obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getBareDungeon()">getBareDungeon</a></span>()</code></th>
 <td class="col-last">
@@ -527,7 +534,7 @@ int[][]&nbsp;environment)</code></th>
  walls and floors respectively.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>int[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getEnvironment()">getEnvironment</a></span>()</code></th>
 <td class="col-last">
@@ -535,21 +542,21 @@ int[][]&nbsp;environment)</code></th>
  in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getHeight()">getHeight</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Height of the dungeon in cells.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getPlaceGrid()">getPlaceGrid</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Get the most recently generated char[][] dungeon out of this class.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getRebuildSeedA()">getRebuildSeedA</a></span>()</code></th>
 <td class="col-last">
@@ -557,7 +564,7 @@ int[][]&nbsp;environment)</code></th>
  the seed that will be used to generate the first dungeon if none has been made yet).</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getRebuildSeedB()">getRebuildSeedB</a></span>()</code></th>
 <td class="col-last">
@@ -565,25 +572,25 @@ int[][]&nbsp;environment)</code></th>
  the seed that will be used to generate the first dungeon if none has been made yet).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getWidth()">getWidth</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Width of the dungeon in cells.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>protected char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#innerGenerate()">innerGenerate</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>protected char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#innerGenerate(char%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectIntMap)">innerGenerate</a></span>&#8203;(char[][]&nbsp;map,
 com.github.tommyettinger.ds.ObjectIntMap&lt;<a href="DungeonProcessor.FillEffect.html" title="enum in com.github.yellowstonegames.place">DungeonProcessor.FillEffect</a>&gt;&nbsp;fx)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>protected char[][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeDoors(com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,char%5B%5D%5B%5D,char%5B%5D%5B%5D)">makeDoors</a></span>&#8203;(com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;rooms,
 com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;corridors,
@@ -591,39 +598,39 @@ char[][]&nbsp;allCaves,
 char[][]&nbsp;allCorridors)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>protected char[][][]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeLake(com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList)">makeLake</a></span>&#8203;(com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;rooms,
 com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;caves)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord)">removeAdjacent</a></span>&#8203;(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
 com.github.yellowstonegames.grid.Coord&nbsp;pt)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">removeAdjacent</a></span>&#8203;(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
 com.github.yellowstonegames.grid.Coord&nbsp;pt1,
 com.github.yellowstonegames.grid.Coord&nbsp;pt2)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeNearby(com.github.tommyettinger.ds.ObjectOrderedSet,char%5B%5D%5B%5D)">removeNearby</a></span>&#8203;(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
 char[][]&nbsp;disallowed)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i28">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setDungeon(char%5B%5D%5B%5D)">setDungeon</a></span>&#8203;(char[][]&nbsp;dungeon)</code></th>
 <td class="col-last">
 <div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.</div>
 </td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setDungeon(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">setDungeon</a></span>&#8203;(char[][]&nbsp;dungeon,
 int[][]&nbsp;environment)</code></th>
@@ -631,14 +638,14 @@ int[][]&nbsp;environment)</code></th>
 <div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Provides a string representation of the latest generated dungeon.</div>
 </td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#viableDoorways(boolean,char%5B%5D%5B%5D,char%5B%5D%5B%5D,char%5B%5D%5B%5D)">viableDoorways</a></span>&#8203;(boolean&nbsp;doubleDoors,
 char[][]&nbsp;map,
@@ -1391,6 +1398,21 @@ com.github.tommyettinger.ds.ObjectIntMap&lt;<a href="DungeonProcessor.FillEffect
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a seed as a long that can be passed to setStateA() on this class' rng field to recreate a dungeon</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="appendTo(java.lang.StringBuilder)">
+<h3>appendTo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.StringBuilder</span>&nbsp;<span class="member-name">appendTo</span>&#8203;(<span class="parameters">java.lang.StringBuilder&nbsp;sb)</span></div>
+<div class="block">Given a StringBuilder, this appends to it a readable representation of the map this stores.
+ The first line appended is the one with the highest y-coordinates, matching y-axis-up behavior.
+ The last line appended is the one where y is 0. Lines are separated by newline chars.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sb</code> - a StringBuilder this will append to</dd>
+<dt>Returns:</dt>
+<dd>sb, after modifications, for chaining</dd>
 </dl>
 </section>
 </li>

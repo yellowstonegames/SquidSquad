@@ -51,10 +51,12 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlyphMap.html#backgrounds">backgrounds</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#BOLD">BOLD</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
@@ -82,7 +84,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">drawGlyph(Batch, long, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>
-<div class="block">Draws a single char with a foreground color, encoded in one long, at the given x,y position in world space.</div>
+<div class="block">Draws the specified glyph with a Batch at the given x, y position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyphs(com.badlogic.gdx.graphics.g2d.Batch,com.github.tommyettinger.ds.LongList,float,float)">drawGlyphs(Batch, LongList, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>
+<div class="block">Draws the specified LongList of glyphs with a Batch at a given x, y position, drawing the full LongList.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyphs(com.badlogic.gdx.graphics.g2d.Batch,com.github.tommyettinger.ds.LongList,int,int,float,float)">drawGlyphs(Batch, LongList, int, int, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>
+<div class="block">Draws the specified LongList of glyphs with a Batch at a given x, y position, starting at offset in glyphs and
+ attempting to draw a count of glyphs equal to length.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawMarkupText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.String,float,float)">drawMarkupText(Batch, String, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>
@@ -202,6 +213,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#mapping">mapping</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#markup(java.lang.String,com.github.tommyettinger.ds.LongList)">markup(String, LongList)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>
+<div class="block">Reads markup from text, along with the chars to receive markup, processes it, and appends into appendTo as a
+ series of <code>long</code> glyphs.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#MIDSCRIPT">MIDSCRIPT</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#msdfCrispness">msdfCrispness</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#msdfFragmentShader">msdfFragmentShader</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
@@ -209,6 +227,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#OBLIQUE">OBLIQUE</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#originalCellHeight">originalCellHeight</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#originalCellWidth">originalCellWidth</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
@@ -242,13 +262,24 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#shader">shader</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#STRIKETHROUGH">STRIKETHROUGH</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#SUBSCRIPT">SUBSCRIPT</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#SUPERSCRIPT">SUPERSCRIPT</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 class="title" id="I:U">U</h2>
+<dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#UNDERLINE">UNDERLINE</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#vertexShader">vertexShader</a></span> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
+<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
 <footer role="contentinfo">
 <nav role="navigation">
 <!-- ======= START OF BOTTOM NAVBAR ====== -->

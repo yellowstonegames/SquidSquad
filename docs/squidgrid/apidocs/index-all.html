@@ -88,6 +88,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds multiple FOV maps to basis cell-by-cell, modifying basis; does not check line-of-sight between FOV maps.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#addLight(int,int,com.github.yellowstonegames.grid.Radiance)">addLight(int, int, Radiance)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Adds a Radiance as a light source at the given position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#addLight(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Radiance)">addLight(Coord, Radiance)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Adds a Radiance as a light source at the given position.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#allOn()">allOn()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Sets all cells in this to "on."</div>
@@ -151,6 +159,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#backgroundColor">backgroundColor</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">The packed float color to mix background cells with when a cell has lighting and is within line-of-sight, but has
+ no background color to start with (its color is a packed Oklab int, <code>DescriptiveColor.TRANSPARENT</code>).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#BILLOW">BILLOW</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#bitSum(com.github.yellowstonegames.grid.Region...)">bitSum(Region...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -189,11 +202,27 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">BresenhamLine</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
-<div class="block">Provides a means to generate Bresenham lines in 2D and 3D.</div>
+<div class="block">Provides a means to generate Bresenham lines in 2D.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#%3Cinit%3E()">BresenhamLine()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Makes a new BresenhamLine and initializes its only state, <a href="com/github/yellowstonegames/grid/BresenhamLine.html#lastLine"><code>BresenhamLine.lastLine</code></a>.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#calculateFOV(int,int)">calculateFOV(int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#calculateFOV(int,int,int,int,int,int)">calculateFOV(int, int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#calculateFOV(com.github.yellowstonegames.grid.Coord)">calculateFOV(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#CARDINALS">CARDINALS</a></span> - Static variable in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
 <div class="block">An array which holds only the four cardinal directions.</div>
@@ -253,6 +282,14 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#CLOCKWISE">CLOCKWISE</a></span> - Static variable in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
 <div class="block">An array which holds all eight OUTWARDS directions in clockwise order.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#color">color</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">The color of light as an Oklab int; typically opaque and lighter than the glowing object's symbol.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting">colorLighting</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">A 2D array that stores the color of light in each cell, as a packed Oklab int color.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a> - package com.github.yellowstonegames.grid</dt>
 <dd>&nbsp;</dd>
@@ -340,6 +377,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returned directly by some methods, but you may want to change this at some other point.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#currentRange()">currentRange()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Provides the calculated current range adjusted for flicker and strobe at the current time in milliseconds, with
+ flicker seeded with the identity hash code of this Radiance.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
@@ -376,6 +418,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the angle in degrees to go between two Coords.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#delay">delay</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">A time delay that applies to when the strobe and flicker effects change; useful with strobe to make a strobe
+ expand its lit radius at one point, then expand at a slightly later time at another Radiance with a delay.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#deltaX">deltaX</a></span> - Variable in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
 <div class="block">The x coordinate difference for this direction.</div>
@@ -385,6 +432,8 @@ loadScripts(document, 'script');</script>
 <div class="block">The y coordinate difference for this direction.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/HilbertCurve.html#DEPTH">DEPTH</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#deserializeFromString(java.lang.String)">deserializeFromString(String)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deserializeFromString(java.lang.String)">deserializeFromString(String)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -455,10 +504,14 @@ loadScripts(document, 'script');</script>
  that still ensures exactly half of the bits are kept as-is (the one exception is when height is an odd number,
  which makes the bottom row slightly random).</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distance(double,double)">distance(double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distance(float,float)">distance(float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the distance from this Coord to the given x2,y2 Coord, as a float.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distance(com.github.yellowstonegames.grid.Coord)">distance(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the distance from this Coord to the given Coord, as a float.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#DISTANCE">DISTANCE</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#DISTANCE_2">DISTANCE_2</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
@@ -471,10 +524,30 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#DISTANCE_2_SUB">DISTANCE_2_SUB</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceSq(double,double)">distanceSq(double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceD(double,double)">distanceD(double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the distance from this Coord to the given x2,y2 Coord, as a double.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceD(com.github.yellowstonegames.grid.Coord)">distanceD(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the distance from this Coord to the given Coord, as a double.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceSq(float,float)">distanceSq(float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the squared distance from this Coord to the given x2,y2 Coord, as a float.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceSq(com.github.yellowstonegames.grid.Coord)">distanceSq(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the squared distance from this Coord to the given Coord, as a float.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceSqD(double,double)">distanceSqD(double, double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the squared distance from this Coord to the given x2,y2 Coord, as a double.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#distanceSqD(com.github.yellowstonegames.grid.Coord)">distanceSqD(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>
+<div class="block">Gets the squared distance from this Coord to the given Coord, as a double.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#divide(double)">divide(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
 <div class="block">Separately divides the x and y positions of this Coord by operand, flooring to a lower int for each of x and
@@ -505,6 +578,129 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#DOWN_RIGHT">DOWN_RIGHT</a></span> - com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#draw(int%5B%5D%5B%5D)">draw(int[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Given a 2D array that should hold RGBA8888 int colors, fills the 2D array with different colors based on what
+ lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
+ sources can do.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLine(int,int,int,int)">drawLine(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLine(int,int,int,int)">drawLine(int, int, int, int)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLine(int,int,int,int)">drawLine(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLine(int,int,int,int,int)">drawLine(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLine(int,int,int,int,int)">drawLine(int, int, int, int, int)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLine(int,int,int,int,int)">drawLine(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLine(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLine(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLine(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength (measured using
+ Chebyshev distance, where diagonally adjacent cells are considered
+ exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLine(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLine(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLine(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">drawLine(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLine(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLine(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLine(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLine(Coord, Coord)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLine(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLine(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLineArray(int,int,int,int)">drawLineArray(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLineArray(int,int,int,int)">drawLineArray(int, int, int, int)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLineArray(int,int,int,int)">drawLineArray(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLineArray(int,int,int,int,int)">drawLineArray(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength..</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLineArray(int,int,int,int,int)">drawLineArray(int, int, int, int, int)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength..</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLineArray(int,int,int,int,int)">drawLineArray(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points, stopping early if
+ the number of Coords returned reaches maxLength..</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#drawLineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLineArray(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#drawLineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLineArray(Coord, Coord)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#drawLineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">drawLineArray(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Generates a 2D Bresenham line between two points.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
@@ -522,6 +718,8 @@ loadScripts(document, 'script');</script>
  3,3 in a way that this class can interpret and manipulate.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -635,6 +833,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fit(int%5B%5D%5B%5D,int)">fit(int[][], int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#flare">flare</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">A temporary increase to the minimum radiance range, meant to brighten a glow during an effect.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><span class="type-name-link">FlawedPointHash</span></a> - Interface in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">An interface for point hashes that are statistically biased, as well as a holder for inner classes that implement
@@ -659,6 +861,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Produces hashes that show strong bias on one axis (usually the later axes matter more) and have nice-looking
  patterns of dots.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#flicker">flicker</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">The rate of random continuous change to radiance range, like the light from a campfire.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#flip(boolean,boolean)">flip(boolean, boolean)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -727,6 +933,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/grid/FOV.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">FOV</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#fovResult">fovResult</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">What the "viewer" (as passed to <a href="com/github/yellowstonegames/grid/LightingManager.html#calculateFOV(com.github.yellowstonegames.grid.Coord)"><code>LightingManager.calculateFOV(Coord)</code></a>) can see either nearby without light or because an
+ area in line-of-sight has light in it.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(float)">fray(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
@@ -806,6 +1017,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#get(int,int)">get(int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#get(int,int)">get(int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Gets the Radiance at the given position, if present, or null if there is no light source there.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#get(int,int,byte%5B%5D)">get(int, int, byte[])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
 <div class="block">Gets a byte from some raw data at least 4096 bytes in length, treating it as an infinite 2D plane of tiling 64x64
@@ -814,6 +1029,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#get(int,int,int)">get(int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
 <div class="block">Gets a byte from the raw data this stores, treating it as an infinite 3D space of tiling 64x64x64 regions.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#get(com.github.yellowstonegames.grid.Coord)">get(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Gets the Radiance at the given position, if present, or null if there is no light source there.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#getCacheHeight()">getCacheHeight()</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
@@ -936,6 +1155,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getHoneyFractal(float,float,float,float,float,float)">getHoneyFractal(float, float, float, float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#getLastLine()">getLastLine()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Gets the last line drawn using the internal buffer this carries, rather than an explicitly-specified buffer.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#getLastLine()">getLastLine()</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
+<dd>
+<div class="block">Gets the last line drawn using the internal buffer this carries, rather than an explicitly-specified buffer.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#getLastLine()">getLastLine()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Gets the last line drawn using the internal buffer this carries, rather than an explicitly-specified buffer.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#getLocation()">getLocation()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
 <div class="block">Provided for compatibility with earlier code that used the AWT Point API.</div>
@@ -975,13 +1206,23 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,float,float,int)">getNoiseWithSeed(float, float, float, float, float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,float,float,long)">getNoiseWithSeed(float, float, float, float, float, float, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,float,int)">getNoiseWithSeed(float, float, float, float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,float,long)">getNoiseWithSeed(float, float, float, float, float, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,int)">getNoiseWithSeed(float, float, float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,float,long)">getNoiseWithSeed(float, float, float, float, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,int)">getNoiseWithSeed(float, float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,float,long)">getNoiseWithSeed(float, float, float, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,int)">getNoiseWithSeed(float, float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getNoiseWithSeed(float,float,long)">getNoiseWithSeed(float, float, long)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getPerlin(float,float)">getPerlin(float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
@@ -1359,6 +1600,8 @@ loadScripts(document, 'script');</script>
  generate, but instead uses a highly-specific technique based on the Rosenberg-Strong pairing function, a Gray
  code, and two XLCG steps at the end.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#hashesToLines(char%5B%5D%5B%5D)">hashesToLines(char[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
@@ -1483,8 +1726,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavy">heavy</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavy0">heavy0</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavyA0">heavyA0</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#heavyAlt">heavyAlt</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#height">height</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Height of the 2D arrays used in this, as obtained from <a href="com/github/yellowstonegames/grid/LightingManager.html#resistances"><code>LightingManager.resistances</code></a>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#height">height</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#HERMITE">HERMITE</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
@@ -1718,75 +1969,102 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#isEmpty()">isEmpty()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
-<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
- the line of sight is obstructed, without storing the line of points along the way.</div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
-<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
- the line of sight is obstructed, without storing the line of points along the way.</div>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D)">isReachable(int, int, int, int, int, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">isReachable(Coord, Coord, float[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineDrawer.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></dt>
 <dd>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#isReachableEuclidean(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachableEuclidean(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">isReachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
 <dd>
-<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </dd>
@@ -1818,6 +2096,13 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#last()">last()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets the last Coord in the iteration order, or (-1,-1) if this Region is empty.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lastLine">lastLine</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#lastLine">lastLine</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">A buffer of Coord as an ObjectList; this is cleared and reused by the drawLine() methods, so its state can only
+ be certain until you make another call to one of those methods.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#lastTight()">lastTight()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
@@ -1871,8 +2156,45 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#light">light</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#light0">light0</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#lightA0">lightA0</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LineTools.html#lightAlt">lightAlt</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">LightingManager</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">A convenience class that makes dealing with multiple colored light sources easier.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#%3Cinit%3E()">LightingManager()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Unlikely to be used except during serialization; makes a LightingManager for a 20x20 fully visible level.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#%3Cinit%3E(float%5B%5D%5B%5D)">LightingManager(float[][])</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Given a resistance array as produced by <a href="com/github/yellowstonegames/grid/FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
+ or <a href="com/github/yellowstonegames/grid/FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
+ LightingManager that can have <a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#%3Cinit%3E(float%5B%5D%5B%5D,int,com.github.yellowstonegames.grid.Radius,float)">LightingManager(float[][], int, Radius, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Given a resistance array as produced by <a href="com/github/yellowstonegames/grid/FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
+ or <a href="com/github/yellowstonegames/grid/FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
+ LightingManager that can have <a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#%3Cinit%3E(float%5B%5D%5B%5D,java.lang.String,com.github.yellowstonegames.grid.Radius,float)">LightingManager(float[][], String, Radius, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Given a resistance array as produced by <a href="com/github/yellowstonegames/grid/FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
+ or <a href="com/github/yellowstonegames/grid/FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
+ LightingManager that can have <a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#lightingStrength">lightingStrength</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#lights">lights</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">A mapping from positions as <a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid"><code>Coord</code></a> objects to <a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects that describe the color, lighting
+ radius, and changes over time of any in-game lights that should be shown on the map and change FOV.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int)">line(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
@@ -1894,6 +2216,10 @@ loadScripts(document, 'script');</script>
  the number of Coords returned reaches maxLength (measured using
  Chebyshev distance, where diagonally adjacent cells are considered
  exactly as distant as orthogonally-adjacent cells).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#line(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#line(int,int,int,int,com.github.tommyettinger.ds.ObjectList)">line(int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
@@ -1928,6 +2254,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates a 2D Bresenham line between two points, stopping early if
  the number of Coords returned reaches maxLength..</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#lineArray(int,int,int,int,int)">lineArray(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineArray(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">lineArray(Coord, Coord)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
@@ -1947,6 +2277,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Given a List of Coord as produced by <a href="com/github/yellowstonegames/grid/OrthoLine.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)"><code>OrthoLine.line(Coord, Coord)</code></a> or <a href="com/github/yellowstonegames/grid/OrthoLine.html#line(int,int,int,int)"><code>OrthoLine.line(int, int, int, int)</code></a>, this
  gets a char array of box-drawing characters that connect when drawn at the corresponding Coord positions in the
  given line.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/LineDrawer.html" title="interface in com.github.yellowstonegames.grid"><span class="type-name-link">LineDrawer</span></a> - Interface in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">A shared interface for line-drawing classes, so instances can be interchanged.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#lineEuclidean(int,int,int,int,int,com.github.tommyettinger.ds.ObjectList)">lineEuclidean(int, int, int, int, int, ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
 <dd>
@@ -1975,9 +2309,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LongPointHash.html#%3Cinit%3E()">LongPointHash()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#losResult">losResult</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">A 2D array of floats that are either 0.0f if a cell has an obstruction between it and the viewer, or greater than
+ 0.0f otherwise.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#makeChain(int,float,int,float)">makeChain(int, float, int, float)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a chain of Radiance objects that will pulse in a sequence, expanding from one to the next.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#makeEven()">makeEven()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
 <div class="block">Gets a Coord based off this instance but with odd values for x and/or y decreased to the nearest even number</div>
@@ -2012,6 +2355,18 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#mirrorY()">mirrorY()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Returns a new Region that has been mirrored along the rightmost edge, parallel to the y-axis.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#mixColoredLighting(float)">mixColoredLighting(float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Edits <a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting"><code>LightingManager.colorLighting</code></a> by adding in and mixing the colors in <a href="com/github/yellowstonegames/grid/LightingManager.html#tempColorLighting"><code>LightingManager.tempColorLighting</code></a>, with the strength
+ of light in tempColorLighting boosted by flare (which can be any finite float greater than -1f, but is usually
+ from 0f to 1f when increasing strength).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#mixColoredLighting(float,int)">mixColoredLighting(float, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Edits <a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting"><code>LightingManager.colorLighting</code></a> by adding in and mixing the given color where the light strength in <a href="com/github/yellowstonegames/grid/LightingManager.html#tempFOV"><code>LightingManager.tempFOV</code></a>
+ is greater than 0, with that strength boosted by flare (which can be any finite float greater than -1f, but is
+ usually from 0f to 1f when increasing strength).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/FOV.html#mixVisibleFOVs(float%5B%5D%5B%5D,float%5B%5D%5B%5D...)">mixVisibleFOVs(float[][], float[][]...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></dt>
 <dd>
@@ -2054,6 +2409,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Takes a position as a Morton code, with interleaved x and y bits and x in the least significant bit, and returns
  the length to travel along the 256x256 Hilbert Curve to reach that position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#moveLight(int,int,int,int)">moveLight(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">If a Radiance is present at oldX,oldY, this will move it to newX,newY and overwrite any existing Radiance at
+ newX,newY.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#moveLight(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">moveLight(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">If a Radiance is present at oldPosition, this will move it to newPosition and overwrite any existing Radiance at
+ newPosition.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#multiply(double)">multiply(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
@@ -2167,6 +2532,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Like andNot, but subtracts this Region from other and stores the result in this Region, without
  mutating other.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#noticeable">noticeable</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">A GreasedRegion that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
+ potentially cast light into such a cell.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#nth(int)">nth(int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -2190,6 +2560,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#%3Cinit%3E()">OrthoLine()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Makes a new OrthoLine and initializes its only state, <a href="com/github/yellowstonegames/grid/OrthoLine.html#lastLine"><code>OrthoLine.lastLine</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#OUTWARDS">OUTWARDS</a></span> - Static variable in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
@@ -2277,6 +2651,56 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">Radiance</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">Grouping of qualities related to glow and light emission.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E()">Radiance()</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">All-default constructor; makes a single-cell unchanging white light.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float)">Radiance(float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes an unchanging white light with the specified range in cells.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,int)">Radiance(float, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes an unchanging light with the given color (as an Oklab int) and the specified range in cells.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,int,float)">Radiance(float, int, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,int,float,float)">Radiance(float, int, float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+ parameter affects the rate at which this will steadily reduce its range and return to normal.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,int,float,float,float)">Radiance(float, int, float, float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+ parameter affects the rate at which this will steadily reduce its range and return to normal.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,int,float,float,float,float)">Radiance(float, int, float, float, float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+ parameter affects the rate at which this will steadily reduce its range and return to normal.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(float,java.lang.String,float,float)">Radiance(float, String, float, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Makes a flickering light with the given color (as a String that can be interpreted by <code>DescriptiveColor</code>)
+ and the specified range in cells; the flicker parameter affects the rate at which this will randomly reduce its
+ range and return to normal, and the strobe parameter affects the rate at which this will steadily reduce its
+ range and return to normal.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#%3Cinit%3E(com.github.yellowstonegames.grid.Radiance)">Radiance(Radiance)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">Copies another Radiance exactly, except for the pattern its flicker may have, if any.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#radius(float,float)">radius(float, float)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#radius(float,float,float,float)">radius(float, float, float, float)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
@@ -2288,6 +2712,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid"><span class="type-name-link">Radius</span></a> - Enum in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">Basic radius strategy implementations likely to be used for roguelikes.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#radiusStrategy">radiusStrategy</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">How light should spread; usually <a href="com/github/yellowstonegames/grid/Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a> unless gameplay reasons need it to be SQUARE or DIAMOND.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomInterleave(java.util.Random)">randomInterleave(Random)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
@@ -2310,6 +2738,10 @@ loadScripts(document, 'script');</script>
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
  were "on" in this originally.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#range">range</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#rateDensity()">rateDensity()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#rateRegularity()">rateRegularity()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2322,6 +2754,78 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BlueNoise.html#RAW_NOISE">RAW_NOISE</a></span> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></dt>
 <dd>
 <div class="block">The raw data this class uses, as a 1D byte array.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(int,int,int,int,float%5B%5D%5B%5D)">reachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(int,int,int,int,float%5B%5D%5B%5D)">reachable(int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(int,int,int,int,int,float%5B%5D%5B%5D)">reachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(int,int,int,int,int,float%5B%5D%5B%5D)">reachable(int, int, int, int, int, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">reachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)">reachable(Coord, Coord, float[][])</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
+ the line of sight is obstructed, without storing the line of points along the way.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/OrthoLine.html#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachable(Coord, Coord, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/BresenhamLine.html#reachableEuclidean(int,int,int,int,int,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)">reachableEuclidean(int, int, int, int, int, float[][], ObjectList&lt;Coord&gt;)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></dt>
+<dd>
+<div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
+ to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
+ <code>buffer</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(boolean%5B%5D%5B%5D)">refill(boolean[][])</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
@@ -2556,6 +3060,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#removeIsolated()">removeIsolated()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#removeLight(int,int)">removeLight(int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Removes a Radiance as a light source from the given position, if any is present.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#removeLight(com.github.yellowstonegames.grid.Coord)">removeLight(Coord)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Removes a Radiance as a light source from the given position, if any is present.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#removeRectangle(int,int,int,int)">removeRectangle(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Removes all "on" cells from (startX, startY) inclusive 
@@ -2566,6 +3078,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#removeSeveral(java.lang.Iterable)">removeSeveral(Iterable&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#resistances">resistances</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">The 2D array of light-resistance values from 0.0f to 1.0f for each cell on the map, as produced by
+ <a href="com/github/yellowstonegames/grid/FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#resizeAndEmpty(int,int)">resizeAndEmpty(int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">If this Region has the same width and height passed as parameters, this acts the same as <a href="com/github/yellowstonegames/grid/Region.html#empty()"><code>Region.empty()</code></a>,
@@ -2778,6 +3295,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Modifies this Region so it contains a quasi-random subset of its previous contents, choosing cells so that
  the <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> matches the given <code>fraction</code> of the total amount of "on" cells in this.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#serializeToString()">serializeToString()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#serializeToString()">serializeToString()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#set(boolean,int,int)">set(boolean, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -2958,6 +3477,11 @@ loadScripts(document, 'script');</script>
  the "on" cells of <code>bounds</code>, until <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> is equal to <code>volume</code> or there are no more cells
  this can expand into.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#splash(com.github.yellowstonegames.grid.Region,java.util.Random)">splash(Region, Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
+ inside the "on" cells of <code>bounds</code>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#split()">split()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">If this Region stores multiple unconnected "on" areas, this finds each isolated area (areas that
@@ -2978,6 +3502,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html#state">state</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#strobe">strobe</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>
+<div class="block">The rate of non-random continuous change to radiance range, like a mechanical strobe effect.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#subtract(double)">subtract(double)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
 <div class="block">Separately subtracts operand from the x and y positions of this Coord, rounding to the nearest int for each of x
@@ -3066,6 +3594,18 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#tempColorLighting">tempColorLighting</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Temporary storage array used for calculations involving <a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting"><code>LightingManager.colorLighting</code></a>; it sometimes may make sense for
+ other code to use this as temporary storage as well.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#tempFOV">tempFOV</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Temporary storage array used for calculations involving <a href="com/github/yellowstonegames/grid/LightingManager.html#fovResult"><code>LightingManager.fovResult</code></a>; it sometimes may make sense for other
+ code to use this as temporary storage as well.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#tempLightingStrength">tempLightingStrength</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#thin()">thin()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this reduces the width of thick areas of this Region, but thin() will not remove
@@ -3117,6 +3657,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Coord.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radiance.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Returns a legible String representation of this that can be printed over multiple lines, with all "on" cells
@@ -3161,6 +3703,27 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#UP_RIGHT">UP_RIGHT</a></span> - com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#update()">update()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Typically called every frame, this updates the flicker and strobe effects of Radiance objects and applies those
+ changes in lighting color and strength to the various fields of this LightingManager.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#updateAll()">updateAll()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Typically called every frame when there isn't a single viewer, this updates the flicker and strobe effects of
+ Radiance objects and applies those changes in lighting color and strength to the various fields of this
+ LightingManager.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#updateUI(int,int,com.github.yellowstonegames.grid.Radiance)">updateUI(int, int, Radiance)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Updates the flicker and strobe effects of a Radiance object and applies the lighting from just that Radiance to
+ just the <a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting"><code>LightingManager.colorLighting</code></a> field, without changing FOV.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#updateUI(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Radiance)">updateUI(Coord, Radiance)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Updates the flicker and strobe effects of a Radiance object and applies the lighting from just that Radiance to
+ just the <a href="com/github/yellowstonegames/grid/LightingManager.html#colorLighting"><code>LightingManager.colorLighting</code></a> field, without changing FOV.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
@@ -3219,6 +3782,11 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#viewerRange">viewerRange</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">How far the viewer can see without light; defaults to 4.0f cells, and you are encouraged to change this member
+ field if the vision range changes after construction.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:W">W</h2>
 <dl class="index">
@@ -3230,6 +3798,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
  edges somewhat.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LightingManager.html#width">width</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
+<dd>
+<div class="block">Width of the 2D arrays used in this, as obtained from <a href="com/github/yellowstonegames/grid/LightingManager.html#resistances"><code>LightingManager.resistances</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#width">width</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>

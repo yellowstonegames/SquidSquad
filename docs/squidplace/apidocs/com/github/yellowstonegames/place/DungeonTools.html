@@ -610,7 +610,9 @@ char&nbsp;match)</span></div>
 <section class="detail" id="debugPrint(char[][])">
 <h3>debugPrint</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">debugPrint</span>&#8203;(<span class="parameters">char[][]&nbsp;level)</span></div>
-<div class="block">For when you want to print a 2D char array. Prints on multiple lines, with a trailing newline.</div>
+<div class="block">For when you want to print a 2D char array. Prints on multiple lines, with a trailing newline.
+ To match how libGDX displays on the screen, this prints with the y-axis pointing up, that is,
+ row 0 is at the bottom and the highest y-value is at the top.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>level</code> - a 2D char array to print with a trailing newline</dd>

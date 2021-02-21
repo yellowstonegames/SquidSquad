@@ -73,11 +73,46 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.BOLD">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#BOLD">BOLD</a></code></th>
+<td class="col-last"><code>2147483648L</code></td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.MIDSCRIPT">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#MIDSCRIPT">MIDSCRIPT</a></code></th>
+<td class="col-last"><code>134217728L</code></td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.msdfFragmentShader">public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
 <th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#msdfFragmentShader">msdfFragmentShader</a></code></th>
 <td class="col-last"><code>"#ifdef GL_ES\n\tprecision mediump float;\n\tprecision mediump int;\n#endif\n\nuniform sampler2D u_texture;\nuniform float u_smoothing;\nvarying vec4 v_color;\nvarying vec2 v_texCoords;\n\nvoid main() {\n  vec3 sdf = texture2D(u_texture, v_texCoords).rgb;\n  gl_FragColor = vec4(v_color.rgb, clamp((max(min(sdf.r, sdf.g), min(max(sdf.r, sdf.g), sdf.b)) - 0.5) * u_smoothing + 0.5, 0.0, 1.0) * v_color.a);\n}\n"</code></td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.OBLIQUE">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#OBLIQUE">OBLIQUE</a></code></th>
+<td class="col-last"><code>1073741824L</code></td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.STRIKETHROUGH">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#STRIKETHROUGH">STRIKETHROUGH</a></code></th>
+<td class="col-last"><code>268435456L</code></td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.SUBSCRIPT">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#SUBSCRIPT">SUBSCRIPT</a></code></th>
+<td class="col-last"><code>67108864L</code></td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.SUPERSCRIPT">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#SUPERSCRIPT">SUPERSCRIPT</a></code></th>
+<td class="col-last"><code>201326592L</code></td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.UNDERLINE">public&nbsp;static&nbsp;final&nbsp;long</code></td>
+<th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#UNDERLINE">UNDERLINE</a></code></th>
+<td class="col-last"><code>536870912L</code></td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code id="com.github.yellowstonegames.glyph.Font.vertexShader">public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
 <th class="col-second" scope="row"><code><a href="com/github/yellowstonegames/glyph/Font.html#vertexShader">vertexShader</a></code></th>
 <td class="col-last"><code>"attribute vec4 a_position;\nattribute vec4 a_color;\nattribute vec2 a_texCoord0;\nuniform mat4 u_projTrans;\nvarying vec4 v_color;\nvarying vec2 v_texCoords;\n\nvoid main() {\n\tv_color = a_color;\n\tv_color.a = v_color.a * (255.0/254.0);\n\tv_texCoords = a_texCoord0;\n\tgl_Position =  u_projTrans * a_position;\n}\n"</code></td>

@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -555,6 +555,13 @@ float&nbsp;change)</code></th>
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeOklab(java.lang.CharSequence)">describeOklab</a></span>&#8203;(java.lang.CharSequence&nbsp;description)</code></th>
+<td class="col-last">
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed Oklab int color.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeOklab(java.lang.CharSequence,int,int)">describeOklab</a></span>&#8203;(java.lang.CharSequence&nbsp;description,
 int&nbsp;start,
 int&nbsp;length)</code></th>
@@ -562,7 +569,18 @@ int&nbsp;length)</code></th>
 <div class="block">Parses a color description and returns the approximate color it describes, as a packed Oklab int color.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#differentiateLightness(int,int)">differentiateLightness</a></span>&#8203;(int&nbsp;mainColor,
+int&nbsp;contrastingColor)</code></th>
+<td class="col-last">
+<div class="block">Given a packed int Oklab color <code>mainColor</code> and another Oklab color that it should be made to contrast with,
+ gets a packed int Oklab color with L that should be quite different from <code>contrastingColor</code>'s L, but the
+ same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
+ black).</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#dullen(int,float)">dullen</a></span>&#8203;(int&nbsp;oklab,
 float&nbsp;change)</code></th>
@@ -570,7 +588,7 @@ float&nbsp;change)</code></th>
 <div class="block">Brings the chromatic components of <code>oklab</code> closer to grayscale by <code>change</code> (desaturating them).</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enrich(int,float)">enrich</a></span>&#8203;(int&nbsp;oklab,
 float&nbsp;change)</code></th>
@@ -578,7 +596,7 @@ float&nbsp;change)</code></th>
 <div class="block">Pushes the chromatic components of <code>oklab</code> away from grayscale by change (saturating them).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static byte</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getRawGamutValue(int)">getRawGamutValue</a></span>&#8203;(int&nbsp;index)</code></th>
 <td class="col-last">
@@ -587,7 +605,7 @@ float&nbsp;change)</code></th>
  that lightness and hue.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hue(int)">hue</a></span>&#8203;(int&nbsp;oklab)</code></th>
 <td class="col-last">
@@ -595,14 +613,14 @@ float&nbsp;change)</code></th>
  to 1f (exclusive, red and approaching purple if decreased).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#inGamut(int)">inGamut</a></span>&#8203;(int&nbsp;packed)</code></th>
 <td class="col-last">
 <div class="block">Returns true if the given packed int color, as Oklab, is valid to convert losslessly back to RGBA.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#inGamut(int,int,int)">inGamut</a></span>&#8203;(int&nbsp;L,
 int&nbsp;A,
@@ -611,7 +629,7 @@ int&nbsp;B)</code></th>
 <div class="block">Returns true if the given Oklab values are valid to convert losslessly back to RGBA.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lerp(float,float,float)">lerp</a></span>&#8203;(float&nbsp;fromValue,
 float&nbsp;toValue,
@@ -620,7 +638,7 @@ float&nbsp;progress)</code></th>
 <div class="block">Linearly interpolates between fromValue to toValue on progress position.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lerpColors(int,int,float)">lerpColors</a></span>&#8203;(int&nbsp;s,
 int&nbsp;e,
@@ -629,7 +647,17 @@ float&nbsp;change)</code></th>
 <div class="block">Interpolates from the packed int color start towards end by change.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i14">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lerpColorsBlended(int,int,float)">lerpColorsBlended</a></span>&#8203;(int&nbsp;start,
+int&nbsp;end,
+float&nbsp;change)</code></th>
+<td class="col-last">
+<div class="block">Interpolates from the packed Oklab int color start towards the Oklan int color end by change, but keeps the alpha
+ of start and uses the alpha of end as an extra factor that can affect how much to change.</div>
+</td>
+</tr>
+<tr class="row-color" id="i15">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lighten(int,float)">lighten</a></span>&#8203;(int&nbsp;oklab,
 float&nbsp;change)</code></th>
@@ -637,7 +665,7 @@ float&nbsp;change)</code></th>
 <div class="block">Interpolates from the packed Oklab int color oklab towards white by change.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int)">limitToGamut</a></span>&#8203;(int&nbsp;packed)</code></th>
 <td class="col-last">
@@ -645,7 +673,7 @@ float&nbsp;change)</code></th>
  the gamut at the same lightness, or if it is already in-gamut, returns the color as-is.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;L,
 int&nbsp;A,
@@ -655,7 +683,7 @@ int&nbsp;B)</code></th>
  the gamut at the same lightness, or if it is already in-gamut, returns the color as-is.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;L,
 int&nbsp;A,
@@ -666,7 +694,7 @@ int&nbsp;alpha)</code></th>
  the gamut at the same lightness, or if it is already in-gamut, returns the color as-is.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maximizeSaturation(int)">maximizeSaturation</a></span>&#8203;(int&nbsp;packed)</code></th>
 <td class="col-last">
@@ -674,7 +702,7 @@ int&nbsp;alpha)</code></th>
  B from gray possible for that lightness while keeping the same hue as the given color.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maximizeSaturation(int,int,int,int)">maximizeSaturation</a></span>&#8203;(int&nbsp;L,
 int&nbsp;A,
@@ -685,7 +713,7 @@ int&nbsp;alpha)</code></th>
  B from gray possible for that lightness while keeping the same hue as the given color.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mix(int%5B%5D,int,int)">mix</a></span>&#8203;(int[]&nbsp;colors,
 int&nbsp;offset,
@@ -694,7 +722,15 @@ int&nbsp;size)</code></th>
 <div class="block">Given several colors, this gets an even mix of all colors in equal measure.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="alt-color" id="i22">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#offsetLightness(int)">offsetLightness</a></span>&#8203;(int&nbsp;oklab)</code></th>
+<td class="col-last">
+<div class="block">Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
+ then averages that with the original L.</div>
+</td>
+</tr>
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(java.lang.CharSequence&nbsp;markupString)</code></th>
 <td class="col-last">
@@ -703,7 +739,7 @@ int&nbsp;size)</code></th>
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toRGBA8888(int)">toRGBA8888</a></span>&#8203;(int&nbsp;oklab)</code></th>
 <td class="col-last">
@@ -1954,6 +1990,27 @@ float&nbsp;change)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="lerpColorsBlended(int,int,float)">
+<h3>lerpColorsBlended</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">lerpColorsBlended</span>&#8203;(<span class="parameters">int&nbsp;start,
+int&nbsp;end,
+float&nbsp;change)</span></div>
+<div class="block">Interpolates from the packed Oklab int color start towards the Oklan int color end by change, but keeps the alpha
+ of start and uses the alpha of end as an extra factor that can affect how much to change. Both start and end
+ should be packed Oklab int colors, as from <a href="#describeOklab(java.lang.CharSequence)"><code>describeOklab(CharSequence)</code></a> or any of the color constants
+ here, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
+ of temporary Colors. You will probably want to convert the color for rendering with <a href="#toRGBA8888(int)"><code>toRGBA8888(int)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - the starting color as a packed Oklab int; alpha will be preserved</dd>
+<dd><code>end</code> - the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change</dd>
+<dd><code>change</code> - how much to go from start toward end, as a float between 0 and 1; higher means closer to end</dd>
+<dt>Returns:</dt>
+<dd>a packed float that represents a color between start and end</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="mix(int[],int,int)">
 <h3>mix</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">mix</span>&#8203;(<span class="parameters">int[]&nbsp;colors,
@@ -2004,6 +2061,35 @@ int&nbsp;size)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="describeOklab(java.lang.CharSequence)">
+<h3>describeOklab</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">describeOklab</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description)</span></div>
+<div class="block">Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
+ Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
+ spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
+ <a href="#NAMED"><code>NAMED</code></a> and tracked; if there is more than one of these color name words, the colors will be mixed using
+ <a href="#mix(int%5B%5D,int,int)"><code>mix(int[], int, int)</code></a>, or if there is just one color name word, then the corresponding color
+ will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
+ "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
+ adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. Technically,
+ the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
+ "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
+ appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
+ name or adjective is invalid, it is considered the same as adding the color <a href="#TRANSPARENT"><code>TRANSPARENT</code></a>.
+ <br>
+ Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+ and "lightest richer apricot-olive".
+ <br>
+ This always considers its input a color description, won't parse hex colors, and always uses the full text.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>description</code> - a color description, as a lower-case String matching the above format</dd>
+<dt>Returns:</dt>
+<dd>a packed Oklab int color as described</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="describeOklab(java.lang.CharSequence,int,int)">
 <h3>describeOklab</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">describeOklab</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;description,
@@ -2050,6 +2136,40 @@ int&nbsp;length)</span></div>
 <dd><code>markupString</code> - a CharSequence, most commonly a String, that may contain color markup starting with <code>[|</code></dd>
 <dt>Returns:</dt>
 <dd>a String that has the <code>[|</code> markup changed to libGDX-compatible <code>[#</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="differentiateLightness(int,int)">
+<h3>differentiateLightness</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">differentiateLightness</span>&#8203;(<span class="parameters">int&nbsp;mainColor,
+int&nbsp;contrastingColor)</span></div>
+<div class="block">Given a packed int Oklab color <code>mainColor</code> and another Oklab color that it should be made to contrast with,
+ gets a packed int Oklab color with L that should be quite different from <code>contrastingColor</code>'s L, but the
+ same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
+ black). This allows most of the colors this method produces to contrast well as a foreground when displayed on a
+ background of <code>contrastingColor</code>, or vice versa.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mainColor</code> - a packed Oklab int color; this is the color that will be adjusted</dd>
+<dd><code>contrastingColor</code> - a packed Oklab int color; the adjusted mainColor will contrast with the L of this</dd>
+<dt>Returns:</dt>
+<dd>a different packed Oklab int color, based on mainColor but typically with different lightness</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="offsetLightness(int)">
+<h3>offsetLightness</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">offsetLightness</span>&#8203;(<span class="parameters">int&nbsp;oklab)</span></div>
+<div class="block">Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
+ then averages that with the original L. This means light colors become darker, and dark colors become lighter,
+ with almost all results in the middle-range of possible lightness.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>oklab</code> - a packed Oklab int color</dd>
+<dt>Returns:</dt>
+<dd>a different packed Oklab int color, with its L channel changed and limited to the correct gamut</dd>
 </dl>
 </section>
 </li>
