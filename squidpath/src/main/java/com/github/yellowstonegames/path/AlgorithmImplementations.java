@@ -143,7 +143,7 @@ class AlgorithmImplementations<V> {
     // Shortest Paths
     //================================================================================
 
-    double findMinimumDistance(Node<V> start, Node<V> target) {
+    float findMinimumDistance(Node<V> start, Node<V> target) {
         Node<V> end = aStarSearch(start, target, null);
         if (end==null) return Float.MAX_VALUE;
         else return end.distance;

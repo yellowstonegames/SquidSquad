@@ -82,6 +82,10 @@ loadScripts(document, 'script');</script>
 <dt>Type Parameters:</dt>
 <dd><code>V</code> - the vertex type; often <code>Coord</code></dd>
 </dl>
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="DirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">DirectedGraphAlgorithms</a></code>, <code><a href="UndirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">UndirectedGraphAlgorithms</a></code></dd>
+</dl>
 <hr>
 <pre>public class <span class="type-name-label">Algorithms&lt;V&gt;</span>
 extends java.lang.Object</pre>
@@ -152,7 +156,7 @@ int&nbsp;maxDepth)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i5">
-<td class="col-first"><code>double</code></td>
+<td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findMinimumDistance(V,V)">findMinimumDistance</a></span>&#8203;(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
 <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</code></th>
 <td class="col-last">
@@ -267,7 +271,7 @@ com.github.tommyettinger.ds.ObjectList&lt;<a href="Algorithms.html" title="type 
 <li>
 <section class="detail" id="findMinimumDistance(V,V)">
 <h3 id="findMinimumDistance(java.lang.Object,java.lang.Object)">findMinimumDistance</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">findMinimumDistance</span>&#8203;(<span class="parameters"><a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">findMinimumDistance</span>&#8203;(<span class="parameters"><a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
 <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</span></div>
 <div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 <dl class="notes">

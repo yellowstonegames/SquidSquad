@@ -98,7 +98,7 @@ public class Algorithms<V> {
      * @param target the target vertex
      * @return the sum of the weights in a shortest path from the starting vertex to the target vertex
      */
-    public double findMinimumDistance(V start, V target) {
+    public float findMinimumDistance(V start, V target) {
         return implementations.findMinimumDistance(graph.getNode(start), graph.getNode(target));
     }
 

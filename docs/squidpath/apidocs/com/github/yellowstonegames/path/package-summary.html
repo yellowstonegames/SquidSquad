@@ -110,11 +110,37 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></th>
+<td class="col-last">
+<div class="block">A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
+ passable neighbor.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></th>
+<td class="col-last">
+<div class="block">A default setting for an <a href="UndirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>UndirectedGraph</code></a> of Coord vertices where all connections have cost 1.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></th>
 <td class="col-last">
 <div class="block">A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more
  than one valid goal, or when you want a gradient floodfill to mark each cell in an area with its distance from a
  goal.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;V&gt;</th>
+<td class="col-last">
+<div class="block">A kind of <a href="Graph.html" title="class in com.github.yellowstonegames.path"><code>Graph</code></a> where all connections between vertices are one-way (but a connection may exist that goes from
+ A to B and another connection may go from B to A), and each connection can have a different cost.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="DirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">DirectedGraphAlgorithms</a>&lt;V&gt;</th>
+<td class="col-last">
+<div class="block">Algorithms specific to directed graphs, like <a href="CostlyGraph.html" title="class in com.github.yellowstonegames.path"><code>CostlyGraph</code></a>, as well as general <a href="Algorithms.html" title="class in com.github.yellowstonegames.path"><code>Algorithms</code></a>.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -135,6 +161,19 @@ loadScripts(document, 'script');</script>
 <div class="block">An extended version of <code>BinaryHeap.Node</code> that also stores a reference to the parent Graph,
  a vertex object of type <code>V</code>, a Map of neighbor Nodes to the appropriate <a href="Connection.html" title="class in com.github.yellowstonegames.path"><code>Connection</code></a> per Node, an extra
  List of those same Connections for faster iteration, and a lot of internal data used by algorithms in this package.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="UndirectedGraph.html" title="class in com.github.yellowstonegames.path">UndirectedGraph</a>&lt;V&gt;</th>
+<td class="col-last">
+<div class="block">A kind of <a href="Graph.html" title="class in com.github.yellowstonegames.path"><code>Graph</code></a> where all connections between vertices are two-way and have equal cost for traveling A to B
+ or B to A.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="UndirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">UndirectedGraphAlgorithms</a>&lt;V&gt;</th>
+<td class="col-last">
+<div class="block">Algorithms specific to undirected graphs, like <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path"><code>DefaultGraph</code></a>, as well as general <a href="Algorithms.html" title="class in com.github.yellowstonegames.path"><code>Algorithms</code></a>.</div>
 </td>
 </tr>
 <tr class="alt-color">
