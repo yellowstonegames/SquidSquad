@@ -2,11 +2,12 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.graphics.Texture;
 
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
 
-    private Font cozette, astarry, cascadiaMono, dejaVuSansMono, inconsolataLGC, iosevka, iosevkaSlab;
+    private Font cozette, astarry, cascadiaMono, dejaVuSansMono, inconsolataLGC, iosevka, iosevkaSlab, openSans;
 
     private KnownFonts() {
         if(Gdx.app == null)
@@ -50,6 +51,36 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cozette != null)
             return new Font(instance.cozette);
         throw new RuntimeException("Assets for getCozette() not found.");
+    }
+
+    /**
+     * Returns a Font configured to use a clean variable-width font, Open Sans. This makes an especially large
+     * font by default, but can be scaled down nicely.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.png</li>
+     * </ul>
+     * @return the Font object that represents the variable-width font OpenSans
+     */
+    public static Font getOpenSans()
+    {
+        initialize();
+        if(instance.openSans == null)
+        {
+            try {
+                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", false, 0, 0, 0, 0);
+                instance.openSans.parentTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.openSans != null)
+            return new Font(instance.openSans);
+        throw new RuntimeException("Assets for getOpenSans() not found.");
     }
 
     /**

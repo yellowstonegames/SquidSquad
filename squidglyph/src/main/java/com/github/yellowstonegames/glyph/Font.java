@@ -18,12 +18,13 @@ import regexodus.Category;
 public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
     public Texture parentTexture;
-    public boolean isMSDF;
+    public boolean isMSDF, isMono;
     public float msdfCrispness = 1f;
-    public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f;
-    public static final long BOLD = 1L << 31, OBLIQUE = 1L << 30,
-            UNDERLINE = 1L << 29, STRIKETHROUGH = 1L << 28,
-            SUBSCRIPT = 1L << 26, MIDSCRIPT = 2L << 26, SUPERSCRIPT = 3L << 26;
+    public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f,
+            scaleX = 1f, scaleY = 1f;
+    public static final long BOLD = 1L << 30, OBLIQUE = 1L << 29,
+            UNDERLINE = 1L << 28, STRIKETHROUGH = 1L << 27,
+            SUBSCRIPT = 1L << 25, MIDSCRIPT = 2L << 25, SUPERSCRIPT = 3L << 25;
 
     private final float[] vertices = new float[20];
 
@@ -67,10 +68,13 @@ public class Font implements Disposable {
 
     public Font(Font toCopy){
         isMSDF = toCopy.isMSDF;
+        isMono = toCopy.isMono;
         msdfCrispness = toCopy.msdfCrispness;
         parentTexture = toCopy.parentTexture;
         cellWidth = toCopy.cellWidth;
         cellHeight = toCopy.cellHeight;
+        scaleX = toCopy.scaleX;
+        scaleY = toCopy.scaleY;
         originalCellWidth = toCopy.originalCellWidth;
         originalCellHeight = toCopy.originalCellHeight;
         mapping = new IntObjectMap<>(toCopy.mapping.size());
@@ -115,32 +119,37 @@ public class Font implements Disposable {
         int idx = indexAfter(fnt, "\nchars count=", 0);
         int size = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
         mapping = new IntObjectMap<>(size);
+        float minWidth = Float.MAX_VALUE;
         for (int i = 0; i < size; i++) {
             int c = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " x=", idx));
             int x = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " y=", idx));
             int y = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " width=", idx));
-            int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " height=", idx));
-            int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+            int h = DigitTools.intFromDec(fnt, idx = indexAfter(fnt, " height=", idx), idx = indexAfter(fnt, " xadvance=", idx));
+            int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
             x += xAdjust;
             y += yAdjust;
             w += widthAdjust;
             h += heightAdjust;
-            cellWidth = w;
-            cellHeight = h;
+            minWidth = Math.min(minWidth, w);
+            cellWidth = Math.max(w, cellWidth);
+            cellHeight = Math.max(h, cellHeight);
             mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         originalCellWidth = cellWidth;
         originalCellHeight = cellHeight;
+        isMono = minWidth == cellWidth;
     }
     public Font scale(float horizontal, float vertical) {
+        scaleX *= horizontal;
+        scaleY *= vertical;
         cellWidth *= horizontal;
         cellHeight *= vertical;
-//        msdfCrispness = (msdfCrispness - 1f) * vertical + 1f;
         return this;
     }
     public Font scaleTo(float width, float height) {
-//        msdfCrispness = (msdfCrispness - 1f) * (height / cellHeight) + 1f;
+        scaleX = width / originalCellWidth;
+        scaleY = height / originalCellHeight;
         cellWidth  = width;
         cellHeight = height;
         return this;
@@ -186,8 +195,10 @@ public class Font implements Disposable {
      */
     public void drawText(Batch batch, CharSequence text, float x, float y, int color) {
         batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
-        for (int i = 0, n = text.length(); i < n; i++, x += cellWidth) {
-            batch.draw(mapping.get(text.charAt(i)), x, y, cellWidth, cellHeight);
+        TextureRegion current;
+        for (int i = 0, n = text.length(); i < n; i++) {
+            batch.draw(current = mapping.get(text.charAt(i)), x, y, current.getRegionWidth(), current.getRegionHeight());
+            x += current.getRegionWidth();
         }
     }
 
@@ -290,8 +301,8 @@ public class Font implements Disposable {
         tempGlyphs.clear();
         markup(text, tempGlyphs);
         final int n = tempGlyphs.size();
-        for (int i = 0; i < n; i++, x += cellWidth) {
-            drawGlyph(batch, tempGlyphs.get(i), x, y);
+        for (int i = 0; i < n; i++) {
+            x += drawGlyph(batch, tempGlyphs.get(i), x, y);
         }
         return n;
     }
@@ -320,8 +331,8 @@ public class Font implements Disposable {
      */
     public int drawGlyphs(Batch batch, LongList glyphs, int offset, int length, float x, float y) {
         int drawn = 0;
-        for (int i = offset, n = glyphs.size(); i < n && drawn < length; i++, drawn++, x += cellWidth) {
-            drawGlyph(batch, glyphs.get(i), x, y);
+        for (int i = offset, n = glyphs.size(); i < n && drawn < length; i++, drawn++) {
+            x += drawGlyph(batch, glyphs.get(i), x, y);
         }
         return drawn;
     }
@@ -335,48 +346,55 @@ public class Font implements Disposable {
      * @param x the x position in world space to start drawing the glyph at (lower left corner)
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
      */
-    public void drawGlyph(Batch batch, long glyph, float x, float y) {
+    public float drawGlyph(Batch batch, long glyph, float x, float y) {
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         float color = BitConversion.reversedIntBitsToFloat((int) (glyph >>> 32) & -2);
         final float xPx = 1f, xPx2 = 2f;
         TextureRegion tr = mapping.get((char) glyph);
-        if (tr == null) return;
+        if (tr == null) return 0f;
         float u, v, u2, v2;
         u = tr.getU();
         v = tr.getV();
         u2 = tr.getU2();
         v2 = tr.getV2();
+        float w = tr.getRegionWidth() * scaleX, changedW = w, h = tr.getRegionHeight() * scaleY;
         if ((glyph & OBLIQUE) != 0L) {
-            x0 += cellWidth * 0.2f;
-            x1 -= cellWidth * 0.2f;
-            x2 -= cellWidth * 0.2f;
-            x3 += cellWidth * 0.2f;
+            x0 += cellHeight * 0.2f;
+            x1 -= cellHeight * 0.2f;
+            x2 -= cellHeight * 0.2f;
+            x3 += cellHeight * 0.2f;
         }
         final long script = (glyph & SUPERSCRIPT);
         if (script == SUPERSCRIPT) {
-            x2 -= cellWidth * 0.5f;
-            x3 -= cellWidth * 0.5f;
-            y1 += cellHeight * 0.5f;
-            y2 += cellHeight * 0.5f;
+            x2 -= w * 0.5f;
+            x3 -= w * 0.5f;
+            y1 += h * 0.5f;
+            y2 += h * 0.5f;
+            if(!isMono)
+                changedW *= 0.5f;
         }
         else if (script == SUBSCRIPT) {
-            x2 -= cellWidth * 0.5f;
-            x3 -= cellWidth * 0.5f;
-            y0 -= cellHeight * 0.5f;
-            y3 -= cellHeight * 0.5f;
+            x2 -= w * 0.5f;
+            x3 -= w * 0.5f;
+            y0 -= h * 0.5f;
+            y3 -= h * 0.5f;
+            if(!isMono)
+                changedW *= 0.5f;
         }
         else if(script == MIDSCRIPT) {
-            x2 -= cellWidth * 0.5f;
-            x3 -= cellWidth * 0.5f;
-            y0 -= cellHeight * 0.25f;
-            y1 += cellHeight * 0.25f;
-            y2 += cellHeight * 0.25f;
-            y3 -= cellHeight * 0.25f;
+            x2 -= w * 0.5f;
+            x3 -= w * 0.5f;
+            y0 -= h * 0.25f;
+            y1 += h * 0.25f;
+            y2 += h * 0.25f;
+            y3 -= h * 0.25f;
+            if(!isMono)
+                changedW *= 0.5f;
         }
 
         vertices[0] = x + x0;
-        vertices[1] = y + y0 + cellHeight;
+        vertices[1] = y + y0 + h;
         vertices[2] = color;
         vertices[3] = u;
         vertices[4] = v;
@@ -387,14 +405,14 @@ public class Font implements Disposable {
         vertices[8] = u;
         vertices[9] = v2;
 
-        vertices[10] = x + x2 + cellWidth;
+        vertices[10] = x + x2 + w;
         vertices[11] = y + y2;
         vertices[12] = color;
         vertices[13] = u2;
         vertices[14] = v2;
 
-        vertices[15] = x + x3 + cellWidth;
-        vertices[16] = y + y3 + cellHeight;
+        vertices[15] = x + x3 + w;
+        vertices[16] = y + y3 + h;
         vertices[17] = color;
         vertices[18] = u2;
         vertices[19] = v;
@@ -419,7 +437,7 @@ public class Font implements Disposable {
                         underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
                         underV2 = under.getV2();
                 vertices[0] = x;
-                vertices[1] = y + cellHeight;
+                vertices[1] = y + h;
                 vertices[2] = color;
                 vertices[3] = underU;
                 vertices[4] = underV;
@@ -430,14 +448,14 @@ public class Font implements Disposable {
                 vertices[8] = underU;
                 vertices[9] = underV2;
 
-                vertices[10] = x + cellWidth;
+                vertices[10] = x + w;
                 vertices[11] = y;
                 vertices[12] = color;
                 vertices[13] = underU2;
                 vertices[14] = underV2;
 
-                vertices[15] = x + cellWidth;
-                vertices[16] = y + cellHeight;
+                vertices[15] = x + w;
+                vertices[16] = y + h;
                 vertices[17] = color;
                 vertices[18] = underU2;
                 vertices[19] = underV;
@@ -453,7 +471,7 @@ public class Font implements Disposable {
                         dashV2 = dash.getV2();
 
                 vertices[0] = x;
-                vertices[1] = y + cellHeight;
+                vertices[1] = y + h;
                 vertices[2] = color;
                 vertices[3] = dashU;
                 vertices[4] = dashV;
@@ -464,20 +482,21 @@ public class Font implements Disposable {
                 vertices[8] = dashU;
                 vertices[9] = dashV2;
 
-                vertices[10] = x + cellWidth;
+                vertices[10] = x + w;
                 vertices[11] = y;
                 vertices[12] = color;
                 vertices[13] = dashU2;
                 vertices[14] = dashV2;
 
-                vertices[15] = x + cellWidth;
-                vertices[16] = y + cellHeight;
+                vertices[15] = x + w;
+                vertices[16] = y + h;
                 vertices[17] = color;
                 vertices[18] = dashU2;
                 vertices[19] = dashV;
                 batch.draw(parentTexture, vertices, 0, 20);
             }
         }
+        return changedW;
     }
 
     /**
