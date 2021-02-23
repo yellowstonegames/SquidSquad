@@ -71,6 +71,7 @@ public interface Heuristic<V> {
 	Heuristic<Coord> DIJKSTRA = (node, endNode) -> 0f;
 	/**
 	 * An unmodifiable List of all the Heuristic implementations in this class.
+	 * Contains {@link #MANHATTAN}, {@link #CHEBYSHEV}, {@link #EUCLIDEAN}, and {@link #DIJKSTRA}.
 	 */
 	List<Heuristic<Coord>> HEURISTICS = Arrays.asList(MANHATTAN, CHEBYSHEV, EUCLIDEAN, DIJKSTRA);
 }

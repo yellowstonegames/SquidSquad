@@ -54,7 +54,7 @@ public class DirectedGraphAlgorithms<V> extends Algorithms<V> {
      * That is, for every edge from vertex u to vertex v, u will come before v in the supplied list.
      * Note that the graph cannot contain any cycles for a topological order to exist. If a cycle exists, the sorting
      * procedure will terminate and the supplied list will only contain the vertices up until the point of termination.
-     * @param sortedVertices an ArrayList of V vertices that will be cleared and modified in-place
+     * @param sortedVertices an ObjectList of V vertices that will be cleared and modified in-place
      * @return true if the sort was successful, false if the graph contains a cycle
      */
     public boolean topologicalSort(ObjectList<V> sortedVertices) {
