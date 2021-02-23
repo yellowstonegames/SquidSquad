@@ -1,10 +1,10 @@
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.ds.ObjectList;
 import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.Replacer;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -586,8 +586,8 @@ public class StringTools {
     public static List<String> wrap(CharSequence longText, int width)
     {
         if(width <= 0)
-            return new ArrayList<>(0);
-        return wrap(new ArrayList<String>(longText.length() / width + 2), longText, width);
+            return new ObjectList<>(0);
+        return wrap(new ObjectList<>(longText.length() / width + 2), longText, width);
     }
     /**
      * Word-wraps the given String (or other CharSequence, such as a StringBuilder) so it is split into zero or more

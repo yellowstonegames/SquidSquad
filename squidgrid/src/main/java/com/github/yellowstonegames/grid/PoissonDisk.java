@@ -27,7 +27,7 @@ public class PoissonDisk {
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
-     * @return an ArrayList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY)
@@ -48,7 +48,7 @@ public class PoissonDisk {
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small radii, this can be around 5; with larger ones, 30 is reasonable
      * @param rng an IRNG to use for all random sampling.
-     * @return an ArrayList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY, int pointsPerIteration, Random rng)
@@ -68,7 +68,7 @@ public class PoissonDisk {
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
-     * @return an ArrayList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
                                                     int maxX, int maxY)
@@ -89,7 +89,7 @@ public class PoissonDisk {
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
      * @param rng an IRNG to use for all random sampling.
-     * @return an ArrayList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
                                                     int maxX, int maxY, int pointsPerIteration, Random rng)

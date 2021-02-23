@@ -1,14 +1,13 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
 
 import java.io.Serializable;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * This class provides methods for calculating Field of View in grids. Field of
@@ -567,13 +566,15 @@ public class FOV implements Serializable {
         }
     }
 
+    private static final ObjectList<Coord> neighbors = new ObjectList<>(8);
+
     private static float nearRippleLight(int x, int y, int rippleNeighbors, int startx, int starty, float decay, float[][] lightMap, float[][] map, Radius radiusStrategy) {
         if (x == startx && y == starty) {
             return 1;
         }
         int width = lightMap.length;
         int height = lightMap[0].length;
-        List<Coord> neighbors = new ArrayList<>();
+        neighbors.clear();
         float tmpDistance = 0, testDistance;
         Coord c;
         for (Direction di : Direction.OUTWARDS) {
@@ -598,7 +599,8 @@ public class FOV implements Serializable {
         if (neighbors.isEmpty()) {
             return 0;
         }
-        neighbors = neighbors.subList(0, Math.min(neighbors.size(), rippleNeighbors));
+        if(rippleNeighbors < neighbors.size())
+            neighbors.removeRange(rippleNeighbors, neighbors.size());
         float light = 0;
         int lit = 0, indirects = 0;
         for (Coord p : neighbors) {
