@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectSet;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
@@ -47,19 +48,23 @@ import java.util.Iterator;
  * All solvers perform bounds checking so solid borders in the map are not
  * required.
  * <br>
- * For calculating FOV maps, this class provides both instance methods, which
- * attempt to reuse the same 2D array for light stored in the object, and static
- * methods, which take a light 2D array as an argument and edit it in-place.
- * In older versions of SquidLib, constantly allocating and returning 2D float
- * arrays on each call dragged performance down, but both of the new methods
- * should perform well.
+ * For calculating FOV maps, this class only provides static methods, which take
+ * a light 2D array as an argument and edit it in-place. The Ripple methods
+ * {@link #reuseRippleFOV(float[][], float[][], int, int, int, float, Radius)}
+ * and {@link #reuseRippleFOV(float[][], float[][], int, int, int, float, Radius, float, float)}
+ * use internal static state, resetting it on each call; this makes them
+ * ineligible for use in multi-threaded code. The other methods use Shadow FOV,
+ * and are potentially usable in multi-threaded code.
  * <br>
  * Static methods are provided to add together FOV maps in the simple way
  * (disregarding visibility of distant FOV from a given cell), or the more
  * practical way for roguelikes (where a cell needs to be within line-of-sight
  * in the first place for a distant light to illuminate it). The second method
  * relies on an LOS map, which is essentially the same as a very-high-radius
- * FOV map and can be easily obtained with calculateLOSMap().
+ * FOV map and can be easily obtained with calculateLOSMap(). The simple way uses
+ * {@link #addFOVs(float[][]...)} or {@link #addFOVsInto(float[][], float[][]...)},
+ * while the way that respects LOS uses {@link #mixVisibleFOVs(float[][], float[][]...)}
+ * or {@link #mixVisibleFOVsInto(float[][], float[][], float[][]...)}.
  * <br>
  * If you want to iterate through cells that are visible in a float[][] returned
  * by FOV, you can pass that float[][] to the constructor for Region, and
@@ -72,15 +77,16 @@ import java.util.Iterator;
  * This class is not thread-safe. This is generally true for most of SquidLib.
  *
  * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author Tommy Ettinger
  */
 public class FOV implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected static final Direction[] ccw = new Direction[]
+    private static final Direction[] ccw = new Direction[]
             {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT},
             ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP, Direction.UP_LEFT,
             Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
     private static final ArrayDeque<Coord> dq = new ArrayDeque<>();
-    private static final Region lightWorkspace = new Region(64, 64);
+    private static final ObjectSet<Coord> lightWorkspace = new ObjectSet<>(256);
 
     /**
      * Static usage only.
@@ -91,7 +97,7 @@ public class FOV implements Serializable {
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates. Assigns to, and returns, a light map where the values
-     * represent a percentage of fully lit. Always uses shadowcasting FOV,
+     * represent a percentage of fully lit. Always uses Shadow FOV,
      * which allows this method to be static since it doesn't need to keep any
      * state around, and can reuse the state the user gives it via the
      * {@code light} parameter.  The values in light are always cleared before
@@ -115,7 +121,7 @@ public class FOV implements Serializable {
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates. Assigns to, and returns, a light map where the values
-     * represent a percentage of fully lit. Always uses shadowcasting FOV,
+     * represent a percentage of fully lit. Always uses Shadow FOV,
      * which allows this method to be static since it doesn't need to keep any
      * state around, and can reuse the state the user gives it via the
      * {@code light} parameter. The values in light are always cleared before
@@ -140,7 +146,7 @@ public class FOV implements Serializable {
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates. Assigns to, and returns, a light map where the values
-     * represent a percentage of fully lit. Always uses shadowcasting FOV,
+     * represent a percentage of fully lit. Always uses Shadow FOV,
      * which allows this method to be static since it doesn't need to keep any
      * state around, and can reuse the state the user gives it via the
      * {@code light} parameter. The values in light are always cleared before
@@ -182,7 +188,7 @@ public class FOV implements Serializable {
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates. Assigns to, and returns, a light map where the values
-     * represent a percentage of fully lit. Always uses shadowcasting FOV,
+     * represent a percentage of fully lit. Always uses Shadow FOV,
      * which allows this method to be static since it doesn't need to keep any
      * state around, and can reuse the state the user gives it via the
      * {@code light} parameter. The values in light are always cleared before
@@ -280,7 +286,7 @@ public class FOV implements Serializable {
      * Assigns to, and returns, a light map where the values
      * are always either 0.0f for "not in line of sight" or 1.0f for "in line of
      * sight," which doesn't mean a cell is actually visible if there's no light
-     * in that cell. Always uses shadowcasting FOV, which allows this method to
+     * in that cell. Always uses Shadow FOV, which allows this method to
      * be static since it doesn't need to keep any state around, and can reuse the
      * state the user gives it via the {@code light} parameter. The values in light
      * are always cleared before this is run, because prior state can make this give
@@ -305,7 +311,7 @@ public class FOV implements Serializable {
      * Assigns to, and returns, a light map where the values
      * are always either 0.0f for "not in line of sight" or 1.0f for "in line of
      * sight," which doesn't mean a cell is actually visible if there's no light
-     * in that cell. Always uses shadowcasting FOV, which allows this method to
+     * in that cell. Always uses Shadow FOV, which allows this method to
      * be static since it doesn't need to keep any state around, and can reuse the
      * state the user gives it via the {@code light} parameter. The values in light
      * are always cleared before this is run, because prior state can make this give
@@ -345,7 +351,7 @@ public class FOV implements Serializable {
      * coordinates, lighting at the given angle in  degrees and covering a span
      * centered on that angle, also in degrees. Assigns to, and returns, a light
      * map where the values represent a percentage of fully lit. Always uses
-     * shadowcasting FOV, which allows this method to be static since it doesn't
+     * Shadow FOV, which allows this method to be static since it doesn't
      * need to keep any state around, and can reuse the state the user gives it
      * via the {@code light} parameter. The values in light are cleared before
      * this is run, because prior state can make this give incorrect results.
@@ -395,6 +401,15 @@ public class FOV implements Serializable {
      * can get a resistance map from {@link #generateResistances(char[][])}, {@code light} will be modified and returned
      * (it will be overwritten, but its size should be the same as the resistance map), there's a starting x,y position,
      * a radius in cells, and a {@link Radius} enum constant to choose the distance measurement.
+     * <br>
+     * This method should not be used from multiple threads; it uses internal static state. You can use the Shadow FOV
+     * methods instead if you need multi-threading.
+     * <br>
+     * Ripple is a significantly slower algorithm than Shadow, typically by more than an order of magnitude.
+     * Still, unless you are making many FOV calls per frame rendered, it's unlikely to be a severe bottleneck,
+     * although this is possible. {@link Radiance}, which typically makes an FOV call once per frame per Radiance,
+     * should always use Shadow, but if you only calculate FOV for the player, or only when they move, then either
+     * Shadow or Ripple can be suitable.
      * @param resistanceMap probably calculated with {@link #generateResistances(char[][])}; 1.0f blocks light, 0.0f allows it
      * @param light will be overwritten! Should be initialized with the same size as {@code resistanceMap}
      * @param rippleLooseness affects spread; between 1 and 6, inclusive; 1 is tightest, 2 is normal, and 6 is loosest
@@ -407,7 +422,7 @@ public class FOV implements Serializable {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
+        lightWorkspace.clear();
         doRippleFOV(light, MathTools.clamp(rippleLooseness, 1, 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
         return light;
     }
@@ -419,6 +434,15 @@ public class FOV implements Serializable {
      * modified and returned (it will be overwritten, but its size should be the same as the resistance map), there's 
      * starting x,y position, a radius in cells, a {@link Radius} enum constant to choose the distance measurement, and
      * the angle/span combination to specify a conical section of FOV (span is the total in degrees, centered on angle).
+     * <br>
+     * This method should not be used from multiple threads; it uses internal static state. You can use the Shadow FOV
+     * methods instead if you need multi-threading.
+     * <br>
+     * Ripple is a significantly slower algorithm than Shadow, typically by more than an order of magnitude.
+     * Still, unless you are making many FOV calls per frame rendered, it's unlikely to be a severe bottleneck,
+     * although this is possible. {@link Radiance}, which typically makes an FOV call once per frame per Radiance,
+     * should always use Shadow, but if you only calculate FOV for the player, or only when they move, then either
+     * Shadow or Ripple can be suitable.
      * @param resistanceMap probably calculated with {@link #generateResistances(char[][])}; 1.0f blocks light, 0.0f allows it
      * @param light will be overwritten! Should be initialized with the same size as {@code resistanceMap}
      * @param rippleLooseness affects spread; between 1 and 6, inclusive; 1 is tightest, 2 is normal, and 6 is loosest
@@ -433,7 +457,7 @@ public class FOV implements Serializable {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique, float angle, float span) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
+        lightWorkspace.clear();
         angle *= 0.002777777777777778f;
         angle -= MathTools.fastFloor(angle);
         span *= 0.002777777777777778f;
@@ -599,11 +623,11 @@ public class FOV implements Serializable {
         if (neighbors.isEmpty()) {
             return 0;
         }
-        if(rippleNeighbors < neighbors.size())
-            neighbors.removeRange(rippleNeighbors, neighbors.size());
+        int max = Math.min(rippleNeighbors, neighbors.size());
         float light = 0;
         int lit = 0, indirects = 0;
-        for (Coord p : neighbors) {
+        for (int i = 0; i < max; i++) {
+            Coord p = neighbors.get(i);
             if (lightMap[p.x][p.y] > 0) {
                 lit++;
                 if (FOV.lightWorkspace.contains(p)) {
@@ -615,7 +639,7 @@ public class FOV implements Serializable {
         }
 
         if (map[x][y] >= 1 || indirects >= lit) {
-            FOV.lightWorkspace.insert(x, y);
+            FOV.lightWorkspace.add(Coord.get(x, y));
         }
         return light;
     }
