@@ -3,6 +3,7 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -219,7 +220,7 @@ public class Font implements Disposable {
      */
     public void drawBlocks(Batch batch, int[][] colors, float x, float y) {
         final TextureRegion block = mapping.get(0);
-        assert block != null;
+        if(block == null) return;
         final float u = block.getU() + (block.getU2() - block.getU()) * 0.25f,
                 v = block.getV() + (block.getV2() - block.getV()) * 0.25f,
                 u2 = block.getU2() - (block.getU2() - block.getU()) * 0.25f,
@@ -596,7 +597,7 @@ public class Font implements Disposable {
                             break;
                         case '#':
                             if (len >= 7 && len < 9)
-                                color = DigitTools.longFromHex(text, i + 1, i + 7) << 40 | 0xFF00000000L;
+                                color = DigitTools.longFromHex(text, i + 1, i + 7) << 40 | 0x000000FF00000000L;
                             else if (len >= 9)
                                 color = DigitTools.longFromHex(text, i + 1, i + 9) << 32;
                             else
@@ -611,8 +612,14 @@ public class Font implements Disposable {
                             if (c >= 'a' && c <= 'z')
                             {
                                 color = (long) DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i, len)) << 32;
-                                current = (current & ~COLOR_MASK) | color;
                             }
+                            else {
+                                // attempt to look up a known Color name from Colors
+                                Color gdxColor = Colors.get(text.substring(i, len));
+                                if(gdxColor == null) color = -1L << 32; // opaque white
+                                else color = (long) Color.rgba8888(gdxColor) << 32;
+                            }
+                            current = (current & ~COLOR_MASK) | color;
                     }
                     i += len;
                 }
@@ -621,21 +628,15 @@ public class Font implements Disposable {
                 }
             } else {
                 char ch = text.charAt(i);
-                if(Category.Ll.contains(ch)) {
-                    if(capitalize && !previousWasLetter) {
-                        ch = Character.toUpperCase(ch);
-                    }
-                    else if(capsLock) {
-                        ch = Character.toUpperCase(ch);
+                if(Category.Ll.contains(ch)) { //we need to use this instead of Character.isLowerCase() because of GWT.
+                    if((capitalize && !previousWasLetter) || capsLock) {
+                        ch = Category.caseUp(ch); // again, GWT's toUpperCase() is not ideal.
                     }
                     previousWasLetter = true;
                 }
-                else if(Category.Lu.contains(ch)) {
-                    if(capitalize && previousWasLetter) {
-                        ch = Character.toLowerCase(ch);
-                    }
-                    else if(lowerCase) {
-                        ch = Character.toLowerCase(ch);
+                else if(Category.Lu.contains(ch)) { //we need to use this instead of Character.isUpperCase() because of GWT.
+                    if((capitalize && previousWasLetter) || lowerCase) {
+                        ch = Category.caseFold(ch); // yet again, GWT's toLowerCase() is not ideal.
                     }
                     previousWasLetter = true;
                 }

@@ -3,8 +3,12 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.BitConversion;
-import regexodus.*;
+import regexodus.MatchResult;
+import regexodus.Matcher;
+import regexodus.Pattern;
+import regexodus.Replacer;
+import regexodus.Substitution;
+import regexodus.TextBuffer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
