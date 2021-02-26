@@ -6,10 +6,12 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.LineTools;
+import regexodus.Category;
 
 public class FontTest extends ApplicationAdapter {
 
@@ -18,6 +20,7 @@ public class FontTest extends ApplicationAdapter {
     LaserRandom random;
     int[][] backgrounds;
     char[][] lines;
+    LongList[] glyphs = new LongList[4];
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
@@ -38,8 +41,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
-//        font = KnownFonts.getCozette();
-        font = KnownFonts.getOpenSans().scale(0.75f, 1.5f);
+        font = KnownFonts.getCozette();
+//        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
 
         //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
@@ -61,6 +64,12 @@ public class FontTest extends ApplicationAdapter {
                 backgrounds[x][y] = DescriptiveColor.lerpColors(s, e, y / (float)backgrounds[0].length);
             }
         }
+
+        font.markup("[#00FF00FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", glyphs[0] = new LongList());
+//        font.markup("[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]♪[=]♪[^]♪[^]!", glyphs[0] = new LongList());
+        font.markup("The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", glyphs[1] = new LongList());
+        font.markup("The [_][dark dull blue purple]BLADE[] of [*][/][|dark richest yellow]KINGS[] strikes!", glyphs[2] = new LongList());
+        font.markup("[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", glyphs[3] = new LongList());
     }
 
     @Override
@@ -77,17 +86,20 @@ public class FontTest extends ApplicationAdapter {
                 font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, font.cellHeight * (9 + yy));
             }
         }
-        int color = DescriptiveColor.lerpColors(
+        long color = (long) DescriptiveColor.lerpColors(
                 DescriptiveColor.lerpColors(
                         (int)((System.currentTimeMillis() >>> 10) * 0x9E3779B0 | 0xFE),
                         (int)(((System.currentTimeMillis() >>> 10) + 1L) * 0x9E3779B0 | 0xFE),
                         (System.currentTimeMillis() & 0x3FFL) * 0x1p-10f
-                ), 0x000000FF, 0.375f);
-        font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", x, y);
-//        font.drawMarkupText(batch, "[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]♪[=]♪[^]♪[^]!", x, y);
-        font.drawMarkupText(batch, "The [dark richer red]MAW[] of the [/][|lighter blue mint]WENDIGO[] [*]appears[*]!", 0, font.cellHeight * 3);
-        font.drawMarkupText(batch, "The [_][dark dull blue purple]BLADE[] of [*][/][|darker richest yellow]KINGS[] strikes!", 0, font.cellHeight * 2);
-        font.drawMarkupText(batch, "[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", 0, font.cellHeight);
+                ), 0x000000FF, 0.375f) << 32;
+        for (int i = 0, n = glyphs[0].size(); i < n; i++) {
+            glyphs[0].set(i, glyphs[0].get(i) & 0xFFFFFFFFL | color);
+        }
+        font.drawGlyphs(batch, glyphs[0], x, y);
+        font.drawGlyphs(batch, glyphs[1], 0, font.cellHeight * 3);
+        font.drawGlyphs(batch, glyphs[2], 0, font.cellHeight * 2);
+        font.drawGlyphs(batch, glyphs[3], 0, font.cellHeight);
+
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

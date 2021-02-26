@@ -615,7 +615,7 @@ public class Font implements Disposable {
                             }
                             else {
                                 // attempt to look up a known Color name from Colors
-                                Color gdxColor = Colors.get(text.substring(i, len));
+                                Color gdxColor = Colors.get(text.substring(i, i + len));
                                 if(gdxColor == null) color = -1L << 32; // opaque white
                                 else color = (long) Color.rgba8888(gdxColor) << 32;
                             }
@@ -630,13 +630,13 @@ public class Font implements Disposable {
                 char ch = text.charAt(i);
                 if(Category.Ll.contains(ch)) { //we need to use this instead of Character.isLowerCase() because of GWT.
                     if((capitalize && !previousWasLetter) || capsLock) {
-                        ch = Category.caseUp(ch); // again, GWT's toUpperCase() is not ideal.
+                        ch = Character.toUpperCase(ch);
                     }
                     previousWasLetter = true;
                 }
                 else if(Category.Lu.contains(ch)) { //we need to use this instead of Character.isUpperCase() because of GWT.
                     if((capitalize && previousWasLetter) || lowerCase) {
-                        ch = Category.caseFold(ch); // yet again, GWT's toLowerCase() is not ideal.
+                        ch = Character.toLowerCase(ch);
                     }
                     previousWasLetter = true;
                 }
