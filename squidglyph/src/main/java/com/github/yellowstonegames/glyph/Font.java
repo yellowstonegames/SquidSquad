@@ -18,7 +18,7 @@ import regexodus.Category;
 
 public class Font implements Disposable {
     public IntObjectMap<TextureRegion> mapping;
-    public Texture parentTexture;
+    public TextureRegion parentImage;
     public boolean isMSDF, isMono;
     public float msdfCrispness = 1f;
     public float cellWidth = 1f, cellHeight = 1f, originalCellWidth = 1f, originalCellHeight = 1f,
@@ -71,7 +71,7 @@ public class Font implements Disposable {
         isMSDF = toCopy.isMSDF;
         isMono = toCopy.isMono;
         msdfCrispness = toCopy.msdfCrispness;
-        parentTexture = toCopy.parentTexture;
+        parentImage = toCopy.parentImage;
         cellWidth = toCopy.cellWidth;
         cellHeight = toCopy.cellHeight;
         scaleX = toCopy.scaleX;
@@ -81,7 +81,7 @@ public class Font implements Disposable {
         mapping = new IntObjectMap<>(toCopy.mapping.size());
         for(IntObjectMap.Entry<TextureRegion> e : toCopy.mapping){
             if(e.value == null) continue;
-            mapping.put(e.key, new TextureRegion(parentTexture, e.value.getU(), e.value.getV(), e.value.getU2(), e.value.getV2()));
+            mapping.put(e.key, new TextureRegion(e.value));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         if(toCopy.shader != null)
@@ -92,24 +92,51 @@ public class Font implements Disposable {
     public Font(String fntName, String textureName, boolean isMSDF,
                 float xAdjust, float yAdjust, float widthAdjust, float heightAdjust) {
         this.isMSDF = isMSDF;
-        if(isMSDF) {
+        if (isMSDF) {
             shader = new ShaderProgram(vertexShader, msdfFragmentShader);
-            if(!shader.isCompiled())
+            if (!shader.isCompiled())
                 Gdx.app.error("squidglyph", "Font shader failed to compile: " + shader.getLog());
         }
-        FileHandle fntHandle, textureHandle;
-        String fnt;
-        if((textureHandle = Gdx.files.internal(textureName)).exists()
+        FileHandle textureHandle;
+        if ((textureHandle = Gdx.files.internal(textureName)).exists()
                 || (textureHandle = Gdx.files.classpath(textureName)).exists()) {
-            parentTexture = new Texture(textureHandle);
-            if(isMSDF) {
-                parentTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            parentImage = new TextureRegion(new Texture(textureHandle));
+            if (isMSDF) {
+                parentImage.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("Missing texture file: " + textureName);
         }
+        loadFNT(fntName, xAdjust, yAdjust, widthAdjust, heightAdjust);
+    }
 
+    public Font(String fntName, TextureRegion parentImage, boolean isMSDF,
+                float xAdjust, float yAdjust, float widthAdjust, float heightAdjust) {
+        this.isMSDF = isMSDF;
+        if (isMSDF) {
+            shader = new ShaderProgram(vertexShader, msdfFragmentShader);
+            if (!shader.isCompiled())
+                Gdx.app.error("squidglyph", "Font shader failed to compile: " + shader.getLog());
+        }
+        this.parentImage = parentImage;
+        if (isMSDF)
+            parentImage.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        loadFNT(fntName, xAdjust, yAdjust, widthAdjust, heightAdjust);
+    }
+
+    /**
+     * The gritty parsing code that pulls relevant info from a FNT file and uses it to assemble the
+     * many {@code TextureRegion}s this has for each glyph.
+     * @param fntName the file name of the .fnt file; can be internal or classpath
+     * @param xAdjust added to the x-position for each glyph in the font
+     * @param yAdjust added to the y-position for each glyph in the font
+     * @param widthAdjust added to the glyph width for each glyph in the font
+     * @param heightAdjust added to the glyph height for each glyph in the font
+     */
+    protected void loadFNT(String fntName, float xAdjust, float yAdjust, float widthAdjust, float heightAdjust)
+    {
+        FileHandle fntHandle;
+        String fnt;
         if((fntHandle = Gdx.files.internal(fntName)).exists()
                 || (fntHandle = Gdx.files.classpath(fntName)).exists()) {
             fnt = fntHandle.readString("UTF8");
@@ -134,7 +161,7 @@ public class Font implements Disposable {
             minWidth = Math.min(minWidth, w);
             cellWidth = Math.max(w, cellWidth);
             cellHeight = Math.max(h, cellHeight);
-            mapping.put(c, new TextureRegion(parentTexture, x, y, w, h));
+            mapping.put(c, new TextureRegion(parentImage, x, y, w, h));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         originalCellWidth = cellWidth;
@@ -252,7 +279,7 @@ public class Font implements Disposable {
             for (int yi = 0; yi < yn; yi++) {
                 vertices[2] = vertices[7] = vertices[12] = vertices[17] =
                         BitConversion.reversedIntBitsToFloat(colors[xi][yi] & -2);
-                batch.draw(parentTexture, vertices, 0, 20);
+                batch.draw(parentImage.getTexture(), vertices, 0, 20);
                 vertices[1] = vertices[16] += cellHeight;
                 vertices[6] = vertices[11] += cellHeight;
             }
@@ -417,18 +444,18 @@ public class Font implements Disposable {
         vertices[17] = color;
         vertices[18] = u2;
         vertices[19] = v;
-        batch.draw(parentTexture, vertices, 0, 20);
+        batch.draw(parentImage.getTexture(), vertices, 0, 20);
         if ((glyph & BOLD) != 0L) {
             vertices[0] += xPx;
             vertices[5] += xPx;
             vertices[10] += xPx;
             vertices[15] += xPx;
-            batch.draw(parentTexture, vertices, 0, 20);
+            batch.draw(parentImage.getTexture(), vertices, 0, 20);
             vertices[0] -= xPx2;
             vertices[5] -= xPx2;
             vertices[10] -= xPx2;
             vertices[15] -= xPx2;
-            batch.draw(parentTexture, vertices, 0, 20);
+            batch.draw(parentImage.getTexture(), vertices, 0, 20);
         }
         if ((glyph & UNDERLINE) != 0L) {
             final TextureRegion under = mapping.get('_');
@@ -460,7 +487,7 @@ public class Font implements Disposable {
                 vertices[17] = color;
                 vertices[18] = underU2;
                 vertices[19] = underV;
-                batch.draw(parentTexture, vertices, 0, 20);
+                batch.draw(parentImage.getTexture(), vertices, 0, 20);
             }
         }
         if ((glyph & STRIKETHROUGH) != 0L) {
@@ -494,7 +521,7 @@ public class Font implements Disposable {
                 vertices[17] = color;
                 vertices[18] = dashU2;
                 vertices[19] = dashV;
-                batch.draw(parentTexture, vertices, 0, 20);
+                batch.draw(parentImage.getTexture(), vertices, 0, 20);
             }
         }
         return changedW;
@@ -656,6 +683,5 @@ public class Font implements Disposable {
     @Override
     public void dispose() {
         mapping = null;
-        parentTexture.dispose();
     }
 }
