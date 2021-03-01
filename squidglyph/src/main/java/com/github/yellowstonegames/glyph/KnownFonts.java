@@ -72,7 +72,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.openSans == null)
         {
             try {
-                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", false, 0, 0, 0, 0);
+                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", false, 2, 0, 0, 0);
                 instance.openSans.parentImage.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             } catch (Exception e) {
                 e.printStackTrace();

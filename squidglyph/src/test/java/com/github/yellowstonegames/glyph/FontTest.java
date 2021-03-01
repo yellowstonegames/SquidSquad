@@ -6,13 +6,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.LineTools;
-import regexodus.Category;
 
 public class FontTest extends ApplicationAdapter {
 

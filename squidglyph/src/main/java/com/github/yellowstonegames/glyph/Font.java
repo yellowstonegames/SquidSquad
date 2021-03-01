@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
@@ -18,7 +17,54 @@ import com.github.yellowstonegames.core.DigitTools;
 import regexodus.Category;
 
 public class Font implements Disposable {
-    public IntObjectMap<TextureAtlas.AtlasRegion> mapping;
+    /**
+     * Describes the region of a glyph in a larger TextureRegion, carrying a little more info about the offsets that
+     * apply to where the glyph is rendered.
+     */
+    public static class GlyphRegion extends TextureRegion {
+        /** The offset from the left of the original image to the left of the packed image, after whitespace was removed for
+         * packing. */
+        public float offsetX;
+
+        /** The offset from the bottom of the original image to the bottom of the packed image, after whitespace was removed for
+         * packing. */
+        public float offsetY;
+
+        /**
+         * Creates a GlyphRegion from a parent TextureRegion (typically from an atlas), along with the lower-left x and
+         * y coordinates, the width, and the height of the GlyphRegion.
+         * @param textureRegion a TextureRegion, typically from a TextureAtlas
+         * @param x the x-coordinate of the left side of the texture, in pixels
+         * @param y the y-coordinate of the lower side of the texture, in pixels
+         * @param width the width of the GlyphRegion, in pixels
+         * @param height the height of the GlyphRegion, in pixels
+         */
+        public GlyphRegion(TextureRegion textureRegion, int x, int y, int width, int height) {
+            super(textureRegion, x, y, width, height);
+        }
+
+        public GlyphRegion(GlyphRegion other) {
+            super(other);
+            offsetX = other.offsetX;
+            offsetY = other.offsetY;
+        }
+
+        /**
+         * Flips the region, adjusting the offset so the image appears to be flipped as if no whitespace has been
+         * removed for packing.
+         * @param x true if this should flip x to be -x
+         * @param y true if this should flip y to be -y
+         */
+        @Override
+        public void flip (boolean x, boolean y) {
+            super.flip(x, y);
+            if (x) offsetX = -offsetX;
+            if (y) offsetY = -offsetY;
+        }
+    }
+
+
+    public IntObjectMap<GlyphRegion> mapping;
     public TextureRegion parentImage;
     public boolean isMSDF, isMono;
     public float msdfCrispness = 1f;
@@ -80,9 +126,9 @@ public class Font implements Disposable {
         originalCellWidth = toCopy.originalCellWidth;
         originalCellHeight = toCopy.originalCellHeight;
         mapping = new IntObjectMap<>(toCopy.mapping.size());
-        for(IntObjectMap.Entry<TextureAtlas.AtlasRegion> e : toCopy.mapping){
+        for(IntObjectMap.Entry<GlyphRegion> e : toCopy.mapping){
             if(e.value == null) continue;
-            mapping.put(e.key, new TextureAtlas.AtlasRegion(e.value));
+            mapping.put(e.key, new GlyphRegion(e.value));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         if(toCopy.shader != null)
@@ -167,7 +213,7 @@ public class Font implements Disposable {
             minWidth = Math.min(minWidth, a);
             cellWidth = Math.max(a, cellWidth);
             cellHeight = Math.max(h, cellHeight);
-            TextureAtlas.AtlasRegion ar = new TextureAtlas.AtlasRegion(new TextureRegion(parentImage, x, y, a, h));
+            GlyphRegion ar = new GlyphRegion(parentImage, x, y, a, h);
             ar.offsetX = xo;
             ar.offsetY = yo;
             mapping.put(c, ar);
@@ -232,7 +278,7 @@ public class Font implements Disposable {
      */
     public void drawText(Batch batch, CharSequence text, float x, float y, int color) {
         batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
-        TextureAtlas.AtlasRegion current;
+        GlyphRegion current;
         for (int i = 0, n = text.length(); i < n; i++) {
             batch.draw(current = mapping.get(text.charAt(i)), x + current.offsetX, y + current.offsetY, current.getRegionWidth(), current.getRegionHeight());
             x += current.getRegionWidth();
@@ -384,7 +430,7 @@ public class Font implements Disposable {
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
      */
     public float drawGlyph(Batch batch, long glyph, float x, float y) {
-        TextureAtlas.AtlasRegion tr = mapping.get((char) glyph);
+        GlyphRegion tr = mapping.get((char) glyph);
         if (tr == null) return 0f;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
@@ -468,7 +514,7 @@ public class Font implements Disposable {
             batch.draw(parentImage.getTexture(), vertices, 0, 20);
         }
         if ((glyph & UNDERLINE) != 0L) {
-            final TextureAtlas.AtlasRegion under = mapping.get('_');
+            final GlyphRegion under = mapping.get('_');
             if (under != null) {
                 final float underU = under.getU() + (under.getU2() - under.getU()) * 0.375f,
                         underV = under.getV(),
@@ -502,7 +548,7 @@ public class Font implements Disposable {
             }
         }
         if ((glyph & STRIKETHROUGH) != 0L) {
-            final TextureAtlas.AtlasRegion dash = mapping.get('-');
+            final GlyphRegion dash = mapping.get('-');
             if (dash != null) {
                 final float dashU = dash.getU() + (dash.getU2() - dash.getU()) * 0.375f,
                         dashV = dash.getV(),
