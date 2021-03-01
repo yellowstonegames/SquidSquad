@@ -43,10 +43,12 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
-        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
-//        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
+        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
+
+//        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
+//        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
+
 
         //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
 

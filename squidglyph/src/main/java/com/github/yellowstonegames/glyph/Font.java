@@ -166,7 +166,7 @@ public class Font implements Disposable {
             h += heightAdjust;
             minWidth = Math.min(minWidth, a);
             cellWidth = Math.max(a, cellWidth);
-            cellHeight = Math.max(h + yo, cellHeight);
+            cellHeight = Math.max(h, cellHeight);
             TextureAtlas.AtlasRegion ar = new TextureAtlas.AtlasRegion(new TextureRegion(parentImage, x, y, a, h));
             ar.offsetX = xo;
             ar.offsetY = yo;
@@ -386,8 +386,6 @@ public class Font implements Disposable {
     public float drawGlyph(Batch batch, long glyph, float x, float y) {
         TextureAtlas.AtlasRegion tr = mapping.get((char) glyph);
         if (tr == null) return 0f;
-//        x -= tr.offsetX;
-//        y += tr.offsetY;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         float color = BitConversion.reversedIntBitsToFloat((int) (glyph >>> 32) & -2);
@@ -398,7 +396,7 @@ public class Font implements Disposable {
         u2 = tr.getU2();
         v2 = tr.getV2();
         float w = tr.getRegionWidth() * scaleX, changedW = w, h = tr.getRegionHeight() * scaleY;
-        y += cellHeight - h - tr.offsetY;
+        float yt = y + cellHeight - h - tr.offsetY * scaleY;
         if ((glyph & OBLIQUE) != 0L) {
             x0 += cellHeight * 0.2f;
             x1 -= cellHeight * 0.2f;
@@ -434,25 +432,25 @@ public class Font implements Disposable {
         }
 
         vertices[0] = x + x0;
-        vertices[1] = y + y0 + h;
+        vertices[1] = yt + y0 + h;
         vertices[2] = color;
         vertices[3] = u;
         vertices[4] = v;
 
         vertices[5] = x + x1;
-        vertices[6] = y + y1;
+        vertices[6] = yt + y1;
         vertices[7] = color;
         vertices[8] = u;
         vertices[9] = v2;
 
         vertices[10] = x + x2 + w;
-        vertices[11] = y + y2;
+        vertices[11] = yt + y2;
         vertices[12] = color;
         vertices[13] = u2;
         vertices[14] = v2;
 
         vertices[15] = x + x3 + w;
-        vertices[16] = y + y3 + h;
+        vertices[16] = yt + y3 + h;
         vertices[17] = color;
         vertices[18] = u2;
         vertices[19] = v;
@@ -476,7 +474,7 @@ public class Font implements Disposable {
                         underV = under.getV(),
                         underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
                         underV2 = under.getV2(),
-                        hu = under.getRegionHeight() * scaleY, yu = y + hu - under.offsetY;
+                        hu = under.getRegionHeight() * scaleY, yu = y + cellHeight - hu - under.offsetY * scaleY;
                 vertices[0] = x;
                 vertices[1] = yu + hu;
                 vertices[2] = color;
@@ -510,7 +508,7 @@ public class Font implements Disposable {
                         dashV = dash.getV(),
                         dashU2 = dash.getU2() - (dash.getU2() - dash.getU()) * 0.375f,
                         dashV2 = dash.getV2(),
-                        hd = dash.getRegionHeight() * scaleY, yd = y + hd - dash.offsetY;
+                        hd = dash.getRegionHeight() * scaleY, yd = y + cellHeight - hd - dash.offsetY * scaleY;
 
                 vertices[0] = x;
                 vertices[1] = yd + hd;

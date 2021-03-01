@@ -143,7 +143,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cascadiaMono == null)
         {
             try {
-                instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true, 2f, 1f, -4.5f, -1.5f);
+                instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true, 2f, 1f, -5.5f, -1.5f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,7 +176,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.dejaVuSansMono == null)
         {
             try {
-                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", true, 1f, 4f, -1.5f, -4f);
+                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", true, 1f, 4f, -1.5f, -4.5f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -206,7 +206,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.inconsolataLGC == null)
         {
             try {
-                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true, 5f, 1f, -4f, -7.5f);
+                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true, 5f, 1f, -9f, -8f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
