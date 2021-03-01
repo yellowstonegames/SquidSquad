@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
@@ -17,7 +18,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import regexodus.Category;
 
 public class Font implements Disposable {
-    public IntObjectMap<TextureRegion> mapping;
+    public IntObjectMap<TextureAtlas.AtlasRegion> mapping;
     public TextureRegion parentImage;
     public boolean isMSDF, isMono;
     public float msdfCrispness = 1f;
@@ -79,9 +80,9 @@ public class Font implements Disposable {
         originalCellWidth = toCopy.originalCellWidth;
         originalCellHeight = toCopy.originalCellHeight;
         mapping = new IntObjectMap<>(toCopy.mapping.size());
-        for(IntObjectMap.Entry<TextureRegion> e : toCopy.mapping){
+        for(IntObjectMap.Entry<TextureAtlas.AtlasRegion> e : toCopy.mapping){
             if(e.value == null) continue;
-            mapping.put(e.key, new TextureRegion(e.value));
+            mapping.put(e.key, new TextureAtlas.AtlasRegion(e.value));
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         if(toCopy.shader != null)
@@ -152,16 +153,24 @@ public class Font implements Disposable {
             int c = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " x=", idx));
             int x = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " y=", idx));
             int y = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " width=", idx));
-            int h = DigitTools.intFromDec(fnt, idx = indexAfter(fnt, " height=", idx), idx = indexAfter(fnt, " xadvance=", idx));
-            int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+            int w = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " height=", idx));
+            int h = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " xoffset=", idx));
+            int xo = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " yoffset=", idx));
+            int yo = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, " xadvance=", idx));
+            int a = DigitTools.intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
+
+//            System.out.printf("'%s' (%5d): width=%d height=%d xoffset=%d yoffset=%d xadvance=%d\n", (char)c, c, w, h, xo, yo, a);
             x += xAdjust;
             y += yAdjust;
-            w += widthAdjust;
+            a += widthAdjust;
             h += heightAdjust;
-            minWidth = Math.min(minWidth, w);
-            cellWidth = Math.max(w, cellWidth);
-            cellHeight = Math.max(h, cellHeight);
-            mapping.put(c, new TextureRegion(parentImage, x, y, w, h));
+            minWidth = Math.min(minWidth, a);
+            cellWidth = Math.max(a, cellWidth);
+            cellHeight = Math.max(h + yo, cellHeight);
+            TextureAtlas.AtlasRegion ar = new TextureAtlas.AtlasRegion(new TextureRegion(parentImage, x, y, a, h));
+            ar.offsetX = xo;
+            ar.offsetY = yo;
+            mapping.put(c, ar);
         }
         mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
         originalCellWidth = cellWidth;
@@ -223,9 +232,9 @@ public class Font implements Disposable {
      */
     public void drawText(Batch batch, CharSequence text, float x, float y, int color) {
         batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
-        TextureRegion current;
+        TextureAtlas.AtlasRegion current;
         for (int i = 0, n = text.length(); i < n; i++) {
-            batch.draw(current = mapping.get(text.charAt(i)), x, y, current.getRegionWidth(), current.getRegionHeight());
+            batch.draw(current = mapping.get(text.charAt(i)), x + current.offsetX, y + current.offsetY, current.getRegionWidth(), current.getRegionHeight());
             x += current.getRegionWidth();
         }
     }
@@ -375,18 +384,21 @@ public class Font implements Disposable {
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
      */
     public float drawGlyph(Batch batch, long glyph, float x, float y) {
+        TextureAtlas.AtlasRegion tr = mapping.get((char) glyph);
+        if (tr == null) return 0f;
+//        x -= tr.offsetX;
+//        y += tr.offsetY;
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
         float color = BitConversion.reversedIntBitsToFloat((int) (glyph >>> 32) & -2);
         final float xPx = 1f, xPx2 = 2f;
-        TextureRegion tr = mapping.get((char) glyph);
-        if (tr == null) return 0f;
         float u, v, u2, v2;
         u = tr.getU();
         v = tr.getV();
         u2 = tr.getU2();
         v2 = tr.getV2();
         float w = tr.getRegionWidth() * scaleX, changedW = w, h = tr.getRegionHeight() * scaleY;
+        y += cellHeight - h - tr.offsetY;
         if ((glyph & OBLIQUE) != 0L) {
             x0 += cellHeight * 0.2f;
             x1 -= cellHeight * 0.2f;
@@ -458,32 +470,33 @@ public class Font implements Disposable {
             batch.draw(parentImage.getTexture(), vertices, 0, 20);
         }
         if ((glyph & UNDERLINE) != 0L) {
-            final TextureRegion under = mapping.get('_');
+            final TextureAtlas.AtlasRegion under = mapping.get('_');
             if (under != null) {
                 final float underU = under.getU() + (under.getU2() - under.getU()) * 0.375f,
                         underV = under.getV(),
                         underU2 = under.getU2() - (under.getU2() - under.getU()) * 0.375f,
-                        underV2 = under.getV2();
+                        underV2 = under.getV2(),
+                        hu = under.getRegionHeight() * scaleY, yu = y + hu - under.offsetY;
                 vertices[0] = x;
-                vertices[1] = y + h;
+                vertices[1] = yu + hu;
                 vertices[2] = color;
                 vertices[3] = underU;
                 vertices[4] = underV;
 
                 vertices[5] = x;
-                vertices[6] = y;
+                vertices[6] = yu;
                 vertices[7] = color;
                 vertices[8] = underU;
                 vertices[9] = underV2;
 
                 vertices[10] = x + w;
-                vertices[11] = y;
+                vertices[11] = yu;
                 vertices[12] = color;
                 vertices[13] = underU2;
                 vertices[14] = underV2;
 
                 vertices[15] = x + w;
-                vertices[16] = y + h;
+                vertices[16] = yu + hu;
                 vertices[17] = color;
                 vertices[18] = underU2;
                 vertices[19] = underV;
@@ -491,33 +504,34 @@ public class Font implements Disposable {
             }
         }
         if ((glyph & STRIKETHROUGH) != 0L) {
-            final TextureRegion dash = mapping.get('-');
+            final TextureAtlas.AtlasRegion dash = mapping.get('-');
             if (dash != null) {
                 final float dashU = dash.getU() + (dash.getU2() - dash.getU()) * 0.375f,
                         dashV = dash.getV(),
                         dashU2 = dash.getU2() - (dash.getU2() - dash.getU()) * 0.375f,
-                        dashV2 = dash.getV2();
+                        dashV2 = dash.getV2(),
+                        hd = dash.getRegionHeight() * scaleY, yd = y + hd - dash.offsetY;
 
                 vertices[0] = x;
-                vertices[1] = y + h;
+                vertices[1] = yd + hd;
                 vertices[2] = color;
                 vertices[3] = dashU;
                 vertices[4] = dashV;
 
                 vertices[5] = x;
-                vertices[6] = y;
+                vertices[6] = yd;
                 vertices[7] = color;
                 vertices[8] = dashU;
                 vertices[9] = dashV2;
 
                 vertices[10] = x + w;
-                vertices[11] = y;
+                vertices[11] = yd;
                 vertices[12] = color;
                 vertices[13] = dashU2;
                 vertices[14] = dashV2;
 
                 vertices[15] = x + w;
-                vertices[16] = y + h;
+                vertices[16] = yd + hd;
                 vertices[17] = color;
                 vertices[18] = dashU2;
                 vertices[19] = dashV;
