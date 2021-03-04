@@ -34,13 +34,13 @@ public class FontTest extends ApplicationAdapter {
         lines = LineTools.decode4x4(random.nextLong() | LineTools.exteriorSquare, LineTools.light);
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
-//        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
+        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
-        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
+//        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));

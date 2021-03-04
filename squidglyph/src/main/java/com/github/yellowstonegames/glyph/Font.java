@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.support.BitConversion;
@@ -16,7 +15,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import regexodus.Category;
 
-public class Font implements Disposable {
+public class Font {
     /**
      * Describes the region of a glyph in a larger TextureRegion, carrying a little more info about the offsets that
      * apply to where the glyph is rendered.
@@ -248,8 +247,7 @@ public class Font implements Disposable {
         if(isMSDF) {
             if (batch.getShader() != shader) {
                 batch.setShader(shader);
-                shader.setUniformf("u_smoothing", 5f * msdfCrispness * (cellHeight / originalCellHeight + cellWidth / originalCellWidth));
-//            msdfShader.setUniformf("u_smoothing", 0.09375f * msdfCrispness * cellHeight);
+                shader.setUniformf("u_smoothing", 7f * msdfCrispness * Math.max(cellHeight / originalCellHeight, cellWidth / originalCellWidth));
             }
         }
         else {
@@ -732,14 +730,5 @@ public class Font implements Disposable {
             }
         }
         return appendTo;
-    }
-
-
-    /**
-     * Releases all resources of this object.
-     */
-    @Override
-    public void dispose() {
-        mapping = null;
     }
 }

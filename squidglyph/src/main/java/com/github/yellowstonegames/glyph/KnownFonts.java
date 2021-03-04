@@ -206,7 +206,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.inconsolataLGC == null)
         {
             try {
-                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true, 5f, 1f, -9f, -8f);
+                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true, 5f, 1f, -10f, -8f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -302,31 +302,35 @@ public class KnownFonts implements LifecycleListener {
     public void dispose() {
 
         if(cozette != null){
-            cozette.dispose();
+            cozette.parentImage.getTexture().dispose();
             cozette = null;
         }
+        if(openSans != null){
+            openSans.parentImage.getTexture().dispose();
+            openSans = null;
+        }
         if(astarry != null){
-            astarry.dispose();
+            astarry.parentImage.getTexture().dispose();
             astarry = null;
         }
         if(cascadiaMono != null){
-            cascadiaMono.dispose();
+            cascadiaMono.parentImage.getTexture().dispose();
             cascadiaMono = null;
         }
         if(dejaVuSansMono != null){
-            dejaVuSansMono.dispose();
+            dejaVuSansMono.parentImage.getTexture().dispose();
             dejaVuSansMono = null;
         }
         if(inconsolataLGC != null){
-            inconsolataLGC.dispose();
+            inconsolataLGC.parentImage.getTexture().dispose();
             inconsolataLGC = null;
         }
         if(iosevka != null){
-            iosevka.dispose();
+            iosevka.parentImage.getTexture().dispose();
             iosevka = null;
         }
         if(iosevkaSlab != null){
-            iosevkaSlab.dispose();
+            iosevkaSlab.parentImage.getTexture().dispose();
             iosevkaSlab = null;
         }
     }

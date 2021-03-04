@@ -214,6 +214,7 @@ public class DigitTools {
         String h = Integer.toBinaryString(number & 0xff);
         return mask8.substring(0, 8 - h.length()) + h;
     }
+
     private static final int[] hexCodes = new int[]
             {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
                     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -244,6 +245,7 @@ public class DigitTools {
     public static long longFromHex(final CharSequence cs) {
         return longFromHex(cs, 0, cs.length());
     }
+
     /**
      * Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
      * and returns the long they represent, reading at most 16 characters (17 if there is a sign) and returning the
@@ -293,6 +295,7 @@ public class DigitTools {
         }
         return data * len;
     }
+
     /**
      * Reads in a char[] containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start and
      * returns the long they represent, reading at most 16 characters (17 if there is a sign) and returning the result
