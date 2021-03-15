@@ -5,7 +5,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 import com.github.yellowstonegames.core.Hasher;
-import com.github.yellowstonegames.core.Maker;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
 
@@ -1284,7 +1283,7 @@ public class Thesaurus implements Serializable{
             "a bottle`adj` bottle`noun` half-filled with a liquid`adj` color`adj` liquid`noun`",
             "a bottle`adj` bottle`noun` containing a few drops of a color`adj` liquid`noun`"
         );
-    public static final CaseInsensitiveOrderedMap<ObjectList<String>> categories = Maker.<ObjectList<String>>caseInsensitiveOrderedMap(
+    public static final CaseInsensitiveOrderedMap<ObjectList<String>> categories = CaseInsensitiveOrderedMap.<ObjectList<String>>with(
             "calm`adj`",
             with("harmonious", "peaceful", "pleasant", "serene", "placid", "tranquil", "calm"),
             "calm`noun`",
@@ -1527,12 +1526,12 @@ public class Thesaurus implements Serializable{
             with("power", "force", "potency", "strength", "authority", "dominance"),
             "power`adj`",
             with("powerful", "forceful", "potent", "strong", "authoritative", "dominant"),
-            "plant`term`",     plantTerms,
-            "fruit`term`",     fruitTerms,
-            "nut`term`",       nutTerms,
+            "plant`term`", plantTerms,
+            "fruit`term`", fruitTerms,
+            "nut`term`", nutTerms,
             "vegetable`term`", vegetableTerms,
-            "flower`term`",    flowerTerms,
-            "potion`term`",    potionTerms
+            "flower`term`", flowerTerms,
+            "potion`term`", potionTerms
     );
     public static final CaseInsensitiveOrderedMap<ObjectList<String>>
             adjective = new CaseInsensitiveOrderedMap<>(categories),
@@ -1545,7 +1544,7 @@ public class Thesaurus implements Serializable{
             languages.put(Language.registeredNames[i].replace(' ', '_').toLowerCase() + "`gen`", Language.registered[i]);
         }
     }
-    public static final CaseInsensitiveOrderedMap<Integer> numbers = Maker.caseInsensitiveOrderedMap(
+    public static final CaseInsensitiveOrderedMap<Integer> numbers = CaseInsensitiveOrderedMap.with(
             "zero`noun`", 0,
             "one`noun`", 1,
             "two`noun`", 2,
@@ -1568,7 +1567,7 @@ public class Thesaurus implements Serializable{
             "nineteen`noun`", 19,
             "twenty`noun`", 20
     ),
-            numberAdjectives = Maker.caseInsensitiveOrderedMap(
+            numberAdjectives = CaseInsensitiveOrderedMap.with(
                     "zero`adj`", 0,
                     "one`adj`", 1,
                     "two`adj`", 2,
@@ -1597,6 +1596,14 @@ public class Thesaurus implements Serializable{
      * like dis speakah." You may be familiar with a certain sci-fi game that has orks who sound like this.
      */
     public static Thesaurus ORK = new Thesaurus("WAAAAAGH!");
+
+    /**
+     * Thesaurus preset that sharply reduces the used letters to only: a, b, g, h, m, n, r, and z. This apparently is
+     * the canonical set of letters that zombies can use? This will abuse the rules of proper English spelling, using r
+     * and h as vowels, kind-of, in addition to a.
+     */
+    public static Thesaurus ZOMBIE = new Thesaurus("zrrmbrh grh BRRRNZ!");
+
     static {
         ORK.alterations.add(new Language.Alteration("\\bth", "d"));
         ORK.alterations.add(new Language.Alteration("th", "dd"));
@@ -1613,7 +1620,29 @@ public class Thesaurus implements Serializable{
                 .addReplacement("rhythm", "riddim")
                 .addReplacement("get", "git")
                 .addReplacement("good", "gud");
-        
+
+        ZOMBIE.alterations.add(new Language.Alteration("(?[[\\p{L}]-[A-Za-z]])", "r"));
+        ZOMBIE.alterations.add(new Language.Alteration("[pcst]h", "h"));
+        ZOMBIE.alterations.add(new Language.Alteration("[eiu]([tckhd]+)", "rh"));
+        ZOMBIE.alterations.add(new Language.Alteration("[aei][aeiy]", "aa"));
+        ZOMBIE.alterations.add(new Language.Alteration("o[hw]", "ah"));
+        ZOMBIE.alterations.add(new Language.Alteration("n[cdtkq]", "nh"));
+        ZOMBIE.alterations.add(new Language.Alteration("m\\b", "mm"));
+        ZOMBIE.alterations.add(new Language.Alteration("[td]+", "bh"));
+        ZOMBIE.alterations.add(new Language.Alteration("[ckq]+", "gh"));
+        ZOMBIE.alterations.add(new Language.Alteration("[ai]", "a"));
+        ZOMBIE.alterations.add(new Language.Alteration("[bvp]", "b"));
+        ZOMBIE.alterations.add(new Language.Alteration("[jg]", "g"));
+        ZOMBIE.alterations.add(new Language.Alteration("[fwyh]", "h"));
+        ZOMBIE.alterations.add(new Language.Alteration("[m]", "m"));
+        ZOMBIE.alterations.add(new Language.Alteration("[n]", "n"));
+        ZOMBIE.alterations.add(new Language.Alteration("[lreou]", "r"));
+        ZOMBIE.alterations.add(new Language.Alteration("[sxz]", "z"));
+        ZOMBIE.alterations.add(new Language.Alteration("([ahmnrz])\\b", "$1$1", 0.2));
+        ZOMBIE.alterations.add(new Language.Alteration("(\\b\\w+\\b)", "${!1}", 0.125));
+    }
+    static {
+
         // not related to ORK; this filters out synonyms that aren't in the appropriate list
         Iterator<CharSequence> it = adjective.keySet().iterator();
         while (it.hasNext()){

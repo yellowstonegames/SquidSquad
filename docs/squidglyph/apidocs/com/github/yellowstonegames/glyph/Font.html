@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -78,17 +78,40 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.glyph.Font</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code>com.badlogic.gdx.utils.Disposable</code></dd>
-</dl>
 <hr>
 <pre>public class <span class="type-name-label">Font</span>
-extends java.lang.Object
-implements com.badlogic.gdx.utils.Disposable</pre>
+extends java.lang.Object</pre>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested.class.summary">
+<h2>Nested Class Summary</h2>
+<div class="member-summary">
+<table class="summary-table">
+<caption><span>Nested Classes</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a></span></code></th>
+<td class="col-last">
+<div class="block">Describes the region of a glyph in a larger TextureRegion, carrying a little more info about the offsets that
+ apply to where the glyph is rendered.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field.summary">
@@ -121,75 +144,90 @@ implements com.badlogic.gdx.utils.Disposable</pre>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isMSDF">isMSDF</a></span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isMono">isMono</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>com.github.tommyettinger.ds.IntObjectMap&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mapping">mapping</a></span></code></th>
+<td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isMSDF">isMSDF</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>com.github.tommyettinger.ds.IntObjectMap&lt;<a href="Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mapping">mapping</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#MIDSCRIPT">MIDSCRIPT</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfCrispness">msdfCrispness</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#msdfFragmentShader">msdfFragmentShader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#OBLIQUE">OBLIQUE</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellHeight">originalCellHeight</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#originalCellWidth">originalCellWidth</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="alt-color">
+<td class="col-first"><code>com.badlogic.gdx.graphics.g2d.TextureRegion</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parentImage">parentImage</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 <tr class="row-color">
-<td class="col-first"><code>com.badlogic.gdx.graphics.Texture</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parentTexture">parentTexture</a></span></code></th>
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scaleX">scaleX</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scaleY">scaleY</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>com.badlogic.gdx.graphics.glutils.ShaderProgram</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shader">shader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#STRIKETHROUGH">STRIKETHROUGH</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SUBSCRIPT">SUBSCRIPT</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SUPERSCRIPT">SUPERSCRIPT</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#UNDERLINE">UNDERLINE</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#vertexShader">vertexShader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
@@ -218,12 +256,22 @@ implements com.badlogic.gdx.utils.Disposable</pre>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,com.badlogic.gdx.graphics.g2d.TextureRegion,boolean,float,float,float,float)">Font</a></span>&#8203;(java.lang.String&nbsp;fntName,
+com.badlogic.gdx.graphics.g2d.TextureRegion&nbsp;parentImage,
+boolean&nbsp;isMSDF,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,boolean)">Font</a></span>&#8203;(java.lang.String&nbsp;fntName,
 java.lang.String&nbsp;textureName,
 boolean&nbsp;isMSDF)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,boolean,float,float,float,float)">Font</a></span>&#8203;(java.lang.String&nbsp;fntName,
 java.lang.String&nbsp;textureName,
 boolean&nbsp;isMSDF,
@@ -256,13 +304,6 @@ float&nbsp;heightAdjust)</code></th>
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#dispose()">dispose</a></span>()</code></th>
-<td class="col-last">
-<div class="block">Releases all resources of this object.</div>
-</td>
-</tr>
-<tr class="row-color" id="i1">
-<td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawBlocks(com.badlogic.gdx.graphics.g2d.Batch,int%5B%5D%5B%5D,float,float)">drawBlocks</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 int[][]&nbsp;colors,
 float&nbsp;x,
@@ -271,8 +312,8 @@ float&nbsp;y)</code></th>
 <div class="block">Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
-<td class="col-first"><code>void</code></td>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">drawGlyph</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 long&nbsp;glyph,
 float&nbsp;x,
@@ -281,7 +322,7 @@ float&nbsp;y)</code></th>
 <div class="block">Draws the specified glyph with a Batch at the given x, y position.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawGlyphs(com.badlogic.gdx.graphics.g2d.Batch,com.github.tommyettinger.ds.LongList,float,float)">drawGlyphs</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 com.github.tommyettinger.ds.LongList&nbsp;glyphs,
@@ -291,7 +332,7 @@ float&nbsp;y)</code></th>
 <div class="block">Draws the specified LongList of glyphs with a Batch at a given x, y position, drawing the full LongList.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawGlyphs(com.badlogic.gdx.graphics.g2d.Batch,com.github.tommyettinger.ds.LongList,int,int,float,float)">drawGlyphs</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 com.github.tommyettinger.ds.LongList&nbsp;glyphs,
@@ -304,7 +345,7 @@ float&nbsp;y)</code></th>
  attempting to draw a count of glyphs equal to length.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawMarkupText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.String,float,float)">drawMarkupText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 java.lang.String&nbsp;text,
@@ -316,7 +357,7 @@ float&nbsp;y)</code></th>
  CharSequence.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float)">drawText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 java.lang.CharSequence&nbsp;text,
@@ -326,7 +367,7 @@ float&nbsp;y)</code></th>
 <div class="block">Draws the specified text at the given x,y position (in world space) with a white foreground.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#drawText(com.badlogic.gdx.graphics.g2d.Batch,java.lang.CharSequence,float,float,int)">drawText</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 java.lang.CharSequence&nbsp;text,
@@ -337,12 +378,24 @@ int&nbsp;color)</code></th>
 <div class="block">Draws the specified text at the given x,y position (in world space) with the given foreground color.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enableShader(com.badlogic.gdx.graphics.g2d.Batch)">enableShader</a></span>&#8203;(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch)</code></th>
 <td class="col-last">
 <div class="block">Must be called before drawing anything with an MSDF font; does not need to be called for other fonts unless you
  are mixing them with MSDF fonts or other shaders.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>protected void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#loadFNT(java.lang.String,float,float,float,float)">loadFNT</a></span>&#8203;(java.lang.String&nbsp;fntName,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</code></th>
+<td class="col-last">
+<div class="block">The gritty parsing code that pulls relevant info from a FNT file and uses it to assemble the
+ many <code>TextureRegion</code>s this has for each glyph.</div>
 </td>
 </tr>
 <tr class="row-color" id="i9">
@@ -387,19 +440,25 @@ float&nbsp;height)</code></th>
 <li>
 <section class="detail" id="mapping">
 <h3>mapping</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntObjectMap&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</span>&nbsp;<span class="member-name">mapping</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntObjectMap&lt;<a href="Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a>&gt;</span>&nbsp;<span class="member-name">mapping</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="parentTexture">
-<h3>parentTexture</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="member-name">parentTexture</span></div>
+<section class="detail" id="parentImage">
+<h3>parentImage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.TextureRegion</span>&nbsp;<span class="member-name">parentImage</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="isMSDF">
 <h3>isMSDF</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isMSDF</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isMono">
+<h3>isMono</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isMono</span></div>
 </section>
 </li>
 <li>
@@ -430,6 +489,18 @@ float&nbsp;height)</code></th>
 <section class="detail" id="originalCellHeight">
 <h3>originalCellHeight</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">originalCellHeight</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="scaleX">
+<h3>scaleX</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">scaleX</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="scaleY">
+<h3>scaleY</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">scaleY</span></div>
 </section>
 </li>
 <li>
@@ -562,6 +633,18 @@ float&nbsp;widthAdjust,
 float&nbsp;heightAdjust)</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.badlogic.gdx.graphics.g2d.TextureRegion,boolean,float,float,float,float)">
+<h3>Font</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">Font</span>&#8203;(<span class="parameters">java.lang.String&nbsp;fntName,
+com.badlogic.gdx.graphics.g2d.TextureRegion&nbsp;parentImage,
+boolean&nbsp;isMSDF,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -570,6 +653,26 @@ float&nbsp;heightAdjust)</span></div>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="loadFNT(java.lang.String,float,float,float,float)">
+<h3>loadFNT</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">loadFNT</span>&#8203;(<span class="parameters">java.lang.String&nbsp;fntName,
+float&nbsp;xAdjust,
+float&nbsp;yAdjust,
+float&nbsp;widthAdjust,
+float&nbsp;heightAdjust)</span></div>
+<div class="block">The gritty parsing code that pulls relevant info from a FNT file and uses it to assemble the
+ many <code>TextureRegion</code>s this has for each glyph.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fntName</code> - the file name of the .fnt file; can be internal or classpath</dd>
+<dd><code>xAdjust</code> - added to the x-position for each glyph in the font</dd>
+<dd><code>yAdjust</code> - added to the y-position for each glyph in the font</dd>
+<dd><code>widthAdjust</code> - added to the glyph width for each glyph in the font</dd>
+<dd><code>heightAdjust</code> - added to the glyph height for each glyph in the font</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="scale(float,float)">
 <h3>scale</h3>
@@ -750,7 +853,7 @@ float&nbsp;y)</span></div>
 <li>
 <section class="detail" id="drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">
 <h3>drawGlyph</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">drawGlyph</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">drawGlyph</span>&#8203;(<span class="parameters">com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
 long&nbsp;glyph,
 float&nbsp;x,
 float&nbsp;y)</span></div>
@@ -804,17 +907,6 @@ com.github.tommyettinger.ds.LongList&nbsp;appendTo)</span></div>
 </dl>
 </section>
 </li>
-<li>
-<section class="detail" id="dispose()">
-<h3>dispose</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">dispose</span>()</div>
-<div class="block">Releases all resources of this object.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
-</dl>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -840,7 +932,7 @@ com.github.tommyettinger.ds.LongList&nbsp;appendTo)</span></div>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

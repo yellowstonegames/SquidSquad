@@ -15,7 +15,7 @@
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="all-classes-index-page">
-<script type="text/javascript">var data = {"i0":2,"i1":2,"i2":2,"i3":2,"i4":2,"i5":2,"i6":2,"i7":2,"i8":2,"i9":2,"i10":2,"i11":1,"i12":2,"i13":2,"i14":2,"i15":2};
+<script type="text/javascript">var data = {"i0":2,"i1":2,"i2":2,"i3":2,"i4":2,"i5":2,"i6":2,"i7":2,"i8":2,"i9":2,"i10":2,"i11":2,"i12":1,"i13":2,"i14":2,"i15":2,"i16":2};
 var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -75,37 +75,43 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i1">
+<td class="col-first"><a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></td>
+<th class="col-last" scope="row">
+<div class="block">Performs A* search to find the shortest path between two Coord points.</div>
+</th>
+</tr>
+<tr class="alt-color" id="i2">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Connection.html" title="class in com.github.yellowstonegames.path">Connection</a>&lt;<a href="com/github/yellowstonegames/path/Connection.html" title="type parameter in Connection">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">The most-commonly-used class that represents an edge between nodes on a Graph.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a>&lt;<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="type parameter in Connection.DirectedConnection">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A Connection that treats A-to-B as a different edge from B-to-A.</div>
 </th>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a>&lt;<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="type parameter in Connection.UndirectedConnection">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A Connection that treats A-to-B and B-to-A as the same edge.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></td>
 <th class="col-last" scope="row">
 <div class="block">A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
  passable neighbor.</div>
 </th>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></td>
 <th class="col-last" scope="row">
 <div class="block">A default setting for an <a href="com/github/yellowstonegames/path/UndirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>UndirectedGraph</code></a> of Coord vertices where all connections have cost 1.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></td>
 <th class="col-last" scope="row">
 <div class="block">A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more
@@ -113,38 +119,38 @@ loadScripts(document, 'script');</script>
  goal.</div>
 </th>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><a href="com/github/yellowstonegames/path/DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;<a href="com/github/yellowstonegames/path/DirectedGraph.html" title="type parameter in DirectedGraph">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A kind of <a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path"><code>Graph</code></a> where all connections between vertices are one-way (but a connection may exist that goes from
  A to B and another connection may go from B to A), and each connection can have a different cost.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><a href="com/github/yellowstonegames/path/DirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">DirectedGraphAlgorithms</a>&lt;<a href="com/github/yellowstonegames/path/DirectedGraphAlgorithms.html" title="type parameter in DirectedGraphAlgorithms">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Algorithms specific to directed graphs, like <a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path"><code>CostlyGraph</code></a>, as well as general <a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path"><code>Algorithms</code></a>.</div>
 </th>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Edge.html" title="class in com.github.yellowstonegames.path">Edge</a>&lt;<a href="com/github/yellowstonegames/path/Edge.html" title="type parameter in Edge">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Abstract superclass of any connection between nodes on a graph.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;<a href="com/github/yellowstonegames/path/Graph.html" title="type parameter in Graph">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Abstract superclass of actual Graph types.</div>
 </th>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;<a href="com/github/yellowstonegames/path/Heuristic.html" title="type parameter in Heuristic">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A <code>Heuristic</code> generates estimates of the cost to move from a given node to the goal.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a>&lt;<a href="com/github/yellowstonegames/path/Node.html" title="type parameter in Node">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">An extended version of <code>BinaryHeap.Node</code> that also stores a reference to the parent Graph,
@@ -152,20 +158,20 @@ loadScripts(document, 'script');</script>
  List of those same Connections for faster iteration, and a lot of internal data used by algorithms in this package.</div>
 </th>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><a href="com/github/yellowstonegames/path/UndirectedGraph.html" title="class in com.github.yellowstonegames.path">UndirectedGraph</a>&lt;<a href="com/github/yellowstonegames/path/UndirectedGraph.html" title="type parameter in UndirectedGraph">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A kind of <a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path"><code>Graph</code></a> where all connections between vertices are two-way and have equal cost for traveling A to B
  or B to A.</div>
 </th>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><a href="com/github/yellowstonegames/path/UndirectedGraphAlgorithms.html" title="class in com.github.yellowstonegames.path">UndirectedGraphAlgorithms</a>&lt;<a href="com/github/yellowstonegames/path/UndirectedGraphAlgorithms.html" title="type parameter in UndirectedGraphAlgorithms">V</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Algorithms specific to undirected graphs, like <a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path"><code>DefaultGraph</code></a>, as well as general <a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path"><code>Algorithms</code></a>.</div>
 </th>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i16">
 <td class="col-first"><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></td>
 <th class="col-last" scope="row">
 <div class="block">Calculates the Zone of Influence, also known as Zone of Control, for different points on a map.</div>

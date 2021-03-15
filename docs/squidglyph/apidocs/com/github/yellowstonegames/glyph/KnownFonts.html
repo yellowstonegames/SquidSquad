@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":10,"i9":10};
+<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -167,11 +167,18 @@ implements com.badlogic.gdx.LifecycleListener</pre>
 </td>
 </tr>
 <tr class="alt-color" id="i8">
+<td class="col-first"><code>static <a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getOpenSans()">getOpenSans</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Returns a Font configured to use a clean variable-width font, Open Sans.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#pause()">pause</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resume()">resume</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
@@ -214,6 +221,26 @@ implements com.badlogic.gdx.LifecycleListener</pre>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that represents the 7x13px font Cozette</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getOpenSans()">
+<h3>getOpenSans</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></span>&nbsp;<span class="member-name">getOpenSans</span>()</div>
+<div class="block">Returns a Font configured to use a clean variable-width font, Open Sans. This makes an especially large
+ font by default, but can be scaled down nicely.
+ <br>
+
+ <br>
+ Needs files:
+ <ul>
+     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.fnt</li>
+     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.png</li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that represents the variable-width font OpenSans</dd>
 </dl>
 </section>
 </li>

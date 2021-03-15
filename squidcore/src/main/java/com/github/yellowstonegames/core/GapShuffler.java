@@ -135,7 +135,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
     public GapShuffler(T[] items, LaserRandom random)
     {
         this.random = random.copy();
-        elements = Maker.list(items);
+        elements = ObjectList.with(items);
         elements.shuffle(this.random);
         index = 0;
     }
@@ -155,7 +155,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
     public GapShuffler(T[] items, LaserRandom random, boolean shareRNG)
     {
         this.random = shareRNG ? random : random.copy();
-        elements = Maker.list(items);
+        elements = ObjectList.with(items);
         elements.shuffle(this.random);
         index = 0;
     }

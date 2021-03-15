@@ -292,14 +292,14 @@ public class Language implements Serializable {
 
         registry.put("", null);
         
-        openVowels = Maker.orderedMap(
+        openVowels = ObjectObjectOrderedMap.with(
         "a", "a aa ae ai au ea ia oa ua",
         "e", "e ae ea ee ei eo eu ie ue",
         "i", "i ai ei ia ie io iu oi ui",
         "o", "o eo io oa oi oo ou",
         "u", "u au eu iu ou ua ue ui");
 
-        openCons = Maker.orderedMap(
+        openCons = ObjectObjectOrderedMap.with(
                 "b", "b bl br by bw bh",
                 "bh", "bh",
         "c", "c cl cr cz cth sc scl",
@@ -331,7 +331,7 @@ public class Language implements Serializable {
         "y", "by dy fy gy hy ky my ny py sy ty vy y zy",
         "z", "cz dz z zv zvr zl zy zw");
 
-        midCons = Maker.orderedMap(
+        midCons = ObjectObjectOrderedMap.with(
                 "b", "lb rb bj bl br lbr rbl skbr scbr zb bq bdh dbh bbh lbh rbh bb",
         "bh", "bbh dbh lbh rbh",
         "c", "lc lsc rc rsc cl cqu cr ct lcr rcl sctr scdr scbr scpr msc mscr nsc nscr ngscr ndscr cc",
@@ -363,7 +363,7 @@ public class Language implements Serializable {
         "y", "by dy fy gy hy ky my ny py sy ty vy wy zy",
         "z", "lz rz zn zd zt zg zk zm zn zp zb zr zdr ztr zgr zkr zth zz");
 
-        closeCons = Maker.orderedMap("b", "b lb rb bs bz mb mbs bh bh lbh rbh mbh bb",
+        closeCons = ObjectObjectOrderedMap.with("b", "b lb rb bs bz mb mbs bh bh lbh rbh mbh bb",
         "bh", "bh lbh rbh mbh",
         "c", "c ck cks lc rc cs cz ct cz cth sc",
         "ch", "ch lch rch tch pch kch mch nch",

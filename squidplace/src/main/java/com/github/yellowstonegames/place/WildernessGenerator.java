@@ -6,7 +6,6 @@ import com.github.tommyettinger.ds.ObjectLongOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Maker;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Direction;
 
@@ -119,9 +118,9 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
                 return makeShuffledRepeats(rng, "dirt", 3, "pebbles", 1, "snow", 11);
             case "River":
             case "Lake":
-                return Maker.list("fresh water");
+                return ObjectList.with("fresh water");
             case "Ocean":
-                return Maker.list("salt water");
+                return ObjectList.with("salt water");
             case "Desert":
             case "Beach":
                 return makeShuffledRepeats(rng, "sand", 9, "pebbles", 1);
@@ -140,7 +139,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
             case "Rocky":
                 return makeShuffledRepeats(rng, "pebbles", 5, "rubble", 1);
             default:
-                return Maker.list("empty space");
+                return ObjectList.with("empty space");
         }
     }
     /**
@@ -153,31 +152,31 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         if(biome == null || biome.name == null) return new ObjectList<>(0);
         switch (biome.name) {
             case "Ice":
-                return Maker.list("snow path");
+                return ObjectList.with("snow path");
             case "Tundra":
             case "BorealForest":
-                return Maker.list("snow path", "dirt path");
+                return ObjectList.with("snow path", "dirt path");
             case "Desert":
-                return Maker.list("sand path");
+                return ObjectList.with("sand path");
             case "Beach":
-                return Maker.list("sand path", "stone path");
+                return ObjectList.with("sand path", "stone path");
             case "Grassland":
             case "Woodland":
             case "Savanna":
             case "TropicalRainforest":
-                return Maker.list("dirt path");
+                return ObjectList.with("dirt path");
             case "SeasonalForest":
-                return Maker.list("dirt path", "grass path");
+                return ObjectList.with("dirt path", "grass path");
             case "TemperateRainforest":
-                return Maker.list("grass path");
+                return ObjectList.with("grass path");
             case "Rocky":
             case "Moon":
             case "Volcano":
             case "Exotic":
             case "Cavern":
-                return Maker.list("stone path");
+                return ObjectList.with("stone path");
             default:
-                return Maker.list("wooden bridge");
+                return ObjectList.with("wooden bridge");
 
         }
     }

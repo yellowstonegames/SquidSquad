@@ -90,6 +90,20 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Most of the algorithms that operate on a <a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path"><code>Graph</code></a> are defined here, with some specific cases in subclasses.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path"><span class="type-name-link">AStarSearch</span></a> - Class in <a href="com/github/yellowstonegames/path/package-summary.html">com.github.yellowstonegames.path</a></dt>
+<dd>
+<div class="block">Performs A* search to find the shortest path between two Coord points.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#%3Cinit%3E()">AStarSearch()</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#%3Cinit%3E(char%5B%5D%5B%5D,com.github.yellowstonegames.path.Heuristic)">AStarSearch(char[][], Heuristic&lt;Coord&gt;)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Builds a pathing object to run searches on.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#%3Cinit%3E(float%5B%5D%5B%5D,com.github.yellowstonegames.path.Heuristic)">AStarSearch(float[][], Heuristic&lt;Coord&gt;)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Builds a pathing object to run searches on.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
@@ -647,6 +661,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get a List containing all the edges which have v as a source.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#getHeight()">getHeight()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html#getInfluences()">getInfluences()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></dt>
 <dd>
 <div class="block">Gets the influencing groups; ideally the result should not be changed without setting it back with setInfluences.</div>
@@ -679,6 +695,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Edge.html#getWeight()">getWeight()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Edge.html" title="class in com.github.yellowstonegames.path">Edge</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#getWidth()">getWidth()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#GOAL">GOAL</a></span> - Static variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
 <div class="block">Goals are always marked with 0.</div>
@@ -692,6 +710,8 @@ loadScripts(document, 'script');</script>
 <div class="block">The frequently-changing values that are often the point of using this class; goals will have a value of 0, and
  any cells that can have a character reach a goal in n steps will have a value of n.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#graph">graph</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Node.html#graph">graph</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path"><span class="type-name-link">Graph</span></a>&lt;<a href="com/github/yellowstonegames/path/Graph.html" title="type parameter in Graph">V</a>&gt; - Class in <a href="com/github/yellowstonegames/path/package-summary.html">com.github.yellowstonegames.path</a></dt>
@@ -712,6 +732,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Node.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#height">height</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/CostlyGraph.html#height">height</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
 <dd>&nbsp;</dd>
@@ -885,9 +907,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Recalculate the Dijkstra map up to a limit and return it.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#path">path</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#path">path</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
 <div class="block">The latest path that was obtained by calling findPath().</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#path(int,int,int,int)">path(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Finds an A* path to the target from the start.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#path(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">path(Coord, Coord)</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Finds an A* path to the target from the start.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#physicalMap">physicalMap</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
@@ -902,6 +934,14 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html#radius">radius</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#reinitialize(char%5B%5D%5B%5D,com.github.yellowstonegames.path.Heuristic)">reinitialize(char[][], Heuristic&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Resets this pathing object to use a different map and optionally a different Heuristic.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#reinitialize(float%5B%5D%5B%5D,com.github.yellowstonegames.path.Heuristic)">reinitialize(float[][], Heuristic&lt;Coord&gt;)</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>
+<div class="block">Resets this pathing object to use a different map and optionally a different Heuristic.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Graph.html#removeAllEdges()">removeAllEdges()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
 <div class="block">Removes all edges from the graph.</div>
@@ -1070,9 +1110,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#standardCosts">standardCosts</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#start">start</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#target">target</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#targetMap">targetMap</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/CostlyGraph.html#topologicalSort()">topologicalSort()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
@@ -1091,11 +1135,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Perform a topological sort on the graph, and puts the sorted vertices in the supplied list.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Node.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#type">type</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
@@ -1132,6 +1180,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Walls, which are solid no-entry cells, are marked with a high number equal to 999500f .</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Connection.html#weight">weight</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.html" title="class in com.github.yellowstonegames.path">Connection</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/AStarSearch.html#width">width</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/CostlyGraph.html#width">width</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
 <dd>&nbsp;</dd>
