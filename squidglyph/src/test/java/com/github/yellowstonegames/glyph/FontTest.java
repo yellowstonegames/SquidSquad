@@ -18,7 +18,7 @@ public class FontTest extends ApplicationAdapter {
     LaserRandom random;
     int[][] backgrounds;
     char[][] lines;
-    LongList[] glyphs = new LongList[4];
+    LongList[] glyphs = new LongList[6];
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
@@ -34,20 +34,17 @@ public class FontTest extends ApplicationAdapter {
         lines = LineTools.decode4x4(random.nextLong() | LineTools.exteriorSquare, LineTools.light);
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
-        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
+//        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
-//        font = KnownFonts.getCozette();
+        font = KnownFonts.getCozette();
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
-
-
-        //        font = new Font("Iosevka-Slab-Family-msdf.fnt", "Iosevka-Slab-Family-msdf.png", true).scale(0.75f, 0.75f);
 
         backgrounds = new int[(int)Math.ceil(800 / font.cellWidth)][(int)Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
@@ -67,18 +64,26 @@ public class FontTest extends ApplicationAdapter {
             }
         }
 
-        font.markup("[#00FF00FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", glyphs[0] = new LongList());
-//        font.markup("[#"+ DigitTools.hex(color) +"]Hello, [~]World[~]Universe[.]♪[=]♪[^]♪[^]!", glyphs[0] = new LongList());
-        font.markup("The [dark richer red]MAW[] of the [/][|lighter blue mint]wendigo[] [*]appears[*]!", glyphs[1] = new LongList());
-        font.markup("The [_][dark dull blue purple]BLADE[] of [*][/][|dark richest yellow]KINGS[] strikes!", glyphs[2] = new LongList());
-        font.markup("[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", glyphs[3] = new LongList());
+//        font.markup("[#00FF00FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", glyphs[0] = new LongList());
+//        font.markup("The [dark richer red]MAW[] of the [/][|lighter blue mint]wendigo[] [*]appears[*]!", glyphs[1] = new LongList());
+//        font.markup("The [_][dark dull blue purple]BLADE[] of [*][/][|dark richest yellow]KINGS[] strikes!", glyphs[2] = new LongList());
+//        font.markup("[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", glyphs[3] = new LongList());
+
+        int line = 0;
+        font.markup("[#22BB22FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", glyphs[line++] = new LongList());
+        font.markup("The [RED]MAW[] of the [/][CYAN]wendigo[/] (wendigo)[] [*]appears[*]!", glyphs[line++] = new LongList());
+        font.markup("The [_][GRAY]BLADE[] of [*][/][YELLOW]KINGS[] strikes!", glyphs[line++] = new LongList());
+        font.markup("[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?", glyphs[line++] = new LongList());
+        font.markup("[GOLD]φ[] = (1 + 5[^]0.5[^]) * 0.5", glyphs[line++] = new LongList());
+        font.markup("[ORANGE]¿Qué? ¡Arribate, mijo![]", glyphs[line] = new LongList());
+
     }
 
     @Override
     public void render() {
         Gdx.gl.glClearColor(0.7f, 0.5f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = font.cellHeight * 4;
+        float x = 0, y = font.cellHeight * glyphs.length;
         batch.begin();
         font.enableShader(batch);
 
@@ -97,10 +102,12 @@ public class FontTest extends ApplicationAdapter {
         for (int i = 0, n = glyphs[0].size(); i < n; i++) {
             glyphs[0].set(i, glyphs[0].get(i) & 0xFFFFFFFFL | color);
         }
-        font.drawGlyphs(batch, glyphs[0], x, y);
-        font.drawGlyphs(batch, glyphs[1], 0, font.cellHeight * 3);
-        font.drawGlyphs(batch, glyphs[2], 0, font.cellHeight * 2);
-        font.drawGlyphs(batch, glyphs[3], 0, font.cellHeight);
+        font.drawGlyphs(batch, glyphs[0], x, y -= font.cellHeight);
+        font.drawGlyphs(batch, glyphs[1], x, y -= font.cellHeight);
+        font.drawGlyphs(batch, glyphs[2], x, y -= font.cellHeight);
+        font.drawGlyphs(batch, glyphs[3], x, y -= font.cellHeight);
+        font.drawGlyphs(batch, glyphs[4], x, y -= font.cellHeight);
+        font.drawGlyphs(batch, glyphs[5], x, y -= font.cellHeight);
 
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
