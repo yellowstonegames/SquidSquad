@@ -2,6 +2,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
 import regexodus.*;
@@ -3342,7 +3343,7 @@ public class Language implements Serializable {
     }
 
     private static String[] processParts(ObjectObjectOrderedMap<String, String> parts, Set<String> missingSounds,
-                                         Set<String> forbidden, LaserRandom rng, double repeatSingleChance,
+                                         Set<String> forbidden, EnhancedRandom rng, double repeatSingleChance,
                                          int preferredLimit) {
         int l, sz = parts.size();
         List<String> working = new ObjectList<>(sz * 24);
@@ -3495,7 +3496,7 @@ public class Language implements Serializable {
     };
 */
 
-    public static Language randomLanguage(Random rng) {
+    public static Language randomLanguage(EnhancedRandom rng) {
         return randomLanguage(rng.nextLong());
     }
 
@@ -3735,7 +3736,7 @@ public class Language implements Serializable {
      * @param capitalize true if the word should start with a capital letter, false otherwise
      * @return a word in the fake language as a String
      */
-    public String word(LaserRandom rng, boolean capitalize) {
+    public String word(EnhancedRandom rng, boolean capitalize) {
         while (true) {
             sb.setLength(0);
             ender.setLength(0);
@@ -3865,7 +3866,7 @@ public class Language implements Serializable {
      * @param approxSyllables the approximate number of syllables to produce in the word; there may be more syllables
      * @return a word in the fake language as a String
      */
-    public String word(LaserRandom rng, boolean capitalize, int approxSyllables) {
+    public String word(EnhancedRandom rng, boolean capitalize, int approxSyllables) {
         return word(rng, capitalize, approxSyllables, null);
     }
     /**
@@ -3897,7 +3898,7 @@ public class Language implements Serializable {
      * @param additionalChecks an array of RegExodus Pattern objects that match invalid words (these may be additional vulgarity checks, for example)
      * @return a word in the fake language as a String
      */
-    public String word(LaserRandom rng, boolean capitalize, int approxSyllables, Pattern[] additionalChecks) {
+    public String word(EnhancedRandom rng, boolean capitalize, int approxSyllables, Pattern[] additionalChecks) {
         if (approxSyllables <= 0) {
             sb.setLength(0);
             sb.append(openingVowels[rng.nextInt(openingVowels.length)]);
@@ -4039,7 +4040,7 @@ public class Language implements Serializable {
      * @param maxWords an int for the maximum number of words in a sentence; should be at least equal to minWords
      * @return a sentence in the fake language as a String
      */
-    public String sentence(LaserRandom rng, int minWords, int maxWords) {
+    public String sentence(EnhancedRandom rng, int minWords, int maxWords) {
         return sentence(rng, minWords, maxWords, mid,
                 end, 0.2);
     }
@@ -4104,7 +4105,7 @@ public class Language implements Serializable {
      *                                midPunctuation should be inserted before spaces
      * @return a sentence in the fake language as a String
      */
-    public String sentence(LaserRandom rng, int minWords, int maxWords, String[] midPunctuation, String[] endPunctuation,
+    public String sentence(EnhancedRandom rng, int minWords, int maxWords, String[] midPunctuation, String[] endPunctuation,
                            double midPunctuationFrequency) {
         if (minWords < 1)
             minWords = 1;
@@ -4200,7 +4201,7 @@ public class Language implements Serializable {
      * @param maxChars                the longest string length this can produce; should be at least {@code 6 * minWords}
      * @return a sentence in the fake language as a String
      */
-    public String sentence(LaserRandom rng, int minWords, int maxWords, String[] midPunctuation, String[] endPunctuation,
+    public String sentence(EnhancedRandom rng, int minWords, int maxWords, String[] midPunctuation, String[] endPunctuation,
                            double midPunctuationFrequency, int maxChars) {
         if(maxChars < 0)
             return sentence(rng, minWords, maxWords, midPunctuation, endPunctuation, midPunctuationFrequency);
@@ -4267,7 +4268,7 @@ public class Language implements Serializable {
         return ssb.toString();
     }
 
-    protected String[] merge1000(LaserRandom rng, String[] me, String[] other, double otherInfluence) {
+    protected String[] merge1000(EnhancedRandom rng, String[] me, String[] other, double otherInfluence) {
         if (other.length <= 0 && me.length <= 0)
             return new String[]{};
         String[] ret = new String[1000];
@@ -4276,7 +4277,7 @@ public class Language implements Serializable {
         if (other.length > 0) {
             String[] tmp = new String[other.length];
             System.arraycopy(other, 0, tmp, 0, other.length);
-            ArrayTools.shuffle(tmp, rng);
+            rng.shuffle(tmp);
             for (idx = 0; idx < otherCount; idx++) {
                 ret[idx] = tmp[idx % tmp.length];
             }
@@ -4284,7 +4285,7 @@ public class Language implements Serializable {
         if (me.length > 0) {
             String[] tmp = new String[me.length];
             System.arraycopy(me, 0, tmp, 0, me.length);
-            ArrayTools.shuffle(tmp, rng);
+            rng.shuffle(tmp);
             for (; idx < 1000; idx++) {
                 ret[idx] = tmp[idx % tmp.length];
             }
@@ -4297,7 +4298,7 @@ public class Language implements Serializable {
     }
 
 
-    protected static String[] accentVowels(LaserRandom rng, String[] me, double influence) {
+    protected static String[] accentVowels(EnhancedRandom rng, String[] me, double influence) {
         String[] ret = new String[1000];
         int otherCount = (int) (1000 * influence);
         int idx;
@@ -4305,7 +4306,7 @@ public class Language implements Serializable {
         if (me.length > 0) {
             String[] tmp = new String[me.length];
             System.arraycopy(me, 0, tmp, 0, me.length);
-            ArrayTools.shuffle(tmp, rng);
+            rng.shuffle(tmp);
             for (idx = 0; idx < otherCount; idx++) {
                 ret[idx] = tmp[idx % tmp.length]
                         .replace('a', accentedVowels[0][rng.nextInt(accentedVowels[0].length)])
@@ -4326,7 +4327,7 @@ public class Language implements Serializable {
         return ret;
     }
 
-    protected static String[] accentConsonants(LaserRandom rng, String[] me, double influence) {
+    protected static String[] accentConsonants(EnhancedRandom rng, String[] me, double influence) {
         String[] ret = new String[1000];
         int otherCount = (int) (1000 * influence);
         int idx;
@@ -4334,7 +4335,7 @@ public class Language implements Serializable {
         if (me.length > 0) {
             String[] tmp = new String[me.length];
             System.arraycopy(me, 0, tmp, 0, me.length);
-            ArrayTools.shuffle(tmp, rng);
+            rng.shuffle(tmp);
             for (idx = 0; idx < otherCount; idx++) {
                 ret[idx] = tmp[idx % tmp.length]
                         //0
@@ -4372,14 +4373,14 @@ public class Language implements Serializable {
         return ret;
     }
 
-    protected static String[] accentBoth(LaserRandom rng, String[] me, double vowelInfluence, double consonantInfluence) {
+    protected static String[] accentBoth(EnhancedRandom rng, String[] me, double vowelInfluence, double consonantInfluence) {
         String[] ret = new String[1000];
         int idx;
         Matcher matcher;
         if (me.length > 0) {
             String[] tmp = new String[me.length];
             System.arraycopy(me, 0, tmp, 0, me.length);
-            ArrayTools.shuffle(tmp, rng);
+            rng.shuffle(tmp);
             for (idx = 0; idx < 1000; idx++) {
                 boolean subVowel = rng.nextDouble() < vowelInfluence, subCon = rng.nextDouble() < consonantInfluence;
                 if (subVowel && subCon) {
@@ -4972,7 +4973,7 @@ public class Language implements Serializable {
             alterations = (alts == null) ? new Alteration[0] : alts;
         }
 
-        public StringBuilder modify(LaserRandom rng, StringBuilder sb) {
+        public StringBuilder modify(EnhancedRandom rng, StringBuilder sb) {
             Matcher m;
             Replacer.StringBuilderBuffer tb;
             boolean found;
@@ -5392,10 +5393,10 @@ public class Language implements Serializable {
 
     /**
      * A simple way to bundle a Language with the arguments that would be passed to it when calling
-     * {@link Language#sentence(LaserRandom, int, int, String[], String[], double, int)} or one of its overloads.
+     * {@link Language#sentence(EnhancedRandom, int, int, String[], String[], double, int)} or one of its overloads.
      * You can call {@link #sentence()} on this to produce another String sentence with the parameters it was given
      * at construction. The parameters to
-     * {@link #SentenceForm(Language, LaserRandom, int, int, String[], String[], double, int)} are stored in fields of
+     * {@link #SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)} are stored in fields of
      * the same name, and all fields in this class are public and modifiable.
      */
     public static class SentenceForm implements Serializable
@@ -5481,12 +5482,12 @@ public class Language implements Serializable {
          * @param midPunctuationFrequency the probability that two words will be separated by a String from midPunctuation, between 0.0 and 1.0
          * @param maxChars the maximum number of chars to use in a sentence, or -1 for no hard limit
          */
-        public SentenceForm(Language language, LaserRandom rng, int minWords, int maxWords,
+        public SentenceForm(Language language, EnhancedRandom rng, int minWords, int maxWords,
                             String[] midPunctuation, String[] endPunctuation,
                             double midPunctuationFrequency, int maxChars)
         {
             this.language = language;
-            this.rng = new LaserRandom(rng.getStateA(), rng.getStateB());
+            this.rng = new LaserRandom(rng.nextLong(), rng.nextLong());
             this.minWords = minWords;
             this.maxWords = maxWords;
             this.midPunctuation = midPunctuation;

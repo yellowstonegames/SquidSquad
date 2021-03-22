@@ -3,11 +3,19 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.*;
+import com.github.yellowstonegames.core.ArrayTools;
+import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.Hasher;
+import com.github.yellowstonegames.core.LZSEncoding;
+import com.github.yellowstonegames.core.StringTools;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.
@@ -57,14 +65,14 @@ import java.util.*;
  *     {@link #flood(Region, int)}, which may be most useful with a very large {@code amount} parameter to fill
  *     up the bounds completely with whatever the original Region could reach. {@link #flood8way(Region)},
  *     {@link #floodSeries(Region, int)}, and {@link #floodSeriesToLimit(Region)} are all here, too.</li>
- *     <li>{@link #spill(Region, int, Random)} is like calling {@link #flood(Region)} many times, but only
+ *     <li>{@link #spill(Region, int, EnhancedRandom)} is like calling {@link #flood(Region)} many times, but only
  *     expanding one cell on the edge each time, randomly choosing it. As long as {@code volume} is not enough to fully
  *     fill the reachable part of {@code bounds}, the filled area will be random but always connected.</li>
- *     <li>Various random modifications: {@link #randomRegion(Random, int)} simply chooses "on" points from this
- *     Region until it reaches {@code size}, {@link #deteriorate(Random, float)} randomly removes
+ *     <li>Various random modifications: {@link #randomRegion(EnhancedRandom, int)} simply chooses "on" points from this
+ *     Region until it reaches {@code size}, {@link #deteriorate(EnhancedRandom, float)} randomly removes
  *     points but stops when the fraction of cells remaining is equal to {@code preservation}, {@link #fray(float)}
- *     acts like {@link #deteriorate(Random, float)} but only affects the surface (what {@link #surface()}
- *     would return), and {@link #disperseRandom(Random)} randomly removes one of each pair of "on" cells.
+ *     acts like {@link #deteriorate(EnhancedRandom, float)} but only affects the surface (what {@link #surface()}
+ *     would return), and {@link #disperseRandom(EnhancedRandom)} randomly removes one of each pair of "on" cells.
  *     </li>
  *     <li>Various quasi-random modifications: Mostly you should use {@link #separatedRegionBlue(float)} if you want
  *     to get an approximate fraction of well-separated "on" cells from a Region. {@link #fray(float)} also has a quasi-random version that
@@ -73,10 +81,10 @@ import java.util.*;
  * <br>
  * Once you have a Region, you may want to:
  * <ul>
- *     <li>get a single random point from it (use {@link #singleRandom(Random)}),</li>
- *     <li>get several random points from it with random sampling (use {@link #randomPortion(Random, int)}),</li>
- *     <li>mutate the current Region to keep random points from it with random sampling (use {@link #randomRegion(Random, int)}),</li>
- *     <li>get random points that are likely to be separated (use {@link #randomScatter(Random, int)} on a copy, or
+ *     <li>get a single random point from it (use {@link #singleRandom(EnhancedRandom)}),</li>
+ *     <li>get several random points from it with random sampling (use {@link #randomPortion(EnhancedRandom, int)}),</li>
+ *     <li>mutate the current Region to keep random points from it with random sampling (use {@link #randomRegion(EnhancedRandom, int)}),</li>
+ *     <li>get random points that are likely to be separated (use {@link #randomScatter(EnhancedRandom, int)} on a copy, or
  *     {@link #separatedBlue(float)} if you don't want a random aspect),</li>
  *     <li>do what any of the above "separated" methods can do, but mutate the current Region (use
  *     {@link #separatedRegionBlue(float)} ),</li>
@@ -90,8 +98,8 @@ import java.util.*;
  * You may also want to produce some 2D data from one or more Regions, as with {@link #sum(Region...)} or
  * {@link #toChars()}. The most effective techniques regarding Region involve multiple methods, like getting a
  * few random points from an existing Region representing floor tiles in a dungeon with
- * {@link #randomRegion(Random, int)}, then finding a random expansion of those initial points with
- * {@link #spill(Region, int, Random)}, giving the original Region of floor tiles as the first argument.
+ * {@link #randomRegion(EnhancedRandom, int)}, then finding a random expansion of those initial points with
+ * {@link #spill(Region, int, EnhancedRandom)}, giving the original Region of floor tiles as the first argument.
  * This could be used to position puddles of water or toxic waste in a dungeon level, while still keeping the starting
  * points and finished points within the boundaries of valid (floor) cells. If you wanted to place something like mold
  * that can be on floors or on cells immediately adjacent to floors (like walls), you could call {@link #expand()} on
@@ -1060,11 +1068,11 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Constructor for a random Region of the given width and height, typically assigning approximately half of
      * the cells in this to "on" and the rest to off.
-     * @param random a Random, or a recommended subclass like {@link LaserRandom}
+     * @param random a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
      */
-    public Region(final Random random, final int width, final int height)
+    public Region(final EnhancedRandom random, final int width, final int height)
     {
         this.width = width;
         this.height = height;
@@ -1086,12 +1094,12 @@ public class Region implements Collection<Coord>, Serializable {
      * Reassigns this Region by filling it with random values from random, reusing the current data storage
      * (without extra allocations) if this.width == width and this.height == height, and typically assigning
      * approximately half of the cells in this to "on" and the rest to off.
-     * @param random a Random or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
      * @param width the width of the desired Region
      * @param height the height of the desired Region
      * @return this for chaining
      */
-    public Region refill(final Random random, final int width, final int height) {
+    public Region refill(final EnhancedRandom random, final int width, final int height) {
         if (random != null){
             if(this.width == width && this.height == height) {
                 for (int i = 0; i < width * ySections; i++) {
@@ -1121,18 +1129,18 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Constructor for a random Region of the given width and height, trying to set the given fraction of cells
      * to on. Depending on the value of fraction, this makes between 0 and 6 calls to the nextLong() method of random's
-     * internal Random, per 64 cells of this Region (if height is not a multiple of 64, round up to get
+     * internal EnhancedRandom, per 64 cells of this Region (if height is not a multiple of 64, round up to get
      * the number of calls this makes). As such, this sacrifices the precision of the fraction to obtain significantly
      * better speed than generating one random number per cell, although the precision is probably good enough (fraction
      * is effectively rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
-     * {@code random} can be a plain {@link Random}, but will be much faster and have less potential for patterns or
+     * {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential for patterns or
      * artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a Random or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
      * @param fraction between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
      */
-    public Region(final Random random, final float fraction, final int width, final int height)
+    public Region(final EnhancedRandom random, final float fraction, final int width, final int height)
     {
         this.width = width;
         this.height = height;
@@ -1154,20 +1162,20 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Reassigns this Region randomly, reusing the current data storage (without extra allocations) if this.width
      * == width and this.height == height, while trying to set the given fraction of cells to on. Depending on the value
-     * of fraction, this makes between 0 and 6 calls to the nextLong() method of random's internal Random, per
+     * of fraction, this makes between 0 and 6 calls to the nextLong() method of random's internal EnhancedRandom, per
      * 64 cells of this Region (if height is not a multiple of 64, round up to get the number of calls this
      * makes). As such, this sacrifices the precision of the fraction to obtain significantly better speed than
      * generating one random number per cell, although the precision is probably good enough (fraction is effectively
      * rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
-     * {@code random} can be a plain {@link Random}, but will be much faster and have less potential for patterns or
+     * {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential for patterns or
      * artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a Random or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
      * @param fraction between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
      * @return this for chaining
      */
-    public Region refill(final Random random, final float fraction, final int width, final int height) {
+    public Region refill(final EnhancedRandom random, final float fraction, final int width, final int height) {
         if (random != null){
             int bitCount = (int) (fraction * 64);
             if(this.width == width && this.height == height) {
@@ -3254,7 +3262,7 @@ public class Region implements Collection<Coord>, Serializable {
      * @param random the RNG used for a random factor
      * @return this for chaining
      */
-    public Region disperseRandom(Random random) {
+    public Region disperseRandom(EnhancedRandom random) {
         Region result = this;
         if (width < 1 || ySections <= 0) {
         } else {
@@ -3269,18 +3277,18 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.
      * For example, calling this with a parameter of 32 will be equivalent to calling nextLong() on the given
-     * Random, which is recommended to be a subclass like {@link LaserRandom}.
+     * EnhancedRandom, which is recommended to be a subclass like {@link LaserRandom}.
      * Calling this with a parameter of 16 will have on average 16 of the 64 bits in the returned long set to '1',
      * distributed pseudo-randomly, while a parameter of 47 will have on average 47 bits set. This can be useful for
      * certain code that uses bits to represent data but needs a different ratio of set bits to unset bits than 1:1.
      * <br>
-     * The parameter {@code random} can be a plain {@link Random}, but will be much faster and have less potential
+     * The parameter {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential
      * for patterns or artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a Random or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
      * @param bitCount an int, only considered if between 0 and 64, that is the average number of bits to set
      * @return a 64-bit long that, on average, should have bitCount bits set to 1, potentially anywhere in the long
      */
-    public static long approximateBits(Random random, int bitCount) {
+    public static long approximateBits(EnhancedRandom random, int bitCount) {
         long result;
         if (bitCount <= 0) {
             result = 0L;
@@ -3310,7 +3318,7 @@ public class Region implements Collection<Coord>, Serializable {
      * Not exactly general-use; meant for generating data for Region.
      * @return a random long with 32 "1" bits, distributed so exactly one bit is "1" for each pair of bits
      */
-    public static long randomInterleave(Random random) {
+    public static long randomInterleave(EnhancedRandom random) {
         long bits = random.nextLong() & 0xFFFFFFFFL, ib = ~bits & 0xFFFFFFFFL;
         bits |= (bits << 16);
         ib |= (ib << 16);
@@ -4214,12 +4222,12 @@ public class Region implements Collection<Coord>, Serializable {
      * A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
      * inside the "on" cells of {@code bounds}. This Region acts as the initial state, and often contains just one cell
      * before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
-     * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, Random)} fills a whole volume.
+     * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, EnhancedRandom)} fills a whole volume.
      * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
-     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @return this, after expanding randomly once, for chaining
      */
-    public Region splash(Region bounds, Random rng) {
+    public Region splash(Region bounds, EnhancedRandom rng) {
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             insert(new Region(this).fringe().and(bounds).singleRandom(rng));
         }
@@ -4233,10 +4241,10 @@ public class Region implements Collection<Coord>, Serializable {
      * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
-     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @return this, after expanding randomly, for chaining
      */
-    public Region spill(Region bounds, int volume, Random rng) {
+    public Region spill(Region bounds, int volume, EnhancedRandom rng) {
         Region result = this;
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             int current = size();
@@ -4920,15 +4928,15 @@ public class Region implements Collection<Coord>, Serializable {
     /**
      * Like {@link #retract()}, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
      * method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running 
-     * {@link #surface()} on a copy of this Region, running {@link #deteriorate(Random, float)} on
+     * {@link #surface()} on a copy of this Region, running {@link #deteriorate(EnhancedRandom, float)} on
      * that surface with the given fractionKept, taking the original Region and removing its whole surface with
      * {@link #retract()}, then inserting the randomly-removed surface into this Region to replace its surface
      * with a randomly "damaged" one.
-     * @param random a Random, or a recommended subclass like {@link LaserRandom}
+     * @param random a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @param fractionKept the fraction between 0.0 and 1.0 of how many cells on the outer surface of this to keep "on"
      * @return this for chaining
      */
-    public Region fray(Random random, float fractionKept)
+    public Region fray(EnhancedRandom random, float fractionKept)
     {
         Region cpy = new Region(this).retract();
         return xor(cpy).deteriorate(random, fractionKept).or(cpy);
@@ -4938,11 +4946,11 @@ public class Region implements Collection<Coord>, Serializable {
      * Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
      * distance between any two "on" cells is at least {@code minimumDistance}, with at least one cell as "on" if any
      * were "on" in this originally. Does not limit the count of "on" cells in the result.
-     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @param minimumDistance the minimum distance between "on" cells in the result
      * @return this for chaining
      */
-    public Region randomScatter(Random rng, int minimumDistance) {
+    public Region randomScatter(EnhancedRandom rng, int minimumDistance) {
         return randomScatter(rng, minimumDistance, -1);
     }
     /**
@@ -4951,12 +4959,12 @@ public class Region implements Collection<Coord>, Serializable {
      * were "on" in this originally.
      * Restricts the total count of "on" cells after this returns to a maximum of {@code limit} (minimum is 0 if no
      * cells are "on"). If limit is negative, this will not restrict the count.
-     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @param minimumDistance the minimum distance between "on" cells in the result
      * @param limit the maximum count of "on" cells to keep
      * @return this for chaining
      */
-    public Region randomScatter(Random rng, int minimumDistance, int limit) {
+    public Region randomScatter(EnhancedRandom rng, int minimumDistance, int limit) {
         Region result = this;
         int tmp, total = 0, ct;
         tally();
@@ -5326,18 +5334,18 @@ public class Region implements Collection<Coord>, Serializable {
 
     /**
      * Gets a single random Coord from the "on" positions in this Region, or the Coord (-1,-1) if this is empty.
-     * Uses the given Random to generate one random int, which is used as an index. The technique this uses to iterate
+     * Uses the given EnhancedRandom to generate one random int, which is used as an index. The technique this uses to iterate
      * over bits can be credited to Erling Ellingsen and Daniel Lemire, found
      * <a href="https://lemire.me/blog/2013/12/23/even-faster-bitmap-decoding/">here</a>, and seems to be a little
      * faster than the previous method. The fastest way to get a random Coord from a Region is to avoid iterating
      * over the bits at all, so if your region data doesn't change you should get it as a Coord array with
-     * {@link #asCoords()} and call {@link Random#nextInt(int)} to get an index inside that Coord array. If you
+     * {@link #asCoords()} and call {@link EnhancedRandom#nextInt(int)} to get an index inside that Coord array. If you
      * take the asCoords() call out of consideration, getting random elements out of an array (especially a large one)
      * can be hundreds of times faster.
-     * @param rng a Random, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
      * @return a single randomly-chosen Coord from the "on" positions in this Region, or (-1,-1) if empty
      */
-    public Coord singleRandom(Random rng)
+    public Coord singleRandom(EnhancedRandom rng)
     {
         int ct = size(), tmp = rng.nextInt(ct);
         long t, w;
@@ -5357,7 +5365,7 @@ public class Region implements Collection<Coord>, Serializable {
         return Coord.get(-1, -1);
     }
 
-    public int singleRandomTight(Random rng)
+    public int singleRandomTight(EnhancedRandom rng)
     {
         int ct = size(), tmp = rng.nextInt(ct);
         long t, w;
@@ -5502,7 +5510,7 @@ public class Region implements Collection<Coord>, Serializable {
         return this;
     }
 
-    public Coord[] randomPortion(Random rng, int size)
+    public Coord[] randomPortion(EnhancedRandom rng, int size)
     {
         int ct = size(), idx = 0, run = 0;
         if(ct <= 0 || size <= 0)
@@ -5511,7 +5519,7 @@ public class Region implements Collection<Coord>, Serializable {
             return asCoords();
         Coord[] points = new Coord[size];
         int[] order = ArrayTools.range(ct);
-        ArrayTools.shuffle(order, rng);
+        rng.shuffle(order);
         Arrays.sort(order, 0, size);
         long t, w;
         ALL:
@@ -5534,7 +5542,7 @@ public class Region implements Collection<Coord>, Serializable {
         return points;
     }
 
-    public Region randomRegion(Random rng, int size)
+    public Region randomRegion(EnhancedRandom rng, int size)
     {
         int ct = size(), idx = 0, run = 0;
         if(ct <= 0 || size <= 0)
@@ -5542,7 +5550,7 @@ public class Region implements Collection<Coord>, Serializable {
         if(ct <= size)
             return this;
         int[] order = ArrayTools.range(ct);
-        ArrayTools.shuffle(order, rng);
+        rng.shuffle(order);
         Arrays.sort(order, 0, size);
         long t, w;
         ALL:
@@ -6186,7 +6194,7 @@ public class Region implements Collection<Coord>, Serializable {
      * @param preservation roughly what degree of points to remove (higher keeps more); removes about {@code 1/(2^preservation)} points
      * @return a randomly modified change to this Region
      */
-    public Region deteriorate(Random rng, int preservation) {
+    public Region deteriorate(EnhancedRandom rng, int preservation) {
         if(rng == null || width <= 2 || ySections <= 0 || preservation <= 0)
             return this;
         long mash;
@@ -6207,14 +6215,14 @@ public class Region implements Collection<Coord>, Serializable {
      * removed (roughly 0.25 will be _kept_), if 0.8, roughly 1/5 will be removed (and about 0.8 will be kept), and so
      * on. Preservation must be between 0.0 and 1.0 for this to have the intended behavior; 1.0 or higher will keep all
      * points without change (returning this Region), while anything less than 0.015625 (1.0/64) will empty this
-     * Region (using {@link #empty()}) and then return it. The parameter {@code random} can be a plain {@link Random},
+     * Region (using {@link #empty()}) and then return it. The parameter {@code random} can be a plain {@link EnhancedRandom},
      * but will be much faster and have less potential for patterns or artifacts in the output if you use
      * {@link LaserRandom} or another higher-quality subclass.
-     * @param random a Random or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
      * @param preservation the rough fraction of points to keep, between 0.0 and 1.0
      * @return a randomly modified change to this Region
      */
-    public Region deteriorate(final Random random, final float preservation) {
+    public Region deteriorate(final EnhancedRandom random, final float preservation) {
         if(random == null || width <= 2 || ySections <= 0 || preservation >= 1)
             return this;
         if(preservation <= 0)

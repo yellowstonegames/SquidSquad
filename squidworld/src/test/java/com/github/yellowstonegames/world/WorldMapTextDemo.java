@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -48,7 +49,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     private InputProcessor input;
     private Viewport view;
     private Camera camera;
-    private LaserRandom rng;
+    private EnhancedRandom rng;
     private long seedA, seedB;
     private Vector3 position, previousPosition, nextPosition;
 //    private WorldMapGenerator.MimicMap world;
@@ -122,7 +123,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         seedA = rng.nextLong();
                         seedB = rng.nextLong() | 1L;
                         generate(seedA, seedB);
-                        rng.setState(seedA, seedB);
+                        rng.setSelectedState(0, seedA);
+                        rng.setSelectedState(1, seedB);
                         break;
                     case Input.Keys.S:
                     case Input.Keys.DOWN:
@@ -161,7 +163,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             }
         };
         generate(seedA, seedB);
-        rng.setState(seedA, seedB);
+        rng.setSelectedState(0, seedA);
+        rng.setSelectedState(1, seedB);
         Gdx.input.setInputProcessor(input);
     }
 
@@ -209,7 +212,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                 .copy() // don't want to edit the actual land map
                 .removeEdges() // don't want cities on the edge of the map
                 .separatedRegionBlue(0.1f, 500) // get 500 points in a regularly-tiling but unpredictable, sparse pattern
-                .randomPortion(rng,112); // randomly select less than 1/4 of those points, breaking the pattern
+                .randomPortion(rng, 112); // randomly select less than 1/4 of those points, breaking the pattern
         for (int i = 0; i < points.length; i++) {
             char p = political[points[i].x][points[i].y];
             if(p == '~' || p == '%')

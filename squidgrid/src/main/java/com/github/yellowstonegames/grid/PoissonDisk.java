@@ -4,10 +4,9 @@ import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.TrigTools;
-
-import java.util.Random;
 
 public class PoissonDisk {
     private static final float inverseRootTwo = 1f / (float)Math.sqrt(2f);
@@ -51,7 +50,7 @@ public class PoissonDisk {
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
-                                                 int maxX, int maxY, int pointsPerIteration, Random rng)
+                                                 int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
     {
         int radius2 = Math.round(radius);
         return sample(center.translate(-radius2, -radius2), center.translate(radius2, radius2), radius, minimumDistance, maxX, maxY, pointsPerIteration, rng);
@@ -92,21 +91,21 @@ public class PoissonDisk {
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
     public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
-                                                    int maxX, int maxY, int pointsPerIteration, Random rng)
+                                                    int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
     {
         return sample(minPosition, maxPosition, 0f, minimumDistance, maxX, maxY, pointsPerIteration, rng);
     }
 
 
     public static ObjectOrderedSet<Coord> sampleMap(char[][] map,
-                                                    float minimumDistance, Random rng, char... blocking)
+                                                    float minimumDistance, EnhancedRandom rng, char... blocking)
     {
         return sampleMap(Coord.get(1, 1), Coord.get(map.length - 2, map[0].length - 2),
                 map, minimumDistance, rng, blocking);
     }
 
     public static ObjectOrderedSet<Coord> sampleMap(Coord minPosition, Coord maxPosition, char[][] map,
-                                                    float minimumDistance, Random rng, char... blocking) {
+                                                    float minimumDistance, EnhancedRandom rng, char... blocking) {
         int width = map.length;
         int height = map[0].length;
         boolean restricted = (blocking != null && blocking.length > 0);
@@ -195,7 +194,7 @@ public class PoissonDisk {
     protected static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
                                                                                    float maxSampleRadius, float radius,
                                                                                    int xBound, int yBound,
-                                                                                   int pointsPerTry, Random random) {
+                                                                                   int pointsPerTry, EnhancedRandom random) {
         radius = Math.max(1.0001f, radius);
         maxSampleRadius *= maxSampleRadius;
         final float radius2 = radius * radius;

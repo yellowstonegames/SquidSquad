@@ -2,7 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
 
@@ -66,7 +66,7 @@ public enum Radius {
         }
     }
 
-    public Coord onUnitShape(float distance, LaserRandom rng) {
+    public Coord onUnitShape(float distance, EnhancedRandom rng) {
         int x, y;
         switch (this) {
             case SQUARE:
@@ -97,7 +97,7 @@ public enum Radius {
                 }
                 break;
             default: // CIRCLE
-                float radius = distance * (float) Math.sqrt(rng.nextDouble());
+                float radius = distance * (float) Math.sqrt(rng.nextFloat());
                 float theta = rng.nextFloat();
                 x = Math.round(TrigTools.cos_(theta) * radius);
                 y = Math.round(TrigTools.sin_(theta) * radius);
