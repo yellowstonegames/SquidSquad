@@ -40,7 +40,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     private static final int bigWidth = 512, bigHeight = 256;
 //    private static final int bigWidth = 2048, bigHeight = 1024;
     //private static final int bigWidth = 400, bigHeight = 400;
-    private static final int cellWidth = 10, cellHeight = 16;
+    private static final int cellWidth = 16, cellHeight = 16;
     private static final int shownWidth = 96, shownHeight = 48;
     private SpriteBatch batch;
     private GlyphMap display;//, overlay;
@@ -76,7 +76,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         display = new GlyphMap(
-                KnownFonts.getCascadiaMono().scaleTo(cellWidth, cellHeight),
+                KnownFonts.getIosevkaSlab().scaleTo(cellWidth, cellHeight),
                 bigWidth * bigHeight);
         view = new StretchViewport(shownWidth * cellWidth, shownHeight * cellHeight);
         camera = view.getCamera();
@@ -230,6 +230,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         //generate(rng.nextLong());
 //        ArrayTools.fill(display.backgrounds, -0x1.0p125F);
         display.backgrounds = wmv.getColorMap();
+        int[][] oklab = wmv.getColorMapOklab();
         BiomeMapper.DetailedBiomeMapper dbm = wmv.getBiomeMapper();
         int hc, tc, codeA, codeB;
         float mix;
@@ -249,13 +250,13 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         case 0:
                         case 1:
                         case 2:
-                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], display.backgrounds[x][y])));
+                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], oklab[x][y])));
                             continue PER_CELL;
                         case 3:
-                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], display.backgrounds[x][y])));
+                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
                             continue PER_CELL;
                         case 4:
-                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], display.backgrounds[x][y])));
+                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
                             continue PER_CELL;
                     }
                 }
@@ -263,10 +264,10 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                     case 0:
                     case 1:
                     case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], display.backgrounds[x][y])));
+                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
                         break;
                     case 3:
-                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], display.backgrounds[x][y])));
+                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
                         break;
                     default: 
                         int bc = dbm.biomeCodeData[x][y];
@@ -274,9 +275,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         codeA = dbm.extractPartA(bc);
                         mix = dbm.extractMixAmount(bc);
                         if(mix <= 0.5) 
-                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], display.backgrounds[x][y])));
+                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
                         else
-                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], display.backgrounds[x][y])));
+                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
                 }
             }
         }
@@ -288,7 +289,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             int nationColor = toRGBA8888(differentiateLightness(
                     DescriptiveColor.COLORS_BY_HUE.get((int) ((pm.politicalMap[ct.x][ct.y] * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
                     0xFE7F7F40)); // dark gray
-            display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, display.backgrounds[ct.x][ct.y])));
+            display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x][ct.y])));
             if(ct.y >= display.backgrounds[0].length - 1) continue;
             for (int pos = ct.x - (cname.length() >> 1), j = 0; j < cname.length(); pos++, j++) {
                 display.backgrounds[pos][ct.y + 1] = dark;

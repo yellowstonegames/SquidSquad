@@ -18,6 +18,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
 public class WorldMapView {
     protected int width, height;
     protected int[][] colorMap;
+    protected int[][] colorMapOklab;
     protected WorldMapGenerator world;
     protected BiomeMapper.DetailedBiomeMapper biomeMapper;
 
@@ -31,6 +32,10 @@ public class WorldMapView {
 
     public int[][] getColorMap() {
         return colorMap;
+    }
+
+    public int[][] getColorMapOklab() {
+        return colorMapOklab;
     }
 
     public BiomeMapper.DetailedBiomeMapper getBiomeMapper() {
@@ -52,6 +57,7 @@ public class WorldMapView {
             width = world.width;
             height = world.height;
             colorMap = new int[width][height];
+            colorMapOklab = new int[width][height];
         }
     }
 
@@ -61,6 +67,7 @@ public class WorldMapView {
         width = world.width;
         height = world.height;
         colorMap = new int[width][height];
+        colorMapOklab = new int[width][height];
         this.biomeMapper = new BiomeMapper.DetailedBiomeMapper();
         initialize();
     }
@@ -120,6 +127,14 @@ public class WorldMapView {
         world.generate(landMod, heatMod, seedA, seedB | 1L);
         biomeMapper.makeBiomes(world);
     }
+
+    /**
+     * After calling {@link #generate()}, you can call this to assign values to {@link #getColorMap()} and
+     * {@link #getColorMapOklab()}. This method returns the RGBA colorMap, but it assigns to colorMapOklab
+     * at the same time, so you can use the Oklab colors with methods like
+     * {@link DescriptiveColor#lighten(int, float)} and {@link DescriptiveColor#lerpColors(int, int, float)}.
+     * @return the RGBA8888 colorMap
+     */
     public int[][] show()
     {
         int hc, tc, bc; // height, temperature, biome codes
@@ -134,7 +149,7 @@ public class WorldMapView {
                 hc = heightCodeData[x][y];
                 if(hc == 1000)
                 {
-                    colorMap[x][y] = toRGBA8888(BIOME_COLOR_TABLE[60]);
+                    colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = BIOME_COLOR_TABLE[60]);
                     continue;
                 }
                 tc = heatCodeData[x][y];
@@ -147,11 +162,11 @@ public class WorldMapView {
                         case 1:
                         case 2:
                         case 3:
-                            colorMap[x][y] = toRGBA8888(lerpColors(BIOME_COLOR_TABLE[50], BIOME_COLOR_TABLE[12],
+                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[50], BIOME_COLOR_TABLE[12],
                                     ((heightData[x][y] - -1f) / (WorldMapGenerator.sandLower - -1f))));
                             continue PER_CELL;
                         case 4:
-                            colorMap[x][y] = toRGBA8888(lerpColors(BIOME_COLOR_TABLE[0], BIOME_COLOR_TABLE[12],
+                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[0], BIOME_COLOR_TABLE[12],
                                     ((heightData[x][y] - WorldMapGenerator.sandLower) / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower))));
                             continue PER_CELL;
                     }
@@ -161,79 +176,17 @@ public class WorldMapView {
                     case 1:
                     case 2:
                     case 3:
-                        colorMap[x][y] = toRGBA8888(lerpColors(
+                        colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(
                                 BIOME_COLOR_TABLE[56], BIOME_COLOR_TABLE[43],
                                 Math.min(Math.max(((heightData[x][y] + 0.06f) * 8f) / (WorldMapGenerator.sandLower + 1f), 0f), 1f)));
                         break;
                     default:
-                        colorMap[x][y] = toRGBA8888(lerpColors(BIOME_COLOR_TABLE[biomeMapper.extractPartA(bc)],
+                        colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[biomeMapper.extractPartA(bc)],
                                 BIOME_DARK_COLOR_TABLE[biomeMapper.extractPartB(bc)], biomeMapper.extractMixAmount(bc)));
                 }
             }
         }
         
-        return colorMap;
-    }
-
-    /**
-     * Exactly like {@link #show()}, but returns colors as Oklab packed ints instead of RGBA ints.
-     * This means you can adjust the colors with methods like {@link DescriptiveColor#lighten(int, float)}
-     * or {@link DescriptiveColor#dullen(int, float)}, but you should probably convert back to RGBA when you're done
-     * using {@link DescriptiveColor#toRGBA8888(int)}.
-     * @return a 2D int array of packed Oklab int colors representing the world
-     */
-    public int[][] showOklab()
-    {
-        int hc, tc, bc; // height, temperature, biome codes
-        final int[][] heightCodeData = world.heightCodeData;
-        float[][] heightData = world.heightData;
-        int[][] heatCodeData = biomeMapper.heatCodeData;
-        int[][] biomeCodeData = biomeMapper.biomeCodeData;
-
-        for (int y = 0; y < height; y++) {
-            PER_CELL:
-            for (int x = 0; x < width; x++) {
-                hc = heightCodeData[x][y];
-                if(hc == 1000)
-                {
-                    colorMap[x][y] = (BIOME_COLOR_TABLE[60]);
-                    continue;
-                }
-                tc = heatCodeData[x][y];
-                bc = biomeCodeData[x][y];
-                if(tc == 0)
-                {
-                    switch (hc)
-                    {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                            colorMap[x][y] = (lerpColors(BIOME_COLOR_TABLE[50], BIOME_COLOR_TABLE[12],
-                                    ((heightData[x][y] - -1f) / (WorldMapGenerator.sandLower - -1f))));
-                            continue PER_CELL;
-                        case 4:
-                            colorMap[x][y] = (lerpColors(BIOME_COLOR_TABLE[0], BIOME_COLOR_TABLE[12],
-                                    ((heightData[x][y] - WorldMapGenerator.sandLower) / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower))));
-                            continue PER_CELL;
-                    }
-                }
-                switch (hc) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        colorMap[x][y] = (lerpColors(
-                                BIOME_COLOR_TABLE[56], BIOME_COLOR_TABLE[43],
-                                Math.min(Math.max(((heightData[x][y] + 0.06f) * 8f) / (WorldMapGenerator.sandLower + 1f), 0f), 1f)));
-                        break;
-                    default:
-                        colorMap[x][y] = (lerpColors(BIOME_COLOR_TABLE[biomeMapper.extractPartA(bc)],
-                                BIOME_DARK_COLOR_TABLE[biomeMapper.extractPartB(bc)], biomeMapper.extractMixAmount(bc)));
-                }
-            }
-        }
-
         return colorMap;
     }
 }
