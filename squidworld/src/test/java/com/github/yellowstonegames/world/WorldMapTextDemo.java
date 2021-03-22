@@ -20,6 +20,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.glyph.GlyphMap;
 import com.github.yellowstonegames.glyph.KnownFonts;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -101,9 +102,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 //// it's also possible to store the compressed map as a String in code, but you need to be careful about escaped chars.
 //        world = new WorldMapGenerator.LocalMimicMap(seed, basis, FastNoise.instance, 0.8);
 //        pix.dispose();
-
+        Noise noise = new Noise(rng.nextInt(), 1.5f, Noise.FOAM, 1);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
-        world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, WorldMapGenerator.DEFAULT_NOISE, 0.8f);
+        world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
         wmv = new WorldMapView(world);
         thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
         pm = new PoliticalMapper();
@@ -191,9 +192,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     {
         long startTime = System.currentTimeMillis();
         System.out.println("Seed used: 0x" + DigitTools.hex(seedA) + "L, 0x" + DigitTools.hex(seedB));
-        world.seedA = seedA;
-        world.seedB = seedB;
-        wmv.generate();
+        // You can remove the 0.9f and 1.3f parameters if you use a different kind of noise than FOAM.
+        // For some reason, Foam's distribution and the equalization that gets applied to land levels don't work well.
+        wmv.generate(seedA, seedB, 0.9f, 1.3f);
         wmv.show();
         atlas.clear();
         for (int i = 0; i < 64; i++) {
@@ -227,57 +228,53 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 
     public void putMap() {
         // uncomment next line to generate maps as quickly as possible
-        //generate(rng.nextLong());
-//        ArrayTools.fill(display.backgrounds, -0x1.0p125F);
+//        generate(rng.nextLong(), rng.nextLong());
         display.backgrounds = wmv.getColorMap();
         int[][] oklab = wmv.getColorMapOklab();
         BiomeMapper.DetailedBiomeMapper dbm = wmv.getBiomeMapper();
         int hc, tc, codeA, codeB;
         float mix;
         int[][] heightCodeData = world.heightCodeData;
-        //double xp, yp, zp;
         for (int y = 0; y < bigHeight; y++) {
-            PER_CELL:
             for (int x = 0; x < bigWidth; x++) {
                 hc = heightCodeData[x][y];
-                if(hc == 1000)
+                if (hc == 1000)
                     continue;
                 tc = dbm.heatCodeData[x][y];
-                if(tc == 0)
-                {
-                    switch (hc)
-                    {
+                if (tc == 0) {
+                    switch (hc) {
                         case 0:
                         case 1:
                         case 2:
                             display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], oklab[x][y])));
-                            continue PER_CELL;
+                            break;
                         case 3:
                             display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
-                            continue PER_CELL;
+                            break;
                         case 4:
                             display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
-                            continue PER_CELL;
+                            break;
                     }
-                }
-                switch (hc) {
-                    case 0:
-                    case 1:
-                    case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
-                        break;
-                    case 3:
-                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
-                        break;
-                    default: 
-                        int bc = dbm.biomeCodeData[x][y];
-                        codeB = dbm.extractPartB(bc);
-                        codeA = dbm.extractPartA(bc);
-                        mix = dbm.extractMixAmount(bc);
-                        if(mix <= 0.5) 
-                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
-                        else
-                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
+                } else {
+                    switch (hc) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
+                            break;
+                        case 3:
+                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
+                            break;
+                        default:
+                            int bc = dbm.biomeCodeData[x][y];
+                            codeB = dbm.extractPartB(bc);
+                            codeA = dbm.extractPartA(bc);
+                            mix = dbm.extractMixAmount(bc);
+                            if (mix <= 0.5)
+                                display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
+                            else
+                                display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
+                    }
                 }
             }
         }
@@ -290,8 +287,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                     DescriptiveColor.COLORS_BY_HUE.get((int) ((pm.politicalMap[ct.x][ct.y] * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
                     0xFE7F7F40)); // dark gray
             display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x][ct.y])));
-            if(ct.y >= display.backgrounds[0].length - 1) continue;
-            for (int pos = ct.x - (cname.length() >> 1), j = 0; j < cname.length(); pos++, j++) {
+            int pos = ct.x - (cname.length() >> 1);
+            if(ct.y >= display.backgrounds[0].length - 1 || pos + cname.length() >= display.backgrounds.length) continue;
+            for (int j = 0; j < cname.length(); pos++, j++) {
                 display.backgrounds[pos][ct.y + 1] = dark;
                 display.put(pos, ct.y + 1, cname.charAt(j), nationColor);
             }
