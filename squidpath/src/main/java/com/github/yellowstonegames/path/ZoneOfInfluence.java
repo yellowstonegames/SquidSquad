@@ -2,6 +2,7 @@ package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.Radius;
@@ -100,7 +101,7 @@ public class ZoneOfInfluence implements Serializable {
      * region B by using {@link Region#andNot(Region)}. Merging two zones A and B can be done with
      * {@link Region#or(Region)}. You can transform the data into a boolean[][] easily with
      * {@link Region#decode()}, where true is contained in the zone and false is not. The methods
-     * {@link Region#fringe()}, {@link Region#expand()}, {@link Region#singleRandom(Random)}, and
+     * {@link Region#fringe()}, {@link Region#expand()}, {@link Region#singleRandom(EnhancedRandom)}, and
      * {@link Region#separatedBlue(float)} are also potentially useful for this sort of data. You should save
      * the {@code Region[]} for later use if you want to call
      * {@link #nearestInfluences(Region[], Coord)}.

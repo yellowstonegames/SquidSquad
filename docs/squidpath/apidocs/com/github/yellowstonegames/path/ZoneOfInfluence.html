@@ -391,7 +391,7 @@ com.github.yellowstonegames.grid.Radius&nbsp;radiusStrategy)</span></div>
  region B by using <code>Region.andNot(Region)</code>. Merging two zones A and B can be done with
  <code>Region.or(Region)</code>. You can transform the data into a boolean[][] easily with
  <code>Region.decode()</code>, where true is contained in the zone and false is not. The methods
- <code>Region.fringe()</code>, <code>Region.expand()</code>, <code>Region.singleRandom(Random)</code>, and
+ <code>Region.fringe()</code>, <code>Region.expand()</code>, <code>Region.singleRandom(EnhancedRandom)</code>, and
  <code>Region.separatedBlue(float)</code> are also potentially useful for this sort of data. You should save
  the <code>Region[]</code> for later use if you want to call
  <a href="#nearestInfluences(com.github.yellowstonegames.grid.Region%5B%5D,com.github.yellowstonegames.grid.Coord)"><code>nearestInfluences(Region[], Coord)</code></a>.

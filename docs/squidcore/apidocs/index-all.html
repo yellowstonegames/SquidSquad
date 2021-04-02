@@ -167,6 +167,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/Hasher.html#astaroth_">astaroth_</a></span> - Static variable in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan(double)">atan(double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
+<dd>
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan(float)">atan(float)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
+<dd>
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2(double,double)">atan2(double, double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
 <div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
@@ -179,7 +191,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2_(double,double)">atan2_(double, double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
-<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as 
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
  doubles and returning an angle measured in turns from 0.0 to 1.0 (inclusive), with one cycle over the range
  equivalent to 360 degrees or 2PI radians.</div>
 </dd>
@@ -191,23 +203,37 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2Degrees(double,double)">atan2Degrees(double, double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180.</div>
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2Degrees(float,float)">atan2Degrees(float, float)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180.</div>
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2Degrees360(double,double)">atan2Degrees360(double, double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive).</div>
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ doubles and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atan2Degrees360(float,float)">atan2Degrees360(float, float)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
 <dd>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive).</div>
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ floats and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atanDegrees(double)">atanDegrees(double)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
+<dd>
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/TrigTools.html#atanDegrees(float)">atanDegrees(float)</a></span> - Static method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></dt>
+<dd>
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
 </dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>

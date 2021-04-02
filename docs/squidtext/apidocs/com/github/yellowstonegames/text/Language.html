@@ -136,7 +136,7 @@ implements java.io.Serializable</pre>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></span></code></th>
 <td class="col-last">
 <div class="block">A simple way to bundle a Language with the arguments that would be passed to it when calling
- <a href="#sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>sentence(LaserRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.</div>
+ <a href="#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>sentence(EnhancedRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.</div>
 </td>
 </tr>
 </tbody>
@@ -760,7 +760,7 @@ boolean&nbsp;clean)</code></th>
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>protected static java.lang.String[]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentBoth(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String%5B%5D,double,double)">accentBoth</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentBoth(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String%5B%5D,double,double)">accentBoth</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;vowelInfluence,
 double&nbsp;consonantInfluence)</code></th>
@@ -768,14 +768,14 @@ double&nbsp;consonantInfluence)</code></th>
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>protected static java.lang.String[]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentConsonants(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String%5B%5D,double)">accentConsonants</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentConsonants(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String%5B%5D,double)">accentConsonants</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;influence)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>protected static java.lang.String[]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentVowels(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String%5B%5D,double)">accentVowels</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#accentVowels(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String%5B%5D,double)">accentVowels</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;influence)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -868,7 +868,7 @@ regexodus.Pattern[]&nbsp;checks)</code></th>
 </tr>
 <tr class="alt-color" id="i16">
 <td class="col-first"><code>protected java.lang.String[]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#merge1000(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String%5B%5D,java.lang.String%5B%5D,double)">merge1000</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#merge1000(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String%5B%5D,java.lang.String%5B%5D,double)">merge1000</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 java.lang.String[]&nbsp;other,
 double&nbsp;otherInfluence)</code></th>
@@ -933,7 +933,7 @@ double&nbsp;chance)</code></th>
 </tr>
 <tr class="alt-color" id="i24">
 <td class="col-first"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomLanguage(java.util.Random)">randomLanguage</a></span>&#8203;(java.util.Random&nbsp;rng)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomLanguage(com.github.tommyettinger.ds.support.EnhancedRandom)">randomLanguage</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i25">
@@ -1030,7 +1030,7 @@ int&nbsp;maxChars)</code></th>
 </tr>
 <tr class="alt-color" id="i34">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords)</code></th>
 <td class="col-last">
@@ -1040,7 +1040,7 @@ int&nbsp;maxWords)</code></th>
 </tr>
 <tr class="row-color" id="i35">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,
@@ -1052,7 +1052,7 @@ double&nbsp;midPunctuationFrequency)</code></th>
 </tr>
 <tr class="alt-color" id="i36">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)">sentence</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,
@@ -1111,7 +1111,7 @@ regexodus.Pattern[]&nbsp;additionalChecks)</code></th>
 </tr>
 <tr class="row-color" id="i43">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.LaserRandom,boolean)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize)</code></th>
 <td class="col-last">
 <div class="block">Generate a word from this Language using the specified RNG.</div>
@@ -1119,7 +1119,7 @@ boolean&nbsp;capitalize)</code></th>
 </tr>
 <tr class="alt-color" id="i44">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.LaserRandom,boolean,int)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean,int)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize,
 int&nbsp;approxSyllables)</code></th>
 <td class="col-last">
@@ -1128,7 +1128,7 @@ int&nbsp;approxSyllables)</code></th>
 </tr>
 <tr class="row-color" id="i45">
 <td class="col-first"><code>java.lang.String</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.LaserRandom,boolean,int,regexodus.Pattern%5B%5D)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean,int,regexodus.Pattern%5B%5D)">word</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize,
 int&nbsp;approxSyllables,
 regexodus.Pattern[]&nbsp;additionalChecks)</code></th>
@@ -2171,9 +2171,9 @@ boolean&nbsp;clean)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="randomLanguage(java.util.Random)">
+<section class="detail" id="randomLanguage(com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>randomLanguage</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></span>&nbsp;<span class="member-name">randomLanguage</span>&#8203;(<span class="parameters">java.util.Random&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></span>&nbsp;<span class="member-name">randomLanguage</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
@@ -2235,9 +2235,9 @@ boolean&nbsp;capitalize)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="word(com.github.tommyettinger.ds.support.LaserRandom,boolean)">
+<section class="detail" id="word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
 <h3>word</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize)</span></div>
 <div class="block">Generate a word from this Language using the specified RNG.</div>
 <dl class="notes">
@@ -2270,9 +2270,9 @@ int&nbsp;approxSyllables)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="word(com.github.tommyettinger.ds.support.LaserRandom,boolean,int)">
+<section class="detail" id="word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean,int)">
 <h3>word</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize,
 int&nbsp;approxSyllables)</span></div>
 <div class="block">Generate a word from this Language using the specified RNG with an approximate number of syllables.</div>
@@ -2310,9 +2310,9 @@ regexodus.Pattern[]&nbsp;additionalChecks)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="word(com.github.tommyettinger.ds.support.LaserRandom,boolean,int,regexodus.Pattern[])">
+<section class="detail" id="word(com.github.tommyettinger.ds.support.EnhancedRandom,boolean,int,regexodus.Pattern[])">
 <h3>word</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">word</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 boolean&nbsp;capitalize,
 int&nbsp;approxSyllables,
 regexodus.Pattern[]&nbsp;additionalChecks)</span></div>
@@ -2367,9 +2367,9 @@ int&nbsp;maxWords)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int)">
+<section class="detail" id="sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">
 <h3>sentence</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords)</span></div>
 <div class="block">Generate a sentence from this Language, using the given RNG, with the length in words between minWords and
@@ -2442,9 +2442,9 @@ double&nbsp;midPunctuationFrequency)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String[],java.lang.String[],double)">
+<section class="detail" id="sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String[],java.lang.String[],double)">
 <h3>sentence</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,
@@ -2533,9 +2533,9 @@ int&nbsp;maxChars)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
+<section class="detail" id="sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
 <h3>sentence</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">sentence</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,
@@ -2565,34 +2565,34 @@ int&nbsp;maxChars)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="merge1000(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String[],java.lang.String[],double)">
+<section class="detail" id="merge1000(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String[],java.lang.String[],double)">
 <h3>merge1000</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">merge1000</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">merge1000</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 java.lang.String[]&nbsp;other,
 double&nbsp;otherInfluence)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="accentVowels(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String[],double)">
+<section class="detail" id="accentVowels(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String[],double)">
 <h3>accentVowels</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentVowels</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentVowels</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;influence)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="accentConsonants(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String[],double)">
+<section class="detail" id="accentConsonants(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String[],double)">
 <h3>accentConsonants</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentConsonants</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentConsonants</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;influence)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="accentBoth(com.github.tommyettinger.ds.support.LaserRandom,java.lang.String[],double,double)">
+<section class="detail" id="accentBoth(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.String[],double,double)">
 <h3>accentBoth</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentBoth</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">java.lang.String[]</span>&nbsp;<span class="member-name">accentBoth</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 java.lang.String[]&nbsp;me,
 double&nbsp;vowelInfluence,
 double&nbsp;consonantInfluence)</span></div>

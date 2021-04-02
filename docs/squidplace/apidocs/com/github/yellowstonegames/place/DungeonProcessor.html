@@ -121,7 +121,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  class, placement, can be used to find parts of a dungeon that fit certain qualities for the placement of items,
  terrain features, or NPCs. If you don't need Placement, the simplest way to get random cells from the map is probably
  to use <code>Region(char[][], char)</code> with the dungeon this made and <code>'.'</code> as the parameters, then call
- <code>Region.singleRandom(Random)</code> on that to choose random cells, optionally removing the chosen cells if you don't
+ <code>Region.singleRandom(EnhancedRandom)</code> on that to choose random cells, optionally removing the chosen cells if you don't
  want duplicates.
  <br>
  Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25</div>

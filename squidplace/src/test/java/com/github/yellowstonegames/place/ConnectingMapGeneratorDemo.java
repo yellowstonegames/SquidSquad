@@ -7,8 +7,9 @@ public class ConnectingMapGeneratorDemo {
 
     public static void main(String[] args) {
         LaserRandom random = new LaserRandom(0xB0BAFE77);
-        ConnectingMapGenerator gen = new ConnectingMapGenerator(61, 31, 3, 4, random, 2, 0.5);
-        char[][] map = LineTools.hashesToLines(gen.generate());
+        ConnectingMapGenerator gen = new ConnectingMapGenerator(32, 32, 5, 5, random, 1, 0.5);
+        char[][] map = gen.generate();
+//        char[][] map = LineTools.hashesToLines(gen.generate());
         DungeonTools.debugPrint(map);
     }
 }

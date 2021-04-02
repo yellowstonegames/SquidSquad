@@ -133,7 +133,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Tries to look up the position x,y in each Region in packed; each Region that contains that x,y
  point is appended into the Collection <code>into</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#approximateBits(java.util.Random,int)">approximateBits(Random, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#approximateBits(com.github.tommyettinger.ds.support.EnhancedRandom,int)">approximateBits(EnhancedRandom, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.</div>
 </dd>
@@ -433,12 +433,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deserializeFromString(java.lang.String)">deserializeFromString(String)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(java.util.Random,float)">deteriorate(Random, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)">deteriorate(EnhancedRandom, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Randomly removes points from a Region, with preservation as a fraction between 1.0 (keep all) and 0.0
  (remove all).</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(java.util.Random,int)">deteriorate(Random, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,int)">deteriorate(EnhancedRandom, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Randomly removes points from a Region, with larger values for preservation keeping more of the existing
  shape intact.</div>
@@ -494,7 +494,7 @@ loadScripts(document, 'script');</script>
  its x component is stored in the bottom 16 bits (use <code>(n &amp; 0xffff)</code> to obtain) and its y component is
  stored in the upper 16 bits (use <code>(n &gt;&gt;&gt; 16)</code> to obtain).</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#disperseRandom(java.util.Random)">disperseRandom(Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#disperseRandom(com.github.tommyettinger.ds.support.EnhancedRandom)">disperseRandom(EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Removes "on" cells that are nearby other "on" cells, with a random factor to which bits are actually turned off
  that still ensures exactly half of the bits are kept as-is (the one exception is when height is an odd number,
@@ -940,7 +940,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, quasi-randomly selecting them.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(java.util.Random,float)">fray(Random, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#fray(com.github.tommyettinger.ds.support.EnhancedRandom,float)">fray(EnhancedRandom, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, randomly selecting them.</div>
@@ -2542,7 +2542,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a Region using a vararg for data.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#onUnitShape(float,com.github.tommyettinger.ds.support.LaserRandom)">onUnitShape(float, LaserRandom)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#onUnitShape(float,com.github.tommyettinger.ds.support.EnhancedRandom)">onUnitShape(float, EnhancedRandom)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#opposite()">opposite()</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
@@ -2713,22 +2713,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">How light should spread; usually <a href="com/github/yellowstonegames/grid/Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a> unless gameplay reasons need it to be SQUARE or DIAMOND.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomInterleave(java.util.Random)">randomInterleave(Random)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomInterleave(com.github.tommyettinger.ds.support.EnhancedRandom)">randomInterleave(EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
  2 and bit 3, up to bit 62 and bit 3, one bit will be 1 and one bit will be 0 in each pair.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomPortion(java.util.Random,int)">randomPortion(Random, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomPortion(com.github.tommyettinger.ds.support.EnhancedRandom,int)">randomPortion(EnhancedRandom, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomRegion(java.util.Random,int)">randomRegion(Random, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)">randomRegion(EnhancedRandom, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(java.util.Random,int)">randomScatter(Random, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int)">randomScatter(EnhancedRandom, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
  were "on" in this originally.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(java.util.Random,int,int)">randomScatter(Random, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">randomScatter(EnhancedRandom, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
@@ -2887,21 +2887,21 @@ loadScripts(document, 'script');</script>
 <div class="block">Reassigns this Region with the given rectangular short array, reusing the current data storage (without
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.lang.String%5B%5D,char)">refill(String[], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Weird refill method that takes a String array, _as it would be printed_, so each String is a row and indexing
- would be done with y, x instead of the normal x, y.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.util.Random,float,int,int)">refill(Random, float, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)">refill(EnhancedRandom, float, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Reassigns this Region randomly, reusing the current data storage (without extra allocations) if this.width
  == width and this.height == height, while trying to set the given fraction of cells to on.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.util.Random,int,int)">refill(Random, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">refill(EnhancedRandom, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Reassigns this Region by filling it with random values from random, reusing the current data storage
  (without extra allocations) if this.width == width and this.height == height, and typically assigning
  approximately half of the cells in this to "on" and the rest to off.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#refill(java.lang.String%5B%5D,char)">refill(String[], char)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Weird refill method that takes a String array, _as it would be printed_, so each String is a row and indexing
+ would be done with y, x instead of the normal x, y.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">Region</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
@@ -2994,6 +2994,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs this Region using a short[][], treating cells as on if they are greater than or equal to lower
  and less than upper, or off otherwise.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)">Region(EnhancedRandom, float, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Constructor for a random Region of the given width and height, trying to set the given fraction of cells
+ to on.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">Region(EnhancedRandom, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dd>
+<div class="block">Constructor for a random Region of the given width and height, typically assigning approximately half of
+ the cells in this to "on" and the rest to off.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.yellowstonegames.grid.Coord,int,int)">Region(Coord, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Constructor for a Region that contains a single "on" cell, and has the given width and height.</div>
@@ -3006,16 +3016,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Weird constructor that takes a String array, _as it would be printed_, so each String is a row and indexing would
  be done with y, x instead of the normal x, y.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(java.util.Random,float,int,int)">Region(Random, float, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Constructor for a random Region of the given width and height, trying to set the given fraction of cells
- to on.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(java.util.Random,int,int)">Region(Random, int, int)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
-<dd>
-<div class="block">Constructor for a random Region of the given width and height, typically assigning approximately half of
- the cells in this to "on" and the rest to off.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.GRIterator.html" title="class in com.github.yellowstonegames.grid"><span class="type-name-link">Region.GRIterator</span></a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>&nbsp;</dd>
@@ -3241,28 +3241,28 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,java.util.Random)">sample(Coord, Coord, float, float, int, int, int, Random)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">sample(Coord, Coord, float, float, int, int, int, EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int)">sampleCircle(Coord, float, float, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,java.util.Random)">sampleCircle(Coord, float, float, int, int, int, Random)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">sampleCircle(Coord, float, float, int, int, int, EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(char%5B%5D%5B%5D,float,java.util.Random,char...)">sampleMap(char[][], float, Random, char...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)">sampleMap(char[][], float, EnhancedRandom, char...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,java.util.Random,char...)">sampleMap(Coord, Coord, char[][], float, Random, char...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)">sampleMap(Coord, Coord, char[][], float, EnhancedRandom, char...)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int)">sampleRectangle(Coord, Coord, float, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,java.util.Random)">sampleRectangle(Coord, Coord, float, int, int, int, Random)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">sampleRectangle(Coord, Coord, float, int, int, int, EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
@@ -3439,11 +3439,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#singleHoney(int,float,float,float,float,float,float)">singleHoney(int, float, float, float, float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#singleRandom(java.util.Random)">singleRandom(Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#singleRandom(com.github.tommyettinger.ds.support.EnhancedRandom)">singleRandom(EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a single random Coord from the "on" positions in this Region, or the Coord (-1,-1) if this is empty.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#singleRandomTight(java.util.Random)">singleRandomTight(Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#singleRandomTight(com.github.tommyettinger.ds.support.EnhancedRandom)">singleRandomTight(EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#singleSimplex(int,float,float)">singleSimplex(int, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
@@ -3467,13 +3467,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#size()">size()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#spill(com.github.yellowstonegames.grid.Region,int,java.util.Random)">spill(Region, int, Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)">spill(Region, int, EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
  the "on" cells of <code>bounds</code>, until <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> is equal to <code>volume</code> or there are no more cells
  this can expand into.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#splash(com.github.yellowstonegames.grid.Region,java.util.Random)">splash(Region, Random)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Region.html#splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.ds.support.EnhancedRandom)">splash(Region, EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
  inside the "on" cells of <code>bounds</code>.</div>

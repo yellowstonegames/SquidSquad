@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":9,"i19":10,"i20":9,"i21":10,"i22":10,"i23":10,"i24":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":9,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":9,"i21":10,"i22":9,"i23":10,"i24":10,"i25":10,"i26":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -311,6 +311,15 @@ long&nbsp;shuffleSeedB)</code></th>
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addArchivedCategoriesAlternate(java.lang.String)">addArchivedCategoriesAlternate</a></span>&#8203;(java.lang.String&nbsp;archive)</code></th>
+<td class="col-last">
+<div class="block">Given an archive String saved by <a href="#archiveCategoriesAlternate()"><code>archiveCategoriesAlternate()</code></a> (probably from another version of
+ SquidLib), this makes the Thesaurus class act like it did in that archive, assuming the <a href="#rng"><code>rng</code></a> is seeded
+ the same and uses the same algorithm/RandomnessSource.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addCategory(java.lang.CharSequence,java.util.Collection)">addCategory</a></span>&#8203;(java.lang.CharSequence&nbsp;keyword,
 java.util.Collection&lt;java.lang.String&gt;&nbsp;synonyms)</code></th>
 <td class="col-last">
@@ -319,7 +328,7 @@ java.util.Collection&lt;java.lang.String&gt;&nbsp;synonyms)</code></th>
  order).</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addFakeWords()">addFakeWords</a></span>()</code></th>
 <td class="col-last">
@@ -327,7 +336,7 @@ java.util.Collection&lt;java.lang.String&gt;&nbsp;synonyms)</code></th>
  accessible with a keyword based on the language.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addKnownCategories()">addKnownCategories</a></span>()</code></th>
 <td class="col-last">
@@ -335,25 +344,33 @@ java.util.Collection&lt;java.lang.String&gt;&nbsp;synonyms)</code></th>
  words with synonyms (only categories, which contain backticks in the name).</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addReplacement(java.lang.CharSequence,java.lang.String)">addReplacement</a></span>&#8203;(java.lang.CharSequence&nbsp;before,
 java.lang.String&nbsp;after)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
+<td class="col-first"><code>static java.lang.String</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#archiveCategoriesAlternate()">archiveCategoriesAlternate</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Gets a stable (large) String that stores all categories this version of Thesaurus knows, as well as all of the
+ words each category includes.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lookup(java.lang.String)">lookup</a></span>&#8203;(java.lang.String&nbsp;word)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeFlowerName()">makeFlowerName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a flower or flowering plant, such as "tulip of Jirui" or "thorny lilac".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeFlowerName(com.github.yellowstonegames.text.Language)">makeFlowerName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
@@ -361,14 +378,14 @@ java.lang.String&nbsp;after)</code></th>
  with the Language already available instead of randomly created.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeFruitName()">makeFruitName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a fruit, such as "green lime-melon" or "Ung's date".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeFruitName(com.github.yellowstonegames.text.Language)">makeFruitName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
@@ -376,14 +393,14 @@ java.lang.String&nbsp;after)</code></th>
  with the Language already available instead of randomly created.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeNationName()">makeNationName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a nation, such as "Iond-Gouccief Alliance" or "The Last Drayo Commonwealth".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeNationName(com.github.yellowstonegames.text.Language)">makeNationName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
@@ -391,14 +408,14 @@ java.lang.String&nbsp;after)</code></th>
  with the Language already available instead of randomly created.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeNutName()">makeNutName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a nut or bean, such as "nut of Gikoim" or "Pelyt's cashew".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeNutName(com.github.yellowstonegames.text.Language)">makeNutName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
@@ -406,14 +423,14 @@ java.lang.String&nbsp;after)</code></th>
  with the Language already available instead of randomly created.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makePlantName()">makePlantName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a plant or tree, such as "Ikesheha's maple" or "sugarleaf birch".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makePlantName(com.github.yellowstonegames.text.Language)">makePlantName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
@@ -421,7 +438,7 @@ java.lang.String&nbsp;after)</code></th>
  with the Language already available instead of randomly created.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makePotionDescription()">makePotionDescription</a></span>()</code></th>
 <td class="col-last">
@@ -430,21 +447,21 @@ java.lang.String&nbsp;after)</code></th>
  effervescent violet potion", or "a wineskin filled with a black serum".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeVegetableName()">makeVegetableName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a vegetable, such as "miniature yam" or Iliakshe's spicy zucchini".</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i19">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#makeVegetableName(com.github.yellowstonegames.text.Language)">makeVegetableName</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language)</code></th>
 <td class="col-last">
 <div class="block">Generates a random possible name for a vegetable, such as "miniature yam" or Iliakshe's spicy zucchini".</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#numberAdjective(int)">numberAdjective</a></span>&#8203;(int&nbsp;number)</code></th>
 <td class="col-last">
@@ -452,7 +469,7 @@ java.lang.String&nbsp;after)</code></th>
  "eleventh").</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#numberAdjectiveInRange(int,int)">numberAdjectiveInRange</a></span>&#8203;(int&nbsp;lowest,
 int&nbsp;highest)</code></th>
@@ -461,14 +478,14 @@ int&nbsp;highest)</code></th>
  "eleventh"), where the number is chosen randomly nextInt lowest and highest, both inclusive.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#numberWord(int)">numberWord</a></span>&#8203;(int&nbsp;number)</code></th>
 <td class="col-last">
 <div class="block">Gets an English word for a given number, if this knows it.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#numberWordInRange(int,int)">numberWordInRange</a></span>&#8203;(int&nbsp;lowest,
 int&nbsp;highest)</code></th>
@@ -477,7 +494,7 @@ int&nbsp;highest)</code></th>
  highest, both inclusive.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#process(java.lang.CharSequence)">process</a></span>&#8203;(java.lang.CharSequence&nbsp;text)</code></th>
 <td class="col-last">
@@ -485,7 +502,7 @@ int&nbsp;highest)</code></th>
  replaces each occurrence of such a known word with one of its synonyms, leaving unknown words untouched.</div>
 </td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#refresh(long)">refresh</a></span>&#8203;(long&nbsp;state)</code></th>
 <td class="col-last">
@@ -493,7 +510,7 @@ int&nbsp;highest)</code></th>
  different version that knows all the same synonyms and categories but will produce different results.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#refresh(long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
 long&nbsp;stateB)</code></th>
@@ -934,6 +951,32 @@ java.util.Collection&lt;java.lang.String&gt;&nbsp;synonyms)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="addArchivedCategoriesAlternate(java.lang.String)">
+<h3>addArchivedCategoriesAlternate</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></span>&nbsp;<span class="member-name">addArchivedCategoriesAlternate</span>&#8203;(<span class="parameters">java.lang.String&nbsp;archive)</span></div>
+<div class="block">Given an archive String saved by <a href="#archiveCategoriesAlternate()"><code>archiveCategoriesAlternate()</code></a> (probably from another version of
+ SquidLib), this makes the Thesaurus class act like it did in that archive, assuming the <a href="#rng"><code>rng</code></a> is seeded
+ the same and uses the same algorithm/RandomnessSource. This modifies the <a href="#mappings"><code>mappings</code></a> field and the
+ <a href="#categories"><code>categories</code></a>, <a href="#adjective"><code>adjective</code></a>, <a href="#noun"><code>noun</code></a>, and <a href="#nouns"><code>nouns</code></a> static fields, so it can affect other
+ Thesaurus objects produced later (it won't change previously-made ones, probably).
+ <br>
+ If you didn't have an archive of the categories from some version of SquidLib, you can download one of the small
+ files from <a href="https://github.com/yellowstonegames/SquidLib/tree/master/archives">the 'archives' folder of the
+ SquidLib repo</a>; there's an archive that acts as a snapshot of SquidLib 3.0.0's Thesaurus class, for instance.
+ The files that use this method's format end in <code>.alt.txt</code>, while the other format uses <code>.squid.txt</code>.
+ If you save the 3.0.0 archive in a libGDX application's assets folder, you can reload the 3.0.0 definitions into
+ a Thesaurus called <code>myThesaurus</code> with:
+ <br>
+ <code>myThesaurus.addArchivedCategoriesAlternate(Gdx.files.internal("Thesaurus-3-0-0.alt.txt").readString("UTF-8"));</code></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>archive</code> - an archived String of categories produced by <a href="#archiveCategoriesAlternate()"><code>archiveCategoriesAlternate()</code></a></dd>
+<dt>Returns:</dt>
+<dd>this Thesaurus, but static state of the class will also be modified so this may affect other Thesaurus objects</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="addFakeWords()">
 <h3>addFakeWords</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></span>&nbsp;<span class="member-name">addFakeWords</span>()</div>
@@ -1315,6 +1358,27 @@ int&nbsp;highest)</span></div>
 <dd><code>highest</code> - the upper bound for numbers this can choose, inclusive</dd>
 <dt>Returns:</dt>
 <dd>a String word for a number in the given range, such as "third" or "twelfth", if it is known</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="archiveCategoriesAlternate()">
+<h3>archiveCategoriesAlternate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">java.lang.String</span>&nbsp;<span class="member-name">archiveCategoriesAlternate</span>()</div>
+<div class="block">Gets a stable (large) String that stores all categories this version of Thesaurus knows, as well as all of the
+ words each category includes. This can be useful in conjunction with
+ <a href="#addArchivedCategoriesAlternate(java.lang.String)"><code>addArchivedCategoriesAlternate(String)</code></a> to load a set of categories stored from an earlier version of
+ SquidLib, but its intended purpose is to provide a simpler format for archival that doesn't use ObText. The code
+ for ObText is in SquidLib 3.x, but so far is not in SquidSquad, and is unlikely to be added here.
+ <br>
+ This yields a String that describes an OrderedMap of String keys (categories) mapped to ArrayList of String
+ values (the words each category knows). Each key-value pair is one line, typically separated by <code>"\n"</code> (but
+ because various OS properties can affect line endings, <code>"\r\n"</code> must also be handled). Items within the
+ line are separated by the non-breaking space character, Unicode 00A0. The first item on a line is the key, or the
+ category name. Remaining items are words the category knows. This may produce a trailing newline.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a category archive String that can be passed to <a href="#addArchivedCategoriesAlternate(java.lang.String)"><code>addArchivedCategoriesAlternate(String)</code></a></dd>
 </dl>
 </section>
 </li>

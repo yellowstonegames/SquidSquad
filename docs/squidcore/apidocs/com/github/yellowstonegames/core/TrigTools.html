@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -227,6 +227,24 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="alt-color" id="i8">
 <td class="col-first"><code>static double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan(double)">atan</a></span>&#8203;(double&nbsp;i)</code></th>
+<td class="col-last">
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan(float)">atan</a></span>&#8203;(float&nbsp;i)</code></th>
+<td class="col-last">
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2(double,double)">atan2</a></span>&#8203;(double&nbsp;y,
 double&nbsp;x)</code></th>
 <td class="col-last">
@@ -234,7 +252,7 @@ double&nbsp;x)</code></th>
  approximation.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2(float,float)">atan2</a></span>&#8203;(float&nbsp;y,
 float&nbsp;x)</code></th>
@@ -243,17 +261,17 @@ float&nbsp;x)</code></th>
  approximation.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2_(double,double)">atan2_</a></span>&#8203;(double&nbsp;y,
 double&nbsp;x)</code></th>
 <td class="col-last">
-<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as 
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
  doubles and returning an angle measured in turns from 0.0 to 1.0 (inclusive), with one cycle over the range
  equivalent to 360 degrees or 2PI radians.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2_(float,float)">atan2_</a></span>&#8203;(float&nbsp;y,
 float&nbsp;x)</code></th>
@@ -263,43 +281,63 @@ float&nbsp;x)</code></th>
  degrees or 2PI radians.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees(double,double)">atan2Degrees</a></span>&#8203;(double&nbsp;y,
 double&nbsp;x)</code></th>
 <td class="col-last">
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180.</div>
-</td>
-</tr>
-<tr class="row-color" id="i13">
-<td class="col-first"><code>static float</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees(float,float)">atan2Degrees</a></span>&#8203;(float&nbsp;y,
-float&nbsp;x)</code></th>
-<td class="col-last">
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180.</div>
-</td>
-</tr>
-<tr class="alt-color" id="i14">
-<td class="col-first"><code>static double</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees360(double,double)">atan2Degrees360</a></span>&#8203;(double&nbsp;y,
-double&nbsp;x)</code></th>
-<td class="col-last">
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive).</div>
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation.</div>
 </td>
 </tr>
 <tr class="row-color" id="i15">
 <td class="col-first"><code>static float</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees360(float,float)">atan2Degrees360</a></span>&#8203;(float&nbsp;y,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees(float,float)">atan2Degrees</a></span>&#8203;(float&nbsp;y,
 float&nbsp;x)</code></th>
 <td class="col-last">
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive).</div>
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i16">
+<td class="col-first"><code>static double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees360(double,double)">atan2Degrees360</a></span>&#8203;(double&nbsp;y,
+double&nbsp;x)</code></th>
+<td class="col-last">
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ doubles and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn.</div>
+</td>
+</tr>
+<tr class="row-color" id="i17">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atan2Degrees360(float,float)">atan2Degrees360</a></span>&#8203;(float&nbsp;y,
+float&nbsp;x)</code></th>
+<td class="col-last">
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ floats and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i18">
+<td class="col-first"><code>static double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atanDegrees(double)">atanDegrees</a></span>&#8203;(double&nbsp;i)</code></th>
+<td class="col-last">
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</td>
+</tr>
+<tr class="row-color" id="i19">
+<td class="col-first"><code>static float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#atanDegrees(float)">atanDegrees</a></span>&#8203;(float&nbsp;i)</code></th>
+<td class="col-last">
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise).</div>
+</td>
+</tr>
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cos(double)">cos</a></span>&#8203;(double&nbsp;radians)</code></th>
 <td class="col-last">
@@ -308,7 +346,7 @@ float&nbsp;x)</code></th>
  and sometimes-faster MathUtils.cos() method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cos(float)">cos</a></span>&#8203;(float&nbsp;radians)</code></th>
 <td class="col-last">
@@ -317,7 +355,7 @@ float&nbsp;x)</code></th>
  consider its more-precise and sometimes-faster MathUtils.cos() method.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cos_(double)">cos_</a></span>&#8203;(double&nbsp;turns)</code></th>
 <td class="col-last">
@@ -325,7 +363,7 @@ float&nbsp;x)</code></th>
  turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cos_(float)">cos_</a></span>&#8203;(float&nbsp;turns)</code></th>
 <td class="col-last">
@@ -333,7 +371,7 @@ float&nbsp;x)</code></th>
  also takes and returns a float); one turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#cosDegrees(float)">cosDegrees</a></span>&#8203;(float&nbsp;degrees)</code></th>
 <td class="col-last">
@@ -342,7 +380,7 @@ float&nbsp;x)</code></th>
  consider its more-precise and sometimes-faster MathUtils.cosDeg() method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin(double)">sin</a></span>&#8203;(double&nbsp;radians)</code></th>
 <td class="col-last">
@@ -351,7 +389,7 @@ float&nbsp;x)</code></th>
  and sometimes-faster MathUtils.sin() method.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin(float)">sin</a></span>&#8203;(float&nbsp;radians)</code></th>
 <td class="col-last">
@@ -360,7 +398,7 @@ float&nbsp;x)</code></th>
  consider its more-precise and sometimes-faster MathUtils.sin() method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin_(double)">sin_</a></span>&#8203;(double&nbsp;turns)</code></th>
 <td class="col-last">
@@ -368,7 +406,7 @@ float&nbsp;x)</code></th>
  turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sin_(float)">sin_</a></span>&#8203;(float&nbsp;turns)</code></th>
 <td class="col-last">
@@ -376,7 +414,7 @@ float&nbsp;x)</code></th>
  also takes and returns a float); one turn is equal to 360 degrees or two*PI radians.</div>
 </td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>static float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sinDegrees(float)">sinDegrees</a></span>&#8203;(float&nbsp;degrees)</code></th>
 <td class="col-last">
@@ -787,22 +825,58 @@ float&nbsp;x)</code></th>
 </section>
 </li>
 <li>
+<section class="detail" id="atan(double)">
+<h3>atan</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atan</span>&#8203;(<span class="parameters">double&nbsp;i)</span></div>
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise). This method is usually much faster than <code>Math.atan(double)</code>,
+ but is somewhat less precise than Math's implementation.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>i</code> - an input to the inverse tangent function; any double is accepted</dd>
+<dt>Returns:</dt>
+<dd>an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="atan(float)">
+<h3>atan</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">atan</span>&#8203;(<span class="parameters">float&nbsp;i)</span></div>
+<div class="block">Arc tangent approximation with very low error, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise). This method is usually much faster than <code>Math.atan(double)</code>,
+ but is somewhat less precise than Math's implementation.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>i</code> - an input to the inverse tangent function; any float is accepted</dd>
+<dt>Returns:</dt>
+<dd>an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="atan2(double,double)">
 <h3>atan2</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atan2</span>&#8203;(<span class="parameters">double&nbsp;y,
 double&nbsp;x)</span></div>
 <div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation. Maximum error is below 0.001 radians.
+ approximation. Maximum error is below 0.00009 radians.
  Takes y and x (in that unusual order) as doubles, and returns the angle from the origin to that point in radians.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation of the same method; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable. This method changed from an earlier
- technique that was twice as fast but had very poor quality, enough to be visually noticeable. See also
- <a href="#atan2_(double,double)"><code>atan2_(double, double)</code></a> if you don't want a mess converting to degrees or some other measurement, since
- that method returns an angle from 0.0 (equal to 0 degrees) to 1.0 (equal to 360 degrees).</div>
+ It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 12 ns instead of roughly 62 ns for
+ Math, on Java 8 HotSpot). It is slightly faster than libGDX' MathUtils approximation of the same method;
+ MathUtils seems to have worse average error, though.
+ <br>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(double)"><code>atan(double)</code></a>
+ method, and the small code to make that work as atan2() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(double,double)"><code>atan2_(double, double)</code></a> if you don't want a mess converting to degrees or some other
+ measurement, since that method returns an angle from 0f (equal to 0 degrees) to 1f (equal to 360 degrees). You
+ can also use <a href="#atan2Degrees(double,double)"><code>atan2Degrees(double, double)</code></a> or <a href="#atan2Degrees360(double,double)"><code>atan2Degrees360(double, double)</code></a> to produce a
+ result in degrees, either from -180 to 180 or 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
@@ -818,17 +892,21 @@ double&nbsp;x)</span></div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">atan2</span>&#8203;(<span class="parameters">float&nbsp;y,
 float&nbsp;x)</span></div>
 <div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation. Maximum error is below 0.001 radians.
+ approximation. Maximum error is below 0.00009 radians.
  Takes y and x (in that unusual order) as floats, and returns the angle from the origin to that point in radians.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation of the same method; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable. This method changed from an earlier
- technique that was twice as fast but had very poor quality, enough to be visually noticeable. See also
- <a href="#atan2_(float,float)"><code>atan2_(float, float)</code></a> if you don't want a mess converting to degrees or some other measurement, since
- that method returns an angle from 0f (equal to 0 degrees) to 1f (equal to 360 degrees).</div>
+ It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 12 ns instead of roughly 62 ns for
+ Math, on Java 8 HotSpot). It is slightly faster than libGDX' MathUtils approximation of the same method;
+ MathUtils seems to have worse average error, though.
+ <br>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(float)"><code>atan(float)</code></a>
+ method, and the small code to make that work as atan2() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(float,float)"><code>atan2_(float, float)</code></a> if you don't want a mess converting to degrees or some other measurement,
+ since that method returns an angle from 0f (equal to 0 degrees) to 1f (equal to 360 degrees). You can also use
+ <a href="#atan2Degrees(float,float)"><code>atan2Degrees(float, float)</code></a> or <a href="#atan2Degrees360(float,float)"><code>atan2Degrees360(float, float)</code></a> to produce a result in degrees,
+ either from -180 to 180 or 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
@@ -843,16 +921,21 @@ float&nbsp;x)</span></div>
 <h3>atan2_</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atan2_</span>&#8203;(<span class="parameters">double&nbsp;y,
 double&nbsp;x)</span></div>
-<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as 
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
  doubles and returning an angle measured in turns from 0.0 to 1.0 (inclusive), with one cycle over the range
  equivalent to 360 degrees or 2PI radians. You can multiply the angle by <code>6.2831855f</code> to change to radians,
  or by <code>360f</code> to change to degrees. Takes y and x (in that unusual order) as doubles. Will never return a
  negative number, which may help avoid costly floating-point modulus when you actually want a positive number.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable. Note that
- <a href="#atan2(double,double)"><code>atan2(double, double)</code></a> returns an angle in radians and can return negative results, which may be fine for
- many tasks; these two methods are extremely close in implementation and speed.</div>
+ <br>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(float)"><code>atan(float)</code></a>
+ method, and the small code to make that work as atan2_() was worked out from Wikipedia.
+ <br>
+ Note that <a href="#atan2(double,double)"><code>atan2(double, double)</code></a> returns an angle in radians and can return negative results, which may
+ be fine for many tasks; these two methods are extremely close in implementation and speed. There are also
+ <a href="#atan2Degrees(double,double)"><code>atan2Degrees(double, double)</code></a> and <a href="#atan2Degrees360(double,double)"><code>atan2Degrees360(double, double)</code></a>, which provide an angle in
+ degrees, either from -180 to 180 or 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
@@ -872,11 +955,16 @@ float&nbsp;x)</span></div>
  degrees or 2PI radians. You can multiply the angle by <code>6.2831855f</code> to change to radians, or by <code>360f</code>
  to change to degrees. Takes y and x (in that unusual order) as floats. Will never return a negative number, which
  may help avoid costly floating-point modulus when you actually want a positive number.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable. Note that
- <a href="#atan2(float,float)"><code>atan2(float, float)</code></a> returns an angle in radians and can return negative results, which may be fine for
- many tasks; these two methods are extremely close in implementation and speed.</div>
+ <br>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(float)"><code>atan(float)</code></a>
+ method, and the small code to make that work as atan2_() was worked out from Wikipedia.
+ <br>
+ Note that <a href="#atan2(float,float)"><code>atan2(float, float)</code></a> returns an angle in radians and can return negative results, which may
+ be fine for many tasks; these two methods are extremely close in implementation and speed. There are also
+ <a href="#atan2Degrees(float,float)"><code>atan2Degrees(float, float)</code></a> and <a href="#atan2Degrees360(float,float)"><code>atan2Degrees360(float, float)</code></a>, which provide an angle in
+ degrees, either from -180 to 180 or 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
@@ -887,28 +975,65 @@ float&nbsp;x)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="atanDegrees(double)">
+<h3>atanDegrees</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atanDegrees</span>&#8203;(<span class="parameters">double&nbsp;i)</span></div>
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise). This method is usually much faster than <code>Math.atan(double)</code>,
+ but is somewhat less precise than Math's implementation. This implementation can return negative or positive
+ results in degrees.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>i</code> - an input to the inverse tangent function; any double is accepted</dd>
+<dt>Returns:</dt>
+<dd>an output from the inverse tangent function in degrees, from -90 to 90 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="atanDegrees(float)">
+<h3>atanDegrees</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">atanDegrees</span>&#8203;(<span class="parameters">float&nbsp;i)</span></div>
+<div class="block">Arc tangent approximation measured in degrees, using an algorithm from the 1955 research study
+ "Approximations for Digital Computers," by RAND Corporation (this is sheet 9's algorithm, which is the
+ second-fastest and second-least precise). This method is usually much faster than <code>Math.atan(double)</code>,
+ but is somewhat less precise than Math's implementation. This implementation can return negative or positive
+ results in degrees.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>i</code> - an input to the inverse tangent function; any float is accepted</dd>
+<dt>Returns:</dt>
+<dd>an output from the inverse tangent function, from -90 to 90 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="atan2Degrees(double,double)">
 <h3>atan2Degrees</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atan2Degrees</span>&#8203;(<span class="parameters">double&nbsp;y,
 double&nbsp;x)</span></div>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180. Maximum error is below 0.1 degrees.
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation. The range for this is -180 to 180.
  Takes y and x (in that unusual order) as doubles, and returns the angle from the origin to that point in degrees.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation after converting to degrees; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable.
+ It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 12 ns instead of roughly 62 ns for
+ Math, on Java 8 HotSpot). It is slightly faster than libGDX' MathUtils approximation of the same method;
+ MathUtils seems to have worse average error, as well.
  <br>
- See also <a href="#atan2Degrees360(double,double)"><code>atan2Degrees360(double, double)</code></a>, which is just like this but returns an angle from 0 to 360,
- instead of -180 to 180, in case negative angles are undesirable.</div>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(double)"><code>atan(double)</code></a>
+ method, and the small code to make that work as atan2Degrees() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(double,double)"><code>atan2_(double, double)</code></a> for a version that returns a measurement as a fraction of a turn, or
+ <a href="#atan2(double,double)"><code>atan2(double, double)</code></a> for the typical radians. You
+ can also use <a href="#atan2Degrees360(double,double)"><code>atan2Degrees360(double, double)</code></a> to produce a result in degrees from 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dd><code>x</code> - x-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dt>Returns:</dt>
-<dd>the angle to the given point, in degrees as a double</dd>
+<dd>the angle to the given point, in radians as a double; ranges from -180 to 180</dd>
 </dl>
 </section>
 </li>
@@ -917,24 +1042,27 @@ double&nbsp;x)</span></div>
 <h3>atan2Degrees</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">atan2Degrees</span>&#8203;(<span class="parameters">float&nbsp;y,
 float&nbsp;x)</span></div>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from -180 to 180. Maximum error is below 0.1 degrees.
+<div class="block">Close approximation of the frequently-used trigonometric method atan2 measured in degrees, with higher precision
+ than libGDX's atan2 approximation. The range for this is -180 to 180.
  Takes y and x (in that unusual order) as floats, and returns the angle from the origin to that point in degrees.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation after converting to degrees; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable.
+ It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 12 ns instead of roughly 62 ns for
+ Math, on Java 8 HotSpot). It is slightly faster than libGDX' MathUtils approximation of the same method;
+ MathUtils seems to have worse average error, as well.
  <br>
- See also <a href="#atan2Degrees360(float,float)"><code>atan2Degrees360(float, float)</code></a>, which is just like this but returns an angle from 0 to 360,
- instead of -180 to 180, in case negative angles are undesirable.</div>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(float)"><code>atan(float)</code></a>
+ method, and the small code to make that work as atan2Degrees() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(float,float)"><code>atan2_(float, float)</code></a> for a version that returns a measurement as a fraction of a turn, or
+ <a href="#atan2(float,float)"><code>atan2(float, float)</code></a> for the typical radians. You
+ can also use <a href="#atan2Degrees360(float,float)"><code>atan2Degrees360(float, float)</code></a> to produce a result in degrees from 0 to 360.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dd><code>x</code> - x-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dt>Returns:</dt>
-<dd>the angle to the given point, in degrees as a float</dd>
+<dd>the angle to the given point, in radians as a float; ranges from -180 to 180</dd>
 </dl>
 </section>
 </li>
@@ -943,24 +1071,25 @@ float&nbsp;x)</span></div>
 <h3>atan2Degrees360</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">atan2Degrees360</span>&#8203;(<span class="parameters">double&nbsp;y,
 double&nbsp;x)</span></div>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive). Maximum error is below 0.1 degrees.
- Takes y and x (in that unusual order) as doubles, and returns the angle from the origin to that point in degrees.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation after converting to degrees; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable.
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ doubles and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn. Takes y and x (in that unusual order) as doubles. Will never return a
+ negative number, which may help avoid costly floating-point modulus when you actually want a positive number.
  <br>
- See also <a href="#atan2Degrees(double,double)"><code>atan2Degrees(double, double)</code></a>, which is just like this but returns an angle from -180 to 180,
- matching <code>Math.atan2(double, double)</code>'s convention.</div>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(double)"><code>atan(double)</code></a>
+ method, and the small code to make that work as atan2Degrees360() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(double,double)"><code>atan2_(double, double)</code></a> for a version that returns a measurement as a fraction of a turn, or
+ <a href="#atan2(double,double)"><code>atan2(double, double)</code></a> for the typical radians. You
+ can also use <a href="#atan2Degrees(double,double)"><code>atan2Degrees(double, double)</code></a> to produce a result in degrees from -180 to 180.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dd><code>x</code> - x-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dt>Returns:</dt>
-<dd>the angle to the given point, in degrees as a double</dd>
+<dd>the angle to the given point, as a double from 0.0 to 360.0, inclusive</dd>
 </dl>
 </section>
 </li>
@@ -969,24 +1098,25 @@ double&nbsp;x)</span></div>
 <h3>atan2Degrees360</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">atan2Degrees360</span>&#8203;(<span class="parameters">float&nbsp;y,
 float&nbsp;x)</span></div>
-<div class="block">Close approximation of the frequently-used trigonometric method atan2, with higher precision than libGDX's atan2
- approximation, and giving a result in degrees from 0 to 360 (both inclusive). Maximum error is below 0.1 degrees.
- Takes y and x (in that unusual order) as floats, and returns the angle from the origin to that point in degrees.
- It is about 5 times faster than <code>Math.atan2(double, double)</code> (roughly 17 ns instead of roughly 88 ns for
- Math, though the computer was under some load during testing). It is almost identical in speed to libGDX'
- MathUtils approximation after converting to degrees; MathUtils seems to have worse average error, though.
- Credit to Nic Taylor and imuli, with Taylor publishing
- <a href="https://www.dsprelated.com/showarticle/1052.php">this nice post</a> and imuli commenting with very
- handy information that makes this approach usable.
+<div class="block">Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
+ floats and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
+ equivalent to 2PI radians or 1 turn. Takes y and x (in that unusual order) as floats. Will never return a
+ negative number, which may help avoid costly floating-point modulus when you actually want a positive number.
  <br>
- See also <a href="#atan2Degrees(float,float)"><code>atan2Degrees(float, float)</code></a>, which is just like this but returns an angle from -180 to 180,
- matching <code>Math.atan2(double, double)</code>'s convention.</div>
+ Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
+ is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
+ but only by a very small degree, and is considerably less precise. That study provides an <a href="#atan(float)"><code>atan(float)</code></a>
+ method, and the small code to make that work as atan2Degrees360() was worked out from Wikipedia.
+ <br>
+ See also <a href="#atan2_(float,float)"><code>atan2_(float, float)</code></a> for a version that returns a measurement as a fraction of a turn, or
+ <a href="#atan2(float,float)"><code>atan2(float, float)</code></a> for the typical radians. You
+ can also use <a href="#atan2Degrees(float,float)"><code>atan2Degrees(float, float)</code></a> to produce a result in degrees from -180 to 180.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>y</code> - y-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dd><code>x</code> - x-component of the point to find the angle towards; note the parameter order is unusual by convention</dd>
 <dt>Returns:</dt>
-<dd>the angle to the given point, in degrees as a float</dd>
+<dd>the angle to the given point, as a float from 0.0 to 360.0, inclusive</dd>
 </dl>
 </section>
 </li>

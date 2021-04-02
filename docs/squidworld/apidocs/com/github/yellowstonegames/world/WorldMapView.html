@@ -127,16 +127,21 @@ extends java.lang.Object</pre>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>protected int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#height">height</a></span></code></th>
+<td class="col-first"><code>protected int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#colorMapOklab">colorMapOklab</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>protected int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#width">width</a></span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#height">height</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>protected int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#width">width</a></span></code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#world">world</a></span></code></th>
 <td class="col-last">&nbsp;</td>
@@ -221,52 +226,53 @@ float&nbsp;heatMod)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i5">
-<td class="col-first"><code>int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getHeight()">getHeight</a></span>()</code></th>
+<td class="col-first"><code>int[][]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getColorMapOklab()">getColorMapOklab</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
 <td class="col-first"><code>int</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getWidth()">getWidth</a></span>()</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getHeight()">getHeight</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i7">
+<td class="col-first"><code>int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getWidth()">getWidth</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getWorld()">getWorld</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#initialize()">initialize</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#match(int...)">match</a></span>&#8203;(int...&nbsp;similarColors)</code></th>
 <td class="col-last">
 <div class="block">Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setBiomeMapper(com.github.yellowstonegames.world.BiomeMapper.DetailedBiomeMapper)">setBiomeMapper</a></span>&#8203;(<a href="BiomeMapper.DetailedBiomeMapper.html" title="class in com.github.yellowstonegames.world">BiomeMapper.DetailedBiomeMapper</a>&nbsp;biomeMapper)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setWorld(com.github.yellowstonegames.world.WorldMapGenerator)">setWorld</a></span>&#8203;(<a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a>&nbsp;world)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
-<td class="col-first"><code>int[][]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#show()">show</a></span>()</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
 <tr class="row-color" id="i13">
 <td class="col-first"><code>int[][]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#showOklab()">showOklab</a></span>()</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#show()">show</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Exactly like <a href="#show()"><code>show()</code></a>, but returns colors as Oklab packed ints instead of RGBA ints.</div>
+<div class="block">After calling <a href="#generate()"><code>generate()</code></a>, you can call this to assign values to <a href="#getColorMap()"><code>getColorMap()</code></a> and
+ <a href="#getColorMapOklab()"><code>getColorMapOklab()</code></a>.</div>
 </td>
 </tr>
 </tbody>
@@ -303,6 +309,12 @@ float&nbsp;heatMod)</code></th>
 <section class="detail" id="colorMap">
 <h3>colorMap</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">colorMap</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="colorMapOklab">
+<h3>colorMapOklab</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">colorMapOklab</span></div>
 </section>
 </li>
 <li>
@@ -378,6 +390,12 @@ int&nbsp;height)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="getColorMapOklab()">
+<h3>getColorMapOklab</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">getColorMapOklab</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getBiomeMapper()">
 <h3>getBiomeMapper</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BiomeMapper.DetailedBiomeMapper.html" title="class in com.github.yellowstonegames.world">BiomeMapper.DetailedBiomeMapper</a></span>&nbsp;<span class="member-name">getBiomeMapper</span>()</div>
@@ -448,19 +466,13 @@ float&nbsp;heatMod)</span></div>
 <section class="detail" id="show()">
 <h3>show</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">show</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="showOklab()">
-<h3>showOklab</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="member-name">showOklab</span>()</div>
-<div class="block">Exactly like <a href="#show()"><code>show()</code></a>, but returns colors as Oklab packed ints instead of RGBA ints.
- This means you can adjust the colors with methods like <code>DescriptiveColor.lighten(int, float)</code>
- or <code>DescriptiveColor.dullen(int, float)</code>, but you should probably convert back to RGBA when you're done
- using <code>DescriptiveColor.toRGBA8888(int)</code>.</div>
+<div class="block">After calling <a href="#generate()"><code>generate()</code></a>, you can call this to assign values to <a href="#getColorMap()"><code>getColorMap()</code></a> and
+ <a href="#getColorMapOklab()"><code>getColorMapOklab()</code></a>. This method returns the RGBA colorMap, but it assigns to colorMapOklab
+ at the same time, so you can use the Oklab colors with methods like
+ <code>DescriptiveColor.lighten(int, float)</code> and <code>DescriptiveColor.lerpColors(int, int, float)</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>a 2D int array of packed Oklab int colors representing the world</dd>
+<dd>the RGBA8888 colorMap</dd>
 </dl>
 </section>
 </li>

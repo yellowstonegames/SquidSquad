@@ -91,10 +91,10 @@ loadScripts(document, 'script');</script>
 extends java.lang.Object
 implements java.io.Serializable</pre>
 <div class="block">A simple way to bundle a Language with the arguments that would be passed to it when calling
- <a href="Language.html#sentence(com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>Language.sentence(LaserRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.
+ <a href="Language.html#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>Language.sentence(EnhancedRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.
  You can call <a href="#sentence()"><code>sentence()</code></a> on this to produce another String sentence with the parameters it was given
  at construction. The parameters to
- <a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>SentenceForm(Language, LaserRandom, int, int, String[], String[], double, int)</code></a> are stored in fields of
+ <a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)</code></a> are stored in fields of
  the same name, and all fields in this class are public and modifiable.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -220,8 +220,8 @@ int&nbsp;maxChars)</code></th>
 </td>
 </tr>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)">SentenceForm</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)">SentenceForm</a></span>&#8203;(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,
@@ -420,10 +420,10 @@ int&nbsp;maxChars)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.LaserRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
 <h3>SentenceForm</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">SentenceForm</span>&#8203;(<span class="parameters"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
 int&nbsp;minWords,
 int&nbsp;maxWords,
 java.lang.String[]&nbsp;midPunctuation,

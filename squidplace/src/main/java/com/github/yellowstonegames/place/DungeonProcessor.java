@@ -3,6 +3,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
@@ -49,7 +50,7 @@ import java.util.Random;
  * class, placement, can be used to find parts of a dungeon that fit certain qualities for the placement of items,
  * terrain features, or NPCs. If you don't need Placement, the simplest way to get random cells from the map is probably
  * to use {@link Region#Region(char[][], char)} with the dungeon this made and {@code '.'} as the parameters, then call
- * {@link Region#singleRandom(Random)} on that to choose random cells, optionally removing the chosen cells if you don't
+ * {@link Region#singleRandom(EnhancedRandom)} on that to choose random cells, optionally removing the chosen cells if you don't
  * want duplicates.
  * <br>
  * Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25
