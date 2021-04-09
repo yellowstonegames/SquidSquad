@@ -1,9 +1,6 @@
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.*;
@@ -100,7 +97,9 @@ public class DijkstraMap implements Serializable {
      */
     public ObjectList<Coord> path;
 
-    private ObjectSet<Coord> impassable2, friends, tempSet;
+    private ObjectOrderedSet<Coord> impassable2;
+
+    private ObjectSet<Coord> tempSet;
     
     public boolean cutShort;
 
@@ -276,8 +275,7 @@ public class DijkstraMap implements Serializable {
             Arrays.fill(costMap[x], 1f);
         }
         standardCosts = true;
-        impassable2 = new ObjectSet<>(32);
-        friends = new ObjectSet<>(32);
+        impassable2 = new ObjectOrderedSet<>(32);
         tempSet = new ObjectSet<>(32);
         initialized = true;
         return this;
@@ -307,8 +305,7 @@ public class DijkstraMap implements Serializable {
             }
         }
         standardCosts = true;
-        impassable2 = new ObjectSet<>(32);
-        friends = new ObjectSet<>(32);
+        impassable2 = new ObjectOrderedSet<>(32);
         tempSet = new ObjectSet<>(32);
         initialized = true;
         return this;
@@ -340,8 +337,7 @@ public class DijkstraMap implements Serializable {
             }
         }
         standardCosts = true;
-        impassable2 = new ObjectSet<>(32);
-        friends = new ObjectSet<>(32);
+        impassable2 = new ObjectOrderedSet<>(32);
         tempSet = new ObjectSet<>(32);
         initialized = true;
         return this;

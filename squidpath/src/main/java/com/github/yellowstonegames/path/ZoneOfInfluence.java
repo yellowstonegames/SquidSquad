@@ -20,8 +20,7 @@ import java.util.Random;
  * <br>
  * Created by Tommy Ettinger on 1/14/2018.
  */
-public class ZoneOfInfluence implements Serializable {
-    private static final long serialVersionUID = 2L;
+public class ZoneOfInfluence {
     protected DijkstraMap dijkstra;
     protected Coord[][] influences;
     protected Region[] groups;
