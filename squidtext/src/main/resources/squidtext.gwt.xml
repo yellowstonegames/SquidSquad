@@ -9,6 +9,5 @@
   -->
 <module>
     <inherits name="squidcore" />
-    <inherits name="regexodus"/>
     <source path="com/github/yellowstonegames/text" />
 </module>
