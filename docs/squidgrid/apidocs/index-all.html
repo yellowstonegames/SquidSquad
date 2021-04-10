@@ -1234,6 +1234,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getPerlinFractal(float,float,float)">getPerlinFractal(float, float, float)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#getPointHash()">getPointHash()</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>
+<div class="block">Gets the current point hash, which is only used for <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC"><code>Noise.CUBIC</code></a> and <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC_FRACTAL"><code>Noise.CUBIC_FRACTAL</code></a> noise types.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Direction.html#getRoughDirection(int,int)">getRoughDirection(int, int)</a></span> - Static method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
 <div class="block">Gets an estimate at the correct direction that a position lies in given the distance towards it on the x and y
@@ -1415,31 +1419,26 @@ loadScripts(document, 'script');</script>
 <div class="block">A 8-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash256(int,int,int)">hash256(int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash256(int,int,int,int)">hash256(int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
 <div class="block">A 8-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash256(int,int,int,int)">hash256(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash256(int,int,int,int,int)">hash256(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
 <div class="block">A 8-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash256(int,int,int,int,int)">hash256(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash256(int,int,int,int,int,int)">hash256(int, int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash256(int,int,int,int,int,int)">hash256(int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
+<dd>
+<div class="block">An 8-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
+ numbers, then runs a simple unary hash on s and returns it.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash256(int,int,int,int,int,int,int)">hash256(int, int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
 <div class="block">A 8-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash256(int,int,int,int,int,int,int)">hash256(int, int, int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/LongPointHash.html#hash256(long,long,long)">hash256(long, long, long)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></dt>
 <dd>
 <div class="block">Gets an 8-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.</div>
@@ -1472,8 +1471,6 @@ loadScripts(document, 'script');</script>
 <div class="block">A 5-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash32(int,int,int,int)">hash32(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash32(int,int,int,int,int)">hash32(int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
 <div class="block">A 5-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
@@ -1517,8 +1514,6 @@ loadScripts(document, 'script');</script>
 <div class="block">A 6-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#hash64(int,int,int,int,int)">hash64(int, int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hash64(int,int,int,int,int,int,int)">hash64(int, int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
 <div class="block">A 6-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
@@ -1562,7 +1557,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hashAll(int,int,int,int,int,int)">hashAll(int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
 <dd>
-<div class="block">A 32-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
+<div class="block">A 32-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/IntPointHash.html#hashAll(int,int,int,int,int,int,int)">hashAll(int, int, int, int, int, int, int)</a></span> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></dt>
@@ -2596,6 +2591,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/PhantomNoise.html#%3Cinit%3E(long,int,float)">PhantomNoise(long, int, float)</a></span> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#pointHash">pointHash</a></span> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#pointsInside(int,int,int,boolean,int,int)">pointsInside(int, int, int, boolean, int, int)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Radius.html#pointsInside(int,int,int,boolean,int,int,java.util.List)">pointsInside(int, int, int, boolean, int, int, List&lt;Coord&gt;)</a></span> - Method in enum com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum in com.github.yellowstonegames.grid">Radius</a></dt>
@@ -3361,7 +3358,9 @@ loadScripts(document, 'script');</script>
  (12), or <a href="com/github/yellowstonegames/grid/Noise.html#HONEY_FRACTAL"><code>Noise.HONEY_FRACTAL</code></a> (13).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#setPointHash(com.github.yellowstonegames.grid.IPointHash)">setPointHash(IPointHash)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets the point hash, typically to one with intentional flaws, as found in <a href="com/github/yellowstonegames/grid/FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>FlawedPointHash</code></a> types.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/grid/Noise.html#setSeed(int)">setSeed(int)</a></span> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
 <div class="block">Sets the seed used for all noise types, as a long.</div>

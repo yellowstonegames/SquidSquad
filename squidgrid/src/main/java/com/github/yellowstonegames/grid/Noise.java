@@ -33,6 +33,8 @@ import com.github.tommyettinger.ds.support.BitConversion;
 
 import java.io.Serializable;
 
+import static com.github.yellowstonegames.grid.IntPointHash.*;
+
 /**
  * A wide range of noise functions that can all be called from one configurable object. Originally from Jordan Peck's
  * Noise library, hence the name (these functions are sometimes, but not always, very fast for noise that doesn't
@@ -65,7 +67,9 @@ import java.io.Serializable;
  *         and refers to the exponential shape of a graph of frequency as octaves are added. It defaults to 2.0, and
  *         some usage works better by setting it to 0.5 (rarely).</li>
  *         <li>Gain usually only needs changing if lacunarity is changed, but they can be adjusted independently. You
- *         probably will get the best results if gain is equal to {@code 1f / lacunarity}, or close to that.</li>
+ *         probably will get the best results if gain is equal to {@code 1f / lacunarity}, or close to that. This means
+ *         the default is 0.5, meant to match a lacunarity of 2.0. If you change lacunarity to 0.5, then this should be
+ *         2.0. You can move gain out-of-sync with lacunarity, but this can have strange outcomes.</li>
  *     </ul>
  *     </li>
  *     <li>In some cases, you may want unusual or symmetrical artifacts in noise; you can make this happen with
@@ -174,9 +178,8 @@ public class Noise implements Serializable {
      * of them to get a smoothly changing value using... uh... some kind of cubic or bicubic interpolation, the
      * documentation for <a href="https://github.com/jobtalle/CubicNoise">CubicNoise</> is not specific.
      * This version can use {@link #setFractalType(int)}, {@link #setFractalOctaves(int)}, and more.
-     * If you're changing the point hashing algorithm with {@link #setPointHash(IPointHash)}, you should usually use
-     * this or {@link #CUBIC} if you want to see any aesthetically-desirable artifacts in the hash. This supports 2D,
-     * 3D, and 4D, currently.
+     * If you're changing the point hashing algorithm with {@link #setPointHash(IPointHash)}, you must use this or
+     * {@link #CUBIC} to see the effects of an artifact-laden point hash. This supports 2D, 3D, and 4D, currently.
      * <br>
      * <a href="https://i.imgur.com/foV90pn.png">Noise sample at left, FFT at right.</a>
      * <br>
@@ -278,7 +281,7 @@ public class Noise implements Serializable {
     private Noise cellularNoiseLookup;
     private float gradientPerturbAmp = 1f / 0.45f;
 
-    private IPointHash pointHash = new IntPointHash();
+    protected IPointHash pointHash = new IntPointHash();
 
     /**
      * A publicly available Noise object with seed 1337, frequency 1.0f/32.0f, 1 octave of Simplex noise using
@@ -539,28 +542,24 @@ public class Noise implements Serializable {
     public void setCellularDistanceFunction(int cellularDistanceFunction) {
         this.cellularDistanceFunction = cellularDistanceFunction;
     }
-    // Sets
-    // Note: NoiseLookup requires another Noise object be set with setCellularNoiseLookup() to function
-    // Default: CellValue
 
     /**
      * Sets the return type from cellular noise calculations, allowing an int argument corresponding to one of the
      * following constants from this class: {@link #CELL_VALUE} (0), {@link #NOISE_LOOKUP} (1), {@link #DISTANCE} (2),
      * {@link #DISTANCE_2} (3), {@link #DISTANCE_2_ADD} (4), {@link #DISTANCE_2_SUB} (5), {@link #DISTANCE_2_MUL} (6),
-     * or {@link #DISTANCE_2_DIV} (7). If this isn't called, it will use CELL_VALUE.
-     * @param cellularReturnType
+     * or {@link #DISTANCE_2_DIV} (7). If this isn't called, it will use CELL_VALUE. If this is {@link #NOISE_LOOKUP},
+     * then you must set another Noise with {@link #setCellularNoiseLookup(Noise)}.
+     * @param cellularReturnType a constant from this class (see above JavaDoc)
      */
     public void setCellularReturnType(int cellularReturnType) {
         this.cellularReturnType = cellularReturnType;
     }
 
-    // Noise used to calculate a cell value if cellular return type is NoiseLookup
-    // The lookup value is acquired through getConfiguredNoise() so ensure you setNoiseType() on the noise lookup, value, gradient or simplex is recommended
-
     /**
      * Sets the Noise used to calculate a cell value if cellular return type is {@link #NOISE_LOOKUP}.
      * There is no default value; this must be called if using noise lookup to set the noise to a non-null value.
-     * The lookup value is acquired through getConfiguredNoise() so ensure you setNoiseType() on the noise lookup. Value, Foam, Perlin, or Simplex is recommended.
+     * The lookup value is acquired through getConfiguredNoise() so ensure you setNoiseType() on the noise lookup.
+     * Honey, Value, Foam, Perlin, and Simplex are recommended.
      * @param noise another Noise object that should be configured already
      */
     public void setCellularNoiseLookup(Noise noise) {
@@ -576,57 +575,23 @@ public class Noise implements Serializable {
     public void setGradientPerturbAmp(float gradientPerturbAmp) {
         this.gradientPerturbAmp = gradientPerturbAmp / (float) 0.45;
     }
-    
+
+    /**
+     * Sets the point hash, typically to one with intentional flaws, as found in {@link FlawedPointHash} types.
+     * Only matters for {@link #CUBIC} and {@link #CUBIC_FRACTAL} noise types.
+     * @param hash a non-null IPointHash implementation
+     */
     public void setPointHash(IPointHash hash){
         if(hash != null) this.pointHash = hash;
     }
 
-    private int hashAll(int x, int y, int s){
-        return pointHash.hashWithState(x, y, s);
-    }
-
-    private int hashAll(int x, int y, int z, int s){
-        return pointHash.hashWithState(x, y, z, s);
-    }
-
-    private int hashAll(int x, int y, int z, int w, int s){
-        return pointHash.hashWithState(x, y, z, w, s);
-    }
-
-    private int hashAll(int x, int y, int z, int w, int u, int s){
-        return pointHash.hashWithState(x, y, z, w, u, s);
-    }
-
-    private int hashAll(int x, int y, int z, int w, int u, int v, int s){
-        return pointHash.hashWithState(x, y, z, w, u, v, s);
-    }
-
-    protected int hash32(int x, int y, int z, int s){
-        return pointHash.hashWithState(x, y, z, s) >>> 27;
-    }
-
-    protected int hash64(int x, int y, int z, int w, int s){
-        return pointHash.hashWithState(x, y, z, w, s) >>> 26;
-    }
-
-    protected int hash256(int x, int y, int s){
-        return pointHash.hashWithState(x, y, s) >>> 24;
-    }
-
-    protected int hash256(int x, int y, int z, int s){
-        return pointHash.hashWithState(x, y, z, s) >>> 24;
-    }
-
-    protected int hash256(int x, int y, int z, int w, int s){
-        return pointHash.hashWithState(x, y, z, w, s) >>> 24;
-    }
-
-    protected int hash256(int x, int y, int z, int w, int u, int s){
-        return pointHash.hashWithState(x, y, z, w, u, s) >>> 24;
-    }
-
-    protected int hash256(int x, int y, int z, int w, int u, int v, int s){
-        return pointHash.hashWithState(x, y, z, w, u, v, s) >>> 24;
+    /**
+     * Gets the current point hash, which is only used for {@link #CUBIC} and {@link #CUBIC_FRACTAL} noise types.
+     * This is an {@link IntPointHash} by default.
+     * @return an IPointHash implementation, typically an {@link IntPointHash} if not otherwise specified
+     */
+    public IPointHash getPointHash() {
+        return pointHash;
     }
 
     public double getNoise(double x, double y) {
@@ -825,30 +790,52 @@ public class Noise implements Serializable {
         return (hashAll(x, y, z, w, u, v, seed) >> 7) * 0x1.0p-24f;
     }
 
+    private float phCoord2D(int seed, int x, int y) {
+        return (pointHash.hashWithState(x, y, seed) >> 7) * 0x1.0p-24f;
+    }
+
+    private float phCoord3D(int seed, int x, int y, int z) {
+        return (pointHash.hashWithState(x, y, z, seed) >> 7) * 0x1.0p-24f;
+    }
+
+    private float phCoord4D(int seed, int x, int y, int z, int w) {
+        return (pointHash.hashWithState(x, y, z, w, seed) >> 7) * 0x1.0p-24f;
+    }
+
+    private float phCoord5D(int seed, int x, int y, int z, int w, int u) {
+        return (pointHash.hashWithState(x, y, z, w, u, seed) >> 7) * 0x1.0p-24f;
+    }
+
+    private float phCoord6D(int seed, int x, int y, int z, int w, int u, int v) {
+        return (pointHash.hashWithState(x, y, z, w, u, v, seed) >> 7) * 0x1.0p-24f;
+    }
+
+
+
     protected float gradCoord2D(int seed, int x, int y, float xd, float yd) {
-        final Float2 g = GRADIENTS_2D[hashAll(x, y, seed) >>> 24];
+        final Float2 g = GRADIENTS_2D[hash256(x, y, seed)];
         return xd * g.x + yd * g.y;
     }
 
     protected float gradCoord3D(int seed, int x, int y, int z, float xd, float yd, float zd) {
-        final Float3 g = GRADIENTS_3D[hashAll(x, y, z, seed) >>> 27];
+        final Float3 g = GRADIENTS_3D[hash32(x, y, z, seed)];
         return xd * g.x + yd * g.y + zd * g.z;
     }
 
     protected float gradCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
-        final Float4 g = GRADIENTS_4D[hashAll(x, y, z, w, seed) >>> 26];
+        final Float4 g = GRADIENTS_4D[hash64(x, y, z, w, seed)];
         return xd * g.x + yd * g.y + zd * g.z + wd * g.w;
     }
 
     protected float gradCoord5D(int seed, int x, int y, int z, int w, int u,
                                        float xd, float yd, float zd, float wd, float ud) {
-        final Float5 g = GRADIENTS_5D[hashAll(x, y, z, w, u, seed) >>> 24];
+        final Float5 g = GRADIENTS_5D[hash256(x, y, z, w, u, seed)];
         return xd * g.x + yd * g.y + zd * g.z + wd * g.w + ud * g.u;
     }
 
     protected float gradCoord6D(int seed, int x, int y, int z, int w, int u, int v,
                                        float xd, float yd, float zd, float wd, float ud, float vd) {
-        final Float6 g = GRADIENTS_6D[hashAll(x, y, z, w, u, v, seed) >>> 24];
+        final Float6 g = GRADIENTS_6D[hash256(x, y, z, w, u, v, seed)];
         return xd * g.x + yd * g.y + zd * g.z + wd * g.w + ud * g.u + vd * g.v;
     }
 
@@ -4847,13 +4834,13 @@ public class Noise implements Serializable {
         float ys = y - (float) y1;
 
         return cubicLerp(
-                cubicLerp(valCoord2D(seed, x0, y0), valCoord2D(seed, x1, y0), valCoord2D(seed, x2, y0), valCoord2D(seed, x3, y0),
+                cubicLerp(phCoord2D(seed, x0, y0), phCoord2D(seed, x1, y0), phCoord2D(seed, x2, y0), phCoord2D(seed, x3, y0),
                         xs),
-                cubicLerp(valCoord2D(seed, x0, y1), valCoord2D(seed, x1, y1), valCoord2D(seed, x2, y1), valCoord2D(seed, x3, y1),
+                cubicLerp(phCoord2D(seed, x0, y1), phCoord2D(seed, x1, y1), phCoord2D(seed, x2, y1), phCoord2D(seed, x3, y1),
                         xs),
-                cubicLerp(valCoord2D(seed, x0, y2), valCoord2D(seed, x1, y2), valCoord2D(seed, x2, y2), valCoord2D(seed, x3, y2),
+                cubicLerp(phCoord2D(seed, x0, y2), phCoord2D(seed, x1, y2), phCoord2D(seed, x2, y2), phCoord2D(seed, x3, y2),
                         xs),
-                cubicLerp(valCoord2D(seed, x0, y3), valCoord2D(seed, x1, y3), valCoord2D(seed, x2, y3), valCoord2D(seed, x3, y3),
+                cubicLerp(phCoord2D(seed, x0, y3), phCoord2D(seed, x1, y3), phCoord2D(seed, x2, y3), phCoord2D(seed, x3, y3),
                         xs),
                 ys) * CUBIC_2D_BOUNDING;
     }
@@ -4952,28 +4939,28 @@ public class Noise implements Serializable {
 
         return cubicLerp(
                 cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z0), valCoord3D(seed, x1, y0, z0), valCoord3D(seed, x2, y0, z0), valCoord3D(seed, x3, y0, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z0), valCoord3D(seed, x1, y1, z0), valCoord3D(seed, x2, y1, z0), valCoord3D(seed, x3, y1, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z0), valCoord3D(seed, x1, y2, z0), valCoord3D(seed, x2, y2, z0), valCoord3D(seed, x3, y2, z0), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z0), valCoord3D(seed, x1, y3, z0), valCoord3D(seed, x2, y3, z0), valCoord3D(seed, x3, y3, z0), xs),
+                        cubicLerp(phCoord3D(seed, x0, y0, z0), phCoord3D(seed, x1, y0, z0), phCoord3D(seed, x2, y0, z0), phCoord3D(seed, x3, y0, z0), xs),
+                        cubicLerp(phCoord3D(seed, x0, y1, z0), phCoord3D(seed, x1, y1, z0), phCoord3D(seed, x2, y1, z0), phCoord3D(seed, x3, y1, z0), xs),
+                        cubicLerp(phCoord3D(seed, x0, y2, z0), phCoord3D(seed, x1, y2, z0), phCoord3D(seed, x2, y2, z0), phCoord3D(seed, x3, y2, z0), xs),
+                        cubicLerp(phCoord3D(seed, x0, y3, z0), phCoord3D(seed, x1, y3, z0), phCoord3D(seed, x2, y3, z0), phCoord3D(seed, x3, y3, z0), xs),
                         ys),
                 cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z1), valCoord3D(seed, x1, y0, z1), valCoord3D(seed, x2, y0, z1), valCoord3D(seed, x3, y0, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z1), valCoord3D(seed, x1, y1, z1), valCoord3D(seed, x2, y1, z1), valCoord3D(seed, x3, y1, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z1), valCoord3D(seed, x1, y2, z1), valCoord3D(seed, x2, y2, z1), valCoord3D(seed, x3, y2, z1), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z1), valCoord3D(seed, x1, y3, z1), valCoord3D(seed, x2, y3, z1), valCoord3D(seed, x3, y3, z1), xs),
+                        cubicLerp(phCoord3D(seed, x0, y0, z1), phCoord3D(seed, x1, y0, z1), phCoord3D(seed, x2, y0, z1), phCoord3D(seed, x3, y0, z1), xs),
+                        cubicLerp(phCoord3D(seed, x0, y1, z1), phCoord3D(seed, x1, y1, z1), phCoord3D(seed, x2, y1, z1), phCoord3D(seed, x3, y1, z1), xs),
+                        cubicLerp(phCoord3D(seed, x0, y2, z1), phCoord3D(seed, x1, y2, z1), phCoord3D(seed, x2, y2, z1), phCoord3D(seed, x3, y2, z1), xs),
+                        cubicLerp(phCoord3D(seed, x0, y3, z1), phCoord3D(seed, x1, y3, z1), phCoord3D(seed, x2, y3, z1), phCoord3D(seed, x3, y3, z1), xs),
                         ys),
                 cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z2), valCoord3D(seed, x1, y0, z2), valCoord3D(seed, x2, y0, z2), valCoord3D(seed, x3, y0, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z2), valCoord3D(seed, x1, y1, z2), valCoord3D(seed, x2, y1, z2), valCoord3D(seed, x3, y1, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z2), valCoord3D(seed, x1, y2, z2), valCoord3D(seed, x2, y2, z2), valCoord3D(seed, x3, y2, z2), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z2), valCoord3D(seed, x1, y3, z2), valCoord3D(seed, x2, y3, z2), valCoord3D(seed, x3, y3, z2), xs),
+                        cubicLerp(phCoord3D(seed, x0, y0, z2), phCoord3D(seed, x1, y0, z2), phCoord3D(seed, x2, y0, z2), phCoord3D(seed, x3, y0, z2), xs),
+                        cubicLerp(phCoord3D(seed, x0, y1, z2), phCoord3D(seed, x1, y1, z2), phCoord3D(seed, x2, y1, z2), phCoord3D(seed, x3, y1, z2), xs),
+                        cubicLerp(phCoord3D(seed, x0, y2, z2), phCoord3D(seed, x1, y2, z2), phCoord3D(seed, x2, y2, z2), phCoord3D(seed, x3, y2, z2), xs),
+                        cubicLerp(phCoord3D(seed, x0, y3, z2), phCoord3D(seed, x1, y3, z2), phCoord3D(seed, x2, y3, z2), phCoord3D(seed, x3, y3, z2), xs),
                         ys),
                 cubicLerp(
-                        cubicLerp(valCoord3D(seed, x0, y0, z3), valCoord3D(seed, x1, y0, z3), valCoord3D(seed, x2, y0, z3), valCoord3D(seed, x3, y0, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y1, z3), valCoord3D(seed, x1, y1, z3), valCoord3D(seed, x2, y1, z3), valCoord3D(seed, x3, y1, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y2, z3), valCoord3D(seed, x1, y2, z3), valCoord3D(seed, x2, y2, z3), valCoord3D(seed, x3, y2, z3), xs),
-                        cubicLerp(valCoord3D(seed, x0, y3, z3), valCoord3D(seed, x1, y3, z3), valCoord3D(seed, x2, y3, z3), valCoord3D(seed, x3, y3, z3), xs),
+                        cubicLerp(phCoord3D(seed, x0, y0, z3), phCoord3D(seed, x1, y0, z3), phCoord3D(seed, x2, y0, z3), phCoord3D(seed, x3, y0, z3), xs),
+                        cubicLerp(phCoord3D(seed, x0, y1, z3), phCoord3D(seed, x1, y1, z3), phCoord3D(seed, x2, y1, z3), phCoord3D(seed, x3, y1, z3), xs),
+                        cubicLerp(phCoord3D(seed, x0, y2, z3), phCoord3D(seed, x1, y2, z3), phCoord3D(seed, x2, y2, z3), phCoord3D(seed, x3, y2, z3), xs),
+                        cubicLerp(phCoord3D(seed, x0, y3, z3), phCoord3D(seed, x1, y3, z3), phCoord3D(seed, x2, y3, z3), phCoord3D(seed, x3, y3, z3), xs),
                         ys),
                 zs) * CUBIC_3D_BOUNDING;
     }
@@ -5082,106 +5069,106 @@ public class Noise implements Serializable {
         return cubicLerp(
                 cubicLerp(
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z0, w0), valCoord4D(seed, x1, y0, z0, w0), valCoord4D(seed, x2, y0, z0, w0), valCoord4D(seed, x3, y0, z0, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z0, w0), valCoord4D(seed, x1, y1, z0, w0), valCoord4D(seed, x2, y1, z0, w0), valCoord4D(seed, x3, y1, z0, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z0, w0), valCoord4D(seed, x1, y2, z0, w0), valCoord4D(seed, x2, y2, z0, w0), valCoord4D(seed, x3, y2, z0, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z0, w0), valCoord4D(seed, x1, y3, z0, w0), valCoord4D(seed, x2, y3, z0, w0), valCoord4D(seed, x3, y3, z0, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z0, w0), phCoord4D(seed, x1, y0, z0, w0), phCoord4D(seed, x2, y0, z0, w0), phCoord4D(seed, x3, y0, z0, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z0, w0), phCoord4D(seed, x1, y1, z0, w0), phCoord4D(seed, x2, y1, z0, w0), phCoord4D(seed, x3, y1, z0, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z0, w0), phCoord4D(seed, x1, y2, z0, w0), phCoord4D(seed, x2, y2, z0, w0), phCoord4D(seed, x3, y2, z0, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z0, w0), phCoord4D(seed, x1, y3, z0, w0), phCoord4D(seed, x2, y3, z0, w0), phCoord4D(seed, x3, y3, z0, w0), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z1, w0), valCoord4D(seed, x1, y0, z1, w0), valCoord4D(seed, x2, y0, z1, w0), valCoord4D(seed, x3, y0, z1, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z1, w0), valCoord4D(seed, x1, y1, z1, w0), valCoord4D(seed, x2, y1, z1, w0), valCoord4D(seed, x3, y1, z1, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z1, w0), valCoord4D(seed, x1, y2, z1, w0), valCoord4D(seed, x2, y2, z1, w0), valCoord4D(seed, x3, y2, z1, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z1, w0), valCoord4D(seed, x1, y3, z1, w0), valCoord4D(seed, x2, y3, z1, w0), valCoord4D(seed, x3, y3, z1, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z1, w0), phCoord4D(seed, x1, y0, z1, w0), phCoord4D(seed, x2, y0, z1, w0), phCoord4D(seed, x3, y0, z1, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z1, w0), phCoord4D(seed, x1, y1, z1, w0), phCoord4D(seed, x2, y1, z1, w0), phCoord4D(seed, x3, y1, z1, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z1, w0), phCoord4D(seed, x1, y2, z1, w0), phCoord4D(seed, x2, y2, z1, w0), phCoord4D(seed, x3, y2, z1, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z1, w0), phCoord4D(seed, x1, y3, z1, w0), phCoord4D(seed, x2, y3, z1, w0), phCoord4D(seed, x3, y3, z1, w0), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z2, w0), valCoord4D(seed, x1, y0, z2, w0), valCoord4D(seed, x2, y0, z2, w0), valCoord4D(seed, x3, y0, z2, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z2, w0), valCoord4D(seed, x1, y1, z2, w0), valCoord4D(seed, x2, y1, z2, w0), valCoord4D(seed, x3, y1, z2, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z2, w0), valCoord4D(seed, x1, y2, z2, w0), valCoord4D(seed, x2, y2, z2, w0), valCoord4D(seed, x3, y2, z2, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z2, w0), valCoord4D(seed, x1, y3, z2, w0), valCoord4D(seed, x2, y3, z2, w0), valCoord4D(seed, x3, y3, z2, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z2, w0), phCoord4D(seed, x1, y0, z2, w0), phCoord4D(seed, x2, y0, z2, w0), phCoord4D(seed, x3, y0, z2, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z2, w0), phCoord4D(seed, x1, y1, z2, w0), phCoord4D(seed, x2, y1, z2, w0), phCoord4D(seed, x3, y1, z2, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z2, w0), phCoord4D(seed, x1, y2, z2, w0), phCoord4D(seed, x2, y2, z2, w0), phCoord4D(seed, x3, y2, z2, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z2, w0), phCoord4D(seed, x1, y3, z2, w0), phCoord4D(seed, x2, y3, z2, w0), phCoord4D(seed, x3, y3, z2, w0), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z3, w0), valCoord4D(seed, x1, y0, z3, w0), valCoord4D(seed, x2, y0, z3, w0), valCoord4D(seed, x3, y0, z3, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z3, w0), valCoord4D(seed, x1, y1, z3, w0), valCoord4D(seed, x2, y1, z3, w0), valCoord4D(seed, x3, y1, z3, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z3, w0), valCoord4D(seed, x1, y2, z3, w0), valCoord4D(seed, x2, y2, z3, w0), valCoord4D(seed, x3, y2, z3, w0), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z3, w0), valCoord4D(seed, x1, y3, z3, w0), valCoord4D(seed, x2, y3, z3, w0), valCoord4D(seed, x3, y3, z3, w0), xs),
-                                ys),
-                        zs),
-                cubicLerp(
-                        cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z0, w1), valCoord4D(seed, x1, y0, z0, w1), valCoord4D(seed, x2, y0, z0, w1), valCoord4D(seed, x3, y0, z0, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z0, w1), valCoord4D(seed, x1, y1, z0, w1), valCoord4D(seed, x2, y1, z0, w1), valCoord4D(seed, x3, y1, z0, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z0, w1), valCoord4D(seed, x1, y2, z0, w1), valCoord4D(seed, x2, y2, z0, w1), valCoord4D(seed, x3, y2, z0, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z0, w1), valCoord4D(seed, x1, y3, z0, w1), valCoord4D(seed, x2, y3, z0, w1), valCoord4D(seed, x3, y3, z0, w1), xs),
-                                ys),
-                        cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z1, w1), valCoord4D(seed, x1, y0, z1, w1), valCoord4D(seed, x2, y0, z1, w1), valCoord4D(seed, x3, y0, z1, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z1, w1), valCoord4D(seed, x1, y1, z1, w1), valCoord4D(seed, x2, y1, z1, w1), valCoord4D(seed, x3, y1, z1, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z1, w1), valCoord4D(seed, x1, y2, z1, w1), valCoord4D(seed, x2, y2, z1, w1), valCoord4D(seed, x3, y2, z1, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z1, w1), valCoord4D(seed, x1, y3, z1, w1), valCoord4D(seed, x2, y3, z1, w1), valCoord4D(seed, x3, y3, z1, w1), xs),
-                                ys),
-                        cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z2, w1), valCoord4D(seed, x1, y0, z2, w1), valCoord4D(seed, x2, y0, z2, w1), valCoord4D(seed, x3, y0, z2, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z2, w1), valCoord4D(seed, x1, y1, z2, w1), valCoord4D(seed, x2, y1, z2, w1), valCoord4D(seed, x3, y1, z2, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z2, w1), valCoord4D(seed, x1, y2, z2, w1), valCoord4D(seed, x2, y2, z2, w1), valCoord4D(seed, x3, y2, z2, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z2, w1), valCoord4D(seed, x1, y3, z2, w1), valCoord4D(seed, x2, y3, z2, w1), valCoord4D(seed, x3, y3, z2, w1), xs),
-                                ys),
-                        cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z3, w1), valCoord4D(seed, x1, y0, z3, w1), valCoord4D(seed, x2, y0, z3, w1), valCoord4D(seed, x3, y0, z3, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z3, w1), valCoord4D(seed, x1, y1, z3, w1), valCoord4D(seed, x2, y1, z3, w1), valCoord4D(seed, x3, y1, z3, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z3, w1), valCoord4D(seed, x1, y2, z3, w1), valCoord4D(seed, x2, y2, z3, w1), valCoord4D(seed, x3, y2, z3, w1), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z3, w1), valCoord4D(seed, x1, y3, z3, w1), valCoord4D(seed, x2, y3, z3, w1), valCoord4D(seed, x3, y3, z3, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z3, w0), phCoord4D(seed, x1, y0, z3, w0), phCoord4D(seed, x2, y0, z3, w0), phCoord4D(seed, x3, y0, z3, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z3, w0), phCoord4D(seed, x1, y1, z3, w0), phCoord4D(seed, x2, y1, z3, w0), phCoord4D(seed, x3, y1, z3, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z3, w0), phCoord4D(seed, x1, y2, z3, w0), phCoord4D(seed, x2, y2, z3, w0), phCoord4D(seed, x3, y2, z3, w0), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z3, w0), phCoord4D(seed, x1, y3, z3, w0), phCoord4D(seed, x2, y3, z3, w0), phCoord4D(seed, x3, y3, z3, w0), xs),
                                 ys),
                         zs),
                 cubicLerp(
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z0, w2), valCoord4D(seed, x1, y0, z0, w2), valCoord4D(seed, x2, y0, z0, w2), valCoord4D(seed, x3, y0, z0, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z0, w2), valCoord4D(seed, x1, y1, z0, w2), valCoord4D(seed, x2, y1, z0, w2), valCoord4D(seed, x3, y1, z0, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z0, w2), valCoord4D(seed, x1, y2, z0, w2), valCoord4D(seed, x2, y2, z0, w2), valCoord4D(seed, x3, y2, z0, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z0, w2), valCoord4D(seed, x1, y3, z0, w2), valCoord4D(seed, x2, y3, z0, w2), valCoord4D(seed, x3, y3, z0, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z0, w1), phCoord4D(seed, x1, y0, z0, w1), phCoord4D(seed, x2, y0, z0, w1), phCoord4D(seed, x3, y0, z0, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z0, w1), phCoord4D(seed, x1, y1, z0, w1), phCoord4D(seed, x2, y1, z0, w1), phCoord4D(seed, x3, y1, z0, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z0, w1), phCoord4D(seed, x1, y2, z0, w1), phCoord4D(seed, x2, y2, z0, w1), phCoord4D(seed, x3, y2, z0, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z0, w1), phCoord4D(seed, x1, y3, z0, w1), phCoord4D(seed, x2, y3, z0, w1), phCoord4D(seed, x3, y3, z0, w1), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z1, w2), valCoord4D(seed, x1, y0, z1, w2), valCoord4D(seed, x2, y0, z1, w2), valCoord4D(seed, x3, y0, z1, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z1, w2), valCoord4D(seed, x1, y1, z1, w2), valCoord4D(seed, x2, y1, z1, w2), valCoord4D(seed, x3, y1, z1, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z1, w2), valCoord4D(seed, x1, y2, z1, w2), valCoord4D(seed, x2, y2, z1, w2), valCoord4D(seed, x3, y2, z1, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z1, w2), valCoord4D(seed, x1, y3, z1, w2), valCoord4D(seed, x2, y3, z1, w2), valCoord4D(seed, x3, y3, z1, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z1, w1), phCoord4D(seed, x1, y0, z1, w1), phCoord4D(seed, x2, y0, z1, w1), phCoord4D(seed, x3, y0, z1, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z1, w1), phCoord4D(seed, x1, y1, z1, w1), phCoord4D(seed, x2, y1, z1, w1), phCoord4D(seed, x3, y1, z1, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z1, w1), phCoord4D(seed, x1, y2, z1, w1), phCoord4D(seed, x2, y2, z1, w1), phCoord4D(seed, x3, y2, z1, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z1, w1), phCoord4D(seed, x1, y3, z1, w1), phCoord4D(seed, x2, y3, z1, w1), phCoord4D(seed, x3, y3, z1, w1), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z2, w2), valCoord4D(seed, x1, y0, z2, w2), valCoord4D(seed, x2, y0, z2, w2), valCoord4D(seed, x3, y0, z2, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z2, w2), valCoord4D(seed, x1, y1, z2, w2), valCoord4D(seed, x2, y1, z2, w2), valCoord4D(seed, x3, y1, z2, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z2, w2), valCoord4D(seed, x1, y2, z2, w2), valCoord4D(seed, x2, y2, z2, w2), valCoord4D(seed, x3, y2, z2, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z2, w2), valCoord4D(seed, x1, y3, z2, w2), valCoord4D(seed, x2, y3, z2, w2), valCoord4D(seed, x3, y3, z2, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z2, w1), phCoord4D(seed, x1, y0, z2, w1), phCoord4D(seed, x2, y0, z2, w1), phCoord4D(seed, x3, y0, z2, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z2, w1), phCoord4D(seed, x1, y1, z2, w1), phCoord4D(seed, x2, y1, z2, w1), phCoord4D(seed, x3, y1, z2, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z2, w1), phCoord4D(seed, x1, y2, z2, w1), phCoord4D(seed, x2, y2, z2, w1), phCoord4D(seed, x3, y2, z2, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z2, w1), phCoord4D(seed, x1, y3, z2, w1), phCoord4D(seed, x2, y3, z2, w1), phCoord4D(seed, x3, y3, z2, w1), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z3, w2), valCoord4D(seed, x1, y0, z3, w2), valCoord4D(seed, x2, y0, z3, w2), valCoord4D(seed, x3, y0, z3, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z3, w2), valCoord4D(seed, x1, y1, z3, w2), valCoord4D(seed, x2, y1, z3, w2), valCoord4D(seed, x3, y1, z3, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z3, w2), valCoord4D(seed, x1, y2, z3, w2), valCoord4D(seed, x2, y2, z3, w2), valCoord4D(seed, x3, y2, z3, w2), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z3, w2), valCoord4D(seed, x1, y3, z3, w2), valCoord4D(seed, x2, y3, z3, w2), valCoord4D(seed, x3, y3, z3, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z3, w1), phCoord4D(seed, x1, y0, z3, w1), phCoord4D(seed, x2, y0, z3, w1), phCoord4D(seed, x3, y0, z3, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z3, w1), phCoord4D(seed, x1, y1, z3, w1), phCoord4D(seed, x2, y1, z3, w1), phCoord4D(seed, x3, y1, z3, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z3, w1), phCoord4D(seed, x1, y2, z3, w1), phCoord4D(seed, x2, y2, z3, w1), phCoord4D(seed, x3, y2, z3, w1), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z3, w1), phCoord4D(seed, x1, y3, z3, w1), phCoord4D(seed, x2, y3, z3, w1), phCoord4D(seed, x3, y3, z3, w1), xs),
                                 ys),
                         zs),
                 cubicLerp(
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z0, w3), valCoord4D(seed, x1, y0, z0, w3), valCoord4D(seed, x2, y0, z0, w3), valCoord4D(seed, x3, y0, z0, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z0, w3), valCoord4D(seed, x1, y1, z0, w3), valCoord4D(seed, x2, y1, z0, w3), valCoord4D(seed, x3, y1, z0, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z0, w3), valCoord4D(seed, x1, y2, z0, w3), valCoord4D(seed, x2, y2, z0, w3), valCoord4D(seed, x3, y2, z0, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z0, w3), valCoord4D(seed, x1, y3, z0, w3), valCoord4D(seed, x2, y3, z0, w3), valCoord4D(seed, x3, y3, z0, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z0, w2), phCoord4D(seed, x1, y0, z0, w2), phCoord4D(seed, x2, y0, z0, w2), phCoord4D(seed, x3, y0, z0, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z0, w2), phCoord4D(seed, x1, y1, z0, w2), phCoord4D(seed, x2, y1, z0, w2), phCoord4D(seed, x3, y1, z0, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z0, w2), phCoord4D(seed, x1, y2, z0, w2), phCoord4D(seed, x2, y2, z0, w2), phCoord4D(seed, x3, y2, z0, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z0, w2), phCoord4D(seed, x1, y3, z0, w2), phCoord4D(seed, x2, y3, z0, w2), phCoord4D(seed, x3, y3, z0, w2), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z1, w3), valCoord4D(seed, x1, y0, z1, w3), valCoord4D(seed, x2, y0, z1, w3), valCoord4D(seed, x3, y0, z1, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z1, w3), valCoord4D(seed, x1, y1, z1, w3), valCoord4D(seed, x2, y1, z1, w3), valCoord4D(seed, x3, y1, z1, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z1, w3), valCoord4D(seed, x1, y2, z1, w3), valCoord4D(seed, x2, y2, z1, w3), valCoord4D(seed, x3, y2, z1, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z1, w3), valCoord4D(seed, x1, y3, z1, w3), valCoord4D(seed, x2, y3, z1, w3), valCoord4D(seed, x3, y3, z1, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z1, w2), phCoord4D(seed, x1, y0, z1, w2), phCoord4D(seed, x2, y0, z1, w2), phCoord4D(seed, x3, y0, z1, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z1, w2), phCoord4D(seed, x1, y1, z1, w2), phCoord4D(seed, x2, y1, z1, w2), phCoord4D(seed, x3, y1, z1, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z1, w2), phCoord4D(seed, x1, y2, z1, w2), phCoord4D(seed, x2, y2, z1, w2), phCoord4D(seed, x3, y2, z1, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z1, w2), phCoord4D(seed, x1, y3, z1, w2), phCoord4D(seed, x2, y3, z1, w2), phCoord4D(seed, x3, y3, z1, w2), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z2, w3), valCoord4D(seed, x1, y0, z2, w3), valCoord4D(seed, x2, y0, z2, w3), valCoord4D(seed, x3, y0, z2, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z2, w3), valCoord4D(seed, x1, y1, z2, w3), valCoord4D(seed, x2, y1, z2, w3), valCoord4D(seed, x3, y1, z2, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z2, w3), valCoord4D(seed, x1, y2, z2, w3), valCoord4D(seed, x2, y2, z2, w3), valCoord4D(seed, x3, y2, z2, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z2, w3), valCoord4D(seed, x1, y3, z2, w3), valCoord4D(seed, x2, y3, z2, w3), valCoord4D(seed, x3, y3, z2, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z2, w2), phCoord4D(seed, x1, y0, z2, w2), phCoord4D(seed, x2, y0, z2, w2), phCoord4D(seed, x3, y0, z2, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z2, w2), phCoord4D(seed, x1, y1, z2, w2), phCoord4D(seed, x2, y1, z2, w2), phCoord4D(seed, x3, y1, z2, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z2, w2), phCoord4D(seed, x1, y2, z2, w2), phCoord4D(seed, x2, y2, z2, w2), phCoord4D(seed, x3, y2, z2, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z2, w2), phCoord4D(seed, x1, y3, z2, w2), phCoord4D(seed, x2, y3, z2, w2), phCoord4D(seed, x3, y3, z2, w2), xs),
                                 ys),
                         cubicLerp(
-                                cubicLerp(valCoord4D(seed, x0, y0, z3, w3), valCoord4D(seed, x1, y0, z3, w3), valCoord4D(seed, x2, y0, z3, w3), valCoord4D(seed, x3, y0, z3, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y1, z3, w3), valCoord4D(seed, x1, y1, z3, w3), valCoord4D(seed, x2, y1, z3, w3), valCoord4D(seed, x3, y1, z3, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y2, z3, w3), valCoord4D(seed, x1, y2, z3, w3), valCoord4D(seed, x2, y2, z3, w3), valCoord4D(seed, x3, y2, z3, w3), xs),
-                                cubicLerp(valCoord4D(seed, x0, y3, z3, w3), valCoord4D(seed, x1, y3, z3, w3), valCoord4D(seed, x2, y3, z3, w3), valCoord4D(seed, x3, y3, z3, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y0, z3, w2), phCoord4D(seed, x1, y0, z3, w2), phCoord4D(seed, x2, y0, z3, w2), phCoord4D(seed, x3, y0, z3, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z3, w2), phCoord4D(seed, x1, y1, z3, w2), phCoord4D(seed, x2, y1, z3, w2), phCoord4D(seed, x3, y1, z3, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z3, w2), phCoord4D(seed, x1, y2, z3, w2), phCoord4D(seed, x2, y2, z3, w2), phCoord4D(seed, x3, y2, z3, w2), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z3, w2), phCoord4D(seed, x1, y3, z3, w2), phCoord4D(seed, x2, y3, z3, w2), phCoord4D(seed, x3, y3, z3, w2), xs),
+                                ys),
+                        zs),
+                cubicLerp(
+                        cubicLerp(
+                                cubicLerp(phCoord4D(seed, x0, y0, z0, w3), phCoord4D(seed, x1, y0, z0, w3), phCoord4D(seed, x2, y0, z0, w3), phCoord4D(seed, x3, y0, z0, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z0, w3), phCoord4D(seed, x1, y1, z0, w3), phCoord4D(seed, x2, y1, z0, w3), phCoord4D(seed, x3, y1, z0, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z0, w3), phCoord4D(seed, x1, y2, z0, w3), phCoord4D(seed, x2, y2, z0, w3), phCoord4D(seed, x3, y2, z0, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z0, w3), phCoord4D(seed, x1, y3, z0, w3), phCoord4D(seed, x2, y3, z0, w3), phCoord4D(seed, x3, y3, z0, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(phCoord4D(seed, x0, y0, z1, w3), phCoord4D(seed, x1, y0, z1, w3), phCoord4D(seed, x2, y0, z1, w3), phCoord4D(seed, x3, y0, z1, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z1, w3), phCoord4D(seed, x1, y1, z1, w3), phCoord4D(seed, x2, y1, z1, w3), phCoord4D(seed, x3, y1, z1, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z1, w3), phCoord4D(seed, x1, y2, z1, w3), phCoord4D(seed, x2, y2, z1, w3), phCoord4D(seed, x3, y2, z1, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z1, w3), phCoord4D(seed, x1, y3, z1, w3), phCoord4D(seed, x2, y3, z1, w3), phCoord4D(seed, x3, y3, z1, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(phCoord4D(seed, x0, y0, z2, w3), phCoord4D(seed, x1, y0, z2, w3), phCoord4D(seed, x2, y0, z2, w3), phCoord4D(seed, x3, y0, z2, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z2, w3), phCoord4D(seed, x1, y1, z2, w3), phCoord4D(seed, x2, y1, z2, w3), phCoord4D(seed, x3, y1, z2, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z2, w3), phCoord4D(seed, x1, y2, z2, w3), phCoord4D(seed, x2, y2, z2, w3), phCoord4D(seed, x3, y2, z2, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z2, w3), phCoord4D(seed, x1, y3, z2, w3), phCoord4D(seed, x2, y3, z2, w3), phCoord4D(seed, x3, y3, z2, w3), xs),
+                                ys),
+                        cubicLerp(
+                                cubicLerp(phCoord4D(seed, x0, y0, z3, w3), phCoord4D(seed, x1, y0, z3, w3), phCoord4D(seed, x2, y0, z3, w3), phCoord4D(seed, x3, y0, z3, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y1, z3, w3), phCoord4D(seed, x1, y1, z3, w3), phCoord4D(seed, x2, y1, z3, w3), phCoord4D(seed, x3, y1, z3, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y2, z3, w3), phCoord4D(seed, x1, y2, z3, w3), phCoord4D(seed, x2, y2, z3, w3), phCoord4D(seed, x3, y2, z3, w3), xs),
+                                cubicLerp(phCoord4D(seed, x0, y3, z3, w3), phCoord4D(seed, x1, y3, z3, w3), phCoord4D(seed, x2, y3, z3, w3), phCoord4D(seed, x3, y3, z3, w3), xs),
                                 ys),
                         zs),
                 ws) * CUBIC_4D_BOUNDING;
@@ -7149,5 +7136,4 @@ public class Noise implements Serializable {
                     new Float3(0.2054835762f, -0.3252600376f, -0.2334146693f), new Float3(-0.3231994983f, 0.1564282844f, -0.2712420987f), new Float3(-0.2669545963f, 0.2599343665f, -0.2523278991f), new Float3(-0.05554372779f, 0.3170813944f, -0.3144428146f), new Float3(-0.2083935713f, -0.310922837f, -0.2497981362f), new Float3(0.06989323478f, -0.3156141536f, 0.3130537363f), new Float3(0.3847566193f, -0.1605309138f, -0.1693876312f), new Float3(-0.3026215288f, -0.3001537679f, -0.1443188342f),
                     new Float3(0.3450735512f, 0.08611519592f, 0.2756962409f), new Float3(0.1814473292f, -0.2788782453f, -0.3029914042f), new Float3(-0.03855010448f, 0.09795110726f, 0.4375151083f), new Float3(0.3533670318f, 0.2665752752f, 0.08105160988f), new Float3(-0.007945601311f, 0.140359426f, -0.4274764309f), new Float3(0.4063099273f, -0.1491768253f, -0.1231199324f), new Float3(-0.2016773589f, 0.008816271194f, -0.4021797064f), new Float3(-0.07527055435f, -0.425643481f, -0.1251477955f),
             };
-
 }
