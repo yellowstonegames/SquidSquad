@@ -91,7 +91,7 @@ public class PhantomNoise {
 //        printDebugInfo();
     }
 
-    protected float valueNoise()
+    protected double valueNoise()
     {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
@@ -99,11 +99,11 @@ public class PhantomNoise {
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        float sum = 0f, temp;
+        double sum = 0.0, temp;
         final int limit = 1 << dim;
         int bit;
         for (int i = 0; i < limit; i++) {
-            temp = 1f;
+            temp = 1.0;
             for (int j = 0; j < dim; j++) {
                 bit = (i >>> j & 1);
                 temp *= bit + (1|-bit) * working[j];
@@ -111,10 +111,10 @@ public class PhantomNoise {
             }
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32f + 0.5f);
+        return (sum * 0x1p-32 + 0.5);
     }
 
-    protected float valueNoise2D()
+    protected double valueNoise2D()
     {
         hashFloors[2] = BitConversion.floatToRawIntBits(working[2]);
         for (int i = 0; i < 2; i++) {
@@ -122,10 +122,10 @@ public class PhantomNoise {
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        float sum = 0f, temp;
+        double sum = 0.0, temp;
         int bit;
         for (int i = 0; i < 4; i++) {
-            temp = 1f;
+            temp = 1.0;
             
             bit = i;
             temp *= bit + (1|-bit) * working[0];
@@ -137,7 +137,7 @@ public class PhantomNoise {
             
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32f + 0.5f);
+        return (sum * 0x1p-32 + 0.5);
     }
     
     public float getNoise(float... args) {
@@ -148,7 +148,8 @@ public class PhantomNoise {
             }
         }
         working[dim] = 0.6180339887498949f; // inverse golden ratio; irrational, so its bit representation nears random
-        float result = 0f, warp = 0f;
+        float result = 0f;
+        double warp = 0.0;
         for (int i = 0; i <= dim; i++) {
             for (int j = 0, d = 0; j < dim; j++, d++) {
                 if(d == i) d++;
@@ -176,11 +177,12 @@ public class PhantomNoise {
         points[1] = -0.5794012529532914f * x + -0.8150424455671962f * y;
         points[2] = 0.9955480895004332f * x + -0.09425498125848553f * y;
         working[2] = 0.6180339887498949f;
-        float result = 0f, warp = 0f;
+        float result = 0f;
+        double warp = 0.0;
         for (int i = 0; i <= 2; i++) {
             for (int j = 0, d = 0; j < 2; j++, d++) {
                 if(d == i) d++;
-                working[j] = points[d] + warp;
+                working[j] = (float)(points[d] + warp);
             }
             warp = valueNoise2D();
             result += warp;
