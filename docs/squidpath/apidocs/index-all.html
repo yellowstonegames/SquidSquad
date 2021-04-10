@@ -330,17 +330,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where one char means a wall and anything else is a walkable tile.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#%3Cinit%3E(char%5B%5D%5B%5D,com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap(char[][], LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
-<dd>
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#%3Cinit%3E(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Measurement)">DijkstraMap(char[][], Measurement)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
-<dd>
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#%3Cinit%3E(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Measurement,com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap(char[][], Measurement, LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where '#' means a wall and anything else is a walkable tile.</div>
@@ -352,10 +342,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#%3Cinit%3E(float%5B%5D%5B%5D,com.github.yellowstonegames.grid.Measurement)">DijkstraMap(float[][], Measurement)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
 <div class="block">Used to construct a DijkstraMap from the output of another, specifying a distance calculation.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#%3Cinit%3E(com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap(LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
-<dd>
-<div class="block">Construct a DijkstraMap without a level to actually scan.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#%3Cinit%3E()">DirectedConnection()</a></span> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
 <dd>&nbsp;</dd>
@@ -1001,7 +987,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/path/DijkstraMap.html#rng">rng</a></span> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take.</div>
+<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+ deterministically before any usage.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>

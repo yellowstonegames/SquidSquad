@@ -5,7 +5,6 @@ import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -14,11 +13,11 @@ import java.util.*;
  * goal. This type of pathfinding is called a Dijkstra Map because it produces the same type of grid of
  * distances from the nearest goal as Dijkstra's Pathfinding Algorithm can, but the actual algorithm used here is
  * simpler than Dijkstra's Algorithm, and is more comparable to an optimized breadth-first search that doesn't consider
- * edge costs. You can set more than one goal with {@link #setGoal(Coord)} or {@link #setGoals(Iterable)}, unlike A*,
- * which enables such features as pathfinding for creatures that can attack targets between a specified minimum and
- * maximum distance, and the standard uses of Dijkstra Maps such as finding ideal paths to run away. All these features
- * have some cost; when paths are short or unobstructed, A* tends to be faster, though some convoluted map shapes can
- * slow down A* more than DijkstraMap.
+ * edge costs. You can set more than one goal with {@link #setGoal(Coord)} or {@link #setGoals(Iterable)}, unlike A*;
+ * having multiple goals enables such features as pathfinding for creatures that can attack targets between a specified
+ * minimum and maximum distance, and the standard uses of Dijkstra Maps such as finding ideal paths to run away. All
+ * these features have some price; when paths are short or unobstructed, A* tends to be faster, though some convoluted
+ * map shapes can slow down A* more than DijkstraMap.
  * <br>
  * One unique optimization made possible by Dijkstra Maps is for when only one endpoint of a path can change in some
  * section of a game, such as when you want to draw a path from the (stationary) player's current cell to the cell the
@@ -31,9 +30,10 @@ import java.util.*;
  * in this class with only slight differences: length is the length of path that can be moved "in one go," so 1 for most
  * roguelikes and more for most strategy games, impassable used for enemies and solid moving obstacles, onlyPassable can
  * be null in most roguelikes but in strategy games should contain ally positions that can be moved through as long as
- * no one stops in them, start is the NPC's starting position, and targets is an array or vararg of Coord that the NPC
- * should pathfind toward (it could be just one Coord, with or without explicitly putting it in an array, or it could be
- * more and the NPC will pick the closest).
+ * no one stops in them (it can also contain terrain that must be jumped over without falling in, like lava), start is
+ * the pathfinding NPC's starting position, and targets is an array or vararg of Coord that the NPC should pathfind
+ * toward (it could be just one Coord, with or without explicitly putting it in an array, or it could be more and the
+ * NPC will pick the closest).
  * <br>
  * As a bit of introduction, <a href="http://www.roguebasin.com/index.php?title=Dijkstra_Maps_Visualized">this article
  * on RogueBasin</a> can provide some useful information on how these work and how to visualize the information they can
@@ -43,10 +43,14 @@ import java.util.*;
  * <br>
  * If you can't remember how to spell this, just remember: Does It Just Know Stuff? That's Really Awesome!
  * <br>
- * Created by Tommy Ettinger on 4/4/2015.
+ * You shouldn't use DijkstraMap for all purposes; it isn't very good at handling terrains with a cost to enter, and
+ * can't handle directional costs like a one-way ledge. For those tasks, {@link DefaultGraph} or {@link CostlyGraph}
+ * will be better fits. CostlyGraph and similar versions of {@link DirectedGraph} can handle even very complicated kinds
+ * of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.
+ * <br>
+ * Created by Tommy Ettinger on 4/4/2015. Optimized ruthlessly by Tommy Ettinger over the next few years.
  */
-public class DijkstraMap implements Serializable {
-    private static final long serialVersionUID = -2456306898212944441L;
+public class DijkstraMap {
 
     /**
      * This affects how distance is measured on diagonal directions vs. orthogonal directions. MANHATTAN should form a
@@ -127,9 +131,11 @@ public class DijkstraMap implements Serializable {
     protected IntList goals = new IntList(256), fresh = new IntList(256);
 
     /**
-     * The LaserRandom used to decide which one of multiple equally-short paths to take.
+     * The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+     * deterministically before any usage. There will only be one path produced for a given set of parameters, and it
+     * will be returned again and again if the same parameters are requested.
      */
-    public LaserRandom rng;
+    protected LaserRandom rng = new LaserRandom(0L, 0x9E3779B97F4A7C15L);
     private int frustration;
     public Coord[][] targetMap;
 
@@ -146,17 +152,6 @@ public class DijkstraMap implements Serializable {
      * initialize() method before using this class.
      */
     public DijkstraMap() {
-        rng = new LaserRandom();
-        path = new ObjectList<>();
-    }
-
-    /**
-     * Construct a DijkstraMap without a level to actually scan. This constructor allows you to specify a LaserRandom
-     * before it is ever used in this class. If you use this constructor, you must call an initialize()
-     * method before using any other methods in the class.
-     */
-    public DijkstraMap(LaserRandom random) {
-        rng = random;
         path = new ObjectList<>();
     }
 
@@ -176,7 +171,6 @@ public class DijkstraMap implements Serializable {
      * @param measurement
      */
     public DijkstraMap(final float[][] level, Measurement measurement) {
-        rng = new LaserRandom();
         this.measurement = measurement;
         path = new ObjectList<>();
         initialize(level);
@@ -186,38 +180,25 @@ public class DijkstraMap implements Serializable {
      * Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
      * char[][] where '#' means a wall and anything else is a walkable tile. If you only have
      * a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
-     * map that can be used here.
+     * map that can be used here. This uses {@link Measurement#MANHATTAN}, allowing only 4-way
+     * movement.
      *
      * @param level
      */
     public DijkstraMap(final char[][] level) {
-        this(level, Measurement.MANHATTAN, new LaserRandom());
-    }
-
-    /**
-     * Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
-     * char[][] where '#' means a wall and anything else is a walkable tile. If you only have
-     * a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
-     * map that can be used here. Also takes an LaserRandom that ensures
-     * predictable path choices given otherwise identical inputs and circumstances.
-     *
-     * @param level
-     * @param rng   The RNG to use for certain decisions; only affects find* methods like findPath, not scan.
-     */
-    public DijkstraMap(final char[][] level, LaserRandom rng) {
-        this(level, Measurement.MANHATTAN, rng);
+        this(level, Measurement.MANHATTAN);
     }
 
     /**
      * Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
      * char[][] where one char means a wall and anything else is a walkable tile. If you only have
      * a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
-     * map that can be used here. You can specify the character used for walls.
+     * map that can be used here. You can specify the character used for walls. This uses
+     * {@link Measurement#MANHATTAN}, allowing only 4-way movement.
      *
      * @param level
      */
     public DijkstraMap(final char[][] level, char alternateWall) {
-        rng = new LaserRandom();
         path = new ObjectList<>();
 
         initialize(level, alternateWall);
@@ -227,27 +208,15 @@ public class DijkstraMap implements Serializable {
      * Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
      * char[][] where '#' means a wall and anything else is a walkable tile. If you only have
      * a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
-     * map that can be used here. This constructor specifies a distance measurement.
+     * map that can be used here. Also takes a distance measurement, which you may want to set
+     * to {@link Measurement#CHEBYSHEV} for unpredictable 8-way movement or
+     * {@link Measurement#EUCLIDEAN} for more reasonable 8-way movement that prefers straight
+     * lines.
      *
-     * @param level
-     * @param measurement
+     * @param level a char[x][y] map where '#' is a wall, and anything else is walkable
+     * @param measurement how this should measure orthogonal vs. diagonal measurement, such as {@link Measurement#MANHATTAN} for 4-way only movement
      */
     public DijkstraMap(final char[][] level, Measurement measurement) {
-        this(level, measurement, new LaserRandom());
-    }
-
-    /**
-     * Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
-     * char[][] where '#' means a wall and anything else is a walkable tile. If you only have
-     * a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
-     * map that can be used here. Also takes a distance measurement and a LaserRandom that ensures
-     * predictable path choices given otherwise identical inputs and circumstances.
-     *
-     * @param level
-     * @param rng   The RNG to use for certain decisions; only affects find* methods like findPath, not scan.
-     */
-    public DijkstraMap(final char[][] level, Measurement measurement, LaserRandom rng) {
-        this.rng = rng;
         path = new ObjectList<>();
         this.measurement = measurement;
 
@@ -1077,14 +1046,15 @@ public class DijkstraMap implements Serializable {
      */
     public Coord findNearest(Coord start, Collection<Coord> targets) {
         if (!initialized) return null;
-        if (targets == null)
+        if (targets == null || targets.isEmpty())
             return null;
         if (targets.contains(start))
             return start;
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        while (physicalMap[start.x][start.y] >= WALL && frustration < 50) {
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.size());
+        while (physicalMap[start2.x][start2.y] >= WALL && frustration < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
                     Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
         }
@@ -1168,6 +1138,7 @@ public class DijkstraMap implements Serializable {
             return new ObjectList<>(path);
         }
         Coord currentPos = findNearest(start, targets);
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -1220,14 +1191,15 @@ public class DijkstraMap implements Serializable {
     public ObjectList<Coord> findNearestMultiple(Coord start, int limit, Collection<Coord> targets) {
         if (!initialized) return null;
         ObjectList<Coord> found = new ObjectList<>(limit);
-        if (targets == null)
+        if (targets == null || targets.isEmpty())
             return found;
         if (targets.contains(start))
             return found;
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        while (physicalMap[start.x][start.y] >= WALL && frustration < 50) {
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.size());
+        while (physicalMap[start2.x][start2.y] >= WALL && frustration < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
                     Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
         }
@@ -1771,6 +1743,7 @@ public class DijkstraMap implements Serializable {
             partialScan(start, scanLimit, impassable2);
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2029,6 +2002,7 @@ public class DijkstraMap implements Serializable {
         }
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2598,6 +2572,8 @@ public class DijkstraMap implements Serializable {
         }
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * fearSources.length);
+
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2724,6 +2700,7 @@ public class DijkstraMap implements Serializable {
 
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2869,6 +2846,7 @@ public class DijkstraMap implements Serializable {
 
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3015,6 +2993,7 @@ public class DijkstraMap implements Serializable {
 
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3140,6 +3119,7 @@ public class DijkstraMap implements Serializable {
         }
         Coord currentPos = start;
         float paidLength = 0f;
+        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * fearSources.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3245,8 +3225,8 @@ public class DijkstraMap implements Serializable {
             {
                 return buffer;
             }
-
         }
+        rng.setState(target.hashCode(), 0x9E3779B97F4A7C15L);
         while (true) {
             if (frustration > 2000) {
                 path.clear();

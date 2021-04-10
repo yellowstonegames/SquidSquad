@@ -78,24 +78,19 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.path.DijkstraMap</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code></dd>
-</dl>
 <hr>
 <pre>public class <span class="type-name-label">DijkstraMap</span>
-extends java.lang.Object
-implements java.io.Serializable</pre>
+extends java.lang.Object</pre>
 <div class="block">A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more
  than one valid goal, or when you want a gradient floodfill to mark each cell in an area with its distance from a
  goal. This type of pathfinding is called a Dijkstra Map because it produces the same type of grid of
  distances from the nearest goal as Dijkstra's Pathfinding Algorithm can, but the actual algorithm used here is
  simpler than Dijkstra's Algorithm, and is more comparable to an optimized breadth-first search that doesn't consider
- edge costs. You can set more than one goal with <a href="#setGoal(com.github.yellowstonegames.grid.Coord)"><code>setGoal(Coord)</code></a> or <a href="#setGoals(java.lang.Iterable)"><code>setGoals(Iterable)</code></a>, unlike A*,
- which enables such features as pathfinding for creatures that can attack targets between a specified minimum and
- maximum distance, and the standard uses of Dijkstra Maps such as finding ideal paths to run away. All these features
- have some cost; when paths are short or unobstructed, A* tends to be faster, though some convoluted map shapes can
- slow down A* more than DijkstraMap.
+ edge costs. You can set more than one goal with <a href="#setGoal(com.github.yellowstonegames.grid.Coord)"><code>setGoal(Coord)</code></a> or <a href="#setGoals(java.lang.Iterable)"><code>setGoals(Iterable)</code></a>, unlike A*;
+ having multiple goals enables such features as pathfinding for creatures that can attack targets between a specified
+ minimum and maximum distance, and the standard uses of Dijkstra Maps such as finding ideal paths to run away. All
+ these features have some price; when paths are short or unobstructed, A* tends to be faster, though some convoluted
+ map shapes can slow down A* more than DijkstraMap.
  <br>
  One unique optimization made possible by Dijkstra Maps is for when only one endpoint of a path can change in some
  section of a game, such as when you want to draw a path from the (stationary) player's current cell to the cell the
@@ -108,9 +103,10 @@ implements java.io.Serializable</pre>
  in this class with only slight differences: length is the length of path that can be moved "in one go," so 1 for most
  roguelikes and more for most strategy games, impassable used for enemies and solid moving obstacles, onlyPassable can
  be null in most roguelikes but in strategy games should contain ally positions that can be moved through as long as
- no one stops in them, start is the NPC's starting position, and targets is an array or vararg of Coord that the NPC
- should pathfind toward (it could be just one Coord, with or without explicitly putting it in an array, or it could be
- more and the NPC will pick the closest).
+ no one stops in them (it can also contain terrain that must be jumped over without falling in, like lava), start is
+ the pathfinding NPC's starting position, and targets is an array or vararg of Coord that the NPC should pathfind
+ toward (it could be just one Coord, with or without explicitly putting it in an array, or it could be more and the
+ NPC will pick the closest).
  <br>
  As a bit of introduction, <a href="http://www.roguebasin.com/index.php?title=Dijkstra_Maps_Visualized">this article
  on RogueBasin</a> can provide some useful information on how these work and how to visualize the information they can
@@ -120,11 +116,12 @@ implements java.io.Serializable</pre>
  <br>
  If you can't remember how to spell this, just remember: Does It Just Know Stuff? That's Really Awesome!
  <br>
- Created by Tommy Ettinger on 4/4/2015.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.path.DijkstraMap">Serialized Form</a></dd>
-</dl>
+ You shouldn't use DijkstraMap for all purposes; it isn't very good at handling terrains with a cost to enter, and
+ can't handle directional costs like a one-way ledge. For those tasks, <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path"><code>DefaultGraph</code></a> or <a href="CostlyGraph.html" title="class in com.github.yellowstonegames.path"><code>CostlyGraph</code></a>
+ will be better fits. CostlyGraph and similar versions of <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>DirectedGraph</code></a> can handle even very complicated kinds
+ of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.
+ <br>
+ Created by Tommy Ettinger on 4/4/2015. Optimized ruthlessly by Tommy Ettinger over the next few years.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -231,10 +228,11 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>com.github.tommyettinger.ds.support.LaserRandom</code></td>
+<td class="col-first"><code>protected com.github.tommyettinger.ds.support.LaserRandom</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></th>
 <td class="col-last">
-<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take.</div>
+<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+ deterministically before any usage.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -302,25 +300,8 @@ char&nbsp;alternateWall)</code></th>
 </td>
 </tr>
 <tr class="row-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D,com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap</a></span>&#8203;(char[][]&nbsp;level,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
-<td class="col-last">
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile.</div>
-</td>
-</tr>
-<tr class="alt-color">
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Measurement)">DijkstraMap</a></span>&#8203;(char[][]&nbsp;level,
 com.github.yellowstonegames.grid.Measurement&nbsp;measurement)</code></th>
-<td class="col-last">
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile.</div>
-</td>
-</tr>
-<tr class="row-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Measurement,com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap</a></span>&#8203;(char[][]&nbsp;level,
-com.github.yellowstonegames.grid.Measurement&nbsp;measurement,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 <td class="col-last">
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where '#' means a wall and anything else is a walkable tile.</div>
@@ -337,12 +318,6 @@ com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></th>
 com.github.yellowstonegames.grid.Measurement&nbsp;measurement)</code></th>
 <td class="col-last">
 <div class="block">Used to construct a DijkstraMap from the output of another, specifying a distance calculation.</div>
-</td>
-</tr>
-<tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.LaserRandom)">DijkstraMap</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</code></th>
-<td class="col-last">
-<div class="block">Construct a DijkstraMap without a level to actually scan.</div>
 </td>
 </tr>
 </tbody>
@@ -1122,8 +1097,10 @@ int&nbsp;y)</code></th>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="member-name">rng</span></div>
-<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take.</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="member-name">rng</span></div>
+<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+ deterministically before any usage. There will only be one path produced for a given set of parameters, and it
+ will be returned again and again if the same parameters are requested.</div>
 </section>
 </li>
 <li>
@@ -1146,15 +1123,6 @@ int&nbsp;y)</code></th>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">DijkstraMap</span>()</div>
 <div class="block">Construct a DijkstraMap without a level to actually scan. If you use this constructor, you must call an
  initialize() method before using this class.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.LaserRandom)">
-<h3>DijkstraMap</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">DijkstraMap</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</span></div>
-<div class="block">Construct a DijkstraMap without a level to actually scan. This constructor allows you to specify a LaserRandom
- before it is ever used in this class. If you use this constructor, you must call an initialize()
- method before using any other methods in the class.</div>
 </section>
 </li>
 <li>
@@ -1188,27 +1156,11 @@ com.github.yellowstonegames.grid.Measurement&nbsp;measurement)</span></div>
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where '#' means a wall and anything else is a walkable tile. If you only have
  a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
- map that can be used here.</div>
+ map that can be used here. This uses <code>Measurement.MANHATTAN</code>, allowing only 4-way
+ movement.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>level</code> - </dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(char[][],com.github.tommyettinger.ds.support.LaserRandom)">
-<h3>DijkstraMap</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">DijkstraMap</span>&#8203;(<span class="parameters">char[][]&nbsp;level,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile. If you only have
- a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
- map that can be used here. Also takes an LaserRandom that ensures
- predictable path choices given otherwise identical inputs and circumstances.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>level</code> - </dd>
-<dd><code>rng</code> - The RNG to use for certain decisions; only affects find* methods like findPath, not scan.</dd>
 </dl>
 </section>
 </li>
@@ -1220,7 +1172,8 @@ char&nbsp;alternateWall)</span></div>
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where one char means a wall and anything else is a walkable tile. If you only have
  a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
- map that can be used here. You can specify the character used for walls.</div>
+ map that can be used here. You can specify the character used for walls. This uses
+ <code>Measurement.MANHATTAN</code>, allowing only 4-way movement.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>level</code> - </dd>
@@ -1235,29 +1188,14 @@ com.github.yellowstonegames.grid.Measurement&nbsp;measurement)</span></div>
 <div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
  char[][] where '#' means a wall and anything else is a walkable tile. If you only have
  a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
- map that can be used here. This constructor specifies a distance measurement.</div>
+ map that can be used here. Also takes a distance measurement, which you may want to set
+ to <code>Measurement.CHEBYSHEV</code> for unpredictable 8-way movement or
+ <code>Measurement.EUCLIDEAN</code> for more reasonable 8-way movement that prefers straight
+ lines.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>level</code> - </dd>
-<dd><code>measurement</code> - </dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(char[][],com.github.yellowstonegames.grid.Measurement,com.github.tommyettinger.ds.support.LaserRandom)">
-<h3>DijkstraMap</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">DijkstraMap</span>&#8203;(<span class="parameters">char[][]&nbsp;level,
-com.github.yellowstonegames.grid.Measurement&nbsp;measurement,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
-<div class="block">Constructor meant to take a char[][] returned by DungeonBoneGen.generate(), or any other
- char[][] where '#' means a wall and anything else is a walkable tile. If you only have
- a map that uses box-drawing characters, use DungeonUtility.linesToHashes() to get a
- map that can be used here. Also takes a distance measurement and a LaserRandom that ensures
- predictable path choices given otherwise identical inputs and circumstances.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>level</code> - </dd>
-<dd><code>rng</code> - The RNG to use for certain decisions; only affects find* methods like findPath, not scan.</dd>
+<dd><code>level</code> - a char[x][y] map where '#' is a wall, and anything else is walkable</dd>
+<dd><code>measurement</code> - how this should measure orthogonal vs. diagonal measurement, such as <code>Measurement.MANHATTAN</code> for 4-way only movement</dd>
 </dl>
 </section>
 </li>
