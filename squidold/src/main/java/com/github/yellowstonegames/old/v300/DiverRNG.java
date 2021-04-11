@@ -1,13 +1,10 @@
-package com.github.yellowstonegames.old.v300.squidmath;
+package com.github.yellowstonegames.old.v300;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
-import java.io.Serializable;
-
-public final class DiverRNG implements StatefulRandomness, Serializable {
-
-    private static final long serialVersionUID = 153186732328748834L;
+public final class DiverRNG implements EnhancedRandom {
 
     private long state; /* The state can be seeded with any value. */
 
@@ -197,7 +194,7 @@ public final class DiverRNG implements StatefulRandomness, Serializable {
      * @param seed the seed to use for this LightRNG, as if it was constructed with this seed.
      */
     @Override
-    public final void setState(final long seed) {
+    public final void setSelectedState(final int selection, final long seed) {
         state = seed;
     }
 
@@ -207,8 +204,38 @@ public final class DiverRNG implements StatefulRandomness, Serializable {
      * @return the current seed of this LightRNG, changed once per call to nextLong()
      */
     @Override
-    public final long getState() {
+    public final long getSelectedState(final int selection) {
         return state;
+    }
+
+    /**
+     * Sets the seed of this random number generator using a single
+     * {@code long} seed. The general contract of {@code setSeed} is
+     * that it alters the state of this random number generator object
+     * so as to be in exactly the same state as if it had just been
+     * created with the argument {@code seed} as a seed. This does not
+     * necessarily assign the state variable(s) of the implementation
+     * with the exact contents of seed, so {@link #getSelectedState(int)}]
+     * should not be expected to return {@code seed} after this, though
+     * it may.
+     *
+     * @param seed the initial seed
+     */
+    @Override
+    public void setSeed(long seed) {
+        state = seed;
+    }
+
+    /**
+     * Gets the number of possible state variables that can be selected with
+     * {@link #getSelectedState(int)} or {@link #setSelectedState(int, long)}.
+     * This returns 1.
+     *
+     * @return the non-negative number of selections possible for state variables (always 1 here)
+     */
+    @Override
+    public int getStateCount() {
+        return 1;
     }
 
     @Override
