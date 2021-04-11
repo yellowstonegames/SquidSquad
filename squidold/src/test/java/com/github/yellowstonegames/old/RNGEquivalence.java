@@ -24,6 +24,12 @@ public class RNGEquivalence {
         for (int i = 20; i < 200; i++) {
             Assert.assertEquals(rng.nextInt(i), enh.nextInt(i));
         }
+        for (int i = -200; i < 200; i++) {
+            Assert.assertEquals(rng.nextSignedLong(i), enh.nextSignedLong(i));
+        }
+        for (int i = -200; i < 200; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextSignedInt(i), enh.nextSignedInt(i));
+        }
     }
 
 }
