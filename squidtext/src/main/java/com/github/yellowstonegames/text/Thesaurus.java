@@ -390,7 +390,7 @@ public class Thesaurus implements Serializable{
         noun.clear();
         nouns.clear();
         for (int i = 0, n = lines.length; i < n; i++) {
-            int idx = lines[i].indexOf('\u00A0');
+            int idx = lines[i].indexOf('\u00A0'); // u00A0 is non-breaking space
             String k;
             ObjectList<String> v;
             categories.put(k = lines[i].substring(0, idx), v = ObjectList.with(StringTools.split(lines[i].substring(idx + 1), "\u00A0")));
@@ -1345,7 +1345,7 @@ public class Thesaurus implements Serializable{
     private static final ObjectList<String> potionTerms = with(
             "a bottle`adj` bottle`noun` filled with a liquid`adj` color`adj` liquid`noun`",
             "a bottle`adj` bottle`noun` filled with a color`adj` liquid`noun`",
-            "a calabash`adj` filled with a color`adj` liquid`noun`",
+            "a calabash`noun` filled with a color`adj` liquid`noun`",
             "a bottle`adj` bottle`noun` half-filled with a liquid`adj` color`adj` liquid`noun`",
             "a bottle`adj` bottle`noun` containing a few drops of a color`adj` liquid`noun`"
         );

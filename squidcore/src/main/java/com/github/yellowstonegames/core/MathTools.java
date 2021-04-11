@@ -462,7 +462,6 @@ public final class MathTools
         return fromValue + (toValue - fromValue) * progress;
     }
 
-
     /**
      * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
@@ -713,4 +712,13 @@ public final class MathTools
         return (start - (long)start) * 6.283185307179586f;
     }
 
+    /**
+     * Returns the next higher power of two relative to {@code n}, or n if it is already a power of two. This returns 2
+     * if n is any value less than 2 (including negative numbers, but also 1, which is a power of two).
+     * @param n the lower bound for the result
+     * @return the next higher power of two that is greater than or equal to n
+     */
+    public static int nextPowerOfTwo(final int n) {
+        return 1 << -Integer.numberOfLeadingZeros(Math.max(2, n) - 1);
+    }
 }
