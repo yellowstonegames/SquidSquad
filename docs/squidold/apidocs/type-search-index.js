@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"com.github.yellowstonegames.old.v300","l":"DiverRNG"},{"p":"com.github.yellowstonegames.old.v300","l":"LegacyRandom"}];updateSearchResults();

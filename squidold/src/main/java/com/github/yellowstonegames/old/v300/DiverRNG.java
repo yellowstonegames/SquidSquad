@@ -1,10 +1,9 @@
 package com.github.yellowstonegames.old.v300;
 
-import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
-public final class DiverRNG implements EnhancedRandom {
+public final class DiverRNG implements LegacyRandom {
 
     private long state; /* The state can be seeded with any value. */
 
