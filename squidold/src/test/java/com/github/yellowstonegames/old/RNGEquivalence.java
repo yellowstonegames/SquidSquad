@@ -3,7 +3,6 @@ package com.github.yellowstonegames.old;
 import com.github.yellowstonegames.old.v300.DiverRNG;
 import com.github.yellowstonegames.old.v300.squidmath.RNG;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RNGEquivalence {
@@ -35,6 +34,23 @@ public class RNGEquivalence {
             int bound = (int) DiverRNG.randomize(i);
             Assert.assertEquals("Failed with bound " + bound, rng.nextSignedInt(bound), enh.nextSignedInt(bound));
         }
+        for (int i = 0; i < 300; i++) {
+            Assert.assertEquals(rng.nextDouble(), enh.nextDouble(), Double.MIN_VALUE);
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextDouble(i), enh.nextDouble(i), Double.MIN_VALUE);
+            double bound = DiverRNG.randomizeDouble(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextDouble(bound), enh.nextDouble(bound), Double.MIN_VALUE);
+        }
+        for (int i = 0; i < 300; i++) {
+            Assert.assertEquals(rng.nextFloat(), enh.nextFloat(), Float.MIN_VALUE);
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextFloat(i), enh.nextFloat(i), Float.MIN_VALUE);
+            float bound = DiverRNG.randomizeFloat(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextFloat(bound), enh.nextFloat(bound), Float.MIN_VALUE);
+        }
+
     }
 
 }

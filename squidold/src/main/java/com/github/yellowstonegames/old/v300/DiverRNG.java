@@ -158,8 +158,9 @@ public final class DiverRNG implements LegacyRandom {
      * @return a random float at least equal to 0.0 and less than 1.0
      */
     public final float nextFloat() {
-        final long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
-        return ((z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L >>> 40) * 0x1p-24f;
+        long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
+        z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
+        return ((int)(z ^ z >>> 25) >>> 8) * 0x1p-24f;
     }
 
     /**
