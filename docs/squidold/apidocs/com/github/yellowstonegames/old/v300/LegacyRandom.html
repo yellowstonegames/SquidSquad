@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":18,"i1":18};
+<script type="text/javascript">var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -81,13 +81,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></code></dd>
+<dd><code><a href="DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></code>, <code><a href="GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></code>, <code><a href="SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></code>, <code><a href="XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></code></dd>
 </dl>
 <hr>
 <pre>public interface <span class="type-name-label">LegacyRandom</span>
 extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
 <div class="block">An alternate version of <code>EnhancedRandom</code> that intentionally implements certain methods incorrectly, for
- compatibility with SquidLib 3.0.0.</div>
+ compatibility with SquidLib 3.0.0. Currently, <a href="#nextSignedInt(int)"><code>nextSignedInt(int)</code></a> and <a href="#nextSignedLong(long)"><code>nextSignedLong(long)</code></a> are
+ incorrectly implemented for compatibility, and that makes <code>EnhancedRandom.nextSignedInt(int, int)</code> incorrect too. Other
+ methods here are implemented as <code>EnhancedRandom</code> does in its default implementations.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -108,6 +110,28 @@ extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextDouble()">nextDouble</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Gets a random double between 0 and 1 (inclusive on 0, exclusive on 1).</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextFloat()">nextFloat</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Gets a random float between 0 and 1 (inclusive on 0, exclusive on 1).</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>default int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInt(int)">nextInt</a></span>&#8203;(int&nbsp;bound)</code></th>
+<td class="col-last">
+<div class="block">This is slightly different from how EnhancedRandom implements this method, and this version may have some bias
+ for large bounds (more bias than EnhancedRandom has).</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedInt(int)">nextSignedInt</a></span>&#8203;(int&nbsp;outerBound)</code></th>
 <td class="col-last">
@@ -115,7 +139,7 @@ extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
  like -1 or -2.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedLong(long)">nextSignedLong</a></span>&#8203;(long&nbsp;outerBound)</code></th>
 <td class="col-last">
@@ -128,7 +152,7 @@ extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.support.EnhancedRandom">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.support.EnhancedRandom</h3>
-<code>copy, getSelectedState, getStateCount, next, nextBoolean, nextBoolean, nextBytes, nextDouble, nextDouble, nextDouble, nextExclusiveDouble, nextExclusiveFloat, nextFloat, nextFloat, nextFloat, nextGaussian, nextInt, nextInt, nextInt, nextLong, nextLong, nextLong, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, randomElement, randomElement, randomElement, randomElement, randomElement, setSeed, setSelectedState, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
+<code>copy, getSelectedState, getStateCount, next, nextBoolean, nextBoolean, nextBytes, nextDouble, nextDouble, nextExclusiveDouble, nextExclusiveFloat, nextFloat, nextFloat, nextGaussian, nextInt, nextInt, nextLong, nextLong, nextLong, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, randomElement, randomElement, randomElement, randomElement, randomElement, setSeed, setSelectedState, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
 </section>
 </li>
 </ul>
@@ -140,6 +164,22 @@ extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="nextInt(int)">
+<h3>nextInt</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">nextInt</span>&#8203;(<span class="parameters">int&nbsp;bound)</span></div>
+<div class="block">This is slightly different from how EnhancedRandom implements this method, and this version may have some bias
+ for large bounds (more bias than EnhancedRandom has).</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>nextInt</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Parameters:</dt>
+<dd><code>bound</code> - the outer exclusive bound; if non-positive, this returns 0</dd>
+<dt>Returns:</dt>
+<dd>a random int between 0 (inclusive) and bound (exclusive); never negative</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="nextSignedInt(int)">
 <h3>nextSignedInt</h3>
@@ -168,6 +208,34 @@ extends com.github.tommyettinger.ds.support.EnhancedRandom</pre>
 <dd><code>outerBound</code> - the outer bound, positive or negative; will probably not be respected</dd>
 <dt>Returns:</dt>
 <dd>honestly, this could return anything -- a whale and a potted plant are possibilities</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextDouble()">
+<h3>nextDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextDouble</span>()</div>
+<div class="block">Gets a random double between 0 and 1 (inclusive on 0, exclusive on 1).
+ This one isn't incorrectly implemented, it's just different from how EnhancedRandom does it.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>nextDouble</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Returns:</dt>
+<dd>a random double between 0 (inclusive) and 1 (exclusive)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextFloat()">
+<h3>nextFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextFloat</span>()</div>
+<div class="block">Gets a random float between 0 and 1 (inclusive on 0, exclusive on 1).
+ This one isn't incorrectly implemented, it's just different from how EnhancedRandom does it.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>nextFloat</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Returns:</dt>
+<dd>a random float between 0 (inclusive) and 1 (exclusive)</dd>
 </dl>
 </section>
 </li>

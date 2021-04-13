@@ -865,20 +865,22 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom)">GapShuffler(Collection&lt;T&gt;, LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler(Collection&lt;T&gt;, EnhancedRandom)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom,boolean)">GapShuffler(Collection&lt;T&gt;, LaserRandom, boolean)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler(Collection&lt;T&gt;, EnhancedRandom, boolean)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(java.util.Collection,java.lang.String)">GapShuffler(Collection&lt;T&gt;, String)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by <code>seed</code>, and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T)">GapShuffler(T)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>&nbsp;</dd>
@@ -887,15 +889,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.LaserRandom)">GapShuffler(T[], LaserRandom)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler(T[], EnhancedRandom)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
+ and can then iterate infinitely through mostly-random shuffles of the given collection.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.LaserRandom,boolean)">GapShuffler(T[], LaserRandom, boolean)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler(T[], EnhancedRandom, boolean)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#%3Cinit%3E(T%5B%5D,java.lang.CharSequence)">GapShuffler(T[], CharSequence)</a></span> - Constructor for class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
@@ -1996,14 +1999,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/WeightedTable.html#serializeToString()">serializeToString()</a></span> - Method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/WeightedTable.html" title="class in com.github.yellowstonegames.core">WeightedTable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#setRNG(com.github.tommyettinger.ds.support.LaserRandom)">setRNG(LaserRandom)</a></span> - Method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#setRNG(com.github.tommyettinger.ds.support.EnhancedRandom)">setRNG(EnhancedRandom)</a></span> - Method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, always copying the given LaserRandom before using it.</div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, always copying the given EnhancedRandom
+ before using it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#setRNG(com.github.tommyettinger.ds.support.LaserRandom,boolean)">setRNG(LaserRandom, boolean)</a></span> - Method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/GapShuffler.html#setRNG(com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">setRNG(EnhancedRandom, boolean)</a></span> - Method in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a></dt>
 <dd>
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, optionally sharing a reference between outside code and
- the internal LaserRandom (when <code>shareRNG</code> is true).</div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, optionally sharing a reference between
+ outside code and the internal EnhancedRandom (when <code>shareRNG</code> is true).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/core/Hasher.html#shax">shax</a></span> - Static variable in class com.github.yellowstonegames.core.<a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></dt>
 <dd>&nbsp;</dd>

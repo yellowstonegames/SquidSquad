@@ -85,22 +85,19 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code>, <code>java.lang.Iterable&lt;T&gt;</code>, <code>java.util.Iterator&lt;T&gt;</code></dd>
+<dd><code>java.lang.Iterable&lt;T&gt;</code>, <code>java.util.Iterator&lt;T&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">GapShuffler&lt;T&gt;</span>
 extends java.lang.Object
-implements java.util.Iterator&lt;T&gt;, java.lang.Iterable&lt;T&gt;, java.io.Serializable</pre>
+implements java.util.Iterator&lt;T&gt;, java.lang.Iterable&lt;T&gt;</pre>
 <div class="block">Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
  quick succession; that is, there should always be a gap between the same item's occurrences. This is an Iterable of
  T, not a Collection, because it can iterate without stopping, infinitely, unless you break out of a foreach loop that
  iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  a size that can be checked, but Iterables can be infinite (and in this case, this one is).
+ <br>
  Created by Tommy Ettinger on 5/21/2016.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.core.GapShuffler">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -130,7 +127,7 @@ implements java.util.Iterator&lt;T&gt;, java.lang.Iterable&lt;T&gt;, java.io.Ser
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>com.github.tommyettinger.ds.support.LaserRandom</code></td>
+<td class="col-first"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#random">random</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -169,21 +166,23 @@ implements java.util.Iterator&lt;T&gt;, java.lang.Iterable&lt;T&gt;, java.io.Ser
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>&nbsp;</code></td>
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom)">GapShuffler</a></span>&#8203;(java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></th>
 <td class="col-last">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>&nbsp;</code></td>
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom,boolean)">GapShuffler</a></span>&#8203;(java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</code></th>
 <td class="col-last">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </td>
 </tr>
 <tr class="alt-color">
@@ -191,8 +190,8 @@ boolean&nbsp;shareRNG)</code></th>
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,java.lang.String)">GapShuffler</a></span>&#8203;(java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
 java.lang.String&nbsp;seed)</code></th>
 <td class="col-last">
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by <code>seed</code>, and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -210,21 +209,22 @@ java.lang.String&nbsp;seed)</code></th>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>&nbsp;</code></td>
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.LaserRandom)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></th>
 <td class="col-last">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
+ and can then iterate infinitely through mostly-random shuffles of the given collection.</div>
 </td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>&nbsp;</code></td>
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.LaserRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</code></th>
 <td class="col-last">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -266,7 +266,7 @@ java.lang.CharSequence&nbsp;seed)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>com.github.tommyettinger.ds.support.LaserRandom</code></td>
+<td class="col-first"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getRNG()">getRNG</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -300,18 +300,19 @@ java.lang.CharSequence&nbsp;seed)</code></th>
 </tr>
 <tr class="alt-color" id="i6">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setRNG(com.github.tommyettinger.ds.support.LaserRandom)">setRNG</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setRNG(com.github.tommyettinger.ds.support.EnhancedRandom)">setRNG</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></th>
 <td class="col-last">
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, always copying the given LaserRandom before using it.</div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, always copying the given EnhancedRandom
+ before using it.</div>
 </td>
 </tr>
 <tr class="row-color" id="i7">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setRNG(com.github.tommyettinger.ds.support.LaserRandom,boolean)">setRNG</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setRNG(com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">setRNG</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</code></th>
 <td class="col-last">
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, optionally sharing a reference between outside code and
- the internal LaserRandom (when <code>shareRNG</code> is true).</div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, optionally sharing a reference between
+ outside code and the internal EnhancedRandom (when <code>shareRNG</code> is true).</div>
 </td>
 </tr>
 </tbody>
@@ -341,7 +342,7 @@ boolean&nbsp;shareRNG)</code></th>
 <li>
 <section class="detail" id="random">
 <h3>random</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="member-name">random</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="member-name">random</span></div>
 </section>
 </li>
 <li>
@@ -395,10 +396,11 @@ boolean&nbsp;shareRNG)</code></th>
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">GapShuffler</span>&#8203;(<span class="parameters">java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
 java.lang.String&nbsp;seed)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
- of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by <code>seed</code>, and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+ to keep the appearance of a gap if every item in elements is unique, but that is not necessary and does not
+ affect how this works.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>elements</code> - a Collection of T that will not be modified</dd>
@@ -406,40 +408,42 @@ java.lang.String&nbsp;seed)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">GapShuffler</span>&#8203;(<span class="parameters">java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
- of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
- random parameter is copied so externally using it won't change the order this produces its values; the
- random field is used whenever the iterator needs to re-shuffle the internal ordering of items.</div>
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+ to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+ how this works. The random parameter is copied so externally using it won't change the order this produces its
+ values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>items</code> - a Collection of T that will not be modified</dd>
-<dd><code>random</code> - a LaserRandom that can be pre-seeded; will be copied and not used directly</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.LaserRandom,boolean)">
+<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">GapShuffler</span>&#8203;(<span class="parameters">java.util.Collection&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
- of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
- random parameter will be copied if <code>shareRNG</code> is true, otherwise the reference will be shared (which could
- make the results of this GapShuffler depend on outside code, though it will always maintain a gap between
- identical elements if the elements are unique).</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+ to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+ how this works. The random parameter will be copied if <code>shareRNG</code> is true, otherwise the reference will be
+ shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+ gap between identical elements if the elements are unique).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>items</code> - a Collection of T that will not be modified</dd>
-<dd><code>random</code> - a LaserRandom that can be pre-seeded; will be copied and not used directly</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
 <dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
 </dl>
 </section>
@@ -454,7 +458,7 @@ boolean&nbsp;shareRNG)</span></div>
  of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>elements</code> - a Collection of T that will not be modified</dd>
+<dd><code>elements</code> - an array of T that will not be modified</dd>
 </dl>
 </section>
 </li>
@@ -469,45 +473,46 @@ java.lang.CharSequence&nbsp;seed)</span></div>
  of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>elements</code> - a Collection of T that will not be modified</dd>
+<dd><code>elements</code> - an array of T that will not be modified</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(T[],com.github.tommyettinger.ds.support.LaserRandom)">
-<h3 id="&lt;init&gt;(java.lang.Object[],com.github.tommyettinger.ds.support.LaserRandom)">GapShuffler</h3>
+<section class="detail" id="&lt;init&gt;(T[],com.github.tommyettinger.ds.support.EnhancedRandom)">
+<h3 id="&lt;init&gt;(java.lang.Object[],com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">GapShuffler</span>&#8203;(<span class="parameters"><a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
- of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
- random parameter is copied so externally using it won't change the order this produces its values; the random field is
- used whenever the iterator needs to re-shuffle the internal ordering of items.</div>
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
+ and can then iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced
+ so that a single element should always have a large amount of "gap" in order between one appearance and the next.
+ It helps to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not
+ affect how this works. The random parameter is copied so externally using it won't change the order this produces
+ its values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>items</code> - a Collection of T that will not be modified</dd>
-<dd><code>random</code> - a LaserRandom that can be pre-seeded; will be copied and not used directly</dd>
+<dd><code>items</code> - an array of T that will not be modified</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(T[],com.github.tommyettinger.ds.support.LaserRandom,boolean)">
-<h3 id="&lt;init&gt;(java.lang.Object[],com.github.tommyettinger.ds.support.LaserRandom,boolean)">GapShuffler</h3>
+<section class="detail" id="&lt;init&gt;(T[],com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
+<h3 id="&lt;init&gt;(java.lang.Object[],com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">GapShuffler</span>&#8203;(<span class="parameters"><a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
-com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have at least one "gap" element between one appearance and the next. It helps to keep the appearance
- of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
- random parameter will be copied if <code>shareRNG</code> is false, otherwise the reference will be shared (which could
- make the results of this GapShuffler depend on outside code, though it will always maintain a gap between
- identical elements if the elements are unique).</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have at least one "gap" element between one appearance and the next. It helps to
+ keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect how
+ this works. The random parameter will be copied if <code>shareRNG</code> is false, otherwise the reference will be
+ shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+ gap between identical elements if the elements are unique).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>items</code> - a Collection of T that will not be modified</dd>
-<dd><code>random</code> - a LaserRandom that can be pre-seeded; will be copied and not used directly</dd>
+<dd><code>items</code> - an array of T that will not be modified</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
 <dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
 </dl>
 </section>
@@ -566,7 +571,7 @@ boolean&nbsp;shareRNG)</span></div>
 <h3>iterator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">java.util.Iterator&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</span>&nbsp;<span class="member-name">iterator</span>()</div>
 <div class="block">Returns an <b>infinite</b> iterator over elements of type <code>T</code>; the returned iterator is this object.
- You should be prepared to break out of any for loops that use this once you've gotten enough elements!
+ You should be prepared to break out of any loops that use this once you've gotten enough elements!
  The remove() method is not supported by this iterator and hasNext() will always return true.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -579,33 +584,34 @@ boolean&nbsp;shareRNG)</span></div>
 <li>
 <section class="detail" id="getRNG()">
 <h3>getRNG</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="member-name">getRNG</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="member-name">getRNG</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setRNG(com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="setRNG(com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>setRNG</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">setRNG</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</span></div>
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, always copying the given LaserRandom before using it. Always
- reshuffles the order, which may eliminate a gap that should have been present, so treat the sequence before and
- after like separate GapShuffler objects.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">setRNG</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, always copying the given EnhancedRandom
+ before using it. Always reshuffles the order, which may eliminate a gap that should have been present, so treat
+ the sequence before and after like separate GapShuffler objects.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a LaserRandom, which can have been seeded; always copied</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; always copied</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setRNG(com.github.tommyettinger.ds.support.LaserRandom,boolean)">
+<section class="detail" id="setRNG(com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
 <h3>setRNG</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">setRNG</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.LaserRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">setRNG</span>&#8203;(<span class="parameters">com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
 boolean&nbsp;shareRNG)</span></div>
-<div class="block">Sets the LaserRandom this uses to shuffle the order of elements, optionally sharing a reference between outside code and
- the internal LaserRandom (when <code>shareRNG</code> is true). Always reshuffles the order, which may eliminate a gap that
- should have been present, so treat the sequence before and after like separate GapShuffler objects.</div>
+<div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, optionally sharing a reference between
+ outside code and the internal EnhancedRandom (when <code>shareRNG</code> is true). Always reshuffles the order, which
+ may eliminate a gap that should have been present, so treat the sequence before and after like separate
+ GapShuffler objects.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a LaserRandom, which can have been seeded; optionally copied</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; optionally copied</dd>
 <dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
 </dl>
 </section>

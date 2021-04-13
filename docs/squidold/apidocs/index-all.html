@@ -51,7 +51,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:X">X</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
 <dt><a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a> - package com.github.yellowstonegames.old.v300</dt>
@@ -61,28 +61,95 @@ loadScripts(document, 'script');</script>
 <div class="block">Produces a copy of this RandomnessSource that, if next() and/or nextLong() are called on this object and the
  copy, both will generate the same sequence of random numbers from the point copy() was called.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#copy()">copy()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Creates a copy of this GWTRNG; it will generate the same random numbers, given the same calls in order, as this
+ GWTRNG at the point copy() is called.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#copy()">copy()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Creates a copy of this SilkRNG; it will generate the same random numbers, given the same calls in order, as this
+ SilkRNG at the point copy() is called.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#copy()">copy()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Produces a copy of this RandomnessSource that, if next() and/or nextLong() are called on this object and the
+ copy, both will generate the same sequence of random numbers from the point copy() was called.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#determine(int)">determine(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">A deterministic random long generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different long as a result.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#determine(int)">determine(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">A deterministic random long generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different long as a result.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#determine(long)">determine(long)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Fast static randomizing method that takes its state as a parameter; state is expected to change between calls to
  this.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#determineBounded(int,int)">determineBounded(int, int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">A deterministic random int generator that, given one int <code>state</code> and an outer int <code>bound</code> as input,
+ returns an int between 0 (inclusive) and <code>bound</code> (exclusive) as a result, which should have no noticeable
+ correlation between <code>state</code> and the result.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#determineBounded(int,int)">determineBounded(int, int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">A deterministic random int generator that, given one int <code>state</code> and an outer int <code>bound</code> as input,
+ returns an int between 0 (inclusive) and <code>bound</code> (exclusive) as a result, which should have no noticeable
+ correlation between <code>state</code> and the result.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#determineBounded(long,int)">determineBounded(long, int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Fast static randomizing method that takes its state as a parameter and limits output to an int between 0
  (inclusive) and bound (exclusive); state is expected to change between calls to this.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#determineDouble(int)">determineDouble(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">A deterministic random double generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different double between 0.0 and 1.0 as a result.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#determineDouble(int)">determineDouble(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">A deterministic random double generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different double between 0.0 and 1.0 as a result.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#determineDouble(long)">determineDouble(long)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
  will return the same float.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#determineFloat(int)">determineFloat(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">A deterministic random float generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different float between 0.0f and 1.0f as a result.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#determineFloat(int)">determineFloat(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">A deterministic random float generator that, given one int <code>state</code> as input, returns an 
+ almost-always-different float between 0.0f and 1.0f as a result.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#determineFloat(long)">determineFloat(long)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
  return the same float.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#determineInt(int)">determineInt(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">A deterministic random int generator that, given one int <code>state</code> as input, irreversibly returns an 
+ almost-always-different int as a result.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#determineInt(int)">determineInt(int)</a></span> - Static method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">A deterministic random int generator that, given one int <code>state</code> as input, irreversibly returns an 
+ almost-always-different int as a result.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300"><span class="type-name-link">DiverRNG</span></a> - Class in <a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a></dt>
 <dd>&nbsp;</dd>
@@ -99,6 +166,12 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -106,15 +179,91 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the current state of this generator.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Identical to <a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getState()"><code>GWTRNG.getState()</code></a>, this gets both int states as one long value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Identical to <a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getState()"><code>SilkRNG.getState()</code></a>, this gets both int states as one long value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getState()">getState()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Get the current internal state of the StatefulRandomness as a long.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getState()">getState()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Get the current internal state of the StatefulRandomness as a long.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getStateA()">getStateA()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getStateA()">getStateA()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getStateA()">getStateA()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getStateB()">getStateB()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getStateB()">getStateB()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getStateB()">getStateB()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getStateC()">getStateC()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#getStateCount()">getStateCount()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Gets the number of possible state variables that can be selected with
  <a href="com/github/yellowstonegames/old/v300/DiverRNG.html#getSelectedState(int)"><code>DiverRNG.getSelectedState(int)</code></a> or <a href="com/github/yellowstonegames/old/v300/DiverRNG.html#setSelectedState(int,long)"><code>DiverRNG.setSelectedState(int, long)</code></a>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getStateCount()">getStateCount()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Always returns 1 (counting in terms of long states).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#getStateCount()">getStateCount()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Always returns 1 (counting in terms of long states).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getStateCount()">getStateCount()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getStateD()">getStateD()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300"><span class="type-name-link">GWTRNG</span></a> - Class in <a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#%3Cinit%3E()">GWTRNG()</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Creates a new generator seeded using two calls to Math.random().</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#%3Cinit%3E(int)">GWTRNG(int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Constructs this GWTRNG by dispersing the bits of seed using <a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setSeed(long)"><code>GWTRNG.setSeed(int)</code></a> across the two parts of state
+ this has.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#%3Cinit%3E(int,int)">GWTRNG(int, int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Constructs this GWTRNG by calling <a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(int,int)"><code>GWTRNG.setState(int, int)</code></a> on stateA and stateB as given; see that method
+ for the specific details (stateA and stateB are kept as-is unless they are both 0).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#%3Cinit%3E(long)">GWTRNG(long)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Constructs this GWTRNG by splitting the given seed across the two parts of state this has with
+ <a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(long)"><code>GWTRNG.setState(long)</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#%3Cinit%3E(java.lang.String)">GWTRNG(String)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Hashes <code>seed</code> using both <code>Hasher.hash(CharSequence)</code> and <code>String.hashCode()</code> and uses those
+ two results as the two states with <a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(int,int)"><code>GWTRNG.setState(int, int)</code></a>.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#hashCode()">hashCode()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
@@ -129,9 +278,29 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#next(int)">next(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#next(int)">next(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Get up to 32 bits (inclusive) of random output; the int this produces
+ will not require more than <code>bits</code> bits to represent.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#next(int)">next(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Get up to 32 bits (inclusive) of random output; the int this produces
+ will not require more than <code>bits</code> bits to represent.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#next(int)">next(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextBoolean()">nextBoolean()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Gets a random value, true or false.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextBoolean()">nextBoolean()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Get a random bit of state, interpreted as true or false with approximately equal likelihood.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextBoolean()">nextBoolean()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Get a random bit of state, interpreted as true or false with approximately equal likelihood.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextBytes(byte%5B%5D)">nextBytes(byte[])</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
@@ -142,6 +311,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets a uniform random double in the range [0.0,1.0)</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextDouble()">nextDouble()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Gets a random double between 0.0 inclusive and 1.0 exclusive.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/LegacyRandom.html#nextDouble()">nextDouble()</a></span> - Method in interface com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></dt>
+<dd>
+<div class="block">Gets a random double between 0 and 1 (inclusive on 0, exclusive on 1).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextDouble()">nextDouble()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Gets a random double between 0.0 inclusive and 1.0 exclusive.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextDouble(double)">nextDouble(double)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Gets a uniform random double in the range [0.0,outer) given a positive parameter outer.</div>
@@ -150,13 +331,52 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets a uniform random float in the range [0.0,1.0)</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextFloat()">nextFloat()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Gets a random float between 0.0f inclusive and 1.0f exclusive.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/LegacyRandom.html#nextFloat()">nextFloat()</a></span> - Method in interface com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></dt>
+<dd>
+<div class="block">Gets a random float between 0 and 1 (inclusive on 0, exclusive on 1).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextFloat()">nextFloat()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Gets a random float between 0.0f inclusive and 1.0f exclusive.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextInt()">nextInt()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
+<dd>
+<div class="block">Can return any int, positive or negative, of any size permissible in a 32-bit signed integer.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextInt()">nextInt()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Get a random integer between Integer.MIN_VALUE to Integer.MAX_VALUE (both inclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextInt()">nextInt()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Get a random integer between Integer.MIN_VALUE to Integer.MAX_VALUE (both inclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#nextInt()">nextInt()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
 <dd>
 <div class="block">Can return any int, positive or negative, of any size permissible in a 32-bit signed integer.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextInt(int)">nextInt(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Exclusive on the outer bound.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextInt(int)">nextInt(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Returns a random non-negative integer below the given bound, or 0 if the bound is 0 or
+ negative.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/LegacyRandom.html#nextInt(int)">nextInt(int)</a></span> - Method in interface com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></dt>
+<dd>
+<div class="block">This is slightly different from how EnhancedRandom implements this method, and this version may have some bias
+ for large bounds (more bias than EnhancedRandom has).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextInt(int)">nextInt(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Returns a random non-negative integer below the given bound, or 0 if the bound is 0 or
+ negative.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextInt(int,int)">nextInt(int, int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
@@ -166,6 +386,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Can return any long, positive or negative, of any size permissible in a 64-bit signed integer.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#nextLong()">nextLong()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Get a random long between Long.MIN_VALUE to Long.MAX_VALUE (both inclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#nextLong()">nextLong()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Get a random long between Long.MIN_VALUE to Long.MAX_VALUE (both inclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#nextLong()">nextLong()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#nextLong(long)">nextLong(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Exclusive on bound (which may be positive or negative), with an inner bound of 0.</div>
@@ -210,22 +440,175 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setSeed(int)">setSeed(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets the state of this generator using one int, running it through Zog32RNG's algorithm two times to get 
+ two ints.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setSeed(int)">setSeed(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Sets the state of this generator using one int, running it through Zog32RNG's algorithm two times to get 
+ two ints.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setSeed(int)">setSeed(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the state of this generator using one int, running it through a GWT-compatible variant of SplitMix32 four
+ times to get four ints of state, all guaranteed to be different.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Sets the seed of this random number generator using a single
  <code>long</code> seed.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets both int states of the SilkRNG with one long value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the state of this generator using one long, running it through a GWT-compatible variant of SplitMix32 four
+ times to get four ints of state, guaranteed to repeat a state no more than two times.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>
 <div class="block">Sets the seed (also the current state) of this generator.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets both int states of the SilkRNG with one long value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Sets both int states of the SilkRNG with one long value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(int,int)">setState(int, int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets the current internal state of this GWTRNG with three ints, where stateA and stateB can each be any int
+ unless they are both 0 (which will be treated as if stateA is 1 and stateB is 0).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setState(int,int)">setState(int, int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Sets the current internal state of this SilkRNG with two ints, where stateA and stateB can each be any int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setState(int,int,int,int)">setState(int, int, int, int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the current internal state of this XoshiroStarPhi32RNG with four ints, where each can be any int unless
+ they are all 0 (which will be treated as if stateA is 1 and the rest are 0).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(long)">setState(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setState(long)">setState(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setStateA(int)">setStateA(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets the first part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setStateA(int)">setStateA(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Sets the first part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setStateA(int)">setStateA(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the first part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setStateB(int)">setStateB(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>
+<div class="block">Sets the second part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setStateB(int)">setStateB(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Sets the second part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setStateB(int)">setStateB(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the second part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setStateC(int)">setStateC(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the third part of the state to the given int.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setStateD(int)">setStateD(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Sets the second part of the state to the given int.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300"><span class="type-name-link">SilkRNG</span></a> - Class in <a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#%3Cinit%3E()">SilkRNG()</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Creates a new generator seeded using two calls to Math.random().</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#%3Cinit%3E(int)">SilkRNG(int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Constructs this SilkRNG by dispersing the bits of seed using <a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setSeed(long)"><code>SilkRNG.setSeed(int)</code></a> across the two parts of state
+ this has.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#%3Cinit%3E(int,int)">SilkRNG(int, int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Constructs this SilkRNG by calling <a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setState(int,int)"><code>SilkRNG.setState(int, int)</code></a> on stateA and stateB as given; see that method
+ for the specific details (stateA and stateB are kept as-is).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#%3Cinit%3E(long)">SilkRNG(long)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>
+<div class="block">Constructs this SilkRNG by splitting the given seed across the two parts of state this has with
+ <a href="com/github/yellowstonegames/old/v300/SilkRNG.html#setState(long)"><code>SilkRNG.setState(long)</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#%3Cinit%3E(java.lang.String)">SilkRNG(String)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#stateA">stateA</a></span> - Variable in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#stateA">stateA</a></span> - Variable in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#stateB">stateB</a></span> - Variable in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#stateB">stateB</a></span> - Variable in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#toString()">toString()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>&nbsp;</dd>
 </dl>
-<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
+<h2 class="title" id="I:X">X</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300"><span class="type-name-link">XoshiroStarPhi32RNG</span></a> - Class in <a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#%3Cinit%3E()">XoshiroStarPhi32RNG()</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Creates a new generator seeded using four calls to Math.random().</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#%3Cinit%3E(int)">XoshiroStarPhi32RNG(int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Constructs this XoshiroStarPhi32RNG by dispersing the bits of seed using <a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setSeed(long)"><code>setSeed(int)</code></a> across the four
+ parts of state this has.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#%3Cinit%3E(int,int,int,int)">XoshiroStarPhi32RNG(int, int, int, int)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Constructs this XoshiroStarPhi32RNG by calling <a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setState(int,int,int,int)"><code>setState(int, int, int, int)</code></a> on stateA and stateB as
+ given; see that method for the specific details (the states are kept as-is unless they are all 0).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#%3Cinit%3E(long)">XoshiroStarPhi32RNG(long)</a></span> - Constructor for class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
+<dd>
+<div class="block">Constructs this XoshiroStarPhi32RNG by dispersing the bits of seed using <a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#setSeed(long)"><code>setSeed(long)</code></a> across the four
+ parts of state this has.</div>
+</dd>
+</dl>
+<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:X">X</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
 <footer role="contentinfo">
 <nav role="navigation">
 <!-- ======= START OF BOTTOM NAVBAR ====== -->

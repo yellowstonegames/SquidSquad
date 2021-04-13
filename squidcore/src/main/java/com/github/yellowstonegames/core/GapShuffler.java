@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 
 import java.io.Serializable;
@@ -14,12 +15,12 @@ import java.util.Iterator;
  * T, not a Collection, because it can iterate without stopping, infinitely, unless you break out of a foreach loop that
  * iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
+ * <br>
  * Created by Tommy Ettinger on 5/21/2016.
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
-public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
-    private static final long serialVersionUID = 1L;
-    public LaserRandom random;
+public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
+    public EnhancedRandom random;
     protected ObjectList<T> elements;
     protected int index;
     protected GapShuffler() {
@@ -49,10 +50,11 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
+     * Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by {@code seed}, and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+     * to keep the appearance of a gap if every item in elements is unique, but that is not necessary and does not
+     * affect how this works.
      * @param elements a Collection of T that will not be modified
      */
     public GapShuffler(Collection<T> elements, String seed)
@@ -61,40 +63,42 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
-     * random parameter is copied so externally using it won't change the order this produces its values; the
-     * random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+     * to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+     * how this works. The random parameter is copied so externally using it won't change the order this produces its
+     * values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
      * @param items a Collection of T that will not be modified
-     * @param random a LaserRandom that can be pre-seeded; will be copied and not used directly
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
      */
-    public GapShuffler(Collection<T> items, LaserRandom random)
+    public GapShuffler(Collection<T> items, EnhancedRandom random)
     {
         this.random = random.copy();
         elements = new ObjectList<>(items);
-        elements.shuffle(this.random);
+        this.random.shuffle(elements);
         index = 0;
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
-     * random parameter will be copied if {@code shareRNG} is true, otherwise the reference will be shared (which could
-     * make the results of this GapShuffler depend on outside code, though it will always maintain a gap between
-     * identical elements if the elements are unique).
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+     * to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+     * how this works. The random parameter will be copied if {@code shareRNG} is true, otherwise the reference will be
+     * shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+     * gap between identical elements if the elements are unique).
      * @param items a Collection of T that will not be modified
-     * @param random a LaserRandom that can be pre-seeded; will be copied and not used directly
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
      * @param shareRNG if false, {@code random} will be copied and no reference will be kept; if true, {@code random} will be shared with the outside code
      */
-    public GapShuffler(Collection<T> items, LaserRandom random, boolean shareRNG)
+    public GapShuffler(Collection<T> items, EnhancedRandom random, boolean shareRNG)
     {
         this.random = shareRNG ? random : random.copy();
         elements = new ObjectList<>(items);
-        elements.shuffle(this.random);
+        this.random.shuffle(elements);
         index = 0;
     }
 
@@ -103,7 +107,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
      * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
-     * @param elements a Collection of T that will not be modified
+     * @param elements an array of T that will not be modified
      */
     public GapShuffler(T[] elements)
     {
@@ -115,7 +119,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
      * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
-     * @param elements a Collection of T that will not be modified
+     * @param elements an array of T that will not be modified
      */
     public GapShuffler(T[] elements, CharSequence seed)
     {
@@ -123,40 +127,41 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
-     * random parameter is copied so externally using it won't change the order this produces its values; the random field is
-     * used whenever the iterator needs to re-shuffle the internal ordering of items.
-     * @param items a Collection of T that will not be modified
-     * @param random a LaserRandom that can be pre-seeded; will be copied and not used directly
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
+     * and can then iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced
+     * so that a single element should always have a large amount of "gap" in order between one appearance and the next.
+     * It helps to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not
+     * affect how this works. The random parameter is copied so externally using it won't change the order this produces
+     * its values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
+     * @param items an array of T that will not be modified
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
      */
-    public GapShuffler(T[] items, LaserRandom random)
+    public GapShuffler(T[] items, EnhancedRandom random)
     {
         this.random = random.copy();
         elements = ObjectList.with(items);
-        elements.shuffle(this.random);
+        this.random.shuffle(elements);
         index = 0;
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have at least one "gap" element between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in items is unique, but that is not necessary and does not affect how this works. The
-     * random parameter will be copied if {@code shareRNG} is false, otherwise the reference will be shared (which could
-     * make the results of this GapShuffler depend on outside code, though it will always maintain a gap between
-     * identical elements if the elements are unique).
-     * @param items a Collection of T that will not be modified
-     * @param random a LaserRandom that can be pre-seeded; will be copied and not used directly
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have at least one "gap" element between one appearance and the next. It helps to
+     * keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect how
+     * this works. The random parameter will be copied if {@code shareRNG} is false, otherwise the reference will be
+     * shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+     * gap between identical elements if the elements are unique).
+     * @param items an array of T that will not be modified
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
      * @param shareRNG if false, {@code random} will be copied and no reference will be kept; if true, {@code random} will be shared with the outside code
      */
-    public GapShuffler(T[] items, LaserRandom random, boolean shareRNG)
+    public GapShuffler(T[] items, EnhancedRandom random, boolean shareRNG)
     {
         this.random = shareRNG ? random : random.copy();
         elements = ObjectList.with(items);
-        elements.shuffle(this.random);
+        this.random.shuffle(elements);
         index = 0;
     }
 
@@ -175,9 +180,9 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
         {
             final int n = size - 1;
             for (int i = n; i > 1; i--) {
-                Collections.swap(elements, random.nextInt(i), i - 1);
+                elements.swap(random.nextInt(i), i - 1);
             }
-            Collections.swap(elements, 1 + random.nextInt(n), n);
+            elements.swap(1 + random.nextInt(n), n);
             index = 0;
         }
         return elements.get(index++);
@@ -204,7 +209,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
 
     /**
      * Returns an <b>infinite</b> iterator over elements of type {@code T}; the returned iterator is this object.
-     * You should be prepared to break out of any for loops that use this once you've gotten enough elements!
+     * You should be prepared to break out of any loops that use this once you've gotten enough elements!
      * The remove() method is not supported by this iterator and hasNext() will always return true.
      *
      * @return an infinite Iterator over elements of type T.
@@ -214,31 +219,32 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Serializable {
         return this;
     }
 
-    public LaserRandom getRNG() {
+    public EnhancedRandom getRNG() {
         return random;
     }
 
 
     /**
-     * Sets the LaserRandom this uses to shuffle the order of elements, always copying the given LaserRandom before using it. Always
-     * reshuffles the order, which may eliminate a gap that should have been present, so treat the sequence before and
-     * after like separate GapShuffler objects.
-     * @param random a LaserRandom, which can have been seeded; always copied
+     * Sets the EnhancedRandom this uses to shuffle the order of elements, always copying the given EnhancedRandom
+     * before using it. Always reshuffles the order, which may eliminate a gap that should have been present, so treat
+     * the sequence before and after like separate GapShuffler objects.
+     * @param random an EnhancedRandom, such as a LaserRandom; always copied
      */
-    public void setRNG(LaserRandom random) {
+    public void setRNG(EnhancedRandom random) {
         setRNG(random, false);
     }
 
     /**
-     * Sets the LaserRandom this uses to shuffle the order of elements, optionally sharing a reference between outside code and
-     * the internal LaserRandom (when {@code shareRNG} is true). Always reshuffles the order, which may eliminate a gap that
-     * should have been present, so treat the sequence before and after like separate GapShuffler objects.
-     * @param random a LaserRandom, which can have been seeded; optionally copied
+     * Sets the EnhancedRandom this uses to shuffle the order of elements, optionally sharing a reference between
+     * outside code and the internal EnhancedRandom (when {@code shareRNG} is true). Always reshuffles the order, which
+     * may eliminate a gap that should have been present, so treat the sequence before and after like separate
+     * GapShuffler objects.
+     * @param random an EnhancedRandom, such as a LaserRandom; optionally copied
      * @param shareRNG if false, {@code random} will be copied and no reference will be kept; if true, {@code random} will be shared with the outside code
      */
-    public void setRNG(LaserRandom random, boolean shareRNG) {
+    public void setRNG(EnhancedRandom random, boolean shareRNG) {
         this.random = shareRNG ? random : random.copy();
-        elements.shuffle(this.random);
+        this.random.shuffle(elements);
     }
 
     /**
