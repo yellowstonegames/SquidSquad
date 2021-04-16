@@ -5,6 +5,7 @@ import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.Replacer;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,17 @@ public class StringTools {
         sb.append(elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter).append(elements[i]);
+        }
+        return sb.toString();
+    }
+
+    public static String join(CharSequence delimiter, Collection<? extends CharSequence> elements) {
+        if (elements == null || elements.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder(64);
+        Iterator<? extends CharSequence> it = elements.iterator();
+        sb.append(it.next());
+        while(it.hasNext()) {
+            sb.append(delimiter).append(it.next());
         }
         return sb.toString();
     }
@@ -181,6 +193,171 @@ public class StringTools {
         }
         return sb.toString();
     }
+
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, CharSequence... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Collection<? extends CharSequence> elements) {
+        if (sb == null || elements == null || elements.isEmpty()) return sb;
+        Iterator<? extends CharSequence> it = elements.iterator();
+        sb.append(it.next());
+        while(it.hasNext()) {
+            sb.append(delimiter).append(it.next());
+        }
+        return sb;
+    }
+
+    public static StringBuilder appendJoinedArrays(StringBuilder sb, CharSequence delimiter, char[]... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, long... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, double... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, int... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, float... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, short... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, char... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, byte... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, boolean... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
+     * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
+     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
+     * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param delimiter the String or other CharSequence to separate items in elements with
+     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return sb after modifications (if elements was non-null)
+     */
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Object[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb;
+    }
+    /**
+     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
+     * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
+     * elements parameter.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param delimiter the String or other CharSequence to separate items in elements with
+     * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return sb after modifications (if elements was non-null)
+     */
+    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Iterable<?> elements) {
+        if (sb == null || elements == null) return sb;
+        Iterator<?> it = elements.iterator();
+        if(!it.hasNext()) return sb;
+        sb.append(it.next());
+        while(it.hasNext()) {
+            sb.append(delimiter).append(it.next());
+        }
+        return sb;
+    }
+
+    /**
+     * Joins the boolean array {@code elements} without delimiters into a String, using "1" for true and "0" for false.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param elements an array or vararg of booleans
+     * @return sb after modifications (if elements was non-null)
+     */
+    public static StringBuilder appendJoinedAlt(StringBuilder sb, boolean... elements) {
+        if (sb == null || elements == null) return sb;
+        if(elements.length == 0) return sb;
+        for (int i = 0; i < elements.length; i++) {
+            sb.append(elements[i] ? '1' : '0');
+        }
+        return sb;
+    }
+
+    /**
+     * Like {@link #appendJoined(StringBuilder, CharSequence, long...)}, but this appends an 'L' to each number so they can be read in by Java.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param delimiter CharSequence that goes between elements
+     * @param elements the array or varargs of long items to append
+     * @return sb, after modifications
+     */
+    public static StringBuilder appendJoinedAlt(StringBuilder sb, CharSequence delimiter, long... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]).append('L');
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]).append('L');
+        }
+        return sb;
+    }
+
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search
