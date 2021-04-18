@@ -3,6 +3,7 @@ package com.github.yellowstonegames.old.v300;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 public final class SilkRNG implements LegacyRandom {
@@ -175,6 +176,7 @@ public final class SilkRNG implements LegacyRandom {
      *
      * @return a copy of this SilkRNG
      */
+    @Nonnull
     @Override
     public SilkRNG copy() {
         return new SilkRNG(stateA, stateB);

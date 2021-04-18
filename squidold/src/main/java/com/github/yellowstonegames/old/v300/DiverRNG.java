@@ -3,6 +3,8 @@ package com.github.yellowstonegames.old.v300;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
+import javax.annotation.Nonnull;
+
 public final class DiverRNG implements LegacyRandom {
 
     private long state; /* The state can be seeded with any value. */
@@ -50,6 +52,7 @@ public final class DiverRNG implements LegacyRandom {
      *
      * @return a copy of this RandomnessSource
      */
+    @Nonnull
     @Override
     public DiverRNG copy() {
         return new DiverRNG(state);

@@ -4,6 +4,7 @@ package com.github.yellowstonegames.old.v300;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 public final class GWTRNG implements LegacyRandom {
@@ -181,6 +182,7 @@ public final class GWTRNG implements LegacyRandom {
      * 
      * @return a copy of this GWTRNG
      */
+    @Nonnull
     @Override
     public GWTRNG copy() {
         return new GWTRNG(stateA, stateB);

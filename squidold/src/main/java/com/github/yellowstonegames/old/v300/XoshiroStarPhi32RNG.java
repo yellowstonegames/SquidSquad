@@ -2,6 +2,8 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
+import javax.annotation.Nonnull;
+
 public final class XoshiroStarPhi32RNG implements LegacyRandom {
 
     private static final long serialVersionUID = 1L;
@@ -101,6 +103,7 @@ public final class XoshiroStarPhi32RNG implements LegacyRandom {
      *
      * @return a copy of this RandomnessSource
      */
+    @Nonnull
     @Override
     public XoshiroStarPhi32RNG copy() {
         return new XoshiroStarPhi32RNG(stateA, stateB, stateC, stateD);

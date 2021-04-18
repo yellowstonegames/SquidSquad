@@ -10,6 +10,8 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
+import javax.annotation.Nonnull;
+
 /**
  * This is a SplittableRandom-style generator, meant to have a tiny state
  * that permits storing many different generators with low overhead.
@@ -27,8 +29,7 @@ import com.github.yellowstonegames.core.DigitTools;
  * @author Sebastiano Vigna
  * @author Tommy Ettinger
  */
-public final class LightRNG implements LegacyRandom
-{
+public final class LightRNG implements LegacyRandom {
     public long state; /* The state can be seeded with any value. */
 
     /** Creates a new generator seeded using Math.random. */
@@ -75,6 +76,7 @@ public final class LightRNG implements LegacyRandom
      *
      * @return a copy of this RandomnessSource
      */
+    @Nonnull
     @Override
     public LightRNG copy() {
         return new LightRNG(state);
