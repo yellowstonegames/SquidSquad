@@ -325,5 +325,58 @@ public class RNGEquivalence {
             Assert.assertEquals(rng.nextBoolean(), enh.nextBoolean());
         }
     }
+    @Test
+    public void testThrustAltRNG() {
+        ThrustAltRNG enh = new ThrustAltRNG(0L);
+        com.github.yellowstonegames.old.v300.squidmath.ThrustAltRNG old = new com.github.yellowstonegames.old.v300.squidmath.ThrustAltRNG(0L);
+        RNG rng = new RNG(old);
+        for (int i = 0; i < 20; i++) {
+            Assert.assertEquals(rng.nextLong(), enh.nextLong());
+        }
+        for (int i = 20; i < 200; i++) {
+            Assert.assertEquals(rng.nextLong(i), enh.nextLong(i));
+        }
+
+        for (int i = 0; i < 20; i++) {
+            Assert.assertEquals(rng.nextInt(), enh.nextInt());
+        }
+        for (int i = 20; i < 200; i++) {
+            Assert.assertEquals(rng.nextInt(i), enh.nextInt(i));
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextSignedLong(i), enh.nextSignedLong(i));
+            long bound = DiverRNG.randomize(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextSignedLong(bound), enh.nextSignedLong(bound));
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextSignedInt(i), enh.nextSignedInt(i));
+            int bound = (int) DiverRNG.randomize(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextSignedInt(bound), enh.nextSignedInt(bound));
+        }
+        for (int i = 0; i < 300; i++) {
+            Assert.assertEquals(rng.nextDouble(), enh.nextDouble(), Double.MIN_VALUE);
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextDouble(i), enh.nextDouble(i), Double.MIN_VALUE);
+            double bound = DiverRNG.randomizeDouble(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextDouble(bound), enh.nextDouble(bound), Double.MIN_VALUE);
+        }
+        for (int i = 0; i < 300; i++) {
+            Assert.assertEquals(rng.nextFloat(), enh.nextFloat(), Float.MIN_VALUE);
+        }
+        for (int i = -300; i < 300; i++) {
+            Assert.assertEquals("Failed with bound " + i, rng.nextFloat(i), enh.nextFloat(i), Float.MIN_VALUE);
+            float bound = DiverRNG.randomizeFloat(i);
+            Assert.assertEquals("Failed with bound " + bound, rng.nextFloat(bound), enh.nextFloat(bound), Float.MIN_VALUE);
+        }
+        for (int bits = 1; bits <= 32; bits++) {
+            for (int i = 0; i < 300; i++) {
+                Assert.assertEquals("Failed with bits " + bits, rng.next(bits), enh.next(bits));
+            }
+        }
+        for (int i = 0; i < 300; i++) {
+            Assert.assertEquals(rng.nextBoolean(), enh.nextBoolean());
+        }
+    }
 
 }
