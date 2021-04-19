@@ -22,7 +22,7 @@ public final class DiverRNG implements LegacyRandom {
     }
 
     public DiverRNG(final String seed) {
-        state = Hasher.andras.hash64(seed);
+        state = CrossHash.hash64(seed);
     }
 
     @Override

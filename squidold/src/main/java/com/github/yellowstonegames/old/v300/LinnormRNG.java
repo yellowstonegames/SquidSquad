@@ -29,7 +29,7 @@ public final class LinnormRNG implements LegacyRandom {
      * @param seed any CharSequence, such as a String or StringBuilder; should probably not be null (it might work?)
      */
     public LinnormRNG(final CharSequence seed) {
-        state = Hasher.andras.hash64(seed);
+        state = CrossHash.hash64(seed);
     }
 
     @Override

@@ -49,7 +49,7 @@ public final class SilkRNG implements LegacyRandom {
     }
 
     public SilkRNG(final String seed) {
-        setState(Hasher.andras.hash(seed), seed == null ? 0 : seed.hashCode());
+        setState(CrossHash.hash(seed), seed == null ? 0 : seed.hashCode());
     }
 
     /**

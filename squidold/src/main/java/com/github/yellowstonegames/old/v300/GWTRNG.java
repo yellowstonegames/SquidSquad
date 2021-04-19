@@ -50,7 +50,7 @@ public final class GWTRNG implements LegacyRandom {
      * @param seed any String; may be null
      */
     public GWTRNG(final String seed) {
-        setState(Hasher.andras.hash(seed), seed == null ? 1 : seed.hashCode());
+        setState(CrossHash.hash(seed), seed == null ? 1 : seed.hashCode());
     }
 
     /**
