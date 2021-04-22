@@ -239,6 +239,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         float mix;
         int[][] heightCodeData = world.heightCodeData;
         for (int y = 0; y < bigHeight; y++) {
+            PER_CELL:
             for (int x = 0; x < bigWidth; x++) {
                 hc = heightCodeData[x][y];
                 if (hc == 1000)
@@ -250,34 +251,34 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         case 1:
                         case 2:
                             display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], oklab[x][y])));
-                            break;
+                            continue PER_CELL;
                         case 3:
                             display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
-                            break;
+                            continue PER_CELL;
                         case 4:
                             display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
-                            break;
+                            continue PER_CELL;
                     }
-                } else {
-                    switch (hc) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
-                            break;
-                        case 3:
-                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
-                            break;
-                        default:
-                            int bc = dbm.biomeCodeData[x][y];
-                            codeB = dbm.extractPartB(bc);
-                            codeA = dbm.extractPartA(bc);
-                            mix = dbm.extractMixAmount(bc);
-                            if (mix <= 0.5)
-                                display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
-                            else
-                                display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
-                    }
+                }
+                switch (hc) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
+                        break;
+                    case 3:
+                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
+                        break;
+                    default:
+                        int bc = dbm.biomeCodeData[x][y];
+                        codeB = dbm.extractPartB(bc);
+                        codeA = dbm.extractPartA(bc);
+                        mix = dbm.extractMixAmount(bc);
+                        if (mix <= 0.5) {
+                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
+                        } else {
+                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
+                        }
                 }
             }
         }
