@@ -52,13 +52,15 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         writer.setCompression(6);
         rng = new LaserRandom(Hasher.hash64(1L, date));
 
-        final int hs = size >>> 1, end = size - 1;
-        for (int i = 1; i <= hs; i++) {
-            lut[end][size - i] = lut[end][i] = (float) Math.exp(-0.5 * i * i / sigma2);
+        final int hs = size >>> 1;
+        float[] column = new float[size];
+        for (int i = 1; i < hs; i++) {
+            column[size - i] = column[i] = (float) Math.exp(-0.5 * i * i / sigma2);
         }
-        for (int x = 1; x < end; x++) {
-            for (int y = 1; y < size; y++) {
-                lut[x][y] = lut[end][x] * lut[end][y];
+        column[0] = 1f;
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                lut[x][y] = column[x] * column[y];
             }
         }
         lut[0][0] = Float.POSITIVE_INFINITY;
