@@ -12,12 +12,14 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -29,6 +31,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
     private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size);
     private final float[][] lut = new float[size][size];
+    private final int[][] done = new int[size][size];
     private Pixmap pm;
     private LaserRandom rng;
     private PixmapIO.PNG writer;
@@ -68,7 +71,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     private void energize(Coord point) {
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                energy.getAndIncrement(Coord.get(x, y), 0f, lut[x + point.x & mask][y + point.y & mask]);
+                energy.getAndIncrement(Coord.get(x, y), 0f, lut[x - point.x & mask][y - point.y & mask]);
             }
         }
     }
@@ -84,15 +87,33 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         }
         rng.shuffle(initial);
         energy.clear();
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                energy.put(Coord.get(x, y), 0f);
+            }
+        }
+        ArrayTools.fill(done, 0);
+        int ctr = 0;
         for(Coord c : initial) {
             energize(c);
+            done[c.x][c.y] = ctr++;
         }
+
+        for (int n = size * size; ctr < n; ctr++) {
+            Coord low = energy.selectRanked(
+                    (o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)),
+                    1);
+            energize(low);
+            done[low.x][low.y] = ctr;
+        }
+        final int toByteShift = Math.max(0, shift + shift - 8);
 
         pm.setColor(Color.BLACK);
         pm.fill();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                pm.drawPixel(x, y, 0xFF);
+//                pm.drawPixel(x, y, done[x][y] << 8 | 0xFF);
+                pm.drawPixel(x, y, (done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
             }
         }
 

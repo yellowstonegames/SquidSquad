@@ -78,3 +78,6 @@ $RECYCLE.BIN/
 ## Mac junk
 .DS_Store
 *.symbolMap
+
+## output folders
+/out/
