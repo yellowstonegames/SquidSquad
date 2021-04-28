@@ -11,7 +11,9 @@ import java.util.Random;
  * problems for initialization. These states, a, b, and c, are passed around so b and c affect the next result for a,
  * but the previous value of a will only affect the next results for b and c, not a itself. The next values for b and c
  * involve a rotation with {@link Long#rotateLeft(long, int)} for one state, and an extra operation using another state
- * (b uses XOR, c uses add). The next value for a just adds {@code b + ~c}, which is equivalent to {@code b - 1 - c}.
+ * (b uses add, c uses subtract). The next value for a is {@code (c + 0xC6BC279692B5C323L) ^ b}, where the long constant
+ * is a probable prime with an equal number of 1 and 0 bits, but is otherwise arbitrary.
+ * <br>
  * This complicated transfer of states happens to be optimized very nicely by recent JVM versions (mostly for HotSpot,
  * but OpenJ9 also does well), since a, b, and c can all be updated in parallel instructions. It passes 64TB of
  * PractRand testing with no anomalies and also passes Dieharder.
@@ -24,15 +26,17 @@ import java.util.Random;
  * <br>
  * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
  * RomuTrio, but this avoids multiplication. TricycleRandom is usually about as fast as RomuTrio or a little faster.
- * I have also called this generator HarpoRandom, and it's related to GrouchoRandom, both ARX generators (using only
- * add, rotate, and XOR operations or their equivalents).
+ * Unlike RomuTrio, there isn't a clear problematic state with a period of 1 (which happens when all of its states are
+ * 0). I have also called this generator ChicoRandom, and it's related to GrouchoRandom, both ARX generators (using only
+ * add, rotate, and XOR operations or their equivalents). Keeping with the Marx brother theme, there was also a
+ * HarpoRandom, which was very similar to this but not quite as fast.
  */
 public class TricycleRandom extends Random implements EnhancedRandom {
 
     private long stateA, stateB, stateC;
 
     /**
-     * Creates a new DistinctRandom with a random state.
+     * Creates a new TricycleRandom with a random state.
      */
     public TricycleRandom() {
         super();
@@ -42,7 +46,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
     }
 
     /**
-     * Creates a new DistinctRandom with the given seed; all {@code long} values are permitted.
+     * Creates a new TricycleRandom with the given seed; all {@code long} values are permitted.
      * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
      * @param seed any {@code long} value
      */
@@ -52,7 +56,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
     }
 
     /**
-     * Creates a new DistinctRandom with the given three states; all {@code long} values are permitted.
+     * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted.
      * These states will be used verbatim.
      * @param stateA any {@code long} value
      * @param stateB any {@code long} value
@@ -145,10 +149,10 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         final long a0 = stateA;
         final long b0 = stateB;
         final long c0 = stateC;
-        stateA = b0 + ~c0;
-        stateB = Long.rotateLeft(a0, 46) ^ c0;
+        stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
+        stateB = Long.rotateLeft(a0, 46) + c0;
         stateC = Long.rotateLeft(b0, 23) - a0;
-        return a0 + b0;
+        return a0;
     }
 
     @Override
@@ -156,10 +160,10 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         final long a0 = stateA;
         final long b0 = stateB;
         final long c0 = stateC;
-        stateA = b0 + ~c0;
-        stateB = Long.rotateLeft(a0, 46) ^ c0;
+        stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
+        stateB = Long.rotateLeft(a0, 46) + c0;
         stateC = Long.rotateLeft(b0, 23) - a0;
-        return (int) (a0 + b0) >>> (32 - bits);
+        return (int)a0 >>> (32 - bits);
     }
 
     @Nonnull
@@ -171,6 +175,36 @@ public class TricycleRandom extends Random implements EnhancedRandom {
     @Override
     public void nextBytes(@Nonnull byte[] bytes) {
         EnhancedRandom.super.nextBytes(bytes);
+    }
+
+    @Override
+    public int nextInt() {
+        return EnhancedRandom.super.nextInt();
+    }
+
+    @Override
+    public int nextInt(int bound) {
+        return EnhancedRandom.super.nextInt(bound);
+    }
+
+    @Override
+    public boolean nextBoolean() {
+        return EnhancedRandom.super.nextBoolean();
+    }
+
+    @Override
+    public float nextFloat() {
+        return EnhancedRandom.super.nextFloat();
+    }
+
+    @Override
+    public double nextDouble() {
+        return EnhancedRandom.super.nextDouble();
+    }
+
+    @Override
+    public double nextGaussian() {
+        return EnhancedRandom.super.nextGaussian();
     }
 
     @Override

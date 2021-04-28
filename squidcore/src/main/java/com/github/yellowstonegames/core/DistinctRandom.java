@@ -115,8 +115,39 @@ public class DistinctRandom extends Random implements EnhancedRandom {
         return new DistinctRandom(state);
     }
 
+
     @Override
     public void nextBytes(@Nonnull byte[] bytes) {
         EnhancedRandom.super.nextBytes(bytes);
+    }
+
+    @Override
+    public int nextInt() {
+        return EnhancedRandom.super.nextInt();
+    }
+
+    @Override
+    public int nextInt(int bound) {
+        return EnhancedRandom.super.nextInt(bound);
+    }
+
+    @Override
+    public boolean nextBoolean() {
+        return EnhancedRandom.super.nextBoolean();
+    }
+
+    @Override
+    public float nextFloat() {
+        return EnhancedRandom.super.nextFloat();
+    }
+
+    @Override
+    public double nextDouble() {
+        return EnhancedRandom.super.nextDouble();
+    }
+
+    @Override
+    public double nextGaussian() {
+        return EnhancedRandom.super.nextGaussian();
     }
 }
