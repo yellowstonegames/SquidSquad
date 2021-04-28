@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 
@@ -9,7 +10,7 @@ import java.util.Random;
  * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.
  */
 public class PacMazeGenerator implements PlaceGenerator {
-    public Random rng;
+    public EnhancedRandom rng;
     public int width, height;
     private boolean[][] map;
     private int[][] env;
@@ -25,7 +26,7 @@ public class PacMazeGenerator implements PlaceGenerator {
         rng = new LaserRandom();
     }
 
-    public PacMazeGenerator(int width, int height, Random rng) {
+    public PacMazeGenerator(int width, int height, EnhancedRandom rng) {
         this.height = height;
         this.width = width;
         this.rng = rng;

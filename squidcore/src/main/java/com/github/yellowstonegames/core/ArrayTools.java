@@ -782,7 +782,7 @@ public class ArrayTools {
      * @param items an int array; must be non-null
      * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
      */
-    public static void shuffle(int[] items, Random random) {
+    public static void shuffle(int[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
             int ii = random.nextInt(i + 1);
             int temp = items[i];
@@ -796,7 +796,7 @@ public class ArrayTools {
      * @param items a long array; must be non-null
      * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
      */
-    public static void shuffle(long[] items, Random random) {
+    public static void shuffle(long[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
             int ii = random.nextInt(i + 1);
             long temp = items[i];
@@ -810,7 +810,7 @@ public class ArrayTools {
      * @param items a char array; must be non-null
      * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
      */
-    public static void shuffle(char[] items, Random random) {
+    public static void shuffle(char[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
             int ii = random.nextInt(i + 1);
             char temp = items[i];
@@ -824,7 +824,7 @@ public class ArrayTools {
      * @param items a float array; must be non-null
      * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
      */
-    public static void shuffle(float[] items, Random random) {
+    public static void shuffle(float[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
             int ii = random.nextInt(i + 1);
             float temp = items[i];
@@ -838,7 +838,7 @@ public class ArrayTools {
      * @param items an array of some reference type; must be non-null but may contain null items
      * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
      */
-    public static <T> void shuffle(T[] items, Random random) {
+    public static <T> void shuffle(T[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
             int ii = random.nextInt(i + 1);
             T temp = items[i];

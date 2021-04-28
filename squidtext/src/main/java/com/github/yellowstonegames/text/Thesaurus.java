@@ -2,10 +2,12 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.StringTools;
+import com.github.yellowstonegames.core.TricycleRandom;
 import regexodus.*;
 
 import java.io.Serializable;
@@ -29,7 +31,7 @@ public class Thesaurus implements Serializable{
             similarFinder = Pattern.compile(".*?\\b(\\w\\w\\w\\w).*?{\\@1}.*$", "ui");
     public CaseInsensitiveOrderedMap<GapShuffler<String>> mappings;
     public ObjectList<Language.Alteration> alterations = new ObjectList<>(4);
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     protected GapShuffler<String> plantTermShuffler, fruitTermShuffler, nutTermShuffler, flowerTermShuffler,
             potionTermShuffler, vegetableTermShuffler;
     public Language defaultLanguage = Language.SIMPLISH;
@@ -50,7 +52,7 @@ public class Thesaurus implements Serializable{
      * the given Random.
      * @param rng a Random that will only be used to get one long (for seeding this class' internal LaserRandom)
      */
-    public Thesaurus(Random rng)
+    public Thesaurus(EnhancedRandom rng)
     {
         this(rng.nextLong());
     }
@@ -92,23 +94,51 @@ public class Thesaurus implements Serializable{
     /**
      * Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
      * different version that knows all the same synonyms and categories but will produce different results.
-     * @param state any long; will be given split into upper and lower halves and passed to {@link #refresh(long, long)}
+     * This version of refresh() is meant for cases where you either only have one long of seed, or you know the
+     * generator this uses has one state.
+     * @param state any long; will be used with {@link EnhancedRandom#setSeed(long)} on the generator shared by this and its mappings
      */
     public void refresh(long state)
     {
-        refresh((state & 0xFFFFFFFFL), (state & 0xFFFFFFFF00000000L));
+        this.rng.setSeed(state);
+        final int sz = mappings.size();
+        for (int i = 0; i < sz; i++) {
+            mappings.getAt(i).setRNG(rng, true);
+        }
     }
 
     /**
      * Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
      * different version that knows all the same synonyms and categories but will produce different results.
-     * @param stateA any long; the first part of the state of a {@link LaserRandom}
-     * @param stateB any long; the second part of the state of a {@link LaserRandom}
+     * This version of refresh() is meant for cases where you know the generator this uses has two states, 128 bits.
+     * @param stateA any long; the first part of a two-state EnhancedRandom like a {@link LaserRandom}
+     * @param stateB any long; the second part of a two-state EnhancedRandom like a {@link LaserRandom}
      */
     public void refresh(long stateA, long stateB)
     {
-        this.rng.setStateA(stateA);
-        this.rng.setStateB(stateB);
+        this.rng.setSeed(stateA);
+        this.rng.setSelectedState(0, stateA);
+        this.rng.setSelectedState(1, stateB);
+        final int sz = mappings.size();
+        for (int i = 0; i < sz; i++) {
+            mappings.getAt(i).setRNG(rng, true);
+        }
+    }
+
+    /**
+     * Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
+     * different version that knows all the same synonyms and categories but will produce different results.
+     * This version of refresh() is meant for cases where you know the generator this uses has three states, 192 bits.
+     * @param stateA any long; the first part of a three-state EnhancedRandom like a {@link TricycleRandom}
+     * @param stateB any long; the second part of a three-state EnhancedRandom like a {@link TricycleRandom}
+     * @param stateC any long; the third part of a three-state EnhancedRandom like a {@link TricycleRandom}
+     */
+    public void refresh(long stateA, long stateB, long stateC)
+    {
+        this.rng.setSeed(stateA);
+        this.rng.setSelectedState(0, stateA);
+        this.rng.setSelectedState(1, stateB);
+        this.rng.setSelectedState(2, stateC);
         final int sz = mappings.size();
         for (int i = 0; i < sz; i++) {
             mappings.getAt(i).setRNG(rng, true);
@@ -764,10 +794,10 @@ public class Thesaurus implements Serializable{
         {
             addKnownCategories();
         }
-        String working = process(nationTerms.random(rng));
+        String working = process(rng.randomElement(nationTerms));
         int frustration = 0;
         while (frustration++ < 8 && similarFinder.matches(working))
-            working = process(nationTerms.random(rng));
+            working = process(rng.randomElement(nationTerms));
         randomLanguages.clear();
         RandomLanguageSubstitution sub = new RandomLanguageSubstitution();
         Replacer replacer = Pattern.compile("@(-@)?").replacer(sub);
@@ -799,10 +829,10 @@ public class Thesaurus implements Serializable{
         {
             addKnownCategories();
         }
-        String working = process(nationTerms.random(rng));
+        String working = process(rng.randomElement(nationTerms));
         int frustration = 0;
         while (frustration++ < 8 && similarFinder.matches(working))
-            working = process(nationTerms.random(rng));
+            working = process(rng.randomElement(nationTerms));
         randomLanguages.clear();
         KnownLanguageSubstitution sub = new KnownLanguageSubstitution(language);
         Replacer replacer = Pattern.compile("@(-@)?").replacer(sub);
