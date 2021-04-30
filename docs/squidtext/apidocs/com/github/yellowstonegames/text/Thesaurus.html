@@ -165,7 +165,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#randomLanguages">randomLanguages</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected static regexodus.Pattern</code></div>
@@ -206,15 +206,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-last even-row-color">
 <div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String)">Thesaurus</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shuffleSeed)</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)">Thesaurus</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with two different hashes of
- shuffleSeed (produced by <code>Hasher.sallos</code> and <code>Hasher.sallos_</code>).</div>
-</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Random)">Thesaurus</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rng)</code></div>
-<div class="col-last even-row-color">
 <div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
  the given Random.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String)">Thesaurus</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shuffleSeed)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with two different hashes of
+ shuffleSeed (produced by <code>Hasher.sallos</code> and <code>Hasher.sallos_</code>).</div>
 </div>
 </div>
 </section>
@@ -386,6 +386,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
  different version that knows all the same synonyms and categories but will produce different results.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long,long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
+ long&nbsp;stateB,
+ long&nbsp;stateC)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
+ different version that knows all the same synonyms and categories but will produce different results.</div>
+</div>
 </div>
 </div>
 </div>
@@ -430,7 +438,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -562,9 +570,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.Random)">
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>Thesaurus</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
  the given Random.</div>
 <dl class="notes">
@@ -622,10 +630,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3>refresh</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refresh</span>&#8203;<span class="parameters">(long&nbsp;state)</span></div>
 <div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
- different version that knows all the same synonyms and categories but will produce different results.</div>
+ different version that knows all the same synonyms and categories but will produce different results.
+ This version of refresh() is meant for cases where you either only have one long of seed, or you know the
+ generator this uses has one state.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>state</code> - any long; will be given split into upper and lower halves and passed to <a href="#refresh(long,long)"><code>refresh(long, long)</code></a></dd>
+<dd><code>state</code> - any long; will be used with <code>EnhancedRandom.setSeed(long)</code> on the generator shared by this and its mappings</dd>
 </dl>
 </section>
 </li>
@@ -635,11 +645,29 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refresh</span>&#8203;<span class="parameters">(long&nbsp;stateA,
  long&nbsp;stateB)</span></div>
 <div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
- different version that knows all the same synonyms and categories but will produce different results.</div>
+ different version that knows all the same synonyms and categories but will produce different results.
+ This version of refresh() is meant for cases where you know the generator this uses has two states, 128 bits.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>stateA</code> - any long; the first part of the state of a <code>LaserRandom</code></dd>
-<dd><code>stateB</code> - any long; the second part of the state of a <code>LaserRandom</code></dd>
+<dd><code>stateA</code> - any long; the first part of a two-state EnhancedRandom like a <code>LaserRandom</code></dd>
+<dd><code>stateB</code> - any long; the second part of a two-state EnhancedRandom like a <code>LaserRandom</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="refresh(long,long,long)">
+<h3>refresh</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refresh</span>&#8203;<span class="parameters">(long&nbsp;stateA,
+ long&nbsp;stateB,
+ long&nbsp;stateC)</span></div>
+<div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
+ different version that knows all the same synonyms and categories but will produce different results.
+ This version of refresh() is meant for cases where you know the generator this uses has three states, 192 bits.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>stateA</code> - any long; the first part of a three-state EnhancedRandom like a <code>TricycleRandom</code></dd>
+<dd><code>stateB</code> - any long; the second part of a three-state EnhancedRandom like a <code>TricycleRandom</code></dd>
+<dd><code>stateC</code> - any long; the third part of a three-state EnhancedRandom like a <code>TricycleRandom</code></dd>
 </dl>
 </section>
 </li>
