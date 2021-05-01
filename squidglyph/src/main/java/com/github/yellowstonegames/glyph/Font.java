@@ -129,7 +129,7 @@ public class Font {
             if(e.value == null) continue;
             mapping.put(e.key, new GlyphRegion(e.value));
         }
-        mapping.defaultValue = mapping.getOrDefault(' ', mapping.get(0));
+        mapping.defaultValue = new GlyphRegion(toCopy.mapping.defaultValue);
         if(toCopy.shader != null)
             shader = new ShaderProgram(toCopy.shader.getVertexShaderSource(),
                     toCopy.shader.getFragmentShaderSource());

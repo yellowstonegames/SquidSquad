@@ -14,10 +14,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.CharArray;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.IntIntMap;
-import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.Pools;
+import com.github.tommyettinger.ds.IntIntMap;
+import com.github.tommyettinger.ds.IntObjectMap;
 import regexodus.Category;
 
 import java.util.Arrays;
@@ -119,8 +119,7 @@ public class Font implements Disposable {
 
     //// members section
 
-    public IntMap<GlyphRegion> mapping;
-    public GlyphRegion defaultValue;
+    public IntObjectMap<GlyphRegion> mapping;
     public Array<TextureRegion> parents;
     public DistanceFieldType distanceField = DistanceFieldType.STANDARD;
     public boolean isMono;
@@ -453,13 +452,13 @@ public class Font implements Disposable {
         scaleY = toCopy.scaleY;
         originalCellWidth = toCopy.originalCellWidth;
         originalCellHeight = toCopy.originalCellHeight;
-        mapping = new IntMap<>(toCopy.mapping.size);
-        for(IntMap.Entry<GlyphRegion> e : toCopy.mapping){
+        mapping = new IntObjectMap<>(toCopy.mapping.size());
+        for(IntObjectMap.Entry<GlyphRegion> e : toCopy.mapping){
             if(e.value == null) continue;
             mapping.put(e.key, new GlyphRegion(e.value));
         }
-        defaultValue = mapping.get(' ', mapping.get(0));
-
+        mapping.defaultValue = new GlyphRegion(toCopy.mapping.defaultValue);
+        kerning = new IntIntMap(toCopy.kerning);
         // the shader is not copied, because there isn't much point in having different copies of a ShaderProgram.
         if(toCopy.shader != null)
             shader = toCopy.shader;
@@ -692,7 +691,7 @@ public class Font implements Disposable {
                 parent.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         }
         BitmapFont.BitmapFontData data = bmFont.getData();
-        mapping = new IntMap<>(128);
+        mapping = new IntObjectMap<>(128);
         int minWidth = Integer.MAX_VALUE;
         for (BitmapFont.Glyph[] page : data.glyphs) {
             if (page == null) continue;
@@ -736,7 +735,11 @@ public class Font implements Disposable {
                 }
             }
         }
-        defaultValue =  mapping.get(data.missingGlyph == null ? ' ' : data.missingGlyph.id, mapping.get(' ', mapping.values().next()));
+        if(mapping.notEmpty()) {
+            mapping.defaultValue = mapping.getOrDefault(data.missingGlyph == null
+                    ? ' '
+                    : data.missingGlyph.id, mapping.getOrDefault(' ', mapping.values().iterator().next()));
+        }
         originalCellWidth = cellWidth;
         originalCellHeight = cellHeight;
         isMono = minWidth == cellWidth && kerning == null;
@@ -780,7 +783,7 @@ public class Font implements Disposable {
             }
         }
         int size = intFromDec(fnt, idx = indexAfter(fnt, "\nchars count=", idx), idx = indexAfter(fnt, "\nchar id=", idx));
-        mapping = new IntMap<>(size);
+        mapping = new IntObjectMap<>(size);
         int minWidth = Integer.MAX_VALUE;
         for (int i = 0; i < size; i++) {
             int c = intFromDec(fnt, idx, idx = indexAfter(fnt, " x=", idx));
@@ -793,7 +796,6 @@ public class Font implements Disposable {
             int a = intFromDec(fnt, idx, idx = indexAfter(fnt, " page=", idx));
             int p = intFromDec(fnt, idx, idx = indexAfter(fnt, "\nchar id=", idx));
 
-//            System.out.printf("'%s' (%5d): width=%d height=%d xoffset=%d yoffset=%d xadvance=%d\n", (char)c, c, w, h, xo, yo, a);
             x += xAdjust;
             y += yAdjust;
             a += widthAdjust;
@@ -824,7 +826,10 @@ public class Font implements Disposable {
                 kerning.put(first << 16 | second, amount);
             }
         }
-        defaultValue = mapping.get(' ', mapping.get(0));
+        if(mapping.notEmpty())
+        {
+            mapping.defaultValue = mapping.getOrDefault(' ', mapping.values().iterator().next());
+        }
         originalCellWidth = cellWidth;
         originalCellHeight = cellHeight;
         isMono = minWidth == cellWidth && kerning == null;
@@ -1004,7 +1009,7 @@ public class Font implements Disposable {
                 long glyph;
                 for (int i = 0; i < n; i++) {
                     kern = kern << 16 | (int) ((glyph = line.glyphs.get(i)) & 0xFFFF);
-                    amt = kerning.get(kern, 0);
+                    amt = kerning.getOrDefault(kern, 0);
                     x += drawGlyph(batch, glyph, x + amt, y) + amt;
                 }
             } else {
@@ -1087,7 +1092,7 @@ public class Font implements Disposable {
             long glyph;
             for (int i = 0, n = glyphs.glyphs.size; i < n; i++, drawn++) {
                 kern = kern << 16 | (int) ((glyph = glyphs.glyphs.get(i)) & 0xFFFF);
-                amt = kerning.get(kern, 0) * scaleX;
+                amt = kerning.getOrDefault(kern, 0) * scaleX;
                 x += drawGlyph(batch, glyph, x + amt, y) + amt;
             }
         }
@@ -1435,7 +1440,7 @@ public class Font implements Disposable {
                         w = (appendTo.peekLine().width += xAdvance(current | '['));
                     } else {
                         kern = kern << 16 | '[';
-                        w = (appendTo.peekLine().width += xAdvance(current | '[') + kerning.get(kern, 0) * scaleX);
+                        w = (appendTo.peekLine().width += xAdvance(current | '[') + kerning.getOrDefault(kern, 0) * scaleX);
                     }
                     appendTo.add(current | '[');
                     if(targetWidth > 0 && w > targetWidth) {
@@ -1471,9 +1476,9 @@ public class Font implements Disposable {
                                             k2 = k2 << 16 | (char) curr;
                                             k2e = k2e << 16 | (char) currE;
                                             float adv = xAdvance(curr);
-                                            change += adv + kerning.get(k2, 0) * scaleX;
+                                            change += adv + kerning.getOrDefault(k2, 0) * scaleX;
                                             if (--leading < 0 && (e < appendTo.ellipsis.length())) {
-                                                changeNext += xAdvance(currE) + kerning.get(k2e, 0) * scaleX;
+                                                changeNext += xAdvance(currE) + kerning.getOrDefault(k2e, 0) * scaleX;
 //                                                appendTo.add(currE);
                                             }
                                         }
@@ -1512,10 +1517,10 @@ public class Font implements Disposable {
                                             curr = earlier.glyphs.get(k);
                                             k2 = k2 << 16 | (char) curr;
                                             float adv = xAdvance(curr);
-                                            change += adv + kerning.get(k2, 0) * scaleX;
+                                            change += adv + kerning.getOrDefault(k2, 0) * scaleX;
                                             if (--leading < 0) {
                                                 k3 = k3 << 16 | (char) curr;
-                                                changeNext += adv + kerning.get(k3, 0) * scaleX;
+                                                changeNext += adv + kerning.getOrDefault(k3, 0) * scaleX;
                                                 appendTo.add(curr);
                                             }
                                         }
@@ -1549,7 +1554,7 @@ public class Font implements Disposable {
                     w = (appendTo.peekLine().width += xAdvance(current | ch));
                 } else {
                     kern = kern << 16 | (int) ((current | ch) & 0xFFFF);
-                    w = (appendTo.peekLine().width += xAdvance(current | ch) + kerning.get(kern, 0) * scaleX);
+                    w = (appendTo.peekLine().width += xAdvance(current | ch) + kerning.getOrDefault(kern, 0) * scaleX);
                 }
                 appendTo.add(current | ch);
                 if((targetWidth > 0 && w > targetWidth) || appendTo.atLimit) {
@@ -1587,11 +1592,11 @@ public class Font implements Disposable {
                                         curr = earlier.glyphs.get(k);
                                         k2 = k2 << 16 | (char) curr;
                                         float adv = xAdvance(curr);
-                                        change += adv + kerning.get(k2, 0) * scaleX;
+                                        change += adv + kerning.getOrDefault(k2, 0) * scaleX;
                                         if ((e < appendTo.ellipsis.length())) {
                                             currE = baseColor | appendTo.ellipsis.charAt(e);
                                             k2e = k2e << 16 | (char) currE;
-                                            changeNext += xAdvance(currE) + kerning.get(k2e, 0) * scaleX;
+                                            changeNext += xAdvance(currE) + kerning.getOrDefault(k2e, 0) * scaleX;
 //                                                appendTo.add(currE);
                                         }
                                     }
@@ -1639,10 +1644,10 @@ public class Font implements Disposable {
                                         curr = earlier.glyphs.get(k);
                                         k2 = k2 << 16 | (char) curr;
                                         float adv = xAdvance(curr);
-                                        change += adv + kerning.get(k2, 0) * scaleX;
+                                        change += adv + kerning.getOrDefault(k2, 0) * scaleX;
                                         if (--leading < 0) {
                                             k3 = k3 << 16 | (char) curr;
-                                            changeNext += adv + kerning.get(k3, 0) * scaleX;
+                                            changeNext += adv + kerning.getOrDefault(k3, 0) * scaleX;
                                             appendTo.add(curr);
                                         }
                                     }
