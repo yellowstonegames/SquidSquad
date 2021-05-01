@@ -14,13 +14,17 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.CharArray;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.Pools;
 import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DigitTools;
 import regexodus.Category;
 
 import java.util.Arrays;
+
+import static com.github.yellowstonegames.core.DigitTools.intFromDec;
 
 public class Font implements Disposable {
 
@@ -261,118 +265,7 @@ public class Font implements Disposable {
      */
     public ShaderProgram shader = null;
 
-    //// font parsing section
-
-    private static final int[] hexCodes = new int[]
-            {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,-1,-1,-1,-1,-1,-1,
-                    -1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,10,11,12,13,14,15};
-    /**
-     * Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
-     * and returns the long they represent, reading at most 16 characters (17 if there is a sign) and returning the
-     * result if valid, or 0 if nothing could be read. The leading sign can be '+' or '-' if present. This can also
-     * represent negative numbers as they are printed by such methods as String.format given a %x in the formatting
-     * string; that is, if the first char of a 16-char (or longer)
-     * CharSequence is a hex digit 8 or higher, then the whole number represents a negative number, using two's
-     * complement and so on. This means "FFFFFFFFFFFFFFFF" would return the long -1 when passed to this, though you
-     * could also simply use "-1 ". If you use both '-' at the start and have the most significant digit as 8 or higher,
-     * such as with "-FFFFFFFFFFFFFFFF", then both indicate a negative number, but the digits will be processed first
-     * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
-     * <br>
-     * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
-     * stopping the parse process early if a non-hex-digit char is read before end is reached. If the parse is stopped
-     * early, this behaves as you would expect for a number with less digits, and simply doesn't fill the larger places.
-     * @param cs a CharSequence, such as a String, containing only hex digits with an optional sign (no 0x at the start)
-     * @param start the (inclusive) first character position in cs to read
-     * @param end the (exclusive) last character position in cs to read (this stops after 16 characters if end is too large)
-     * @return the long that cs represents
-     */
-    private static long longFromHex(final CharSequence cs, final int start, int end) {
-        int len, h, lim = 16;
-        if (cs == null || start < 0 || end <= 0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if (c == '-') {
-            len = -1;
-            h = 0;
-            lim = 17;
-        } else if (c == '+') {
-            len = 1;
-            h = 0;
-            lim = 17;
-        } else if (c > 102 || (h = hexCodes[c]) < 0)
-            return 0;
-        else {
-            len = 1;
-        }
-        long data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0)
-                return data * len;
-            data <<= 4;
-            data |= h;
-        }
-        return data * len;
-    }
-
-    /**
-     * Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
-     * int they represent, reading at most 10 characters (11 if there is a sign) and returning the result if valid, or 0
-     * if nothing could be read. The leading sign can be '+' or '-' if present. This can technically be used to handle
-     * unsigned integers in decimal format, but it isn't the intended purpose. If you do use it for handling unsigned
-     * ints, 2147483647 is normally the highest positive int and -2147483648 the lowest negative one, but if you give
-     * this a number between 2147483647 and {@code 2147483647 + 2147483648}, it will interpret it as a negative number
-     * that fits in bounds using the normal rules for converting between signed and unsigned numbers.
-     * <br>
-     * Should be fairly close to the JDK's Integer.parseInt method, but this also supports CharSequence data instead of
-     * just String data, and allows specifying a start and end. This doesn't throw on invalid input, either, instead
-     * returning 0 if the first char is not a decimal digit, or stopping the parse process early if a non-decimal-digit
-     * char is read before end is reached. If the parse is stopped early, this behaves as you would expect for a number
-     * with less digits, and simply doesn't fill the larger places.
-     * @param cs a CharSequence, such as a String, containing only digits 0-9 with an optional sign
-     * @param start the (inclusive) first character position in cs to read
-     * @param end the (exclusive) last character position in cs to read (this stops after 10 or 11 characters if end is too large, depending on sign)
-     * @return the int that cs represents
-     */
-    private static int intFromDec(final CharSequence cs, final int start, int end)
-    {
-        int len, h, lim = 10;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if(c == '-')
-        {
-            len = -1;
-            lim = 11;
-            h = 0;
-        }
-        else if(c == '+')
-        {
-            len = 1;
-            lim = 11;
-            h = 0;
-        }
-        else if(c > 102 || (h = hexCodes[c]) < 0 || h > 9)
-            return 0;
-        else
-        {
-            len = 1;
-        }
-        int data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0 || h > 9)
-                return data * len;
-            data = data * 10 + h;
-        }
-        return data * len;
-    }
+    //// utilities
 
     private static int indexAfter(String text, String search, int from){
         return ((from = text.indexOf(search, from)) < 0 ? text.length() : from + search.length());
@@ -953,7 +846,7 @@ public class Font implements Disposable {
      * @param color an int color; typically this is RGBA, but custom shaders or Batches can use other kinds of color
      */
     public void drawText(Batch batch, CharSequence text, float x, float y, int color) {
-        batch.setPackedColor(NumberUtils.intToFloatColor(Integer.reverseBytes(color)));
+        batch.setPackedColor(BitConversion.reversedIntBitsToFloat(color & -2));
         GlyphRegion current;
         for (int i = 0, n = text.length(); i < n; i++) {
             batch.draw(current = mapping.get(text.charAt(i)), x + current.offsetX, y + current.offsetY, current.getRegionWidth(), current.getRegionHeight());
@@ -1139,8 +1032,7 @@ public class Font implements Disposable {
         Texture tex = tr.getTexture();
         float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
         float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
-        float color = NumberUtils.intBitsToFloat(((int)(batch.getColor().a * 127.999f) << 25)
-                | (0xFFFFFF & Integer.reverseBytes((int) (glyph >>> 32))));
+        float color = BitConversion.reversedIntBitsToFloat(((int) (glyph >>> 32) & -256) | (int)(batch.getColor().a * 255.999f));
         final float iw = 1f / tex.getWidth();
         float u, v, u2, v2;
         u = tr.getU();
@@ -1347,7 +1239,7 @@ public class Font implements Disposable {
                 capsLock = false, lowerCase = false;
         int c;
         final long COLOR_MASK = 0xFFFFFFFF00000000L;
-        long baseColor = Long.reverseBytes(NumberUtils.floatToIntColor(appendTo.getBaseColor())) & COLOR_MASK;
+        long baseColor = (long) (appendTo.getBaseColor()) << 32;
         long color = baseColor;
         long current = color;
         if(appendTo.font == null || !appendTo.font.equals(this))
@@ -1418,18 +1310,28 @@ public class Font implements Disposable {
                             break;
                         case '#':
                             if (len >= 7 && len < 9)
-                                color = longFromHex(text, i + 1, i + 7) << 40 | 0x000000FF00000000L;
+                                color = DigitTools.longFromHex(text, i + 1, i + 7) << 40 | 0x000000FF00000000L;
                             else if (len >= 9)
-                                color = longFromHex(text, i + 1, i + 9) << 32;
+                                color = DigitTools.longFromHex(text, i + 1, i + 9) << 32;
                             else
                                 color = baseColor;
                             current = (current & ~COLOR_MASK) | color;
                             break;
+                        case '|':
+                            color = (long) DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i + 1, len)) << 32;
+                            current = (current & ~COLOR_MASK) | color;
+                            break;
                         default:
-                            // attempt to look up a known Color name from Colors
-                            Color gdxColor = Colors.get(text.substring(i, i + len));
-                            if (gdxColor == null) color = baseColor;
-                            else color = (long) Color.rgba8888(gdxColor) << 32;
+                            if (c >= 'a' && c <= 'z')
+                            {
+                                color = (long) DescriptiveColor.toRGBA8888(DescriptiveColor.describeOklab(text, i, len)) << 32;
+                            }
+                            else {
+                                // attempt to look up a known Color name from Colors
+                                Color gdxColor = Colors.get(text.substring(i, i + len));
+                                if(gdxColor == null) color = baseColor;
+                                else color = (long) Color.rgba8888(gdxColor) << 32;
+                            }
                             current = (current & ~COLOR_MASK) | color;
                     }
                     i += len;

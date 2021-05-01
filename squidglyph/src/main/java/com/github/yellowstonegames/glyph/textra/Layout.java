@@ -23,7 +23,7 @@ public class Layout implements Pool.Poolable {
     protected boolean atLimit = false;
     protected String ellipsis = null;
     protected float targetWidth = 0f;
-    protected float baseColor = Color.WHITE_FLOAT_BITS;
+    protected int baseColor = -1;
 
     public Layout() {
         lines.add(Pools.obtain(Line.class));
@@ -114,24 +114,24 @@ public class Layout implements Pool.Poolable {
     }
 
     /**
-     * Gets the base color of the Layout, as the float bits of a Color. The base color is what font color
+     * Gets the base color of the Layout, as an RGBA8888 color. The base color is what font color
      * will be used immediately after resetting formatting with {@code []}, as well as the initial color
      * used by text that hasn't been formatted. You can fill a Color object with this value using
-     * {@link Color#abgr8888ToColor(Color, float)} (it modifies the Color you give it).
-     * @return the base color of the Layout, as float bits
+     * {@link Color#rgba8888ToColor(Color, int)} (it modifies the Color you give it).
+     * @return the base color of the Layout, as an RGBA8888 int
      */
-    public float getBaseColor() {
+    public int getBaseColor() {
         return baseColor;
     }
 
     /**
      * Sets the base color of the Layout; this is what font color will be used immediately after resetting
      * formatting with {@code []}, as well as the initial color used by text that hasn't been formatted.
-     * This takes the color as a primitive float, which you can get from a Color object with
-     * {@link Color#toFloatBits()}, or in some cases from existing data produced by {@link Font}.
-     * @param baseColor the float bits of a Color, as obtainable via {@link Color#toFloatBits()}
+     * This takes the color as an RGBA8888 int, which you can get from a Color object with
+     * {@link Color#rgba8888(Color)}, or in some cases from existing data produced by {@link Font}.
+     * @param baseColor an RGBA8888 int color, as obtainable via {@link Color#rgba8888(Color)}
      */
-    public void setBaseColor(float baseColor) {
+    public void setBaseColor(int baseColor) {
         this.baseColor = baseColor;
     }
 
@@ -142,7 +142,7 @@ public class Layout implements Pool.Poolable {
      * @param baseColor a Color to use for text that hasn't been formatted; if null, will be treated as white
      */
     public void setBaseColor(Color baseColor) {
-        this.baseColor = baseColor == null ? Color.WHITE_FLOAT_BITS : baseColor.toFloatBits();
+        this.baseColor = baseColor == null ? -1 : Color.rgba8888(baseColor);
     }
 
     /**
@@ -188,7 +188,7 @@ public class Layout implements Pool.Poolable {
     @Override
     public void reset() {
         targetWidth = 0f;
-        baseColor = Color.WHITE_FLOAT_BITS;
+        baseColor = -1;
         maxLines = Integer.MAX_VALUE;
         atLimit = false;
         ellipsis = null;
