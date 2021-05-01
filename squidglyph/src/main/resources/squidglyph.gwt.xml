@@ -12,4 +12,6 @@
     <inherits name="squidcore" />
     <inherits name="squidgrid" />
     <source path="com/github/yellowstonegames/glyph" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.Line" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.Layout" />
 </module>
