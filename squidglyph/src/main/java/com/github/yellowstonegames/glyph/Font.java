@@ -289,10 +289,10 @@ public class Font {
      * value {@code 0} will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
      * then nothing will be drawn there. This is usually called before other methods that draw foreground text.
      * <br>
-     * Internally, this is substantially more complex than the other drawing methods; it uses
-     * {@link Batch#draw(Texture, float[], int, int)} to draw each rectangle with minimal overhead, and this also means
-     * it is unaffected by the batch color. If you want to alter the colors using a shader, the shader will receive each
-     * color in {@code colors} as its {@code a_color} attribute, the same as if it was passed via the batch color.
+     * Internally, this uses {@link Batch#draw(Texture, float[], int, int)} to draw each rectangle with minimal
+     * overhead, and this also means it is unaffected by the batch color. If you want to alter the colors using a
+     * shader, the shader will receive each color in {@code colors} as its {@code a_color} attribute, the same as if it
+     * was passed via the batch color.
      * @param batch typically a SpriteBatch
      * @param colors a 2D rectangular array of int colors (typically RGBA)
      * @param x the x position in world space to draw the text at (lower left corner)
