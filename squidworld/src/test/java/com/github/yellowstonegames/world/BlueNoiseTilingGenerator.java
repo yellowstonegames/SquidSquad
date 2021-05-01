@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
@@ -34,21 +35,22 @@ import java.util.Date;
  * arrays and Arrays (ugh, these names...), but in jdkgdxds, it applies to all Ordered implementations. One could use
  * OrderedMap's orderedKeys in libGDX and selectRanked() with that, but there's no OrderedMap with primitive float keys.
  */
-public class BlueNoiseGenerator extends ApplicationAdapter {
-    private static final int shift = 7, size = 1 << shift, mask = size - 1;
+public class BlueNoiseTilingGenerator extends ApplicationAdapter {
+    private static final int shift = 8, size = 1 << shift, sector = size >>> 2,
+            mask = size - 1, sectorMask = sector - 1, wrapMask = sectorMask >>> 1;
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size);
-    private final float[][] lut = new float[size][size];
+    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size, 0.5f);
+    private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private LaserRandom rng;
+    private TricycleRandom rng;
     private PixmapIO.PNG writer;
     private String path;
 
     @Override
     public void create() {
         String date = DateFormat.getDateInstance().format(new Date());
-        path = "out/blueNoise/" + date + "/";
+        path = "out/blueNoise/" + date + "/tiling/";
         
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -58,16 +60,16 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new LaserRandom(Hasher.hash64(1L, date));
+        rng = new TricycleRandom(Hasher.hash64(1L, date));
 
-        final int hs = size >>> 1;
-        float[] column = new float[size];
+        final int hs = sector >>> 1;
+        float[] column = new float[sector];
         for (int i = 1; i < hs; i++) {
-            column[size - i] = column[i] = (float) Math.exp(-0.5 * i * i / sigma2);
+            column[sector - i] = column[i] = (float) Math.exp(-0.5 * i * i / sigma2);
         }
         column[0] = 1f;
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+        for (int x = 0; x < sector; x++) {
+            for (int y = 0; y < sector; y++) {
                 lut[x][y] = column[x] * column[y];
             }
         }
@@ -79,9 +81,51 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     }
 
     private void energize(Coord point) {
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                energy.getAndIncrement(Coord.get(x, y), 0f, lut[x - point.x & mask][y - point.y & mask]);
+        final int secX = point.x >>> shift - 2, secY = point.y >>> shift - 2,
+                outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
+        for (int x = 0; x < sector; x++) {
+            for (int y = 0; y < sector; y++) {
+                if((point.x & sectorMask) <= x + wrapMask && (point.x & sectorMask) + wrapMask >= x &&
+                        (point.y & sectorMask) <= y + wrapMask && (point.y & sectorMask) + wrapMask >= y)
+                {
+                    energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
+                            0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
+                    continue;
+                }
+                float adj = 0x1p-3f;// (x|y) == 0 ? 0x1p-3f - lut[sectorMask][sectorMask] * 0x1p-5f : 0x1p-3f - lut[x][y] * 0x1p-5f;
+
+                if((point.x & sectorMask) + wrapMask < x) {
+                    for (int ex = -1 + (secX & 2); ex < 1 + (secX & 2); ex++) {
+                        for (int ey = 0; ey < 4; ey++) {
+                            energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                        }
+                    }
+                }
+                else if((point.x & sectorMask) > x + wrapMask) {
+                    for (int ex = (secX & 2); ex < 2 + (secX & 2); ex++) {
+                        for (int ey = 0; ey < 4; ey++) {
+                            energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                        }
+                    }
+                }
+                else if((point.y & sectorMask) + wrapMask < y) {
+                    for (int ex = 0; ex < 4; ex++) {
+                        for (int ey = -1 + (secY & 2); ey < 1 + (secY & 2); ey++) {
+                            energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                        }
+                    }
+                }
+                else if((point.y & sectorMask) > y + wrapMask) {
+                    for (int ex = 0; ex < 4; ex++) {
+                        for (int ey = (secY & 2); ey < 2 + (secY & 2); ey++) {
+                            energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                        }
+                    }
+                }
             }
         }
     }
@@ -131,9 +175,9 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         buffer.flip();
 
         try {
-            writer.write(Gdx.files.local(path + "BlueNoise.png"), pm); // , false);
+            writer.write(Gdx.files.local(path + "BlueNoiseTiling.png"), pm); // , false);
         } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoise.png", ex);
+            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoiseTiling.png", ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
@@ -155,8 +199,8 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Tool: Blue Noise Generator");
+        config.setTitle("SquidLib Tool: Blue Noise Tiling Generator");
         config.setWindowedMode(size, size);
-        new Lwjgl3Application(new BlueNoiseGenerator(), config);
+        new Lwjgl3Application(new BlueNoiseTilingGenerator(), config);
     }
 }
