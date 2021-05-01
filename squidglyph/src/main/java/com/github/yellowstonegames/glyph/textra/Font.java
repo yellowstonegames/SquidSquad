@@ -12,9 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.CharArray;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pools;
+import com.github.tommyettinger.ds.CharList;
 import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
@@ -171,7 +171,7 @@ public class Font implements Disposable {
      * Must be in lexicographic order because we use {@link Arrays#binarySearch(char[], int, int, char)} to
      * verify if a char is present.
      */
-    private final CharArray breakChars = CharArray.with(
+    private final CharList breakChars = CharList.with(
             '\t',    // horizontal tab
             ' ',     // space
             '-',     // ASCII hyphen-minus
@@ -198,7 +198,7 @@ public class Font implements Disposable {
      * Must be in lexicographic order because we use {@link Arrays#binarySearch(char[], int, int, char)} to
      * verify if a char is present.
      */
-    private final CharArray spaceChars = CharArray.with(
+    private final CharList spaceChars = CharList.with(
             '\t',    // horizontal tab
             ' ',     // space
             '\u2000',// Unicode space
@@ -958,7 +958,7 @@ public class Font implements Disposable {
         int drawn = 0;
         for (int ln = 0; ln < lines; ln++) {
             Line line = layout.getLine(ln);
-            int n = line.glyphs.size;
+            int n = line.glyphs.size();
             drawn += n;
             if (kerning != null) {
                 int kern = -1, amt = 0;
@@ -1046,14 +1046,14 @@ public class Font implements Disposable {
             int kern = -1;
             float amt = 0;
             long glyph;
-            for (int i = 0, n = glyphs.glyphs.size; i < n; i++, drawn++) {
+            for (int i = 0, n = glyphs.glyphs.size(); i < n; i++, drawn++) {
                 kern = kern << 16 | (int) ((glyph = glyphs.glyphs.get(i)) & 0xFFFF);
                 amt = kerning.getOrDefault(kern, 0) * scaleX;
                 x += drawGlyph(batch, glyph, x + amt, y) + amt;
             }
         }
         else {
-            for (int i = 0, n = glyphs.glyphs.size; i < n; i++, drawn++) {
+            for (int i = 0, n = glyphs.glyphs.size(); i < n; i++, drawn++) {
                 x += drawGlyph(batch, glyphs.glyphs.get(i), x, y);
             }
         }
@@ -1085,7 +1085,7 @@ public class Font implements Disposable {
      * packed into one {@code long}: the bottom 16 bits store a {@code char}, the roughly 16 bits above that store
      * formatting (bold, underline, superscript, etc.), and the remaining upper 32 bits store color as RGBA.
      * @param batch typically a SpriteBatch
-     * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongArray
+     * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongList
      * @param x the x position in world space to start drawing the glyph at (lower left corner)
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
      */
@@ -1415,16 +1415,16 @@ public class Font implements Disposable {
                             // here, the max lines have been reached, and an ellipsis may need to be added
                             // to the last line.
                             if(appendTo.ellipsis != null) {
-                                for (int j = earlier.glyphs.size - 1 - appendTo.ellipsis.length(); j >= 0; j--) {
+                                for (int j = earlier.glyphs.size() - 1 - appendTo.ellipsis.length(); j >= 0; j--) {
                                     int leading = 0;
-                                    while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size, (char) earlier.glyphs.get(j)) >= 0) {
+                                    while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size(), (char) earlier.glyphs.get(j)) >= 0) {
                                         ++leading;
                                         --j;
                                     }
                                     float change = 0f, changeNext = 0f;
                                     long currE, curr;
                                     if (kerning == null) {
-                                        for (int k = j + 1, e = 0; k < earlier.glyphs.size; k++, e++) {
+                                        for (int k = j + 1, e = 0; k < earlier.glyphs.size(); k++, e++) {
                                             change += xAdvance(earlier.glyphs.get(k));
                                             if (--leading < 0 && (e < appendTo.ellipsis.length())) {
                                                 float adv = xAdvance(currE = baseColor | appendTo.ellipsis.charAt(e));
@@ -1435,7 +1435,7 @@ public class Font implements Disposable {
                                     } else {
                                         int k2 = ((int) earlier.glyphs.get(j) & 0xFFFF), k3 = -1;
                                         int k2e = appendTo.ellipsis.charAt(0) & 0xFFFF, k3e = -1;
-                                        for (int k = j + 1, e = 0; k < earlier.glyphs.size; k++, e++) {
+                                        for (int k = j + 1, e = 0; k < earlier.glyphs.size(); k++, e++) {
                                             currE = baseColor | appendTo.ellipsis.charAt(e);
                                             curr = earlier.glyphs.get(k);
                                             k2 = k2 << 16 | (char) curr;
@@ -1458,17 +1458,17 @@ public class Font implements Disposable {
                             }
                         }
                         else {
-                            for (int j = earlier.glyphs.size - 2; j >= 0; j--) {
-                                if (Arrays.binarySearch(breakChars.items, 0, breakChars.size, (char) earlier.glyphs.get(j)) >= 0) {
+                            for (int j = earlier.glyphs.size() - 2; j >= 0; j--) {
+                                if (Arrays.binarySearch(breakChars.items, 0, breakChars.size(), (char) earlier.glyphs.get(j)) >= 0) {
                                     int leading = 0;
-                                    while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size, (char) earlier.glyphs.get(j)) >= 0) {
+                                    while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size(), (char) earlier.glyphs.get(j)) >= 0) {
                                         ++leading;
                                         --j;
                                     }
                                     float change = 0f, changeNext = 0f;
                                     long curr;
                                     if (kerning == null) {
-                                        for (int k = j + 1; k < earlier.glyphs.size; k++) {
+                                        for (int k = j + 1; k < earlier.glyphs.size(); k++) {
                                             float adv = xAdvance(curr = earlier.glyphs.get(k));
                                             change += adv;
                                             if (--leading < 0) {
@@ -1478,7 +1478,7 @@ public class Font implements Disposable {
                                         }
                                     } else {
                                         int k2 = ((int) earlier.glyphs.get(j) & 0xFFFF), k3 = -1;
-                                        for (int k = j + 1; k < earlier.glyphs.size; k++) {
+                                        for (int k = j + 1; k < earlier.glyphs.size(); k++) {
                                             curr = earlier.glyphs.get(k);
                                             k2 = k2 << 16 | (char) curr;
                                             float adv = xAdvance(curr);
@@ -1529,20 +1529,20 @@ public class Font implements Disposable {
                         // here, the max lines have been reached, and an ellipsis may need to be added
                         // to the last line.
                         if(appendTo.ellipsis != null) {
-                            for (int j = earlier.glyphs.size - 1; j >= 0; j--) {
+                            for (int j = earlier.glyphs.size() - 1; j >= 0; j--) {
                                 int leading = 0;
-                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size, (char) earlier.glyphs.get(j)) < 0 && j > 0) {
+                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size(), (char) earlier.glyphs.get(j)) < 0 && j > 0) {
                                     ++leading;
                                     --j;
                                 }
-                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size, (char) earlier.glyphs.get(j)) >= 0 && j > 0) {
+                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size(), (char) earlier.glyphs.get(j)) >= 0 && j > 0) {
                                     ++leading;
                                     --j;
                                 }
                                 float change = 0f, changeNext = 0f;
                                 long currE, curr;
                                 if (kerning == null) {
-                                    for (int k = j + 1, e = 0; k < earlier.glyphs.size; k++, e++) {
+                                    for (int k = j + 1, e = 0; k < earlier.glyphs.size(); k++, e++) {
                                         change += xAdvance(earlier.glyphs.get(k));
                                         if ((e < appendTo.ellipsis.length())) {
                                             float adv = xAdvance(currE = baseColor | appendTo.ellipsis.charAt(e));
@@ -1553,7 +1553,7 @@ public class Font implements Disposable {
                                 } else {
                                     int k2 = ((int) earlier.glyphs.get(j) & 0xFFFF), k3 = -1;
                                     int k2e = appendTo.ellipsis.charAt(0) & 0xFFFF, k3e = -1;
-                                    for (int k = j + 1, e = 0; k < earlier.glyphs.size; k++, e++) {
+                                    for (int k = j + 1, e = 0; k < earlier.glyphs.size(); k++, e++) {
                                         curr = earlier.glyphs.get(k);
                                         k2 = k2 << 16 | (char) curr;
                                         float adv = xAdvance(curr);
@@ -1585,17 +1585,17 @@ public class Font implements Disposable {
                         }
                     }
                     else {
-                        for (int j = earlier.glyphs.size - 2; j >= 0; j--) {
-                            if (Arrays.binarySearch(breakChars.items, 0, breakChars.size, (char) earlier.glyphs.get(j)) >= 0) {
+                        for (int j = earlier.glyphs.size() - 2; j >= 0; j--) {
+                            if (Arrays.binarySearch(breakChars.items, 0, breakChars.size(), (char) earlier.glyphs.get(j)) >= 0) {
                                 int leading = 0;
-                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size, (char) earlier.glyphs.get(j)) >= 0) {
+                                while (Arrays.binarySearch(spaceChars.items, 0, spaceChars.size(), (char) earlier.glyphs.get(j)) >= 0) {
                                     ++leading;
                                     --j;
                                 }
                                 float change = 0f, changeNext = 0f;
                                 long curr;
                                 if (kerning == null) {
-                                    for (int k = j + 1; k < earlier.glyphs.size; k++) {
+                                    for (int k = j + 1; k < earlier.glyphs.size(); k++) {
                                         float adv = xAdvance(curr = earlier.glyphs.get(k));
                                         change += adv;
                                         if (--leading < 0) {
@@ -1605,7 +1605,7 @@ public class Font implements Disposable {
                                     }
                                 } else {
                                     int k2 = ((int) earlier.glyphs.get(j) & 0xFFFF), k3 = -1;
-                                    for (int k = j + 1; k < earlier.glyphs.size; k++) {
+                                    for (int k = j + 1; k < earlier.glyphs.size(); k++) {
                                         curr = earlier.glyphs.get(k);
                                         k2 = k2 << 16 | (char) curr;
                                         float adv = xAdvance(curr);

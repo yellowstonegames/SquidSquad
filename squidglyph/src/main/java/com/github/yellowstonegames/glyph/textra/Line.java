@@ -1,8 +1,8 @@
 package com.github.yellowstonegames.glyph.textra;
 
-import com.badlogic.gdx.utils.LongArray;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.github.tommyettinger.ds.LongList;
 
 public class Line implements Pool.Poolable {
 
@@ -16,15 +16,15 @@ public class Line implements Pool.Poolable {
         Pools.set(Line.class, pool);
     }
 
-    public final LongArray glyphs;
+    public final LongList glyphs;
     public float width, height;
 
     public Line() {
-        glyphs = new LongArray(16);
+        glyphs = new LongList(16);
     }
 
     public Line(int capacity) {
-        glyphs = new LongArray(capacity);
+        glyphs = new LongList(capacity);
     }
 
     public Line size(float width, float height) {

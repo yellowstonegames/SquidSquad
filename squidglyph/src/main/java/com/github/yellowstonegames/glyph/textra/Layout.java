@@ -201,7 +201,7 @@ public class Layout implements Pool.Poolable {
     public StringBuilder appendInto(StringBuilder sb){
         for (int i = 0, n = lines.size; i < n;) {
             Line line = lines.get(i);
-            for (int j = 0, ln = line.glyphs.size; j < ln; j++) {
+            for (int j = 0, ln = line.glyphs.size(); j < ln; j++) {
                 sb.append((char)line.glyphs.get(j));
             }
             if(++i < n)
