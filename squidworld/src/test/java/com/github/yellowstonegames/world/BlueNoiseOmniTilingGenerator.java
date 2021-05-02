@@ -15,6 +15,7 @@ import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -35,10 +36,18 @@ import java.util.Date;
  * OrderedMap's orderedKeys in libGDX and selectRanked() with that, but there's no OrderedMap with primitive float keys.
  */
 public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
-    private static final int shift = 8, size = 1 << shift, sector = size >>> 2,
+    private static final int shift = 9, size = 1 << shift,
+            sectorShift = 3, sectors = 1 << sectorShift, sector = size >>> sectorShift,
             mask = size - 1, sectorMask = sector - 1, wrapMask = sectorMask >>> 1;
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size, 0.5f);
+    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f){
+        @Override
+        protected int place(@Nonnull Object item) {
+            final int x = ((Coord)item).x, y = ((Coord)item).y;
+            // Cantor pairing function
+            return y + ((x + y) * (x + y + 1) >> 1) & mask;
+        }
+    };
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
@@ -80,9 +89,8 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
     }
 
     private void energize(Coord point) {
-        final int secX = point.x >>> shift - 2, secY = point.y >>> shift - 2,
-                outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
-        final float adj = 0x1p-4f;
+        final int outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
+        final float adj = 1f / (sectors * sectors);
         for (int x = 0; x < sector; x++) {
             for (int y = 0; y < sector; y++) {
                 if((point.x & sectorMask) <= x + wrapMask && (point.x & sectorMask) + wrapMask >= x &&
@@ -92,15 +100,30 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
                             0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
                 }
                 else {
-                    for (int ex = 0; ex < 4; ex++) {
-                        for (int ey = 0; ey < 4; ey++) {
-                            energy.getAndIncrement(Coord.get((ex << shift - 2) + x, (ey << shift - 2) + y),
+                    for (int ex = 0; ex < sectors; ex++) {
+                        for (int ey = 0; ey < sectors; ey++) {
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
                         }
                     }
                 }
             }
         }
+    }
+
+    public static int vdc(final int base, int index)
+    {
+        if(base <= 2) {
+            return (Integer.reverse(index) >>> 32 - shift);
+        }
+        double denominator = base, res = 0.0;
+        while (index > 0)
+        {
+            res += (index % base) / denominator;
+            index /= base;
+            denominator *= base;
+        }
+        return (int) (res * size);
     }
 
     public void generate()
@@ -110,7 +133,7 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
         final int limit = (size >>> 3) * (size >>> 3);
         ObjectList<Coord> initial = new ObjectList<>(limit);
         for (int i = 1; i <= limit; i++) {
-            initial.add(Coord.get((int) (0xC13FA9A902A6328FL * i >>> 64 - shift), (int)(0x91E10DA5C79E7B1DL * i >>> 64 - shift)));
+            initial.add(Coord.get(vdc(5, i), vdc(3, i)));
         }
         rng.shuffle(initial);
         energy.clear();
@@ -132,6 +155,7 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
                     1);
             energize(low);
             done[low.x][low.y] = ctr;
+            if((ctr & 1023) == 0) System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
         }
         final int toByteShift = Math.max(0, shift + shift - 8);
 
@@ -148,9 +172,9 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
         buffer.flip();
 
         try {
-            writer.write(Gdx.files.local(path + "BlueNoiseOmniTiling.png"), pm); // , false);
+            writer.write(Gdx.files.local(path + "BlueNoiseOmniTiling8x8.png"), pm); // , false);
         } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoiseOmniTiling.png", ex);
+            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoiseOmniTiling8x8.png", ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
