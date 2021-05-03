@@ -3,6 +3,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.ObjectLongOrderedMap;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -44,7 +45,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
     private static final long serialVersionUID = 1L;
     public final int width, height;
     public Biome biome;
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     public ObjectList<String> contentTypes;
     public ObjectList<String> floorTypes;
     public ObjectLongMap<String> viewer;
@@ -79,14 +80,14 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         }
         return al;
     }
-    public static ObjectList<String> makeShuffledRepeats(LaserRandom rng, Object... rest) 
+    public static ObjectList<String> makeShuffledRepeats(EnhancedRandom rng, Object... rest)
     {
         final ObjectList<String> al = makeRepeats(rest);
         al.shuffle(rng);
         return al;
     }
 //    
-//    public static ObjectList<String> makeVegetation(LaserRandom rng, int size, double monoculture, FakeLanguageGen naming)
+//    public static ObjectList<String> makeVegetation(EnhancedRandom rng, int size, double monoculture, FakeLanguageGen naming)
 //    {
 //        Thesaurus t = new Thesaurus(rng);
 //        ObjectList<String> al = new ObjectList<>(size);
@@ -104,10 +105,10 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
     /**
      * Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.
      * @param biome an index into some biome table, WIP
-     * @param rng a LaserRandom, can be seeded
+     * @param rng an EnhancedRandom, such as a LaserRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of floor that can appear here
      */
-    public static ObjectList<String> floorsByBiome(Biome biome, LaserRandom rng) {
+    public static ObjectList<String> floorsByBiome(Biome biome, EnhancedRandom rng) {
         if(biome == null || biome.name == null) return new ObjectList<>(0);
         switch (biome.name) {
             case "Ice":
@@ -183,10 +184,10 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
     /**
      * Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.
      * @param biome an index into some biome table, WIP
-     * @param rng a LaserRandom, can be seeded
+     * @param rng an EnhancedRandom, such as a LaserRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of terrain feature that can appear here
      */
-    public static ObjectList<String> contentByBiome(Biome biome, LaserRandom rng) {
+    public static ObjectList<String> contentByBiome(Biome biome, EnhancedRandom rng) {
         if(biome == null || biome.name == null) return new ObjectList<>(0);
         switch (biome.name) {
             case "Ice":
@@ -416,15 +417,15 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
     {
         this(width, height, biome, new LaserRandom(seedA, seedB));
     }
-    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng)
+    public WildernessGenerator(int width, int height, Biome biome, EnhancedRandom rng)
     {
         this(width, height, biome, rng, floorsByBiome(biome, rng), contentByBiome(biome, rng), defaultViewer());
     }
-    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng, ObjectList<String> contentTypes)
+    public WildernessGenerator(int width, int height, Biome biome, EnhancedRandom rng, ObjectList<String> contentTypes)
     {
         this(width, height, biome, rng, floorsByBiome(biome, rng), contentTypes, defaultViewer());
     }
-    public WildernessGenerator(int width, int height, Biome biome, LaserRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes, ObjectLongMap<String> viewer)
+    public WildernessGenerator(int width, int height, Biome biome, EnhancedRandom rng, ObjectList<String> floorTypes, ObjectList<String> contentTypes, ObjectLongMap<String> viewer)
     {
         this.width = width;
         this.height = height;
@@ -459,7 +460,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
         BlueNoise.blueSpill(floors, floorLimit, rng);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if((b = BlueNoise.getChosen(x, y, seed) + 128) < limit)
+                if((b = BlueNoise.getSeededOmniTiling(x, y, seed) + 128) < limit)
                 {
                     pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;
@@ -520,7 +521,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
             this(new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new LaserRandom());
         }
         
-        public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, LaserRandom rng)
+        public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, EnhancedRandom rng)
         {
             super(northeast.width, northeast.height, northeast.biome, rng, new ObjectList<>(northeast.floorTypes), new ObjectList<>(northeast.contentTypes), northeast.viewer);
             minFloors = new int[4];

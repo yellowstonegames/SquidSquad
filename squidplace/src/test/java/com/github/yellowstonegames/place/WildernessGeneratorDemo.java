@@ -1,12 +1,13 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.grid.LineTools;
 
 public class WildernessGeneratorDemo {
 
     public static void main(String[] args) {
-        LaserRandom random = new LaserRandom();
+        TricycleRandom random = new TricycleRandom();
         WildernessGenerator gen = new WildernessGenerator(40, 40, Biome.TABLE[random.nextInt(42)], random);
         DungeonTools.debugPrint(gen.generate());
     }
