@@ -24,7 +24,27 @@ import java.util.Date;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
- * https://bartwronski.com/2021/04/21/superfast-void-and-cluster-blue-noise-in-python-numpy-jax/ for more.
+ * <a href="https://bartwronski.com/2021/04/21/superfast-void-and-cluster-blue-noise-in-python-numpy-jax/">Wronski's
+ * blog</a> for more on the original code. This version has been modified quite a bit.
+ * <br>
+ * This particular blue noise generator produces "omni-tiling" blue noise textures. Wang tiles have been investigated
+ * before for blue noise point sets (<a href="http://johanneskopf.de/publications/blue_noise/">Kopf et al, 2006</a>),
+ * but this approach effectively makes a Wang tiling where any left edge can tile seamlessly with any right edge, and
+ * any top edge with any bottom edge. It also makes blue noise textures, rather than point sets, and these textures
+ * satisfy the progressive quality of void-and-cluster blue noise. The generated textures have been incorporated into
+ * {@link com.github.yellowstonegames.grid.BlueNoise}, which also includes a sample way of quickly laying out textures
+ * given a position and a seed in {@link com.github.yellowstonegames.grid.BlueNoise#getSeededOmniTiling(int, int, int)}.
+ * <br>
+ * The technical details of how this differs from void-and-cluster aren't too complex. Normally, void-and-cluster (as
+ * Wronski implemented it) spreads out "energy" away from pixels it has selected, and that energy is used to determine
+ * the next pixel to select (it picks the lowest-energy pixel remaining). We do that here too, but where regular
+ * void-and-cluster used a single, toroidally-wrapping grid, here we split up the blue noise texture into "sectors,"
+ * typically 16 or 64 of them in a grid, and we handle wrapping differently when it would cross between sectors. Where
+ * energy spreads within a sector, it stays there and affects nothing else. Where energy crosses the edge between
+ * sectors, such as the right edge of one sector spilling over into the left edge of a neighbor, the spread portion
+ * actually extends across the corresponding edges of all sectors (here, all left edges). To avoid spreading much more
+ * energy than normal, the dispersed energy is lessened; it is effectively divided by the number of sectors. The rest of
+ * the code is roughly the same as Wronski's; we don't have access to Numpy or Jax, so we make do with jdkgdxds.
  * <br>
  * This makes use of some of the more unusual and powerful features in jdkgdxds; that's the reason this tool was moved
  * from SquidLib (which already has existing code to analyze blue noise, and so seemed like a nice fit) to SquidSquad.
@@ -36,13 +56,34 @@ import java.util.Date;
  * OrderedMap's orderedKeys in libGDX and selectRanked() with that, but there's no OrderedMap with primitive float keys.
  */
 public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
-    private static final int shift = 9, size = 1 << shift,
-            sectorShift = 2, sectors = 1 << sectorShift, sector = size >>> sectorShift,
-            mask = size - 1, sectorMask = sector - 1, wrapMask = sectorMask >>> 1;
+
+    /**
+     * True if this should produce triangular-mapped blue noise.
+     */
+    private static final boolean isTriangular = true;
+
+    /**
+     * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 5125x512 parent image.
+     */
+    private static final int shift = 8;
+    /**
+     * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
+     */
+    private static final int sectorShift = 3;
+
+    private static final int size = 1 << shift;
+    private static final int sectors = 1 << sectorShift;
+    private static final int sector = size >>> sectorShift;
+    private static final int mask = size - 1;
+    private static final int sectorMask = sector - 1;
+    private static final int wrapMask = sectorMask >>> 1;
     private static final float fraction = 1f / (sectors * sectors);
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f){
+    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
+    { // OK, we're making an anonymous subclass of ObjectFloatOrderedMap so its hashing function is faster.
+      // It may also make it collide less, but the computation is much simpler here than the default.
+      // This makes a roughly 3x difference in runtime. (!)
         @Override
         protected int place(@Nonnull Object item) {
             final int x = ((Coord)item).x, y = ((Coord)item).y;
@@ -133,8 +174,9 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
 
         final int limit = (size >>> 3) * (size >>> 3);
         ObjectList<Coord> initial = new ObjectList<>(limit);
+        final int xOff = rng.next(shift), yOff = rng.next(shift);
         for (int i = 1; i <= limit; i++) {
-            initial.add(Coord.get(vdc(5, i), vdc(3, i)));
+            initial.add(Coord.get(vdc(5, i) + xOff & mask, vdc(3, i) + yOff & mask));
         }
         rng.shuffle(initial);
         energy.clear();
@@ -158,30 +200,38 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
             done[low.x][low.y] = ctr;
             if((ctr & 1023) == 0) System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
         }
-        final int toByteShift = Math.max(0, shift + shift - 8);
-        final float shrink = 1f / (1 << shift + shift);
-        pm.setColor(Color.BLACK);
-        pm.fill();
         ByteBuffer buffer = pm.getPixels();
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                float rnd = done[x][y] * shrink + 0.5f;
-                rnd -= (int) rnd;
-                float orig = rnd * 2f - 1f;
-                rnd = (orig == 0f) ? 0f : (float) (orig / Math.sqrt(Math.abs(orig)));
-                rnd = (rnd - Math.signum(orig)) * 127.5f + 127.5f;
+        if(isTriangular) {
+            final float shrink = 1f / (1 << shift + shift);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    float rnd = done[x][y] * shrink + 0.5f;
+                    rnd -= (int) rnd;
+                    float orig = rnd * 2f - 1f;
+                    rnd = (orig == 0f) ? 0f : (float) (orig / Math.sqrt(Math.abs(orig)));
+                    rnd = (rnd - Math.signum(orig)) * 127.5f + 127.5f;
 //                buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
-                buffer.putInt((Math.round(rnd) & 0xFF) * 0x01010100 | 0xFF);
+                    buffer.putInt((Math.round(rnd) & 0xFF) * 0x01010100 | 0xFF);
 //                pm.drawPixel(x, y, done[x][y] << 8 | 0xFF);
 //                pm.drawPixel(x, y, (done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
+                }
+            }
+        }
+        else {
+            final int toByteShift = Math.max(0, shift + shift - 8);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
+                }
             }
         }
         buffer.flip();
 
+        String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling" + sectors + "x" + sectors + ".png";
         try {
-            writer.write(Gdx.files.local(path + "BlueNoiseTriOmniTiling4x4.png"), pm); // , false);
+            writer.write(Gdx.files.local(name), pm); // , false);
         } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoiseTriOmniTiling4x4.png", ex);
+            throw new GdxRuntimeException("Error writing PNG: " + name, ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");

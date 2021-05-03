@@ -11,10 +11,12 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -37,11 +39,19 @@ import java.util.Date;
 public class BlueNoiseGenerator extends ApplicationAdapter {
     private static final int shift = 7, size = 1 << shift, mask = size - 1;
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size);
+    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
+    {
+        @Override
+        protected int place(@Nonnull Object item) {
+            final int x = ((Coord)item).x, y = ((Coord)item).y;
+            // Cantor pairing function
+            return y + ((x + y) * (x + y + 1) >> 1) & mask;
+        }
+    };
     private final float[][] lut = new float[size][size];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private LaserRandom rng;
+    private TricycleRandom rng;
     private PixmapIO.PNG writer;
     private String path;
 
@@ -58,7 +68,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new LaserRandom(Hasher.hash64(1L, date));
+        rng = new TricycleRandom(Hasher.hash64(1L, date));
 
         final int hs = size >>> 1;
         float[] column = new float[size];
@@ -86,6 +96,21 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         }
     }
 
+    public static int vdc(final int base, int index)
+    {
+        if(base <= 2) {
+            return (Integer.reverse(index) >>> 32 - shift);
+        }
+        double denominator = base, res = 0.0;
+        while (index > 0)
+        {
+            res += (index % base) / denominator;
+            index /= base;
+            denominator *= base;
+        }
+        return (int) (res * size);
+    }
+
     public void generate()
     {
         long startTime = System.currentTimeMillis();
@@ -93,7 +118,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         final int limit = (size >>> 3) * (size >>> 3);
         ObjectList<Coord> initial = new ObjectList<>(limit);
         for (int i = 1; i <= limit; i++) {
-            initial.add(Coord.get((int) (0xC13FA9A902A6328FL * i >>> 64 - shift), (int)(0x91E10DA5C79E7B1DL * i >>> 64 - shift)));
+            initial.add(Coord.get(vdc(5, i), vdc(3, i)));
         }
         rng.shuffle(initial);
         energy.clear();
@@ -118,8 +143,6 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         }
         final int toByteShift = Math.max(0, shift + shift - 8);
 
-        pm.setColor(Color.BLACK);
-        pm.fill();
         ByteBuffer buffer = pm.getPixels();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -131,9 +154,9 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         buffer.flip();
 
         try {
-            writer.write(Gdx.files.local(path + "BlueNoise.png"), pm); // , false);
+            writer.write(Gdx.files.local(path + "BlueNoiseRevised.png"), pm); // , false);
         } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoise.png", ex);
+            throw new GdxRuntimeException("Error writing PNG: " + path + "BlueNoiseRevised.png", ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");

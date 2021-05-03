@@ -16,6 +16,7 @@ import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -39,7 +40,15 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
     private static final int shift = 8, size = 1 << shift, sector = size >>> 2,
             mask = size - 1, sectorMask = sector - 1, wrapMask = sectorMask >>> 1;
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<>(size * size, 0.5f);
+    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
+    {
+        @Override
+        protected int place(@Nonnull Object item) {
+            final int x = ((Coord)item).x, y = ((Coord)item).y;
+            // Cantor pairing function
+            return y + ((x + y) * (x + y + 1) >> 1) & mask;
+        }
+    };
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
