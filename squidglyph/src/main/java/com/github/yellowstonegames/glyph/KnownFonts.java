@@ -4,13 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.graphics.Texture;
 
-import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.MSDF;
-import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.STANDARD;
+import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.*;
 
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
-
-    private Font cozette, astarry, cascadiaMono, dejaVuSansMono, inconsolataLGC, iosevka, iosevkaSlab, openSans;
 
     private KnownFonts() {
         if(Gdx.app == null)
@@ -24,6 +21,7 @@ public class KnownFonts implements LifecycleListener {
             instance = new KnownFonts();
     }
 
+    private Font cozette;
     /**
      * Returns a Font configured to use a cozy fixed-width bitmap font,
      * <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
@@ -56,6 +54,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getCozette() not found.");
     }
 
+    private Font openSans;
     /**
      * Returns a Font configured to use a clean variable-width font, Open Sans. This makes an especially large
      * font by default, but can be scaled down nicely.
@@ -86,6 +85,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getOpenSans() not found.");
     }
 
+    private Font astarry;
     /**
      * Returns a Font already configured to use a square font with 45-degree angled sections, based on the
      * typeface used on the Atari ST console, that should scale cleanly to many sizes. This font only supports ASCII,
@@ -120,6 +120,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getAStarry() not found.");
     }
 
+    private Font cascadiaMono;
     /**
      * Returns a Font already configured to use a quirky fixed-width font with good Unicode support
      * and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).
@@ -156,6 +157,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getCascadiaMono() not found.");
     }
 
+    private Font dejaVuSansMono;
     /**
      * A nice old standby font with very broad language support, DejaVu Sans Mono is fixed-width and can be clearly
      * readable but doesn't do anything unusual stylistically. It really does handle a lot of glyphs; not only does this
@@ -190,6 +192,7 @@ public class KnownFonts implements LifecycleListener {
     }
 
 
+    private Font inconsolataLGC;
     /**
      * A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
      * Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
@@ -219,6 +222,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getInconsolataLGC() not found.");
     }
 
+    private Font iosevka;
     /**
      * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
      * and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
@@ -255,6 +259,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getIosevka() not found.");
     }
 
+    private Font iosevkaSlab;
     /**
      * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
      * and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
@@ -290,6 +295,42 @@ public class KnownFonts implements LifecycleListener {
             return new Font(instance.iosevkaSlab);
         throw new RuntimeException("Assets for getIosevkaSlab() not found.");
     }
+
+    private Font gentium;
+    /**
+     * Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
+     * scale cleanly to even very large sizes (using an SDF technique).
+     * Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
+     * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
+     * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
+     * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/JXGbHVf.png">Image link</a>
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Gentium.ttf using SDF
+     */
+    public static Font getGentium()
+    {
+        initialize();
+        if(instance.gentium == null)
+        {
+            try {
+                instance.gentium = new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.gentium != null)
+            return new Font(instance.gentium);
+        throw new RuntimeException("Assets for getGentium() not found.");
+    }
+
 
     @Override
     public void pause() {
@@ -335,6 +376,10 @@ public class KnownFonts implements LifecycleListener {
         if(iosevkaSlab != null){
             iosevkaSlab.dispose();
             iosevkaSlab = null;
+        }
+        if(gentium != null){
+            gentium.dispose();
+            gentium = null;
         }
     }
 }
