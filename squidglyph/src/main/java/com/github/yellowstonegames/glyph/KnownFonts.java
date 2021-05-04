@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.graphics.Texture;
 
+import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.MSDF;
+import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.STANDARD;
+
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
 
@@ -43,7 +46,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cozette == null)
         {
             try {
-                instance.cozette = new Font("Cozette.fnt", "Cozette.png", false, 1, 1, 0, -1);
+                instance.cozette = new Font("Cozette.fnt", "Cozette.png", STANDARD, 1, 1, 0, -1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -72,8 +75,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.openSans == null)
         {
             try {
-                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", false, 2, 0, 0, 0);
-                instance.openSans.parentImage.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", STANDARD, 2, 0, 0, 0);
+                instance.openSans.setTextureFilter();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -106,8 +109,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.astarry == null)
         {
             try {
-                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", true, 0, 1, 0, 0).scaleTo(18, 18);
-                instance.astarry.msdfCrispness = 3f;
+                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(18, 18);
+                instance.astarry.distanceFieldCrispness = 3f;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,7 +146,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cascadiaMono == null)
         {
             try {
-                instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", true, 2f, 1f, -5.5f, -1.5f);
+                instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", MSDF, 2f, 1f, -5.5f, -1.5f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,7 +179,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.dejaVuSansMono == null)
         {
             try {
-                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", true, 1f, 4f, -1.5f, -4.5f);
+                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", MSDF, 1f, 4f, -1.5f, -4.5f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -206,7 +209,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.inconsolataLGC == null)
         {
             try {
-                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", true, 5f, 1f, -10f, -8f);
+                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -242,7 +245,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.iosevka == null)
         {
             try {
-                instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", true, 3f, 6, -4f, -7);
+                instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", MSDF, 3f, 6, -4f, -7);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -278,7 +281,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.iosevkaSlab == null)
         {
             try {
-                instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", true, 3f, 6, -4f, -7);
+                instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, 3f, 6, -4f, -7);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -302,35 +305,35 @@ public class KnownFonts implements LifecycleListener {
     public void dispose() {
 
         if(cozette != null){
-            cozette.parentImage.getTexture().dispose();
+            cozette.dispose();
             cozette = null;
         }
         if(openSans != null){
-            openSans.parentImage.getTexture().dispose();
+            openSans.dispose();
             openSans = null;
         }
         if(astarry != null){
-            astarry.parentImage.getTexture().dispose();
+            astarry.dispose();
             astarry = null;
         }
         if(cascadiaMono != null){
-            cascadiaMono.parentImage.getTexture().dispose();
+            cascadiaMono.dispose();
             cascadiaMono = null;
         }
         if(dejaVuSansMono != null){
-            dejaVuSansMono.parentImage.getTexture().dispose();
+            dejaVuSansMono.dispose();
             dejaVuSansMono = null;
         }
         if(inconsolataLGC != null){
-            inconsolataLGC.parentImage.getTexture().dispose();
+            inconsolataLGC.dispose();
             inconsolataLGC = null;
         }
         if(iosevka != null){
-            iosevka.parentImage.getTexture().dispose();
+            iosevka.dispose();
             iosevka = null;
         }
         if(iosevkaSlab != null){
-            iosevkaSlab.parentImage.getTexture().dispose();
+            iosevkaSlab.dispose();
             iosevkaSlab = null;
         }
     }

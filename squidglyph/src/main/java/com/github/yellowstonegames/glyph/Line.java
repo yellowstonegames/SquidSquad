@@ -1,4 +1,4 @@
-package com.github.yellowstonegames.glyph.textra;
+package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;

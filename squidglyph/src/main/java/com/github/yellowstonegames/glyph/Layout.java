@@ -1,4 +1,4 @@
-package com.github.yellowstonegames.glyph.textra;
+package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
