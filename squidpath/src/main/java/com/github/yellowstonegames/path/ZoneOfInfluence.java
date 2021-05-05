@@ -8,9 +8,7 @@ import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.Radius;
 import com.github.yellowstonegames.grid.Region;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.Random;
 
 /**
  * Calculates the Zone of Influence, also known as Zone of Control, for different points on a map.

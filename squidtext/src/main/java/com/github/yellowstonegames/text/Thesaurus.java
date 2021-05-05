@@ -49,8 +49,8 @@ public class Thesaurus implements Serializable{
 
     /**
      * Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
-     * the given Random.
-     * @param rng a Random that will only be used to get one long (for seeding this class' internal LaserRandom)
+     * the given EnhancedRandom.
+     * @param rng an EnhancedRandom that will only be used to get one long (for seeding this class' internal LaserRandom)
      */
     public Thesaurus(EnhancedRandom rng)
     {

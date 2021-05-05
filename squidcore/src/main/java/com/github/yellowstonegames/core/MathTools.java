@@ -23,8 +23,15 @@ import java.util.Random;
 /**
  * Mathematical operations not provided by {@link Math java.lang.Math}.
  * <br>
- * Originally part of the <a href="http://maths.uncommons.org/">Uncommon Maths software package</a> as Maths.
+ * Includes code that was originally part of the
+ * <a href="http://maths.uncommons.org/">Uncommon Maths software package</a> as Maths.
+ * Also includes code adapted from libGDX as their MathUtils class, and {@link #probit(double)}
+ * formulated by Peter John Acklam and implemented by Sherali Karimov. There's also
+ * {@link #cbrt(float)} by Marc B. Reynolds, building on the legendary fast inverse square root.
  * @author Daniel Dyer
+ * @author Tommy Ettinger
+ * @author Sherali Karimov
+ * @author Marc B. Reynolds
  */
 public final class MathTools
 {

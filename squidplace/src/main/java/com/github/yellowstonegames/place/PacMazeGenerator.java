@@ -4,8 +4,6 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 
-import java.util.Random;
-
 /**
  * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.
  */

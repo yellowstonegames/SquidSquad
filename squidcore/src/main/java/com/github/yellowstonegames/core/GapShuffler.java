@@ -3,6 +3,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,33 +25,34 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     protected ObjectList<T> elements;
     protected int index;
     protected GapShuffler() {
-        random = new LaserRandom();
+        random = new TricycleRandom();
         elements = new ObjectList<>();
         index = 0;
     }
 
     public GapShuffler(T single)
     {
-        random = new LaserRandom();
+        random = new TricycleRandom();
         elements = new ObjectList<>(1);
         elements.add(single);
         index = 0;
     }
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
-     * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
-     * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
-     * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
+     * Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate
+     * infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a single
+     * element should always have a large amount of "gap" in order between one appearance and the next. It helps to keep
+     * the appearance of a gap if every item in elements is unique, but that is not necessary and does not affect how
+     * this works.
      * @param elements a Collection of T that will not be modified
      */
     public GapShuffler(Collection<T> elements)
     {
-        this(elements, new LaserRandom());
+        this(elements, new TricycleRandom());
 
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by {@code seed}, and can then
+     * Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded by {@code seed}, and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
      * to keep the appearance of a gap if every item in elements is unique, but that is not necessary and does not
@@ -59,11 +61,11 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(Collection<T> elements, String seed)
     {
-        this(elements, new LaserRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed)));
+        this(elements, new TricycleRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed), Hasher.raum.hash64(seed)));
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a {@link TricycleRandom},
      * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -71,7 +73,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      * how this works. The random parameter is copied so externally using it won't change the order this produces its
      * values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
      * @param items a Collection of T that will not be modified
-     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
+     * @param random an EnhancedRandom, such as a LaserRandom or TricycleRandom; will be copied and not used directly
      */
     public GapShuffler(Collection<T> items, EnhancedRandom random)
     {
@@ -82,7 +84,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a {@link TricycleRandom},
      * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -103,7 +105,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+     * Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
      * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
@@ -111,11 +113,12 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(T[] elements)
     {
-        this(elements, new LaserRandom());
+        this(elements, new TricycleRandom());
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+     * Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded with the given CharSequence
+     * (hashed 3 different ways by {@link Hasher}), and can then iterate infinitely
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
      * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
@@ -123,18 +126,19 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(T[] elements, CharSequence seed)
     {
-        this(elements, new LaserRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed)));
+        this(elements, new TricycleRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed), Hasher.raum.hash64(seed)));
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
-     * and can then iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a TricycleRandom
+     * or LaserRandom), and can then iterate infinitely through mostly-random shuffles of the given collection.
+     * These shuffles are spaced
      * so that a single element should always have a large amount of "gap" in order between one appearance and the next.
      * It helps to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not
      * affect how this works. The random parameter is copied so externally using it won't change the order this produces
      * its values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
      * @param items an array of T that will not be modified
-     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
+     * @param random an EnhancedRandom, such as a TricycleRandom or LaserRandom; will be copied and not used directly
      */
     public GapShuffler(T[] items, EnhancedRandom random)
     {
@@ -145,7 +149,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a {@link TricycleRandom},
      * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have at least one "gap" element between one appearance and the next. It helps to

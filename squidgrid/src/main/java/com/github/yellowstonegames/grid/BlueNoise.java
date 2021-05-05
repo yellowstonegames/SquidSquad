@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.MathTools;
 

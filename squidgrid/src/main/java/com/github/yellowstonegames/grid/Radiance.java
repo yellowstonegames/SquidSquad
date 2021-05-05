@@ -2,6 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.MathTools;
@@ -37,7 +38,7 @@ public class Radiance implements Serializable {
     /**
      * Randomly-seeded and only used for things that should be visually random, but won't matter for equality.
      */
-    private static final LaserRandom random = new LaserRandom();
+    private static final TricycleRandom random = new TricycleRandom();
 
     /**
      * How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.
@@ -50,7 +51,7 @@ public class Radiance implements Serializable {
     public int color;
     /**
      * The rate of random continuous change to radiance range, like the light from a campfire. The random component of
-     * the change is determined by a unique seed produced by an internal {@link LaserRandom}, which will
+     * the change is determined by a unique seed produced by an internal {@link TricycleRandom}, which will
      * probably make all flicker effects different when flicker is non-0.
      */
     public float flicker;
@@ -74,7 +75,7 @@ public class Radiance implements Serializable {
      */
     public float flare;
     /**
-     * Assigned during construction by an internal {@link LaserRandom}, this is used for flickering effects, but does
+     * Assigned during construction by an internal {@link TricycleRandom}, this is used for flickering effects, but does
      * not affect {@link #equals(Object)} or {@link #hashCode()}.
      */
     private final int seed;

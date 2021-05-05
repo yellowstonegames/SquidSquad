@@ -3,9 +3,9 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Static methods for various frequently-used operations on 1D and 2D arrays. Has methods for copying, inserting, and
@@ -780,7 +780,7 @@ public class ArrayTools {
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
      * @param items an int array; must be non-null
-     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(int[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
@@ -794,7 +794,7 @@ public class ArrayTools {
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
      * @param items a long array; must be non-null
-     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(long[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
@@ -808,7 +808,7 @@ public class ArrayTools {
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
      * @param items a char array; must be non-null
-     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(char[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
@@ -822,7 +822,7 @@ public class ArrayTools {
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
      * @param items a float array; must be non-null
-     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(float[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
@@ -836,7 +836,7 @@ public class ArrayTools {
     /**
      * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
      * @param items an array of some reference type; must be non-null but may contain null items
-     * @param random a Random instance or a subclass of Random, like the recommended {@link LaserRandom}
+     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static <T> void shuffle(T[] items, EnhancedRandom random) {
         for (int i = items.length - 1; i >= 0; i--) {
