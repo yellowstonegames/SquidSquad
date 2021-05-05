@@ -182,6 +182,12 @@ public class BlueNoise {
      * something. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
      * to it, and uses {@link StandardCharsets} to decode itself from a String, which only works on GWT 2.8.2 and newer.
      * Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.
+     * <br>
+     * If you want high-quality non-obviously-repeating blue noise, this is your best bet, when used with
+     * {@link #getSeededOmniTiling(int, int, int)}. However, an individual 64x64 tile chosen from this set of tiles does
+     * not have the same guarantees about its own distribution relative to a tile from {@link #ALT_NOISE}. ALT_NOISE
+     * always uses each byte value equally often for all tiles, while TILE_NOISE may have a slightly-imperfect mean and
+     * uneven distribution for one tile. If you consider all 64 tiles in TILE_NOISE, the distribution should be perfect.
      */
     public static final byte[][] TILE_NOISE = new byte[][] {
             "ªT\003GÔ\007q¼\037?Ó÷I¡\036UÍ5!gª\026Eð³a\001t \032ºÚr@Ã\005,h¸Õ:ÿ©EÂèl£Mö\0317ÏæZ:\bs\"â¾l<Oüèy¬\022j½ê\fqïIÂã|Ð2\031à-ÇìI3W\037Ûí\016x d\0311\000*È¬z\005k¨\025ºÌPäÊr3\030ó$æ¯×bÃ*XË6\003}ª¹×\006;øWÄn¦Reû\b«ñ^}BT¦IÊïÛzY·\020ÚaêQ¸û)}ô!®÷a²RÈ^\0160\027 ÿâ#GÝ,]\025Rn´&¢\020\002Bó×%²Ñyä-Í\021³ûÁ3âùUµ\013#Ì?w1!ÝA_ØlD\025FÙ\t¡7~ðEr·<nR°cõ@ûÊ1ÙdæN»~\021@\026\\»m8$Ò\030p+h9¨÷ãS \003Â\017ÉìK\n2\001§Àìvý»\037¨Íß\013òÖ\rÃ\032Ð¥$èz\027¿u­\0368\005TÄ6õOèi]±Å\022ÔHs\030±ôHp¦5t²ÂbâÉWn\037,BâÓX\003PeÈ0¢t3w½h\016­Hñ?Òú\\áªíjÛ\"E\003×©\nIî\002A~ê¾\003*Ål7eÐ\033Y\000$\027©=w\002Ïd¬\026k:(ö\033­L ë[\000äFÓ[ÿ`\007/kÊ)s\000µ¤tÆ\035y½7'Ú Obî×\013ã·ñÔåPö\021Ü8·ôÅJê´`¿}ý»A®Vó8*Äß!·ê¡\026¾K-b\rêS0à¡Ît¬Wû¢µ\025Cª%QD,}?\\i*µM\020T\006{# \rrÚè>ÐjÜ\021&É\007\035µnM¨{<S\013D×õÎ;²_ø\022Nbò\0176Ëã0v^¿ür\t«Æ\020»\003ÌÚG'så¤1úÕ3H\025\b5NcrØ£\177ç\f\024ÙÇ÷³e\037xVá\027*Òpµ\036Âfm\006Ðõà5¡Ì`Ü l7¦yñóÇ_ÙºiCÈ\001©])±Åõ¦è;I_ùÎ3g,uâ5­\006½þ\177îA\004<æ\000F¹\030=X\017|\032ë<øJë\016 H³ ?\024ïW¯\033yñ½nXv\033¸ý.Â\027«B½\000ë\\\030\003ÀQëÉBgL¨ÀÜX-|Ô$ï©ÄH°¹)oV´-Þc½WÒxûm&äO×\037ê\003-ÒT\fÜ(wN¯?Ò¥'b\020-°\036Ì6e%\016Î®\\£OxÞ'\002cØQ\005Á\023Ðu«ö=Ñ/\tªâËK\005f9\020BÊ¡ßFf«yìmYó¡à#pIó{Õõvå\013ùuMò\025Ü\taý9nòB¨å4\001\032O\006ça¼S9~÷¿-Í¨úc2\177\022Àö =µÐ\034\tdÊ\020¹ß\0339¦ZÙQo\031¹ãÃ@o½2Ì\035ë¾\022Ê ~Z EÇz*\026@×\036\r²ÝvW¸\013±R8ãÇ\005K4¿;û`2\bÆN»\002?&´ïÓE^5ü(é²r[K1^ýÕ¸ò'eêÚµ¥Éón¤]D\030$æoòÛ'\001sa\025¥ükSïz§U®hé\023sÄ`¥.\003«{V\033C\rÙ§ûãt±@\020Ýr­\013:_Nz\004*æ6Ókî\002>ÅH^¥Ð¸G-Ö~á%°Õ\026(æÏù-Ò\034ú8\bxÉ\"Ú\017¸Ï÷iN&?Ñ\032\bÅi6Â\035ù#µeÂ\023ý¸N®Ö\0246\033h\nî®YÄBK»n@\037}ÜE¬fMÞèTjíc7à¤Ä\003}ºS,éN!ø^QÓI¡Ïâ;­KX)|Èa/w¼ûç=V\"ù9ê\021\006uÞ\000 \017¶Y\001ñºr¡\023±À=L\030w.ï\024a ö©wÎ³\005¥ït'\016]ú\033Íê:Ü\033ó\006ªT{ÊÝp¾d.Ì[0ÈPï5Ät&\021Ê0D\037÷-þ©É\bµ[:Ëá2lÙ¼\024Fá{/\023Ç sØy\nmªZ\r¡jß)Ã\020/¦\005\030L´q©!ì³cØ\n£?ÙVîÑ|ãZÖl&Rå\034oªK \001\\9e»>å\\0¾Cï&·G\001\"¾æJÍ;ñd²N?Ó\000ÙT÷h>\026wªI\036ç`ªk\003`¦\f·BùÓþ¾\017AÊï*ý\035×l­\002çR\004§4Æb?vµ\025\035ÿæ`ò|*çEÂ¡\005â)úÍl¸/ø\f¶$ÂH5q\036ñÀ\177F\f+Vuè³~\f«ÂX\rM\034Ë[jà\027ôÑ2úYsÖCnÌ ÁZ\037\0175\177Ð½T\024Ó\177M6Ü\025ëÌ ^Ú1§c¶òÖ%gLßSÒpê5öÌ&h¯\020ÓûK ~V­Ú)\003À«0¸\0226ª\tËt¹ÞP\033C`3ê\000CÁçsüV¯\006<\024éÈ<¨4ø\032/I¦|·b@z\"´,é\017l£íHâ\013ô[vßHkð?þ®ðr\016±w'Þf\035@Ë+xL#h²\000o\037S{\027\006Í¼d\000\023Ü!@àýÙîÂ;r\007½CÈ\037`7}T'Òû³%Uèm-Ä¤ÚÈZ©\007ï²]¤\n½Õ÷ãÃOÔüáÂ^Etæ>É¯\\¿\006\027 5^T¨Ü\034Rõ¸Ï\027Æ¯B\005/R\030Õg¥\025Ó\\\007#N>\030öQ.Ö\031mñAY¨y8*¡C¯/ð±#¡zô4rÐió¤¹\013+ödÌn/áy\nOùiÛ\034êe¤Âä3\004½9Fû¸lç7½zþ6ß\0241\033\fð½k\016o×\023Y\bNé-H\032lä\024G\000®=(ç§:\002»r#y\\Ë{õ²ãuÌ c\021ÎFhÃO´~ÊbýÏÝcMç!Qú3Ðà'¸\002U¬ÆÑM|Å¢ì\\\027ÕÃd¶t+_JÏô\020=®îN\r(e\0344T\013+Ù¯ ä¦í%\002Fë·q=­\031\000Ï:¶ÆfG©m\027BeØ\037x÷3\002¯:×&ºu\007W\035GÓî\f¬XÚÿ\"Û ÂÖ«îG\001q2\007VrÓ«\037O&ZÃ}¦t\006ì½üË£\020ú[¾\037bs\n5Kò©Þü\022Ç¢>â1ÅhG¸^s?êY\025~Â]õA¸\022:âj/Æ\bôà3ñW\025á-\037~P7òt/ãP¨ßCêùâe-?½\1771To!þv\033£Î0ù¬\005Jý7#³OÊ|Ú^Á÷ \rXÙ©w\023J%ÖC®[Ù\016±XÀ>´(n\bX¸ÎT­Å\037Ðjæ®\004Ù¾Kí\b\177ã\021Ç-p·ËiÜ\031é\020+\034Lzºí6CÍ¶\004i¾÷9£Èiè$Ò\b|Ç\0250\034C\017zú \fH\033aòg´Ó*¯7Wi\034Ù\016ñD¤d=\000­hïÎ@%ÿ`\032lè^ª\016yÎc\003\031B\000¥b\030îõKØ|¦ií4ÙQ²ñÃ8(@\027S`ÂñÔLµç:a(xû½ÓTã3\006ªoÒ¢¿ù.ÝO æHw»[2pÜ+b±;þÁÝ\003»]$ußNÎy\tàûmA\004$ø| Q¯Ää2n$Åx´Z\030ÄåO,\bU\035>Âý3´'óÝÆ÷°NÂ#è^*Oo\027ç\005-nû\024«ç]È\"\024ºq©D\tÏ\037\000\024ZK\n§ñ8\017Ûgö8\177Ú±pÏïkXÕ©\020Q\036?\013sÊ\006r\036A³Ò£9Ê«BÓ¸YÀq6¨×é1RßÁ5sÖµ\034ÝFüP*Eµ\017Gî£\024zBº\026\007s;g*å}ÐèP6»ò\017üK|ö\022^¢\036Dð.\001¸J|ZÊ\020)hóâ_£?ö\177Ë_¹tÑ¦ìr\036Êÿ$c5\003ªâKÁûÎ´\0013e¨Ý\026YÇvaã#¿hê5\002~ÑP\017ó\036±ûuV­I¼.ég\"æ\026@Á\005[×j¹âÅ\\Ø#e0ì¡\034D`\027¼õIeú¥I×'¬\0072ÚOÆß°\031Ûi@Î\005c;íÕ\031\002\017!Å\bOý1­h&¯3Só+@\rõHÊ\177Zßoï¦VÜ\t$´-~î<Up´\034\nª*m=a¢'Ãâ-ÁF¹6kÐy«9ÔqZ\013Ûô}\025çv¨P±w¾ü\020­%1\fÇwÌ\020çÄ\004i·\025ÞôËAuûT¸\fæùYu«R\024m¥#\177_Þí=Vß\024»ïÈJ8½D\nÇÝ\030gÒ-\033TÛ>ö½QÔ@\0357±l\\D\0371ÂGd¢íÓ\"Ë5\003ì7·öÜ\nÈ,úO°\004óa\037D¤,µd\000Ð£\"^ù9\003¤åi\007t°ióáNýÍ5«VÑxþ%\0177`¿GyñhJ¾ Ó{]Jéª\022nÁ$tÌ|ûV\034áQqIµ~ÀîCq3·ÑI\032æ,\003À*ýrÜô\016éTÔ\177²ã\031\004¨Ø\024±\rDÿÏ\033r>Y\036ÎF0Úµ@\få×\017w¬*ð\005Ö'\016bÆ\013]ïÃc¤U|\025]\027f³;\036©½\0010\\=-tWàe&Ã1°\002¾xã£Zý1ªg5Àë=\026Âmä5ªPÝ#ø¨(y8ùÖ\017ËFëÒN½*HÈ\\ßoAðPjÍõ$ÄéýÌ¦ópåUó×3\nfì\026ÆPm¼\004L[Íc³U@õÏ\031³{Ká\021³D$·5n®å}\005î/\b)\025Ü{°Od9\035¹N\020=¡\030k³Nø;¯s*Üñ\032Ñ÷\036\t1û§!t\\\002;ÒXÊ`ärõ\004 6Õ§\022uøÎdÃ¡·D\nâ\022 E\007\177.Õ\004Àa'È Ò\t¡]&qD·|ØèhË\013I ëg¿\0251þp\036\0051ªLÚ[²U!hºO\033¯IëuYû7¾rÛ²êX«yßFî\016|ÞTb½H\177<²èà¨(M\032ß·Å'E£çc¼ÛQÁ\031h<Æ\017Éú9çÛ5\r1\037É¨`+\034øÇ^\027úË!/Ñ©@\003ó2âû\022ÆQ\0079Èÿn¾>Y}ý6\016Ûwõ\"­@òÏ}\nê£úbxDÅZ|þÔäpîÒU5nG:f¶þ[¿l´\025Í©i-v\027`ò\020¯ì#oU´\007Ny\017(^:¹U)ïÜ,¬\nó\"¥¾S²fH\027\004Bä\r§Ý¾\021æqM\031&ç6Lu$WØô¼£ÔE1ÏNÕ«ñË9jÃÔ3å£²ü#ÒuH¼\027RÓp\021k@&÷Ø¼9®y¹&P\005vó*¤Éõ`Õ\013ë¹\005H\037dê,Wáub\004<\027d/\024ã\032þWÈoJß\021A¡l\001`¶/ßì\007£~XÌô`Î2®ZÖC\b8Üz¬ÿÂ¢fAx®8\006´\024Äõ·åÁ\001£\\$Ht·E\026íc®ó5Î$å?û;Î_Ä3ç\036\n+\000\030íg\034Äx²d\021+BS\033Ú1ÈäýÎO~\"©J(zVm?Øù¬ía\n×7½\004/pÅó}©Èy\035O­v\025Nc§ÝIrÂ¡EàþRè\"¼WËð|ö«\021Y\031ÀñÝm7\nÛ\037î±~6Ì+¨|ÍY\032\025´EYî\016½\004ôC´ÒûÀk4Õ#|¸<\020.÷\004pá¶:$p?k*CüÑfëÅ4GÐ\017½O\003\031nàöR\"æüLdÖ\004.jØ+\\á&s=\023ê±W\007ò_Ð©kÔI3¦\030_\003ÐMºí\t×ª[\021»R\032¬sûb,â¡ZÁA\rµj9«Ù".getBytes(StandardCharsets.ISO_8859_1),
@@ -259,6 +265,13 @@ public class BlueNoise {
      * something. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
      * to it, and uses {@link StandardCharsets} to decode itself from a String, which only works on GWT 2.8.2 and newer.
      * Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.
+     * <br>
+     * If you want high-quality non-obviously-repeating triangular blue noise, this is your best bet, when used with
+     * {@link #getSeededTriOmniTiling(int, int, int)}. However, an individual 64x64 tile chosen from this set of tiles
+     * does not have the same guarantees about its own distribution relative to a tile from {@link #TRI_NOISE}.
+     * TRI_NOISE always uses the same frequency of byte values for every tile, while TILE_TRI_NOISE may have a
+     * slightly-imperfect mean and uneven distribution for one tile. If you consider all 64 tiles in TILE_TRI_NOISE, the
+     * distribution should be perfect for a triangular-mapped blue noise tile.
      */
     public static final byte[][] TILE_TRI_NOISE = new byte[][]{
             "É5\001¿*ç\003T×\020°%çû,Á\0206ã\036½\021GÊ\013)÷Ñ@¯\000XÀ\rÖëV%Ý\002\030HÕè!ÿÉ)ÜóMÃ/û\r­\037åò:!°\004X\022 ðÙN¥\"»1þócË\tKØô\006T÷,Üð³iå\034\rî\030ßõ,\0347¥\021¿ì¯ö\007`\021³D\r\033\000°\027àÌf\002KÇ\013Öâ1ñáV\035\rù\023òÍêBÝ\0278£â\037\001lÉÕé¤\003\"ü8 ÝPÆ3Eý³\004Ëø>m'5Æ¢,á÷ìe9Ô\bëAô2Õ·ý\026mù\021ÍûµAÐ3à>\007\033\fÀÿð\022·*í\030=\n3OÑ\024Â\b\001'ùé\024Ðæbñ\031ã\tÑýÛ\035ðü6Ò\005¹\022ã$^\033\022í&?êÀM(\013)ë\004Á\037¯q÷)VÔ\"P3ÏCú¯%ýºá\033ëDò0¸×s\b%½\f<×O \023æ\fR¾\030I Èûð4Á\001Ü\007áõ.\005\034§\000ÇÚö\\þ×\021Èãî\005¬øé\007Ü\råÅ\023ód\fÚ[Ì\020 §\0024Þ\036¡ú¹1óIµ=ÏÞ\tè+V§\rÐù+SÆ\036YÐÜBðá7P\020\030'ðç8\001¹2Eà\032ÂX\034_ØH\007Ì+ø$­æý;ïÉöKì\022)\001éÉ\005,÷\001&rôÙ\001\027ÞN\037Eå\0169\000»\023\fÉ#^\001ªäCË\013K¥!\026û\016Ì.\021õ;\000ñ*¦ç;ÿ½?\003\032Lá\026W±\000ÓÄXÞ\017cÙ\037¤\025ë±\0211Aµöê\006¸ñÔø­èò1ûµ\tí ÔúµÞ-ôÒ@Úlþ³×&Í¹6ù \027Ýî\022ÔôÂ\013Ù-\031B\007õ3¦\032ïÂäXË7ýÂÒ\013(Ê\0242¥(\030n$; I\027Ò½/\b5\003h\023Á\006Uëó$åKì\b\024à\003\017Ó²O/Èh#4\006(êúä\"³Ð?ü\t0Bù\007\036âð\032]>ÚþV\004Ëß\b×\001âë*\025WòÄ\033ýè\035­+\013¼\004\0350¨CUêÃtó\006\nëßûÑE·\020a7ï\f\027æºRÓ\017ÜºF¢O\003åúï\035Áã@ì\021½N\037Æcøù¢ß?êÖI'à\000É=\026ÐÞúÆó\",>üä\034Gº\030¬Zð\036Ì\003¿Ùÿuö&\002\"ò\000)Õ\r#·8\bi\rõ\"ü,õ¯\007\021+Ñ\021%\n÷7Î\016cøØP8\\\016Õþ\031Ü\fÊ'Ø\000õ<\r\001Û2õá'G.ÇÚí9\030kç\023÷ÉÝ+ÏªÕ\026¸Q7Ñ\031íBÙ7ç`ý®N½\025ñ¹1ê\020ô\001\031²æ5\006¹ì\026«^0Î%æÅ\025¢A\b\031Ï\020â\037E\024\007äÍ;Ã®1aí\025\001Cê2\002Û\nåZÊú#æ·\032\004Êðâ-\003F \b©'áÁî)FËaõN9ùÁï\023S+ùgè¯ú\\ñ\005«üÀZ/ù\013ì\004Aþ ÀPù'Èñ\035©\000\r1¼\003óAØ3 qûÚ\031ãÇýB\034x\tÛû\021©#Óå\016\004Dá\bÖî¹\016 Æ:ë¹2Q\rÕñ²Ý%QØ\034ã\017õÙ\tá¢\021s:À)àe\027\013&é\020\006Ð§í\\7Õ\005µÏ3\037ñà\002-\035Ú´\"ý@\034\004Þ0×\001%\025Ò÷ç)>\036ý\026¢ô¹ÐV;-³\033>þèÕø\025EôëÒÅàùPµÄ=(\f¾\023òQùì\025\000X¼A\013ÅþL4÷fÆ«6ÍIô\nVÝ@Å\031\001Êg¿7\016'\007ëÇýðYÏ»%\bíUÌ\005!?0e\002\027ò\036çLö\001$Þ+>ÅåÕ*\030éoð\024Ïè\013\026òåü\030¼æ\017ý \004`á\022ë\bÕåûI0§\025$æ\016\004ÞI\036¶Ü\017¬ü\022Ó¬EÜ\tþÕ²0Íé\n\037­\016I\005÷Í°9Ý½'¢-×P&\020ní)ËF/î²ó4K¬öB\037îÄÝ\001lÖ4\030ô0\021û=3ç,Áåð!Ì-8\026iàA\032_×ýó#£6\022ü!õ\t\003[î\000À\bµÓ9\000øÖUÁ\tÏÛ#.\f]\031´÷\nAÀûÈ^°äÑ\002Å÷Y\025\007=ý\016¼ãõ!ì\016ù©\003Ê5ºfáíRÙD\031â³;\033à1÷\036ÝZ\024\bá\033(\020û\030¹ÿÉá\004Ò;!âï\034MëØ\n*ïf\032\tßÀWêb\005NÉ¹:\007ÁJî\026Ü\b\032Æ\002\f.ÒTÉ\022õÑCê\005ªÃ$ë6ö§æjð:éM\0253ñ\017QÊ-®\021\000<!¿E¨×$ò<\033Ù'÷\024Ô*\000\022Ùò-ã\"øDÐ/´%ç¿\000ë5ûH$\013_Ê,\020ò@³ÊL\001?Æ\006Ô&­ü½çÿÙ\007&á ÷\027þ\017éNÌ\001ò3\002Ç\035¬ßB%]Ò\013\017ÿò@ùj\027ó)¤ÜÁ\002ð\026ýãNÕ\032ü\006Ó\023Ü+\035T\017øÚu*\006\0277Zó¼Ñs\006ÊÜ8¸\007/\016âµ;Kï\fúæ\034ý´9Wé(Pã\021¦Û:²\020\b\036wå±Ù¼5 \nçt/\037ºì\013õãÀ=ë\033ÆBÓùé\024G.î4æSõ\036ûã\025HÎ\bçý.Ás6Ìë\026\001ÛÊ\033¾Õ\t\037É\005âYÕí1\016'?\034ô\000(¾ÛóWþ7Î²\003# \nôà¶\"È\035ü\016¶\032+ÅjÔA¦%d\022Ò\030ô®\bMÃö+ð\005ú;]î+L÷$ºÿÍøU\007Ï]\025îF\017%â©\027_.\023IÐ\000Q\0204f\f\003ã«×D\000\tí\022­&ïþëöÜ\"U\003Ø'à\020@\037©n5\025æ¸ýÑ\0246óO\031ÞÄëªà:È\003÷Ð=Ä\005ÙèûðÝ1«èþïÜ=)Yò$àÍ<Ú\003\fÀ\036>·5Èì\017¹3úÕå\fºßÎ&\002\0323\fèGÅ\nç<\003\0230$\fû²2\031é\rNø&9Èc \027Â(Î\032½÷Ï\023Ádú\035VåJùÄÕ\005\027ûDãP\032ïc\0050üIì\016ôEÄÜñ\034\002Ø ª*¸ýÕMó\037Øe¡ÿ¶\036î\n¾\033\016²\006øØL\007©Qê\n9\004§0»ô\031+\016Mñ«\n*¡\000Í#½\026óÇ!\001±×V\022§b<´âhúÐð[ãÀC\bä*HÝ0ÒsáBþåíC/ó\0222ý\035åï\025Õ\0015ËÞæ/kÞÃö;\fèÝD¤ÓZ\027>,åú\b#Í÷0\007\026E\017\0354\005\027ëÍ\021ñÆö\024­\001*õÔT#Ì\r\000ä!ÓßF*ÈN\f'Eê\020_û\034\001Î!ê\025Ö±[\0037\017*ç÷\006Ë8ºëÿ\022ìÀÜ¥éÊö+\000T¹\034\0037UçÊ\020 1»\024:ÜnÆ°X\003ºöØþ²âÃ\b«ý;Ù¹\020BW\005\036-ùÈíþ¸\tßÂ$ð\033ÞH*Õ>W$ô9\013s±Ü=§ú&Õ\t!ðK\032Þ\004úªï\035ø7\013ï\031\020s1\037øZ\032ð2Èî'ôü¼ðE\031$Øt\0335Q\021ÿ\\\016Ãä\033üË\002,»þ\037\023Ñ1ájë>ÛûÀ\0068ëÉ_\n-¼\024é'Í;¤ë\007Ï8Ú$Ñ\026P\0048Õä5ÌÞ\020åK«òÍ\002ëÙ³.ö\004wñ\tµß\031RÔâIí\rô\b¿\027\016µ.eÖ¯ö\037(ãÓ\002JÙû ÃàIó\023æ\004¹j§ß\013²\032\016(\bdýÀ\006+\016A¡ùGÒç\027Î\037¨7J\016ë\007ø(ÄD#\000ÌI÷ä%\024ÿ@\016Nó>É\007bäC\001\r·&\000ÅA\r÷ú.êiÆJö¨\035ê3ÐøÝ\037¿\026%\f4¾@Üøè.Òó!A«\026`ýØç5©ð\034\003ÊRæÂÚü´\031í0\021¯ò+^×;\033Rì¤\027BÏ\"ÿÜí\001¹×<\023Zµî0äb\004ªïýO&\002º\023üiÀ2ÎÞñ\034¶P\023Þ`Ñ:\fÝò1\030\0045\017$Üþ¿\034Ñ\025ùí©ßûÏ/Ü\023¾ó>\0271Q\fó\002\030Oý\nËó=à\022\nÖTÉ(\004ä\021\000\n:-\005Çø \007¼ìGû ¸zëÏRå¢÷L8èÈ\b2¿\020$\005Wá\003V\020&ÑæÄ!áÊ'çÔ9Û¸S\037Èéô\0333î¢Û\036²Xé¡Ó\017í*þ1\027¬)Ò\b*öÃ\ne'Ö\013\003W\"G\027ñmåµó2\036×·ù\007¦þ-kû\t>Â\020(÷\031\000Õ,i:¯á\b\026Iùð?Ã$û}â?ÕYæÆõV\020âÿ\023B®\035\001Êð´-ÛýäÒ\000\035EÈ«í\0139ß]Añ\022ÚIô\036\001ræ2£\bù¾\020Ïý[¿6Ì,Ø\031ôG«¿\022ò\013%Ü\002;é¾KÕðÞ;ê\022E\032õÂ\016°(@\fØú,EüÅ,é\025Ë\003º\034ë1¶ßî¬Ï\rìJ%ä\002C\"öè\r\001\007\022Þ\0040þ\033Ì±I\025 Í\0343ù\027%\006úº+áw:îR÷Æ6í\004\023Ò\030oö\"¯6RÒ\017\005É\026N#AÃ\025Ý³ð\031Ü*­Õ\037LåcµË èT:\005ìúl\013ò¯\\È2Ð]Ùþ\bÌ\024£\033\006ßº_ªã\bòÝ\002IÔ\013îúâ&Zý5Õ\006òü9ZÊ3\nNÅ\022t>í½ö#7î\n×¡÷à-º Ø(\005ßí\fHç\031\0165ì$ûÙ2è%\017\037ÐM<¯(\020¿\033Ü*DÂªöç\022ºâ\036\001õ\037Ôúì\005à\030ý1Ï\002ù@\020(Ä\030ÓD\000åÃ\022=ü ²\001Äò­J½\004YµÎIùï0þã\036Ê6æ`ÿ\024\007\037@Ú+aøH-Ù\021çg«<,¸ôÊ¥\tPÛ\023Y¼ãiý6\017ï2U¥,ÒqÛö'T\034Ôæ,\rò\030\001Ú\027ÀþVíú\007´ô5èzÐñ\r\002Çê\nÏµ\007(¿ÿå\016V$9\020ä)\032ëÒ%\006ò°é\007]Ë\027÷\002é»\025\007B Þ\006=÷ÜCÄ6k\013=¾\fGÑ\"\020ÈØ\000²\032½<#«\030X7ïE\025Ý\033Î\001Ù`ð®Ã:þ©\033ÊG\036Ûõ#¶\013ÜNñ\036Ê1í\023üÈ\026b üé\007â)õæ0Ù\027+à<îQ&ø1Kãú\023ÝôþãÆù£Rñ5ùê\035½\005Fö\fÞ1N×\002.¿;ãCÑ5%úå\rÑg¸.ï\bÑ(®\023Ô\036PÍñl\002÷«\032½\004¤\026\013ìgÎ1D \017Ö0\b#Â\fLÑ0ü\"ÎW\027ìø\ræ¡û\020\004¦\033ýÇ\021Y<¯\001\"æ9©á¿?ñVúº\002\021\036´èÇ\t[ûäDÝÂÔ(\005ð\tÁ)\003w\031è¶\002ÛA¯\025à\021ç¶\004Á=\024T(ÔiêóHâ\005,ÀõGÚ\013\033ÿR\020\002\033É.ë¦;Ð6\021HÖ1\016Í,õ[9ý\037®ÙVìÐ±ô8Ëbî)ö\007kî5BØ+v\"Ðó¶îÈ\025/¼\016­îÔÞ\025)ÄóB×ì2Û\rH#ß\007áý óì\036µ\007\033\020áÈ@\027\017üß>\fýâ\021 \032æÈ%\001¿ù\034ðý\tß2\004 àÿOÙ$9nþ\036\007ì^ú\022Ì%·ùåo\005ôÄýB¤`»(Þ:jÿè¡ñ¹Röæ5¸\036O+!FÓÿ;µÚNÑ\013¦ãÉJ\031§[\f@ù\bÎõ\023¡Q·5Ò\0030¦c\007\026=!´Õ5\026÷í\030Ì\005ù\022ÅÙ4ÐF+\f\002'ñ\007ÇíÙ¼\tòT/\r\024ó\037.Z\0238¹êú×Ãç)\033äÀ0èÊøâ!JÝè\034òÃÐþ\023æZ+Ø\f3çR\tL%\024ûêØ!ÍcÕ\0251\002[ù\027«Åàú?è²\005õÖ\002+\020Dô\0308ïZB\002\"\fD\032\n¬ñ¼\016ÿ7àQ¨-î\b&ÁM\000°@Ó\032îõ±\003Ãs­8ãù@«ä\034Í:é'\004 ìdËÿÜÂF&`Í\037®\003Ò\nÝú±ÔòÛ\000Ã<\023+XÔ)\013öC¿Íù\036ä\023ñ$ý¼!ä?Ý\034ó\020\005\027»\000\föG\017Ý`ÐD»\t\027'4\016ë\033àñþä1q»\022È-\026e6N%êüËöA\005é\037Ø\002\032RÞùoÈàb\0171Ì\\\0130BÇí+VÜÁ)ïÿ¸3ó\022Ø7â÷¡jûÊ\b9¾\rÚøíO\037¤\005ì¾\020÷Ïr¡\037ã´\027Èi¸ä9\016±\nÒ)9ö\007Ø¦\002ù'ÒæýÚL \035è\023iÕ\"\b\031û\002®RðÓ!¶\023S©$L\027'þæFõÞ\035+å\007Ù0\001\rPïû3\022òþ.Cé\002\031·Jê\030;¿ï\024Xµ#\nõÐ7\003­ù?åÉLè,\035Æ\f?\001å/Öö\004êÉ;\b×·3\016ËXý´B\030ðÁ:Û&©\007ÒK Êê".getBytes(StandardCharsets.ISO_8859_1),
@@ -394,9 +407,15 @@ public class BlueNoise {
     public static byte get(final int x, final int y, final byte[] noiseData) {
         return noiseData[(y << 6 & 0xFC0) | (x & 0x3F)];
     }
+
     /**
      * A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
-     * artifacts detectable to the human eye. <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
+     * artifacts detectable to the human eye.
+     * <br>
+     * New code should prefer {@link #getSeededOmniTiling(int, int, int)}; it is better in every way. The rest of the
+     * notes here are outdated.
+     * <br>
+     * <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
      * histogram at right.</a> This works by choosing from one of four nearby blue noise tiles and using it as-is, with
      * the choice determined by an initial blue noise sample from a non-tiling blue noise tile, weighted heavily based
      * on how close a pixel is to a border between the four noise tiles. Compared to {@link #getSeeded(int, int, int)},
@@ -421,13 +440,21 @@ public class BlueNoise {
     }
     /**
      * A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
-     * artifacts detectable to the human eye. <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
-     * histogram at right.</a> This works by choosing from one of four nearby blue noise tiles and using it as-is, with
-     * the choice determined by an initial blue noise sample from a non-tiling blue noise tile, weighted heavily based
-     * on how close a pixel is to a border between the four noise tiles. Compared to {@link #getSeeded(int, int, int)},
-     * the "progressive" quality of the blue noise this uses is preserved better, meaning if you get the set of points
-     * with values under or over a certain value, that set is still usually blue noise. (Keeping this quality is quite
-     * hard for blue noise textures generated from combining existing tiles!)
+     * artifacts detectable to the human eye.
+     * <br>
+     * New code should prefer {@link #getSeededOmniTiling(int, int, int)}; it is better in every way. The rest of the
+     * notes here are outdated.
+     * <br>
+     * <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
+     * histogram at right (using ALT_NOISE).</a> <a href="https://i.imgur.com/ryA4HYC.png">Blue noise at left, magnitude
+     * histogram at right (using TRI_NOISE).</a> You can pass either {@link #ALT_NOISE} or {@link #TRI_NOISE} to this
+     * and it will be fine (unlike {@link #getSeeded(int, int, int, byte[])}). This works by choosing from one of four
+     * nearby blue noise tiles and using it as-is, with the choice determined by an initial blue noise sample from a
+     * non-tiling blue noise tile, weighted heavily based on how close a pixel is to a border between the four noise
+     * tiles. Compared to {@link #getSeeded(int, int, int)}, the "progressive" quality of the blue noise this uses is
+     * preserved better, meaning if you get the set of points with values under or over a certain value, that set is
+     * still usually blue noise. (Keeping this quality is quite hard for blue noise textures generated from combining
+     * existing tiles!)
      * <br>
      * This way of mixing blue noise textures has some soft line artifacts that don't persist very far.
      * It tends to look like it has less artifacts to human observers now, and about the same to signal processing.
@@ -460,11 +487,14 @@ public class BlueNoise {
         // this transposes x and y again (it seems to help with the particular blue noise textures we have).
         return noises[(seed ^ (seed ^ x ^ y) >>> 6) & 0x3F][(x << 6 & 0xFC0) | (y & 0x3F)];
     }
-    
+
     /**
      * Gets a modified byte from the raw data this stores, using seed to adjust repeated sections of blue noise so
      * patterns are much less noticeable. Unlike {@link #get(int, int)}, this won't repeat every 64 cells on x or y, but
      * it isn't as correct at matching blue-noise frequencies, and tends to look "scratchy" in places, like TV static.
+     * <br>
+     * New code should prefer {@link #getSeededOmniTiling(int, int, int)}; it is better in every way.
+     * <br>
      * This chooses a sub-array from {@link #ALT_NOISE} based on the seed, and the same seed will use the same sub-array
      * in all locations. This tends to look less scratchy than {@link #getChosen(int, int, int)}, but has worse measured
      * repetitive qualities. The "progressive" quality of the blue noise this uses is not well-preserved, meaning if you
@@ -482,32 +512,17 @@ public class BlueNoise {
         return (byte) (ALT_NOISE[s][(y << 6 & 0xFC0) | (x & 0x3F)] ^
                 ((seed ^ (seed << 19 | seed >>> 13) ^ (seed << 5 | seed >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 15 & 63)
                 ^ (x + x + y >> 2 & 0x3F) ^ (x - y - y >> 2 & 0x3F));
-//        seed ^= (x + 47 >>> 6) * 0x1827FB ^ (y + 19 >>> 6) * 0x123C23;
-//        final int idx = (23 - x << 6 & 0xFC0) | (43 - y & 0x3F);
-//        final int a = Integer.bitCount(ALT_NOISE[seed & 31][idx] + 128) - 4;
-//        final int b = Integer.bitCount(ALT_NOISE[(seed >>> 5 & 31) | 32][idx] + 128) - 4;
-//        return ALT_NOISE[s][(y + b << 6 & 0xFC0) | (x + a & 0x3F)];
-//        final int d = ALT_NOISE[s][(y << 6 & 0xFC0) | (x & 0x3F)];
-//        return (byte)(d < 0 ? Math.min(a, b) : Math.max(a, b));
-//        final int h = Noise.IntPointHash.hashAll(x >>> 6, y >>> 6, seed);         
-                //ALT_NOISE[s][(y + Integer.bitCount(h) - 4 << 6 & 0xFC0) | (x + Integer.bitCount((h ^ 0xD1B54A35) * 0x125493) - 4 & 0x3F)];
-//                (byte) (ALT_NOISE[s][(y << 6 & 0xFC0) | (x & 0x3F)] ^
-//                        (ALT_NOISE[seed & 63][(x + 23 << 6 & 0xFC0) | (y + 43 & 0x3F)]
-////                        & ALT_NOISE[seed >>> 6 & 63][(y + 29 << 6 & 0xFC0) | (x + 37 & 0x3F)]
-////                        & ALT_NOISE[seed >>> 12 & 63][(y + 29 << 6 & 0xFC0) | (x + 37 & 0x3F)]
-//                ) + 128 >>> 3);
-        //(ALT_NOISE[seed >>> 6 & 63][(y + 23 << 6 & 0xFC0) | (x + 43 & 0x3F)] + 128 
-        //        >>> 1 + Integer.bitCount(ALT_NOISE[seed & 63][(x + 43 << 6 & 0xFC0) | (y + 23 & 0x3F)] + 129)));
-//                (ALT_NOISE[Noise.IntPointHash.hash64(x, y, seed)][(32 - x << 6 & 0xFC0) | (32 - y & 0x3F)] + 128) >>> 3);
-//                ((seed ^ (seed << 19 | seed >>> 13) ^ (seed << 5 | seed >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 15 & 63)
-//                ^ (x + y + (x >> 2) & 0x3F) ^ (x - y - (y >> 2) & 0x3F));
     }
 
     /**
      * Gets a modified byte from some raw noise data in an array of at least 4096 bytes, using seed to adjust repeated
      * sections of noise so patterns are much less noticeable. Unlike {@link #get(int, int)}, this won't repeat every 64
      * cells on x or y, but it isn't as correct at matching blue-noise frequencies, and tends to look "scratchy" in
-     * places, like TV static. You probably want to get the noiseData from an element of {@link #ALT_NOISE} or
+     * places, like TV static.
+     * <br>
+     * New code should prefer {@link #getSeededOmniTiling(int, int, int)}; it is better in every way.
+     * <br>
+     * You probably want to get the noiseData from an element of {@link #ALT_NOISE} or
      * {@link #TRI_NOISE}; unlike {@link #getSeeded(int, int, int)}, this won't choose a different byte array, and will
      * always use the given {@code noiseData}. The "progressive" quality of the blue noise this uses is not
      * well-preserved, meaning if you get the set of points with values under or over a certain value, that set doesn't
@@ -522,6 +537,34 @@ public class BlueNoise {
     public static byte getSeeded(final int x, final int y, int seed, final byte[] noiseData) {
         seed ^= (x >>> 5) * 0x1827F5 + 0xC13FA9A9 ^ (y >>> 5 ^ 0x91E10DA5) * 0x123C23;
         return (byte) (noiseData[(y << 6 & 0xFC0) | (x & 0x3F)] ^
+                ((seed ^ (seed << 19 | seed >>> 13) ^ (seed << 5 | seed >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 15 & 63)
+                ^ (x + x + y >> 2 & 0x3F) ^ (x - y - y >> 2 & 0x3F));
+    }
+
+    /**
+     * Gets a modified byte from the triangular-mapped blue noise this stores in {@link #TRI_NOISE}, using seed to
+     * adjust repeated sections of noise so patterns are much less noticeable. Unlike {@link #get(int, int)}, this won't
+     * repeat every 64 cells on x or y, but it isn't as correct at matching blue-noise frequencies, and tends to look
+     * "scratchy" in places, like TV static.
+     * <br>
+     * New code should prefer {@link #getSeededTriOmniTiling(int, int, int)}; it is better in every way.
+     * <br>
+     * This chooses a sub-array from {@link #TRI_NOISE} based on the seed, and the same seed will use the same sub-array
+     * in all locations. This tends to look less scratchy than {@link #getChosen(int, int, int)}, but has worse measured
+     * repetitive qualities. The "progressive" quality of the blue noise this uses is not well-preserved, meaning if you
+     * get the set of points with values under or over a certain value, that set doesn't usually resemble blue noise.
+     * <a href="https://i.imgur.com/zcxLjj6.png">Blue noise at left, magnitude histogram at right.</a> There is an odd
+     * "patchwork" quality to the noise with the triangular mapping; it is not present when using
+     * {@link #getChosen(int, int, int, byte[][])} with {@link #TRI_NOISE} as the last parameter.
+     * @param x         x position, can be any int; results will not repeat for a very long time
+     * @param y         y position, can be any int; results will not repeat for a very long time
+     * @param seed      seed value, can be any int; should be the same for all calls that should be from the same 2D plane
+     * @return a byte that obeys an almost-triangular-blue-noise distribution, so a value is only next to a similar value rarely
+     */
+    public static byte getSeededTriangular(final int x, final int y, int seed) {
+        final int s = seed & 63;
+        seed ^= (x >>> 5) * 0x1827F5 + 0xC13FA9A9 ^ (y >>> 5 ^ 0x91E10DA5) * 0x123C23;
+        return (byte) (TRI_NOISE[s][(y << 6 & 0xFC0) | (x & 0x3F)] ^
                 ((seed ^ (seed << 19 | seed >>> 13) ^ (seed << 5 | seed >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 15 & 63)
                 ^ (x + x + y >> 2 & 0x3F) ^ (x - y - y >> 2 & 0x3F));
     }
@@ -566,7 +609,6 @@ public class BlueNoise {
         final int b = y >>> 6 ^ seed >>> 12;
         return TILE_TRI_NOISE[seed + b + ((a + b) * (a + b + 1) >> 1) & 63][(y << 6 & 0xFC0) | (x & 0x3F)];
     }
-
 
     /**
      * A 256-element array of {@link Region}s, each 64x64, where the first Region has an impossibly strict
