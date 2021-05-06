@@ -6,6 +6,7 @@ sourceSets.test.resources.srcDirs += [ file('../assets').path ]
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
+    api project(':squidsmooth')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
     testImplementation project(':squidplace')

@@ -11,6 +11,7 @@
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
     <inherits name="squidcore" />
     <inherits name="squidgrid" />
+    <inherits name="squidsmooth" />
     <source path="com/github/yellowstonegames/glyph" />
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.Line" />
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.Layout" />
