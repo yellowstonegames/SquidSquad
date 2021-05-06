@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * their values will be different every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
  */
-public class CoordGlider {
+public class CoordGlider implements Glider {
     protected float change = 0f;
     protected @Nonnull Coord start = Coord.get(0, 0);
     protected @Nonnull Coord end = Coord.get(0, 0);
@@ -36,21 +36,26 @@ public class CoordGlider {
         return interpolation.apply(start.y, end.y, change);
     }
 
+    @Override
     public float getChange() {
         return change;
     }
 
+    @Override
     public void setChange(float change) {
         this.change = Math.max(0f, Math.min(1f, change));
     }
 
+    @Override
     @Nonnull
     public Interpolation getInterpolation() {
         return interpolation;
     }
 
+    @Override
     public void setInterpolation(@Nonnull Interpolation interpolation) {
         this.interpolation = interpolation;
+        change = 0f;
     }
 
     @Nonnull
