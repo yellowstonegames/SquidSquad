@@ -79,9 +79,6 @@ public class WaveFunctionCollapse {
 
         int C = choices.size();
 
-
-//        Dictionary<long, int> weights = new Dictionary<long, int>();
-//        List<long> ordering = new List<long>();
         ObjectIntOrderedMap<int[]> weights = new ObjectIntOrderedMap<int[]>(){
             @Override
             protected int place(@Nonnull Object item) {
@@ -149,44 +146,11 @@ public class WaveFunctionCollapse {
         }
     }
 
-    private long index(byte[] p, long C)
-    {
-        long result = 0, power = 1;
-        for (int i = 0; i < p.length; i++)
-        {
-            result += p[p.length - 1 - i] * power;
-            power *= C;
-        }
-        return result;
-    }
-
-    private byte[] patternFromIndex(long ind, long power, long C)
-    {
-        long residue = ind;
-        byte[] result = new byte[order * order];
-
-        for (int i = 0; i < result.length; i++)
-        {
-            power /= C;
-            int count = 0;
-
-            while (residue >= power)
-            {
-                residue -= power;
-                count++;
-            }
-
-            result[i] = (byte)count;
-        }
-
-        return result;
-    }
-
-    private int[] patternFromSample(int x, int y, int[][] sample, int SMX, int SMY) {
+    private int[] patternFromSample(int x, int y, int[][] sample, int sampleWidth, int sampleHeight) {
         int[] result = new int[order * order];
         for (int dy = 0; dy < order; dy++) {
             for (int dx = 0; dx < order; dx++) {
-                result[dx + dy * order] = sample[(x + dx) % SMX][(y + dy) % SMY];
+                result[dx + dy * order] = sample[(x + dx) % sampleWidth][(y + dy) % sampleHeight];
             }
         }
         return result;
