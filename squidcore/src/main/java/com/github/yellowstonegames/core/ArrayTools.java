@@ -404,6 +404,22 @@ public class ArrayTools {
 
     /**
      * Creates a 2D array of the given width and height, filled with entirely with the value contents.
+     * You may want to use {@link #fill(long[][], long)} to modify an existing 2D array instead.
+     * @param contents the value to fill the array with
+     * @param width    the desired width
+     * @param height   the desired height
+     * @return a freshly allocated 2D array of the requested dimensions, filled entirely with contents
+     */
+    public static long[][] fill(long contents, int width, int height) {
+        long[][] next = new long[width][height];
+        for (int x = 0; x < width; x++) {
+            Arrays.fill(next[x], contents);
+        }
+        return next;
+    }
+
+    /**
+     * Creates a 2D array of the given width and height, filled with entirely with the value contents.
      * You may want to use {@link #fill(byte[][], byte)} to modify an existing 2D array instead.
      * @param contents the value to fill the array with
      * @param width    the desired width
@@ -558,17 +574,19 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
+    }
 
-//        final int width = array2d.length;
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
+    /**
+     * Fills {@code array2d} with {@code value}.
+     * Not to be confused with {@link #fill(long, int, int)}, which makes a new 2D array.
+     * @param array2d a 2D array that will be modified in-place
+     * @param value the value to fill all of array2D with
+     */
+    public static void fill(long[][] array2d, long value) {
+        final int width = array2d.length;
+        for (int i = 0; i < width; i++) {
+            Arrays.fill(array2d[i], value);
+        }
     }
 
     /**
@@ -694,7 +712,27 @@ public class ArrayTools {
             }
         }
     }
-    
+
+    /**
+     * Fills a sub-section of {@code array2d} with {@code value}, with the section defined by start/end x/y.
+     * Not to be confused with {@link #fill(long, int, int)}, which makes a new 2D array.
+     * @param array2d a 2D array that will be modified in-place
+     * @param value the value to fill all of array2D with
+     * @param startX the first x position to fill (inclusive)
+     * @param startY the first y position to fill (inclusive)
+     * @param endX the last x position to fill (inclusive)
+     * @param endY the last y position to fill (inclusive)
+     */
+    public static void fill(long[][] array2d, long value, int startX, int startY, int endX, int endY) {
+        final int width = array2d.length;
+        final int height = width == 0 ? 0 : array2d[0].length;
+        for (int x = startX; x <= endX && x < width; x++) {
+            for (int y = startY; y <= endY && y < height; y++) {
+                array2d[x][y] = value;
+            }
+        }
+    }
+
     /**
      * Rearranges an Arrangeable using the given {@link LaserRandom} to shuffle it, then returns the LaserRandom to its
      * prior state so it can be used to reorder other Arrangeables. This rearrangement is done in-place.
