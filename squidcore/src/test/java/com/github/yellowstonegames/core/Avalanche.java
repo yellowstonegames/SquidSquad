@@ -105,12 +105,41 @@ Order 2, Best Ten with total:
 #7: 17,5 with value 318.23436546325684
 #8: 48,37 with value 318.4336643218994
 #9: 13,42 with value 318.71700286865234
+ */
+/*
+lower=10, upper=41, inc=1, N=1L<<11
 
+// note, this takes over 12 hours to run.
+
+v 0 0
+
+#0: 37,57 with value 30.90493154525757
+#1: 13,55 with value 30.92151927947998
+#2: 47,52 with value 31.059566497802734
+#3: 49,55 with value 31.07398748397827
+#4: 17,59 with value 31.08048677444458
+#5: 9,30 with value 31.082557678222656
+#6: 36,48 with value 31.088653087615967
+#7: 6,40 with value 31.102781295776367
+#8: 25,54 with value 31.10760498046875
+#9: 37,42 with value 31.108074188232422
+Order 2, Best Ten with total:
+#0: 20,50 with value 974.9239659309387
+#1: 5,49 with value 975.0130786895752
+#2: 59,26 with value 975.1056275367737
+#3: 39,30 with value 975.1386919021606
+#4: 50,59 with value 975.2236862182617
+#5: 58,27 with value 975.2764978408813
+#6: 6,50 with value 975.3469920158386
+#7: 27,7 with value 975.3521447181702
+#8: 48,42 with value 975.384928226471
+#9: 23,10 with value 975.3943996429443
  */
 public class Avalanche {
-    private static final long N = 1L << 9;
+    private static final long N = 1L << 11;
     //    private static final int lower = 9, upper = 19, inc = 1;
-    private static final int lower = 8, upper = 41, inc = 4;
+//    private static final int lower = 8, upper = 41, inc = 4;
+    private static final int lower = 10, upper = 41, inc = 1;
 
     public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
