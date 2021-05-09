@@ -2,6 +2,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 /*
+lower=9, upper=19, inc=1, N=1L<<10
+
 v 0 0
 Order 1, Best Ten with total:
 #0: 27,42 with value 13.172428131103516
@@ -75,10 +77,40 @@ Order 2, Best Ten with total:
 #7: 9,30 with value 317.48772716522217
 #8: 47,5 with value 317.53620433807373
 #9: 54,48 with value 317.56426429748535
+ */
+
+/*
+lower=8, upper=41, inc=4, N=1L<<9
+
+v 0 0
+Order 1, Best Ten with total:
+#0: 20,6 with value 22.667417526245117
+#1: 27,21 with value 22.742338180541992
+#2: 20,49 with value 23.08631134033203
+#3: 51,42 with value 23.67423439025879
+#4: 6,42 with value 23.6773681640625
+#5: 41,7 with value 24.245046615600586
+#6: 37,42 with value 24.394433975219727
+#7: 17,59 with value 24.6146297454834
+#8: 13,42 with value 24.623638153076172
+#9: 20,50 with value 24.688993453979492
+Order 2, Best Ten with total:
+#0: 20,49 with value 313.23787117004395
+#1: 27,21 with value 313.6917018890381
+#2: 20,6 with value 313.79674911499023
+#3: 55,30 with value 315.06591415405273
+#4: 6,42 with value 316.889347076416
+#5: 51,42 with value 317.2352352142334
+#6: 37,42 with value 317.81798553466797
+#7: 17,5 with value 318.23436546325684
+#8: 48,37 with value 318.4336643218994
+#9: 13,42 with value 318.71700286865234
 
  */
 public class Avalanche {
-    private static final long N = 1L << 10;
+    private static final long N = 1L << 9;
+//    private static final int lower = 9, upper = 19, inc = 1;
+    private static final int lower = 8, upper = 41, inc = 4;
 
     public static long mix(final long v, final int shiftB, final int shiftC, final int iterations){
         long stateA = v;
@@ -102,7 +134,7 @@ public class Avalanche {
             final long[][] A = new long[64][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
-            for (int iterations = 9; iterations < 19; iterations++) {
+            for (int iterations = lower; iterations < upper; iterations+=inc) {
                 for (int sb = 1; sb < 64; sb++) {
                     for (int sc = 1; sc < 64; sc++) {
                         ArrayTools.fill(A, 0L);
@@ -128,6 +160,7 @@ public class Avalanche {
                         totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
                     }
                 }
+                System.out.println("Completed run for " + iterations + " iterations, order 1.");
 //            res.sortByValue(Double::compareTo);
 //            System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
 //            for (int i = 0; i < 10; i++) {
@@ -157,7 +190,7 @@ public class Avalanche {
             final long[][] A = new long[2016][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
-            for (int iterations = 9; iterations < 19; iterations++) {
+            for (int iterations = lower; iterations < upper; iterations+=inc) {
                 for (int sb = 1; sb < 64; sb++) {
                     for (int sc = 1; sc < 64; sc++) {
                         ArrayTools.fill(A, 0L);
@@ -186,6 +219,7 @@ public class Avalanche {
                         totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
                     }
                 }
+                System.out.println("Completed run for " + iterations + " iterations, order 2.");
 //            res.sortByValue(Double::compareTo);
 //            System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
 //            for (int i = 0; i < 10; i++) {
