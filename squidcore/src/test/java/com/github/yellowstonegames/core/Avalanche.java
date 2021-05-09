@@ -109,10 +109,10 @@ Order 2, Best Ten with total:
  */
 public class Avalanche {
     private static final long N = 1L << 9;
-//    private static final int lower = 9, upper = 19, inc = 1;
+    //    private static final int lower = 9, upper = 19, inc = 1;
     private static final int lower = 8, upper = 41, inc = 4;
 
-    public static long mix(final long v, final int shiftB, final int shiftC, final int iterations){
+    public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
@@ -134,7 +134,7 @@ public class Avalanche {
             final long[][] A = new long[64][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
-            for (int iterations = lower; iterations < upper; iterations+=inc) {
+            for (int iterations = lower; iterations < upper; iterations += inc) {
                 for (int sb = 1; sb < 64; sb++) {
                     for (int sc = 1; sc < 64; sc++) {
                         ArrayTools.fill(A, 0L);
@@ -190,7 +190,7 @@ public class Avalanche {
             final long[][] A = new long[2016][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
-            for (int iterations = lower; iterations < upper; iterations+=inc) {
+            for (int iterations = lower; iterations < upper; iterations += inc) {
                 for (int sb = 1; sb < 64; sb++) {
                     for (int sc = 1; sc < 64; sc++) {
                         ArrayTools.fill(A, 0L);
