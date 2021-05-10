@@ -1,33 +1,39 @@
 package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 
 public class GlyphMap {
+    protected int gridWidth;
+    protected int gridHeight;
     public IntLongOrderedMap map;
     public int[][] backgrounds = null;
     public Font font;
+    public Viewport viewport;
 
     /**
      * Does not set {@link #font}, you will have to set it later.
      */
     public GlyphMap(){
-        this(2048);
+        map = new IntLongOrderedMap(4096);
+        viewport = new StretchViewport(64, 64);
     }
     public GlyphMap(Font font){
-        this(font, 2048);
+        this(font, 64, 64);
     }
-    public GlyphMap(Font font, int capacity){
-        this.font = font;
-        map = new IntLongOrderedMap(capacity);
-    }
-    /**
-     * Does not set {@link #font}, you will have to set it later.
-     * @param capacity how many glyphs this should be able to hold at the start, before resizing
-     */
-    public GlyphMap(int capacity){
-        map = new IntLongOrderedMap(capacity);
+    public GlyphMap(Font font, int gridWidth, int gridHeight){
+        this.font = new Font(font);
+        this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
+        this.gridWidth = gridWidth;
+        this.gridHeight = gridHeight;
+        map = new IntLongOrderedMap(gridWidth * gridHeight);
+        viewport = new StretchViewport(gridWidth, gridHeight);
+        viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
+        viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
+        this.font.scaleTo(1f, 1f);
     }
 
     /**
@@ -81,6 +87,7 @@ public class GlyphMap {
     }
 
     public void draw(Batch batch, float x, float y) {
+        viewport.apply(false);
         font.enableShader(batch);
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
@@ -90,5 +97,9 @@ public class GlyphMap {
             pos = e.key;
             font.drawGlyph(batch, e.value, x + extractX(pos) * font.cellWidth, y + (extractY(pos)) * font.cellHeight);
         }
+    }
+
+    public void resize(int screenWidth, int screenHeight) {
+        viewport.update(screenWidth, screenHeight, false);
     }
 }

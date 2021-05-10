@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.LaserRandom;
@@ -41,7 +42,7 @@ public class GlyphMapTest extends ApplicationAdapter {
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getAStarry();
-        gm = new GlyphMap(font);
+        gm = new GlyphMap(font, 60, 32);
 
         wilderness = new WildernessGenerator(60, 32, Biome.TABLE[random.nextInt(42)], random);
         regenerate();
@@ -69,9 +70,20 @@ public class GlyphMapTest extends ApplicationAdapter {
             regenerate();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Camera camera = gm.viewport.getCamera();
+        camera.position.set(gm.gridWidth * 0.5f, gm.gridHeight * 0.5f, 0f);
+        camera.update();
+        gm.viewport.apply(false);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         gm.draw(batch, 0, 0);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        gm.resize(width, height);
     }
 }
