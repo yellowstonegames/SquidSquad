@@ -3126,7 +3126,31 @@ public class Language implements Serializable {
     public static final Language[] romanizedHumanLanguages = {
             ENGLISH, KOREAN_ROMANIZED, SPANISH, SWAHILI, NORSE_SIMPLIFIED, ARABIC_ROMANIZED, HINDI_ROMANIZED, FRENCH,
             MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW, 
-            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE
+            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE,
+    };
+
+    /**
+     * Language constants that are meant to sound like they belong to fictional groups or species. All of these use the
+     * Latin script (like English), and many use accents. These are sorted roughly by how non-human the language sounds,
+     * with {@link #HLETKIP} first (as a stand-in for some fictional human language), {@link #FANTASY_NAME} second (it
+     * is built by combining several real languages), and the 5 ALIEN_ languages, such as {@link #ALIEN_A}, last (these
+     * are meant to be always very different from human languages).
+     */
+    public static final Language[] fantasyLanguages = {
+            HLETKIP, FANTASY_NAME, ELF, GOBLIN, KOBOLD, DEEP_SPEECH, DRAGON, INSECT, CELESTIAL, INFERNAL,
+            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
+    };
+
+    /**
+     * Language constants that could sound like real-world languages or completely fictional ones, but that all use the
+     * Latin script (like English) with maybe some accents.
+     */
+    public static final Language[] romanizedLanguages = {
+            ENGLISH, KOREAN_ROMANIZED, SPANISH, SWAHILI, NORSE_SIMPLIFIED, ARABIC_ROMANIZED, HINDI_ROMANIZED, FRENCH,
+            MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW,
+            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE,
+            HLETKIP, FANTASY_NAME, ELF, GOBLIN, KOBOLD, DEEP_SPEECH, DRAGON, INSECT, CELESTIAL, INFERNAL,
+            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
     };
 
     /**

@@ -82,13 +82,35 @@ lower=10, upper=43, inc=1, N=1L<<14
 
 5,49 with value 42.28814917802811
 5,49 with value 1042.9201802015305
+
+^ + + ^, N=1L<<14
+
+stateA
+42,27 with value 33.04507076740265
+42,27 with value 1040.020654797554
+
+stateA
+27,42 with value 33.162183344364166
+27,42 with value 1038.5555713772774
+
+stateB
+42,27 with value 33.051907658576965
+42,27 with value 1039.887927532196
+
+stateB
+27,42 with value 32.75392371416092
+27,42 with value 1040.356209218502
+
+stateC
+27,42 with value 33.104141652584076
+27,42 with value 1039.4659236073494
 */
 public class AvalancheEvaluator {
     private static final long N = 1L << 14;
 //        private static final int lower = 9, upper = 19, inc = 1;
     private static final int lower = 10, upper = 43, inc = 1;
 
-//    private static final int shiftB = 42, shiftC = 27;
+    private static final int shiftB = 42, shiftC = 27;
 //    private static final int shiftB = 27, shiftC = 42;
 //    private static final int shiftB = 27, shiftC = 21;
 //    private static final int shiftB = 20, shiftC = 49;
@@ -104,7 +126,7 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 47, shiftC = 23;
 //    private static final int shiftB = 23, shiftC = 47;
 //    private static final int shiftB = 43, shiftC = 27;
-    private static final int shiftB = 5, shiftC = 49;
+//    private static final int shiftB = 5, shiftC = 49;
 
     public static long mix(final long v, final int iterations) {
         long stateA = v;
@@ -116,9 +138,9 @@ public class AvalancheEvaluator {
             final long c0 = stateC;
             stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
             stateB = Long.rotateLeft(a0, shiftB) + c0;
-            stateC = Long.rotateLeft(b0, shiftC) + a0;
+            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
         }
-        return stateA;
+        return stateB;
     }
 
     public static void main(String[] args) {

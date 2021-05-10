@@ -101,9 +101,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 //// you could reload basis without needing the original map image with
 //// basis = GreasedRegion.deserializeFromString(LZSPlus.decompress(Gdx.files.local("map.txt").readString("UTF16")));
 //// it's also possible to store the compressed map as a String in code, but you need to be careful about escaped chars.
-//        world = new WorldMapGenerator.LocalMimicMap(seed, basis, FastNoise.instance, 0.8);
+//        world = new WorldMapGenerator.LocalMimicMap(seed, basis, WorldMapGenerator.DEFAULT_NOISE, 0.8);
 //        pix.dispose();
-        Noise noise = new Noise(rng.nextInt(), 1.5f, Noise.FOAM, 1);
+        Noise noise = new Noise(rng.nextInt(), 1.0f, Noise.FOAM, 1);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
         wmv = new WorldMapView(world);
@@ -202,7 +202,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         atlas.clear();
         for (int i = 0; i < 64; i++) {
             Language lang = rng.randomElement(Language.romanizedHumanLanguages)
-                    .mix(rng.randomElement(Language.romanizedHumanLanguages), rng.nextFloat()).removeAccents();
+                    .mix(Language.romanizedLanguages[rng.nextInt(Language.romanizedLanguages.length - 7)], // - 7 removes fancy, imp, and alien langs
+                            rng.nextFloat(0.125f)).removeAccents();
             factions.add(new PoliticalMapper.Faction(lang, thesaurus.makeNationName(lang)));
             atlas.put(ArrayTools.letterAt(i), lang);
         }
@@ -220,7 +221,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             Language lang = atlas.get(p);
             if(lang != null)
             {
-                cities.put(points[i], lang.word(rng, false)
+                cities.put(points[i], lang.word(rng, true)
                 );
 //                        .toUpperCase());
             }
