@@ -79,8 +79,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         batch = new SpriteBatch();
         display = new GlyphMap(
                 KnownFonts.getIosevkaSlab().scaleTo(cellWidth, cellHeight),
-                bigWidth * bigHeight);
-        view = new StretchViewport(shownWidth * cellWidth, shownHeight * cellHeight);
+                bigWidth, bigHeight);
+        view = display.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seedA = 1234567890L;
         seedB = 0x12345L;
@@ -112,7 +112,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         atlas = new IntObjectOrderedMap<>(80);
         factions = new ObjectList<>(80);
         cities = new ObjectObjectOrderedMap<>(96);
-        position = new Vector3(bigWidth * cellWidth * 0.5f, bigHeight * cellHeight * 0.5f, 0);
+        position = new Vector3(bigWidth * 0.5f, bigHeight * 0.5f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
         input = new InputAdapter(){
@@ -156,7 +156,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                 previousPosition.set(position);
                 nextPosition.set(screenX, screenY, 0);
                 camera.unproject(nextPosition);
-                nextPosition.set(MathUtils.round(nextPosition.x * 4f), MathUtils.round(nextPosition.y * 4f), nextPosition.z);
+                nextPosition.set((nextPosition.x * 4f), (nextPosition.y * 4f), nextPosition.z);
                 counter = System.currentTimeMillis();
                 moveAmount = 0f;
                 return true;
@@ -309,12 +309,12 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             moveAmount = (System.currentTimeMillis() - counter) * 0.001f;
             if (moveAmount <= 1f) {
                 position.set(previousPosition).lerp(nextPosition, moveAmount);
-                position.set(MathUtils.round(position.x), MathUtils.round(position.y), position.z);
+                position.set((position.x), (position.y), position.z);
             }
             else {
                 previousPosition.set(position);
                 nextPosition.set(position);
-                nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
+                nextPosition.set((nextPosition.x), (nextPosition.y), nextPosition.z);
                 moveAmount = 0f;
                 counter = System.currentTimeMillis();
             }
@@ -323,14 +323,17 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
+        view.apply(false);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        display.draw(batch, 0.125f * shownWidth * cellWidth - 1.25f * position.x, 0.125f * shownWidth * cellWidth - 1.25f * position.y);
+        display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownWidth - 1.25f * position.y);
         batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+        display.resize(width, height);
         view.update(width, height, true);
         view.apply(true);
     }
