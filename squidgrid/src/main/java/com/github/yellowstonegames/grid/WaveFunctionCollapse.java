@@ -330,7 +330,7 @@ public class WaveFunctionCollapse {
             propagate();
         }
 
-        return true;
+        return false;
     }
 
     public boolean run(EnhancedRandom rng, int limit)
@@ -347,7 +347,7 @@ public class WaveFunctionCollapse {
             propagate();
         }
 
-        return true;
+        return false;
     }
 
     private void ban(int i, int t)

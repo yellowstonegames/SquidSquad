@@ -36,7 +36,7 @@ public class ScriptGenerator extends ApplicationAdapter {
                 source[x][y] = pix.getPixel(x, y);
             }
         }
-        wfc = new WaveFunctionCollapse(source, 4, 16, 16, false, false, 8, 0);
+        wfc = new WaveFunctionCollapse(source, 4, 128, 128, false, false, 1, 0);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ScriptGenerator extends ApplicationAdapter {
         int count = 0;
         int[][] res;
         while (true){
-            if(wfc.run(random, 1000)) {
+            if(wfc.run(random, 100000)) {
                 res = wfc.result();
                 int sum = 0;
                 for (int y = 0; y < res[0].length; y++) {
@@ -59,8 +59,10 @@ public class ScriptGenerator extends ApplicationAdapter {
                 }
                 if(sum != 0)
                     break;
+                else
+                    System.out.println("Made an empty result");
             }
-            System.out.println("made " + (count += 1000) + "attempts");
+            System.out.println("made " + (count += 100000) + " attempts");
         }
 
         System.out.println();
@@ -81,5 +83,6 @@ public class ScriptGenerator extends ApplicationAdapter {
             }
             System.out.println();
         }
+        Gdx.app.exit();
     }
 }
