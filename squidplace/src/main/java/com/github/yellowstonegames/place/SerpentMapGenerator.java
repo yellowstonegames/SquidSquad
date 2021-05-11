@@ -2,6 +2,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
@@ -54,7 +55,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
      * @param symmetrical true if this should generate a bi-radially symmetric map, false for a typical map
      * @see MixedGenerator
      */
-    public SerpentMapGenerator(int width, int height, LaserRandom random, boolean symmetrical) {
+    public SerpentMapGenerator(int width, int height, EnhancedRandom random, boolean symmetrical) {
         if (width <= 2 || height <= 2)
             throw new IllegalArgumentException("width and height must be greater than 2");
         HilbertCurve.init2D();
@@ -91,7 +92,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
 
         ObjectList<Coord> points = new ObjectList<>(80);
         Coord temp;
-        for (int i = 0, m = random.nextInt(64), r; i < 256; r = random.nextInt(4, 12), i += r, m += r) {
+        for (int i = 0, m = random.next(6), r; i < 256; r = random.nextInt(4, 12), i += r, m += r) {
             temp = HilbertCurve.mooreToCoord(m);
             points.add(Coord.get(columns[temp.x], rows[temp.y]));
         }

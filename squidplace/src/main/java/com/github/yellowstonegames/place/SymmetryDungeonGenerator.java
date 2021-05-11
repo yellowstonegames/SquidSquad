@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.Ordered;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.PoissonDisk;
@@ -70,7 +71,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      * @param rng    an RNG object to use for random choices; this make a lot of random choices.
      * @see PoissonDisk used to ensure spacing for the points.
      */
-    public SymmetryDungeonGenerator(int width, int height, LaserRandom rng) {
+    public SymmetryDungeonGenerator(int width, int height, EnhancedRandom rng) {
         this(width, height, rng, basicPoints(width, height, rng));
     }
 
@@ -83,11 +84,11 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width    the width of the final map in cells
      * @param height   the height of the final map in cells
-     * @param rng      an LaserRandom, such as an RNG, to use for random choices; this make a lot of random choices.
+     * @param rng      an EnhancedRandom, such as a LaserRandom, to use for random choices; this make a lot of random choices.
      * @param sequence a ObjectList of Coord to connect in order; index 0 is the start, index size() - 1 is the end.
      * @see SerpentMapGenerator a class that uses this technique
      */
-    public SymmetryDungeonGenerator(int width, int height, LaserRandom rng, ObjectList<Coord> sequence) {
+    public SymmetryDungeonGenerator(int width, int height, EnhancedRandom rng, ObjectList<Coord> sequence) {
         this(width, height, rng, listToMap(sequence), 1f);
     }
 
@@ -100,11 +101,11 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width    the width of the final map in cells
      * @param height   the height of the final map in cells
-     * @param rng      an LaserRandom, such as an RNG, to use for random choices; this make a lot of random choices.
+     * @param rng      an EnhancedRandom, such as a LaserRandom, to use for random choices; this make a lot of random choices.
      * @param sequence a ObjectList of Coord to connect in order; index 0 is the start, index size() - 1 is the end.
      * @see SerpentMapGenerator a class that uses this technique
      */
-    public SymmetryDungeonGenerator(int width, int height, LaserRandom rng, Ordered<Coord> sequence) {
+    public SymmetryDungeonGenerator(int width, int height, EnhancedRandom rng, Ordered<Coord> sequence) {
         this(width, height, rng, setToMap(sequence), 1f);
     }
 
@@ -118,11 +119,11 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width       the width of the final map in cells
      * @param height      the height of the final map in cells
-     * @param rng         an RNG object to use for random choices; this make a lot of random choices.
+     * @param rng         an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param connections a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways
      * @see SerpentMapGenerator a class that uses this technique
      */
-    public SymmetryDungeonGenerator(int width, int height, LaserRandom rng, ObjectObjectOrderedMap<Coord, ObjectList<Coord>> connections) {
+    public SymmetryDungeonGenerator(int width, int height, EnhancedRandom rng, ObjectObjectOrderedMap<Coord, ObjectList<Coord>> connections) {
         this(width, height, rng, connections, 0.8f);
     }
 
@@ -136,12 +137,12 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width              the width of the final map in cells
      * @param height             the height of the final map in cells
-     * @param rng                an RNG object to use for random choices; this make a lot of random choices.
+     * @param rng                an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param connections        a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways
      * @param roomSizeMultiplier a float multiplier that will be applied to each room's width and height
      * @see SerpentMapGenerator a class that uses this technique
      */
-    public SymmetryDungeonGenerator(int width, int height, LaserRandom rng, ObjectObjectOrderedMap<Coord, ObjectList<Coord>> connections, float roomSizeMultiplier) {
+    public SymmetryDungeonGenerator(int width, int height, EnhancedRandom rng, ObjectObjectOrderedMap<Coord, ObjectList<Coord>> connections, float roomSizeMultiplier) {
         super(width, height, rng, crossConnect(width, height, connections), roomSizeMultiplier);
     }
 

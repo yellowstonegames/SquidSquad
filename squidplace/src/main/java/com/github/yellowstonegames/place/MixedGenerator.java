@@ -3,7 +3,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.WeightedTable;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Direction;
@@ -36,7 +36,7 @@ public class MixedGenerator implements PlaceGenerator {
     protected WeightedTable carverTable;
     protected int width, height;
     protected float roomWidth, roomHeight;
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     protected char[][] dungeon;
     protected boolean generated;
     protected int[][] environment;
@@ -45,7 +45,7 @@ public class MixedGenerator implements PlaceGenerator {
     protected int totalPoints;
 
     /**
-     * Mainly for internal use; this is used by {@link #MixedGenerator(int, int, LaserRandom)} to get its room positions.
+     * Mainly for internal use; this is used by {@link #MixedGenerator(int, int, EnhancedRandom)} to get its room positions.
      * This is the default for generating a List of Coord if no other collection of Coord was supplied to the
      * constructor.
      * <br>
@@ -56,7 +56,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @return evenly spaced Coord points in a list made by PoissonDisk, trimmed down so they aren't all used
      * @see PoissonDisk used to make the list
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> basicPoints(int width, int height, LaserRandom rng)
+    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> basicPoints(int width, int height, EnhancedRandom rng)
     {
         return PoissonDisk.sampleRectangle(Coord.get(2, 2), Coord.get(width - 3, height - 3),
                 8f * (width + height) / 120f + 1f, width, height, 20, rng);
@@ -74,7 +74,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param rng an RNG object to use for random choices; this make a lot of random choices.
      * @see PoissonDisk used to ensure spacing for the points.
      */
-    public MixedGenerator(int width, int height, LaserRandom rng) {
+    public MixedGenerator(int width, int height, EnhancedRandom rng) {
         this(width, height, rng, basicPoints(width, height, rng));
     }
 
@@ -89,7 +89,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param rng an RNG object to use for random choices; this make a lot of random choices.
      * @param sequence a List of Coord to connect in order; index 0 is the start, index size() - 1 is the end.
      */
-    public MixedGenerator(int width, int height, LaserRandom rng, List<Coord> sequence) {
+    public MixedGenerator(int width, int height, EnhancedRandom rng, List<Coord> sequence) {
         this.width = width;
         this.height = height;
         this.roomWidth = width / 64.0f;
@@ -117,7 +117,7 @@ public class MixedGenerator implements PlaceGenerator {
         carvers = new double[5];
     }
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * This version of the constructor uses a Map with Coord keys and Coord array values to determine a
      * branching path for the dungeon to take; each key will connect once to each of the Coords in its value, and you
      * usually don't want to connect in both directions. You call the different carver-adding methods to affect what the
@@ -125,15 +125,15 @@ public class MixedGenerator implements PlaceGenerator {
      * caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
      * @param width the width of the final map in cells
      * @param height the height of the final map in cells
-     * @param rng an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param rng an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param connections a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways
      */
-    public MixedGenerator(int width, int height, LaserRandom rng, Map<Coord, ? extends List<Coord>> connections)
+    public MixedGenerator(int width, int height, EnhancedRandom rng, Map<Coord, ? extends List<Coord>> connections)
     {
         this(width, height, rng, connections, 0.8f);
     }
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * This version of the constructor uses a Map with Coord keys and Coord array values to determine a
      * branching path for the dungeon to take; each key will connect once to each of the Coords in its value, and you
      * usually don't want to connect in both directions. You call the different carver-adding methods to affect what the
@@ -141,11 +141,11 @@ public class MixedGenerator implements PlaceGenerator {
      * caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
      * @param width the width of the final map in cells
      * @param height the height of the final map in cells
-     * @param rng an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param rng an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param connections a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways
      * @param roomSizeMultiplier a float multiplier that will be applied to each room's width and height
      */
-    public MixedGenerator(int width, int height, LaserRandom rng, Map<Coord, ? extends List<Coord>> connections,
+    public MixedGenerator(int width, int height, EnhancedRandom rng, Map<Coord, ? extends List<Coord>> connections,
                           float roomSizeMultiplier) {
         this.width = width;
         this.height = height;
