@@ -172,16 +172,17 @@ public class DungeonProcessor implements PlaceGenerator{
      * walls and floors respectively. The dungeon may be null if generate() or setDungeon() have not been called.
      * @return a char[][] dungeon with only '#' for walls and '.' for floors, or null.
      */
-    public char[][] getBareDungeon() {
+    public char[][] getBarePlaceGrid() {
         return DungeonTools.simplifyDungeon(dungeon);
     }
 
     /**
-     * Change the underlying char[][]; only affects the toString method, and of course getDungeon.
-     * This always treats the environment of the dungeon as a plain rooms-and-corridors building.
+     * Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().
+     * This always treats the environment of the dungeon as a plain rooms-and-corridors building, using
+     * a {@link RoomFinder} to evaluate what is room and what is corridor.
      * @param dungeon a char[][], probably produced by an earlier call to this class and then modified.
      */
-    public void setDungeon(char[][] dungeon) {
+    public void setPlaceGrid(char[][] dungeon) {
         this.dungeon = dungeon;
         if(dungeon == null)
         {
@@ -197,11 +198,13 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
     /**
-     * Change the underlying char[][]; only affects the toString method, and of course getDungeon.
-     * This always treats the environment of the dungeon as a plain rooms-and-corridors building.
-     * @param dungeon a char[][], probably produced by an earlier call to this class and then modified.
+     * Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().
+     * Sets the environment to the specified one, which typically would have been produced by
+     * {@link PlaceGenerator#getEnvironment()}.
+     * @param dungeon a char[][], possibly produced by {@link PlaceGenerator#getPlaceGrid()}
+     * @param environment an int[][], possibly produced at the same time as dungeon by {@link PlaceGenerator#getEnvironment()}
      */
-    public void setDungeon(char[][] dungeon, int[][] environment) {
+    public void setPlaceGrid(char[][] dungeon, int[][] environment) {
         this.dungeon = dungeon;
         this.environment = environment;
         if(dungeon == null)
@@ -257,7 +260,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
     /**
      * Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
-     * adding features will be a LightRNG using a random seed. If width or height is greater than 256, then this will
+     * adding features will be a LaserRandom using a random seed. If width or height is greater than 256, then this will
      * expand the Coord pool from its 256x256 default so it stores a reference to each Coord that might be used in the
      * creation of the dungeon (if width and height are 300 and 300, the Coord pool will be 300x300; if width and height
      * are 500 and 100, the Coord pool will be 500x256 because it won't shrink below the default size of 256x256).

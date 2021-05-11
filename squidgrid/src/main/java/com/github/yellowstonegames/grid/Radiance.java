@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
-import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;

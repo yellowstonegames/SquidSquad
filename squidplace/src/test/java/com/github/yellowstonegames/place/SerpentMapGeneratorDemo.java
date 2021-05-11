@@ -32,7 +32,7 @@ public class SerpentMapGeneratorDemo {
             gens[i].addBoulders(3, random.nextInt(30));
             gens[i].addDoors(random.nextInt(4, 10), false);
             gens[i].generateRespectingStairs(map3D[i], deepSerpent.getEnvironment(i));
-            gens[i].setDungeon(LineTools.hashesToLines(gens[i].getPlaceGrid(), true));
+            gens[i].setPlaceGrid(LineTools.hashesToLines(gens[i].getPlaceGrid(), true));
             System.out.println(gens[i]);
         }
 

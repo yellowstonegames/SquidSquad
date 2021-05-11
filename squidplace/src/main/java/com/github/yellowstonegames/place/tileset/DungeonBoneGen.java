@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.place.tileset;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.grid.Region;
 
@@ -11,9 +12,9 @@ import com.github.yellowstonegames.grid.Region;
 public class DungeonBoneGen {
 
     /**
-     * The current random number generator; this can be seeded initially, and is should be a {@link LaserRandom}.
+     * The current random number generator; this can be seeded initially, and can be any {@link EnhancedRandom}
      */
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     private int[][] c_color, h_color, v_color;
     private int wide = 20;
     private int high = 20;
@@ -34,7 +35,7 @@ public class DungeonBoneGen {
      * Gets the current RNG.
      * @return
      */
-    public LaserRandom getRng() {
+    public EnhancedRandom getRng() {
         return rng;
     }
 
@@ -42,7 +43,7 @@ public class DungeonBoneGen {
      * Sets the current RNG.
      * @param rng
      */
-    public void setRng(LaserRandom rng) {
+    public void setRng(EnhancedRandom rng) {
         this.rng = rng;
     }
 
@@ -108,11 +109,11 @@ public class DungeonBoneGen {
     private char[][] dungeon;
 
     /**
-     * Constructs a DungeonBoneGen that uses the given IRNG.
+     * Constructs a DungeonBoneGen that uses the given EnhancedRandom.
      *
-     * @param random A LaserRandom to be used during the dungeon generation
+     * @param random An EnhancedRandom, such as a LaserRandom, to be used during the dungeon generation
      */
-    public DungeonBoneGen(LaserRandom random) {
+    public DungeonBoneGen(EnhancedRandom random) {
         rng = random;
         c_color = new int[1][1];
 		h_color = new int[1][1];
@@ -120,7 +121,7 @@ public class DungeonBoneGen {
     }
 
     /**
-     * Constructs a DungeonBoneGen that uses a default RNG, randomly seeded.
+     * Constructs a DungeonBoneGen that uses a default LaserRandom, randomly seeded.
      */
     public DungeonBoneGen() {
         this(new LaserRandom());

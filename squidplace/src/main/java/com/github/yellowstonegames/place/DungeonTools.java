@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.*;
@@ -330,7 +330,7 @@ public class DungeonTools {
         }
         return map;
     }
-    public static ObjectList<Coord> pointPath(int width, int height, LaserRandom rng) {
+    public static ObjectList<Coord> pointPath(int width, int height, EnhancedRandom rng) {
         if (width <= 2 || height <= 2)
             throw new IllegalArgumentException("width and height must be greater than 2");
         HilbertCurve.init2D();
@@ -365,7 +365,7 @@ public class DungeonTools {
         }
 
         ObjectList<Coord> points = new ObjectList<>(80);
-        int m = rng.nextInt(64);
+        int m = rng.next(6);
         Coord temp = HilbertCurve.mooreToCoord(m), next;
         temp = Coord.get(columns[temp.x], rows[temp.y]);
         for (int i = 0, r; i < 256; r = rng.nextInt(4, 12), i += r, m += r) {
@@ -380,8 +380,8 @@ public class DungeonTools {
 
     /**
      * Ensures a path exists in a rough ring around the map by first creating the path (using
-     * {@link #pointPath(int, int, LaserRandom)} with the given LaserRandom), then finding chars in blocking that are on
-     * that path and replacing them with replacement. Modifies map in-place (!) and returns an ObjectList of Coord points
+     * {@link #pointPath(int, int, EnhancedRandom)} with the given EnhancedRandom), then finding chars in blocking that are on
+     * that path and replacing them with replacement. Modifies map in-place and returns an ObjectList of Coord points
      * that will always be on the path.
      *
      * @param map         a 2D char array, x then y, etc. that will be modified directly; this is the "returned map"
@@ -391,7 +391,7 @@ public class DungeonTools {
      *                    they are in the way
      * @return the ObjectList of Coord points that are on the carved path, including existing non-blocking cells; will be empty if any parameters are invalid
      */
-    public static ObjectList<Coord> ensurePath(char[][] map, LaserRandom rng, char replacement, char... blocking) {
+    public static ObjectList<Coord> ensurePath(char[][] map, EnhancedRandom rng, char replacement, char... blocking) {
         if (map == null || map.length <= 0 || blocking == null || blocking.length <= 0)
             return new ObjectList<Coord>(0);
         int width = map.length, height = map[0].length;

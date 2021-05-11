@@ -2,6 +2,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Region;
@@ -127,10 +128,10 @@ public class ConnectingMapGenerator implements PlaceGenerator {
     public Region region;
     public double divideRooms;
     private final transient Region tempRegion;
-    public LaserRandom rng;
+    public EnhancedRandom rng;
 
     /**
-     * Calls {@link #ConnectingMapGenerator(int, int, int, int, LaserRandom, int)} with width 80, height 80, roomWidth 8,
+     * Calls {@link #ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)} with width 80, height 80, roomWidth 8,
      * roomHeight 8, a new {@link LaserRandom} for random, and wallThickness 2.
      */
     public ConnectingMapGenerator()
@@ -144,19 +145,19 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * @param random an IRNG to make random choices for connecting rooms
      */
 
-    public ConnectingMapGenerator(int width, int height, LaserRandom random)
+    public ConnectingMapGenerator(int width, int height, EnhancedRandom random)
     {
         this(width, height, width / 10, height / 10, random, 2);
     }
     /**
-     * Exactly like {@link #ConnectingMapGenerator(int, int, int, int, LaserRandom, int)} with wallThickness 2.
+     * Exactly like {@link #ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)} with wallThickness 2.
      * @param width total width of the map, in cells
      * @param height total height of the map, in cells
      * @param roomWidth target width of each room, in cells; only counts the center floor area of a room
      * @param roomHeight target height of each room, in cells; only counts the center floor area of a room
      * @param random an IRNG to make random choices for connecting rooms
      */
-    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, LaserRandom random)
+    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, EnhancedRandom random)
     {
         this(width, height, roomWidth, roomHeight, random, 2);
     }
@@ -167,11 +168,11 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * @param height total height of the map, in cells
      * @param roomWidth target width of each room, in cells; only counts the center floor area of a room
      * @param roomHeight target height of each room, in cells; only counts the center floor area of a room
-     * @param random an IRNG to make random choices for connecting rooms
+     * @param random an EnhancedRandom to make random choices for connecting rooms
      * @param wallThickness how thick a wall between two rooms should be, in cells; 1 is minimum, and this usually
      *                      shouldn't be much more than roomWidth or roomHeight
      */
-    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, LaserRandom random, int wallThickness) {
+    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, EnhancedRandom random, int wallThickness) {
         this(width, height, roomWidth, roomHeight, random, wallThickness, 0.0);
     }
     /**
@@ -180,11 +181,11 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * @param height total height of the map, in cells
      * @param roomWidth target width of each room, in cells; only counts the center floor area of a room
      * @param roomHeight target height of each room, in cells; only counts the center floor area of a room
-     * @param random an IRNG to make random choices for connecting rooms
+     * @param random an EnhancedRandom to make random choices for connecting rooms
      * @param wallThickness how thick a wall between two rooms should be, in cells; 1 is minimum, and this usually
      *                      shouldn't be much more than roomWidth or roomHeight
      */
-    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, LaserRandom random, int wallThickness,
+    public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, EnhancedRandom random, int wallThickness,
                                   double divideRooms)
     {
         this.width = Math.max(1, width);

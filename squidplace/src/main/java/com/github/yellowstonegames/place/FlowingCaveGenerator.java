@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.grid.CellularAutomaton;
 import com.github.yellowstonegames.grid.Region;
@@ -96,7 +97,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
     public final int width;
     public final int height;
     public TilesetType type;
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     public final int[][] environment;
     private boolean remakeEnvironment = true;
     protected CellularAutomaton ca;
