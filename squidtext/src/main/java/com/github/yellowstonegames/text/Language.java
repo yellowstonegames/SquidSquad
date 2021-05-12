@@ -5423,9 +5423,7 @@ public class Language implements Serializable {
      * {@link #SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)} are stored in fields of
      * the same name, and all fields in this class are public and modifiable.
      */
-    public static class SentenceForm implements Serializable
-    {
-        private static final long serialVersionUID = 4L;
+    public static class SentenceForm {
         public LaserRandom rng;
         public int minWords, maxWords, maxChars;
         public String[] midPunctuation, endPunctuation;

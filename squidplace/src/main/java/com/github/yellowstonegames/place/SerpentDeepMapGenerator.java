@@ -4,7 +4,7 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.Region;
@@ -24,7 +24,7 @@ public class SerpentDeepMapGenerator {
     private int[] columns, rows;
     private int width, height, depth;
     private ObjectList<ObjectOrderedSet<Coord>> linksUp,linksDown;
-    private LaserRandom random;
+    private EnhancedRandom random;
 
     /**
      * This prepares a map generator that will generate a map with the given width, height and depth, using the given
@@ -39,7 +39,7 @@ public class SerpentDeepMapGenerator {
      * @param rng an IRNG object to use for random choices; this make a lot of random choices.
      * @see MixedGenerator
      */
-    public SerpentDeepMapGenerator(int width, int height, int depth, LaserRandom rng) {
+    public SerpentDeepMapGenerator(int width, int height, int depth, EnhancedRandom rng) {
         this(width, height, depth, rng, 0.3);
     }
     /**
@@ -57,7 +57,7 @@ public class SerpentDeepMapGenerator {
      * @param branchingChance the odds from 0.0 to 1.0 that a branch will be created near each necessary room.
      * @see MixedGenerator
      */
-    public SerpentDeepMapGenerator(int width, int height, int depth, LaserRandom rng, double branchingChance)
+    public SerpentDeepMapGenerator(int width, int height, int depth, EnhancedRandom rng, double branchingChance)
     {
         if(width <= 2 || height <= 2)
             throw new IllegalArgumentException("width and height must be greater than 2");

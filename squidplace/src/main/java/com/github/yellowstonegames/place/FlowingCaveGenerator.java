@@ -132,7 +132,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
      * @param type a TilesetType enum value; {@link TilesetType#DEFAULT_DUNGEON} is used if null or unspecified
      * @param rng a random number generator to use when generating the caves; if null this will use a default RNG
      */
-    public FlowingCaveGenerator(int width, int height, TilesetType type, LaserRandom rng) {
+    public FlowingCaveGenerator(int width, int height, TilesetType type, EnhancedRandom rng) {
         this.width = Math.max(3, width);
         this.height = Math.max(3, height);
         this.type = type == null ? TilesetType.DEFAULT_DUNGEON : type;

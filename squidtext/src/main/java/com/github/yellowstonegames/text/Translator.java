@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Tommy Ettinger
  * Created by Tommy Ettinger on 5/1/2016.
  */
-public class Translator implements Serializable{
+public class Translator{
 
     private static class SemiRandom implements EnhancedRandom {
         long state;
@@ -119,7 +119,6 @@ public class Translator implements Serializable{
 
     }
 
-    private static final long serialVersionUID = 0L;
     /**
      * The Language this will use to construct words; normally one of the static fields in Language, a
      * Language produced by using the {@link Language#mixAll(Object...)} method of two or more of them, or

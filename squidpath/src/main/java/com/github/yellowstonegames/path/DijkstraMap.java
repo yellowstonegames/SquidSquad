@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.*;
@@ -3358,7 +3359,7 @@ public class DijkstraMap {
         this.blockingRequirement = blockingRequirement > 2 ? 2 : Math.max(blockingRequirement, 0);
     }
 
-    private void appendDirToShuffle(LaserRandom rng) {
+    private void appendDirToShuffle(EnhancedRandom rng) {
         final Direction[] src = measurement == Measurement.MANHATTAN
                 ? Direction.CARDINALS : Direction.OUTWARDS;
         final int n = measurement.directionCount();

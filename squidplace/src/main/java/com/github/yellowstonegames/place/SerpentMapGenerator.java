@@ -35,10 +35,10 @@ public class SerpentMapGenerator implements PlaceGenerator {
      *
      * @param width  the width of the final map in cells
      * @param height the height of the final map in cells
-     * @param rng    an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param rng    an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @see MixedGenerator
      */
-    public SerpentMapGenerator(int width, int height, LaserRandom rng) {
+    public SerpentMapGenerator(int width, int height, EnhancedRandom rng) {
         this(width, height, rng, false);
     }
 
@@ -51,7 +51,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
      *
      * @param width       the width of the final map in cells
      * @param height      the height of the final map in cells
-     * @param random      an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param random      an LaserRandom object to use for random choices; this makes a lot of random choices.
      * @param symmetrical true if this should generate a bi-radially symmetric map, false for a typical map
      * @see MixedGenerator
      */
@@ -113,11 +113,11 @@ public class SerpentMapGenerator implements PlaceGenerator {
      *
      * @param width           the width of the final map in cells
      * @param height          the height of the final map in cells
-     * @param rng             an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param rng             an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param branchingChance the chance from 0.0 to 1.0 that each room will branch at least once
      * @see MixedGenerator
      */
-    public SerpentMapGenerator(int width, int height, LaserRandom rng, double branchingChance) {
+    public SerpentMapGenerator(int width, int height, EnhancedRandom rng, double branchingChance) {
         this(width, height, rng, branchingChance, false);
     }
 
@@ -130,12 +130,12 @@ public class SerpentMapGenerator implements PlaceGenerator {
      *
      * @param width           the width of the final map in cells
      * @param height          the height of the final map in cells
-     * @param random          an LaserRandom object to use for random choices; this make a lot of random choices.
+     * @param random          an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param branchingChance the chance from 0.0 to 1.0 that each room will branch at least once
      * @param symmetrical     true if this should generate a bi-radially symmetric map, false for a typical map
      * @see MixedGenerator
      */
-    public SerpentMapGenerator(int width, int height, LaserRandom random, double branchingChance, boolean symmetrical) {
+    public SerpentMapGenerator(int width, int height, EnhancedRandom random, double branchingChance, boolean symmetrical) {
         if (width <= 2 || height <= 2)
             throw new IllegalArgumentException("width and height must be greater than 2");
         HilbertCurve.init2D();

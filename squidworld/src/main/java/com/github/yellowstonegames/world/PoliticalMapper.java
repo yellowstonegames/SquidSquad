@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Direction;
@@ -270,7 +271,7 @@ public class PoliticalMapper implements Serializable {
 
     public int width;
     public int height;
-    public LaserRandom rng;
+    public EnhancedRandom rng;
     public String name;
     public char[][] politicalMap;
     public char[][] zoomedMap;

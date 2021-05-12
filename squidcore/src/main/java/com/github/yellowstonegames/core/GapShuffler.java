@@ -5,9 +5,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 /**
