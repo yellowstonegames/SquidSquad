@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import regexodus.*;
 
 import java.io.Serializable;
@@ -37,32 +37,44 @@ import java.util.Map;
  */
 public class Translator implements Serializable{
 
-    private static class SemiRandom extends LaserRandom implements Serializable{
-        private static final long serialVersionUID = 0L;
+    private static class SemiRandom implements EnhancedRandom {
+        long state;
         SemiRandom()
         {
-            stateA = (long) (Long.MAX_VALUE * (Math.random() * 2.0 - 1.0));
-            stateB = 23L;
+            state = (long) (Long.MAX_VALUE * (Math.random() * 2.0 - 1.0));
         }
         SemiRandom(long state)
         {
-            stateA = state;
-            stateB = 23L;
-        }
-        SemiRandom(long stateA, long stateB)
-        {
-            this.stateA = stateA;
-            this.stateB = stateB;
+            this.state = state;
         }
 
-        public void setState(long stateA, long stateB) {
-            this.stateA = stateA;
-            this.stateB = stateB;
+        @Override
+        public void setSeed(long seed) {
+            this.state = seed;
+        }
+
+        @Override
+        public int getStateCount() {
+            return 1;
+        }
+
+        @Override
+        public long getSelectedState(int selection) {
+            return state;
+        }
+
+        @Override
+        public void setSelectedState(int selection, long value) {
+            state = value;
+        }
+
+        public void setState(long stateA) {
+            this.state = stateA;
         }
 
         @Override
         public long nextLong() {
-            return stateA += stateB - ((stateB = (stateB ^ 29L) * 19L) >> 3);
+            return state = Long.rotateLeft(((state ^ 29L) * 19L), 2) + 1L;
         }
 
         @Override
@@ -77,7 +89,7 @@ public class Translator implements Serializable{
 
         @Override
         public SemiRandom copy() {
-            return new SemiRandom(stateA, stateB);
+            return new SemiRandom(state);
         }
 
         @Override
@@ -92,7 +104,7 @@ public class Translator implements Serializable{
 
         @Override
         public long nextLong(long bound) {
-            return nextLong() % bound;
+            return (nextLong() & 0x7FFFFFFFFFFFFFFFL) % bound;
         }
 
         @Override
@@ -388,7 +400,7 @@ se$->z
      */
     public Translator initialize(Language language, long shift)
     {
-        rng.setState(0xDF58476D1CE4E5B9L + shift, 23L);
+        rng.setState(0xDF58476D1CE4E5B9L + shift);
         this.shift = shift;
         this.language = language.copy();
         table.clear();
@@ -802,7 +814,7 @@ se$->z
             }
             long h = phoneticHash64(sc, start, end) ^ (shift & 0xFFFFFFFFFFFFFFFL) ^ (shift >>> 14), frustration = 0;
             //System.out.print(source + ":" + ((h >>> 60) & 7) + ":" + StringKit.hex(h) + ", ");
-            rng.setState(h, 23L);
+            rng.setState(h);
             do {
                 ciphered = conjugate(language.word(rng, false, (int) Math.ceil(language.syllableBias + ((h >>> 60) - language.syllableBias) * Math.sqrt(rng.nextDouble()))), mods);
                 if(cacheLevel < 2 || frustration++ > 9)
