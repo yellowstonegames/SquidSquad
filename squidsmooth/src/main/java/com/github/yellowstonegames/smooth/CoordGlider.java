@@ -15,11 +15,21 @@ import javax.annotation.Nonnull;
  */
 public class CoordGlider implements Glider {
     protected float change = 0f;
-    protected @Nonnull Coord start = Coord.get(0, 0);
-    protected @Nonnull Coord end = Coord.get(0, 0);
+    protected @Nonnull Coord start;
+    protected @Nonnull Coord end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
 
     public CoordGlider() {
+        start = Coord.get(0, 0);
+        end = Coord.get(0, 0);
+    }
+    public CoordGlider(@Nonnull Coord start) {
+        this.start = start;
+        this.end = start;
+    }
+    public CoordGlider(@Nonnull Coord start, @Nonnull Coord end) {
+        this.start = start;
+        this.end = end;
     }
 
     public float getX()
