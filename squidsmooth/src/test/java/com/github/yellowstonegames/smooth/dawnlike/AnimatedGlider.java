@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.smooth.dawnlike;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.smooth.CoordGlider;
@@ -12,21 +13,19 @@ import com.github.yellowstonegames.smooth.CoordGlider;
  * <br>
  * Created by Tommy Ettinger on 12/20/2019.
  */
-public class AnimatedGlider extends TextureRegion {
+public class AnimatedGlider extends Sprite {
     public Animation<TextureRegion> animation;
-    public int color;
     CoordGlider position;
 
     private AnimatedGlider()
     {
         super();
-        this.color = -2;
     }
     public AnimatedGlider(Animation<TextureRegion> animation) {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
-        this.color = -2;
+        setSize(1f, 1f);
     }
 
     public AnimatedGlider(Animation<TextureRegion> animation, Coord coord) {
@@ -37,8 +36,8 @@ public class AnimatedGlider extends TextureRegion {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
-        this.color = -2;
         position = new CoordGlider(start, end);
+        setSize(1f, 1f);
     }
 
     public AnimatedGlider animate(final float stateTime)
@@ -56,4 +55,10 @@ public class AnimatedGlider extends TextureRegion {
     {
         return position.getY();
     }
+    @Override
+    public float[] getVertices() {
+        super.setPosition(position.getX(), position.getY());
+        return super.getVertices();
+    }
+
 }

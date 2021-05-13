@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -55,7 +56,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private int[][] colors, bgColors;
     private Coord player;
     private final int fovRange = 8;
-    private Vector3 pos = new Vector3();
+    private Vector2 pos = new Vector2();
 
     //Here, gridHeight refers to the total number of rows to be displayed on the screen.
     //We're displaying 32 rows of dungeon, then 1 more row of player stats, like current health.
@@ -161,19 +162,39 @@ public class DawnlikeDemo extends ApplicationAdapter {
         batch = new SpriteBatch();
         animationStart = TimeUtils.millis();
 
-        mainViewport = new ScalingViewport(Scaling.fill, gridWidth * cellWidth, gridHeight * cellHeight);
+        mainViewport = new ScalingViewport(Scaling.fill, gridWidth, gridHeight);
         mainViewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
         camera = mainViewport.getCamera();
         camera.update();
 
         atlas = new TextureAtlas(Gdx.files.classpath("dawnlike/Dawnlike.atlas"), Gdx.files.classpath("dawnlike"));
         font = new BitmapFont(Gdx.files.internal("dawnlike/PlainAndSimplePlus.fnt"), atlas.findRegion("PlainAndSimplePlus"));
-        font.setUseIntegerPositions(true);
+        font.setUseIntegerPositions(false);
+        font.getData().setScale(1f/cellWidth, 1f/cellHeight);
         font.getData().markupEnabled = true;
         bgColors = ArrayTools.fill(INT_BLACK, bigWidth, bigHeight);
         colors = ArrayTools.fill(INT_WHITE, bigWidth, bigHeight);
         solid = atlas.findRegion("pixel");
         charMapping = new IntObjectMap<>(64);
+
+//        charMapping.put('.', atlas.findRegion("day tile floor c"));
+//        charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
+//        charMapping.put('~', atlas.findRegion("brick murky pool center"      ));
+//        charMapping.put('"', atlas.findRegion("dusk grass floor c"      ));
+//        charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
+//        charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
+//        charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
+//        charMapping.put('┌', atlas.findRegion("lit brick wall right down"            ));
+//        charMapping.put('└', atlas.findRegion("lit brick wall right up"            ));
+//        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"           ));
+//        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"           ));
+//        charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
+//        charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
+//        charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
+//        charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
+//        charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
+//        charMapping.put('┘', atlas.findRegion("lit brick wall left up"            ));
+//        charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
 
         charMapping.put('.', atlas.findRegion("day tile floor c"));
         charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
@@ -182,17 +203,18 @@ public class DawnlikeDemo extends ApplicationAdapter {
         charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
         charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
         charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
-        charMapping.put('┌', atlas.findRegion("lit brick wall right down"            ));
-        charMapping.put('└', atlas.findRegion("lit brick wall right up"            ));
-        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"           ));
-        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"           ));
+        charMapping.put('└', atlas.findRegion("lit brick wall right down"            ));
+        charMapping.put('┌', atlas.findRegion("lit brick wall right up"            ));
+        charMapping.put('┬', atlas.findRegion("lit brick wall left right up"           ));
+        charMapping.put('┴', atlas.findRegion("lit brick wall left right down"           ));
         charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
         charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
         charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
         charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
         charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
-        charMapping.put('┘', atlas.findRegion("lit brick wall left up"            ));
-        charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
+        charMapping.put('┐', atlas.findRegion("lit brick wall left up"            ));
+        charMapping.put('┘', atlas.findRegion("lit brick wall left down"            ));
+
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
         //sections of pre-drawn dungeon and drops them into place in a tiling pattern. It makes good winding dungeons
         //with rooms by default, but in the later call to dungeonGen.generate(), you can use a TilesetType such as
@@ -286,7 +308,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
 //        playerColor = ColorTools.floatGetHSV(rng.nextFloat(), 1f, 1f, 1f);
 //        playerSprite.setPackedColor(playerColor);
-//        playerSprite.setPosition(player.x * cellWidth, player.y * cellHeight);
+//        playerSprite.setPosition(player.x, player.y);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
         FOV.reuseFOV(resistance, visible, player.x, player.y, 9f, Radius.CIRCLE);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
@@ -401,7 +423,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                         awaitedMoves.add(player);
                         break;
                     case P:
-                        DungeonTools.debugPrint(decoDungeon);
+                        debugPrintVisible();
                         break;
                     case ESCAPE:
                         Gdx.app.exit();
@@ -414,9 +436,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
             // ourselves and copy toCursor over to awaitedMoves.
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                pos.set(screenX, screenY, 0f);
+                pos.set(screenX, screenY);
                 mainViewport.unproject(pos);
-                if (onGrid(MathUtils.floor(pos.x) >> 4, MathUtils.floor(pos.y) >> 4)) {
+                if (onGrid(MathUtils.floor(pos.x), MathUtils.floor(pos.y))) {
                     mouseMoved(screenX, screenY);
                     awaitedMoves.addAll(toCursor);
                     return true;
@@ -435,9 +457,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
             public boolean mouseMoved(int screenX, int screenY) {
                 if(!awaitedMoves.isEmpty())
                     return false;
-                pos.set(screenX, screenY, 0f);
+                pos.set(screenX, screenY);
                 mainViewport.unproject(pos);
-                if (onGrid(screenX = MathUtils.floor(pos.x) >> 4, screenY = MathUtils.floor(pos.y) >> 4)) {
+                if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
                     if (cursor.x == screenX && cursor.y == screenY) {
                         return false;
@@ -471,6 +493,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
      */
     private void move(int newX, int newY) {
         if (health <= 0) return;
+        playerSprite.setPackedColor(Color.WHITE_FLOAT_BITS);
         if (newX >= 0 && newY >= 0 && newX < bigWidth && newY < bigHeight
                 && bareDungeon[newX][newY] != '#') {
             // '+' is a door.
@@ -541,7 +564,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     // position of this monster.
                     if (tmp.x == player.x && tmp.y == player.y) {
                         // not sure if this stays red for very long
-                        playerSprite.color = (INT_BLOOD);
+                        playerSprite.setPackedColor(DescriptiveColor.rgbaIntToFloat(INT_BLOOD));
                         health--;
                         // make sure the monster is still actively stalking/chasing the player
                         monsters.put(pos, mon);
@@ -579,21 +602,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //monsters running in and out of our vision. If artifacts from previous frames show up, uncomment the next line.
         //display.clear();
         for (int i = 0; i < bigWidth; i++) {
-            for (int j = 0; j < bigHeight; j++) {
+            for (int j = 0, r = bigHeight - 1; j < bigHeight; j++, r--) {
                 if(visible[i][j] > 0.0) {
-                    pos.set(i * cellWidth, j * cellHeight, 0f);
                     batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(toCursor.contains(Coord.get(i, j))
-                            ? DescriptiveColor.lerpColors(bgColors[i][j], INT_WHITE, 0.8f)
-                            : DescriptiveColor.lerpColors(bgColors[i][j], INT_LIGHTING, visible[i][j] * 0.75f + 0.25f)));
-                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), pos.x, pos.y, cellWidth, cellHeight);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), pos.x, pos.y, cellWidth, cellHeight);
+                            ? DescriptiveColor.lerpColors(bgColors[i][r], INT_WHITE, 0.85f)
+                            : DescriptiveColor.lerpColors(bgColors[i][r], INT_LIGHTING, visible[i][j] * 0.75f + 0.25f)));
+                    if(lineDungeon[i][r] == '/' || lineDungeon[i][r] == '+') // doors expect a floor drawn beneath them
+                        batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(lineDungeon[i][r], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
-                    pos.set(i * cellWidth, j * cellHeight, 0f);
-                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.7f)));
-                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), pos.x, pos.y, cellWidth, cellHeight);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), pos.x, pos.y, cellWidth, cellHeight);
+                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][r], INT_GRAY, 0.7f)));
+                    if(lineDungeon[i][r] == '/' || lineDungeon[i][r] == '+') // doors expect a floor drawn beneath them
+                        batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(lineDungeon[i][r], solid), i, j, 1f, 1f);
                 }
             }
         }
@@ -603,12 +624,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
             for (int j = 0; j < bigHeight; j++) {
                 if (visible[i][j] > 0.0) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
-                        batch.draw(monster.animate(time), monster.getX() * cellWidth, monster.getY() * cellHeight);
+                        monster.animate(time).draw(batch);
                     }
                 }
             }
         }
-        batch.draw(playerSprite.animate(time), playerSprite.getX() * cellWidth, playerSprite.getY() * cellHeight);
+        playerSprite.animate(time).draw(batch);
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
     @Override
@@ -618,8 +639,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // center the camera on the player's position
-        camera.position.x = playerSprite.getX() * cellWidth;
-        camera.position.y =  playerSprite.getY() * cellHeight;
+        camera.position.x = playerSprite.getX();
+        camera.position.y =  playerSprite.getY();
         camera.update();
 
         mainViewport.apply(false);
@@ -630,13 +651,13 @@ public class DawnlikeDemo extends ApplicationAdapter {
         if (health <= 0) {
             // still need to display the map, then write over it with a message.
             putMap();
-            float wide = gridWidth * cellWidth,
-                    x = playerSprite.getX() * cellWidth - wide * 0.5f,
-                    y = playerSprite.getY() * cellHeight;
-            font.draw(batch, "[RED]YOUR CRAWL IS OVER![WHITE]", x, y + 32, wide, Align.center, true);
-            font.draw(batch, "A monster sniffs your corpse and says,", x, y + 16, wide, Align.center, true);
-            font.draw(batch, lang, x, y, wide, Align.center, true);
-            font.draw(batch, "[LIGHT_GRAY]q[WHITE] to quit.", x, y - 32, wide, Align.center, true);
+            float wide = mainViewport.getWorldWidth(),
+                    x = playerSprite.getX() - mainViewport.getWorldWidth() * 0.5f,
+                    y = playerSprite.getY();
+            font.draw(batch, "[RED]YOUR CRAWL IS OVER!", x, y + 2, wide, Align.center, true);
+            font.draw(batch, "[GRAY]A monster sniffs your corpse and says,", x, y + 1, wide, Align.center, true);
+            font.draw(batch, "[FOREST]" + lang, x, y, wide, Align.center, true);
+            font.draw(batch, "[GRAY]q to quit.", x, y - 2, wide, Align.center, true);
             batch.end();
             if(Gdx.input.isKeyPressed(Q))
                 Gdx.app.exit();
@@ -695,9 +716,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 }
             }
         }
-        pos.set(10, Gdx.graphics.getHeight() - cellHeight - cellHeight, 0);
+        pos.set(10, Gdx.graphics.getHeight() - cellHeight - cellHeight);
         mainViewport.unproject(pos);
-        font.draw(batch, "Current Health: [RED]" + health + "[WHITE] at "
+        font.draw(batch, "[GRAY]Current Health: [RED]" + health + "[WHITE] at "
                 + Gdx.graphics.getFramesPerSecond() + " FPS", pos.x, pos.y);
         batch.end();
     }
@@ -726,6 +747,23 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // initial viewport size in pixels before it gets resized to fullscreen.
         configuration.setWindowedMode(gridWidth * cellWidth, gridHeight * cellHeight);
         return configuration;
+    }
+
+    private void debugPrintVisible(){
+        for (int y = decoDungeon[0].length - 1; y >= 0; y--) {
+            for (int x = 0; x < decoDungeon.length; x++) {
+                System.out.print(decoDungeon[x][y]);
+            }
+            System.out.print(' ');
+            for (int x = 0; x < decoDungeon.length; x++) {
+                if(player.x == x && player.y == y)
+                    System.out.print('@');
+                else
+                    System.out.print(visible[x][y] > 0f ? '+' : '_');
+            }
+            System.out.println();
+        }
+
     }
 
 }

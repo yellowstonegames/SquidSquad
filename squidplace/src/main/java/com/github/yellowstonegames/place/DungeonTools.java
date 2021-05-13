@@ -306,7 +306,6 @@ public class DungeonTools {
                     System.out.print(level[x][y]);
                 }
                 System.out.println();
-
             }
         }
     }
