@@ -3,6 +3,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.BitConversion;
 import regexodus.MatchResult;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -11,6 +12,7 @@ import regexodus.Substitution;
 import regexodus.TextBuffer;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -1345,6 +1347,26 @@ public final class DescriptiveColor {
      */
     public static int offsetLightness(final int oklab) {
         return limitToGamut((oklab & 0xFFFFFF00) | (oklab + 128 & 0xFF) + (oklab & 0xFF) >>> 1);
+    }
+
+    /**
+     * Given an RGBA8888 int such as one returned by {@link #describe(CharSequence)}, this returns a packed float color
+     * that can be given in some places to libGDX.
+     * @param rgba an RGBA8888 int
+     * @return an ABGR packed float color
+     */
+    public static float rgbaIntToFloat(final int rgba){
+        return BitConversion.reversedIntBitsToFloat(rgba & -2);
+    }
+
+    /**
+     * Given an RGBA8888 int such as one returned by {@link #describeOklab(CharSequence)} or any of the color constants
+     * in this class, this returns a packed float ABGR color that can be given in some places to libGDX.
+     * @param oklab a packed Oklab int
+     * @return an ABGR packed float color
+     */
+    public static float oklabIntToFloat(final int oklab){
+        return BitConversion.reversedIntBitsToFloat(toRGBA8888(oklab) & -2);
     }
 
 }
