@@ -281,7 +281,7 @@ public class LineTools {
                     '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '│', '┬', '├',
                     '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '─', '┐', '│', '┬', '┌',
                     '#', '│', '─', '└', '│', '│', '┌', '├', '─', '┘', '─', '┴', '┐', '│', '─', '└',
-                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '─', '┐', '│', '─', '\1'
+                    '#', '│', '─', '└', '│', '│', '┌', '│', '─', '┘', '─', '─', '┐', '│', '─', ' '
             };
 
     /**
@@ -658,53 +658,38 @@ public class LineTools {
      * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLines(char[][] map, boolean keepSingleHashes) {
-        int width = map.length + 2;
-        int height = map[0].length + 2;
+        int width = map.length;
+        int height = map[0].length;
 
         char[][] dungeon = new char[width][height];
-        for (int i = 1; i < width - 1; i++) {
-            System.arraycopy(map[i - 1], 0, dungeon[i], 1, height - 2);
-        }
         for (int i = 0; i < width; i++) {
-            dungeon[i][0] = '\1';
-            dungeon[i][height - 1] = '\1';
+            System.arraycopy(map[i], 0, dungeon[i], 0, height);
         }
-        for (int i = 0; i < height; i++) {
-            dungeon[0][i] = '\1';
-            dungeon[width - 1][i] = '\1';
-        }
-        for (int x = 1; x < width - 1; x++) {
-            for (int y = 1; y < height - 1; y++) {
-                if (map[x - 1][y - 1] == '#') {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (map[x][y] == '#') {
                     int q = 0;
-                    q |= (y <= 1 || map[x - 1][y - 2] == '#' || map[x - 1][y - 2] == '+' || map[x - 1][y - 2] == '/') ? 1 : 0;
-                    q |= (x >= width - 2 || map[x][y - 1] == '#' || map[x][y - 1] == '+' || map[x][y - 1] == '/') ? 2 : 0;
-                    q |= (y >= height - 2 || map[x - 1][y] == '#' || map[x - 1][y] == '+' || map[x - 1][y] == '/') ? 4 : 0;
-                    q |= (x <= 1 || map[x - 2][y - 1] == '#' || map[x - 2][y - 1] == '+' || map[x - 2][y - 1] == '/') ? 8 : 0;
+                    if(y >= height - 1 || map[x][y+1] == '#' || map[x][y+1] == '+' || map[x][y+1] == '/') q |= 1;
+                    if(x >= width - 1 || map[x+1][y] == '#' || map[x+1][y] == '+' || map[x+1][y] == '/') q |= 2;
+                    if(y <= 0 || map[x][y-1] == '#' || map[x][y-1] == '+' || map[x][y-1] == '/') q |= 4;
+                    if(x <= 0 || map[x-1][y] == '#' || map[x-1][y] == '+' || map[x-1][y] == '/') q |= 8;
 
-                    q |= (y <= 1 || x >= width - 2 || map[x][y - 2] == '#' || map[x][y - 2] == '+' || map[x][y - 2] == '/') ? 16 : 0;
-                    q |= (y >= height - 2 || x >= width - 2 || map[x][y] == '#' || map[x][y] == '+' || map[x][y] == '/') ? 32 : 0;
-                    q |= (y >= height - 2 || x <= 1 || map[x - 2][y] == '#' || map[x - 2][y] == '+' || map[x - 2][y] == '/') ? 64 : 0;
-                    q |= (y <= 1 || x <= 1 || map[x - 2][y - 2] == '#' || map[x - 2][y - 2] == '+' || map[x - 2][y - 2] == '/') ? 128 : 0;
+                    if(y >= height - 1 || x >= width - 1 || map[x+1][y+1] == '#' || map[x+1][y+1] == '+' || map[x+1][y+1] == '/') q |= 16;
+                    if(y <= 0 || x >= width - 1 || map[x+1][y-1] == '#' || map[x+1][y-1] == '+' || map[x+1][y-1] == '/') q |= 32;
+                    if(y <= 0 || x <= 0 || map[x-1][y-1] == '#' || map[x-1][y-1] == '+' || map[x-1][y-1] == '/') q |= 64;
+                    if(y >= height - 1 || x <= 0 || map[x-1][y+1] == '#' || map[x-1][y+1] == '+' || map[x-1][y+1] == '/') q |= 128;
                     if (!keepSingleHashes && wallLookup[q] == '#') {
                         dungeon[x][y] = '─';
                     } else {
                         dungeon[x][y] = wallLookup[q];
                     }
                 }
-            }
-        }
-        char[][] portion = new char[width - 2][height - 2];
-        for (int i = 1; i < width - 1; i++) {
-            for (int j = 1; j < height - 1; j++) {
-                if (dungeon[i][j] == '\1') {
-                    portion[i - 1][height - j - 2] = ' ';
-                } else {
-                    portion[i - 1][height - j - 2] = dungeon[i][j];
+                else if(map[x][y] == '\1') {
+                    dungeon[x][y] = ' ';
                 }
             }
         }
-        return portion;
+        return dungeon;
     }
 
     /**
@@ -719,7 +704,7 @@ public class LineTools {
 
         int width = map.length;
         int height = map[0].length;
-        char[][] portion = new char[width][height];
+        char[][] dungeon = new char[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
@@ -735,14 +720,14 @@ public class LineTools {
                     case '│':
                     case '─':
                     case '┼':
-                        portion[i][j] = '#';
+                        dungeon[i][j] = '#';
                         break;
                     default:
-                        portion[i][j] = map[i][j];
+                        dungeon[i][j] = map[i][j];
                 }
             }
         }
-        return portion;
+        return dungeon;
     }
 
     /**

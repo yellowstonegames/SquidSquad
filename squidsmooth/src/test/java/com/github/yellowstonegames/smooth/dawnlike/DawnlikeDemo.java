@@ -54,7 +54,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private DungeonProcessor dungeonGen;
     private char[][] decoDungeon, bareDungeon, lineDungeon;
     // these use packed RGBA8888 int colors, which avoid the overhead of creating new Color objects
-    private int[][] colors, bgColors;
+    private int[][] bgColors;
     private Coord player;
     private final int fovRange = 8;
     private Vector2 pos = new Vector2();
@@ -174,28 +174,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
         font.getData().setScale(1f/cellWidth, 1f/cellHeight);
         font.getData().markupEnabled = true;
         bgColors = ArrayTools.fill(INT_BLACK, bigWidth, bigHeight);
-        colors = ArrayTools.fill(INT_WHITE, bigWidth, bigHeight);
         solid = atlas.findRegion("pixel");
         charMapping = new IntObjectMap<>(64);
-
-//        charMapping.put('.', atlas.findRegion("day tile floor c"));
-//        charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
-//        charMapping.put('~', atlas.findRegion("brick murky pool center"      ));
-//        charMapping.put('"', atlas.findRegion("dusk grass floor c"      ));
-//        charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
-//        charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
-//        charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
-//        charMapping.put('┌', atlas.findRegion("lit brick wall right down"            ));
-//        charMapping.put('└', atlas.findRegion("lit brick wall right up"            ));
-//        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"           ));
-//        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"           ));
-//        charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
-//        charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
-//        charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
-//        charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
-//        charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
-//        charMapping.put('┘', atlas.findRegion("lit brick wall left up"            ));
-//        charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
 
         charMapping.put('.', atlas.findRegion("day tile floor c"));
         charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
@@ -204,17 +184,37 @@ public class DawnlikeDemo extends ApplicationAdapter {
         charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
         charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
         charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
-        charMapping.put('└', atlas.findRegion("lit brick wall right down"            ));
-        charMapping.put('┌', atlas.findRegion("lit brick wall right up"            ));
-        charMapping.put('┬', atlas.findRegion("lit brick wall left right up"           ));
-        charMapping.put('┴', atlas.findRegion("lit brick wall left right down"           ));
+        charMapping.put('┌', atlas.findRegion("lit brick wall right down"            ));
+        charMapping.put('└', atlas.findRegion("lit brick wall right up"            ));
+        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"           ));
+        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"           ));
         charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
         charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
         charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
         charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
         charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
-        charMapping.put('┐', atlas.findRegion("lit brick wall left up"            ));
-        charMapping.put('┘', atlas.findRegion("lit brick wall left down"            ));
+        charMapping.put('┘', atlas.findRegion("lit brick wall left up"            ));
+        charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
+
+        //// these would be needed if the map was flipped top-to-bottom, which has happened due to bugs before.
+//        charMapping.put('.', atlas.findRegion("day tile floor c"));
+//        charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
+//        charMapping.put('~', atlas.findRegion("brick murky pool center"      ));
+//        charMapping.put('"', atlas.findRegion("dusk grass floor c"      ));
+//        charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
+//        charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
+//        charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
+//        charMapping.put('└', atlas.findRegion("lit brick wall right down"            ));
+//        charMapping.put('┌', atlas.findRegion("lit brick wall right up"            ));
+//        charMapping.put('┬', atlas.findRegion("lit brick wall left right up"           ));
+//        charMapping.put('┴', atlas.findRegion("lit brick wall left right down"           ));
+//        charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
+//        charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
+//        charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
+//        charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
+//        charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
+//        charMapping.put('┐', atlas.findRegion("lit brick wall left up"            ));
+//        charMapping.put('┘', atlas.findRegion("lit brick wall left down"            ));
 
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
         //sections of pre-drawn dungeon and drops them into place in a tiling pattern. It makes good winding dungeons
@@ -606,19 +606,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 DescriptiveColor.maximizeSaturation(200,
                         (int) (TrigTools.sin_(time * 0.5f) * 30f) + 128, (int) (TrigTools.cos_(time * 0.5f) * 30f) + 128, 255));
         for (int i = 0; i < bigWidth; i++) {
-            for (int j = 0, r = bigHeight - 1; j < bigHeight; j++, r--) {
+            for (int j = 0; j < bigHeight; j++) {
                 if(visible[i][j] > 0.0) {
                     batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(toCursor.contains(Coord.get(i, j))
-                            ? DescriptiveColor.lerpColors(bgColors[i][r], rainbow, 0.95f)
-                            : DescriptiveColor.lerpColors(bgColors[i][r], INT_LIGHTING, visible[i][j] * 0.75f + 0.125f)));
-                    if(lineDungeon[i][r] == '/' || lineDungeon[i][r] == '+') // doors expect a floor drawn beneath them
+                            ? DescriptiveColor.lerpColors(bgColors[i][j], rainbow, 0.95f)
+                            : DescriptiveColor.lerpColors(bgColors[i][j], INT_LIGHTING, visible[i][j] * 0.75f + 0.125f)));
+                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][r], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
-                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][r], INT_GRAY, 0.7f)));
-                    if(lineDungeon[i][r] == '/' || lineDungeon[i][r] == '+') // doors expect a floor drawn beneath them
+                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.7f)));
+                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][r], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
                 }
             }
         }
@@ -757,6 +757,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for (int y = decoDungeon[0].length - 1; y >= 0; y--) {
             for (int x = 0; x < decoDungeon.length; x++) {
                 System.out.print(decoDungeon[x][y]);
+            }
+            System.out.print(' ');
+            for (int x = 0; x < lineDungeon.length; x++) {
+                System.out.print(lineDungeon[x][y]);
             }
             System.out.print(' ');
             for (int x = 0; x < decoDungeon.length; x++) {
