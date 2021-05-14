@@ -980,7 +980,7 @@ public final class DescriptiveColor {
      * @return the first color this finds that is in-gamut, as if it was moving toward a grayscale color with the same L
      * @see #inGamut(int, int, int) You can use inGamut() if you just want to check whether a color is in-gamut.
      */
-    public static float limitToGamut(int L, int A, int B) {
+    public static int limitToGamut(int L, int A, int B) {
         return limitToGamut(L, A, B, 255);
     }
 
@@ -994,7 +994,7 @@ public final class DescriptiveColor {
      * @return the first color this finds that is in-gamut, as if it was moving toward a grayscale color with the same L
      * @see #inGamut(int, int, int) You can use inGamut() if you just want to check whether a color is in-gamut.
      */
-    public static float limitToGamut(int L, int A, int B, int alpha) {
+    public static int limitToGamut(int L, int A, int B, int alpha) {
         L = Math.min(Math.max(L, 0), 255);
         A = Math.min(Math.max(A, 0), 255);
         B = Math.min(Math.max(B, 0), 255);

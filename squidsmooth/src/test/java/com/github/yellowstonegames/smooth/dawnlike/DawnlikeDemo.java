@@ -25,6 +25,7 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -601,12 +602,15 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //past from affecting the current frame. This isn't a problem here, but would probably be an issue if we had
         //monsters running in and out of our vision. If artifacts from previous frames show up, uncomment the next line.
         //display.clear();
+        int rainbow = DescriptiveColor.toRGBA8888(
+                DescriptiveColor.maximizeSaturation(200,
+                        (int) (TrigTools.sin_(time * 0.5f) * 30f) + 128, (int) (TrigTools.cos_(time * 0.5f) * 30f) + 128, 255));
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0, r = bigHeight - 1; j < bigHeight; j++, r--) {
                 if(visible[i][j] > 0.0) {
                     batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(toCursor.contains(Coord.get(i, j))
-                            ? DescriptiveColor.lerpColors(bgColors[i][r], INT_WHITE, 0.85f)
-                            : DescriptiveColor.lerpColors(bgColors[i][r], INT_LIGHTING, visible[i][j] * 0.75f + 0.25f)));
+                            ? DescriptiveColor.lerpColors(bgColors[i][r], rainbow, 0.95f)
+                            : DescriptiveColor.lerpColors(bgColors[i][r], INT_LIGHTING, visible[i][j] * 0.75f + 0.125f)));
                     if(lineDungeon[i][r] == '/' || lineDungeon[i][r] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(lineDungeon[i][r], solid), i, j, 1f, 1f);
