@@ -279,7 +279,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  int&nbsp;height)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
- adding features will be a LightRNG using a random seed.</div>
+ adding features will be a LaserRandom using a random seed.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)">DungeonProcessor</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
@@ -406,7 +406,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  obtained with <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getBareDungeon()">getBareDungeon</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getBarePlaceGrid()">getBarePlaceGrid</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Get the most recently generated char[][] dungeon out of this class without any chars other than '#' or '.', for
  walls and floors respectively.</div>
@@ -475,15 +475,15 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  char[][]&nbsp;disallowed)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setDungeon(char%5B%5D%5B%5D)">setDungeon</a></span>&#8203;(char[][]&nbsp;dungeon)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setPlaceGrid(char%5B%5D%5B%5D)">setPlaceGrid</a></span>&#8203;(char[][]&nbsp;dungeon)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.</div>
+<div class="block">Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setDungeon(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">setDungeon</a></span>&#8203;(char[][]&nbsp;dungeon,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setPlaceGrid(char%5B%5D%5B%5D,int%5B%5D%5B%5D)">setPlaceGrid</a></span>&#8203;(char[][]&nbsp;dungeon,
  int[][]&nbsp;environment)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.</div>
+<div class="block">Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
@@ -724,7 +724,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonProcessor</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
- adding features will be a LightRNG using a random seed. If width or height is greater than 256, then this will
+ adding features will be a LaserRandom using a random seed. If width or height is greater than 256, then this will
  expand the Coord pool from its 256x256 default so it stores a reference to each Coord that might be used in the
  creation of the dungeon (if width and height are 300 and 300, the Coord pool will be 300x300; if width and height
  are 500 and 100, the Coord pool will be 500x256 because it won't shrink below the default size of 256x256).</div>
@@ -789,9 +789,9 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="getBareDungeon()">
-<h3>getBareDungeon</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">getBareDungeon</span>()</div>
+<section class="detail" id="getBarePlaceGrid()">
+<h3>getBarePlaceGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">getBarePlaceGrid</span>()</div>
 <div class="block">Get the most recently generated char[][] dungeon out of this class without any chars other than '#' or '.', for
  walls and floors respectively. The dungeon may be null if generate() or setDungeon() have not been called.</div>
 <dl class="notes">
@@ -801,11 +801,12 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="setDungeon(char[][])">
-<h3>setDungeon</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDungeon</span>&#8203;<span class="parameters">(char[][]&nbsp;dungeon)</span></div>
-<div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.
- This always treats the environment of the dungeon as a plain rooms-and-corridors building.</div>
+<section class="detail" id="setPlaceGrid(char[][])">
+<h3>setPlaceGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlaceGrid</span>&#8203;<span class="parameters">(char[][]&nbsp;dungeon)</span></div>
+<div class="block">Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().
+ This always treats the environment of the dungeon as a plain rooms-and-corridors building, using
+ a <a href="RoomFinder.html" title="class in com.github.yellowstonegames.place"><code>RoomFinder</code></a> to evaluate what is room and what is corridor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dungeon</code> - a char[][], probably produced by an earlier call to this class and then modified.</dd>
@@ -813,15 +814,17 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="setDungeon(char[][],int[][])">
-<h3>setDungeon</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDungeon</span>&#8203;<span class="parameters">(char[][]&nbsp;dungeon,
+<section class="detail" id="setPlaceGrid(char[][],int[][])">
+<h3>setPlaceGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlaceGrid</span>&#8203;<span class="parameters">(char[][]&nbsp;dungeon,
  int[][]&nbsp;environment)</span></div>
-<div class="block">Change the underlying char[][]; only affects the toString method, and of course getDungeon.
- This always treats the environment of the dungeon as a plain rooms-and-corridors building.</div>
+<div class="block">Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().
+ Sets the environment to the specified one, which typically would have been produced by
+ <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>dungeon</code> - a char[][], probably produced by an earlier call to this class and then modified.</dd>
+<dd><code>dungeon</code> - a char[][], possibly produced by <a href="PlaceGenerator.html#getPlaceGrid()"><code>PlaceGenerator.getPlaceGrid()</code></a></dd>
+<dd><code>environment</code> - an int[][], possibly produced at the same time as dungeon by <a href="PlaceGenerator.html#getEnvironment()"><code>PlaceGenerator.getEnvironment()</code></a></dd>
 </dl>
 </section>
 </li>

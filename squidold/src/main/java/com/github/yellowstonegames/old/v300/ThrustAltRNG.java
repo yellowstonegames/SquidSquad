@@ -2,8 +2,6 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import java.io.Serializable;
-
 public final class ThrustAltRNG implements LegacyRandom {
     /**
      * Can be any long value.

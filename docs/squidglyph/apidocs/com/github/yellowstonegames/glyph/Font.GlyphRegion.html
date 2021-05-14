@@ -102,14 +102,19 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>float</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#offsetX">offsetX</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">The offset from the left of the original image to the left of the packed image, after whitespace was removed for
- packing.</div>
+<div class="block">The offset from the left of the original image to the left of the packed image, after whitespace was removed
+ for packing.</div>
 </div>
 <div class="col-first odd-row-color"><code>float</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#offsetY">offsetY</a></span></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The offset from the bottom of the original image to the bottom of the packed image, after whitespace was removed for
- packing.</div>
+<div class="block">The offset from the bottom of the original image to the bottom of the packed image, after whitespace was
+ removed for packing.</div>
+</div>
+<div class="col-first even-row-color"><code>float</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#xAdvance">xAdvance</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">How far to move the "cursor" to the right after drawing this GlyphRegion.</div>
 </div>
 </div>
 </section>
@@ -132,7 +137,9 @@ loadScripts(document, 'script');</script>
  y coordinates, the width, and the height of the GlyphRegion.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font.GlyphRegion)">GlyphRegion</a></span>&#8203;(<a href="Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a>&nbsp;other)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Copies another GlyphRegion.</div>
+</div>
 </div>
 </section>
 </li>
@@ -178,16 +185,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="offsetX">
 <h3>offsetX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">offsetX</span></div>
-<div class="block">The offset from the left of the original image to the left of the packed image, after whitespace was removed for
- packing.</div>
+<div class="block">The offset from the left of the original image to the left of the packed image, after whitespace was removed
+ for packing.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="offsetY">
 <h3>offsetY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">offsetY</span></div>
-<div class="block">The offset from the bottom of the original image to the bottom of the packed image, after whitespace was removed for
- packing.</div>
+<div class="block">The offset from the bottom of the original image to the bottom of the packed image, after whitespace was
+ removed for packing.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="xAdvance">
+<h3>xAdvance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">xAdvance</span></div>
+<div class="block">How far to move the "cursor" to the right after drawing this GlyphRegion. Uses the same unit as
+ <a href="#offsetX"><code>offsetX</code></a>.</div>
 </section>
 </li>
 </ul>
@@ -222,6 +237,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.glyph.Font.GlyphRegion)">
 <h3>GlyphRegion</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlyphRegion</span>&#8203;<span class="parameters">(<a href="Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a>&nbsp;other)</span></div>
+<div class="block">Copies another GlyphRegion.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>other</code> - the other GlyphRegion to copy</dd>
+</dl>
 </section>
 </li>
 </ul>

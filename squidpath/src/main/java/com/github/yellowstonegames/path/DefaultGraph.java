@@ -4,7 +4,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Direction;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -14,14 +13,12 @@ import java.util.Arrays;
  * <br>
  * Created by Tommy Ettinger on 7/9/2020.
  */
-public class DefaultGraph extends UndirectedGraph<Coord> implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class DefaultGraph extends UndirectedGraph<Coord>{
 	public int width;
 	public int height;
 
 	/**
-	 * No-op no-arg constructor, present for {@link Serializable}; if you use this you must call {@link #init(char[][])}
+	 * No-op no-arg constructor, present for serialization; if you use this you must call {@link #init(char[][])}
 	 * or {@link #init(char[][], boolean)} before using the DefaultGraph.
 	 */
 	public DefaultGraph() {

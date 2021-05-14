@@ -2,7 +2,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntList;
 
-import java.io.Serializable;
+import javax.annotation.Nonnull;
 
 /**
  * A different approach to the same task as a probability table, though this only looks up an appropriate index
@@ -21,8 +21,7 @@ import java.io.Serializable;
  * <br>
  * Created by Tommy Ettinger on 1/5/2018.
  */
-public class WeightedTable implements Serializable {
-    private static final long serialVersionUID = 101L;
+public class WeightedTable {
     protected final int[] mixed;
     public final int size;
 
@@ -41,10 +40,8 @@ public class WeightedTable implements Serializable {
      * returned by {@link #random(long)}.
      * @param probabilities an array or varargs of positive doubles representing the weights for their own indices
      */
-    public WeightedTable(double... probabilities) {
+    public WeightedTable(@Nonnull double... probabilities) {
         /* Begin by doing basic structural checks on the inputs. */
-        if (probabilities == null)
-            throw new NullPointerException("Array 'probabilities' given to WeightedTable cannot be null");
         if ((size = probabilities.length) == 0)
             throw new IllegalArgumentException("Array 'probabilities' given to WeightedTable must be nonempty.");
 

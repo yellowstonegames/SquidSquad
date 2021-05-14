@@ -4,8 +4,6 @@ import com.github.tommyettinger.ds.IntFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 
-import java.io.Serializable;
-
 /**
  * Performs A* search to find the shortest path between two Coord points.
  * <br>
@@ -26,8 +24,7 @@ import java.io.Serializable;
  * @author Tommy Ettinger - optimized code
  * @author earlygrey - wrote and really optimized simple-graphs, which this uses heavily
  */
-public class AStarSearch implements Serializable {
-    private static final long serialVersionUID = 11L;
+public class AStarSearch {
     protected int width, height;
     protected Coord start, target;
     protected Heuristic<Coord> type;

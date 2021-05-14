@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.grid.LineTools;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
 

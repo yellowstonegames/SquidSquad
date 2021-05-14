@@ -76,14 +76,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.text.Thesaurus</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Thesaurus</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A text processing class that can swap out occurrences of special keywords and replace them with randomly-selected
  synonyms. For example, this can take <code>"By the light`adj` fire`noun` in my heart, I will vanquish thee!"</code>, which
  has the keywords <code>light`adj`</code> and <code>fire`noun`</code>, and could produce
@@ -92,10 +87,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  plant names and basic descriptions of potions, as well as make some text sound like <a href="#ORK"><code>ORK</code></a>. 
  <br>
  Created by Tommy Ettinger on 5/23/2016.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.text.Thesaurus">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -209,7 +200,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)">Thesaurus</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
- the given Random.</div>
+ the given EnhancedRandom.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String)">Thesaurus</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shuffleSeed)</code></div>
 <div class="col-last even-row-color">
@@ -574,10 +565,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3>Thesaurus</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
- the given Random.</div>
+ the given EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - a Random that will only be used to get one long (for seeding this class' internal LaserRandom)</dd>
+<dd><code>rng</code> - an EnhancedRandom that will only be used to get one long (for seeding this class' internal LaserRandom)</dd>
 </dl>
 </section>
 </li>

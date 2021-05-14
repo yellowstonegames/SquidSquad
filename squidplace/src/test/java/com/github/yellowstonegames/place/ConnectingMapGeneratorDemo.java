@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.grid.LineTools;
 
 public class ConnectingMapGeneratorDemo {
 

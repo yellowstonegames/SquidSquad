@@ -11,7 +11,6 @@ import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
 import com.github.yellowstonegames.core.StringTools;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -113,9 +112,7 @@ import java.util.List;
  * <br>
  * Created by Tommy Ettinger on 6/24/2016.
  */
-public class Region implements Collection<Coord>, Serializable {
-    private static final long serialVersionUID = 0;
-
+public class Region implements Collection<Coord> {
     public long[] data;
     public int height;
     public int width;

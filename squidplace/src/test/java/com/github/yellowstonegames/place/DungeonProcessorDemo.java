@@ -1,8 +1,6 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.grid.LineTools;
-import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class DungeonProcessorDemo {

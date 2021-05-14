@@ -5,7 +5,6 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
 import javax.annotation.Nonnull;
-import java.io.Serializable;
 
 public final class GWTRNG implements LegacyRandom {
     public int stateA, stateB;

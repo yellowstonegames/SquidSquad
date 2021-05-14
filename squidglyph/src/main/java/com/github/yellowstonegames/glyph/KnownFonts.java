@@ -2,7 +2,6 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
-import com.badlogic.gdx.graphics.Texture;
 
 import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.*;
 

@@ -10,7 +10,7 @@ import com.github.yellowstonegames.grid.Region;
  * <a href="http://yellowstonegames.github.io/SquidLib/LocalMimicMap.png" >Example map, showing a variant on Australia</a>
  */
 public class MimicLocalMap extends LocalMap {
-    private static final long serialVersionUID = 1L;
+
     public Region earth;
     public Region shallow;
     public Region coast;

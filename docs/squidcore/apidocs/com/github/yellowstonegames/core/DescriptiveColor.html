@@ -512,7 +512,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the given Oklab color is in-gamut; if it isn't in-gamut, brings the color just inside
  the gamut at the same lightness, or if it is already in-gamut, returns the color as-is.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;L,
  int&nbsp;A,
  int&nbsp;B)</code></div>
@@ -520,7 +520,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether the given Oklab color is in-gamut; if it isn't in-gamut, brings the color just inside
  the gamut at the same lightness, or if it is already in-gamut, returns the color as-is.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#limitToGamut(int,int,int,int)">limitToGamut</a></span>&#8203;(int&nbsp;L,
  int&nbsp;A,
  int&nbsp;B,
@@ -557,12 +557,24 @@ loadScripts(document, 'script');</script>
 <div class="block">Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
  then averages that with the original L.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;markupString)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#oklabIntToFloat(int)">oklabIntToFloat</a></span>&#8203;(int&nbsp;oklab)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Given an RGBA8888 int such as one returned by <a href="#describeOklab(java.lang.CharSequence)"><code>describeOklab(CharSequence)</code></a> or any of the color constants
+ in this class, this returns a packed float ABGR color that can be given in some places to libGDX.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#processColorMarkup(java.lang.CharSequence)">processColorMarkup</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;markupString)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Processes color markup of the form <code>[|description]</code>, where <code>description</code> is in the format that
  <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a> understands (such as "light dullest green cyan"), and changes the markup
  to a format libGDX can use, <code>[#FF7F00FF]</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#rgbaIntToFloat(int)">rgbaIntToFloat</a></span>&#8203;(int&nbsp;rgba)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Given an RGBA8888 int such as one returned by <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a>, this returns a packed float color
+ that can be given in some places to libGDX.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toRGBA8888(int)">toRGBA8888</a></span>&#8203;(int&nbsp;oklab)</code></div>
@@ -1752,7 +1764,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="limitToGamut(int,int,int)">
 <h3>limitToGamut</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">limitToGamut</span>&#8203;<span class="parameters">(int&nbsp;L,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">limitToGamut</span>&#8203;<span class="parameters">(int&nbsp;L,
  int&nbsp;A,
  int&nbsp;B)</span></div>
 <div class="block">Checks whether the given Oklab color is in-gamut; if it isn't in-gamut, brings the color just inside
@@ -1773,7 +1785,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="limitToGamut(int,int,int,int)">
 <h3>limitToGamut</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">limitToGamut</span>&#8203;<span class="parameters">(int&nbsp;L,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">limitToGamut</span>&#8203;<span class="parameters">(int&nbsp;L,
  int&nbsp;A,
  int&nbsp;B,
  int&nbsp;alpha)</span></div>
@@ -1992,6 +2004,34 @@ loadScripts(document, 'script');</script>
 <dd><code>oklab</code> - a packed Oklab int color</dd>
 <dt>Returns:</dt>
 <dd>a different packed Oklab int color, with its L channel changed and limited to the correct gamut</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="rgbaIntToFloat(int)">
+<h3>rgbaIntToFloat</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">rgbaIntToFloat</span>&#8203;<span class="parameters">(int&nbsp;rgba)</span></div>
+<div class="block">Given an RGBA8888 int such as one returned by <a href="#describe(java.lang.CharSequence)"><code>describe(CharSequence)</code></a>, this returns a packed float color
+ that can be given in some places to libGDX.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>rgba</code> - an RGBA8888 int</dd>
+<dt>Returns:</dt>
+<dd>an ABGR packed float color</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="oklabIntToFloat(int)">
+<h3>oklabIntToFloat</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">oklabIntToFloat</span>&#8203;<span class="parameters">(int&nbsp;oklab)</span></div>
+<div class="block">Given an RGBA8888 int such as one returned by <a href="#describeOklab(java.lang.CharSequence)"><code>describeOklab(CharSequence)</code></a> or any of the color constants
+ in this class, this returns a packed float ABGR color that can be given in some places to libGDX.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>oklab</code> - a packed Oklab int</dd>
+<dt>Returns:</dt>
+<dd>an ABGR packed float color</dd>
 </dl>
 </section>
 </li>

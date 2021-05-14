@@ -1,13 +1,9 @@
 package com.github.yellowstonegames.place;
 
-import java.io.Serializable;
-
 import static com.github.yellowstonegames.place.Biome.Heat.*;
 import static com.github.yellowstonegames.place.Biome.Moisture.*;
 
-public class Biome implements Serializable {
-    private static final long serialVersionUID = 0;
-
+public class Biome {
     public enum Heat {
         COLDEST("coldest"), COLDER("colder"), COLD("cold"), HOT("hot"), HOTTER("hotter"), HOTTEST("hottest");
         public final String name;

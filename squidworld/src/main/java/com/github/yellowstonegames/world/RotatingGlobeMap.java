@@ -23,7 +23,7 @@ import java.util.Arrays;
  * <a href="https://i.imgur.com/NV5IMd6.gifv">Another example</a>.
  */
 public class RotatingGlobeMap extends WorldMapGenerator {
-    private static final long serialVersionUID = 1L;
+
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;

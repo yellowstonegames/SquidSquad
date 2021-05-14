@@ -25,8 +25,6 @@ package com.github.yellowstonegames.path;
 
 import com.github.yellowstonegames.grid.Coord;
 
-import java.io.Serializable;
-
 /**
  * The most-commonly-used class that represents an edge between nodes on a Graph. Different kinds of graph will use
  * different subclasses of this to represent their edges: {@link DirectedConnection} or {@link UndirectedConnection}.
@@ -34,9 +32,7 @@ import java.io.Serializable;
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public class Connection<V> extends Edge<V> implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Connection<V> extends Edge<V> {
     //================================================================================
     // Fields and constants
     //================================================================================

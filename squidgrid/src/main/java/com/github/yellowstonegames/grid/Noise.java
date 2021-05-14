@@ -31,8 +31,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 
-import java.io.Serializable;
-
 import static com.github.yellowstonegames.grid.IntPointHash.*;
 
 /**
@@ -80,8 +78,7 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     {@link #setCellularNoiseLookup(Noise)} is a good way to see if it can do what you want.</li>
  * </ul>
  */
-public class Noise implements Serializable {
-    private static final long serialVersionUID = 3L;
+public class Noise {
     /**
      * Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
      * edges somewhat.

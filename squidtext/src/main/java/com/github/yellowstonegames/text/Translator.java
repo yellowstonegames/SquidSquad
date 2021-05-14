@@ -4,7 +4,6 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import regexodus.*;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**

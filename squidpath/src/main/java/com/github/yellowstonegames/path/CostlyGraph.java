@@ -6,7 +6,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Direction;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -15,9 +14,7 @@ import java.util.Arrays;
  * <br>
  * Created by Tommy Ettinger on 7/9/2020.
  */
-public class CostlyGraph extends DirectedGraph<Coord> implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class CostlyGraph extends DirectedGraph<Coord> {
 	/**
 	 * Given a char[][] for the map, produces a float[][] that can be used as a cost map by this class. It
 	 * expects any doors to be represented by '+' if closed or '/' if open and any walls to be '#' or box drawing
@@ -127,7 +124,7 @@ public class CostlyGraph extends DirectedGraph<Coord> implements Serializable {
 	public int height;
 
 	/**
-	 * No-op no-arg constructor, present for {@link Serializable}; if you use this you must call
+	 * No-op no-arg constructor, present for serialization; if you use this you must call
 	 * {@link #init(float[][])} or {@link #init(float[][], boolean)} before using the CostlyGraph.
 	 */
 	public CostlyGraph() {

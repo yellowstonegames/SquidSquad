@@ -25,7 +25,6 @@ package com.github.yellowstonegames.path;
 
 import com.github.yellowstonegames.grid.Coord;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -35,9 +34,7 @@ import java.util.Collection;
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public class DirectedGraph<V> extends Graph<V> implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class DirectedGraph<V> extends Graph<V>{
     final DirectedGraphAlgorithms<V> algorithms;
 
     //================================================================================

@@ -7,7 +7,6 @@ import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
 import regexodus.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -29,8 +28,7 @@ import java.util.*;
 // * @see NaturalLanguageCipher NaturalLanguageCipher uses a Language to reversibly translate English text to nonsense.
 // * @see Thesaurus Thesaurus uses this class a lot to generate things like plant names and the titles of nations.
 
-public class Language implements Serializable {
-    private static final long serialVersionUID = 4L;
+public class Language {
     public final String[] openingVowels, midVowels, openingConsonants, midConsonants, closingConsonants,
             vowelSplitters, closingSyllables;
     public final boolean clean;
@@ -4976,8 +4974,8 @@ public class Language implements Serializable {
         return flg;
     }
 
-    public static class Modifier implements Serializable {
-        private static final long serialVersionUID = 4L;
+    public static class Modifier {
+
         private transient static final StringBuilder modSB = new StringBuilder(32);
         public final Alteration[] alterations;
 
@@ -5346,8 +5344,8 @@ public class Language implements Serializable {
         }
     }
 
-    public static class Alteration implements Serializable {
-        private static final long serialVersionUID = 4L;
+    public static class Alteration {
+
         public Replacer replacer;
         public String replacement;
         public double chance;

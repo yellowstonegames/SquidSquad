@@ -3,7 +3,6 @@ package com.github.yellowstonegames.old.v300;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -46,7 +45,6 @@ public final class LongPeriodRNG implements LegacyRandom {
 
     public final long[] state = new long[16];
     public int choice;
-    private static final long serialVersionUID = 173524490381383244L;
     private static final long[] jumpTable = {0x84242f96eca9c41dL,
             0xa3c65b8776f96855L, 0x5b34a39f070b5837L, 0x4489affce4f31a1eL,
             0x2ffeeb0a48316f40L, 0xdc2d9891fe68c022L, 0x3659132bb12fea70L,

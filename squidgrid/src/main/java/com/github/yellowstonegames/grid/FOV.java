@@ -6,7 +6,6 @@ import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
 
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
@@ -79,8 +78,7 @@ import java.util.Iterator;
  * @author Eben Howard - http://squidpony.com - howard@squidpony.com
  * @author Tommy Ettinger
  */
-public class FOV implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class FOV {
     private static final Direction[] ccw = new Direction[]
             {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT},
             ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP, Direction.UP_LEFT,

@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -88,7 +88,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WildernessGenerator</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+implements <a href="PlaceGenerator.html" title="interface in com.github.yellowstonegames.place">PlaceGenerator</a></span></div>
 <div class="block">A finite 2D area map for some kind of wilderness, adapting to different ecosystems by changing its output.
  Regional maps for wilderness areas have very different requirements from mostly-artificial dungeons. This is intended
  to work alongside the squidworld module to produce local outdoor maps for specified biomes in a large map, for
@@ -114,10 +114,6 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  conjunction with some system for connecting WildernessGenerators.
  <br>
  Created by Tommy Ettinger on 10/16/2019.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.place.WildernessGenerator">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -178,7 +174,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#height">height</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectLongMap&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
@@ -210,21 +206,21 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  long&nbsp;seedA,
  long&nbsp;seedB)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;contentTypes)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">WildernessGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;floorTypes,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;contentTypes,
  com.github.tommyettinger.ds.ObjectLongMap&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;viewer)</code></div>
@@ -244,8 +240,8 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">contentByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">contentByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 </div>
@@ -253,8 +249,8 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#defaultViewer()">defaultViewer</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">floorsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">floorsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 </div>
@@ -282,7 +278,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="block">Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeShuffledRepeats(com.github.tommyettinger.ds.support.LaserRandom,java.lang.Object...)">makeShuffledRepeats</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeShuffledRepeats(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.Object...)">makeShuffledRepeats</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
@@ -328,7 +324,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -418,31 +414,31 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WildernessGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WildernessGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;contentTypes)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)">
 <h3>WildernessGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WildernessGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  <a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;floorTypes,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;contentTypes,
  com.github.tommyettinger.ds.ObjectLongMap&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;viewer)</span></div>
@@ -472,22 +468,22 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="makeShuffledRepeats(com.github.tommyettinger.ds.support.LaserRandom,java.lang.Object...)">
+<section class="detail" id="makeShuffledRepeats(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.Object...)">
 <h3>makeShuffledRepeats</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">makeShuffledRepeats</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">makeShuffledRepeats</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>floorsByBiome</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">floorsByBiome</span>&#8203;<span class="parameters">(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - an index into some biome table, WIP</dd>
-<dd><code>rng</code> - a LaserRandom, can be seeded</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, can be seeded</dd>
 <dt>Returns:</dt>
 <dd>a shuffled ObjectList that typically contains repeats of the kinds of floor that can appear here</dd>
 </dl>
@@ -508,15 +504,15 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>contentByBiome</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">contentByBiome</span>&#8203;<span class="parameters">(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - an index into some biome table, WIP</dd>
-<dd><code>rng</code> - a LaserRandom, can be seeded</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, can be seeded</dd>
 <dt>Returns:</dt>
 <dd>a shuffled ObjectList that typically contains repeats of the kinds of terrain feature that can appear here</dd>
 </dl>

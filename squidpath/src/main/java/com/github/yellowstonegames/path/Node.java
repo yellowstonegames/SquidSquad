@@ -28,7 +28,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.grid.Coord;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -38,10 +37,7 @@ import java.util.Collection;
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public class Node<V> extends BinaryHeap.Node implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-
+public class Node<V> extends BinaryHeap.Node {
     //================================================================================
     // Graph structure related members
     //================================================================================

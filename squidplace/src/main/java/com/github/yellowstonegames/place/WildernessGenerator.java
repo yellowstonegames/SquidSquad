@@ -10,8 +10,6 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Direction;
 
-import java.io.Serializable;
-
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 /**
@@ -41,8 +39,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * <br>
  * Created by Tommy Ettinger on 10/16/2019.
  */
-public class WildernessGenerator implements PlaceGenerator, Serializable {
-    private static final long serialVersionUID = 1L;
+public class WildernessGenerator implements PlaceGenerator {
     public final int width, height;
     public Biome biome;
     public EnhancedRandom rng;
@@ -509,20 +506,16 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
      * MixedWildernessGenerator's {@link #contentTypes} and {@link #floorTypes}, not the ones in the inner
      * ]WildernessGenerators, because the indices in the MixedWildernessGenerator are different.
      */
-    public static class MixedWildernessGenerator extends WildernessGenerator implements Serializable
-    {
-        private static final long serialVersionUID = 1L;
+    public static class MixedWildernessGenerator extends WildernessGenerator {
         public final int[][] pieceMap;
         public final WildernessGenerator[] pieces;
         protected final int[] minFloors, maxFloors, minContents, maxContents;
         
-        public MixedWildernessGenerator()
-        {
+        public MixedWildernessGenerator() {
             this(new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new LaserRandom());
         }
         
-        public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, EnhancedRandom rng)
-        {
+        public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, EnhancedRandom rng) {
             super(northeast.width, northeast.height, northeast.biome, rng, new ObjectList<>(northeast.floorTypes), new ObjectList<>(northeast.contentTypes), northeast.viewer);
             minFloors = new int[4];
             maxFloors = new int[4];
@@ -546,8 +539,7 @@ public class WildernessGenerator implements PlaceGenerator, Serializable {
             pieceMap = new int[width][height];
         }
         
-        protected void preparePieceMap()
-        {
+        protected void preparePieceMap() {
             ArrayTools.fill(pieceMap, 255);
             pieceMap[width - 1][0] = 0; // northeast
             pieceMap[width - 1][height - 1] = 1; // southeast

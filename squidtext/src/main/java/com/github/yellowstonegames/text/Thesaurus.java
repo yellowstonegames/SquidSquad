@@ -10,7 +10,6 @@ import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 import static com.github.tommyettinger.ds.ObjectList.with;
@@ -25,8 +24,7 @@ import static com.github.tommyettinger.ds.ObjectList.with;
  * <br>
  * Created by Tommy Ettinger on 5/23/2016.
  */
-public class Thesaurus implements Serializable{
-    private static final long serialVersionUID = 3387639905758074640L;
+public class Thesaurus {
     protected static final Pattern wordMatch = Pattern.compile("([\\pL`]+|@)"),
             similarFinder = Pattern.compile(".*?\\b(\\w\\w\\w\\w).*?{\\@1}.*$", "ui");
     public CaseInsensitiveOrderedMap<GapShuffler<String>> mappings;

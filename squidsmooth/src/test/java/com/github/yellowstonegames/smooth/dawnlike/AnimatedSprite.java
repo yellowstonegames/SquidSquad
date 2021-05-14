@@ -7,32 +7,32 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.smooth.CoordGlider;
 
 /**
- * Like a {@link com.badlogic.gdx.graphics.g2d.Sprite}, but lighter-weight and customized to the conventions of this
- * demo. Has a start and end position that it is expected to move between as its {@link CoordGlider#getChange()} field
- * changes. Supports a packed int color.
+ * Extends {@link Sprite}, but is lighter-weight and customized to the conventions of this demo. Has a
+ * {@link CoordGlider} publicly available as {@link #position}, which should be used to determine or change
+ * where this started its move, where it is going, and how far it has gone between the two.
  * <br>
  * Created by Tommy Ettinger on 12/20/2019.
  */
-public class AnimatedGlider extends Sprite {
+public class AnimatedSprite extends Sprite {
     public Animation<TextureRegion> animation;
-    CoordGlider position;
+    public CoordGlider position;
 
-    private AnimatedGlider()
+    private AnimatedSprite()
     {
         super();
     }
-    public AnimatedGlider(Animation<TextureRegion> animation) {
+    public AnimatedSprite(Animation<TextureRegion> animation) {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
         setSize(1f, 1f);
     }
 
-    public AnimatedGlider(Animation<TextureRegion> animation, Coord coord) {
+    public AnimatedSprite(Animation<TextureRegion> animation, Coord coord) {
         this(animation, coord, coord);
     }
 
-    public AnimatedGlider(Animation<TextureRegion> animation, Coord start, Coord end) {
+    public AnimatedSprite(Animation<TextureRegion> animation, Coord start, Coord end) {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
@@ -40,7 +40,7 @@ public class AnimatedGlider extends Sprite {
         setSize(1f, 1f);
     }
 
-    public AnimatedGlider animate(final float stateTime)
+    public AnimatedSprite animate(final float stateTime)
     {
         setRegion(animation.getKeyFrame(stateTime));
         return this;

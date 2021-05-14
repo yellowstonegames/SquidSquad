@@ -4,8 +4,6 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
-import java.io.Serializable;
-
 /**
  * A convenience class that makes dealing with multiple colored light sources easier.
  * All fields are public and documented to encourage their use alongside the API methods. The typical usage case for
@@ -23,8 +21,7 @@ import java.io.Serializable;
  * <br>
  * Created by Tommy Ettinger on 11/2/2018.
  */
-public class LightingManager implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class LightingManager {
 
     /**
      * How light should spread; usually {@link Radius#CIRCLE} unless gameplay reasons need it to be SQUARE or DIAMOND.

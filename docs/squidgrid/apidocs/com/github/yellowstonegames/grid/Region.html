@@ -78,12 +78,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Region</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span></div>
 <div class="block">Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.
  This can handle any size of 2D data, but it's almost always best for the Coord pool to be at least as large
  as the max dimensions of a Region (use <a href="Coord.html#expandPoolTo(int,int)"><code>Coord.expandPoolTo(int, int)</code></a> to ensure this). It stores several long
@@ -178,10 +178,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  of their argument are identical to their current width and height, and don't create more garbage for the GC.
  <br>
  Created by Tommy Ettinger on 6/24/2016.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.grid.Region">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">

@@ -12,7 +12,7 @@ import com.github.yellowstonegames.grid.Region;
  * imitating Earth using a 512x256 world map as a Region for input.
  */
 public class MimicWorldMap extends EllipticalWorldMap {
-    private static final long serialVersionUID = 1L;
+
     public Region earth;
     public Region shallow;
     public Region coast;

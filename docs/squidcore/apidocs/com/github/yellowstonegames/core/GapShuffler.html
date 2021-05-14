@@ -135,14 +135,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate
+ infinitely through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
@@ -151,7 +151,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
  boolean&nbsp;shareRNG)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
@@ -159,7 +159,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,java.lang.String)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by <code>seed</code>, and can then
+<div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded by <code>seed</code>, and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
@@ -168,22 +168,22 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
- and can then iterate infinitely through mostly-random shuffles of the given collection.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a TricycleRandom
+ or LaserRandom), and can then iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
  boolean&nbsp;shareRNG)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
@@ -191,7 +191,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,java.lang.CharSequence)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;seed)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+<div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded with the given CharSequence
+ (hashed 3 different ways by <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a>), and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
 </div>
 </div>
@@ -315,10 +316,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <section class="detail" id="&lt;init&gt;(java.util.Collection)">
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
- through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
- always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
- of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate
+ infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a single
+ element should always have a large amount of "gap" in order between one appearance and the next. It helps to keep
+ the appearance of a gap if every item in elements is unique, but that is not necessary and does not affect how
+ this works.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>elements</code> - a Collection of T that will not be modified</dd>
@@ -330,7 +332,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with a LaserRandom seeded by <code>seed</code>, and can then
+<div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded by <code>seed</code>, and can then
  iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
  single element should always have a large amount of "gap" in order between one appearance and the next. It helps
  to keep the appearance of a gap if every item in elements is unique, but that is not necessary and does not
@@ -346,7 +348,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3>GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
  single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -356,7 +358,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>items</code> - a Collection of T that will not be modified</dd>
-<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom or TricycleRandom; will be copied and not used directly</dd>
 </dl>
 </section>
 </li>
@@ -366,7 +368,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
  boolean&nbsp;shareRNG)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
  single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -386,7 +388,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <section class="detail" id="&lt;init&gt;(T[])">
 <h3 id="&lt;init&gt;(java.lang.Object[])">GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
  through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
  always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
  of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
@@ -401,7 +403,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3 id="&lt;init&gt;(java.lang.Object[],java.lang.CharSequence)">GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;seed)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded LaserRandom, and can then iterate infinitely
+<div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded with the given CharSequence
+ (hashed 3 different ways by <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a>), and can then iterate infinitely
  through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
  always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
  of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.</div>
@@ -416,8 +419,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3 id="&lt;init&gt;(java.lang.Object[],com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a LaserRandom),
- and can then iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a TricycleRandom
+ or LaserRandom), and can then iterate infinitely through mostly-random shuffles of the given collection.
+ These shuffles are spaced
  so that a single element should always have a large amount of "gap" in order between one appearance and the next.
  It helps to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not
  affect how this works. The random parameter is copied so externally using it won't change the order this produces
@@ -425,7 +429,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>items</code> - an array of T that will not be modified</dd>
-<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a TricycleRandom or LaserRandom; will be copied and not used directly</dd>
 </dl>
 </section>
 </li>
@@ -435,7 +439,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
  boolean&nbsp;shareRNG)</span></div>
-<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
  single element should always have at least one "gap" element between one appearance and the next. It helps to

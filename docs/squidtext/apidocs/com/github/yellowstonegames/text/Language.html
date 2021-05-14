@@ -76,14 +76,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.text.Language</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Language</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A text generator for producing sentences and/or words in nonsense languages that fit a theme. This does not use an
  existing word list as a basis for its output, so it may or may not produce existing words occasionally, but you can
  safely assume it won't generate a meaningful sentence except in the absolute unlikeliest of cases.
@@ -97,10 +92,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  <a href="#mix(double,com.github.yellowstonegames.text.Language,double,java.lang.Object...)"><code>mix(double, Language, double, Object...)</code></a> (when you have a sound in mind that isn't quite met by an
  existing language).
  <br></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.text.Language">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -278,151 +269,162 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="block">A mix of four different languages, using only ASCII characters, that is meant for generating single words for
  creature or place names in fantasy settings.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#FRENCH">FRENCH</a></span></code></div>
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#fantasyLanguages">fantasyLanguages</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">Imitation modern French, using the (many) accented vowels that are present in the language.</div>
+<div class="block">Language constants that are meant to sound like they belong to fictional groups or species.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#GOBLIN">GOBLIN</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#FRENCH">FRENCH</a></span></code></div>
 <div class="col-last odd-row-color">
+<div class="block">Imitation modern French, using the (many) accented vowels that are present in the language.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#GOBLIN">GOBLIN</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Fantasy language that might be suitable for stealthy humanoids, such as goblins, or as a secret language used
  by humans who want to avoid notice.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#GREEK_AUTHENTIC">GREEK_AUTHENTIC</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#GREEK_AUTHENTIC">GREEK_AUTHENTIC</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Imitation ancient Greek, using the original Greek alphabet.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#GREEK_ROMANIZED">GREEK_ROMANIZED</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#GREEK_ROMANIZED">GREEK_ROMANIZED</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Imitation ancient Greek, romanized to use the Latin alphabet.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#HINDI_ROMANIZED">HINDI_ROMANIZED</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#HINDI_ROMANIZED">HINDI_ROMANIZED</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Imitation Hindi, romanized to use the Latin alphabet using accented glyphs similar to the IAST standard.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#HLETKIP">HLETKIP</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#HLETKIP">HLETKIP</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">A fictional language that could ostensibly be spoken by some group of humans, but that isn't closely based on any
  one real-world language.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#IMP">IMP</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#IMP">IMP</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">A fantasy language meant for obnoxious screeching annoying enemies more-so than for intelligent friends or foes.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#INFERNAL">INFERNAL</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#INFERNAL">INFERNAL</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Fantasy language that might be suitable for a language spoken by fiends, users of witchcraft, or people who seek
  to emulate or worship similar groups.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#INSECT">INSECT</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#INSECT">INSECT</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Fantasy/sci-fi language that would typically be fitting for an insect-like species without a close equivalent to
  human lips.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#INUKTITUT">INUKTITUT</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#INUKTITUT">INUKTITUT</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Imitation text from an approximation of one of the Inuktitut languages spoken by various people of the Arctic and
  nearby areas.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#JAPANESE_ROMANIZED">JAPANESE_ROMANIZED</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#JAPANESE_ROMANIZED">JAPANESE_ROMANIZED</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Imitation Japanese, romanized to use the Latin alphabet.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#KOBOLD">KOBOLD</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#KOBOLD">KOBOLD</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Fantasy language based closely on <a href="#DRAGON"><code>DRAGON</code></a>, but with much shorter words normally and closing syllables
  that may sound "rushed" or "crude", though it has the same general frequency of most consonants and vowels.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#KOREAN_ROMANIZED">KOREAN_ROMANIZED</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#KOREAN_ROMANIZED">KOREAN_ROMANIZED</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Imitation text from an approximation of Korean, using the Revised Romanization method that is official in South
  Korea today and is easier to type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#LOVECRAFT">LOVECRAFT</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#LOVECRAFT">LOVECRAFT</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Ia! Ia! Cthulhu Rl'yeh ftaghn! Useful for generating cultist ramblings or unreadable occult texts.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#MALAY">MALAY</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#MALAY">MALAY</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">An approximation of the Malay language or any of its close relatives, such as Indonesian.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#MAORI">MAORI</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#MAORI">MAORI</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Imitation text from an approximation of the Maori language, spoken in New Zealand both today and historically,
  and closely related to some other Polynesian languages.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#midConsonants">midConsonants</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#midVowels">midVowels</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#midConsonants">midConsonants</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#modifiers">modifiers</a></span></code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#midVowels">midVowels</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#MONGOLIAN">MONGOLIAN</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#modifiers">modifiers</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#MONGOLIAN">MONGOLIAN</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Imitation text from an approximation of one of the languages spoken in the 13th-century Mongol Empire.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#NAHUATL">NAHUATL</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#NAHUATL">NAHUATL</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Imitation text from an approximation of the language spoken by the Aztec people and also over a million
  contemporary people in parts of Mexico.</div>
 </div>
-<div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#name">name</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#NORSE">NORSE</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#name">name</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#NORSE">NORSE</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Somewhat close to Old Norse, which is itself very close to Icelandic, so this uses Icelandic spelling rules.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#NORSE_SIMPLIFIED">NORSE_SIMPLIFIED</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#NORSE_SIMPLIFIED">NORSE_SIMPLIFIED</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Somewhat close to Old Norse, which is itself very close to Icelandic, but changed to avoid letters not on a
  US-ASCII keyboard.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#openingConsonants">openingConsonants</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#openingVowels">openingVowels</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#openingConsonants">openingConsonants</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#registered">registered</a></span></code></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#openingVowels">openingVowels</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#registered">registered</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">An array that stores all the hand-made Language constants; it does not store randomly-generated languages
  nor does it store modifications or mixes of languages.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#registeredNames">registeredNames</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected static regexodus.Pattern</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#repeats">repeats</a></span></code></div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#registeredNames">registeredNames</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#romanizedHumanLanguages">romanizedHumanLanguages</a></span></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>protected static regexodus.Pattern</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#repeats">repeats</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#romanizedHumanLanguages">romanizedHumanLanguages</a></span></code></div>
+<div class="col-last even-row-color">
 <div class="block">Language constants that are meant to sound like specific real-world languages, and that all use the Latin
  script (like English) with maybe some accents.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#romanizedLanguages">romanizedLanguages</a></span></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Language constants that could sound like real-world languages or completely fictional ones, but that all use the
+ Latin script (like English) with maybe some accents.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#RUSSIAN_AUTHENTIC">RUSSIAN_AUTHENTIC</a></span></code></div>
@@ -1693,6 +1695,25 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</span>&nbsp;<span class="element-name">romanizedHumanLanguages</span></div>
 <div class="block">Language constants that are meant to sound like specific real-world languages, and that all use the Latin
  script (like English) with maybe some accents.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fantasyLanguages">
+<h3>fantasyLanguages</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</span>&nbsp;<span class="element-name">fantasyLanguages</span></div>
+<div class="block">Language constants that are meant to sound like they belong to fictional groups or species. All of these use the
+ Latin script (like English), and many use accents. These are sorted roughly by how non-human the language sounds,
+ with <a href="#HLETKIP"><code>HLETKIP</code></a> first (as a stand-in for some fictional human language), <a href="#FANTASY_NAME"><code>FANTASY_NAME</code></a> second (it
+ is built by combining several real languages), and the 5 ALIEN_ languages, such as <a href="#ALIEN_A"><code>ALIEN_A</code></a>, last (these
+ are meant to be always very different from human languages).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="romanizedLanguages">
+<h3>romanizedLanguages</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>[]</span>&nbsp;<span class="element-name">romanizedLanguages</span></div>
+<div class="block">Language constants that could sound like real-world languages or completely fictional ones, but that all use the
+ Latin script (like English) with maybe some accents.</div>
 </section>
 </li>
 </ul>

@@ -100,10 +100,10 @@ loadScripts(document, 'script');</script>
 <div class="block">A Region that, after <a href="#generate(com.github.yellowstonegames.place.tileset.TilesetType,int,int)"><code>generate(TilesetType, int, int)</code></a> has been called, will hold the floor cells
  in its data as "on" cells and walls as "off" cells.</div>
 </div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The current random number generator; this can be seeded initially, and is should be a <code>LaserRandom</code>.</div>
+<div class="block">The current random number generator; this can be seeded initially, and can be any <code>EnhancedRandom</code></div>
 </div>
 <div class="col-first even-row-color"><code>com.github.yellowstonegames.grid.Region</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#workingRegion">workingRegion</a></span></code></div>
@@ -125,11 +125,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">DungeonBoneGen</a></span>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructs a DungeonBoneGen that uses a default RNG, randomly seeded.</div>
+<div class="block">Constructs a DungeonBoneGen that uses a default LaserRandom, randomly seeded.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.LaserRandom)">DungeonBoneGen</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)">DungeonBoneGen</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructs a DungeonBoneGen that uses the given IRNG.</div>
+<div class="block">Constructs a DungeonBoneGen that uses the given EnhancedRandom.</div>
 </div>
 </div>
 </section>
@@ -176,7 +176,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Returns the height, used as the second coordinate in any char[][] in this class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getRng()">getRng</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the current RNG.</div>
@@ -199,7 +199,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Change the stored char[][] dungeon, using x,y indexing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setRng(com.github.tommyettinger.ds.support.LaserRandom)">setRng</a></span>&#8203;(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setRng(com.github.tommyettinger.ds.support.EnhancedRandom)">setRng</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the current RNG.</div>
 </div>
@@ -238,8 +238,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
-<div class="block">The current random number generator; this can be seeded initially, and is should be a <code>LaserRandom</code>.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="block">The current random number generator; this can be seeded initially, and can be any <code>EnhancedRandom</code></div>
 </section>
 </li>
 <li>
@@ -269,13 +269,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>DungeonBoneGen</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonBoneGen</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.LaserRandom&nbsp;random)</span></div>
-<div class="block">Constructs a DungeonBoneGen that uses the given IRNG.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonBoneGen</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="block">Constructs a DungeonBoneGen that uses the given EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - A LaserRandom to be used during the dungeon generation</dd>
+<dd><code>random</code> - An EnhancedRandom, such as a LaserRandom, to be used during the dungeon generation</dd>
 </dl>
 </section>
 </li>
@@ -283,7 +283,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>DungeonBoneGen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonBoneGen</span>()</div>
-<div class="block">Constructs a DungeonBoneGen that uses a default RNG, randomly seeded.</div>
+<div class="block">Constructs a DungeonBoneGen that uses a default LaserRandom, randomly seeded.</div>
 </section>
 </li>
 </ul>
@@ -297,7 +297,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getRng()">
 <h3>getRng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
 <div class="block">Gets the current RNG.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -305,9 +305,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setRng(com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="setRng(com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>setRng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRng</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRng</span>&#8203;<span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Sets the current RNG.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

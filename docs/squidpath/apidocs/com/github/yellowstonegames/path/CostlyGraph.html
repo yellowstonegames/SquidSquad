@@ -80,22 +80,13 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CostlyGraph</span>
-<span class="extends-implements">extends <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</span></div>
 <div class="block">A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
  passable neighbor.
  <br>
  Created by Tommy Ettinger on 7/9/2020.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.path.CostlyGraph">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -130,7 +121,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">CostlyGraph</a></span>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">No-op no-arg constructor, present for <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a>; if you use this you must call
+<div class="block">No-op no-arg constructor, present for serialization; if you use this you must call
  <a href="#init(float%5B%5D%5B%5D)"><code>init(float[][])</code></a> or <a href="#init(float%5B%5D%5B%5D,boolean)"><code>init(float[][], boolean)</code></a> before using the CostlyGraph.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D)">CostlyGraph</a></span>&#8203;(char[][]&nbsp;map)</code></div>
@@ -315,7 +306,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <section class="detail" id="&lt;init&gt;()">
 <h3>CostlyGraph</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CostlyGraph</span>()</div>
-<div class="block">No-op no-arg constructor, present for <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a>; if you use this you must call
+<div class="block">No-op no-arg constructor, present for serialization; if you use this you must call
  <a href="#init(float%5B%5D%5B%5D)"><code>init(float[][])</code></a> or <a href="#init(float%5B%5D%5B%5D,boolean)"><code>init(float[][], boolean)</code></a> before using the CostlyGraph.</div>
 </section>
 </li>

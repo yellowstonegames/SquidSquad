@@ -147,7 +147,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-first odd-row-color"><code>protected com.github.tommyettinger.ds.IntList</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#points">points</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected float</code></div>
@@ -182,33 +182,33 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.List)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.List)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;sequence)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.Map)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;com.github.yellowstonegames.grid.Coord,&#8203;? extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;&nbsp;connections)</code></div>
 <div class="col-last even-row-color">
-<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.Map,float)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map,float)">MixedGenerator</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;com.github.yellowstonegames.grid.Coord,&#8203;? extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;&nbsp;connections,
  float&nbsp;roomSizeMultiplier)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.</div>
 </div>
 </div>
 </section>
@@ -225,11 +225,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectObjectOrderedMap&lt;com.github.yellowstonegames.grid.Coord,&#8203;com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#basicPoints(int,int,com.github.tommyettinger.ds.support.LaserRandom)">basicPoints</a></span>&#8203;(int&nbsp;width,
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#basicPoints(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">basicPoints</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Mainly for internal use; this is used by <a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)"><code>MixedGenerator(int, int, LaserRandom)</code></a> to get its room positions.</div>
+<div class="block">Mainly for internal use; this is used by <a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>MixedGenerator(int, int, EnhancedRandom)</code></a> to get its room positions.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#generate()">generate</a></span>()</code></div>
@@ -471,7 +471,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -531,11 +531,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>MixedGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MixedGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.
  This version of the constructor uses a sub-random point sequence to generate the points it will draw caves and
  corridors between, helping to ensure a minimum distance between points, but it does not ensure that paths between
@@ -553,11 +553,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.List)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.List)">
 <h3>MixedGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MixedGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;sequence)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.
  This version of the constructor uses a List of Coord points from some other source to determine the path to add
@@ -574,13 +574,13 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.Map)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map)">
 <h3>MixedGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MixedGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;com.github.yellowstonegames.grid.Coord,&#8203;? extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;&nbsp;connections)</span></div>
-<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
  This version of the constructor uses a Map with Coord keys and Coord array values to determine a
  branching path for the dungeon to take; each key will connect once to each of the Coords in its value, and you
  usually don't want to connect in both directions. You call the different carver-adding methods to affect what the
@@ -590,20 +590,20 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dt>Parameters:</dt>
 <dd><code>width</code> - the width of the final map in cells</dd>
 <dd><code>height</code> - the height of the final map in cells</dd>
-<dd><code>rng</code> - an LaserRandom object to use for random choices; this make a lot of random choices.</dd>
+<dd><code>rng</code> - an EnhancedRandom object to use for random choices; this makes a lot of random choices.</dd>
 <dd><code>connections</code> - a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.LaserRandom,java.util.Map,float)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map,float)">
 <h3>MixedGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MixedGenerator</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;com.github.yellowstonegames.grid.Coord,&#8203;? extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;&nbsp;connections,
  float&nbsp;roomSizeMultiplier)</span></div>
-<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+<div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
  This version of the constructor uses a Map with Coord keys and Coord array values to determine a
  branching path for the dungeon to take; each key will connect once to each of the Coords in its value, and you
  usually don't want to connect in both directions. You call the different carver-adding methods to affect what the
@@ -613,7 +613,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dt>Parameters:</dt>
 <dd><code>width</code> - the width of the final map in cells</dd>
 <dd><code>height</code> - the height of the final map in cells</dd>
-<dd><code>rng</code> - an LaserRandom object to use for random choices; this make a lot of random choices.</dd>
+<dd><code>rng</code> - an EnhancedRandom object to use for random choices; this makes a lot of random choices.</dd>
 <dd><code>connections</code> - a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways</dd>
 <dd><code>roomSizeMultiplier</code> - a float multiplier that will be applied to each room's width and height</dd>
 </dl>
@@ -628,12 +628,12 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="basicPoints(int,int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="basicPoints(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>basicPoints</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectObjectOrderedMap&lt;com.github.yellowstonegames.grid.Coord,&#8203;com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;&gt;</span>&nbsp;<span class="element-name">basicPoints</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
-<div class="block">Mainly for internal use; this is used by <a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.LaserRandom)"><code>MixedGenerator(int, int, LaserRandom)</code></a> to get its room positions.
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="block">Mainly for internal use; this is used by <a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>MixedGenerator(int, int, EnhancedRandom)</code></a> to get its room positions.
  This is the default for generating a List of Coord if no other collection of Coord was supplied to the
  constructor.
  <br>

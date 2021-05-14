@@ -80,23 +80,14 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultGraph</span>
-<span class="extends-implements">extends <a href="UndirectedGraph.html" title="class in com.github.yellowstonegames.path">UndirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="UndirectedGraph.html" title="class in com.github.yellowstonegames.path">UndirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</span></div>
 <div class="block">A default setting for an <a href="UndirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>UndirectedGraph</code></a> of Coord vertices where all connections have cost 1. This should be
  initialized with a 2D (rectangular) char array using the map convention where <code>'#'</code> is a wall and anything else
  is passable.
  <br>
  Created by Tommy Ettinger on 7/9/2020.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.path.DefaultGraph">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -131,7 +122,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">DefaultGraph</a></span>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">No-op no-arg constructor, present for <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a>; if you use this you must call <a href="#init(char%5B%5D%5B%5D)"><code>init(char[][])</code></a>
+<div class="block">No-op no-arg constructor, present for serialization; if you use this you must call <a href="#init(char%5B%5D%5B%5D)"><code>init(char[][])</code></a>
  or <a href="#init(char%5B%5D%5B%5D,boolean)"><code>init(char[][], boolean)</code></a> before using the DefaultGraph.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(char%5B%5D%5B%5D)">DefaultGraph</a></span>&#8203;(char[][]&nbsp;map)</code></div>
@@ -287,7 +278,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <section class="detail" id="&lt;init&gt;()">
 <h3>DefaultGraph</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultGraph</span>()</div>
-<div class="block">No-op no-arg constructor, present for <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a>; if you use this you must call <a href="#init(char%5B%5D%5B%5D)"><code>init(char[][])</code></a>
+<div class="block">No-op no-arg constructor, present for serialization; if you use this you must call <a href="#init(char%5B%5D%5B%5D)"><code>init(char[][])</code></a>
  or <a href="#init(char%5B%5D%5B%5D,boolean)"><code>init(char[][], boolean)</code></a> before using the DefaultGraph.</div>
 </section>
 </li>

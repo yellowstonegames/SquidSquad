@@ -127,6 +127,16 @@ loadScripts(document, 'script');</script>
 <div class="block">The raw data this class uses, as a 1D byte array.</div>
 </div>
 <div class="col-first even-row-color"><code>static byte[][]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#TILE_NOISE">TILE_NOISE</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">Raw data this class uses for omni-tiling blue noise, as 64 1D byte arrays.</div>
+</div>
+<div class="col-first odd-row-color"><code>static byte[][]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#TILE_TRI_NOISE">TILE_TRI_NOISE</a></span></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Raw data this class uses for omni-tiling triangular-mapped blue noise, as 64 1D byte arrays.</div>
+</div>
+<div class="col-first even-row-color"><code>static byte[][]</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#TRI_NOISE">TRI_NOISE</a></span></code></div>
 <div class="col-last even-row-color">
 <div class="block">Raw data this class uses for triangularly-distributed blue noise, as 64 1D byte arrays.</div>
@@ -146,18 +156,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  boolean&nbsp;triangular)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
@@ -165,10 +175,10 @@ loadScripts(document, 'script');</script>
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">blueSpill</a></span>&#8203;(int&nbsp;width,
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill</a></span>&#8203;(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
  noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
@@ -230,11 +240,35 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets a modified byte from some raw noise data in an array of at least 4096 bytes, using seed to adjust repeated
  sections of noise so patterns are much less noticeable.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#indexedBlueNoisePoint(float%5B%5D,int,float)">indexedBlueNoisePoint</a></span>&#8203;(float[]&nbsp;dest,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static byte</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getSeededOmniTiling(int,int,int)">getSeededOmniTiling</a></span>&#8203;(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets a point in a potentially-infinite aperiodically-tiling plane of blue noise, where each 64x64 square of blue
+ noise is drawn from <a href="#TILE_NOISE"><code>TILE_NOISE</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static byte</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getSeededTriangular(int,int,int)">getSeededTriangular</a></span>&#8203;(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets a modified byte from the triangular-mapped blue noise this stores in <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>, using seed to
+ adjust repeated sections of noise so patterns are much less noticeable.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static byte</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getSeededTriOmniTiling(int,int,int)">getSeededTriOmniTiling</a></span>&#8203;(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets a point in a potentially-infinite aperiodically-tiling plane of blue noise, where each 64x64 square of blue
+ noise is drawn from <a href="#TILE_TRI_NOISE"><code>TILE_TRI_NOISE</code></a> (which is blue noise with a triangular mapping).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#indexedBlueNoisePoint(float%5B%5D,int,float)">indexedBlueNoisePoint</a></span>&#8203;(float[]&nbsp;dest,
  int&nbsp;index,
  float&nbsp;strength)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Implements http://extremelearning.com.au/a-simple-method-to-construct-isotropic-quasirandom-blue-noise-point-sequences/ .</div>
 </div>
 </div>
@@ -275,6 +309,47 @@ loadScripts(document, 'script');</script>
  noise results. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
  to it, and uses <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/charset/StandardCharsets.html" title="class or interface in java.nio.charset" class="external-link"><code>StandardCharsets</code></a> to decode itself from a String, which only works on GWT 2.8.2 and newer.
  Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TILE_NOISE">
+<h3>TILE_NOISE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">byte[][]</span>&nbsp;<span class="element-name">TILE_NOISE</span></div>
+<div class="block">Raw data this class uses for omni-tiling blue noise, as 64 1D byte arrays. The omni-tiling property here means
+ that you can place any of the 1D arrays here in a grid with any other 1D array from here next to it, and no seam
+ will be visible. This is used by <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>. Any of the 1D arrays this
+ holds can be passed to <a href="#get(int,int,byte%5B%5D)"><code>get(int, int, byte[])</code></a> or <a href="#getSeeded(int,int,int,byte%5B%5D)"><code>getSeeded(int, int, int, byte[])</code></a> as their
+ noiseData parameter, which will make get() produce noise in 64x64 tiling blocks and getSeeded() produce...
+ something. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
+ to it, and uses <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/charset/StandardCharsets.html" title="class or interface in java.nio.charset" class="external-link"><code>StandardCharsets</code></a> to decode itself from a String, which only works on GWT 2.8.2 and newer.
+ Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.
+ <br>
+ If you want high-quality non-obviously-repeating blue noise, this is your best bet, when used with
+ <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>. However, an individual 64x64 tile chosen from this set of tiles does
+ not have the same guarantees about its own distribution relative to a tile from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a>. ALT_NOISE
+ always uses each byte value equally often for all tiles, while TILE_NOISE may have a slightly-imperfect mean and
+ uneven distribution for one tile. If you consider all 64 tiles in TILE_NOISE, the distribution should be perfect.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TILE_TRI_NOISE">
+<h3>TILE_TRI_NOISE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">byte[][]</span>&nbsp;<span class="element-name">TILE_TRI_NOISE</span></div>
+<div class="block">Raw data this class uses for omni-tiling triangular-mapped blue noise, as 64 1D byte arrays. The omni-tiling
+ property here means that you can place any of the 1D arrays here in a grid with any other 1D array from here next
+ to it, and no seam will be visible. This is used by <a href="#getSeededTriOmniTiling(int,int,int)"><code>getSeededTriOmniTiling(int, int, int)</code></a>. Any of the 1D
+ arrays this holds can be passed to <a href="#get(int,int,byte%5B%5D)"><code>get(int, int, byte[])</code></a> or <a href="#getSeeded(int,int,int,byte%5B%5D)"><code>getSeeded(int, int, int, byte[])</code></a> as
+ their noiseData parameter, which will make get() produce noise in 64x64 tiling blocks and getSeeded() produce...
+ something. This group of byte arrays is static, which is probably OK even on Android as long as no one writes
+ to it, and uses <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/charset/StandardCharsets.html" title="class or interface in java.nio.charset" class="external-link"><code>StandardCharsets</code></a> to decode itself from a String, which only works on GWT 2.8.2 and newer.
+ Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.
+ <br>
+ If you want high-quality non-obviously-repeating triangular blue noise, this is your best bet, when used with
+ <a href="#getSeededTriOmniTiling(int,int,int)"><code>getSeededTriOmniTiling(int, int, int)</code></a>. However, an individual 64x64 tile chosen from this set of tiles
+ does not have the same guarantees about its own distribution relative to a tile from <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>.
+ TRI_NOISE always uses the same frequency of byte values for every tile, while TILE_TRI_NOISE may have a
+ slightly-imperfect mean and uneven distribution for one tile. If you consider all 64 tiles in TILE_TRI_NOISE, the
+ distribution should be perfect for a triangular-mapped blue noise tile.</div>
 </section>
 </li>
 <li>
@@ -381,7 +456,12 @@ loadScripts(document, 'script');</script>
  int&nbsp;y,
  int&nbsp;seed)</span></div>
 <div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
- artifacts detectable to the human eye. <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
+ artifacts detectable to the human eye.
+ <br>
+ New code should prefer <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>; it is better in every way. The rest of the
+ notes here are outdated.
+ <br>
+ <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
  histogram at right.</a> This works by choosing from one of four nearby blue noise tiles and using it as-is, with
  the choice determined by an initial blue noise sample from a non-tiling blue noise tile, weighted heavily based
  on how close a pixel is to a border between the four noise tiles. Compared to <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>,
@@ -414,13 +494,21 @@ loadScripts(document, 'script');</script>
  int&nbsp;seed,
  byte[][]&nbsp;noises)</span></div>
 <div class="block">A mix of white noise and blue noise that has very few patterns detectable in frequency space, though it has some
- artifacts detectable to the human eye. <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
- histogram at right.</a> This works by choosing from one of four nearby blue noise tiles and using it as-is, with
- the choice determined by an initial blue noise sample from a non-tiling blue noise tile, weighted heavily based
- on how close a pixel is to a border between the four noise tiles. Compared to <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>,
- the "progressive" quality of the blue noise this uses is preserved better, meaning if you get the set of points
- with values under or over a certain value, that set is still usually blue noise. (Keeping this quality is quite
- hard for blue noise textures generated from combining existing tiles!)
+ artifacts detectable to the human eye.
+ <br>
+ New code should prefer <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>; it is better in every way. The rest of the
+ notes here are outdated.
+ <br>
+ <a href="https://i.imgur.com/iKhhbH2.png">Blue noise at left, magnitude
+ histogram at right (using ALT_NOISE).</a> <a href="https://i.imgur.com/ryA4HYC.png">Blue noise at left, magnitude
+ histogram at right (using TRI_NOISE).</a> You can pass either <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or <a href="#TRI_NOISE"><code>TRI_NOISE</code></a> to this
+ and it will be fine (unlike <a href="#getSeeded(int,int,int,byte%5B%5D)"><code>getSeeded(int, int, int, byte[])</code></a>). This works by choosing from one of four
+ nearby blue noise tiles and using it as-is, with the choice determined by an initial blue noise sample from a
+ non-tiling blue noise tile, weighted heavily based on how close a pixel is to a border between the four noise
+ tiles. Compared to <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>, the "progressive" quality of the blue noise this uses is
+ preserved better, meaning if you get the set of points with values under or over a certain value, that set is
+ still usually blue noise. (Keeping this quality is quite hard for blue noise textures generated from combining
+ existing tiles!)
  <br>
  This way of mixing blue noise textures has some soft line artifacts that don't persist very far.
  It tends to look like it has less artifacts to human observers now, and about the same to signal processing.
@@ -450,6 +538,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets a modified byte from the raw data this stores, using seed to adjust repeated sections of blue noise so
  patterns are much less noticeable. Unlike <a href="#get(int,int)"><code>get(int, int)</code></a>, this won't repeat every 64 cells on x or y, but
  it isn't as correct at matching blue-noise frequencies, and tends to look "scratchy" in places, like TV static.
+ <br>
+ New code should prefer <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>; it is better in every way.
+ <br>
  This chooses a sub-array from <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> based on the seed, and the same seed will use the same sub-array
  in all locations. This tends to look less scratchy than <a href="#getChosen(int,int,int)"><code>getChosen(int, int, int)</code></a>, but has worse measured
  repetitive qualities. The "progressive" quality of the blue noise this uses is not well-preserved, meaning if you
@@ -475,7 +566,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets a modified byte from some raw noise data in an array of at least 4096 bytes, using seed to adjust repeated
  sections of noise so patterns are much less noticeable. Unlike <a href="#get(int,int)"><code>get(int, int)</code></a>, this won't repeat every 64
  cells on x or y, but it isn't as correct at matching blue-noise frequencies, and tends to look "scratchy" in
- places, like TV static. You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or
+ places, like TV static.
+ <br>
+ New code should prefer <a href="#getSeededOmniTiling(int,int,int)"><code>getSeededOmniTiling(int, int, int)</code></a>; it is better in every way.
+ <br>
+ You probably want to get the noiseData from an element of <a href="#ALT_NOISE"><code>ALT_NOISE</code></a> or
  <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>; unlike <a href="#getSeeded(int,int,int)"><code>getSeeded(int, int, int)</code></a>, this won't choose a different byte array, and will
  always use the given <code>noiseData</code>. The "progressive" quality of the blue noise this uses is not
  well-preserved, meaning if you get the set of points with values under or over a certain value, that set doesn't
@@ -492,12 +587,91 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="blueSpill(int,int,int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="getSeededTriangular(int,int,int)">
+<h3>getSeededTriangular</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte</span>&nbsp;<span class="element-name">getSeededTriangular</span>&#8203;<span class="parameters">(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</span></div>
+<div class="block">Gets a modified byte from the triangular-mapped blue noise this stores in <a href="#TRI_NOISE"><code>TRI_NOISE</code></a>, using seed to
+ adjust repeated sections of noise so patterns are much less noticeable. Unlike <a href="#get(int,int)"><code>get(int, int)</code></a>, this won't
+ repeat every 64 cells on x or y, but it isn't as correct at matching blue-noise frequencies, and tends to look
+ "scratchy" in places, like TV static.
+ <br>
+ New code should prefer <a href="#getSeededTriOmniTiling(int,int,int)"><code>getSeededTriOmniTiling(int, int, int)</code></a>; it is better in every way.
+ <br>
+ This chooses a sub-array from <a href="#TRI_NOISE"><code>TRI_NOISE</code></a> based on the seed, and the same seed will use the same sub-array
+ in all locations. This tends to look less scratchy than <a href="#getChosen(int,int,int)"><code>getChosen(int, int, int)</code></a>, but has worse measured
+ repetitive qualities. The "progressive" quality of the blue noise this uses is not well-preserved, meaning if you
+ get the set of points with values under or over a certain value, that set doesn't usually resemble blue noise.
+ <a href="https://i.imgur.com/zcxLjj6.png">Blue noise at left, magnitude histogram at right.</a> There is an odd
+ "patchwork" quality to the noise with the triangular mapping; it is not present when using
+ <a href="#getChosen(int,int,int,byte%5B%5D%5B%5D)"><code>getChosen(int, int, int, byte[][])</code></a> with <a href="#TRI_NOISE"><code>TRI_NOISE</code></a> as the last parameter.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position, can be any int; results will not repeat for a very long time</dd>
+<dd><code>y</code> - y position, can be any int; results will not repeat for a very long time</dd>
+<dd><code>seed</code> - seed value, can be any int; should be the same for all calls that should be from the same 2D plane</dd>
+<dt>Returns:</dt>
+<dd>a byte that obeys an almost-triangular-blue-noise distribution, so a value is only next to a similar value rarely</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSeededOmniTiling(int,int,int)">
+<h3>getSeededOmniTiling</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte</span>&nbsp;<span class="element-name">getSeededOmniTiling</span>&#8203;<span class="parameters">(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</span></div>
+<div class="block">Gets a point in a potentially-infinite aperiodically-tiling plane of blue noise, where each 64x64 square of blue
+ noise is drawn from <a href="#TILE_NOISE"><code>TILE_NOISE</code></a>. Because each square of TILE_NOISE can tile with any other from that
+ group, this can choose those squares randomly, and it does so using a simplistic hash based on Cantor's pairing
+ function. Unlike earlier attempts here to make aperiodic tilings of blue noise, this makes high-quality blue
+ noise that satisfies the progressive quality. Big thanks to Bart Wronski for making Ulichney's Void and Cluster
+ algorithm accessible to me!
+ <br>
+ <a href="https://i.imgur.com/aIRKSaO.png">Blue noise at left, magnitude histogram at right.</a></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - x coordinate, in grid cells, pixels, or some other fine-grained measurement</dd>
+<dd><code>y</code> - y coordinate, in grid cells, pixels, or some other fine-grained measurement</dd>
+<dd><code>seed</code> - only the low 18 bits will be used</dd>
+<dt>Returns:</dt>
+<dd>a byte obeying a blue noise distribution</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSeededTriOmniTiling(int,int,int)">
+<h3>getSeededTriOmniTiling</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte</span>&nbsp;<span class="element-name">getSeededTriOmniTiling</span>&#8203;<span class="parameters">(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;seed)</span></div>
+<div class="block">Gets a point in a potentially-infinite aperiodically-tiling plane of blue noise, where each 64x64 square of blue
+ noise is drawn from <a href="#TILE_TRI_NOISE"><code>TILE_TRI_NOISE</code></a> (which is blue noise with a triangular mapping). The triangular
+ mapping may improve the appearance of the blue noise when used for dithering or other smoothly-fading gradients.
+ Because each square of TILE_TRI_NOISE can tile with any other from that group, this can choose those squares
+ randomly, and it does so using a simplistic hash based on Cantor's pairing function. Unlike earlier attempts here
+ to make aperiodic tilings of blue noise, this makes high-quality blue noise that satisfies the progressive
+ quality. Big thanks to Bart Wronski for making Ulichney's Void and Cluster algorithm accessible to me!
+ <br>
+ <a href="https://i.imgur.com/4bE8iKt.png">Blue noise at left, magnitude histogram at right.</a></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - x coordinate, in grid cells, pixels, or some other fine-grained measurement</dd>
+<dd><code>y</code> - y coordinate, in grid cells, pixels, or some other fine-grained measurement</dd>
+<dd><code>seed</code> - only the low 18 bits will be used</dd>
+<dt>Returns:</dt>
+<dd>a byte obeying a triangular-mapped blue noise distribution</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>blueSpill</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
  noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
  range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
@@ -507,18 +681,18 @@ loadScripts(document, 'script');</script>
 <dd><code>width</code> - the width of the 2D array to return</dd>
 <dd><code>height</code> - the height of the 2D array to return</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - a LaserRandom to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd>a 2D int array containing ints from 0 (inclusive) to <code>spillerLimit</code> (exclusive)</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.LaserRandom)">
+<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.EnhancedRandom)">
 <h3>blueSpill</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int[][]&nbsp;toFill,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
@@ -526,18 +700,18 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - a LaserRandom to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd><code>toFill</code>, after modifications</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.LaserRandom,boolean)">
+<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
 <h3>blueSpill</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int[][]&nbsp;toFill,
  int&nbsp;spillerLimit,
- com.github.tommyettinger.ds.support.LaserRandom&nbsp;rng,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
  boolean&nbsp;triangular)</span></div>
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
@@ -546,7 +720,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - a LaserRandom to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd><code>toFill</code>, after modifications</dd>
 </dl>

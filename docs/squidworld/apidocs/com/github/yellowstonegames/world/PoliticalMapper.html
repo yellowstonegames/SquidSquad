@@ -76,14 +76,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.world.PoliticalMapper</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PoliticalMapper</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">When you have a world map as produced by <a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world"><code>WorldMapGenerator</code></a>, you may want to fill it with claims by various
  factions, where each faction may be hand-made and may consist of humans or some fantasy species, such as goblins,
  elves, or demons. This can assign contiguous areas of land to various factions, while acknowledging any preferences
@@ -98,10 +93,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  can look better if important areas are in the corners of the rectangular area, though they are less familiar map
  shapes). <a href="LocalMap.html" title="class in com.github.yellowstonegames.world"><code>LocalMap</code></a> and <a href="MimicLocalMap.html" title="class in com.github.yellowstonegames.world"><code>MimicLocalMap</code></a> may be better if you don't want world-scale features like polar
  ice caps or a warm equator.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.world.PoliticalMapper">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -148,7 +139,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-first even-row-color"><code>char[][]</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#politicalMap">politicalMap</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#rng">rng</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>int</code></div>
@@ -267,7 +258,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>

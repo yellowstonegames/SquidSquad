@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -29,7 +28,6 @@ import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
-import com.github.yellowstonegames.place.DungeonTools;
 import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -101,7 +99,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Viewport mainViewport;
     private Camera camera;
 
-    private ObjectObjectOrderedMap<Coord, AnimatedGlider> monsters;
+    private ObjectObjectOrderedMap<Coord, AnimatedSprite> monsters;
     private DijkstraMap getToPlayer, playerToCursor;
     private Coord cursor;
     private ObjectList<Coord> toCursor;
@@ -124,7 +122,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     // the player's vision that blocks pathfinding to areas we can't see a path to, and we also store all cells that we
     // have seen in the past in a GreasedRegion (in most roguelikes, there would be one of these per dungeon floor).
     private Region floors, blockage, seen;
-    private AnimatedGlider playerSprite;
+    private AnimatedSprite playerSprite;
     // libGDX can use a kind of packed float (yes, the number type) to efficiently store colors, but it also uses a
     // heavier-weight Color object sometimes; SquidLib has a large list of SColor objects that are often used as easy
     // predefined colors since SColor extends Color. SparseLayers makes heavy use of packed float colors internally,
@@ -305,7 +303,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //if you gave a seed to the RNG constructor, then the cell this chooses will be reliable for testing. If you
         //don't seed the RNG, any valid cell should be possible.
         player = floors.singleRandom(rng);
-        playerSprite = new AnimatedGlider(new Animation<>(DURATION,
+        playerSprite = new AnimatedSprite(new Animation<>(DURATION,
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
 //        playerColor = ColorTools.floatGetHSV(rng.nextFloat(), 1f, 1f, 1f);
 //        playerSprite.setPackedColor(playerColor);
@@ -337,8 +335,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
             Coord monPos = floors.singleRandom(rng);
             floors.remove(monPos);
             String enemy = rng.randomElement(Data.possibleEnemies);
-            AnimatedGlider monster =
-                    new AnimatedGlider(new Animation<>(DURATION,
+            AnimatedSprite monster =
+                    new AnimatedSprite(new Animation<>(DURATION,
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
 //            monster.setPackedColor(ColorTools.floatGetHSV(rng.nextFloat(), 0.75f, 0.8f, 0f));
             // new Color().fromHsv(rng.nextFloat(), 0.75f, 0.8f));
@@ -516,7 +514,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 blockage.fringe8way();
                 playerSprite.position.setStart(player);
                 playerSprite.position.setEnd(player = Coord.get(newX, newY));
-                playerSprite.position.setChange(0f);
                 phase = Phase.PLAYER_ANIM;
                 animationStart = TimeUtils.millis();
                 // if a monster was at the position we moved into, and so was successfully removed...
@@ -553,7 +550,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for(int ci = 0; ci < monCount; ci++)
         {
             Coord pos = monsters.keyAt(0);
-            AnimatedGlider mon = monsters.removeAt(0);
+            AnimatedSprite mon = monsters.removeAt(0);
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
             if (visible[pos.x][pos.y] > 0.1) {
                 getToPlayer.clearGoals();
@@ -623,7 +620,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             }
         }
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        AnimatedGlider monster;
+        AnimatedSprite monster;
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if (visible[i][j] > 0.0) {

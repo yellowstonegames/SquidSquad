@@ -77,14 +77,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.core.WeightedTable</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WeightedTable</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A different approach to the same task as a probability table, though this only looks up an appropriate index
  instead of also storing items it can choose; allows positive doubles for weights but does not allow nested tables for
  simplicity. This doesn't store an RNG (or RandomnessSource) in this class, and instead expects a long to be given for
@@ -100,10 +95,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  64-bit value, allowing the state given to <a href="#random(long)"><code>random(long)</code></a> to be just one long.
  <br>
  Created by Tommy Ettinger on 1/5/2018.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.core.WeightedTable">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -214,7 +205,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <li>
 <section class="detail" id="&lt;init&gt;(double...)">
 <h3>WeightedTable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WeightedTable</span>&#8203;<span class="parameters">(double...&nbsp;probabilities)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WeightedTable</span>&#8203;<span class="parameters">(@Nonnull
+ double...&nbsp;probabilities)</span></div>
 <div class="block">Constructs a WeightedTable with the given array of weights for each index. The array can also be a varargs for
  convenience. The weights can be any positive non-zero doubles, but should usually not be so large or small that
  precision loss is risked. Each weight will be used to determine the likelihood of that weight's index being

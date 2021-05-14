@@ -13,7 +13,6 @@ import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -33,8 +32,8 @@ import java.util.Collections;
  * shapes). {@link LocalMap} and {@link MimicLocalMap} may be better if you don't want world-scale features like polar
  * ice caps or a warm equator.
  */
-public class PoliticalMapper implements Serializable {
-    private static final long serialVersionUID = 0L;
+public class PoliticalMapper {
+
 
     /**
      * Represents a group that claims territory on a world-map, such as a nation. Each Faction has a name, a short name
@@ -45,10 +44,7 @@ public class PoliticalMapper implements Serializable {
      * preferences, but the technology they have already mastered may only be applicable in certain areas, like a height
      * of 4 (shoreline) for seafaring groups, or preferredBiomes that include "Grassland" for equestrians.
      */
-    public static class Faction implements Serializable
-    {
-        private static final long serialVersionUID = 0L;
-
+    public static class Faction {
         public String name, shortName;
         public Language language;
         /**

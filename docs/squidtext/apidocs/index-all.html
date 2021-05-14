@@ -51,7 +51,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:$">$</a>&nbsp;<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a><span class="vertical-separator">|</span><a href="serialized-form.html">Serialized&nbsp;Form</a>
+<a href="#I:$">$</a>&nbsp;<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:$">$</h2>
 <dl class="index">
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Pronoun.html#$$$Text()">$$$Text()</a></span> - Method in enum class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Pronoun.html" title="enum class in com.github.yellowstonegames.text">Pronoun</a></dt>
@@ -338,6 +338,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A mix of four different languages, using only ASCII characters, that is meant for generating single words for
  creature or place names in fantasy settings.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#fantasyLanguages">fantasyLanguages</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
+<dd>
+<div class="block">Language constants that are meant to sound like they belong to fictional groups or species.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Pronoun.html#FEMALE_GENDER">FEMALE_GENDER</a></span> - Enum constant in enum class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Pronoun.html" title="enum class in com.github.yellowstonegames.text">Pronoun</a></dt>
 <dd>
@@ -950,6 +954,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Language constants that are meant to sound like specific real-world languages, and that all use the Latin
  script (like English) with maybe some accents.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#romanizedLanguages">romanizedLanguages</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
+<dd>
+<div class="block">Language constants that could sound like real-world languages or completely fictional ones, but that all use the
+ Latin script (like English) with maybe some accents.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Language.html#RUSSIAN_AUTHENTIC">RUSSIAN_AUTHENTIC</a></span> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
 <div class="block">Imitation modern Russian, using the authentic Cyrillic alphabet used in Russia and other countries.</div>
@@ -1137,7 +1146,7 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Thesaurus.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)">Thesaurus(EnhancedRandom)</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></dt>
 <dd>
 <div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
- the given Random.</div>
+ the given EnhancedRandom.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/text/Thesaurus.html#%3Cinit%3E(java.lang.String)">Thesaurus(String)</a></span> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></dt>
 <dd>
@@ -1321,7 +1330,7 @@ the order they are declared.</div>
 <div class="block">Thesaurus preset that sharply reduces the used letters to only: a, b, g, h, m, n, r, and z.</div>
 </dd>
 </dl>
-<a href="#I:$">$</a>&nbsp;<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a><span class="vertical-separator">|</span><a href="serialized-form.html">Serialized&nbsp;Form</a></main>
+<a href="#I:$">$</a>&nbsp;<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
 </div>
 </div>
 </body>

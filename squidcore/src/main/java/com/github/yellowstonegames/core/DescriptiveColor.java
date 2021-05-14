@@ -11,7 +11,6 @@ import regexodus.Replacer;
 import regexodus.Substitution;
 import regexodus.TextBuffer;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 

@@ -13,7 +13,7 @@ import java.util.Arrays;
  * <a href="http://yellowstonegames.github.io/SquidLib/EllipseWorld.png" >Example map</a>.
  */
 public class EllipticalWorldMap extends WorldMapGenerator {
-    private static final long serialVersionUID = 1L;
+
     protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,

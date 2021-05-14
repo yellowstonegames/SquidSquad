@@ -12,7 +12,7 @@ import com.github.yellowstonegames.grid.Noise;
  * <a href="http://yellowstonegames.github.io/SquidLib/DetailedWorldMapDemo.png" >Example map</a>.
  */
 public class TilingWorldMap extends WorldMapGenerator {
-    private static final long serialVersionUID = 1L;
+
     protected static final float terrainFreq = 0.95f, terrainRidgedFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     private float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,

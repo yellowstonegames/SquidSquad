@@ -6,8 +6,6 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.MathTools;
 
-import java.io.Serializable;
-
 /**
  * Grouping of qualities related to glow and light emission. When a Radiance variable in some object is null, it
  * means that object doesn't emit light; if a Radiance variable is non-null, it will probably emit light unless the
@@ -31,9 +29,7 @@ import java.io.Serializable;
  * <br>
  * Created by Tommy Ettinger on 6/16/2018.
  */
-public class Radiance implements Serializable {
-    private static final long serialVersionUID = 2L;
-
+public class Radiance {
     /**
      * Randomly-seeded and only used for things that should be visually random, but won't matter for equality.
      */

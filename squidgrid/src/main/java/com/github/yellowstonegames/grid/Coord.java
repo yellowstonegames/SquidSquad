@@ -3,7 +3,6 @@ package com.github.yellowstonegames.grid;
 import com.github.yellowstonegames.core.TrigTools;
 
 import javax.annotation.Nonnull;
-import java.io.Serializable;
 
 /**
  * A 2D coordinate with (constant) x and y fields. Coord objects are immutable; a single pool of Coord values, with
@@ -26,9 +25,7 @@ import java.io.Serializable;
  * <br>
  * Created by Tommy Ettinger on 8/12/2015.
  */
-public class Coord implements Serializable {
-    private static final long serialVersionUID = 300L;
-
+public class Coord {
 	/** The x-coordinate. */
 	public final int x;
 

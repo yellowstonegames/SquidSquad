@@ -25,14 +25,12 @@ package com.github.yellowstonegames.path;
 
 import com.github.yellowstonegames.grid.Coord;
 
-import java.io.Serializable;
-
 /**
  * Abstract superclass of any connection between nodes on a graph.
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public abstract class Edge<V> implements Serializable {
+public abstract class Edge<V> {
     public Edge(){}
 
     public abstract V getA();

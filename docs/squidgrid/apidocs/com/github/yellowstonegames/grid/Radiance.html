@@ -76,14 +76,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.grid.Radiance</div>
 </div>
 <section class="description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Radiance</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Grouping of qualities related to glow and light emission. When a Radiance variable in some object is null, it
  means that object doesn't emit light; if a Radiance variable is non-null, it will probably emit light unless the
  color of light it produces is fully transparent. Light may take up one cell or extend into nearby cells, and the
@@ -105,10 +100,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  won't flicker or strobe.
  <br>
  Created by Tommy Ettinger on 6/16/2018.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd><a href="../../../../serialized-form.html#com.github.yellowstonegames.grid.Radiance">Serialized Form</a></dd>
-</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -307,7 +298,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <h3>flicker</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">flicker</span></div>
 <div class="block">The rate of random continuous change to radiance range, like the light from a campfire. The random component of
- the change is determined by a unique seed produced by an internal <code>LaserRandom</code>, which will
+ the change is determined by a unique seed produced by an internal <code>TricycleRandom</code>, which will
  probably make all flicker effects different when flicker is non-0.</div>
 </section>
 </li>

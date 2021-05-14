@@ -97,9 +97,18 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#font">font</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected int</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#gridHeight">gridHeight</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected int</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#gridWidth">gridWidth</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>com.github.tommyettinger.ds.IntLongOrderedMap</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#map">map</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>com.badlogic.gdx.utils.viewport.Viewport</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#viewport">viewport</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -115,15 +124,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Does not set <a href="#font"><code>font</code></a>, you will have to set it later.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int)">GlyphMap</a></span>&#8203;(int&nbsp;capacity)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Does not set <a href="#font"><code>font</code></a>, you will have to set it later.</div>
-</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font)">GlyphMap</a></span>&#8203;(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;font)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font,int)">GlyphMap</a></span>&#8203;(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;font,
- int&nbsp;capacity)</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font)">GlyphMap</a></span>&#8203;(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;font)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.glyph.Font,int,int)">GlyphMap</a></span>&#8203;(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;font,
+ int&nbsp;gridWidth,
+ int&nbsp;gridHeight)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -181,6 +187,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#put(int,long)">put</a></span>&#8203;(int&nbsp;fused,
  long&nbsp;glyph)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#resize(int,int)">resize</a></span>&#8203;(int&nbsp;screenWidth,
+ int&nbsp;screenHeight)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -199,6 +209,18 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="gridWidth">
+<h3>gridWidth</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">gridWidth</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="gridHeight">
+<h3>gridHeight</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">gridHeight</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="map">
 <h3>map</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntLongOrderedMap</span>&nbsp;<span class="element-name">map</span></div>
@@ -214,6 +236,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="font">
 <h3>font</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></span>&nbsp;<span class="element-name">font</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="viewport">
+<h3>viewport</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.utils.viewport.Viewport</span>&nbsp;<span class="element-name">viewport</span></div>
 </section>
 </li>
 </ul>
@@ -238,21 +266,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.glyph.Font,int)">
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.glyph.Font,int,int)">
 <h3>GlyphMap</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlyphMap</span>&#8203;<span class="parameters">(<a href="Font.html" title="class in com.github.yellowstonegames.glyph">Font</a>&nbsp;font,
- int&nbsp;capacity)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(int)">
-<h3>GlyphMap</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlyphMap</span>&#8203;<span class="parameters">(int&nbsp;capacity)</span></div>
-<div class="block">Does not set <a href="#font"><code>font</code></a>, you will have to set it later.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>capacity</code> - how many glyphs this should be able to hold at the start, before resizing</dd>
-</dl>
+ int&nbsp;gridWidth,
+ int&nbsp;gridHeight)</span></div>
 </section>
 </li>
 </ul>
@@ -347,6 +365,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span>&#8203;<span class="parameters">(com.badlogic.gdx.graphics.g2d.Batch&nbsp;batch,
  float&nbsp;x,
  float&nbsp;y)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="resize(int,int)">
+<h3>resize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span>&#8203;<span class="parameters">(int&nbsp;screenWidth,
+ int&nbsp;screenHeight)</span></div>
 </section>
 </li>
 </ul>

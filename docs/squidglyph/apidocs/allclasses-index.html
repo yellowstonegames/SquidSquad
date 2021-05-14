@@ -16,7 +16,11 @@
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="all-classes-index-page">
-<script type="text/javascript">var pathtoroot = "./";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "./";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -52,21 +56,31 @@ loadScripts(document, 'script');</script>
 <h1 title="All&amp;nbsp;Classes" class="title">All&nbsp;Classes</h1>
 </div>
 <div id="all-classes-table">
-<div class="caption"><span>Class Summary</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Class Summary</button><button id="all-classes-table-tab3" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab3', 2)" class="table-tab">Enum Class Summary</button></div>
+<div id="all-classes-table.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/github/yellowstonegames/glyph/Font.DistanceFieldType.html" title="enum class in com.github.yellowstonegames.glyph">Font.DistanceFieldType</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Defines what types of distance field font this can use and render.</div>
+</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/Font.GlyphRegion.html" title="class in com.github.yellowstonegames.glyph">Font.GlyphRegion</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Describes the region of a glyph in a larger TextureRegion, carrying a little more info about the offsets that
  apply to where the glyph is rendered.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/glyph/Line.html" title="class in com.github.yellowstonegames.glyph">Line</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+</div>
 </div>
 </div>
 </main>

@@ -5,9 +5,6 @@ import com.github.yellowstonegames.core.DigitTools;
 import javax.annotation.Nonnull;
 
 public final class XoshiroStarPhi32RNG implements LegacyRandom {
-
-    private static final long serialVersionUID = 1L;
-
     private int stateA, stateB, stateC, stateD;
 
     /**
