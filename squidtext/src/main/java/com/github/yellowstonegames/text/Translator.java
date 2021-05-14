@@ -73,7 +73,7 @@ public class Translator{
 
         @Override
         public long nextLong() {
-            return state = Long.rotateLeft(((state ^ 29L) * 19L), 2) + 1L;
+            return (state = (state ^ 29L) * 19L) - (state >>> 2);
         }
 
         @Override
