@@ -728,4 +728,29 @@ public final class MathTools
     public static int nextPowerOfTwo(final int n) {
         return 1 << -Integer.numberOfLeadingZeros(Math.max(2, n) - 1);
     }
+
+    /**
+     * Forces precision loss on the given float so very small fluctuations away from an integer will be erased.
+     * This is meant primarily for cleaning up floats so they can be presented without needing scientific notation.
+     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
+     * @param n any float, but typically a fairly small one (between -8 and 8, as a guideline)
+     * @return {@code n} with its 13 least significant bits effectively removed
+     */
+    public static float truncate(final float n){
+        long i = (long) (n * 0x1p13f); // 0x1p13f is 2 raised to the 13 as a float, or 8192.0f
+        return i * 0x1p-13f;           // 0x1p-13f is 1 divided by (2 raised to the 13) as a float, or 1.0f/8192.0f
+    }
+
+    /**
+     * Forces precision loss on the given double so very small fluctuations away from an integer will be erased.
+     * This is meant primarily for cleaning up doubles so they can be presented without needing scientific notation.
+     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
+     * @param n any double, but typically a fairly small one (between -8 and 8, as a guideline)
+     * @return {@code n} with its 42 least significant bits effectively removed
+     */
+    public static double truncate(final double n){
+        long i = (long)(n * 0x1p42); // 0x1p42 is 2 raised to the 42 as a double
+        return i * 0x1p-42;          // 0x1p-42 is 1 divided by (2 raised to the 42) as a double
+    }
+
 }
