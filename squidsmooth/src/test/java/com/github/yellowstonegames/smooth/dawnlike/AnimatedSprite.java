@@ -8,14 +8,14 @@ import com.github.yellowstonegames.smooth.CoordGlider;
 
 /**
  * Extends {@link Sprite}, but is lighter-weight and customized to the conventions of this demo. Has a
- * {@link CoordGlider} publicly available as {@link #position}, which should be used to determine or change
+ * {@link CoordGlider} publicly available as {@link #location}, which should be used to determine or change
  * where this started its move, where it is going, and how far it has gone between the two.
  * <br>
  * Created by Tommy Ettinger on 12/20/2019.
  */
 public class AnimatedSprite extends Sprite {
     public Animation<TextureRegion> animation;
-    public CoordGlider position;
+    public CoordGlider location;
 
     private AnimatedSprite()
     {
@@ -36,7 +36,7 @@ public class AnimatedSprite extends Sprite {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
-        position = new CoordGlider(start, end);
+        location = new CoordGlider(start, end);
         setSize(1f, 1f);
     }
 
@@ -48,17 +48,32 @@ public class AnimatedSprite extends Sprite {
     
     public float getX()
     {
-        return position.getX();
+        return location.getX();
     }
 
     public float getY()
     {
-        return position.getY();
+        return location.getY();
     }
     @Override
     public float[] getVertices() {
-        super.setPosition(position.getX(), position.getY());
+        super.setPosition(location.getX(), location.getY());
         return super.getVertices();
     }
 
+    public Animation<TextureRegion> getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
+
+    public CoordGlider getLocation() {
+        return location;
+    }
+
+    public void setLocation(CoordGlider location) {
+        this.location = location;
+    }
 }

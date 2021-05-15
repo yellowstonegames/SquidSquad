@@ -92,4 +92,12 @@ public class Director<C> {
     public void setDuration(long duration) {
         if(this.duration != (this.duration = duration)) stop();
     }
+
+    public Collection<C> getContainer() {
+        return container;
+    }
+
+    public void setContainer(Collection<C> container) {
+        this.container = container;
+    }
 }

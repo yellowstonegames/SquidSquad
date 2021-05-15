@@ -28,6 +28,7 @@ import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.smooth.Director;
 import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -100,6 +101,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Camera camera;
 
     private ObjectObjectOrderedMap<Coord, AnimatedSprite> monsters;
+    private AnimatedSprite playerSprite;
+    private Director<AnimatedSprite> playerDirector;
+    private Director<AnimatedSprite> monsterDirector;
     private DijkstraMap getToPlayer, playerToCursor;
     private Coord cursor;
     private ObjectList<Coord> toCursor;
@@ -122,21 +126,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     // the player's vision that blocks pathfinding to areas we can't see a path to, and we also store all cells that we
     // have seen in the past in a GreasedRegion (in most roguelikes, there would be one of these per dungeon floor).
     private Region floors, blockage, seen;
-    private AnimatedSprite playerSprite;
-    // libGDX can use a kind of packed float (yes, the number type) to efficiently store colors, but it also uses a
-    // heavier-weight Color object sometimes; SquidLib has a large list of SColor objects that are often used as easy
-    // predefined colors since SColor extends Color. SparseLayers makes heavy use of packed float colors internally,
-    // but also allows Colors instead for most methods that take a packed float. Some cases, like very briefly-used
-    // colors that are some mix of two other colors, are much better to create as packed floats from other packed
-    // floats, usually using SColor.lerpFloatColors(), which avoids creating any objects. It's ideal to avoid creating
-    // new objects (such as Colors) frequently for only brief usage, because this can cause temporary garbage objects to
-    // build up and slow down the program while they get cleaned up (garbage collection, which is slower on Android).
-    // Recent versions of SquidLib include the packed float literal in the JavaDocs for any SColor, along with previews
-    // of that SColor as a background and foreground when used with other colors, plus more info like the hue,
-    // saturation, and value of the color. Here we just use the packed floats directly from the SColor docs, but we also
-    // mention what color it is in a line comment, which is a good habit so you can see a preview if needed.
-    // The format used for the floats is a hex literal; these are explained at the bottom of this file, in case you
-    // aren't familiar with them (they're a rather obscure feature of Java 5 and newer).
+
     private static final int
             INT_WHITE = -1,
             INT_BLACK = 255,
@@ -305,6 +295,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         player = floors.singleRandom(rng);
         playerSprite = new AnimatedSprite(new Animation<>(DURATION,
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
+        playerDirector = new Director<>(AnimatedSprite::getLocation, ObjectList.with(playerSprite), 125);
 //        playerColor = ColorTools.floatGetHSV(rng.nextFloat(), 1f, 1f, 1f);
 //        playerSprite.setPackedColor(playerColor);
 //        playerSprite.setPosition(player.x, player.y);
@@ -342,6 +333,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             // new Color().fromHsv(rng.nextFloat(), 0.75f, 0.8f));
             monsters.put(monPos, monster);
         }
+        monsterDirector = new Director<>(AnimatedSprite::getLocation, monsters.values(), 125);
         //This is used to allow clicks or taps to take the player to the desired area.
         toCursor = new ObjectList<>(200);
         //When a path is confirmed by clicking, we draw from this List to find which cell is next to move into.
@@ -512,9 +504,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 blockage.refill(visible, 0f);
                 seen.or(blockage.not());
                 blockage.fringe8way();
-                playerSprite.position.setStart(player);
-                playerSprite.position.setEnd(player = Coord.get(newX, newY));
+                playerSprite.location.setStart(player);
+                playerSprite.location.setEnd(player = Coord.get(newX, newY));
                 phase = Phase.PLAYER_ANIM;
+                playerDirector.play();
                 animationStart = TimeUtils.millis();
                 // if a monster was at the position we moved into, and so was successfully removed...
                 if(monsters.containsKey(player))
@@ -540,7 +533,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // a copy of the key set that we can edit (so monsters don't move into each others' spaces)
 //        OrderedSet<Coord> monplaces = monsters.keysAsOrderedSet();
         int monCount = monsters.size();
-
         // recalculate FOV, store it in fovmap for the render to use.
         FOV.reuseFOV(resistance, visible, player.x, player.y, fovRange, Radius.CIRCLE);
         blockage.refill(visible, 0f);
@@ -571,8 +563,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     else {
                         // alter is a method on OrderedMap and OrderedSet that changes a key in-place
                         monsters.alter(pos, tmp);
-                        mon.position.setStart(pos);
-                        mon.position.setEnd(tmp);
+                        mon.location.setStart(pos);
+                        mon.location.setEnd(tmp);
                         //display.slide(mon, pos.x, pos.y, tmp.x, tmp.y, 0.125f, null);
                         monsters.put(tmp, mon);
                     }
@@ -585,7 +577,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 monsters.put(pos, mon);
             }
         }
-
     }
 
 
@@ -667,13 +658,16 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
-
+        playerDirector.step();
+        monsterDirector.step();
         if(phase == Phase.MONSTER_ANIM) {
             float t = TimeUtils.timeSinceMillis(animationStart) * 0x1p-7f;
             for (int i = 0; i < monsters.size(); i++) {
-                monsters.getAt(i).position.setChange(t);
+                AnimatedSprite m = monsters.getAt(i);
+//                System.out.println("Monster #" + i + " has change: " + m.location.getChange());
+                m.location.setChange(t);
             }
-            if (t >= 1f) {
+            if (!monsterDirector.isPlaying()) {
                 phase = Phase.WAIT;
                 if (!awaitedMoves.isEmpty()) {
                     Coord m = awaitedMoves.remove(0);
@@ -691,9 +685,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
             move(m.x, m.y);
         }
         else if(phase == Phase.PLAYER_ANIM) {
-            playerSprite.position.setChange(TimeUtils.timeSinceMillis(animationStart) * 0.008f);
-            if (playerSprite.position.getChange() >= 1f) {
+            if (!playerDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
+                monsterDirector.play();
                 animationStart = TimeUtils.millis();
                 postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
