@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
@@ -100,7 +101,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Viewport mainViewport;
     private Camera camera;
 
-    private ObjectObjectOrderedMap<Coord, AnimatedSprite> monsters;
+    private NumberedSet<Coord> monsterPositions;
+    private ObjectList<AnimatedSprite> monsterSprites;
+
     private AnimatedSprite playerSprite;
     private Director<AnimatedSprite> playerDirector;
     private Director<AnimatedSprite> monsterDirector;
@@ -321,7 +324,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
         blockage.fringe8way();
         floors.remove(player);
         int numMonsters = 100;
-        monsters = new ObjectObjectOrderedMap<>(numMonsters);
+        monsterPositions = new NumberedSet<>(numMonsters);
+        monsterSprites = new ObjectList<>(numMonsters);
+
         for (int i = 0; i < numMonsters; i++) {
             Coord monPos = floors.singleRandom(rng);
             floors.remove(monPos);
@@ -331,9 +336,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
 //            monster.setPackedColor(ColorTools.floatGetHSV(rng.nextFloat(), 0.75f, 0.8f, 0f));
             // new Color().fromHsv(rng.nextFloat(), 0.75f, 0.8f));
-            monsters.put(monPos, monster);
+            monsterPositions.add(monPos);
+            monsterSprites.add(monster);
         }
-        monsterDirector = new Director<>(AnimatedSprite::getLocation, monsters.values(), 125);
+        monsterDirector = new Director<>(AnimatedSprite::getLocation, monsterSprites, 125);
         //This is used to allow clicks or taps to take the player to the desired area.
         toCursor = new ObjectList<>(200);
         //When a path is confirmed by clicking, we draw from this List to find which cell is next to move into.
@@ -510,9 +516,11 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 playerDirector.play();
                 animationStart = TimeUtils.millis();
                 // if a monster was at the position we moved into, and so was successfully removed...
-                if(monsters.containsKey(player))
+                int idx = monsterPositions.indexOf(player);
+                if(idx >= 0)
                 {
-                    monsters.remove(player);
+                    monsterPositions.remove(player);
+                    monsterSprites.removeAt(idx);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
                             if(rng.nextBoolean())
@@ -532,7 +540,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // in some cases you can use keySet() to get a Set of keys, but that makes a read-only view, and we want
         // a copy of the key set that we can edit (so monsters don't move into each others' spaces)
 //        OrderedSet<Coord> monplaces = monsters.keysAsOrderedSet();
-        int monCount = monsters.size();
+        int monCount = monsterPositions.size();
         // recalculate FOV, store it in fovmap for the render to use.
         FOV.reuseFOV(resistance, visible, player.x, player.y, fovRange, Radius.CIRCLE);
         blockage.refill(visible, 0f);
@@ -541,13 +549,13 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // handle monster turns
         for(int ci = 0; ci < monCount; ci++)
         {
-            Coord pos = monsters.keyAt(0);
-            AnimatedSprite mon = monsters.removeAt(0);
+            Coord pos = monsterPositions.removeAt(0);
+            AnimatedSprite mon = monsterSprites.removeAt(0);
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
             if (visible[pos.x][pos.y] > 0.1) {
                 getToPlayer.clearGoals();
                 nextMovePositions.clear();
-                getToPlayer.findPath(nextMovePositions, 1, 7, monsters.keySet(), null, pos, playerArray);
+                getToPlayer.findPath(nextMovePositions, 1, 7, monsterPositions, null, pos, playerArray);
                 if (nextMovePositions.notEmpty()) {
                     Coord tmp = nextMovePositions.get(0);
                     // if we would move into the player, instead damage the player and give newMons the current
@@ -557,26 +565,34 @@ public class DawnlikeDemo extends ApplicationAdapter {
                         playerSprite.setPackedColor(DescriptiveColor.rgbaIntToFloat(INT_BLOOD));
                         health--;
                         // make sure the monster is still actively stalking/chasing the player
-                        monsters.put(pos, mon);
+//                        monsters.put(pos, mon);
+                        monsterPositions.add(pos);
+                        monsterSprites.add(mon);
                     }
                     // otherwise store the new position in newMons.
                     else {
                         // alter is a method on OrderedMap and OrderedSet that changes a key in-place
-                        monsters.alter(pos, tmp);
                         mon.location.setStart(pos);
                         mon.location.setEnd(tmp);
                         //display.slide(mon, pos.x, pos.y, tmp.x, tmp.y, 0.125f, null);
-                        monsters.put(tmp, mon);
+//                        monsters.put(tmp, mon);
+                        monsterPositions.add(tmp);
+                        monsterSprites.add(mon);
                     }
                 } else {
-                    monsters.put(pos, mon);
+//                    monsters.put(pos, mon);
+                    monsterPositions.add(pos);
+                    monsterSprites.add(mon);
                 }
             }
             else
             {
-                monsters.put(pos, mon);
+//                monsters.put(pos, mon);
+                monsterPositions.add(pos);
+                monsterSprites.add(mon);
             }
         }
+        monsterDirector.play();
     }
 
 
@@ -615,7 +631,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if (visible[i][j] > 0.0) {
-                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
+//                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
+                    int p = monsterPositions.indexOf(Coord.get(i, j));
+                    if(p >= 0 && (monster = monsterSprites.get(p)) != null) {
                         monster.animate(time).draw(batch);
                     }
                 }
@@ -655,18 +673,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 Gdx.app.exit();
             return;
         }
+        playerDirector.step();
+        monsterDirector.step();
 
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
-        playerDirector.step();
-        monsterDirector.step();
         if(phase == Phase.MONSTER_ANIM) {
-            float t = TimeUtils.timeSinceMillis(animationStart) * 0x1p-7f;
-            for (int i = 0; i < monsters.size(); i++) {
-                AnimatedSprite m = monsters.getAt(i);
-//                System.out.println("Monster #" + i + " has change: " + m.location.getChange());
-                m.location.setChange(t);
-            }
             if (!monsterDirector.isPlaying()) {
                 phase = Phase.WAIT;
                 if (!awaitedMoves.isEmpty()) {
@@ -685,9 +697,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
             move(m.x, m.y);
         }
         else if(phase == Phase.PLAYER_ANIM) {
-            if (!playerDirector.isPlaying()) {
+            if (!playerDirector.isPlaying() && !monsterDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
-                monsterDirector.play();
                 animationStart = TimeUtils.millis();
                 postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
