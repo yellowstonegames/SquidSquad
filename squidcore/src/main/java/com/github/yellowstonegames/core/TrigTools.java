@@ -180,10 +180,82 @@ public final class TrigTools {
      * @param degrees an angle in degrees as a float, often from 0 to 360, though not required to be.
      * @return the sine of the given angle, as a float between -1f and 1f (both inclusive)
      */
+    public static double sinDegrees(double degrees)
+    {
+        degrees = degrees * 0.011111111111111112;
+        final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
+        degrees -= floor;
+        degrees *= 2.0 - degrees;
+        return degrees * (-0.775 - 0.225 * degrees) * ((floor & 2) - 1);
+    }
+
+    /**
+     * A fairly-close approximation of {@link Math#cos(double)} that can be significantly faster (between 8x and 80x
+     * faster cos() calls in benchmarking, and both takes and returns floats; if you have access to libGDX, you should
+     * consider its more-precise and sometimes-faster MathUtils.cosDeg() method. Because this method doesn't rely on a
+     * lookup table, where libGDX's MathUtils does, applications that have a bottleneck on memory may perform better
+     * with this method than with MathUtils. Takes one angle in degrees,
+     * which may technically be any float (but this will lose precision on fairly large floats, such as those that are
+     * larger than {@link Integer#MAX_VALUE}, because those floats themselves will lose precision at that scale). The
+     * difference between the result of this method and {@link Math#cos(double)} should be under 0.0011 at
+     * all points between -360 and 360, with an average difference of about 0.0005; not all points have been checked for
+     * potentially higher errors, though.
+     * <br>
+     * The error for this float version is extremely close to the double version, {@link #cos(double)}, so you should
+     * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
+     * between float and double takes about as long as this method normally takes to run (or longer), so if you have
+     * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
+     * and likewise for doubles.
+     * <br>
+     * Unlike in previous versions of this method, the sign of the input doesn't affect performance here, at least not
+     * by a measurable amount.
+     * <br>
+     * The technique for cosine approximation is mostly from
+     * <a href="https://web.archive.org/web/20080228213915/http://devmaster.net/forums/showthread.php?t=5784">this archived DevMaster thread</a>,
+     * with credit to "Nick". Changes have been made to accelerate wrapping from any float to the valid input range.
+     * @param degrees an angle in degrees as a float, often from 0 to pi * 2, though not required to be.
+     * @return the cosine of the given angle, as a float between -1f and 1f (both inclusive)
+     */
+    public static double cosDegrees(double degrees)
+    {
+        degrees = degrees * 0.011111111111111112 + 1.0;
+        final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
+        degrees -= floor;
+        degrees *= 2.0 - degrees;
+        return degrees * (-0.775 - 0.225 * degrees) * ((floor & 2) - 1);
+    }
+
+    /**
+     * A fairly-close approximation of {@link Math#sin(double)} that can be significantly faster (between 8x and 80x
+     * faster sin() calls in benchmarking, and both takes and returns floats; if you have access to libGDX, you should
+     * consider its more-precise and sometimes-faster MathUtils.sinDeg() method. Because this method doesn't rely on a
+     * lookup table, where libGDX's MathUtils does, applications that have a bottleneck on memory may perform better
+     * with this method than with MathUtils. Takes one angle in degrees,
+     * which may technically be any float (but this will lose precision on fairly large floats, such as those that are
+     * larger than {@link Integer#MAX_VALUE}, because those floats themselves will lose precision at that scale). The
+     * difference between the result of this method and {@link Math#sin(double)} should be under 0.0011 at
+     * all points between -360 and 360, with an average difference of about 0.0005; not all points have been checked for
+     * potentially higher errors, though.
+     * <br>
+     * The error for this float version is extremely close to the double version, {@link #sin(double)}, so you should
+     * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
+     * between float and double takes about as long as this method normally takes to run (or longer), so if you have
+     * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
+     * and likewise for doubles.
+     * <br>
+     * Unlike in previous versions of this method, the sign of the input doesn't affect performance here, at least not
+     * by a measurable amount.
+     * <br>
+     * The technique for sine approximation is mostly from
+     * <a href="https://web.archive.org/web/20080228213915/http://devmaster.net/forums/showthread.php?t=5784">this archived DevMaster thread</a>,
+     * with credit to "Nick". Changes have been made to accelerate wrapping from any float to the valid input range.
+     * @param degrees an angle in degrees as a float, often from 0 to 360, though not required to be.
+     * @return the sine of the given angle, as a float between -1f and 1f (both inclusive)
+     */
     public static float sinDegrees(float degrees)
     {
         degrees = degrees * 0.011111111111111112f;
-        final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
+        final int floor = (degrees >= 0f ? (int) degrees : (int) degrees - 1) & -2;
         degrees -= floor;
         degrees *= 2f - degrees;
         return degrees * (-0.775f - 0.225f * degrees) * ((floor & 2) - 1);
@@ -219,7 +291,7 @@ public final class TrigTools {
     public static float cosDegrees(float degrees)
     {
         degrees = degrees * 0.011111111111111112f + 1f;
-        final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
+        final int floor = (degrees >= 0f ? (int) degrees : (int) degrees - 1) & -2;
         degrees -= floor;
         degrees *= 2f - degrees;
         return degrees * (-0.775f - 0.225f * degrees) * ((floor & 2) - 1);
