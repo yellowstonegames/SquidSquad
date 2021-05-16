@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.function.Function;
 
 /**
@@ -23,7 +22,7 @@ import java.util.function.Function;
  */
 public class Director<C> {
     public @Nonnull Function<? super C, ? extends Glider> extractor;
-    public Collection<C> container;
+    public Iterable<C> container;
 
     protected long playTime = Long.MAX_VALUE;
     protected boolean playing = false;
@@ -34,12 +33,12 @@ public class Director<C> {
         extractor = fun;
     }
 
-    public Director(@Nonnull Function<? super C, ? extends Glider> fun, Collection<C> coll){
+    public Director(@Nonnull Function<? super C, ? extends Glider> fun, Iterable<C> coll){
         this(fun);
         container = coll;
     }
 
-    public Director(@Nonnull Function<? super C, ? extends Glider> fun, Collection<C> coll, long durationMillis){
+    public Director(@Nonnull Function<? super C, ? extends Glider> fun, Iterable<C> coll, long durationMillis){
         this(fun);
         container = coll;
         duration = durationMillis;
@@ -93,11 +92,11 @@ public class Director<C> {
         if(this.duration != (this.duration = duration)) stop();
     }
 
-    public Collection<C> getContainer() {
+    public Iterable<C> getContainer() {
         return container;
     }
 
-    public void setContainer(Collection<C> container) {
+    public void setContainer(Iterable<C> container) {
         this.container = container;
     }
 }

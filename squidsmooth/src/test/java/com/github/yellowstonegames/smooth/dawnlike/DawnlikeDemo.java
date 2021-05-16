@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectMap;
-import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
@@ -31,6 +30,8 @@ import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.Director;
 import com.github.yellowstonegames.text.Language;
+
+import java.util.Map;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
@@ -101,12 +102,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Viewport mainViewport;
     private Camera camera;
 
-    private NumberedSet<Coord> monsterPositions;
-    private ObjectList<AnimatedSprite> monsterSprites;
-
+    private ObjectObjectOrderedMap<Coord, AnimatedSprite> monsters;
     private AnimatedSprite playerSprite;
     private Director<AnimatedSprite> playerDirector;
-    private Director<AnimatedSprite> monsterDirector;
+    private Director<Map.Entry<Coord, AnimatedSprite>> monsterDirector;
     private DijkstraMap getToPlayer, playerToCursor;
     private Coord cursor;
     private ObjectList<Coord> toCursor;
@@ -135,7 +134,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             INT_BLACK = 255,
             INT_BLOOD = DescriptiveColor.describe("dark dull red"),
             INT_LIGHTING = DescriptiveColor.describe("lightest white yellow"),
-            INT_GRAY = DescriptiveColor.describe("gray black");
+            INT_GRAY = DescriptiveColor.describe("darker gray");
 
     @Override
     public void create () {
@@ -324,9 +323,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         blockage.fringe8way();
         floors.remove(player);
         int numMonsters = 100;
-        monsterPositions = new NumberedSet<>(numMonsters);
-        monsterSprites = new ObjectList<>(numMonsters);
-
+        monsters = new ObjectObjectOrderedMap<>(numMonsters);
         for (int i = 0; i < numMonsters; i++) {
             Coord monPos = floors.singleRandom(rng);
             floors.remove(monPos);
@@ -336,10 +333,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
 //            monster.setPackedColor(ColorTools.floatGetHSV(rng.nextFloat(), 0.75f, 0.8f, 0f));
             // new Color().fromHsv(rng.nextFloat(), 0.75f, 0.8f));
-            monsterPositions.add(monPos);
-            monsterSprites.add(monster);
+            monsters.put(monPos, monster);
         }
-        monsterDirector = new Director<>(AnimatedSprite::getLocation, monsterSprites, 125);
+        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         //This is used to allow clicks or taps to take the player to the desired area.
         toCursor = new ObjectList<>(200);
         //When a path is confirmed by clicking, we draw from this List to find which cell is next to move into.
@@ -516,11 +512,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 playerDirector.play();
                 animationStart = TimeUtils.millis();
                 // if a monster was at the position we moved into, and so was successfully removed...
-                int idx = monsterPositions.indexOf(player);
-                if(idx >= 0)
+                if(monsters.containsKey(player))
                 {
-                    monsterPositions.remove(player);
-                    monsterSprites.removeAt(idx);
+                    monsters.remove(player);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
                             if(rng.nextBoolean())
@@ -540,7 +534,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // in some cases you can use keySet() to get a Set of keys, but that makes a read-only view, and we want
         // a copy of the key set that we can edit (so monsters don't move into each others' spaces)
 //        OrderedSet<Coord> monplaces = monsters.keysAsOrderedSet();
-        int monCount = monsterPositions.size();
+        int monCount = monsters.size();
         // recalculate FOV, store it in fovmap for the render to use.
         FOV.reuseFOV(resistance, visible, player.x, player.y, fovRange, Radius.CIRCLE);
         blockage.refill(visible, 0f);
@@ -549,13 +543,13 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // handle monster turns
         for(int ci = 0; ci < monCount; ci++)
         {
-            Coord pos = monsterPositions.removeAt(0);
-            AnimatedSprite mon = monsterSprites.removeAt(0);
+            Coord pos = monsters.keyAt(0);
+            AnimatedSprite mon = monsters.removeAt(0);
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
             if (visible[pos.x][pos.y] > 0.1) {
                 getToPlayer.clearGoals();
                 nextMovePositions.clear();
-                getToPlayer.findPath(nextMovePositions, 1, 7, monsterPositions, null, pos, playerArray);
+                getToPlayer.findPath(nextMovePositions, 1, 7, monsters.keySet(), null, pos, playerArray);
                 if (nextMovePositions.notEmpty()) {
                     Coord tmp = nextMovePositions.get(0);
                     // if we would move into the player, instead damage the player and give newMons the current
@@ -565,9 +559,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                         playerSprite.setPackedColor(DescriptiveColor.rgbaIntToFloat(INT_BLOOD));
                         health--;
                         // make sure the monster is still actively stalking/chasing the player
-//                        monsters.put(pos, mon);
-                        monsterPositions.add(pos);
-                        monsterSprites.add(mon);
+                        monsters.put(pos, mon);
                     }
                     // otherwise store the new position in newMons.
                     else {
@@ -575,21 +567,15 @@ public class DawnlikeDemo extends ApplicationAdapter {
                         mon.location.setStart(pos);
                         mon.location.setEnd(tmp);
                         //display.slide(mon, pos.x, pos.y, tmp.x, tmp.y, 0.125f, null);
-//                        monsters.put(tmp, mon);
-                        monsterPositions.add(tmp);
-                        monsterSprites.add(mon);
+                        monsters.put(tmp, mon);
                     }
                 } else {
-//                    monsters.put(pos, mon);
-                    monsterPositions.add(pos);
-                    monsterSprites.add(mon);
+                    monsters.put(pos, mon);
                 }
             }
             else
             {
-//                monsters.put(pos, mon);
-                monsterPositions.add(pos);
-                monsterSprites.add(mon);
+                monsters.put(pos, mon);
             }
         }
         monsterDirector.play();
@@ -614,12 +600,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 if(visible[i][j] > 0.0) {
                     batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(toCursor.contains(Coord.get(i, j))
                             ? DescriptiveColor.lerpColors(bgColors[i][j], rainbow, 0.95f)
-                            : DescriptiveColor.lerpColors(bgColors[i][j], INT_LIGHTING, visible[i][j] * 0.75f + 0.125f)));
+                            : DescriptiveColor.lerpColors(bgColors[i][j], INT_LIGHTING, visible[i][j] * 0.7f + 0.15f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
-                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.7f)));
+                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
@@ -631,9 +617,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if (visible[i][j] > 0.0) {
-//                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
-                    int p = monsterPositions.indexOf(Coord.get(i, j));
-                    if(p >= 0 && (monster = monsterSprites.get(p)) != null) {
+                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         monster.animate(time).draw(batch);
                     }
                 }
@@ -756,16 +740,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
     }
 
     private void debugPrintVisible(){
-        for (int y = decoDungeon[0].length - 1; y >= 0; y--) {
-            for (int x = 0; x < decoDungeon.length; x++) {
-                System.out.print(decoDungeon[x][y]);
-            }
-            System.out.print(' ');
+        for (int y = lineDungeon[0].length - 1; y >= 0; y--) {
             for (int x = 0; x < lineDungeon.length; x++) {
                 System.out.print(lineDungeon[x][y]);
             }
             System.out.print(' ');
-            for (int x = 0; x < decoDungeon.length; x++) {
+            for (int x = 0; x < lineDungeon.length; x++) {
                 if(player.x == x && player.y == y)
                     System.out.print('@');
                 else
