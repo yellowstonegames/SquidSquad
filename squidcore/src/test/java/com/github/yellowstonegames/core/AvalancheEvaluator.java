@@ -106,12 +106,40 @@ stateC
 27,42 with value 33.104141652584076
 27,42 with value 1039.4659236073494
 */
-public class AvalancheEvaluator {
-    private static final long N = 1L << 14;
-//        private static final int lower = 9, upper = 19, inc = 1;
-    private static final int lower = 10, upper = 43, inc = 1;
 
-    private static final int shiftB = 42, shiftC = 27;
+/*
+N 1024
+lower 16, upper 43, inc 1
+
+C A^C A^B return A^B
+Order 1: 41,53 with value 26.896333694458008
+Order 2: 41,53 with value 850.7179107666016
+
+Order 1: 12,45 with value 27.10381507873535
+Order 2: 12,45 with value 851.2522020339966
+
+Order 1: 39,61 with value 27.751235008239746
+Order 2: 39,61 with value 851.8352279663086
+
+Order 1: 46,17 with value 28.045936584472656
+Order 2: 46,17 with value 850.9402856826782
+
+Order 1: 12,16 with value 27.202072143554688
+Order 2: 12,16 with value 851.1701011657715
+
+Order 1: 23,56 with value 26.92930030822754
+Order 2: 23,56 with value 850.3286733627319
+
+Order 1: 21,56 with value 27.27608013153076
+Order 2: 21,56 with value 850.0220127105713
+
+ */
+public class AvalancheEvaluator {
+    private static final long N = 1L << 10;
+//        private static final int lower = 9, upper = 19, inc = 1;
+    private static final int lower = 16, upper = 43, inc = 1;
+
+//    private static final int shiftB = 42, shiftC = 27;
 //    private static final int shiftB = 27, shiftC = 42;
 //    private static final int shiftB = 27, shiftC = 21;
 //    private static final int shiftB = 20, shiftC = 49;
@@ -129,19 +157,33 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 43, shiftC = 27;
 //    private static final int shiftB = 5, shiftC = 49;
 
+//    private static final int shiftB = 41, shiftC = 53;
+//    private static final int shiftB = 12, shiftC = 45;
+//    private static final int shiftB = 12, shiftC = 16;
+//    private static final int shiftB = 39, shiftC = 61;
+//    private static final int shiftB = 46, shiftC = 17;
+    private static final int shiftB = 21, shiftC = 56;
+
     public static long mix(final long v, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
         for (int i = 0; i < iterations; i++) {
-            final long a0 = stateA;
-            final long b0 = stateB;
-            final long c0 = stateC;
-            stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(a0, shiftB) + c0;
-            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
+//            final long a0 = stateA;
+//            final long b0 = stateB;
+//            final long c0 = stateC;
+//            stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
+//            stateB = Long.rotateLeft(a0, shiftB) + c0;
+//            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
+
+            final long a0 = stateC;
+            final long b0 = stateA ^ stateC;
+            final long c0 = stateA ^ stateB;
+            stateA = 0xC6BC279692B5C323L + a0;
+            stateB = Long.rotateLeft(b0, shiftB);
+            stateC = Long.rotateLeft(c0, shiftC);
         }
-        return stateB;
+        return stateA^stateB;
     }
 
     public static void main(String[] args) {
@@ -173,7 +215,7 @@ public class AvalancheEvaluator {
 //                System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
-            System.out.println(shiftB + "," + shiftC + " with value " + total);
+            System.out.println("Order 1: " + shiftB + "," + shiftC + " with value " + total);
         }
         // Order 2
         {
@@ -205,7 +247,7 @@ public class AvalancheEvaluator {
 //                System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
-            System.out.println(shiftB + "," + shiftC + " with value " + total);
+            System.out.println("Order 2: " + shiftB + "," + shiftC + " with value " + total);
         }
     }
 }

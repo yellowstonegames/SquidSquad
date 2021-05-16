@@ -135,31 +135,119 @@ Order 2, Best Ten with total:
 #7: 27,7 with value 975.3521447181702
 #8: 48,42 with value 975.384928226471
 #9: 23,10 with value 975.3943996429443
+
+N 1024
+lower 10 upper 41 inc 1
+bijection, C A^C A^B
+
+Order 1, Best Ten with total:
+#0: 9,42 with value 717.4657564163208
+#1: 9,40 with value 750.3822650909424
+#2: 9,43 with value 751.0811157226562
+#3: 47,55 with value 756.5535402297974
+#4: 54,18 with value 756.6095085144043
+#5: 41,8 with value 762.801344871521
+#6: 56,25 with value 762.9224586486816
+#7: 41,7 with value 766.8172025680542
+#8: 9,41 with value 767.7774839401245
+#9: 47,54 with value 768.7563028335571
+Order 2, Best Ten with total:
+#0: 9,42 with value 7203.092739105225
+#1: 47,55 with value 7451.971041679382
+#2: 54,18 with value 7461.610792160034
+#3: 9,43 with value 7545.473958015442
+#4: 56,26 with value 7548.539187431335
+#5: 9,40 with value 7555.166534423828
+#6: 41,8 with value 7561.018929481506
+#7: 56,25 with value 7563.591048240662
+#8: 9,44 with value 7590.688142776489
+#9: 41,7 with value 7614.589632987976
+
+N 256
+lower 16 upper 21 inc 1
+C A^C A^B return A^B
+
+Order 1, Best Ten with total:
+#0: 12,16 with value 4.879127502441406
+#1: 39,34 with value 4.883136749267578
+#2: 49,60 with value 4.884212493896484
+#3: 44,58 with value 4.8884735107421875
+#4: 23,56 with value 4.897991180419922
+#5: 12,59 with value 4.899467468261719
+#6: 36,51 with value 4.900272369384766
+#7: 41,53 with value 4.901332855224609
+#8: 36,57 with value 4.902675628662109
+#9: 45,32 with value 4.903526306152344
+Order 2, Best Ten with total:
+#0: 17,42 with value 156.59167098999023
+#1: 39,61 with value 156.6676368713379
+#2: 58,25 with value 156.69777297973633
+#3: 52,22 with value 156.76671981811523
+#4: 47,56 with value 156.77505111694336
+#5: 8,28 with value 156.79352188110352
+#6: 21,56 with value 156.80806350708008
+#7: 55,26 with value 156.81796646118164
+#8: 58,39 with value 156.83041381835938
+#9: 40,35 with value 156.84626007080078
+
+
+N 1024
+lower 15 upper 21 inc 1
+B^C A A^B
+
+Order 1, Best Ten with total:
+#0: 54,7 with value 5.862697601318359
+#1: 42,60 with value 5.870357513427734
+#2: 34,58 with value 5.87115478515625
+#3: 30,23 with value 5.896766662597656
+#4: 18,30 with value 5.898929595947266
+#5: 39,48 with value 5.9075469970703125
+#6: 18,44 with value 5.908058166503906
+#7: 22,49 with value 5.911647796630859
+#8: 33,26 with value 5.915760040283203
+#9: 34,41 with value 5.921047210693359
+
+// will run Order 2 later, maybe
  */
 public class Avalanche {
-    private static final long N = 1L << 11;
+    private static final long N = 1L << 8;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 10, upper = 41, inc = 1;
+    private static final int lower = 16, upper = 21, inc = 1;
 
     public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
         for (int i = 0; i < iterations; i++) {
-            final long a0 = stateA;
-            final long b0 = stateB;
-            final long c0 = stateC;
-            stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(a0, shiftB) + c0;
-            stateC = Long.rotateLeft(b0, shiftC) + a0;
+//            final long a0 = stateA;
+//            final long b0 = stateB;
+//            final long c0 = stateC;
+//            stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
+//            stateB = Long.rotateLeft(a0, shiftB) + c0;
+//            stateC = Long.rotateLeft(b0, shiftC) + a0;
+
+//            final long a0 = stateB ^ stateC;
+//            final long b0 = stateA;
+//            final long c0 = stateA ^ stateB;
+//            stateA = 0xC6BC279692B5C323L + a0;
+//            stateB = Long.rotateLeft(b0, shiftB);
+//            stateC = Long.rotateLeft(c0, shiftC);
+
+            final long a0 = stateC;
+            final long b0 = stateA ^ stateC;
+            final long c0 = stateA ^ stateB;
+            stateA = 0xC6BC279692B5C323L + a0;
+            stateB = Long.rotateLeft(b0, shiftB);
+            stateC = Long.rotateLeft(c0, shiftC);
         }
-        return stateA;
+        return stateA ^ stateB;
     }
 
     public static void main(String[] args) {
         DistinctRandom rng = new DistinctRandom(123456789L);
         // Order 1
+        if(true)
         {
             final long[][] A = new long[64][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
@@ -191,17 +279,17 @@ public class Avalanche {
                     }
                 }
                 System.out.println("Completed run for " + iterations + " iterations, order 1.");
-//            res.sortByValue(Double::compareTo);
-//            System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
-//            for (int i = 0; i < 10; i++) {
-//                final int k = res.keyAt(i);
-//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
-//            }
-//            System.out.println("Order 1, Worst Ten with " + iterations + " iterations:");
-//            for (int i = res.size() - 10; i < res.size(); i++) {
-//                final int k = res.keyAt(i);
-//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
-//            }
+                res.sortByValue(Double::compareTo);
+                System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
+                for (int i = 0; i < 10; i++) {
+                    final int k = res.keyAt(i);
+                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+                }
+//                System.out.println("Order 1, Worst Ten with " + iterations + " iterations:");
+//                for (int i = res.size() - 10; i < res.size(); i++) {
+//                    final int k = res.keyAt(i);
+//                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+//                }
             }
             totals.sortByValue(Double::compareTo);
             System.out.println("Order 1, Best Ten with total:");
@@ -209,13 +297,14 @@ public class Avalanche {
                 final int k = totals.keyAt(i);
                 System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
             }
-            System.out.println("Order 1, Worst Ten with total:");
-            for (int i = totals.size() - 10; i < totals.size(); i++) {
-                final int k = totals.keyAt(i);
-                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
-            }
+//            System.out.println("Order 1, Worst Ten with total:");
+//            for (int i = totals.size() - 10; i < totals.size(); i++) {
+//                final int k = totals.keyAt(i);
+//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
+//            }
         }
         // Order 2
+        if(true)
         {
             final long[][] A = new long[2016][64];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
@@ -250,17 +339,17 @@ public class Avalanche {
                     }
                 }
                 System.out.println("Completed run for " + iterations + " iterations, order 2.");
-//            res.sortByValue(Double::compareTo);
-//            System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
-//            for (int i = 0; i < 10; i++) {
-//                final int k = res.keyAt(i);
-//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
-//            }
-//            System.out.println("Order 1, Worst Ten with " + iterations + " iterations:");
-//            for (int i = res.size() - 10; i < res.size(); i++) {
-//                final int k = res.keyAt(i);
-//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
-//            }
+                res.sortByValue(Double::compareTo);
+                System.out.println("Order 2, Best Ten with " + iterations + " iterations:");
+                for (int i = 0; i < 10; i++) {
+                    final int k = res.keyAt(i);
+                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+                }
+//                System.out.println("Order 2, Worst Ten with " + iterations + " iterations:");
+//                for (int i = res.size() - 10; i < res.size(); i++) {
+//                    final int k = res.keyAt(i);
+//                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+//                }
             }
             totals.sortByValue(Double::compareTo);
             System.out.println("Order 2, Best Ten with total:");
@@ -268,11 +357,11 @@ public class Avalanche {
                 final int k = totals.keyAt(i);
                 System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
             }
-            System.out.println("Order 2, Worst Ten with total:");
-            for (int i = totals.size() - 10; i < totals.size(); i++) {
-                final int k = totals.keyAt(i);
-                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
-            }
+//            System.out.println("Order 2, Worst Ten with total:");
+//            for (int i = totals.size() - 10; i < totals.size(); i++) {
+//                final int k = totals.keyAt(i);
+//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
+//            }
         }
     }
 }
