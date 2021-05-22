@@ -213,7 +213,7 @@ public class Avalanche {
     private static final long N = 1L << 8;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 16, upper = 21, inc = 1;
+    private static final int lower = 4, upper = 10, inc = 1;
 
     public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
@@ -234,14 +234,22 @@ public class Avalanche {
 //            stateB = Long.rotateLeft(b0, shiftB);
 //            stateC = Long.rotateLeft(c0, shiftC);
 
-            final long a0 = stateC;
+//            final long a0 = stateC;
+//            final long b0 = stateA ^ stateC;
+//            final long c0 = stateA ^ stateB;
+//            stateA = 0xC6BC279692B5C323L + a0;
+//            stateB = Long.rotateLeft(b0, shiftB);
+//            stateC = Long.rotateLeft(c0, shiftC);
+
+
+            final long a0 = 0xD1342543DE82EF95L ^ stateC;
             final long b0 = stateA ^ stateC;
-            final long c0 = stateA ^ stateB;
-            stateA = 0xC6BC279692B5C323L + a0;
+            final long c0 = stateB + stateA;
+            stateA = 0xD1B54A32D192ED03L * a0;
             stateB = Long.rotateLeft(b0, shiftB);
             stateC = Long.rotateLeft(c0, shiftC);
         }
-        return stateA ^ stateB;
+        return stateC;
     }
 
     public static void main(String[] args) {

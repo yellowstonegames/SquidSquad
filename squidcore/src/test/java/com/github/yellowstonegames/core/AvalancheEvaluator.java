@@ -137,11 +137,11 @@ Order 2: 21,56 with value 850.0220127105713
 public class AvalancheEvaluator {
     private static final long N = 1L << 10;
 //        private static final int lower = 9, upper = 19, inc = 1;
-    private static final int lower = 16, upper = 43, inc = 1;
+    private static final int lower = 2, upper = 12, inc = 1;
 
 //    private static final int shiftB = 42, shiftC = 27;
 //    private static final int shiftB = 27, shiftC = 42;
-//    private static final int shiftB = 27, shiftC = 21;
+//    private static final int shiftB = 27, shiftC = 21; // good contender
 //    private static final int shiftB = 20, shiftC = 49;
 //    private static final int shiftB = 20, shiftC = 50;
 //    private static final int shiftB = 49, shiftC = 20;
@@ -162,7 +162,10 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 12, shiftC = 16;
 //    private static final int shiftB = 39, shiftC = 61;
 //    private static final int shiftB = 46, shiftC = 17;
-    private static final int shiftB = 21, shiftC = 56;
+//    private static final int shiftB = 12, shiftC = 44;
+//    private static final int shiftB = 26, shiftC = 9; // great contender
+    private static final int shiftB = 27, shiftC = 9;  // current best
+//    private static final int shiftB = 34, shiftC = 42;
 
     public static long mix(final long v, final int iterations) {
         long stateA = v;
@@ -176,14 +179,23 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(a0, shiftB) + c0;
 //            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
 
-            final long a0 = stateC;
+            final long a0 = 0xD1342543DE82EF95L ^ stateC;
             final long b0 = stateA ^ stateC;
-            final long c0 = stateA ^ stateB;
-            stateA = 0xC6BC279692B5C323L + a0;
+            final long c0 = stateB + stateA;
+            stateA = 0xD1B54A32D192ED03L * a0;
             stateB = Long.rotateLeft(b0, shiftB);
             stateC = Long.rotateLeft(c0, shiftC);
+
+//            final long xp = stateA;
+//            final long yp = stateB;
+//            final long zp = stateC;
+//            stateA = 0xD3833E804F4C574BL * zp;
+//            stateB = yp - xp;
+//            stateB = Long.rotateLeft(stateB, shiftB);
+//            stateC = zp - yp;
+//            stateC = Long.rotateLeft(stateC, shiftC);
         }
-        return stateA^stateB;
+        return stateC;
     }
 
     public static void main(String[] args) {
@@ -212,7 +224,7 @@ public class AvalancheEvaluator {
                     }
                 }
                 double result = sumsq * 0x1p-10 / N;
-//                System.out.println("With " + iterations + " iterations: " + result);
+                System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
             System.out.println("Order 1: " + shiftB + "," + shiftC + " with value " + total);
@@ -244,7 +256,7 @@ public class AvalancheEvaluator {
                     }
                 }
                 double result = sumsq * 0x1p-10 / N;
-//                System.out.println("With " + iterations + " iterations: " + result);
+                System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
             System.out.println("Order 2: " + shiftB + "," + shiftC + " with value " + total);
