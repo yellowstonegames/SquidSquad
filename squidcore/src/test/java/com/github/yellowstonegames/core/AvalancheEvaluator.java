@@ -164,8 +164,9 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 46, shiftC = 17;
 //    private static final int shiftB = 12, shiftC = 44;
 //    private static final int shiftB = 26, shiftC = 9; // great contender
-    private static final int shiftB = 27, shiftC = 9;  // current best
+//    private static final int shiftB = 27, shiftC = 9;  // current best
 //    private static final int shiftB = 34, shiftC = 42;
+    private static final int shiftB = 21, shiftC = 0;
 
     public static long mix(final long v, final int iterations) {
         long stateA = v;
@@ -179,12 +180,20 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(a0, shiftB) + c0;
 //            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
 
-            final long a0 = 0xD1342543DE82EF95L ^ stateC;
-            final long b0 = stateA ^ stateC;
-            final long c0 = stateB + stateA;
-            stateA = 0xD1B54A32D192ED03L * a0;
-            stateB = Long.rotateLeft(b0, shiftB);
-            stateC = Long.rotateLeft(c0, shiftC);
+            ////romutrio-like but with a XOR to make part of it an XLCG instead of an MCG.
+//            final long a0 = 0xD1342543DE82EF95L ^ stateC;
+//            final long b0 = stateA ^ stateC;
+//            final long c0 = stateB + stateA;
+//            stateA = 0xD1B54A32D192ED03L * a0;
+//            stateB = Long.rotateLeft(b0, shiftB);
+//            stateC = Long.rotateLeft(c0, shiftC);
+            
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            stateA = 0xD1342543DE82EF95L * fc;
+            stateB = fa ^ fb ^ fc;
+            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
 
 //            final long xp = stateA;
 //            final long yp = stateB;
@@ -195,7 +204,7 @@ public class AvalancheEvaluator {
 //            stateC = zp - yp;
 //            stateC = Long.rotateLeft(stateC, shiftC);
         }
-        return stateC;
+        return stateA;
     }
 
     public static void main(String[] args) {
