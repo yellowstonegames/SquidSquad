@@ -207,13 +207,40 @@ Order 1, Best Ten with total:
 #8: 33,26 with value 5.915760040283203
 #9: 34,41 with value 5.921047210693359
 
-// will run Order 2 later, maybe
+
+N 64
+Pico
+lower 13 upper 20 inc 1
+
+Order 1, Best Ten with total:
+#0: 47,55 with value 7.00250244140625
+#1: 47,9 with value 7.009857177734375
+#2: 20,55 with value 7.011016845703125
+#3: 15,9 with value 7.05023193359375
+#4: 4,49 with value 7.0688629150390625
+#5: 43,9 with value 7.0709381103515625
+#6: 61,18 with value 7.071746826171875
+#7: 61,14 with value 7.0733489990234375
+#8: 49,24 with value 7.076629638671875
+#9: 18,10 with value 7.0789031982421875
+Order 2, Best Ten with total:
+#0: 41,29 with value 219.73733520507812
+#1: 22,51 with value 219.78207397460938
+#2: 37,16 with value 219.80178833007812
+#3: 37,45 with value 219.852294921875
+#4: 17,9 with value 219.8617401123047
+#5: 15,8 with value 219.97645568847656
+#6: 59,23 with value 219.98419189453125
+#7: 7,29 with value 219.988525390625
+#8: 38,36 with value 220.01429748535156
+#9: 52,17 with value 220.0272216796875
+
  */
 public class Avalanche {
-    private static final long N = 1L << 8;
+    private static final long N = 1L << 6;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 4, upper = 10, inc = 1;
+    private static final int lower = 13, upper = 20, inc = 1;
 
     public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
@@ -242,14 +269,21 @@ public class Avalanche {
 //            stateC = Long.rotateLeft(c0, shiftC);
 
 
-            final long a0 = 0xD1342543DE82EF95L ^ stateC;
-            final long b0 = stateA ^ stateC;
-            final long c0 = stateB + stateA;
-            stateA = 0xD1B54A32D192ED03L * a0;
-            stateB = Long.rotateLeft(b0, shiftB);
-            stateC = Long.rotateLeft(c0, shiftC);
+//            final long a0 = 0xD1342543DE82EF95L ^ stateC;
+//            final long b0 = stateA ^ stateC;
+//            final long c0 = stateB + stateA;
+//            stateA = 0xD1B54A32D192ED03L * a0;
+//            stateB = Long.rotateLeft(b0, shiftB);
+//            stateC = Long.rotateLeft(c0, shiftC);
+
+            final long a0 = stateA;
+            final long b0 = stateB;
+            final long c0 = stateC;
+            stateA = 0xC6BC279692B5C323L + c0;
+            stateB = Long.rotateLeft(a0, shiftB) + c0;
+            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
         }
-        return stateC;
+        return stateB;
     }
 
     public static void main(String[] args) {
