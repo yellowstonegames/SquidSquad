@@ -133,11 +133,33 @@ Order 2: 23,56 with value 850.3286733627319
 Order 1: 21,56 with value 27.27608013153076
 Order 2: 21,56 with value 850.0220127105713
 
+N 2048
+lower 5, upper 12, inc 1
+
+Marge 7
+
+With 5 iterations: 925.2249054908752
+With 6 iterations: 100.5061149597168
+With 7 iterations: 57.004836082458496
+With 8 iterations: 2.2849631309509277
+With 9 iterations: 1.0802512168884277
+With 10 iterations: 0.9916057586669922
+With 11 iterations: 1.0030179023742676
+Order 1: 7,0 with value 1088.0956945419312
+With 5 iterations: 17900.08853340149
+With 6 iterations: 981.1459832191467
+With 7 iterations: 533.8662786483765
+With 8 iterations: 33.63921117782593
+With 9 iterations: 31.39405870437622
+With 10 iterations: 31.39041566848755
+With 11 iterations: 31.50369882583618
+Order 2: 7,0 with value 19543.02817964554
+
  */
 public class AvalancheEvaluator {
-    private static final long N = 1L << 10;
+    private static final long N = 1L << 11;
 //        private static final int lower = 9, upper = 19, inc = 1;
-    private static final int lower = 2, upper = 12, inc = 1;
+    private static final int lower = 5, upper = 12, inc = 1;
 
 //    private static final int shiftB = 42, shiftC = 27;
 //    private static final int shiftB = 27, shiftC = 42;
@@ -166,7 +188,8 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 26, shiftC = 9; // great contender
 //    private static final int shiftB = 27, shiftC = 9;  // current best
 //    private static final int shiftB = 34, shiftC = 42;
-    private static final int shiftB = 21, shiftC = 0;
+//    private static final int shiftB = 21, shiftC = 0;
+    private static final int shiftB = 7, shiftC = 0;
 
     public static long mix(final long v, final int iterations) {
         long stateA = v;
