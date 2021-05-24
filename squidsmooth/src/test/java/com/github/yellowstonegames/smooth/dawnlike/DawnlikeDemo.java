@@ -28,6 +28,7 @@ import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.smooth.AnimatedGlidingSprite;
 import com.github.yellowstonegames.smooth.Director;
 import com.github.yellowstonegames.text.Language;
 
@@ -102,10 +103,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Viewport mainViewport;
     private Camera camera;
 
-    private ObjectObjectOrderedMap<Coord, AnimatedSprite> monsters;
-    private AnimatedSprite playerSprite;
-    private Director<AnimatedSprite> playerDirector;
-    private Director<Map.Entry<Coord, AnimatedSprite>> monsterDirector;
+    private ObjectObjectOrderedMap<Coord, AnimatedGlidingSprite> monsters;
+    private AnimatedGlidingSprite playerSprite;
+    private Director<AnimatedGlidingSprite> playerDirector;
+    private Director<Map.Entry<Coord, AnimatedGlidingSprite>> monsterDirector;
     private DijkstraMap getToPlayer, playerToCursor;
     private Coord cursor;
     private ObjectList<Coord> toCursor;
@@ -295,9 +296,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //if you gave a seed to the RNG constructor, then the cell this chooses will be reliable for testing. If you
         //don't seed the RNG, any valid cell should be possible.
         player = floors.singleRandom(rng);
-        playerSprite = new AnimatedSprite(new Animation<>(DURATION,
+        playerSprite = new AnimatedGlidingSprite(new Animation<>(DURATION,
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
-        playerDirector = new Director<>(AnimatedSprite::getLocation, ObjectList.with(playerSprite), 125);
+        playerSprite.setSize(1f, 1f);
+        playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 125);
 //        playerColor = ColorTools.floatGetHSV(rng.nextFloat(), 1f, 1f, 1f);
 //        playerSprite.setPackedColor(playerColor);
 //        playerSprite.setPosition(player.x, player.y);
@@ -328,9 +330,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
             Coord monPos = floors.singleRandom(rng);
             floors.remove(monPos);
             String enemy = rng.randomElement(Data.possibleEnemies);
-            AnimatedSprite monster =
-                    new AnimatedSprite(new Animation<>(DURATION,
+            AnimatedGlidingSprite monster =
+                    new AnimatedGlidingSprite(new Animation<>(DURATION,
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
+            monster.setSize(1f, 1f);
 //            monster.setPackedColor(ColorTools.floatGetHSV(rng.nextFloat(), 0.75f, 0.8f, 0f));
             // new Color().fromHsv(rng.nextFloat(), 0.75f, 0.8f));
             monsters.put(monPos, monster);
@@ -544,7 +547,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for(int ci = 0; ci < monCount; ci++)
         {
             Coord pos = monsters.keyAt(0);
-            AnimatedSprite mon = monsters.removeAt(0);
+            AnimatedGlidingSprite mon = monsters.removeAt(0);
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
             if (visible[pos.x][pos.y] > 0.1) {
                 getToPlayer.clearGoals();
@@ -613,7 +616,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             }
         }
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        AnimatedSprite monster;
+        AnimatedGlidingSprite monster;
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if (visible[i][j] > 0.0) {
