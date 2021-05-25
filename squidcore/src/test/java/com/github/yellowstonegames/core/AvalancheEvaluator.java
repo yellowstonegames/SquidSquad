@@ -189,10 +189,12 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 26, shiftC = 9; // great contender
 //    private static final int shiftB = 27, shiftC = 9;  // current best
 //    private static final int shiftB = 34, shiftC = 42;
-//    private static final int shiftB = 21, shiftC = 0;
+    private static final int shiftB = 21, shiftC = 0;
+//    private static final int shiftB = 11, shiftC = 0;
 //    private static final int shiftB = 7, shiftC = 0;
+//    private static final int shiftB = 42, shiftC = 0;
 
-    private static final int shiftB = 47, shiftC = 9; // best for Pico
+//    private static final int shiftB = 47, shiftC = 9; // best for Pico
 //    private static final int shiftB = 47, shiftC = 55;
 //    private static final int shiftB = 20, shiftC = 55;
 
@@ -201,12 +203,12 @@ public class AvalancheEvaluator {
         long stateB = 0L;
         long stateC = 0L;
         for (int i = 0; i < iterations; i++) {
-            final long a0 = stateA;
-            final long b0 = stateB;
-            final long c0 = stateC;
-            stateA = 0xC6BC279692B5C323L + c0;
-            stateB = Long.rotateLeft(a0, shiftB) + c0;
-            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
+//            final long a0 = stateA;
+//            final long b0 = stateB;
+//            final long c0 = stateC;
+//            stateA = 0xC6BC279692B5C323L + c0;
+//            stateB = Long.rotateLeft(a0, shiftB) + c0;
+//            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
 
             ////romutrio-like but with a XOR to make part of it an XLCG instead of an MCG.
 //            final long a0 = 0xD1342543DE82EF95L ^ stateC;
@@ -216,12 +218,12 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(b0, shiftB);
 //            stateC = Long.rotateLeft(c0, shiftC);
             
-//            final long fa = stateA;
-//            final long fb = stateB;
-//            final long fc = stateC;
-//            stateA = 0xD1342543DE82EF95L * fc;
-//            stateB = fa ^ fb ^ fc;
-//            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            stateA = 0xD1342543DE82EF95L * fc;
+            stateB = fa ^ fb ^ fc;
+            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
 
 //            final long xp = stateA;
 //            final long yp = stateB;

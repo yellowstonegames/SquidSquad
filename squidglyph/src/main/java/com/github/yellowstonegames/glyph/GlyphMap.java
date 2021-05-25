@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.yellowstonegames.grid.Coord;
 
 public class GlyphMap {
     protected int gridWidth;
@@ -26,7 +27,8 @@ public class GlyphMap {
     }
     public GlyphMap(Font font, int gridWidth, int gridHeight){
         this.font = new Font(font);
-        this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
+        if(this.font.distanceField != Font.DistanceFieldType.STANDARD)
+            this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         map = new IntLongOrderedMap(gridWidth * gridHeight);
@@ -51,6 +53,19 @@ public class GlyphMap {
     }
 
     /**
+     * Combines the up-to-15-bit non-negative x and y components of the Coord {@code xy} into one
+     * non-negative result int. This is used to get the keys for a GlyphMap given x,y inputs. Because
+     * jdkgdxds uses Fibonacci hashing to scramble keys, there's no concern here from leaving all of
+     * x in the lower half of the bits and all of y in the upper half.
+     * @param xy a Coord with non-negative x and y
+     * @return a non-negative int that combines the Coord's x and y into one value
+     */
+    public static int fuse(final Coord xy)
+    {
+        return (xy.x & 0x7FFF) | (xy.y << 16 & 0x7FFF0000);
+    }
+
+    /**
      * Given a fused x,y pair as an int (typically produced by {@link #fuse(int, int)}), this
      * gets the x component from it, as an int.
      * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
@@ -68,6 +83,16 @@ public class GlyphMap {
      */
     public static int extractY(int fused){
         return fused >>> 16 & 0x7FFF;
+    }
+
+    /**
+     * A convenience method that extracts the x and y components from {@code fused} and returns
+     * them as a Coord.
+     * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
+     * @return
+     */
+    public static Coord extractCoord(int fused) {
+        return Coord.get(fused & 0x7FFF, fused >>> 16 & 0x7FFF);
     }
 
     public void put(int x, int y, int codepoint) {
@@ -92,7 +117,6 @@ public class GlyphMap {
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
-//        final int h = backgrounds[0].length - 1;
         for(IntLongMap.Entry e : map) {
             pos = e.key;
             font.drawGlyph(batch, e.value, x + extractX(pos) * font.cellWidth, y + (extractY(pos)) * font.cellHeight);
