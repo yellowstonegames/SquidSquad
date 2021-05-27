@@ -903,9 +903,11 @@ public class Font implements Disposable {
         vertices[19] = v;
         for (int xi = 0, xn = colors.length, yn = colors[0].length; xi < xn; xi++) {
             for (int yi = 0; yi < yn; yi++) {
-                vertices[2] = vertices[7] = vertices[12] = vertices[17] =
-                        BitConversion.reversedIntBitsToFloat(colors[xi][yi] & -2);
-                batch.draw(parent, vertices, 0, 20);
+                if((colors[xi][yi] & 254) >= 2) {
+                    vertices[2] = vertices[7] = vertices[12] = vertices[17] =
+                            BitConversion.reversedIntBitsToFloat(colors[xi][yi] & -2);
+                    batch.draw(parent, vertices, 0, 20);
+                }
                 vertices[1] = vertices[16] += cellHeight;
                 vertices[6] = vertices[11] += cellHeight;
             }

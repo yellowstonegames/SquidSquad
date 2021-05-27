@@ -244,11 +244,11 @@ public final class MathTools
      */
     public static long modularMultiplicativeInverse(long a)
     {
-        long x = 2 ^ a * 3;    //  5 bits
-        x *= 2 - a * x;        // 10
-        x *= 2 - a * x;        // 20
-        x *= 2 - a * x;        // 40
-        x *= 2 - a * x;        // 80 -- 64 low bits
+        long x = 2 ^ a * 3;
+        x *= 2 - a * x;
+        x *= 2 - a * x;
+        x *= 2 - a * x;
+        x *= 2 - a * x;
         return x;
     }
 
