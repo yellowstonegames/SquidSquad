@@ -757,18 +757,9 @@ public final class DescriptiveColor {
      * eventually to purple before looping back to almost the same red (1.0, exclusive)
      */
     public static float hue(final int oklab) {
-        final float a = ((oklab >>> 7 & 0x1FE) - 255) / 255f;
-        final float b = ((oklab >>> 15 & 0x1FE) - 255) / 255f;
-        // atan2_(y, x) , but inlined so this has no external dependencies other than jdkgdxds
-        if(a == 0.0 && b >= 0.0) return 0f;
-        float ay = Math.abs(a), ax = Math.abs(b);
-        boolean invert = ay > ax;
-        float z = invert ? ax/ay : ay/ax;
-        z = (((((0.022520265292560102f) * z) - (0.054640279287594046f)) * z - (0.0025821297967229097f)) * z + (0.1597659389184251f)) * z - (0.000025146481008519463f);
-        if(invert) z = 0.25f - z;
-        if(b < 0) z = 0.5f - z;
-        return a < 0 ? (int)(1+z) - z : z;
-
+        final float a = ((oklab >>> 7 & 0x1FE) - 255);
+        final float b = ((oklab >>> 15 & 0x1FE) - 255);
+        return TrigTools.atan2_(a, b);
     }
 
     /**
