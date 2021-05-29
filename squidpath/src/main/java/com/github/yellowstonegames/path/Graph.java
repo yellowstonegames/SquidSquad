@@ -42,8 +42,8 @@ public abstract class Graph<V> {
     // Members
     //================================================================================
     
-    protected final ObjectObjectOrderedMap<V, Node<V>> vertexMap;
-    protected final ObjectObjectOrderedMap<Connection<V>, Connection<V>> edgeMap;
+    protected ObjectObjectOrderedMap<V, Node<V>> vertexMap;
+    protected ObjectObjectOrderedMap<Connection<V>, Connection<V>> edgeMap;
     
     //================================================================================
     // Constructors

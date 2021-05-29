@@ -4,6 +4,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.IntFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
 
 import java.util.Arrays;
@@ -128,7 +129,8 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * {@link #init(float[][])} or {@link #init(float[][], boolean)} before using the CostlyGraph.
 	 */
 	public CostlyGraph() {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new DirectedGraphAlgorithms<>(this);
 		width = 0;
 		height = 0;
 	}
@@ -154,7 +156,8 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param eightWay if true, this will build connections on diagonals as well as cardinal directions; if false, this will only use cardinal connections
 	 */
 	public CostlyGraph(float[][] map, boolean eightWay) {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new DirectedGraphAlgorithms<>(this);
 		init(map, eightWay);
 	}
 
@@ -171,7 +174,8 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param map a 2D char array where {@code '#'}, {@code '+'}, and all box drawing characters are considered impassable
 	 */
 	public CostlyGraph(char[][] map) {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new DirectedGraphAlgorithms<>(this);
 		init(generateAStarCostMap(map), false);
 	}
 
@@ -190,7 +194,8 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param eightWay if true, this will build connections on diagonals as well as cardinal directions; if false, this will only use cardinal connections
 	 */
 	public CostlyGraph(char[][] map, boolean eightWay) {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new DirectedGraphAlgorithms<>(this);
 		init(generateAStarCostMap(map), eightWay);
 	}
 
@@ -243,7 +248,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 				off = center.translate(dir);
 				if(off.isWithin(width, height) && map[center.x + dir.deltaX][center.y + dir.deltaY] >= 0.0)
 				{
-					addEdge(off, center, (float)map[center.x][center.y]);
+					addEdge(off, center, map[center.x][center.y]);
 				}
 			}
 		}
@@ -394,7 +399,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 		Node<Coord> nc;
 		for (int i = 0; i < vs; i++) {
 			nc = vertexMap.getAt(i);
-			if(!nc.seen || nc.lastRunID != rid || nc.distance >= 9999.5)
+			if(nc == null || !nc.seen || nc.lastRunID != rid || nc.distance >= 9999.5)
 				continue;
 			int d = (int) (nc.distance + 0.5), x = nc.object.x * 5, y = nc.object.y;
 			cs[y * w5 + x    ] = (d >= 1000) ? (char) ('0' + d / 1000) : ' ';

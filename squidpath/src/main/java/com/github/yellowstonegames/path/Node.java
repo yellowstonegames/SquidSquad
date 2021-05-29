@@ -45,8 +45,8 @@ public class Node<V> extends BinaryHeap.Node {
     protected final Graph<V> graph;
     protected final int idHash;
     protected final V object;
-    protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>();
-    protected ObjectList<Connection<V>> outEdges = new ObjectList<>(); // ObjectList reuses its iterator, should be fast
+    protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>(4);
+    protected ObjectList<Connection<V>> outEdges = new ObjectList<>(4); // ObjectList reuses its iterator, should be fast
 
     private static int hashCounter = 12345;
 

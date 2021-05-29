@@ -2,6 +2,7 @@ package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
 
 import java.util.Arrays;
@@ -22,7 +23,8 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 * or {@link #init(char[][], boolean)} before using the DefaultGraph.
 	 */
 	public DefaultGraph() {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new UndirectedGraphAlgorithms<>(this);
 		width = 0;
 		height = 0;
 	}
@@ -43,7 +45,8 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 * @param eightWay if true, this will build connections on diagonals as well as cardinal directions; if false, this will only use cardinal connections
 	 */
 	public DefaultGraph(char[][] map, boolean eightWay) {
-		super();
+		vertexMap = new CoordObjectOrderedMap<>();
+		algorithms = new UndirectedGraphAlgorithms<>(this);
 		init(map, eightWay);
 	}
 
@@ -99,7 +102,6 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 				}
 			}
 		}
-
 	}
 
 	/**
