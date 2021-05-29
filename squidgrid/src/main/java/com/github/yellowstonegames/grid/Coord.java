@@ -474,6 +474,17 @@ public class Coord {
     }
 
     /**
+     * A specialized hashing function that is meant to pack Coord items extremely densely in hash-based Maps or Sets, at
+     * the expense of any random-seeming quality in the hash. This is simply the Cantor pairing function, and while it
+     * does not behave particularly well with negative x or negative y, it does extremely well at not wasting space or
+     * computation time in a hash table with Coord keys.
+     * @return an int that should, for different non-negative Coord values, be at least a little different from other hash codes
+     */
+    public int denseHashCode() {
+        return y + ((x + y) * (x + y + 1) >> 1);
+    }
+
+    /**
      * A static version of the current {@link #hashCode()} method of this class, taking x and y as parameters instead of
      * requiring a Coord object. Like the current hashCode() method, this involves the close-to-optimal mathematical
      * Rosenberg-Strong pairing function to distribute x and y without overlap until they get very large. The
