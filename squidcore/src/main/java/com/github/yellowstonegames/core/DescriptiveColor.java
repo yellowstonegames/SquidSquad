@@ -692,6 +692,42 @@ public final class DescriptiveColor {
     }
 
     /**
+     * An approximation of the cube-root function for float inputs and outputs.
+     * This can be about twice as fast as {@link Math#cbrt(double)}. This
+     * version does not tolerate negative inputs, because in the narrow use
+     * case it has in this class, it never is given negative inputs.
+     * <br>
+     * Has very low relative error (less than 1E-9) when inputs are uniformly
+     * distributed between 0 and 512, and absolute mean error of less than
+     * 1E-6 in the same scenario. Uses a bit-twiddling method similar to one
+     * presented in Hacker's Delight and also used in early 3D graphics (see
+     * https://en.wikipedia.org/wiki/Fast_inverse_square_root for more, but
+     * this code approximates cbrt(x) and not 1/sqrt(x)). This specific code
+     * was originally by Marc B. Reynolds, posted in his "Stand-alone-junk"
+     * repo: https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197 .
+     * It's worth noting that while hardware instructions for finding the
+     * square root of a float have gotten extremely fast, the same is not
+     * true for the cube root (which has to allow negative inputs), so while
+     * the bit-twiddling inverse square root is no longer a beneficial
+     * optimization on current hardware, this does seem to help.
+     * <br>
+     * This is used when converting from RGB to Oklab, as an intermediate step.
+     * @param x any non-negative finite float to find the cube root of
+     * @return the cube root of x, approximated
+     */
+    private static float cbrtPositive(float x) {
+        int ix = BitConversion.floatToRawIntBits(x);
+        final float x0 = x;
+        ix = (ix>>>2) + (ix>>>4);
+        ix += (ix>>>4);
+        ix += (ix>>>8) + 0x2A5137A0;
+        x  = BitConversion.intBitsToFloat(ix);
+        x  = 0.33333334f*(2f * x + x0/(x*x));
+        x  = 0.33333334f*(2f * x + x0/(x*x));
+        return x;
+    }
+
+    /**
      * Used when given non-linear sRGB inputs to make them linear, approximating with gamma 2.0.
      * Really just {@code component * component}.
      * @param component any non-linear channel of a color, to be made linear
@@ -732,19 +768,134 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Gets the chroma or "colorfulness" of the given encoded color, as a non-negative float. This is like the
-     * saturation component of HSL or HSV, but where saturation is always 1.0 when a color is the most colorful possible
-     * given its combination of hue and lightness, chroma can be lower if the most colorful possible value isn't as
-     * colorful as some other combination. This means chroma has a smaller range of values when L is high or low, and a
-     * larger range when L is near 0.45 to 0.65, roughly, because high and low L approach white and black, respectively,
-     * while mid-range L values are the most colorful.
+     * Gets an encoded Oklab int color given its Oklab channel values: L (lightness), A (green to red), B (blue to
+     * yellow), and alpha (same as in RGBA). Lower L is darker, lower A is more green, and lower B is more blue.
+     * Checks whether the specified Oklab color is in-gamut; if it isn't in-gamut, brings the color just inside
+     * the gamut at the same lightness before returning it, or if it is already in-gamut, returns the specified color.
+     * @param L lightness component; will be clamped between 0 and 1 if it isn't already
+     * @param A green-to-red chromatic component; will be clamped between 0 and 1 if it isn't already
+     * @param B blue-to-yellow chromatic component; will be clamped between 0 and 1 if it isn't already
+     * @param alpha alpha component; will be clamped between 0 and 1 if it isn't already
+     * @return the first color this finds that is in-gamut, as if it was moving toward a grayscale color with the same L
+     */
+    public static int oklab(float L, float A, float B, float alpha) {
+        L = Math.min(Math.max(L, 0f), 1f);
+        A = Math.min(Math.max(A, 0f), 1f);
+        B = Math.min(Math.max(B, 0f), 1f);
+        alpha = Math.min(Math.max(alpha, 0f), 1f);
+        final float A2 = (A - 0.5f);
+        final float B2 = (B - 0.5f);
+        final float hue = TrigTools.atan2_(B2, A2);
+        final int idx = (int) (L * 255.999f) << 8 | (int)(256f * hue);
+        final float dist = GAMUT_DATA[idx];
+        if(dist * 0x1p-9F >= (float) Math.sqrt(A2 * A2 + B2 * B2))
+            return oklab(L, A, B, alpha);
+        return (
+                (int) (alpha * 127.999f) << 25 |
+                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (L * 255.999f));
+    }
+
+    /**
+     * Converts an Oklab int color in the format produced by {@link #oklab(float, float, float, float)}
+     * to a packed float in RGBA format.
+     * This format of float can be used with the standard SpriteBatch and in some other places in libGDX.
+     * @param packed a packed int color, as produced by {@link #oklab(float, float, float, float)}
+     * @return a packed float color as RGBA
+     */
+    public static float toRGBA(final int packed)
+    {
+        final float L = (packed & 0xff) / 255f;
+        final float A = ((packed >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((packed >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        final int r = (int)(reverseGamma(Math.min(Math.max(+4.0767245293f * l - 3.3072168827f * m + 0.2307590544f * s, 0f), 1f)) * 255.999f);
+        final int g = (int)(reverseGamma(Math.min(Math.max(-1.2681437731f * l + 2.6093323231f * m - 0.3411344290f * s, 0f), 1f)) * 255.999f);
+        final int b = (int)(reverseGamma(Math.min(Math.max(-0.0041119885f * l - 0.7034763098f * m + 1.7068625689f * s, 0f), 1f)) * 255.999f);
+        return BitConversion.intBitsToFloat(r | g << 8 | b << 16 | (packed & 0xfe000000));
+    }
+
+    /**
+     * Takes a color encoded as an RGBA8888 int and converts to a packed float in the Oklab format this uses.
+     * @param rgba an int with the channels (in order) red, green, blue, alpha; should have 8 bits per channel
+     * @return a packed int as Oklab, which this class can use
+     */
+    public static int fromRGBA8888(final int rgba) {
+        final float r = forwardGamma((rgba >>> 24) * 0x1.010101010101p-8f);
+        final float g = forwardGamma((rgba >>> 16 & 0xFF) * 0x1.010101010101p-8f);
+        final float b = forwardGamma((rgba >>> 8 & 0xFF) * 0x1.010101010101p-8f);
+
+        final float l = cbrtPositive(0.4121656120f * r + 0.5362752080f * g + 0.0514575653f * b);
+        final float m = cbrtPositive(0.2118591070f * r + 0.6807189584f * g + 0.1074065790f * b);
+        final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
+
+        return (
+                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                        | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
+                        | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
+                        | (rgba & 0xFE) << 24);
+    }
+
+    /**
+     * Takes a color encoded as an RGBA8888 packed float and converts to a packed int in the Oklab format this uses.
+     * @param packed a packed float in RGBA8888 format, with A in the MSB and R in the LSB
+     * @return a packed int as Oklab, which this class can use
+     */
+    public static int fromRGBA(final float packed) {
+        final int abgr = BitConversion.floatToRawIntBits(packed);
+        final float r = forwardGamma((abgr & 0xFF) * 0x1.010101010101p-8f);
+        final float g = forwardGamma((abgr >>> 8 & 0xFF) * 0x1.010101010101p-8f);
+        final float b = forwardGamma((abgr >>> 16 & 0xFF) * 0x1.010101010101p-8f);
+        final float l = cbrtPositive(0.4121656120f * r + 0.5362752080f * g + 0.0514575653f * b);
+        final float m = cbrtPositive(0.2118591070f * r + 0.6807189584f * g + 0.1074065790f * b);
+        final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
+        return (
+                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                        | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
+                        | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
+                        | (abgr & 0xFE000000));
+    }
+
+    /**
+     * Takes RGBA components from 0.0 to 1.0 each and converts to a packed int in the Oklab format this uses.
+     * @param r red, from 0.0 to 1.0 (both inclusive)
+     * @param g green, from 0.0 to 1.0 (both inclusive)
+     * @param b blue, from 0.0 to 1.0 (both inclusive)
+     * @param a alpha, from 0.0 to 1.0 (both inclusive)
+     * @return a packed int as Oklab, which this class can use
+     */
+    public static int fromRGBA(float r, float g, float b, final float a) {
+        r = forwardGamma(r);
+        g = forwardGamma(g);
+        b = forwardGamma(b);
+        final float l = cbrtPositive(0.4121656120f * r + 0.5362752080f * g + 0.0514575653f * b);
+        final float m = cbrtPositive(0.2118591070f * r + 0.6807189584f * g + 0.1074065790f * b);
+        final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
+        return (
+                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                        | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
+                        | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
+                        | ((int)(a * 255f) << 24 & 0xFE000000));
+    }
      *
+    /**
+     * Gets the "chroma" or "colorfulness" of a given Oklab color. Chroma is similar to saturation in that grayscale
+     * values have 0 saturation and 0 chroma, while brighter colors have high saturation and chroma. The difference is
+     * that colors that are perceptually more-colorful have higher chroma than colors that are perceptually
+     * less-colorful, regardless of hue, whereas saturation changes its meaning depending on the hue and lightness. That
+     * is, the most saturated color for a given hue and lightness always has a saturation of 1, but if that color
+     * isn't perceptually very colorful (as is the case for very dark and very light colors), it will have a chroma that
+     * is much lower than the maximum. The result of this method can't be negative, grayscale values have very close to
+     * 0 chroma, and the most colorful values (all very close to magenta) should have 0.31613f chroma.
      * @param oklab a color as an Oklab int that can be obtained from any of the constants in this class.
-     * @return the chroma of the color from 0.0 (a grayscale color; inclusive) to at-most the square root of 2 (but probably lower; a bright color)
+     * @return a float between 0.0f and 0.31613f that represents how colorful the given value is
      */
     public static float chroma(final int oklab) {
-        final float a = ((oklab >>> 7 & 0x1FE) - 255) / 255f;
-        final float b = ((oklab >>> 15 & 0x1FE) - 255) / 255f;
+        final float a = ((oklab >>> 7 & 0x1FE) - 255) / 510f;
+        final float b = ((oklab >>> 15 & 0x1FE) - 255) / 510f;
         return (float) Math.sqrt(a * a + b * b);
     }
 
