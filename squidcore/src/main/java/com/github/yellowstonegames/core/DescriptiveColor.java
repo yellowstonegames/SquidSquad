@@ -880,7 +880,168 @@ public final class DescriptiveColor {
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
                         | ((int)(a * 255f) << 24 & 0xFE000000));
     }
+
+    /**
+     * Gets the red channel value of the given encoded color, as an int ranging from 0 to 255, inclusive.
+     * @param encoded a color as a packed int that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return an int from 0 to 255, inclusive, representing the red channel value of the given encoded color
+     */
+    public static int redInt(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return (int)(reverseGamma(Math.min(Math.max(+4.0767245293f * l - 3.3072168827f * m + 0.2307590544f * s, 0f), 1f)) * 255.999f);
+    }
+
+    /**
+     * Gets the green channel value of the given encoded color, as an int ranging from 0 to 255, inclusive.
+     * @param encoded a color as a packed int that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return an int from 0 to 255, inclusive, representing the green channel value of the given encoded color
+     */
+    public static int greenInt(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return (int)(reverseGamma(Math.min(Math.max(-1.2681437731f * l + 2.6093323231f * m - 0.3411344290f * s, 0f), 1f)) * 255.999f);
+    }
+
+    /**
+     * Gets the blue channel value of the given encoded color, as an int ranging from 0 to 255, inclusive.
+     * @param encoded a color as a packed int that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return an int from 0 to 255, inclusive, representing the blue channel value of the given encoded color
+     */
+    public static int blueInt(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return (int)(reverseGamma(Math.min(Math.max(-0.0041119885f * l - 0.7034763098f * m + 1.7068625689f * s, 0f), 1f)) * 255.999f);
+    }
+
+    /**
+     * Gets the alpha channel value of the given encoded color, as an even int ranging from 0 to 254, inclusive. Because
+     * of how alpha is stored in libGDX, no odd-number values are possible for alpha.
+     * @param encoded a color as a packed int that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return an even int from 0 to 254, inclusive, representing the alpha channel value of the given encoded color
+     */
+    public static int alphaInt(final int encoded)
+    {
+        return encoded >>> 24 & 0xfe;
+    }
+
+    /**
+     * Gets the red channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
+     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return a float from 0.0f to 1.0f, inclusive, representing the red channel value of the given encoded color
+     */
+    public static float red(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return reverseGamma(Math.min(Math.max(+4.0767245293f * l - 3.3072168827f * m + 0.2307590544f * s, 0f), 1f));
+    }
+
+    /**
+     * Gets the green channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
+     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return a float from 0.0f to 1.0f, inclusive, representing the green channel value of the given encoded color
+     */
+    public static float green(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return reverseGamma(Math.min(Math.max(-1.2681437731f * l + 2.6093323231f * m - 0.3411344290f * s, 0f), 1f));
+    }
+
+    /**
+     * Gets the blue channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
+     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return a float from 0.0f to 1.0f, inclusive, representing the blue channel value of the given encoded color
+     */
+    public static float blue(final int encoded)
+    {
+        final int decoded = encoded;
+        final float L = (decoded & 0xff) / 255f;
+        final float A = ((decoded >>> 8 & 0xff) - 127.5f) / 127.5f;
+        final float B = ((decoded >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
+        final float m = cube(L - 0.1055613458f * A - 0.0638541728f * B);
+        final float s = cube(L - 0.0894841775f * A - 1.2914855480f * B);
+        return reverseGamma(Math.min(Math.max(-0.0041119885f * l - 0.7034763098f * m + 1.7068625689f * s, 0f), 1f));
+    }
+
+    /**
+     * Gets the alpha channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
+     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @return a float from 0.0f to 1.0f, inclusive, representing the alpha channel value of the given encoded color
+     */
+    public static float alpha(final int encoded)
+    {
+        return (encoded >>> 24 & 0xfe) / 254f;
+    }
+
+    /**
+     * The "L" channel of the given packed int in Oklab format, which is its lightness; ranges from 0.0f to
+     * 1.0f . You can edit the L of a color with {@link #lighten(int, float)} and {@link #darken(int, float)}.
      *
+     * @param encoded a color encoded as a packed int, as by {@link #oklab(float, float, float, float)}
+     * @return the L value as a float from 0.0f to 1.0f
+     */
+    public static float channelL(final int encoded)
+    {
+        return (encoded & 0xff) / 255f;
+    }
+
+    /**
+     * The "A" channel of the given packed int in Oklab format, which when combined with the B channel describes the
+     * hue and saturation of a color; ranges from 0f to 1f . If A is 0f, the color will be cooler, more green or
+     * blue; if A is 1f, the color will be warmer, from magenta to orange. You can edit the A of a color with
+     * {@link #raiseA(int, float)} and {@link #lowerA(int, float)}.
+     * @param encoded a color encoded as a packed int, as by {@link #oklab(float, float, float, float)}
+     * @return the A value as a float from 0.0f to 1.0f
+     */
+    public static float channelA(final int encoded)
+    {
+        return (encoded >>> 8 & 0xff) / 255f;
+    }
+
+    /**
+     * The "B" channel of the given packed int in Oklab format, which when combined with the A channel describes the
+     * hue and saturation of a color; ranges from 0f to 1f . If B is 0f, the color will be more "artificial", more
+     * blue or purple; if B is 1f, the color will be more "natural", from green to yellow to orange. You can edit
+     * the B of a color with {@link #raiseB(int, float)} and {@link #lowerB(int, float)}.
+     * @param encoded a color encoded as a packed int, as by {@link #oklab(float, float, float, float)}
+     * @return the B value as a float from 0.0f to 1.0f
+     */
+    public static float channelB(final int encoded)
+    {
+        return (encoded >>> 16 & 0xff) / 255f;
+    }
+
     /**
      * Gets the "chroma" or "colorfulness" of a given Oklab color. Chroma is similar to saturation in that grayscale
      * values have 0 saturation and 0 chroma, while brighter colors have high saturation and chroma. The difference is
@@ -911,6 +1072,20 @@ public final class DescriptiveColor {
         final float a = ((oklab >>> 7 & 0x1FE) - 255);
         final float b = ((oklab >>> 15 & 0x1FE) - 255);
         return TrigTools.atan2_(a, b);
+    }
+
+    /**
+     * Given a hue and lightness, this gets the (approximate) maximum chroma possible for that hue-lightness
+     * combination. This is useful to know the bounds of {@link #chroma(int)}. This should be no greater than 0.31613f .
+     * The hue and lightness correspond to {@link #hue(int)} and {@link #channelL(int)}, respectively.
+     * @param hue the hue, typically between 0.0f and 1.0f, to look up
+     * @param lightness the lightness, clamped between 0.0f and 1.0f, to look up
+     * @return the maximum possible chroma for the given hue and lightness, between 0.0f and 0.31613f
+     */
+    public static float chromaLimit(final float hue, final float lightness){
+        final int idx = (int) (Math.min(Math.max(lightness, 0f), 1f) * 255.999f) << 8
+                | (int) (256f * (hue - ((int)(hue + 0x1p14) - 0x4000)));
+        return GAMUT_DATA[idx] * 0x1p-8f;
     }
 
     /**
@@ -945,6 +1120,105 @@ public final class DescriptiveColor {
     public static int darken(final int oklab, final float change) {
         final int i = oklab & 255, other = oklab & 0xFEFFFF00;
         return (((int) (i * (1f - change)) & 255) | other);
+    }
+    /**
+     * Interpolates from the packed float color start towards a warmer color (orange to magenta) by change. While change
+     * should be between 0f (return start as-is) and 1f (return fully warmed), start should be a packed color, as from
+     * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors,
+     * and is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to
+     * lerp towards a warmer color. Unlike {@link #lerpColors(int, int, float)}, this keeps the
+     * alpha and L of start as-is.
+     * @see #lowerA(int, float) the counterpart method that cools a float color
+     * @param start the starting color as a packed float
+     * @param change how much to warm start, as a float between 0 and 1; higher means a warmer result
+     * @return a packed float that represents a color between start and a warmer color
+     */
+    public static float raiseA(final int start, final float change) {
+        final int s = start, p = s >>> 8 & 0xFF, other = s & 0xFEFF00FF;
+        return BitConversion.intBitsToFloat(((int) (p + (0xFF - p) * change) << 8 & 0xFF00) | other);
+    }
+
+    /**
+     * Interpolates from the packed float color start towards a cooler color (green to blue) by change. While change
+     * should be between 0f (return start as-is) and 1f (return fully cooled), start should be a packed color, as from
+     * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
+     * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp
+     * towards a cooler color. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha and
+     * L of start as-is.
+     * @see #raiseA(int, float) the counterpart method that warms a float color
+     * @param start the starting color as a packed float
+     * @param change how much to cool start, as a float between 0 and 1; higher means a cooler result
+     * @return a packed float that represents a color between start and a cooler color
+     */
+    public static float lowerA(final int start, final float change) {
+        final int s = start, p = s >>> 8 & 0xFF, other = s & 0xFEFF00FF;
+        return BitConversion.intBitsToFloat(((int) (p * (1f - change)) & 0xFF) << 8 | other);
+    }
+
+    /**
+     * Interpolates from the packed float color start towards a "natural" color (between green and orange) by change.
+     * While change should be between 0f (return start as-is) and 1f (return fully natural), start should be a packed color, as
+     * from {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary
+     * Colors, and is a little more efficient and clear than using
+     * {@link #lerpColors(int, int, float)} to lerp towards a more natural color. Unlike
+     * {@link #lerpColors(int, int, float)}, this keeps the alpha and L of start as-is.
+     * @see #lowerB(int, float) the counterpart method that makes a float color less natural
+     * @param start the starting color as a packed float
+     * @param change how much to change start to a natural color, as a float between 0 and 1; higher means a more natural result
+     * @return a packed float that represents a color between start and a more natural color
+     */
+    public static float raiseB(final int start, final float change) {
+        final int s = start, t = s >>> 16 & 0xFF, other = s & 0xFE00FFFF;
+        return BitConversion.intBitsToFloat(((int) (t + (0xFF - t) * change) << 16 & 0xFF0000) | other);
+    }
+
+    /**
+     * Interpolates from the packed float color start towards an "artificial" color (between blue and purple) by change.
+     * While change should be between 0f (return start as-is) and 1f (return fully artificial), start should be a packed color, as
+     * from {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary
+     * Colors, and is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp
+     * towards a more artificial color. Unlike {@link #lerpColors(int, int, float)}, this keeps the
+     * alpha and L of start as-is.
+     * @see #raiseB(int, float) the counterpart method that makes a float color less artificial
+     * @param start the starting color as a packed float
+     * @param change how much to change start to a bolder color, as a float between 0 and 1; higher means a more artificial result
+     * @return a packed float that represents a color between start and a more artificial color
+     */
+    public static float lowerB(final int start, final float change) {
+        final int s = start, t = s >>> 16 & 0xFF, other = s & 0xFE00FFFF;
+        return BitConversion.intBitsToFloat(((int) (t * (1f - change)) & 0xFF) << 16 | other);
+    }
+
+    /**
+     * Interpolates from the packed float color start towards that color made opaque by change. While change should be
+     * between 0f (return start as-is) and 1f (return start with full alpha), start should be a packed color, as from
+     * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
+     * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
+     * transparent. This won't change the L, A, or B of the color.
+     * @see #fade(int, float) the counterpart method that makes a float color more translucent
+     * @param start the starting color as a packed float
+     * @param change how much to go from start toward opaque, as a float between 0 and 1; higher means closer to opaque
+     * @return a packed float that represents a color between start and its opaque version
+     */
+    public static float blot(final int start, final float change) {
+        final int s = start, opacity = s >>> 24 & 0xFE, other = s & 0x00FFFFFF;
+        return BitConversion.intBitsToFloat(((int) (opacity + (0xFE - opacity) * change) & 0xFE) << 24 | other);
+    }
+
+    /**
+     * Interpolates from the packed float color start towards transparent by change. While change should be between 0
+     * (return start as-is) and 1f (return the color with 0 alpha), start should be a packed color, as from
+     * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors,
+     * and is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
+     * transparent. This won't change the L, A, or B of the color.
+     * @see #blot(int, float) the counterpart method that makes a float color more opaque
+     * @param start the starting color as a packed float
+     * @param change how much to go from start toward transparent, as a float between 0 and 1; higher means closer to transparent
+     * @return a packed float that represents a color between start and transparent
+     */
+    public static float fade(final int start, final float change) {
+        final int s = start, opacity = s & 0xFE, other = s & 0x00FFFFFF;
+        return BitConversion.intBitsToFloat(((int) (opacity * (1f - change)) & 0xFE) << 24 | other);
     }
 
     /**
