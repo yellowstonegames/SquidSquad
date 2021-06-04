@@ -28,7 +28,7 @@ public class Dice {
     private static final Matcher mat = Pattern.compile("\\s*(?:({=op}[+/*-])?\\s*({=sn}-?\\d+)?\\s*(?:({=im}[:><])\\s*({=mn}\\d+))?\\s*(?:({=mm}[d:!])\\s*({=en}\\d+))?)\\s*").matcher();
     private EnhancedRandom rng;
     private transient IntList temp = new IntList(20);
-    private transient IntList tempRule = new IntList(20);
+    private transient Rule tempRule = new Rule();
     /**
      * Creates a new dice roller that uses a random RNG seed for an RNG that it owns.
      */
@@ -278,7 +278,7 @@ public class Dice {
     /**
      * Evaluate the String {@code rollCode} as dice roll notation and roll to get a random result of that dice roll.
      * You should consider whether you want to parse the rollCode every time (which can be computationally costly); if
-     * you make a lot of similar dice rolls, you can use {@link #parseRollRuleInto(IntList, String)} to get a reusable
+     * you make a lot of similar dice rolls, you can use {@link #parseRollRuleInto(Rule, String)} to get a reusable
      * rule for rolls.
      * <br>
      * This can handle a good amount of dice
@@ -331,14 +331,13 @@ public class Dice {
      * @return a random number that is possible with the given dice string
      */
     public int roll(String rollCode) {
-        tempRule.clear();
-        return runRollRule(parseRollRuleInto(tempRule, rollCode));
+        return runRollRule(tempRule.reset(rollCode));
     }
 
     /**
-     * Parses the String {@code rollCode} as dice roll notation and returns instructions as an IntList so the roll can
-     * be performed later with {@link #runRollRule(IntList)}. This method allocates a new IntList every time, which may
-     * not be optimal; consider reusing an IntList with {@link #parseRollRuleInto(IntList, String)}.
+     * Parses the String {@code rollCode} as dice roll notation and returns instructions as a Rule so the roll can
+     * be performed later with {@link #runRollRule(Rule)}. This method allocates a new Rule every time, which may
+     * not be optimal; consider reusing a Rule with {@link #parseRollRuleInto(Rule, String)}.
      * <br>
      * This effectively allows storing instructions for how to roll a
      * particular set of dice, but leaves the actual roll for later. By storing the instructions instead of parsing them
@@ -392,14 +391,14 @@ public class Dice {
      * </ul>
      *
      * @param rollCode dice string using the above notation
-     * @return a roll rule that can be run with {@link #runRollRule(IntList)}
+     * @return a roll rule that can be run with {@link #runRollRule(Rule)}
      */
-    public IntList parseRollRule(String rollCode){
-        return parseRollRuleInto(new IntList(20), rollCode);
+    public static Rule parseRollRule(String rollCode){
+        return new Rule(rollCode);
     }
     /**
      * Parses the String {@code rollCode} as dice roll notation and appends instructions into {@code into} so rolls can
-     * be performed later with {@link #runRollRule(IntList)}. This method does not clear {@code into}, so you should
+     * be performed later with {@link #runRollRule(Rule)}. This method does not clear {@code into}, so you should
      * clear it yourself if you don't want to save its contents (or it didn't store a roll rule). You can append to an
      * existing roll rule, which is about the same as adding a {@code +} between the two roll codes and parsing that.
      * <br>
@@ -454,11 +453,12 @@ public class Dice {
      *     <li>{@code /8} : integer-divide value by 8</li>
      * </ul>
      *
-     * @param into an IntList that this will append to, placing instructions for how to perform a roll
+     * @param into a Rule that this will append to, placing instructions for how to perform a roll
      * @param rollCode dice string using the above notation
-     * @return a roll rule that can be run with {@link #runRollRule(IntList)}
+     * @return a roll rule that can be run with {@link #runRollRule(Rule)}
      */
-    public IntList parseRollRuleInto(IntList into, String rollCode){
+    public static Rule parseRollRuleInto(Rule into, String rollCode){
+        into.rollCode = rollCode;
         mat.setTarget(rollCode);
         int op = mat.pattern().groupId("op");
         int sn = mat.pattern().groupId("sn");
@@ -470,12 +470,12 @@ public class Dice {
         while (mat.find()) {
             System.out.println(mat.group());
             if(starting && !mat.isCaptured(op)){
-                into.add('+');
+                into.instructions.add('+');
                 starting = false;
             }
             if(mat.isCaptured("op")) // math op
             {
-                into.add(mat.charAt(0, op)); // gets char 0 from the math op group
+                into.instructions.add(mat.charAt(0, op)); // gets char 0 from the math op group
                 starting = false;
             }
 
@@ -492,24 +492,25 @@ public class Dice {
                 midN = 1;
             int endN = endNum ? DigitTools.intFromDec(rollCode, mat.start(en), mat.end(en)) : 0;
 
-            into.add(startN);
-            into.add(initialMode);
-            into.add(midN);
-            into.add(mainMode);
-            into.add(endN);
+            into.instructions.add(startN);
+            into.instructions.add(initialMode);
+            into.instructions.add(midN);
+            into.instructions.add(mainMode);
+            into.instructions.add(endN);
         }
         return into;
     }
 
     /**
-     * Performs a roll of the given {@code rollRule}, which should store instructions from
-     * {@link #parseRollRule(String)} or {@link #parseRollRuleInto(IntList, String)}. Two rolls of the same roll rule
+     * Performs a roll of the given {@code rule}, which should store instructions from
+     * {@link #parseRollRule(String)} or {@link #parseRollRuleInto(Rule, String)}. Two rolls of the same roll rule
      * have no guarantee of having the same or different result, just that they will use the same dice and operations.
-     * @param rollRule an IntList generated by {@link #parseRollRule(String)} or {@link #parseRollRuleInto(IntList, String)}
+     * @param rule a Rule generated by {@link #parseRollRule(String)} or {@link #parseRollRuleInto(Rule, String)}
      * @return the result of rolling the dice as instructed by rollRule
      */
-    public int runRollRule(IntList rollRule) {
-        if(rollRule == null || rollRule.isEmpty()) return 0;
+    public int runRollRule(Rule rule) {
+        if(rule == null || rule.instructions.isEmpty()) return 0;
+        IntList rollRule = rule.instructions;
         int currentResult, previousTotal = 0;
         for (int i = 0; i < rollRule.size(); i+=6) {
             int currentMode = rollRule.get(i);
@@ -586,5 +587,71 @@ public class Dice {
             }
         }
         return previousTotal;
+    }
+
+    public static class Rule {
+        public String rollCode;
+        public @Nonnull IntList instructions;
+
+        protected Rule(){
+            rollCode = "";
+            instructions = new IntList(10);
+        }
+
+        /**
+         * Stores the given {@code rollCode} as-is, and parses instructions using {@link Dice#parseRollRule(String)}.
+         * See the Dice method for more info.
+         * @param rollCode a dice string using the notation described in {@link Dice#parseRollRule(String)}
+         */
+        public Rule(@Nonnull String rollCode){
+            instructions = new IntList(10);
+            Dice.parseRollRuleInto(this, rollCode);
+        }
+
+        /**
+         * Resets this Rile to be empty, with "" as its rollCode and empty instructions.
+         * @return this, for chaining
+         */
+        public Rule reset(){
+            rollCode = "";
+            instructions.clear();
+            return this;
+        }
+        /**
+         * Resets this Rule to store the given {@code rollCode} as-is, and parses instructions using
+         * {@link Dice#parseRollRuleInto(Rule, String)}. See the Dice method for more info.
+         * @param rollCode a dice string using the notation described in {@link Dice#parseRollRuleInto(Rule, String)}
+         * @return this, for chaining
+         */
+        public Rule reset(@Nonnull String rollCode){
+            instructions.clear();
+            Dice.parseRollRuleInto(this, rollCode);
+            return this;
+        }
+
+        /**
+         * Returns a string representation of the rollCode.
+         *
+         * @return a string representation of the rollCode.
+         */
+        @Override
+        public String toString() {
+            return rollCode;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Rule rule = (Rule) o;
+
+            return instructions.equals(rule.instructions);
+        }
+
+        @Override
+        public int hashCode() {
+            return instructions.hashCode();
+        }
     }
 }
