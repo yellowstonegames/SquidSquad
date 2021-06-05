@@ -39,7 +39,7 @@ public class PoissonDiskTest {
         DungeonTools.wallWrap(dun);
 
         ObjectObjectOrderedMap<Coord, ObjectList<Coord>> points = PoissonDisk.sampleRectangle(
-                Coord.get(1, 1), Coord.get(79, 79), 2.5f,
+                Coord.get(1, 1), Coord.get(78, 78), 2.5f,
                 80, 80, 30, rng);
         for (int i = 0; i < points.size(); i++) {
             Coord c = points.keyAt(i);
