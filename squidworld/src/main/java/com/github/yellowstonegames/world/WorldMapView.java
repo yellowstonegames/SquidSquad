@@ -98,13 +98,13 @@ public class WorldMapView {
      * {@link DescriptiveColor#limitToGamut(int, int, int)} and specifying the L, A, and B channels.
      * @param similarColors an array or vararg of packed int Oklab colors with at least one element
      */
-    public void match(
-            int... similarColors
-    )
+    public void match(int... similarColors)
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            BIOME_COLOR_TABLE[i] = b = differentiateLightness(similarColors[Biome.TABLE[i].name.hashCode() % similarColors.length], Biome.TABLE[i].colorDescription.hashCode());
+            BIOME_COLOR_TABLE[i] = b = DescriptiveColor.offsetLightness(similarColors[(Hasher.gremory.hash(Biome.TABLE[i].name) >>> 1) % similarColors.length]
+            //, DescriptiveColor.describeOklab(Biome.TABLE[i].colorDescription)
+            );
             BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
             if(i == 60)
                 BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = darken(describeOklab(Biome.TABLE[60].colorDescription), 0.08f);
@@ -115,7 +115,7 @@ public class WorldMapView {
     {
         final long landA = Hasher.randomize(world.seedA), landB = Hasher.randomize(landA ^ world.seedB);
         final long heat = Hasher.randomize(landB);
-        generate(world.seedA, world.seedB, 1f + ((landA & 0xFFFFFF) * 0x1p-27f + (landA >>> 40) * 0x1p-27f + (landB & 0xFFFFFF) * 0x1p-27f + (landB >>> 40) * 0x1p-27f),
+        generate(world.seedA, world.seedB, 1f + ((landA & 0xFFFFFF) - (landA >>> 40) + (landB & 0xFFFFFF) - (landB >>> 40)) * 0x1p-27f,
                 (heat >>> 40) * 0x1p-24f * 0.375f + 1.0625f);
     }
     public void generate(float landMod, float heatMod)
