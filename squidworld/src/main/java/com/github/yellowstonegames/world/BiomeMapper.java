@@ -519,10 +519,11 @@ public interface BiomeMapper {
 
                     bc |= (hc + mc * 6) << 10;
                     if(heightCode < 4)
-                        biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0f) * 1000.0f) << 20;
+                        biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0) * 1000.0) << 20;
                     else biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
-                            ? (WorldMapGenerator.sandUpper - high) * 10240.0f // multiplier affected by changes to sandLower
-                            : MathTools.sway((high + moist) * (4.1f + high - hot)) * 512 + 512) << 20;
+// multiplier affected by changes to sandUpper, not sure why this needs to be different from SquidLib
+                            ? (high - WorldMapGenerator.sandLower) * 10240.0
+                            : MathTools.sway((high + moist) * (4.1 + high - hot)) * 512 + 512) << 20;
                 }
             }
         }

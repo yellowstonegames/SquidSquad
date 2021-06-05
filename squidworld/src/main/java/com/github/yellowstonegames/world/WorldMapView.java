@@ -115,7 +115,7 @@ public class WorldMapView {
     {
         final long landA = Hasher.randomize(world.seedA), landB = Hasher.randomize(landA ^ world.seedB);
         final long heat = Hasher.randomize(landB);
-        generate(world.seedA, world.seedB, 1f + ((landA & 0xFFFFFF) - (landA >>> 40) + (landB & 0xFFFFFF) - (landB >>> 40)) * 0x1p-27f,
+        generate(world.seedA, world.seedB, 1f + ((landA & 0xFFFFFF) + (landA >>> 40) - (landB & 0xFFFFFF) - (landB >>> 40)) * 0x1p-27f,
                 (heat >>> 40) * 0x1p-24f * 0.375f + 1.0625f);
     }
     public void generate(float landMod, float heatMod)

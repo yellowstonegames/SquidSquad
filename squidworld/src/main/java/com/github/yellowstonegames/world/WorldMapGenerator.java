@@ -130,7 +130,7 @@ public abstract class WorldMapGenerator {
             shallowWaterLower = -0.3f, shallowWaterUpper = -0.1f,  // 2
             coastalWaterLower = -0.1f, coastalWaterUpper = 0.02f,   // 3
             sandLower = 0.02f, sandUpper = 0.12f,                   // 4
-            grassLower = 0.14f, grassUpper = 0.35f,                // 5
+            grassLower = 0.12f, grassUpper = 0.35f,                // 5
             forestLower = 0.35f, forestUpper = 0.6f,               // 6
             rockLower = 0.6f, rockUpper = 0.8f,                    // 7
             snowLower = 0.8f, snowUpper = 1f;                    // 8
