@@ -65,14 +65,30 @@ public class PoissonDisk {
      * @param minPosition the Coord with the lowest x and lowest y to be used as a corner for the bounding box
      * @param maxPosition the Coord with the highest x and highest y to be used as a corner for the bounding box
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
-     * @param maxX one more than the highest x that can be assigned; typically an array length
-     * @param maxY one more than the highest y that can be assigned; typically an array length
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
-                                                    int maxX, int maxY)
+    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
     {
-        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxX, maxY, 10, new LaserRandom());
+        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new LaserRandom());
+    }
+
+    /**
+     * Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other Coord in the list.
+     * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
+     * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
+     * negative x or y.
+     * @param minPosition the Coord with the lowest x and lowest y to be used as a corner for the bounding box
+     * @param maxPosition the Coord with the highest x and highest y to be used as a corner for the bounding box
+     * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
+     * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
+     * @param rng an IRNG to use for all random sampling.
+     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     */
+    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(
+            Coord minPosition, Coord maxPosition, float minimumDistance, int pointsPerIteration, EnhancedRandom rng)
+    {
+        return sample(minPosition, maxPosition, 0f, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, pointsPerIteration, rng);
     }
 
     /**
@@ -200,7 +216,7 @@ public class PoissonDisk {
         final float radius2 = radius * radius;
         final float iCellSize = 1f / (radius * inverseRootTwo);
         final float ik = 1f / pointsPerTry;
-        final float width = maxPos.x - minPos.x, height = maxPos.y - minPos.y;
+        final float width = maxPos.x - minPos.x + 1, height = maxPos.y - minPos.y + 1;
         final Coord gridCenter = minPos.average(maxPos);
         final int gridWidth = Math.min((int) Math.ceil(width * iCellSize), xBound);
         final int gridHeight = Math.min((int) Math.ceil(height * iCellSize), yBound);
@@ -228,7 +244,7 @@ public class PoissonDisk {
 
                 // Accept candidates that are inside the allowed extent
                 // and farther than 2 * radius to all existing samples.
-                if (x >= 0 && x < width && y >= 0 && y < height && far(x, y, iCellSize, radius2,
+                if (x >= minPos.x && x <= maxPos.x && y >= minPos.y && y <= maxPos.y && far(x, y, iCellSize, radius2,
                         gridCenter, maxSampleRadius, gridX, gridY)) {
                     final Coord sam = sample(x, y, iCellSize, qx, qy, gridX, gridY);
                     graph.get(parent).add(sam);
