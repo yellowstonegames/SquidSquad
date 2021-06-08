@@ -1425,17 +1425,17 @@ public final class DescriptiveColor {
      * @see #inGamut(int) You can use inGamut() if you just want to check whether a color is in-gamut.
      */
     public static int limitToGamut(final int packed) {
-        final float A = ((packed >>> 8 & 0xff) - 127.5f) / 127.5f;
-        final float B = ((packed >>> 16 & 0xff) - 127.5f) / 127.5f;
+        final float A = ((packed >>> 8 & 0xff) - 127.5f);
+        final float B = ((packed >>> 16 & 0xff) - 127.5f);
         final float hue = TrigTools.atan2_(B, A);
         final int idx = (packed & 0xff) << 8 | (int) (256f * hue);
-        final float dist = GAMUT_DATA[idx] * 0x1p-8f;
-        if (dist >= (float) Math.sqrt(A * A + B * B))
+        final float dist = GAMUT_DATA[idx];
+        if (dist * 0.5f >= (float) Math.sqrt(A * A + B * B))
             return packed;
         return (
                 (packed & 0xFF0000FF) |
-                        (int) (TrigTools.cos_(hue) * dist * 127.999f + 127.999f) << 8 |
-                        (int) (TrigTools.sin_(hue) * dist * 127.999f + 127.999f) << 16);
+                        (int) (TrigTools.cos_(hue) * dist + 127.999f) << 8 |
+                        (int) (TrigTools.sin_(hue) * dist + 127.999f) << 16);
     }
 
     /**
@@ -1467,17 +1467,17 @@ public final class DescriptiveColor {
         A = Math.min(Math.max(A, 0), 255);
         B = Math.min(Math.max(B, 0), 255);
         alpha = Math.min(Math.max(alpha, 0), 255);
-        final float A2 = (A - 127.5f) / 127.5f;
-        final float B2 = (B - 127.5f) / 127.5f;
+        final float A2 = (A - 127.5f);
+        final float B2 = (B - 127.5f);
         final float hue = TrigTools.atan2_(B2, A2);
         final int idx = L << 8 | (int)(256f * hue);
-        final float dist = GAMUT_DATA[idx] * 0x1p-8f;
-        if(dist >= (float) Math.sqrt(A2 * A2 + B2 * B2))
+        final float dist = GAMUT_DATA[idx];
+        if(dist * 0.5f >= (float) Math.sqrt(A2 * A2 + B2 * B2))
             return (L | A << 8 | B << 16 | alpha << 24);
         return (
                 alpha << 24 |
-                        (int) (TrigTools.sin_(hue) * dist * 127.999f + 127.999f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist * 127.999f + 127.999f) << 8 |
+                        (int) (TrigTools.sin_(hue) * dist + 127.999f) << 16 |
+                        (int) (TrigTools.cos_(hue) * dist + 127.999f) << 8 |
                         L);
     }
     /**
