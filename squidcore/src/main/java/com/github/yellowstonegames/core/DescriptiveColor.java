@@ -1,8 +1,6 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectIntOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.BitConversion;
 import regexodus.MatchResult;
 import regexodus.Matcher;
@@ -43,7 +41,29 @@ public final class DescriptiveColor {
      */
     private DescriptiveColor() {
     }
+    /**
+     * You can look up colors by name here; the names are lower-case, and the colors are packed ints in Oklab format.
+     */
     public static final ObjectIntOrderedMap<String> NAMED = new ObjectIntOrderedMap<>(50);
+    /**
+     * Stores alternative names for colors in {@link #NAMED}, like "grey" as an alias for {@link #GRAY} or "gold" as an
+     * alias for {@link #SAFFRON}. Currently, the list of aliases is as follows:
+     * <ul>
+     * <li>"grey" maps to {@link #GRAY},</li>
+     * <li>"gold" maps to {@link #SAFFRON},</li>
+     * <li>"puce" maps to {@link #MAUVE},</li>
+     * <li>"sand" maps to {@link #TAN},</li>
+     * <li>"skin" maps to {@link #PEACH},</li>
+     * <li>"coral" maps to {@link #SALMON},</li>
+     * <li>"azure" maps to {@link #SKY}, and</li>
+     * <li>"ocean" maps to {@link #TEAL}, and</li>
+     * <li>"sapphire" maps to {@link #COBALT}.</li>
+     * </ul>
+     * Note that these aliases are not duplicated in {@link #NAMES}, {@link #NAMES_BY_HUE}, or
+     * {@link #NAMES_BY_LIGHTNESS}; they are primarily there so blind attempts to name a color might still work.
+     */
+    public static final ObjectIntOrderedMap<String> ALIASES = new ObjectIntOrderedMap<>(10);
+
     public static final IntList LIST = new IntList(50);
 
     /**
@@ -1847,6 +1867,24 @@ public final class DescriptiveColor {
         return result;
     }
 
+
+    private static final ObjectList<String> namesByHue = new ObjectList<>(NAMES_BY_HUE);
+    private static final IntList colorsByHue = new IntList(COLORS_BY_HUE);
+    static {
+        int trn = namesByHue.indexOf("transparent");
+        namesByHue.removeAt(trn);
+        colorsByHue.removeAt(trn);
+        ALIASES.put("grey", GRAY);
+        ALIASES.put("gold", SAFFRON);
+        ALIASES.put("puce", MAUVE);
+        ALIASES.put("sand", TAN);
+        ALIASES.put("skin", PEACH); // Yes, I am aware that there is more than one skin color, but this can only map to one.
+        ALIASES.put("coral", SALMON);
+        ALIASES.put("azure", SKY);
+        ALIASES.put("ocean", TEAL);
+        ALIASES.put("sapphire", COBALT);
+        NAMED.putAll(ALIASES);
+    }
     private static final StringBuilder builder = new StringBuilder(80);
     private static final Substitution sub = (MatchResult matchResult, TextBuffer textBuffer) -> {
         builder.setLength(0);
