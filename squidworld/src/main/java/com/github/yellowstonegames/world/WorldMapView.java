@@ -102,7 +102,7 @@ public class WorldMapView {
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            BIOME_COLOR_TABLE[i] = b = DescriptiveColor.offsetLightness(similarColors[(Hasher.gremory.hash(Biome.TABLE[i].name) >>> 1) % similarColors.length]
+            BIOME_COLOR_TABLE[i] = b = (similarColors[(Hasher.gremory.hash(Biome.TABLE[i].name) >>> 1) % similarColors.length]
             //, DescriptiveColor.describeOklab(Biome.TABLE[i].colorDescription)
             );
             BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);

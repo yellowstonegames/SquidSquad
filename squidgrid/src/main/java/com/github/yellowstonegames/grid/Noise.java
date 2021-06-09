@@ -253,12 +253,85 @@ public class Noise {
      */
     public static final int QUINTIC = 2;
 
-    public static final int FBM = 0, BILLOW = 1, RIDGED_MULTI = 2;
+    /**
+     * "Standard" layered octaves of noise, where each octave has a different frequency and weight.
+     * Tends to look cloudy with more octaves, and generally like a natural process.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int FBM = 0;
+    /**
+     * A less common way to layer octaves of noise, where most results are biased toward higher values,
+     * but "valleys" show up filled with much lower values.
+     * This probably has some good uses in 3D or higher noise, but it isn't used too frequently.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int BILLOW = 1;
+    /**
+     * A way to layer octaves of noise so most values are biased toward low values but "ridges" of high
+     * values run across the noise. This can be a good way of highlighting the least-natural aspects of
+     * some kinds of noise; {@link #PERLIN_FRACTAL} has mostly ridges along 45-degree angles,
+     * {@link #SIMPLEX_FRACTAL} has many ridges along a triangular grid, and so on. {@link #FOAM_FRACTAL}
+     * and {@link #HONEY_FRACTAL} do well with this mode, though, and look something like lightning or
+     * bubbling fluids, respectively. Using FOAM or HONEY will have this look natural, but PERLIN in
+     * particular will look unnatural if the grid is visible.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int RIDGED_MULTI = 2;
 
-    public static final int EUCLIDEAN = 0, MANHATTAN = 1, NATURAL = 2;
+    /**
+     * Measures distances "as the crow flies."
+     * Used only with {@link #CELLULAR} noise.
+     * Meant to be used with {@link #setCellularDistanceFunction(int)}.
+     */
+    public static final int EUCLIDEAN = 0;
+    /**
+     * Measures distances on a grid, as if allowing only orthogonal movement (with no diagonals).
+     * Used only with {@link #CELLULAR} noise.
+     * Meant to be used with {@link #setCellularDistanceFunction(int)}.
+     */
+    public static final int MANHATTAN = 1;
+    /**
+     * Measures distances with an approximation of Euclidean distance that's not 100% accurate.
+     * Used only with {@link #CELLULAR} noise.
+     * Meant to be used with {@link #setCellularDistanceFunction(int)}.
+     */
+    public static final int NATURAL = 2;
 
-    public static final int CELL_VALUE = 0, NOISE_LOOKUP = 1, DISTANCE = 2, DISTANCE_2 = 3,
-            DISTANCE_2_ADD = 4, DISTANCE_2_SUB = 5, DISTANCE_2_MUL = 6, DISTANCE_2_DIV = 7;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int CELL_VALUE = 0;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int NOISE_LOOKUP = 1;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE = 2;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_2 = 3;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_2_ADD = 4;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_2_SUB = 5;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_2_MUL = 6;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_2_DIV = 7;
 
     private int seed;
     protected float frequency = 0.03125f;
@@ -391,10 +464,6 @@ public class Noise {
         this.cellularReturnType = other.cellularReturnType;
         this.cellularDistanceFunction = other.cellularDistanceFunction;
         this.cellularNoiseLookup = other.cellularNoiseLookup;
-    }
-
-    protected static float dotf(final float[] g, final float x, final float y) {
-        return g[0] * x + g[1] * y;
     }
 
     /**
