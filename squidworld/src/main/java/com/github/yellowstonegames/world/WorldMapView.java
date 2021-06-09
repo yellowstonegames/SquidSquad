@@ -178,7 +178,7 @@ public class WorldMapView {
                     case 3:
                         colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(
                                 BIOME_COLOR_TABLE[56], BIOME_COLOR_TABLE[43],
-                                Math.min(Math.max(((heightData[x][y] + 0.06f) * 8f) / (WorldMapGenerator.sandLower + 1f), 0f), 1f)));
+                                Math.min(Math.max(((heightData[x][y] + 0.1f) * 7f) / (WorldMapGenerator.sandLower + 1f), 0f), 1f)));
                         break;
                     default:
                         colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[biomeMapper.extractPartA(bc)],

@@ -51,7 +51,10 @@ public class WorldViewerDemo extends ApplicationAdapter {
     private final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
     @Override
     public void create() {
-        
+        // matching the new ocean colors
+//        System.out.println(DescriptiveColor.bestMatch(DescriptiveColor.fromRGBA8888(0x08404CFF), 1));
+//        System.out.println(DescriptiveColor.bestMatch(DescriptiveColor.fromRGBA8888(0x187880FF), 1));
+
         //// you will probably want to change batch to use whatever rendering system is appropriate
         //// for your game; here it always renders pixels
         batch = new ImmediateModeRenderer20(width * height, false, true, 0);

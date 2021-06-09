@@ -191,7 +191,7 @@ public class Biome {
             new Biome(HOTTER, COAST, '…',  "Beach", "lightmost dullest saffron"),               //40
             new Biome(HOTTEST, COAST, '…',  "Beach", "lightmost dullest saffron"),
             new Biome(COLDEST, RIVER, '-', "Ice", "lightest dullmost sage"),
-            new Biome(COLDER, RIVER, '~',  "River", "light rich denim"),
+            new Biome(COLDER, RIVER, '~',  "River", "dull teal"), //"light rich denim"
             new Biome(COLD, RIVER, '~',  "River", "light rich denim"),
             new Biome(HOT, RIVER, '~',  "River", "dark dull sky"),
             new Biome(HOTTER, RIVER, '~',  "River", "dark dull sky"),
@@ -204,7 +204,7 @@ public class Biome {
             new Biome(HOTTEST, LAKE, '~', "Lake", "richer denim"),
             new Biome(COLDEST, OCEAN, '≈', "Ocean", "dark duller cobalt"),
             new Biome(COLDER, OCEAN, '≈', "Ocean", "light duller navy"),
-            new Biome(COLD, OCEAN, '≈', "Ocean", "dark duller cobalt"),
+            new Biome(COLD, OCEAN, '≈', "Ocean", "darkmost dullest cyan"), //"dark duller cobalt"
             new Biome(HOT, OCEAN, '≈', "Ocean", "darker dull cobalt"),
             new Biome(HOTTER, OCEAN, '≈', "Ocean", "rich navy"),
             new Biome(HOTTEST, OCEAN, '≈', "Ocean", "dark rich navy"),
