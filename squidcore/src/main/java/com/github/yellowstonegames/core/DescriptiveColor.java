@@ -1885,6 +1885,56 @@ public final class DescriptiveColor {
         ALIASES.put("sapphire", COBALT);
         NAMED.putAll(ALIASES);
     }
+    /**
+     * Given a color as a packed Oklab int, this finds the closest description it can to match the given color while
+     * using at most {@code mixCount} colors to mix in. You should only use small numbers for mixCount, like 1 to 3;
+     * this can take quite a while to run otherwise. This returns a String description that can be passed to
+     * {@link #describe(CharSequence)}. It is likely that this will use very contrasting colors if mixCount is 2 or
+     * greater and the color to match is desaturated or brownish.
+     * @param oklab a packed Oklab int color to attempt to match
+     * @param mixCount how many color names this will use in the returned description
+     * @return a description that can be fed to {@link #describe(CharSequence)} to get a similar color
+     */
+    public static String bestMatch(final int oklab, int mixCount) {
+        mixCount = Math.max(1, mixCount);
+        float bestDistance = Float.POSITIVE_INFINITY;
+        final int paletteSize = namesByHue.size(), colorTries = (int)Math.pow(paletteSize, mixCount), totalTries = colorTries * 81;
+        final float targetL = channelL(oklab), targetA = channelA(oklab), targetB = channelB(oklab);
+        final String[] lightAdjectives = {"darkmost ", "darkest ", "darker ", "dark ", "", "light ", "lighter ", "lightest ", "lightmost "};
+        final String[] satAdjectives = {"dullmost ", "dullest ", "duller ", "dull ", "", "rich ", "richer ", "richest ", "richmost "};
+        mixing.clear();
+        for (int i = 0; i < mixCount; i++) {
+            mixing.add(colorsByHue.get(0));
+        }
+        int bestCode = 0;
+        for (int c = 0; c < totalTries; c++) {
+            for (int i = 0, e = 1; i < mixCount; i++, e *= paletteSize) {
+                mixing.set(i, colorsByHue.get((c / e) % paletteSize));
+            }
+            int idxI = ((c / colorTries) % 9 - 4), idxS = (c / (colorTries * 9) - 4);
+
+            int result = mix(mixing.items, 0, mixCount);
+            if(idxI > 0) result = lighten(result, 0.125f * idxI);
+            else if(idxI < 0) result = darken(result, -0.15f * idxI);
+
+            if(idxS > 0) result = limitToGamut(enrich(result, 0.2f * idxS));
+            else if(idxS < 0) result = dullen(result, -0.2f * idxS);
+            else result = limitToGamut(result);
+
+            float dL = channelL(result) - targetL, dA = channelA(result) - targetA, dB = channelB(result) - targetB;
+            if(bestDistance > (bestDistance = Math.min(dL * dL + dA * dA + dB * dB, bestDistance)))
+                bestCode = c;
+        }
+
+        StringBuilder description = new StringBuilder(lightAdjectives[(bestCode / colorTries) % 9] + satAdjectives[bestCode / (colorTries * 9)]);
+        for (int i = 0, e = 1; i < mixCount; e *= paletteSize) {
+            description.append(namesByHue.get((bestCode / e) % paletteSize));
+            if(++i < mixCount)
+                description.append(' ');
+        }
+        return description.toString();
+    }
+
     private static final StringBuilder builder = new StringBuilder(80);
     private static final Substitution sub = (MatchResult matchResult, TextBuffer textBuffer) -> {
         builder.setLength(0);
