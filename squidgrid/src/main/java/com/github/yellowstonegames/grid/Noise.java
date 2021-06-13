@@ -688,16 +688,30 @@ public class Noise {
         return getConfiguredNoise((float)x, (float)y);
     }
 
+    public double getNoise(double x, double y, double z) {
+        return getConfiguredNoise((float)x, (float)y, (float)z);
+    }
+
+    public double getNoise(double x, double y, double z, double w) {
+        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w);
+    }
+
+    public double getNoise(double x, double y, double z, double w, double u) {
+        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w, (float)u);
+    }
+
+    public double getNoise(double x, double y, double z, double w, double u, double v) {
+        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w, (float)u, (float)v);
+    }
+
+
+
     public double getNoiseWithSeed(double x, double y, long seed) {
         int s = this.seed;
         this.seed = (int) (seed ^ seed >>> 32);
         double r = getConfiguredNoise((float)x, (float)y);
         this.seed = s;
         return r;
-    }
-
-    public double getNoise(double x, double y, double z) {
-        return getConfiguredNoise((float)x, (float)y, (float)z);
     }
 
     public double getNoiseWithSeed(double x, double y, double z, long seed) {
@@ -708,20 +722,12 @@ public class Noise {
         return r;
     }
 
-    public double getNoise(double x, double y, double z, double w) {
-        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w);
-    }
-
     public double getNoiseWithSeed(double x, double y, double z, double w, long seed) {
         int s = this.seed;
         this.seed = (int) (seed ^ seed >>> 32);
         double r = getConfiguredNoise((float)x, (float)y, (float)z, (float)w);
         this.seed = s;
         return r;
-    }
-
-    public double getNoise(double x, double y, double z, double w, double u) {
-        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w, (float)u);
     }
 
     public double getNoiseWithSeed(double x, double y, double z, double w, double u, long seed) {
@@ -732,10 +738,6 @@ public class Noise {
         return r;
     }
     
-    public double getNoise(double x, double y, double z, double w, double u, double v) {
-        return getConfiguredNoise((float)x, (float)y, (float)z, (float)w, (float)u, (float)v);
-    }
-
     public double getNoiseWithSeed(double x, double y, double z, double w, double u, double v, long seed) {
         int s = this.seed;
         this.seed = (int) (seed ^ seed >>> 32);
@@ -744,6 +746,26 @@ public class Noise {
         return r;
     }
 
+
+    public float getNoise(float x, float y) {
+        return getConfiguredNoise(x, y);
+    }
+
+    public float getNoise(float x, float y, float z) {
+        return getConfiguredNoise(x, y, z);
+    }
+
+    public float getNoise(float x, float y, float z, float w) {
+        return getConfiguredNoise(x, y, z, w);
+    }
+
+    public float getNoise(float x, float y, float z, float w, float u) {
+        return getConfiguredNoise(x, y, z, w, u);
+    }
+
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        return getConfiguredNoise(x, y, z, w, u, v);
+    }
 
     public float getNoiseWithSeed(float x, float y, int seed) {
         final int s = this.seed;

@@ -164,6 +164,68 @@ public class GlobeMap extends WorldMapGenerator {
     }
 
     /**
+     * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+     * showing only one hemisphere at a time.
+     * Takes an initial seed, the width/height of the map, and parameters for noise
+     * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
+     * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
+     * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
+     * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
+     * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
+     * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
+     * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
+     * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
+     * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+     * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
+     * that don't require zooming.
+     *
+     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param mapWidth         the width of the map(s) to generate; cannot be changed later
+     * @param mapHeight        the height of the map(s) to generate; cannot be changed later
+     * @param terrainNoise a Noise generator (or subclass) that will be used to generate ridged terrain
+     * @param terrainLayeredNoise a Noise generator (or subclass) that will be used to generate general terrain
+     * @param heatNoise a Noise generator (or subclass) that will be used to generate heat values
+     * @param moistureNoise a Noise generator (or subclass) that will be used to generate moisture values
+     * @param otherRidgedNoise a Noise generator (or subclass) that will be used to generate ridges
+     * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
+     */
+    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainNoise, Noise terrainLayeredNoise,
+                    Noise heatNoise, Noise moistureNoise, Noise otherRidgedNoise, float octaveMultiplier) {
+        super(initialSeed, mapWidth, mapHeight);
+        xPositions = new float[width][height];
+        yPositions = new float[width][height];
+        zPositions = new float[width][height];
+        edges = new int[height << 1];
+
+        terrain = terrainNoise;
+        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
+        terrain.setNoiseType(terrain.getNoiseType() | 1);
+        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
+        terrain.setFractalType(Noise.RIDGED_MULTI);
+
+        terrainLayered = terrainLayeredNoise;
+        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
+        terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
+        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
+
+        heat = heatNoise;
+        heat.setFrequency(heat.getFrequency() * heatFreq);
+        heat.setNoiseType(heat.getNoiseType() | 1);
+        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+
+        moisture = moistureNoise;
+        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
+        moisture.setNoiseType(moisture.getNoiseType() | 1);
+        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
+
+        otherRidged = otherRidgedNoise;
+        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
+        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
+        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
+        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+    }
+
+    /**
      * Copies the SpaceViewWorldMap {@code other} to construct a new one that is exactly the same. References will only
      * be shared to Noise classes.
      *
