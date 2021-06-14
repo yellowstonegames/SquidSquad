@@ -489,6 +489,8 @@ public class Noise {
         this.cellularReturnType = other.cellularReturnType;
         this.cellularDistanceFunction = other.cellularDistanceFunction;
         this.cellularNoiseLookup = other.cellularNoiseLookup;
+        this.foamSharpness = other.foamSharpness;
+        this.mutation = other.mutation;
     }
 
     /**
@@ -545,7 +547,7 @@ public class Noise {
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
      * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL.
-     * @param noiseType an int from 0 to 13 corresponding to a constant from this class for a noise type
+     * @param noiseType an int from 0 to 15 corresponding to a constant from this class for a noise type
      */
     public void setNoiseType(int noiseType) {
         this.noiseType = noiseType;
@@ -559,7 +561,7 @@ public class Noise {
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
      * The default is SIMPLEX_FRACTAL.
-     * @return the noise type as a code, from 0 to 13 inclusive
+     * @return the noise type as a code, from 0 to 15 inclusive
      */
     public int getNoiseType()
     {
@@ -668,9 +670,9 @@ public class Noise {
     }
 
     /**
-     * Gets the "sharpness" for the {@link #FOAM} and {@link #FOAM_FRACTAL} noise types, which is usually
-     * around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results more often, and
-     * low values produce mid-range values more often.
+     * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, and {@link #MUTANT_FRACTAL}
+     * noise types, which is usually around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results
+     * more often, and low values produce mid-range values more often.
      * @return the current "sharpness" {@link #FOAM} and {@link #FOAM_FRACTAL} noise types
      */
     public float getFoamSharpness() {
@@ -678,9 +680,9 @@ public class Noise {
     }
 
     /**
-     * Only used with {@link #FOAM} and {@link #FOAM_FRACTAL} noise types, this affects how often the
-     * noise will produce very high and very low results (more often with high values of foamSharpness),
-     * as opposed to mid-range (more often with low values of foamSharpness).
+     * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, and {@link #MUTANT_FRACTAL} noise types,
+     * this affects how often the noise will produce very high and very low results (more often with high values of
+     * foamSharpness), as opposed to mid-range (more often with low values of foamSharpness).
      * <br>
      * This defaults to 1.0f if not set.
      * @param foamSharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
