@@ -30,11 +30,10 @@ import java.util.Collections;
  * world map for a familiar shape for world maps, but an {@link EllipticalWorldMap} or {@link HyperellipticalWorldMap}
  * can look better if important areas are in the corners of the rectangular area, though they are less familiar map
  * shapes). {@link LocalMap} and {@link MimicLocalMap} may be better if you don't want world-scale features like polar
- * ice caps or a warm equator.
+ * ice caps or a warm equator. You probably don't want a {@link GlobeMap} or {@link RotatingGlobeMap} because those
+ * don't show the edges of the map with the same size as the center, and don't show the back of the globe at all.
  */
 public class PoliticalMapper {
-
-
     /**
      * Represents a group that claims territory on a world-map, such as a nation. Each Faction has a name, a short name
      * that may be the same as the regular name, a Language that would be used to generate place names in that
@@ -523,6 +522,7 @@ public class PoliticalMapper {
             }
         }
         zoomedMap = ArrayTools.copy(politicalMap);
+        name = Language.SIMPLISH.word(rng.getSelectedState(0), true);
         return politicalMap;
     }
 

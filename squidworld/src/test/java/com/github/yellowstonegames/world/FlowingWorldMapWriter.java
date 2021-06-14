@@ -87,7 +87,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         thesaurus = new Thesaurus(rng);
 
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         Noise terrainNoise = new Noise(fn) {
             @Override
@@ -204,8 +204,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         worldTime = System.currentTimeMillis();
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
-            mutationA = TrigTools.cos_(angle) * 0.3125f;
-            mutationB = TrigTools.sin_(angle) * 0.3125f;
+            mutationA = TrigTools.cos_(angle) * 0.125f;
+            mutationB = TrigTools.sin_(angle) * 0.125f;
             world.setCenterLongitude(angle * MathUtils.PI2);
             generate(hash);
             wmv.getBiomeMapper().makeBiomes(world);
