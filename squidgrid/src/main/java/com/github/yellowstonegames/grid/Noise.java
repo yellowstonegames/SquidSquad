@@ -231,7 +231,29 @@ public class Noise {
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
-    HONEY_FRACTAL = 13;
+    HONEY_FRACTAL = 13,
+    /**
+     * A kind of noise that allows extra configuration via {@link #setMutation(float)}, producing small changes when the
+     * mutation value is similar, or large changes if it is very different. This contrasts with changes to the seed,
+     * which almost always cause large changes for any difference in seed. The implementation here is the same as
+     * {@link #FOAM} with one more dimension, which is filled by the mutation value.
+     * <br>
+     * <a href="https://i.imgur.com/4ZC9h5t.png">Noise sample at left, FFT at right.</a>
+     * <br>
+     * This is meant to be used with {@link #setNoiseType(int)}.
+     */
+    MUTANT = 14,
+    /**
+     * A kind of noise that allows extra configuration via {@link #setMutation(float)}, producing small changes when the
+     * mutation value is similar, or large changes if it is very different. This contrasts with changes to the seed,
+     * which almost always cause large changes for any difference in seed. The implementation here is the same as
+     * {@link #FOAM_FRACTAL} with one more dimension, which is filled by the mutation value.
+     * <br>
+     * <a href="https://i.imgur.com/4ZC9h5t.png">Noise sample at left, FFT at right.</a>
+     * <br>
+     * This is meant to be used with {@link #setNoiseType(int)}.
+     */
+    MUTANT_FRACTAL = 15;
 
     /**
      * Simple linear interpolation. May result in artificial-looking noise.
@@ -352,6 +374,7 @@ public class Noise {
     private float gradientPerturbAmp = 1f / 0.45f;
 
     private float foamSharpness = 1f;
+    private float mutation = 0f;
 
     protected IPointHash pointHash = new IntPointHash();
 
@@ -520,7 +543,7 @@ public class Noise {
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
-     * (12), or {@link #HONEY_FRACTAL} (13).
+     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
      * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL.
      * @param noiseType an int from 0 to 13 corresponding to a constant from this class for a noise type
      */
@@ -534,7 +557,7 @@ public class Noise {
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
-     * (12), or {@link #HONEY_FRACTAL} (13).
+     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
      * The default is SIMPLEX_FRACTAL.
      * @return the noise type as a code, from 0 to 13 inclusive
      */
@@ -664,6 +687,24 @@ public class Noise {
      */
     public void setFoamSharpness(float foamSharpness) {
         this.foamSharpness = foamSharpness;
+    }
+
+    /**
+     * Gets the mutation value used by {@link #MUTANT} and {@link #MUTANT_FRACTAL} noise types, which allows making
+     * small changes to the result when the mutation values are slightly different.
+     * @return the current mutation value, which can be any finite float
+     */
+    public float getMutation() {
+        return mutation;
+    }
+
+    /**
+     * Sets the mutation value used by {@link #MUTANT} and {@link #MUTANT_FRACTAL} noise types, which can be any finite
+     * float. Small changes to the mutation value cause small changes in the result, unlike changes to the seed.
+     * @param mutation the mutation value to use, which can be any finite float
+     */
+    public void setMutation(float mutation) {
+        this.mutation = mutation;
     }
 
     /**
@@ -987,6 +1028,17 @@ public class Noise {
                     default:
                         return singleFoamFractalFBM(x, y);
                 }
+            case MUTANT:
+                return singleFoam(seed, x, y, mutation);
+            case MUTANT_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleFoamFractalBillow(x, y, mutation);
+                    case RIDGED_MULTI:
+                        return singleFoamFractalRidgedMulti(x, y, mutation);
+                    default:
+                        return singleFoamFractalFBM(x, y, mutation);
+                }
             case HONEY:
                 return singleHoney(seed, x, y);
             case HONEY_FRACTAL:
@@ -1081,6 +1133,17 @@ public class Noise {
                         return singleFoamFractalRidgedMulti(x, y, z);
                     default:
                         return singleFoamFractalFBM(x, y, z);
+                }
+            case MUTANT:
+                return singleFoam(seed, x, y, z, mutation);
+            case MUTANT_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleFoamFractalBillow(x, y, z, mutation);
+                    case RIDGED_MULTI:
+                        return singleFoamFractalRidgedMulti(x, y, z, mutation);
+                    default:
+                        return singleFoamFractalFBM(x, y, z, mutation);
                 }
             case HONEY:
                 return singleHoney(seed, x, y, z);
@@ -1177,6 +1240,17 @@ public class Noise {
                         return singleFoamFractalRidgedMulti(x, y, z, w);
                     default:
                         return singleFoamFractalFBM(x, y, z, w);
+                }
+            case MUTANT:
+                return singleFoam(seed, x, y, z, w, mutation);
+            case MUTANT_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleFoamFractalBillow(x, y, z, w, mutation);
+                    case RIDGED_MULTI:
+                        return singleFoamFractalRidgedMulti(x, y, z, w, mutation);
+                    default:
+                        return singleFoamFractalFBM(x, y, z, w, mutation);
                 }
             case HONEY:
                 return singleHoney(seed, x, y, z, w);
@@ -1278,6 +1352,17 @@ public class Noise {
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u);
                 }
+            case MUTANT:
+                return singleFoam(seed, x, y, z, w, u, mutation);
+            case MUTANT_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleFoamFractalBillow(x, y, z, w, u, mutation);
+                    case RIDGED_MULTI:
+                        return singleFoamFractalRidgedMulti(x, y, z, w, u, mutation);
+                    default:
+                        return singleFoamFractalFBM(x, y, z, w, u, mutation);
+                }
             case HONEY:
                 return singleHoney(seed, x, y, z, w, u);
             case HONEY_FRACTAL:
@@ -1358,6 +1443,17 @@ public class Noise {
                         return singleFoamFractalRidgedMulti(x, y, z, w, u, v);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u, v);
+                }
+            case MUTANT:
+                return singleFoam(seed, x, y, z, w, u, v, mutation);
+            case MUTANT_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleFoamFractalBillow(x, y, z, w, u, v, mutation);
+                    case RIDGED_MULTI:
+                        return singleFoamFractalRidgedMulti(x, y, z, w, u, v, mutation);
+                    default:
+                        return singleFoamFractalFBM(x, y, z, w, u, v, mutation);
                 }
             case HONEY:
                 return singleHoney(seed, x, y, z, w, u, v);
