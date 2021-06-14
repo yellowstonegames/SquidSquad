@@ -3136,6 +3136,66 @@ public class Noise {
         return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
     }
 
+    private float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = singleFoam(seed, x, y, z, w, u, v, m);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += singleFoam(++seed, x, y, z, w, u, v, m) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v, m)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleFoam(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v, m));
+            correction += (exp *= 0.5);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
     public float singleFoam(int seed, float x, float y, float z, float w, float u, float v, float m) {
         final float p0 = x;
         final float p1 = x * -0.14285714285714285f + y * +0.9897433186107870f;
