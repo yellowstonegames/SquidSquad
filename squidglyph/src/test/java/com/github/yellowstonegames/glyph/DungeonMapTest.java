@@ -10,11 +10,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Hasher;
+import com.github.yellowstonegames.grid.LineTools;
 import com.github.yellowstonegames.place.DungeonProcessor;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 public class DungeonMapTest extends ApplicationAdapter {
 
@@ -48,15 +52,40 @@ public class DungeonMapTest extends ApplicationAdapter {
         gm = new GlyphMap(font, 60, 32);
 
         dungeonProcessor = new DungeonProcessor(60, 32, random);
+        dungeonProcessor.addWater(DungeonProcessor.ALL, 15);
         regenerate();
     }
 
     public void regenerate(){
-        final char[][] dungeon = dungeonProcessor.generate();
+        final char[][] dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true);
         gm.backgrounds = ArrayTools.fill(0x222222FF, GRID_WIDTH, GRID_HEIGHT);
+        int deepOklab = describeOklab("dark dull cobalt");
+        int shallowOklab = describeOklab("dull denim");
+        int stoneOklab = describeOklab("darkmost gray gray duller butter");
+        int deep = toRGBA8888(deepOklab);
+        int shallow = toRGBA8888(shallowOklab);
+        int stone = toRGBA8888(stoneOklab);
+        long deepText = toRGBA8888(offsetLightness(deepOklab));
+        long shallowText = toRGBA8888(offsetLightness(shallowOklab));
+        long stoneText = toRGBA8888(offsetLightness(stoneOklab));
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                gm.put(x, y, 0xCCCCCCFF00000000L | dungeon[x][y]);
+                switch (dungeon[x][y]){
+                    case '~':
+                        gm.backgrounds[x][y] = deep;
+                        gm.put(x, y, deepText << 32 | dungeon[x][y]);
+                        break;
+                    case ',':
+                        gm.backgrounds[x][y] = shallow;
+                        gm.put(x, y, shallowText << 32 | dungeon[x][y]);
+                        break;
+                    case ' ':
+                        gm.backgrounds[x][y] = 0;
+                        break;
+                    default:
+                        gm.backgrounds[x][y] = stone;
+                        gm.put(x, y, stoneText << 32 | dungeon[x][y]);
+                }
             }
         }
 
