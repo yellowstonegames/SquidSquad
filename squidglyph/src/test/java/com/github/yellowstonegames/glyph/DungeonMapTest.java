@@ -58,7 +58,8 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     public void regenerate(){
         final char[][] dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true);
-        gm.backgrounds = ArrayTools.fill(0x222222FF, GRID_WIDTH, GRID_HEIGHT);
+        gm.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
+        gm.map.clear();
         int deepOklab = describeOklab("dark dull cobalt");
         int shallowOklab = describeOklab("dull denim");
         int stoneOklab = describeOklab("darkmost gray gray duller butter");
