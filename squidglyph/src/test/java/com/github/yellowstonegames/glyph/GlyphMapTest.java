@@ -56,7 +56,6 @@ public class GlyphMapTest extends ApplicationAdapter {
                 gm.put(x, y, wilderness.glyphs[x][y]);
             }
         }
-
     }
 
     @Override
