@@ -79,7 +79,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         batch = new SpriteBatch();
         display = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), bigWidth, bigHeight);
         inner = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), shownWidth, shownHeight);
-        view = display.viewport = new StretchViewport(shownWidth, shownHeight);
+        view = display.viewport = inner.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seed = 1234567890L;
         rng = new DistinctRandom(seed);
@@ -155,28 +155,30 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
+                    //debugging time...
+                    wmv.getColorMap()[(int) (previousPosition.x + nextPosition.x)][(int)(previousPosition.y + nextPosition.y)] = 0xFF0000FF;
+                    System.out.printf("Set position %d,%d to red.\n", (int) (previousPosition.x + nextPosition.x), (int)(previousPosition.y + nextPosition.y));
+
+                    /*
 //                    nextPosition.set(nextPosition.x, nextPosition.y, nextPosition.z);
                     position.set(0.5f * shownWidth, bigHeight - (0.5f * shownHeight), position.z);
                     zoomed = true;
                     final int hash = IntPointHash.hashAll(screenX, screenY, 0x13579BDF);
                     System.out.printf("%s at %f,%f (nextPosition is %s)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))], nextPosition.x, nextPosition.y, nextPosition);
                     System.out.printf("%s at %f,%f (previousPosition is %s)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x), (int) (previousPosition.y))], previousPosition.x, previousPosition.y, previousPosition);
-                    System.out.printf("%s at %f,%f (position is %s)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(position.x), (int) (position.y))], position.x, position.y, position);
-                    System.out.printf("%s at %f,%f (adjusted)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + shownWidth * 0.5f), (int) (bigHeight - shownHeight * 0.5f - previousPosition.y))],
-                            (previousPosition.x + shownWidth * 0.5f), (bigHeight - shownHeight * 0.5f - previousPosition.y));
-                    System.out.printf("%s at %f,%f (adjusted 2)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x), (int) (previousPosition.y + nextPosition.y))],
-                            (previousPosition.x + nextPosition.x), (previousPosition.y + nextPosition.y));
-                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x)+1, (int) (bigHeight - nextPosition.y)-1)], hash, ~hash),
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x)+1, (int) (bigHeight - nextPosition.y))], hash, ~hash),
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (bigHeight - nextPosition.y))], hash, ~hash),
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (bigHeight - nextPosition.y)-1)], hash, ~hash),
-                            rng
-                    );
-//                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x), (int) (previousPosition.y + nextPosition.y))], rng);
-                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))], rng);
+                    System.out.printf("%s at %f,%f (used)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x), (int) (previousPosition.y + nextPosition.y + 16))],
+                            (previousPosition.x + nextPosition.x), (previousPosition.y + nextPosition.y + 16));
+//                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
+//                            rng
+//                    );
+                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x), (int) (previousPosition.y + nextPosition.y + 16))], rng);
                     wildMap.generate();
                     nextPosition.set(previousPosition);
+                     */
                 }
                 else {
                     previousPosition.set(position);
@@ -231,14 +233,15 @@ public class WorldWildMapDemo extends ApplicationAdapter {
     public void putMap() {
         if(zoomed)
         {
-            inner.backgrounds = wildMap.colors;
+            display.backgrounds = wildMap.colors;
             for (int y = 0; y < wildMap.height; y++) {
                 for (int x = 0; x < wildMap.width; x++) {
-                    inner.put(x, y, wildMap.glyphs[x][y]);
+                    display.put(x, y, wildMap.glyphs[x][y]);
                 }
             }
             return;
         }
+        display.map.clear();
         display.backgrounds = wmv.getColorMap();
         int[][] oklab = wmv.getColorMapOklab();
         BiomeMapper.DetailedBiomeMapper dbm = wmv.getBiomeMapper();
@@ -339,18 +342,21 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
-        if(zoomed){
-            view.apply(false);
-            batch.setProjectionMatrix(camera.combined);
-            batch.begin();
-            inner.draw(batch, 0, 0);
-            batch.end();
-            return;
-        }
+//        if(zoomed){
+//            view.apply(false);
+//            batch.setProjectionMatrix(camera.combined);
+//            batch.begin();
+//            inner.draw(batch, 0, 0);
+//            batch.end();
+//            return;
+//        }
         view.apply(false);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
+        if(zoomed)
+            display.draw(batch, 0, 0);
+        else
+            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
         batch.end();
     }
     @Override
