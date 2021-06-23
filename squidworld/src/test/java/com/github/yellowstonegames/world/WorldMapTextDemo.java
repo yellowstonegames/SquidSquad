@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -111,7 +112,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         atlas = new IntObjectOrderedMap<>(80);
         factions = new ObjectList<>(80);
         cities = new ObjectObjectOrderedMap<>(96);
-        position = new Vector3(bigWidth * 0.5f, bigHeight * 0.5f, 0);
+        position = new Vector3(bigWidth * 0.25f, bigHeight * 0.25f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
         input = new InputAdapter(){
@@ -155,9 +156,10 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                 previousPosition.set(position);
                 nextPosition.set(screenX, screenY, 0);
                 camera.unproject(nextPosition);
-                nextPosition.set((nextPosition.x * 4f), (nextPosition.y * 4f), nextPosition.z);
+                nextPosition.set(MathUtils.clamp(nextPosition.x, 0, bigWidth - 1), MathUtils.clamp(nextPosition.y, 0, bigHeight - 1), nextPosition.z);
                 counter = System.currentTimeMillis();
                 moveAmount = 0f;
+                System.out.printf("%c at %s\n", BIOME_CHARS[wmv.biomeMapper.getBiomeCode(Math.round(nextPosition.x), Math.round(nextPosition.y))], nextPosition);
                 return true;
             }
         };
@@ -309,21 +311,21 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             moveAmount = (System.currentTimeMillis() - counter) * 0.001f;
             if (moveAmount <= 1f) {
                 position.set(previousPosition).lerp(nextPosition, moveAmount);
-                position.set((position.x), (position.y), position.z);
             }
             else {
-                previousPosition.set(position);
-                nextPosition.set(position);
-                nextPosition.set((nextPosition.x), (nextPosition.y), nextPosition.z);
+                previousPosition.set(nextPosition);
+                position.set(nextPosition);
                 moveAmount = 0f;
                 counter = System.currentTimeMillis();
             }
         }
+        camera.position.set(position);
+        view.apply(false);
+
 //        camera.position.set(position);
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
-        view.apply(false);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownWidth - 1.25f * position.y);
@@ -335,7 +337,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         super.resize(width, height);
         display.resize(width, height);
         view.update(width, height, true);
-        view.apply(true);
+        view.apply(false);
     }
 
     public static void main(String[] arg) {
