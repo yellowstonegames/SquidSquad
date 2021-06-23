@@ -12,9 +12,13 @@ import javax.annotation.Nonnull;
  * Class for emulating various traditional RPG-style dice rolls.
  * Supports rolling multiple virtual dice of arbitrary size, summing all, the highest <i>n</i>, or the lowest <i>n</i>
  * dice, treating dice as "exploding" as in some tabletop games (where the max result is rolled again and added),
- * getting value from inside a range, and applying simple arithmetic modifiers to the result (like adding a number).
- * Typically you'll want to use the {@link #roll(String)} method if you have a String like {@code "2d8+6"}, or the
- * various other methods if you have int variables for things like "number of dice to roll" and "sides on each die."
+ * getting a value from inside a range, and applying simple arithmetic modifiers to the result (like adding a number).
+ * Typically you'll want to use the {@link #roll(String)} method if you have a String like {@code "2d8+6"} that you want
+ * to evaluate once, or the various other methods if you have int variables for things like "number of dice to roll" and
+ * "sides on each die." Important to note are the {@link Rule} inner class and the code that uses it, such as
+ * {@link #parseRollRule(String)} to parse dice notation and generate a Rule, and {@link #runRollRule(Rule)} to roll
+ * dice according to that rule. Using Rule-related code is preferred if you want to perform a roll more than a few times
+ * or to hold onto the instructions for a dice roll to use at a later time.
  * <br>
  * Based on code from the Blacken library.
  *
@@ -589,8 +593,14 @@ public class Dice {
         return previousTotal;
     }
 
+    /**
+     * A rule for how to roll a particular set of dice and operations to perform on them, such as "3d6+4" to roll three
+     * 6-sided dice and add 4 to the result. You can generate a Rule once (such as by using the constructor,
+     * {@link #Rule(String)}, or {@link Dice#parseRollRule(String)}) and roll it potentially many times using
+     * {@link Dice#runRollRule(Rule)}. This avoids overhead from repeated parsing.
+     */
     public static class Rule {
-        public String rollCode;
+        public @Nonnull String rollCode;
         public @Nonnull IntList instructions;
 
         protected Rule(){
@@ -604,6 +614,7 @@ public class Dice {
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRule(String)}
          */
         public Rule(@Nonnull String rollCode){
+            this.rollCode = rollCode;
             instructions = new IntList(10);
             Dice.parseRollRuleInto(this, rollCode);
         }

@@ -2,6 +2,9 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 
+/**
+ * Utility class for converting to and from numbers and their String representations.
+ */
 public class DigitTools {
     public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
             mask32 = "00000000000000000000000000000000",
