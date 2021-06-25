@@ -9,6 +9,7 @@ import regexodus.Replacer;
 import regexodus.Substitution;
 import regexodus.TextBuffer;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -808,8 +809,9 @@ public final class DescriptiveColor {
         final float hue = TrigTools.atan2_(B2, A2);
         final int idx = (int) (L * 255.999f) << 8 | (int)(256f * hue);
         final float dist = GAMUT_DATA[idx];
-        if(dist * 0x1p-9F >= (float) Math.sqrt(A2 * A2 + B2 * B2))
-            return oklab(L, A, B, alpha);
+        if(dist * 0x1p-9f >= (float) Math.sqrt(A2 * A2 + B2 * B2))
+            return (((int) (alpha * 255) << 24 & 0xFE000000) | ((int) (B * 255) << 16 & 0xFF0000)
+                    | ((int) (A * 255) << 8 & 0xFF00) | ((int) (L * 255) & 0xFF));
         return (
                 (int) (alpha * 127.999f) << 25 |
                         (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
@@ -1954,6 +1956,7 @@ public final class DescriptiveColor {
      * @param mixCount how many color names this will use in the returned description
      * @return a description that can be fed to {@link #describe(CharSequence)} to get a similar color
      */
+    @Nonnull
     public static String bestMatch(final int oklab, int mixCount) {
         mixCount = Math.max(1, mixCount);
         float bestDistance = Float.POSITIVE_INFINITY;
