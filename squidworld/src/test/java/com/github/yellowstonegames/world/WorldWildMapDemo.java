@@ -165,14 +165,12 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
                     position.set(0.5f * shownWidth, (0.5f * shownHeight), position.z);
                     zoomed = true;
-                    System.out.println(nextPosition);
                     final int hash = IntPointHash.hashAll((int)nextPosition.x, (int)nextPosition.y, 0x13579BDF);
                     final int code = wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1),
                             MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1));
-                    System.out.println(code);
-                    System.out.printf("%08X\n", wmv.biomeMapper.biomeCodeData[MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1)][MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1)]);
                     wildMap = new WildernessGenerator(shownWidth, shownHeight,
                             Biome.TABLE[code], hash, ~hash);
+                    //TODO: still need to get MixedWildernessGenerator working
 //                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
 //                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
 //                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
@@ -182,47 +180,13 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //                    );
                     wildMap.generate();
                     nextPosition.set(previousPosition);
-
-/*
-                    previousPosition.set(position);
-                    nextPosition.set(screenX, screenY, 0);
-                    camera.unproject(nextPosition);
-                    nextPosition.x = MathUtils.clamp(nextPosition.x, 0, bigWidth - 1);
-                    nextPosition.y = MathUtils.clamp(nextPosition.y, 0, bigHeight - 1);
-//                    System.out.println(nextPosition);
-                    //debugging time...
-//                    wmv.getColorMap()[(int) (previousPosition.x + nextPosition.x)][(int)(previousPosition.y + nextPosition.y)] = 0xFF0000FF;
-//                    System.out.printf("Set position %d,%d to red.\n", (int) (previousPosition.x + nextPosition.x), (int)(previousPosition.y + nextPosition.y));
-
-
-//                    nextPosition.set(nextPosition.x, nextPosition.y, nextPosition.z);
-                    position.set(0.5f * shownWidth, (0.5f * shownHeight), position.z);
-                    zoomed = true;
-                    final int hash = IntPointHash.hashAll(screenX, screenY, 0x13579BDF);
-//                    System.out.printf("%s at %f,%f (nextPosition is %s)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))], nextPosition.x, nextPosition.y, nextPosition);
-//                    System.out.printf("%s at %f,%f (previousPosition is %s)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x), (int) (previousPosition.y))], previousPosition.x, previousPosition.y, previousPosition);
-                    System.out.printf("%s at %f,%f (used)\n", Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))],
-                            (nextPosition.x), (nextPosition.y));
-//                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
-//                            rng
-//                    );
-                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))], rng);
-                    wildMap.generate();
-                    nextPosition.set(previousPosition);
-*/
                 }
                 else {
-                    System.out.println(position);
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
                     nextPosition.set(MathUtils.clamp(MathUtils.round(nextPosition.x), 0, bigWidth - 1),
                             MathUtils.clamp(MathUtils.round(nextPosition.y), 0, bigHeight -1), nextPosition.z);
-                    System.out.println(nextPosition);
                     counter = System.currentTimeMillis();
                     moveAmount = 0f;
                 }
@@ -378,29 +342,18 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
-//        if(zoomed){
-//            view.apply(false);
-//            batch.setProjectionMatrix(camera.combined);
-//            batch.begin();
-//            inner.draw(batch, 0, 0);
-//            batch.end();
-//            return;
-//        }
-//        view.apply(false);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if(zoomed)
             display.draw(batch, position.x - 0.5f * shownWidth, position.y - 0.5f * shownHeight);
         else
-            display.draw(batch, 0.5f * shownWidth, 0.5f * shownHeight);
+            display.draw(batch, -0.5f, -0.5f);
 //            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
         batch.end();
     }
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-//        display.resize(width, height);
-//        inner.resize(width, height);
         view.update(width, height, false);
     }
 
