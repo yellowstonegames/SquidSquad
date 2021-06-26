@@ -79,7 +79,9 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         batch = new SpriteBatch();
         display = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), bigWidth, bigHeight);
         inner = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), shownWidth, shownHeight);
-        view = display.viewport = inner.viewport = new StretchViewport(shownWidth, shownHeight);
+        view = display.viewport = inner.viewport = new StretchViewport(shownWidth * cellWidth, shownHeight * cellHeight);
+        display.font.scaleTo(cellWidth, cellHeight);
+        inner.font.scaleTo(cellWidth, cellHeight);
         camera = view.getCamera();
         seed = 1234567890L;
         rng = new DistinctRandom(seed);
@@ -109,9 +111,16 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         pm = new PoliticalMapper();
         cities = new CoordObjectOrderedMap<>(96);
         atlas = new IntObjectOrderedMap<>(80);
+
+        position = new Vector3(bigWidth * cellWidth * 0.5f, bigHeight * cellHeight * 0.5f, 0);
+        previousPosition = position.cpy();
+        nextPosition = position.cpy();
+
+/*
         position = new Vector3(bigWidth * 0.25f, bigHeight * 0.25f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
+*/
         input = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -155,6 +164,25 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
+                    nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
+                    position.set(cellWidth * 0.5f * shownWidth, cellHeight * (bigHeight - 0.5f * shownHeight), position.z);
+                    zoomed = true;
+                    final int hash = IntPointHash.hashAll(screenX & -16, screenY & -16, 0x13579BDF);
+                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x / cellWidth), 0, bigWidth - 1),MathUtils.clamp((int) (bigHeight - nextPosition.y / cellHeight), 0, bigHeight - 1))], hash, ~hash);
+//                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
+//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
+//                            rng
+//                    );
+                    wildMap.generate();
+                    nextPosition.set(previousPosition);
+
+/*
+                    previousPosition.set(position);
+                    nextPosition.set(screenX, screenY, 0);
+                    camera.unproject(nextPosition);
                     nextPosition.x = MathUtils.clamp(nextPosition.x, 0, bigWidth - 1);
                     nextPosition.y = MathUtils.clamp(nextPosition.y, 0, bigHeight - 1);
 //                    System.out.println(nextPosition);
@@ -181,9 +209,19 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(nextPosition.x), (int) (nextPosition.y))], rng);
                     wildMap.generate();
                     nextPosition.set(previousPosition);
-
+*/
                 }
                 else {
+                    System.out.println(position);
+                    previousPosition.set(position);
+                    nextPosition.set(screenX, screenY, 0);
+                    camera.unproject(nextPosition);
+                    nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
+                    System.out.println(nextPosition);
+                    counter = System.currentTimeMillis();
+                    moveAmount = 0f;
+
+/*
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
@@ -193,6 +231,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //                    nextPosition.set((nextPosition.x * 4f), (nextPosition.y * 4f), nextPosition.z);
                     counter = System.currentTimeMillis();
                     moveAmount = 0f;
+*/
                 }
                 return true;
             }
@@ -335,18 +374,17 @@ public class WorldWildMapDemo extends ApplicationAdapter {
             moveAmount = (System.currentTimeMillis() - counter) * 0.001f;
             if (moveAmount <= 1f) {
                 position.set(previousPosition).lerp(nextPosition, moveAmount);
-                position.set((position.x), (position.y), position.z);
+                position.set(MathUtils.round(position.x), MathUtils.round(position.y), position.z);
             }
             else {
                 previousPosition.set(position);
                 nextPosition.set(position);
-                nextPosition.set((nextPosition.x), (nextPosition.y), nextPosition.z);
+                nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
                 moveAmount = 0f;
                 counter = System.currentTimeMillis();
             }
         }
         camera.position.set(position);
-        view.apply();
 
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
@@ -359,22 +397,22 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //            batch.end();
 //            return;
 //        }
-        view.apply(false);
+//        view.apply(false);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if(zoomed)
             display.draw(batch, 0, 0);
         else
-            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
+            display.draw(batch, 0.5f * shownWidth, 0.5f * shownHeight);
+//            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
         batch.end();
     }
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        display.resize(width, height);
-        inner.resize(width, height);
-        view.update(width, height, true);
-        view.apply(true);
+//        display.resize(width, height);
+//        inner.resize(width, height);
+        view.update(width, height, false);
     }
 
     public static void main(String[] arg) {
