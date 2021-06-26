@@ -79,9 +79,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         batch = new SpriteBatch();
         display = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), bigWidth, bigHeight);
         inner = new GlyphMap(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), shownWidth, shownHeight);
-        view = display.viewport = inner.viewport = new StretchViewport(shownWidth * cellWidth, shownHeight * cellHeight);
-        display.font.scaleTo(cellWidth, cellHeight);
-        inner.font.scaleTo(cellWidth, cellHeight);
+        view = display.viewport = inner.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seed = 1234567890L;
         rng = new DistinctRandom(seed);
@@ -112,7 +110,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         cities = new CoordObjectOrderedMap<>(96);
         atlas = new IntObjectOrderedMap<>(80);
 
-        position = new Vector3(bigWidth * cellWidth * 0.5f, bigHeight * cellHeight * 0.5f, 0);
+        position = new Vector3(bigWidth * 0.5f, bigHeight * 0.5f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
 
@@ -165,10 +163,16 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
                     nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
-                    position.set(cellWidth * 0.5f * shownWidth, cellHeight * (bigHeight - 0.5f * shownHeight), position.z);
+                    position.set(0.5f * shownWidth, (0.5f * shownHeight), position.z);
                     zoomed = true;
-                    final int hash = IntPointHash.hashAll(screenX & -16, screenY & -16, 0x13579BDF);
-                    wildMap = new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x / cellWidth), 0, bigWidth - 1),MathUtils.clamp((int) (bigHeight - nextPosition.y / cellHeight), 0, bigHeight - 1))], hash, ~hash);
+                    System.out.println(nextPosition);
+                    final int hash = IntPointHash.hashAll((int)nextPosition.x, (int)nextPosition.y, 0x13579BDF);
+                    final int code = wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1),
+                            MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1));
+                    System.out.println(code);
+                    System.out.printf("%08X\n", wmv.biomeMapper.biomeCodeData[MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1)][MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1)]);
+                    wildMap = new WildernessGenerator(shownWidth, shownHeight,
+                            Biome.TABLE[code], hash, ~hash);
 //                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
 //                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
 //                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
@@ -216,22 +220,11 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
-                    nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
+                    nextPosition.set(MathUtils.clamp(MathUtils.round(nextPosition.x), 0, bigWidth - 1),
+                            MathUtils.clamp(MathUtils.round(nextPosition.y), 0, bigHeight -1), nextPosition.z);
                     System.out.println(nextPosition);
                     counter = System.currentTimeMillis();
                     moveAmount = 0f;
-
-/*
-                    previousPosition.set(position);
-                    nextPosition.set(screenX, screenY, 0);
-                    camera.unproject(nextPosition);
-                    nextPosition.x = MathUtils.clamp(nextPosition.x, 0, bigWidth - 1);
-                    nextPosition.y = MathUtils.clamp(nextPosition.y, 0, bigHeight - 1);
-                    System.out.println(nextPosition);
-//                    nextPosition.set((nextPosition.x * 4f), (nextPosition.y * 4f), nextPosition.z);
-                    counter = System.currentTimeMillis();
-                    moveAmount = 0f;
-*/
                 }
                 return true;
             }
@@ -271,13 +264,13 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                 cities.put(points[i], lang.word(rng, false).toUpperCase());
             }
         }
-        //counter = 0L;
         ttg = System.currentTimeMillis() - startTime;
     }
 
     public void putMap() {
         if(zoomed)
         {
+            display.map.clear();
             display.backgrounds = wildMap.colors;
             for (int y = 0; y < wildMap.height; y++) {
                 for (int x = 0; x < wildMap.width; x++) {
@@ -359,7 +352,6 @@ public class WorldWildMapDemo extends ApplicationAdapter {
             int bg = DescriptiveColor.describe("dullest chocolate");
             int fg = DescriptiveColor.describe("dull yellow");
             display.put(ct.x, ct.y, '□', bg);
-//            display.put(ct.x, ct.y, '#', SColor.SOOTY_WILLOW_BAMBOO);
             for (int j = ct.x - (cname.length() >> 1), k = 0; j < cname.length() && j < display.backgrounds.length; j++, k++) {
                 display.put(j, ct.y + 1, cname.charAt(k), fg);
                 display.backgrounds[j][ct.y + 1] = bg;
@@ -370,13 +362,11 @@ public class WorldWildMapDemo extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(INK);
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        if(!nextPosition.epsilonEquals(previousPosition)) {
+        if (!nextPosition.epsilonEquals(previousPosition)) {
             moveAmount = (System.currentTimeMillis() - counter) * 0.001f;
             if (moveAmount <= 1f) {
                 position.set(previousPosition).lerp(nextPosition, moveAmount);
-                position.set(MathUtils.round(position.x), MathUtils.round(position.y), position.z);
-            }
-            else {
+            } else {
                 previousPosition.set(position);
                 nextPosition.set(position);
                 nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
@@ -385,7 +375,6 @@ public class WorldWildMapDemo extends ApplicationAdapter {
             }
         }
         camera.position.set(position);
-
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
@@ -401,7 +390,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if(zoomed)
-            display.draw(batch, 0, 0);
+            display.draw(batch, position.x - 0.5f * shownWidth, position.y - 0.5f * shownHeight);
         else
             display.draw(batch, 0.5f * shownWidth, 0.5f * shownHeight);
 //            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
