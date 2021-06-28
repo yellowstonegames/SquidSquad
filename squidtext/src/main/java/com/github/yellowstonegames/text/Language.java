@@ -3066,6 +3066,72 @@ public class Language {
      */
     public static final Language VIETNAMESE = vietnamese().register("Vietnamese");
 
+    private static Language latin(){
+        return new Language(
+                new String[]{
+                        "a", "e", "i", "o", "u",
+                        "a", "e", "i", "o", "u",
+                        "a", "e", "i", "o", "u",
+                        "ae", "ei", "eu", "ui",
+                        "a", "a", "a", "a", "i", "i", "i", "o", "u", "u",
+                        "a", "a", "a", "a", "i", "i", "o", "u", "u",
+                        "a", "a", "a", "a", "i", "i", "o", "u",
+
+                },
+                new String[]{
+                },
+                new String[]{
+                        "b", "d", "f", "m", "n", "c", "g", "gn", "h", "y", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "y", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "c", "c", "c", "d", "m", "m", "m", "s", "s", "t"
+                },
+                new String[]{
+                        "b", "d", "f", "m", "n", "c", "g", "gn", "h", "y", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "y", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "rh", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "g", "h", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "f", "m", "n", "c", "l", "p", "qu", "r", "s", "t", "v",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "b", "d", "m", "n", "c", "l", "p", "r", "s", "t",
+                        "c", "c", "c", "d", "m", "m", "m", "s", "s", "t",
+                        "x", "x", "x", "x", "x", "x", "xc", "xc", "sc", "sc",
+                        "ct", "ct", "ct", "ct", "ct", "ct",
+                        "nd", "nd", "nd", "nd", "nd", "nd",
+                        "nn", "nn", "rr", "ll", "ll", "nt", "nt", "nt", "nt", "nt"
+                },
+                new String[]{
+                        ""
+                },
+                new String[]{
+                        "us", "um", "is", "it", "ii", "am", "ius",
+                        "us", "um", "is", "it", "ii", "am", "ius",
+                        "us", "um", "is", "it", "ii", "am", "ius",
+                        "us", "um", "is", "it", "ii", "am", "ius",
+                        "id", "in", "ad", "em", "os", "at",
+                        "id", "in", "ad", "em", "os", "at",
+                        "uit", "ant", "unt", "eo",
+                },
+                new String[]{}, new int[]{1, 2, 3, 4}, new double[]{7, 8, 6, 1}, 0.2, 1.0, 0.0, 0.7, genericSanityChecks, true);
+    }
+    /**
+     * An imitation of Classical Latin, using some modern conventions so it can be suitable for scientific names or
+     * other common English uses of Latin words. This tries to avoid the Latin letters that were mostly used for Greek
+     * loanwords. You may want to capitalize these letters if they represent written ancient text, since Latin from the
+     * Classical period didn't use lower-case letters.
+     * <br>
+     * Eisunt re ennius gin, vi.
+     */
+    public static final Language LATIN = latin().register("Latin");
+
     /**
      * An array that stores all the hand-made Language constants; it does not store randomly-generated languages
      * nor does it store modifications or mixes of languages. The order these are stored in is related to the numeric
@@ -3124,7 +3190,7 @@ public class Language {
     public static final Language[] romanizedHumanLanguages = {
             ENGLISH, KOREAN_ROMANIZED, SPANISH, SWAHILI, NORSE_SIMPLIFIED, ARABIC_ROMANIZED, HINDI_ROMANIZED, FRENCH,
             MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW, 
-            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE,
+            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE, LATIN
     };
 
     /**
@@ -3146,7 +3212,7 @@ public class Language {
     public static final Language[] romanizedLanguages = {
             ENGLISH, KOREAN_ROMANIZED, SPANISH, SWAHILI, NORSE_SIMPLIFIED, ARABIC_ROMANIZED, HINDI_ROMANIZED, FRENCH,
             MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW,
-            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE,
+            ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE, LATIN,
             HLETKIP, FANTASY_NAME, ELF, GOBLIN, KOBOLD, DEEP_SPEECH, DRAGON, INSECT, CELESTIAL, INFERNAL,
             DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
     };
