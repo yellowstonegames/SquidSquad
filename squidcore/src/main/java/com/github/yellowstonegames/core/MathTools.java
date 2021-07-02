@@ -16,6 +16,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Random;
@@ -228,7 +229,7 @@ public final class MathTools
      * @return the multiplicative inverse of {@code a} modulo 4294967296 (or, 2 to the 32)
      */
     @GwtIncompatible
-    public static int modularMultiplicativeInverse(int a)
+    public static int modularMultiplicativeInverse(final int a)
     {
         int x = 2 ^ a * 3;     //  5 bits
         x *= 2 - a * x;        // 10
@@ -242,7 +243,7 @@ public final class MathTools
      * @param a any odd long; note that even numbers do not have inverses modulo 2 to the 64
      * @return the multiplicative inverse of {@code a} modulo 18446744073709551616 (or, 2 to the 64)
      */
-    public static long modularMultiplicativeInverse(long a)
+    public static long modularMultiplicativeInverse(final long a)
     {
         long x = 2 ^ a * 3;
         x *= 2 - a * x;
@@ -280,32 +281,34 @@ public final class MathTools
      * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
      * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
      * as the input).
+     *
+     * This implementation delegates to jdkgdxds' {@link EnhancedRandom#probit(double)}.
      * @param d should be between 0 and 1, exclusive, but other values are tolerated
      * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
      */
     public static double probit(final double d) {
+        return EnhancedRandom.probit(d);
+        /*
         if (d <= 0 || d >= 1) {
             return Math.copySign(38.5, d - 0.5);
         }
-        // Rational approximation for lower region:
         else if (d < 0.02425) {
             final double q = Math.sqrt(-2.0 * Math.log(d));
             return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
                     / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
         }
-        // Rational approximation for upper region:
         else if (0.97575 < d) {
             final double q = Math.sqrt(-2.0 * Math.log(1 - d));
             return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
                     / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
         }
-        // Rational approximation for central region:
         else {
             final double q = d - 0.5;
             final double r = q * q;
             return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q
                     / (((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
         }
+         */
     }
 
     /**

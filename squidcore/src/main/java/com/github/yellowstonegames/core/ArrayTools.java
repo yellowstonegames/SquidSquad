@@ -462,16 +462,6 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
-//        final int width = array2d.length;
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
     }
 
     /**
@@ -485,16 +475,6 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
-//        final int width = array2d.length;
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
     }
 
     /**
@@ -508,16 +488,6 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
-//        final int width = array2d.length;
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
     }
 
 
@@ -532,15 +502,6 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
     }
 
     /**
@@ -600,16 +561,6 @@ public class ArrayTools {
         for (int i = 0; i < width; i++) {
             Arrays.fill(array2d[i], value);
         }
-//        final int width = array2d.length;
-//        final int height = width == 0 ? 0 : array2d[0].length;
-//        if(width > 0) {
-//            for (int i = 0; i < height; i++) {
-//                array2d[0][i] = value;
-//            }
-//        }
-//        for (int x = 1; x < width; x++) {
-//            System.arraycopy(array2d[0], 0, array2d[x], 0, height);
-//        }
     }
 
 
@@ -744,8 +695,7 @@ public class ArrayTools {
     public static void rearrange(Arrangeable sequence, LaserRandom random) {
         long a = random.getStateA(), b = random.getStateB();
         sequence.shuffle(random);
-        random.setStateA(a);
-        random.setStateB(b);
+        random.setState(a, b);
     }
 
     /**
@@ -769,15 +719,14 @@ public class ArrayTools {
             case 1: {
                 long s0 = random.getSelectedState(0);
                 random.shuffle(arrangeable);
-                random.setSelectedState(0, s0);
+                random.setState(s0);
                 break;
             }
             case 2: {
                 long s0 = random.getSelectedState(0),
                         s1 = random.getSelectedState(1);
                 random.shuffle(arrangeable);
-                random.setSelectedState(0, s0);
-                random.setSelectedState(1, s1);
+                random.setState(s0, s1);
                 break;
             }
             case 3: {
@@ -785,9 +734,7 @@ public class ArrayTools {
                         s1 = random.getSelectedState(1),
                         s2 = random.getSelectedState(2);
                 random.shuffle(arrangeable);
-                random.setSelectedState(0, s0);
-                random.setSelectedState(1, s1);
-                random.setSelectedState(2, s2);
+                random.setState(s0, s1, s2);
                 break;
             }
            case 4: {
@@ -796,10 +743,7 @@ public class ArrayTools {
                         s2 = random.getSelectedState(2),
                         s3 = random.getSelectedState(3);
                 random.shuffle(arrangeable);
-                random.setSelectedState(0, s0);
-                random.setSelectedState(1, s1);
-                random.setSelectedState(2, s2);
-                random.setSelectedState(3, s3);
+                random.setState(s0, s1, s2, s3);
                 break;
             }
             default: {
@@ -808,9 +752,7 @@ public class ArrayTools {
                     states[i] = random.getSelectedState(i);
                 }
                 random.shuffle(arrangeable);
-                for (int i = 0; i < c; i++) {
-                    random.setSelectedState(i, states[i]);
-                }
+                random.setState(states);
             }
         }
     }
@@ -821,12 +763,7 @@ public class ArrayTools {
      * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(int[] items, EnhancedRandom random) {
-        for (int i = items.length - 1; i >= 0; i--) {
-            int ii = random.nextInt(i + 1);
-            int temp = items[i];
-            items[i] = items[ii];
-            items[ii] = temp;
-        }
+        random.shuffle(items);
     }
 
     /**
@@ -835,12 +772,7 @@ public class ArrayTools {
      * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(long[] items, EnhancedRandom random) {
-        for (int i = items.length - 1; i >= 0; i--) {
-            int ii = random.nextInt(i + 1);
-            long temp = items[i];
-            items[i] = items[ii];
-            items[ii] = temp;
-        }
+        random.shuffle(items);
     }
 
     /**
@@ -849,12 +781,7 @@ public class ArrayTools {
      * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(char[] items, EnhancedRandom random) {
-        for (int i = items.length - 1; i >= 0; i--) {
-            int ii = random.nextInt(i + 1);
-            char temp = items[i];
-            items[i] = items[ii];
-            items[ii] = temp;
-        }
+        random.shuffle(items);
     }
 
     /**
@@ -863,12 +790,7 @@ public class ArrayTools {
      * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static void shuffle(float[] items, EnhancedRandom random) {
-        for (int i = items.length - 1; i >= 0; i--) {
-            int ii = random.nextInt(i + 1);
-            float temp = items[i];
-            items[i] = items[ii];
-            items[ii] = temp;
-        }
+        random.shuffle(items);
     }
 
     /**
@@ -877,12 +799,7 @@ public class ArrayTools {
      * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
      */
     public static <T> void shuffle(T[] items, EnhancedRandom random) {
-        for (int i = items.length - 1; i >= 0; i--) {
-            int ii = random.nextInt(i + 1);
-            T temp = items[i];
-            items[i] = items[ii];
-            items[ii] = temp;
-        }
+        random.shuffle(items);
     }
 
     /**
