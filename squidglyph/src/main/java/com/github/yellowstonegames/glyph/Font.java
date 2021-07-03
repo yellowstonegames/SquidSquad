@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.TrigTools;
 import regexodus.Category;
 
 import java.util.Arrays;
@@ -1090,6 +1091,7 @@ public class Font implements Disposable {
      * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongList
      * @param x the x position in world space to start drawing the glyph at (lower left corner)
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
+     * @return the distance in world units the drawn glyph uses up for width, as in a line of text
      */
     public float drawGlyph(Batch batch, long glyph, float x, float y) {
         GlyphRegion tr = mapping.get((char) glyph);
@@ -1195,6 +1197,220 @@ public class Font implements Disposable {
             vertices[15] += 1f;
             batch.draw(tex, vertices, 0, 20);
 
+        }
+        if ((glyph & UNDERLINE) != 0L) {
+            final GlyphRegion under = mapping.get('_');
+            if (under != null) {
+                final float underU = under.getU() + (under.xAdvance - under.offsetX) * iw * 0.25f,
+                        underV = under.getV(),
+                        underU2 = under.getU() + (under.xAdvance - under.offsetX) * iw * 0.75f,
+                        underV2 = under.getV2(),
+                        hu = under.getRegionHeight() * scaleY, yu = y + cellHeight - hu - under.offsetY * scaleY;
+                vertices[0] = x - 1f;
+                vertices[1] = yu + hu;
+                vertices[2] = color;
+                vertices[3] = underU;
+                vertices[4] = underV;
+
+                vertices[5] = x - 1f;
+                vertices[6] = yu;
+                vertices[7] = color;
+                vertices[8] = underU;
+                vertices[9] = underV2;
+
+                vertices[10] = x + changedW + 1f;
+                vertices[11] = yu;
+                vertices[12] = color;
+                vertices[13] = underU2;
+                vertices[14] = underV2;
+
+                vertices[15] = x + changedW + 1f;
+                vertices[16] = yu + hu;
+                vertices[17] = color;
+                vertices[18] = underU2;
+                vertices[19] = underV;
+                batch.draw(under.getTexture(), vertices, 0, 20);
+            }
+        }
+        if ((glyph & STRIKETHROUGH) != 0L) {
+            final GlyphRegion dash = mapping.get('-');
+            if (dash != null) {
+                final float dashU = dash.getU() + (dash.xAdvance - dash.offsetX) * iw * 0.625f,
+                        dashV = dash.getV(),
+                        dashU2 = dashU + iw,
+                        dashV2 = dash.getV2(),
+                        hd = dash.getRegionHeight() * scaleY, yd = y + cellHeight - hd - dash.offsetY * scaleY;
+                x0 = x - (dash.offsetX);
+                vertices[0] = x0 - 1f;
+                vertices[1] = yd + hd;
+                vertices[2] = color;
+                vertices[3] = dashU;
+                vertices[4] = dashV;
+
+                vertices[5] = x0 - 1f;
+                vertices[6] = yd;
+                vertices[7] = color;
+                vertices[8] = dashU;
+                vertices[9] = dashV2;
+
+                vertices[10] = x0 + changedW + 1f;
+                vertices[11] = yd;
+                vertices[12] = color;
+                vertices[13] = dashU2;
+                vertices[14] = dashV2;
+
+                vertices[15] = x0 + changedW + 1f;
+                vertices[16] = yd + hd;
+                vertices[17] = color;
+                vertices[18] = dashU2;
+                vertices[19] = dashV;
+                batch.draw(dash.getTexture(), vertices, 0, 20);
+            }
+        }
+        return changedW;
+    }
+
+    /**
+     * Draws the specified glyph with a Batch at the given x, y position. The glyph contains multiple types of data all
+     * packed into one {@code long}: the bottom 16 bits store a {@code char}, the roughly 16 bits above that store
+     * formatting (bold, underline, superscript, etc.), and the remaining upper 32 bits store color as RGBA.
+     * @param batch typically a SpriteBatch
+     * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongList
+     * @param x the x position in world space to start drawing the glyph at (lower left corner)
+     * @param y the y position in world space to start drawing the glyph at (lower left corner)
+     * @param rotation what angle to rotate the glyph, measured in turns (from 0 to 1 is a full rotation)
+     */
+    public float drawGlyph(Batch batch, long glyph, float x, float y, float rotation) {
+        if((rotation -= Math.floor(rotation)) == 0f){
+            return drawGlyph(batch, glyph, x, y);
+        }
+        final float sin = TrigTools.sin_(rotation);
+        final float cos = TrigTools.cos_(rotation);
+
+        GlyphRegion tr = mapping.get((char) glyph);
+        if (tr == null) return 0f;
+        Texture tex = tr.getTexture();
+        float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
+        float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
+        float color = BitConversion.reversedIntBitsToFloat(((int) (glyph >>> 32) & -256) | (int)(batch.getColor().a * 255.999f));
+        final float iw = 1f / tex.getWidth();
+        float u, v, u2, v2;
+        u = tr.getU();
+        v = tr.getV();
+        u2 = tr.getU2();
+        v2 = tr.getV2();
+        float w = tr.getRegionWidth() * scaleX, changedW = tr.xAdvance * scaleX, h = tr.getRegionHeight() * scaleY;
+        if (isMono) {
+            changedW += tr.offsetX * scaleX;
+        } else {
+            x += tr.offsetX * scaleX;
+        }
+        float yt = y + cellHeight - h - tr.offsetY * scaleY;
+        if ((glyph & OBLIQUE) != 0L) {
+            x0 += h * 0.2f;
+            x1 -= h * 0.2f;
+            x2 -= h * 0.2f;
+            x3 += h * 0.2f;
+        }
+        final long script = (glyph & SUPERSCRIPT);
+        if (script == SUPERSCRIPT) {
+            w *= 0.5f;
+            h *= 0.5f;
+            y1 += cellHeight * 0.375f;
+            y2 += cellHeight * 0.375f;
+            y0 += cellHeight * 0.375f;
+            y3 += cellHeight * 0.375f;
+            if(!isMono)
+                changedW *= 0.5f;
+        }
+        else if (script == SUBSCRIPT) {
+            w *= 0.5f;
+            h *= 0.5f;
+            y1 -= cellHeight * 0.125f;
+            y2 -= cellHeight * 0.125f;
+            y0 -= cellHeight * 0.125f;
+            y3 -= cellHeight * 0.125f;
+            if(!isMono)
+                changedW *= 0.5f;
+        }
+        else if(script == MIDSCRIPT) {
+            w *= 0.5f;
+            h *= 0.5f;
+            y0 += cellHeight * 0.125f;
+            y1 += cellHeight * 0.125f;
+            y2 += cellHeight * 0.125f;
+            y3 += cellHeight * 0.125f;
+            if(!isMono)
+                changedW *= 0.5f;
+        }
+
+        float p0x;
+        float p0y;
+        float p1x;
+        float p1y;
+        float p2x;
+        float p2y;
+        float p3x;
+        float p3y;
+
+
+
+
+        vertices[2] = color;
+        vertices[3] = u;
+        vertices[4] = v;
+
+        vertices[7] = color;
+        vertices[8] = u;
+        vertices[9] = v2;
+
+        vertices[12] = color;
+        vertices[13] = u2;
+        vertices[14] = v2;
+
+        vertices[17] = color;
+        vertices[18] = u2;
+        vertices[19] = v;
+
+        p0x = x + x0;
+        p0y = yt + y0 + h;
+        p1x = x + x1;
+        p1y = yt + y1;
+        p2x = x + x2 + w;
+        p2y = yt + y2;
+
+//        p3x = x + x3 + w;
+//        p3y = yt + y3 + h;
+
+        vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+        vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+
+        batch.draw(tex, vertices, 0, 20);
+        if ((glyph & BOLD) != 0L) {
+            p0x += 1f;
+            p1x += 1f;
+            p2x += 1f;
+            vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+            vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+            batch.draw(tex, vertices, 0, 20);
+            p0x -= 2f;
+            p1x -= 2f;
+            p2x -= 2f;
+            vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+            vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+            batch.draw(tex, vertices, 0, 20);
+            p0x += 0.5f;
+            p1x += 0.5f;
+            p2x += 0.5f;
+            vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+            vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+            batch.draw(tex, vertices, 0, 20);
+            p0x += 1f;
+            p1x += 1f;
+            p2x += 1f;
+            vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+            vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+            batch.draw(tex, vertices, 0, 20);
         }
         if ((glyph & UNDERLINE) != 0L) {
             final GlyphRegion under = mapping.get('_');
