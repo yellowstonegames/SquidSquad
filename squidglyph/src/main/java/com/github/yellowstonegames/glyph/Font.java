@@ -1271,14 +1271,17 @@ public class Font implements Disposable {
     }
 
     /**
-     * Draws the specified glyph with a Batch at the given x, y position. The glyph contains multiple types of data all
-     * packed into one {@code long}: the bottom 16 bits store a {@code char}, the roughly 16 bits above that store
-     * formatting (bold, underline, superscript, etc.), and the remaining upper 32 bits store color as RGBA.
+     * Draws the specified glyph with a Batch at the given x, y position and with the specified counterclockwise
+     * rotation, measured in turns. The glyph contains multiple types of data all packed into one {@code long}: the
+     * bottom 16 bits store a {@code char}, the roughly 16 bits above that store formatting (bold, underline,
+     * superscript, etc.), and the remaining upper 32 bits store color as RGBA. Rotation is not stored in the long
+     * glyph; it may change often or as part of an animation.
      * @param batch typically a SpriteBatch
      * @param glyph a long storing a char, format, and color; typically part of a longer formatted text as a LongList
      * @param x the x position in world space to start drawing the glyph at (lower left corner)
      * @param y the y position in world space to start drawing the glyph at (lower left corner)
      * @param rotation what angle to rotate the glyph, measured in turns (from 0 to 1 is a full rotation)
+     * @return the distance in world units the drawn glyph uses up for width, as in a line of text along the given rotation
      */
     public float drawGlyph(Batch batch, long glyph, float x, float y, float rotation) {
         if((rotation -= Math.floor(rotation)) == 0f){
@@ -1290,8 +1293,12 @@ public class Font implements Disposable {
         GlyphRegion tr = mapping.get((char) glyph);
         if (tr == null) return 0f;
         Texture tex = tr.getTexture();
-        float x0 = 0f, x1 = 0f, x2 = 0f, x3 = 0f;
-        float y0 = 0f, y1 = 0f, y2 = 0f, y3 = 0f;
+        float x0 = 0f;
+        float x1 = 0f;
+        float x2 = 0f;
+        float y0 = 0f;
+        float y1 = 0f;
+        float y2 = 0f;
         float color = BitConversion.reversedIntBitsToFloat(((int) (glyph >>> 32) & -256) | (int)(batch.getColor().a * 255.999f));
         final float iw = 1f / tex.getWidth();
         float u, v, u2, v2;
@@ -1310,7 +1317,6 @@ public class Font implements Disposable {
             x0 += h * 0.2f;
             x1 -= h * 0.2f;
             x2 -= h * 0.2f;
-            x3 += h * 0.2f;
         }
         final long script = (glyph & SUPERSCRIPT);
         if (script == SUPERSCRIPT) {
@@ -1319,7 +1325,6 @@ public class Font implements Disposable {
             y1 += cellHeight * 0.375f;
             y2 += cellHeight * 0.375f;
             y0 += cellHeight * 0.375f;
-            y3 += cellHeight * 0.375f;
             if(!isMono)
                 changedW *= 0.5f;
         }
@@ -1329,7 +1334,6 @@ public class Font implements Disposable {
             y1 -= cellHeight * 0.125f;
             y2 -= cellHeight * 0.125f;
             y0 -= cellHeight * 0.125f;
-            y3 -= cellHeight * 0.125f;
             if(!isMono)
                 changedW *= 0.5f;
         }
@@ -1339,7 +1343,6 @@ public class Font implements Disposable {
             y0 += cellHeight * 0.125f;
             y1 += cellHeight * 0.125f;
             y2 += cellHeight * 0.125f;
-            y3 += cellHeight * 0.125f;
             if(!isMono)
                 changedW *= 0.5f;
         }
@@ -1350,11 +1353,6 @@ public class Font implements Disposable {
         float p1y;
         float p2x;
         float p2y;
-        float p3x;
-        float p3y;
-
-
-
 
         vertices[2] = color;
         vertices[3] = u;
@@ -1378,9 +1376,6 @@ public class Font implements Disposable {
         p1y = yt + y1;
         p2x = x + x2 + w;
         p2y = yt + y2;
-
-//        p3x = x + x3 + w;
-//        p3y = yt + y3 + h;
 
         vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
         vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
@@ -1420,29 +1415,31 @@ public class Font implements Disposable {
                         underU2 = under.getU() + (under.xAdvance - under.offsetX) * iw * 0.75f,
                         underV2 = under.getV2(),
                         hu = under.getRegionHeight() * scaleY, yu = y + cellHeight - hu - under.offsetY * scaleY;
-                vertices[0] = x - 1f;
-                vertices[1] = yu + hu;
                 vertices[2] = color;
                 vertices[3] = underU;
                 vertices[4] = underV;
 
-                vertices[5] = x - 1f;
-                vertices[6] = yu;
                 vertices[7] = color;
                 vertices[8] = underU;
                 vertices[9] = underV2;
 
-                vertices[10] = x + changedW + 1f;
-                vertices[11] = yu;
                 vertices[12] = color;
                 vertices[13] = underU2;
                 vertices[14] = underV2;
 
-                vertices[15] = x + changedW + 1f;
-                vertices[16] = yu + hu;
                 vertices[17] = color;
                 vertices[18] = underU2;
                 vertices[19] = underV;
+
+                p0x = x - 1f;
+                p0y = yu + hu;
+                p1x = x - 1f;
+                p1y = yu;
+                p2x = x + changedW + 1f;
+                p2y = yu;
+                vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+                vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+
                 batch.draw(under.getTexture(), vertices, 0, 20);
             }
         }
@@ -1455,29 +1452,31 @@ public class Font implements Disposable {
                         dashV2 = dash.getV2(),
                         hd = dash.getRegionHeight() * scaleY, yd = y + cellHeight - hd - dash.offsetY * scaleY;
                 x0 = x - (dash.offsetX);
-                vertices[0] = x0 - 1f;
-                vertices[1] = yd + hd;
                 vertices[2] = color;
                 vertices[3] = dashU;
                 vertices[4] = dashV;
 
-                vertices[5] = x0 - 1f;
-                vertices[6] = yd;
                 vertices[7] = color;
                 vertices[8] = dashU;
                 vertices[9] = dashV2;
 
-                vertices[10] = x0 + changedW + 1f;
-                vertices[11] = yd;
                 vertices[12] = color;
                 vertices[13] = dashU2;
                 vertices[14] = dashV2;
 
-                vertices[15] = x0 + changedW + 1f;
-                vertices[16] = yd + hd;
                 vertices[17] = color;
                 vertices[18] = dashU2;
                 vertices[19] = dashV;
+
+                p0x = x0 - 1f;
+                p0y = yd + hd;
+                p1x = x0 - 1f;
+                p1y = yd;
+                p2x = x0 + changedW + 1f;
+                p2y = yd;
+                vertices[15] = (vertices[0]  = cos * p0x - sin * p0y) - (vertices[5]  = cos * p1x - sin * p1y) + (vertices[10] = cos * p2x - sin * p2y);
+                vertices[16] = (vertices[1]  = sin * p0x + cos * p0y) - (vertices[6]  = sin * p1x + cos * p1y) + (vertices[11] = sin * p2x + cos * p2y);
+
                 batch.draw(dash.getTexture(), vertices, 0, 20);
             }
         }
