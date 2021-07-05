@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.core.Dice;
+import com.github.yellowstonegames.core.WeightedTable;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -57,6 +58,28 @@ public final class JsonCore {
                 Dice.Rule data = new Dice.Rule(jsonData.child.name);
                 data.instructions = json.readValue(null, jsonData.child);
                 return data;
+            }
+        });
+    }
+
+    /**
+     * Registers WeightedTable with the given Json object, so WeightedTable can be written to and read from JSON.
+     * This is a simple wrapper around WeightedTable's built-in {@link WeightedTable#serializeToString()} and
+     * {@link WeightedTable#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerWeightedTable(@Nonnull Json json) {
+        json.setSerializer(WeightedTable.class, new Json.Serializer<WeightedTable>() {
+            @Override
+            public void write(Json json, WeightedTable object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public WeightedTable read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return WeightedTable.deserializeFromString(jsonData.asString());
             }
         });
     }
