@@ -3,8 +3,11 @@ package com.github.yellowstonegames.store.core;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.Dice;
+import com.github.yellowstonegames.core.GapShuffler;
 import com.github.yellowstonegames.core.WeightedTable;
 
 import javax.annotation.Nonnull;
@@ -58,6 +61,37 @@ public final class JsonCore {
                 Dice.Rule data = new Dice.Rule(jsonData.child.name);
                 data.instructions = json.readValue(null, jsonData.child);
                 return data;
+            }
+        });
+    }
+
+    /**
+     * Registers GapShuffler with the given Json object, so GapShuffler can be written to and read from JSON.
+     * This registers serialization/deserialization for ObjectList as well, since GapShuffler requires it.
+     * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
+     * use {@link JsonSupport#registerAtomicLong(Json)} (if you don't know what type the random number generator uses),
+     * or just call {@link #registerAll(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerGapShuffler(@Nonnull Json json) {
+        JsonSupport.registerObjectList(json);
+        json.setSerializer(GapShuffler.class, new Json.Serializer<GapShuffler>() {
+            @Override
+            public void write(Json json, GapShuffler object, Class knownType) {
+                json.writeObjectStart();
+                json.writeValue("rng", object.random, null);
+                ObjectList items = new ObjectList();
+                object.fillInto(items);
+                json.writeValue("items", items, null);
+                json.writeValue("idx", object.getIndex());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public GapShuffler read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new GapShuffler<>(json.readValue("items", null, jsonData.child), json.readValue("rng", null, jsonData.child), jsonData.getChild("idx").asInt(), true);
             }
         });
     }

@@ -103,6 +103,40 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a {@link TricycleRandom},
+     * {@link LaserRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+     * to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+     * how this works. The random parameter will be copied if {@code shareRNG} is true, otherwise the reference will be
+     * shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+     * gap between identical elements if the elements are unique). This constructor takes an {@code index} to allow
+     * duplicating an existing GapShuffler given the parts that are externally available (using {@link #random},
+     * {@link #fillInto(Collection)}, and {@link #getIndex()}). To actually complete a (shallow) copy, {@code shareRNG}
+     * must be false; to do a deep copy, you need to deep-copy {@code items}.
+     * @param items a Collection of T that will not be modified
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
+     * @param index an index in the iteration, as obtained by {@link #getIndex()}
+     * @param shareRNG if false, {@code random} will be copied and no reference will be kept; if true, {@code random} will be shared with the outside code
+     */
+    public GapShuffler(Collection<T> items, EnhancedRandom random, int index, boolean shareRNG)
+    {
+        this.random = shareRNG ? random : random.copy();
+        elements = new ObjectList<>(items);
+        this.random.shuffle(elements);
+        this.index = (index & 0x7FFFFFFF) % elements.size();
+    }
+
+    /**
+     * Copy constructor; duplicates {@code other}, you know the deal. This does not share its {@link #random} field with
+     * {@code other}.
+     * @param other another GapShuffler; its item type will also be used here
+     */
+    public GapShuffler(GapShuffler<T> other){
+        this(other.elements, other.random, other.index, false);
+    }
+
+    /**
      * Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
@@ -260,5 +294,15 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     public void fillInto(Collection<T> coll) {
         coll.addAll(elements);
     }
-    
+
+    /**
+     * Allows getting (but not setting) the internal index this uses as it iterates through shuffled versions of the
+     * same collection indefinitely. This is mostly meant for serialization code to be able to replicate the state of
+     * this GapShuffler. This is mostly useful with {@link #fillInto(Collection)} and some kind of insertion-ordered
+     * Collection (like {@link ObjectList}, which lets the index match an item in that Collection.
+     * @return an index used internally to determine how far through a particular shuffle the iteration has gotten
+     */
+    public int getIndex() {
+        return index;
+    }
 }
