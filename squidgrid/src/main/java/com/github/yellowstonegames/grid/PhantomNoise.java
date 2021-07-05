@@ -86,7 +86,7 @@ public class PhantomNoise {
         }
         floors = new int[dim+1];
         hashFloors = new int[dim+1];
-        hasher = new Hasher(seed);
+        hasher = new Hasher(Hasher.randomize(seed));
         inverse = 1f / (dim + 1f);
 //        printDebugInfo();
     }

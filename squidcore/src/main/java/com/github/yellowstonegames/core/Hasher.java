@@ -39,14 +39,26 @@ import static com.github.tommyettinger.ds.support.BitConversion.floatToRawIntBit
  * @author Tommy Ettinger
  */
 public class Hasher {
-    private final long seed;
+    /**
+     * The seed used by all non-static hash() and hash64() methods in this class (the methods that don't take a seed).
+     * You can create many different Hasher objects, all with different seeds, and get very different hashes as a result
+     * of any calls on them. Because making this field hidden in some way doesn't meaningfully contribute to security,
+     * and only makes it harder to use this class, {@code seed} is public (and final, so it can't be accidentally
+     * modified, but still can if needed via reflection).
+     */
+    public final long seed;
 
     public Hasher() {
         this.seed = 0xC4CEB9FE1A85EC53L;
     }
 
+    /**
+     * Initializes this Hasher with the given seed, verbatim; it is recommended to use {@link #randomize(long)} on the
+     * seed if you don't know if it is adequately-random.
+     * @param seed a long that will be used to change the output of hash() and hash64() methods on the new Hasher
+     */
     public Hasher(long seed) {
-        this.seed = randomize(seed);
+        this.seed = seed;
     }
 
     /**
@@ -240,7 +252,7 @@ public class Hasher {
     }
 
     public Hasher(final CharSequence seed) {
-        this(hash64(1L, seed));
+        this(randomize(hash64(1L, seed)));
     }
 
     /**

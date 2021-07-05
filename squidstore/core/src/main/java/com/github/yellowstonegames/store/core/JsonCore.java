@@ -8,13 +8,10 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.Dice;
 import com.github.yellowstonegames.core.GapShuffler;
+import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.WeightedTable;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.PrimitiveIterator;
 
 @SuppressWarnings("rawtypes")
 public final class JsonCore {
@@ -33,6 +30,9 @@ public final class JsonCore {
         JsonSupport.registerFourWheelRandom(json);
 
         registerDiceRule(json);
+        registerGapShuffler(json);
+        registerHasher(json);
+        registerWeightedTable(json);
     }
 
     /**
@@ -114,6 +114,27 @@ public final class JsonCore {
             public WeightedTable read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return WeightedTable.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers Hasher with the given Json object, so Hasher can be written to and read from JSON.
+     * This just stores the seed (which is a single {@code long}) as a base-36 String.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerHasher(@Nonnull Json json) {
+        json.setSerializer(Hasher.class, new Json.Serializer<Hasher>() {
+            @Override
+            public void write(Json json, Hasher object, Class knownType) {
+                json.writeValue(Long.toString(object.seed, 36));
+            }
+
+            @Override
+            public Hasher read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Hasher(Long.valueOf(jsonData.asString(), 36));
             }
         });
     }
