@@ -70,6 +70,43 @@ public final class JsonCore {
     }
 
     /**
+     * Registers int[][] with the given Json object, so int[][] can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerInt2D(@Nonnull Json json) {
+        json.setSerializer(int[][].class, new Json.Serializer<int[][]>() {
+            @Override
+            public void write(Json json, int[][] object, Class knownType) {
+                if(object == null)
+                {
+                    json.writeValue(null);
+                    return;
+                }
+                int sz = object.length;
+                json.writeArrayStart();
+                for (int i = 0; i < sz; i++) {
+                    json.writeValue(StringTools.join("&", object[i]));
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public int[][] read(Json json, JsonValue jsonData, Class type) {
+                if(jsonData == null || jsonData.isNull())
+                    return null;
+                int sz = jsonData.size;
+                int[][] data = new int[sz][];
+                JsonValue c = jsonData.child();
+                for (int i = 0; i < sz && c != null; i++, c = c.next()) {
+                    data[i] = DigitTools.splitIntFromDec(c.asString(), "&");
+                }
+                return data;
+            }
+        });
+    }
+
+    /**
      * Registers Dice.Rule with the given Json object, so Dice.Rule can be written to and read from JSON.
      * This registers serialization/deserialization for IntList as well, since Dice.Rule requires it.
      * <br>
