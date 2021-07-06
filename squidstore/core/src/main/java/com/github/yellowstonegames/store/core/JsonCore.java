@@ -6,10 +6,7 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.TricycleRandom;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.GapShuffler;
-import com.github.yellowstonegames.core.Hasher;
-import com.github.yellowstonegames.core.WeightedTable;
+import com.github.yellowstonegames.core.*;
 
 import javax.annotation.Nonnull;
 
@@ -33,6 +30,43 @@ public final class JsonCore {
         registerGapShuffler(json);
         registerHasher(json);
         registerWeightedTable(json);
+    }
+
+    /**
+     * Registers char[][] with the given Json object, so char[][] can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerChar2D(@Nonnull Json json) {
+        json.setSerializer(char[][].class, new Json.Serializer<char[][]>() {
+            @Override
+            public void write(Json json, char[][] object, Class knownType) {
+                if(object == null)
+                {
+                    json.writeValue(null);
+                    return;
+                }
+                int sz = object.length;
+                json.writeArrayStart();
+                for (int i = 0; i < sz; i++) {
+                    json.writeValue(String.valueOf(object[i]));
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public char[][] read(Json json, JsonValue jsonData, Class type) {
+                if(jsonData == null || jsonData.isNull())
+                    return null;
+                int sz = jsonData.size;
+                char[][] data = new char[sz][];
+                JsonValue c = jsonData.child();
+                for (int i = 0; i < sz && c != null; i++, c = c.next()) {
+                    data[i] = c.asString().toCharArray();
+                }
+                return data;
+            }
+        });
     }
 
     /**
