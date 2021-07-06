@@ -26,6 +26,9 @@ public final class JsonCore {
         JsonSupport.registerTricycleRandom(json);
         JsonSupport.registerFourWheelRandom(json);
 
+        registerChar2D(json);
+        registerInt2D(json);
+
         registerDiceRule(json);
         registerGapShuffler(json);
         registerHasher(json);
