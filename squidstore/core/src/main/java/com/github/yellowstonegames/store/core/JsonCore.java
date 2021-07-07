@@ -94,6 +94,33 @@ public final class JsonCore {
     }
 
     /**
+     * Registers LaserRandom with the given Json object, so LaserRandom can be written to and read from JSON.
+     * This is (currently) different from the registration for this class in jdkgdxds-interop, because this needs to be
+     * in a format that can be read into an EnhancedRandom value by using a type tag stored in the serialized JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLaserRandom(@Nonnull Json json) {
+        json.addClassTag("#LasR", LaserRandom.class);
+        json.setSerializer(LaserRandom.class, new Json.Serializer<LaserRandom>() {
+            @Override
+            public void write(Json json, LaserRandom object, Class knownType) {
+                json.writeValue("#LasR`" + Long.toString(object.getStateA(), 36) + "~" + Long.toString(object.getStateB() >>> 1, 36) + "`");
+            }
+
+            @Override
+            public LaserRandom read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 10) return null;
+                final int tilde = s.indexOf('~', 6);
+                final long stateA = Long.parseLong(s.substring(6, tilde), 36);
+                final long stateB = Long.parseLong(s.substring(tilde + 1, s.indexOf('`', tilde)), 36) << 1;
+                return new LaserRandom(stateA, stateB);
+            }
+        });
+    }
+
+    /**
      * Registers GapShuffler with the given Json object, so GapShuffler can be written to and read from JSON.
      * This registers serialization/deserialization for ObjectList as well, since GapShuffler requires it.
      * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
@@ -106,8 +133,7 @@ public final class JsonCore {
         JsonSupport.registerAtomicLong(json);
         JsonSupport.registerDistinctRandom(json);
         json.addClassTag("#DisR", DistinctRandom.class);
-        JsonSupport.registerLaserRandom(json);
-        json.addClassTag("#LasR", LaserRandom.class);
+        registerLaserRandom(json);
         registerTricycleRandom(json);
         registerFourWheelRandom(json);
         json.setSerializer(EnhancedRandom.class, new Json.Serializer<EnhancedRandom>() {
