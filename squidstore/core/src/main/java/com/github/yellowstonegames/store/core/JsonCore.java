@@ -121,6 +121,30 @@ public final class JsonCore {
     }
 
     /**
+     * Registers DistinctRandom with the given Json object, so DistinctRandom can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDistinctRandom(@Nonnull Json json) {
+        json.addClassTag("#DisR", DistinctRandom.class);
+        json.setSerializer(DistinctRandom.class, new Json.Serializer<DistinctRandom>() {
+            @Override
+            public void write(Json json, DistinctRandom object, Class knownType) {
+                json.writeValue("#DisR`" + Long.toString(object.getSelectedState(0), 36) + "`");
+            }
+
+            @Override
+            public DistinctRandom read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new DistinctRandom(state);
+            }
+        });
+    }
+
+    /**
      * Registers GapShuffler with the given Json object, so GapShuffler can be written to and read from JSON.
      * This registers serialization/deserialization for ObjectList as well, since GapShuffler requires it.
      * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
@@ -131,8 +155,7 @@ public final class JsonCore {
      */
     public static void registerEnhancedRandom(@Nonnull Json json) {
         JsonSupport.registerAtomicLong(json);
-        JsonSupport.registerDistinctRandom(json);
-        json.addClassTag("#DisR", DistinctRandom.class);
+        registerDistinctRandom(json);
         registerLaserRandom(json);
         registerTricycleRandom(json);
         registerFourWheelRandom(json);
