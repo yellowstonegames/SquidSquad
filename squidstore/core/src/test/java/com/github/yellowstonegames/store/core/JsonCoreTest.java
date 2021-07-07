@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Dice;
 import com.github.yellowstonegames.core.GapShuffler;
@@ -83,12 +84,23 @@ public class JsonCoreTest {
     public void testGapShuffler() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerGapShuffler(json);
-        FourWheelRandom random = new FourWheelRandom(123L);
-        GapShuffler<String> gs = new GapShuffler<>(new String[]{"foo", "bar", "baz", "quux", "meep", "glin"}, random, false);
-        String data = json.toJson(gs);
-        System.out.println(data);
-        GapShuffler<?> gs2 = json.fromJson(GapShuffler.class, data);
-        Assert.assertEquals(gs, gs2);
-        Assert.assertEquals(gs.next(), gs2.next());
+        {
+            FourWheelRandom random = new FourWheelRandom(123L);
+            GapShuffler<String> gs = new GapShuffler<>(new String[]{"foo", "bar", "baz", "quux", "meep", "glin"}, random, false);
+            String data = json.toJson(gs);
+            System.out.println(data);
+            GapShuffler<?> gs2 = json.fromJson(GapShuffler.class, data);
+            Assert.assertEquals(gs, gs2);
+            Assert.assertEquals(gs.next(), gs2.next());
+        }
+        {
+            TricycleRandom random = new TricycleRandom(123L);
+            GapShuffler<String> gs = new GapShuffler<>(new String[]{"foo", "bar", "baz", "quux", "meep", "glin"}, random, false);
+            String data = json.toJson(gs);
+            System.out.println(data);
+            GapShuffler<?> gs2 = json.fromJson(GapShuffler.class, data);
+            Assert.assertEquals(gs, gs2);
+            Assert.assertEquals(gs.next(), gs2.next());
+        }
     }
 }

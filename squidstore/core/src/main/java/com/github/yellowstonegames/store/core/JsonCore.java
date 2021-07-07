@@ -25,21 +25,21 @@ public final class JsonCore {
     public static void registerAll(@Nonnull Json json) {
         JsonSupport.registerDistinctRandom(json);
         JsonSupport.registerLaserRandom(json);
-        JsonSupport.registerTricycleRandom(json);
-        JsonSupport.registerFourWheelRandom(json);
 
         registerChar2D(json);
         registerInt2D(json);
 
+        registerEnhancedRandom(json);
         registerDiceRule(json);
         registerGapShuffler(json);
         registerHasher(json);
         registerWeightedTable(json);
     }
+
     /**
      * Registers FourWheelRandom with the given Json object, so FourWheelRandom can be written to and read from JSON.
      * This is (currently) different from the registration for this class in jdkgdxds-interop, because this needs to be
-     * in a format that can be read into an EnhancedRandom value by using a type stored in the serialized JSON.
+     * in a format that can be read into an EnhancedRandom value by using a type tag stored in the serialized JSON.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -66,6 +66,34 @@ public final class JsonCore {
     }
 
     /**
+     * Registers TricycleRandom with the given Json object, so TricycleRandom can be written to and read from JSON.
+     * This is (currently) different from the registration for this class in jdkgdxds-interop, because this needs to be
+     * in a format that can be read into an EnhancedRandom value by using a type tag stored in the serialized JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerTricycleRandom(@Nonnull Json json) {
+        json.addClassTag("#TriR", TricycleRandom.class);
+        json.setSerializer(TricycleRandom.class, new Json.Serializer<TricycleRandom>() {
+            @Override
+            public void write(Json json, TricycleRandom object, Class knownType) {
+                json.writeValue("#TriR`" + Long.toString(object.getStateA(), 36) + "~" + Long.toString(object.getStateB(), 36) + "~" + Long.toString(object.getStateC(), 36) + "`");
+            }
+
+            @Override
+            public TricycleRandom read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 12) return null;
+                int tilde = s.indexOf('~', 6);
+                final long stateA = Long.parseLong(s.substring(6, tilde), 36);
+                final long stateB = Long.parseLong(s.substring(tilde + 1, tilde = s.indexOf('~', tilde + 1)), 36);
+                final long stateC = Long.parseLong(s.substring(tilde + 1, s.indexOf('`', tilde)), 36);
+                return new TricycleRandom(stateA, stateB, stateC);
+            }
+        });
+    }
+
+    /**
      * Registers GapShuffler with the given Json object, so GapShuffler can be written to and read from JSON.
      * This registers serialization/deserialization for ObjectList as well, since GapShuffler requires it.
      * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
@@ -80,8 +108,7 @@ public final class JsonCore {
         json.addClassTag("#DisR", DistinctRandom.class);
         JsonSupport.registerLaserRandom(json);
         json.addClassTag("#LasR", LaserRandom.class);
-        JsonSupport.registerTricycleRandom(json);
-        json.addClassTag("#TriR", TricycleRandom.class);
+        registerTricycleRandom(json);
         registerFourWheelRandom(json);
         json.setSerializer(EnhancedRandom.class, new Json.Serializer<EnhancedRandom>() {
             @Override
