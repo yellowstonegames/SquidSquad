@@ -1,21 +1,13 @@
 package com.github.yellowstonegames.store.core;
 
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
-import com.github.tommyettinger.ds.support.util.*;
+import com.github.yellowstonegames.core.ArrayTools;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.PrimitiveIterator;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Arrays;
 
 public class JsonCoreTest {
     @Test
@@ -42,6 +34,30 @@ public class JsonCoreTest {
         for (int y = 0; y < map2.length; y++) {
             System.out.println(map2[y]);
         }
+        Assert.assertTrue(Arrays.deepEquals(map, map2));
+        System.out.println();
+    }
+    @Test
+    public void testInt2D() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerInt2D(json);
+        int[][] map = new int[8][];
+        FourWheelRandom random = new FourWheelRandom(123L);
+        for (int i = 0; i < map.length; i++) {
+            map[i] = ArrayTools.range(8);
+            random.shuffle(map[i]);
+        }
+        String data = json.toJson(map);
+        System.out.println(data);
+        int[][] map2 = json.fromJson(int[][].class, data);
+        for (int y = 0; y < map2.length; y++) {
+            for (int x = 0; x < map2[0].length; x++) {
+                System.out.print(map[y][x]);
+                System.out.print(' ');
+            }
+            System.out.println();
+        }
+        Assert.assertTrue(Arrays.deepEquals(map, map2));
         System.out.println();
     }
 }
