@@ -2,9 +2,12 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.*;
 
@@ -150,6 +153,7 @@ public final class JsonCore {
             public void write(Json json, GapShuffler object, Class knownType) {
                 json.writeObjectStart();
                 json.writeValue("rng", object.random, null);
+                json.writeValue("impl", object.random.getClass().getName(), String.class);
                 ObjectList items = new ObjectList();
                 object.fillInto(items);
                 json.writeValue("items", items, null);
@@ -158,9 +162,15 @@ public final class JsonCore {
             }
 
             @Override
-            public GapShuffler read(Json json, JsonValue jsonData, Class type) {
+            public GapShuffler<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new GapShuffler<>(json.readValue("items", null, jsonData.child), json.readValue("rng", null, jsonData.child), jsonData.getChild("idx").asInt(), true);
+                try {
+                    Class<?> impl = ClassReflection.forName(json.readValue("impl", String.class, jsonData));
+                    return new GapShuffler<>(json.readValue("items", ObjectList.class, jsonData), (EnhancedRandom) json.readValue("rng", impl, jsonData), jsonData.get("idx").asInt(), true, false);
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         });
     }

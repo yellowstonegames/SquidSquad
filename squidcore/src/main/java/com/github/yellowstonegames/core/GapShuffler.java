@@ -5,6 +5,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -19,8 +20,8 @@ import java.util.Iterator;
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
 public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
-    public EnhancedRandom random;
-    protected ObjectList<T> elements;
+    public @Nonnull EnhancedRandom random;
+    protected @Nonnull ObjectList<T> elements;
     protected int index;
     protected GapShuffler() {
         random = new TricycleRandom();
@@ -128,12 +129,40 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
+     * Constructor that takes any Collection of T, optionally shuffles it with the given EnhancedRandom (only if
+     * {@code initialShuffle} is true), and can then
+     * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+     * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+     * to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+     * how this works. The random parameter will be copied if {@code shareRNG} is true, otherwise the reference will be
+     * shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+     * gap between identical elements if the elements are unique). This constructor takes an {@code index} to allow
+     * duplicating an existing GapShuffler given the parts that are externally available (using {@link #random},
+     * {@link #fillInto(Collection)}, and {@link #getIndex()}). To actually complete a (shallow) copy, {@code shareRNG}
+     * must be false; to do a deep copy, you need to deep-copy {@code items}. You can use {@code initialShuffle} to
+     * copy items from another GapShuffler; most of the constructors here act like this does when {@code initialShuffle}
+     * is true, but the copy constructor {@link #GapShuffler(GapShuffler)} does not (it uses this method).
+     * @param items a Collection of T that will not be modified
+     * @param random an EnhancedRandom, such as a LaserRandom; will be copied and not used directly
+     * @param index an index in the iteration, as obtained by {@link #getIndex()}
+     * @param shareRNG if false, {@code random} will be copied and no reference will be kept; if true, {@code random} will be shared with the outside code
+     * @param initialShuffle if true, this will shuffle its copy of {@code items}; if false, then items will be kept in the same order
+     */
+    public GapShuffler(Collection<T> items, EnhancedRandom random, int index, boolean shareRNG, boolean initialShuffle) {
+        this.random = shareRNG ? random : random.copy();
+        elements = new ObjectList<>(items);
+        if(initialShuffle)
+            this.random.shuffle(elements);
+        this.index = (index & 0x7FFFFFFF) % elements.size();
+    }
+
+    /**
      * Copy constructor; duplicates {@code other}, you know the deal. This does not share its {@link #random} field with
      * {@code other}.
      * @param other another GapShuffler; its item type will also be used here
      */
     public GapShuffler(GapShuffler<T> other){
-        this(other.elements, other.random, other.index, false);
+        this(other.elements, other.random, other.index, false, false);
     }
 
     /**
@@ -304,5 +333,26 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public String toString() {
+        return "GapShuffler{" +
+                "elements=" + elements +
+                ", random=" + random +
+                ", index=" + index +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GapShuffler<?> that = (GapShuffler<?>) o;
+
+        if (index != that.index) return false;
+        if (!random.equals(that.random)) return false;
+        return elements.equals(that.elements);
     }
 }

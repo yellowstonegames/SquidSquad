@@ -2,9 +2,11 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Dice;
+import com.github.yellowstonegames.core.GapShuffler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -62,7 +64,7 @@ public class JsonCoreTest {
         Assert.assertTrue(Arrays.deepEquals(map, map2));
         System.out.println();
     }
-    
+
     @Test
     public void testDiceRule() {
         Json json = new Json(JsonWriter.OutputType.minimal);
@@ -75,5 +77,19 @@ public class JsonCoreTest {
         Dice dice2 = new Dice(12345L);
         Assert.assertEquals(rule, rule2);
         Assert.assertEquals(dice.runRollRule(rule), dice2.runRollRule(rule2));
+    }
+
+    @Test
+    public void testGapShuffler() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonSupport.registerFourWheelRandom(json);
+        JsonCore.registerGapShuffler(json);
+        FourWheelRandom random = new FourWheelRandom(123L);
+        GapShuffler<String> gs = new GapShuffler<>(new String[]{"foo", "bar", "baz", "quux", "meep", "glin"}, random, false);
+        String data = json.toJson(gs);
+        System.out.println(data);
+        GapShuffler<?> gs2 = json.fromJson(GapShuffler.class, data);
+        Assert.assertEquals(gs, gs2);
+        Assert.assertEquals(gs.next(), gs2.next());
     }
 }
