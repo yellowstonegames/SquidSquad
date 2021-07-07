@@ -111,7 +111,7 @@ public final class JsonCore {
 
     /**
      * Registers Dice.Rule with the given Json object, so Dice.Rule can be written to and read from JSON.
-     * This registers serialization/deserialization for IntList as well, since Dice.Rule requires it.
+     * This stores a Rule succinctly, using the String representation of its rollCode only.
      * <br>
      * Note that Dice itself can be serialized using Json without a serializer, as long as either the EnhancedRandom
      * implementation used with it has been registered, or {@link JsonSupport#registerAtomicLong(Json)} has been called.
@@ -120,21 +120,16 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerDiceRule(@Nonnull Json json) {
-        JsonSupport.registerIntList(json);
         json.setSerializer(Dice.Rule.class, new Json.Serializer<Dice.Rule>() {
             @Override
             public void write(Json json, Dice.Rule object, Class knownType) {
-                json.writeObjectStart();
-                json.writeValue(object.rollCode, object.instructions, IntList.class);
-                json.writeObjectEnd();
+                json.writeValue(object.rollCode);
             }
 
             @Override
             public Dice.Rule read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                Dice.Rule data = new Dice.Rule(jsonData.child.name);
-                data.instructions = json.readValue(null, jsonData.child);
-                return data;
+                return new Dice.Rule(jsonData.asString());
             }
         });
     }
