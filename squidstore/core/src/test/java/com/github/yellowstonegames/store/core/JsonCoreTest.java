@@ -82,7 +82,6 @@ public class JsonCoreTest {
     @Test
     public void testGapShuffler() {
         Json json = new Json(JsonWriter.OutputType.minimal);
-        JsonSupport.registerFourWheelRandom(json);
         JsonCore.registerGapShuffler(json);
         FourWheelRandom random = new FourWheelRandom(123L);
         GapShuffler<String> gs = new GapShuffler<>(new String[]{"foo", "bar", "baz", "quux", "meep", "glin"}, random, false);
