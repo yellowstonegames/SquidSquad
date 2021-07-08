@@ -2,25 +2,61 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 
+import java.util.Arrays;
+
 /**
  * Utility class for converting to and from numbers and their String representations.
  */
 public class DigitTools {
+    /**
+     * Stores various ways to encode digits, such as binary ({@link #BASE2}, or just 0 and 1), decimal ({@link #BASE10},
+     * 0 through 9), hexadecimal ({@link #BASE16}), and the even larger {@link #BASE36}. Of special note are the two
+     * different approaches to encoding base-64 data: {@link #BASE64} is the standard format, and {@link #URI_SAFE} is
+     * the different format used when encoding data for a URI (typically meant for the Internet).
+     */
+    public enum Encoding {
+        BASE2("01"),
+        BASE8("01234567"),
+        BASE10("0123456789"),
+        BASE16("0123456789ABCDEF"),
+        BASE36("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+        BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", false),
+        URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$", false);
+
+        /**
+         * The digits this will encode to, in order from smallest to largest.
+         */
+        public final char[] toEncoded;
+        /**
+         * An array of the digit values corresponding to different ASCII codepoints
+         */
+        public final int[] fromEncoded;
+
+        Encoding(String digits){
+            this(digits, true);
+        }
+        Encoding(String digits, boolean caseInsensitive){
+            toEncoded = digits.toCharArray();
+            fromEncoded = new int[128];
+            if(caseInsensitive)
+                Arrays.fill(fromEncoded, -1);
+            for (int i = 0; i < toEncoded.length; i++) {
+                char to = toEncoded[i];
+                fromEncoded[to] = i;
+                if(caseInsensitive)
+                    fromEncoded[Character.toLowerCase(to)] = i;
+            }
+        }
+    }
     public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
             mask32 = "00000000000000000000000000000000",
             mask16 = "0000000000000000",
             mask8 = "00000000";
-    /**
-     * Constant storing the 16 hexadecimal digits, as char values, in order.
-     */
-    public static final char[] hexDigits = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-    };
 
     private static final StringBuilder hexBuilder = new StringBuilder(16).append(mask16);
     public static String hex(long number) {
         for (int i = 0; i < 16; i++) {
-            hexBuilder.setCharAt(15 - i, hexDigits[(int)(number >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(15 - i, Encoding.BASE16.toEncoded[(int)(number >> (i << 2) & 15)]);
         }
         return hexBuilder.toString();
     }
@@ -29,18 +65,18 @@ public class DigitTools {
         // avoids creating temporary long values, which can be slow on GWT
         int h = BitConversion.doubleToLowIntBits(number);
         for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(15 - i, hexDigits[(h >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(15 - i, Encoding.BASE16.toEncoded[(h >> (i << 2) & 15)]);
         }
         h = BitConversion.doubleToHighIntBits(number);
         for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, hexDigits[(h >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(7 - i, Encoding.BASE16.toEncoded[(h >> (i << 2) & 15)]);
         }
         return hexBuilder.toString();
     }
 
     public static String hex(int number) {
         for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, hexDigits[(number >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(7 - i, Encoding.BASE16.toEncoded[(number >> (i << 2) & 15)]);
         }
         return hexBuilder.substring(0, 8);
     }
@@ -48,34 +84,34 @@ public class DigitTools {
     public static String hex(float number) {
         final int h = BitConversion.floatToRawIntBits(number);
         for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, hexDigits[(h >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(7 - i, Encoding.BASE16.toEncoded[(h >> (i << 2) & 15)]);
         }
         return hexBuilder.substring(0, 8);
     }
 
     public static String hex(short number) {
         for (int i = 0; i < 4; i++) {
-            hexBuilder.setCharAt(3 - i, hexDigits[(number >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(3 - i, Encoding.BASE16.toEncoded[(number >> (i << 2) & 15)]);
         }
         return hexBuilder.substring(0, 4);
     }
 
     public static String hex(char number) {
         for (int i = 0; i < 4; i++) {
-            hexBuilder.setCharAt(3 - i, hexDigits[(number >> (i << 2) & 15)]);
+            hexBuilder.setCharAt(3 - i, Encoding.BASE16.toEncoded[(number >> (i << 2) & 15)]);
         }
         return hexBuilder.substring(0, 4);
     }
 
     public static String hex(byte number) {
-        hexBuilder.setCharAt(0, hexDigits[(number >> 4 & 15)]);
-        hexBuilder.setCharAt(1, hexDigits[(number & 15)]);
+        hexBuilder.setCharAt(0, Encoding.BASE16.toEncoded[(number >> 4 & 15)]);
+        hexBuilder.setCharAt(1, Encoding.BASE16.toEncoded[(number & 15)]);
         return hexBuilder.substring(0, 2);
     }
 
     public static StringBuilder appendHex(StringBuilder builder, long number){
         for (int i = 60; i >= 0; i -= 4) {
-            builder.append(hexDigits[(int)(number >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(int)(number >> i & 15)]);
         }
         return builder;
     }
@@ -83,42 +119,42 @@ public class DigitTools {
         // avoids creating temporary long values, which can be slow on GWT
         int h = BitConversion.doubleToHighIntBits(number);
         for (int i = 28; i >= 0; i -= 4) {
-            builder.append(hexDigits[(h >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(h >> i & 15)]);
         }
         h = BitConversion.doubleToLowIntBits(number);
         for (int i = 28; i >= 0; i -= 4) {
-            builder.append(hexDigits[(h >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(h >> i & 15)]);
         }
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, int number){
         for (int i = 28; i >= 0; i -= 4) {
-            builder.append(hexDigits[(number >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(number >> i & 15)]);
         }
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, float number){
         final int h = BitConversion.floatToRawIntBits(number);
         for (int i = 28; i >= 0; i -= 4) {
-            builder.append(hexDigits[(h >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(h >> i & 15)]);
         }
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, short number){
         for (int i = 12; i >= 0; i -= 4) {
-            builder.append(hexDigits[(number >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(number >> i & 15)]);
         }
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, char number){
         for (int i = 12; i >= 0; i -= 4) {
-            builder.append(hexDigits[(number >> i & 15)]);
+            builder.append(Encoding.BASE16.toEncoded[(number >> i & 15)]);
         }
         return builder;
     }
     public static StringBuilder appendHex(StringBuilder builder, byte number){
-        builder.append(hexDigits[(number >> 4 & 15)]);
-        builder.append(hexDigits[(number & 15)]);
+        builder.append(Encoding.BASE16.toEncoded[(number >> 4 & 15)]);
+        builder.append(Encoding.BASE16.toEncoded[(number & 15)]);
         return builder;
     }
 
@@ -218,15 +254,6 @@ public class DigitTools {
         return mask8.substring(0, 8 - h.length()) + h;
     }
 
-    private static final int[] hexCodes = new int[]
-            {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,-1,-1,-1,-1,-1,-1,
-                    -1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                    -1,10,11,12,13,14,15};
-
     /**
      * Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
      * and returns the long they represent, reading at most 16 characters (17 if there is a sign) and returning the
@@ -284,14 +311,14 @@ public class DigitTools {
             len = 1;
             h = 0;
             lim = 17;
-        } else if (c > 102 || (h = hexCodes[c]) < 0)
+        } else if (c > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
             return 0;
         else {
             len = 1;
         }
         long data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0)
+            if ((c = cs.charAt(i)) > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
                 return data * len;
             data <<= 4;
             data |= h;
@@ -339,7 +366,7 @@ public class DigitTools {
             h = 0;
             lim = 17;
         }
-        else if(c > 102 || (h = hexCodes[c]) < 0)
+        else if(c > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
             return 0;
         else
         {
@@ -347,7 +374,7 @@ public class DigitTools {
         }
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs[i]) > 102 || (h = hexCodes[c]) < 0)
+            if((c = cs[i]) > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
                 return data * len;
             data <<= 4;
             data |= h;
@@ -418,7 +445,7 @@ public class DigitTools {
             h = 0;
             lim = 9;
         }
-        else if(c > 102 || (h = hexCodes[c]) < 0)
+        else if(c > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
             return 0;
         else
         {
@@ -426,7 +453,7 @@ public class DigitTools {
         }
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0)
+            if((c = cs.charAt(i)) > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
                 return data * len;
             data <<= 4;
             data |= h;
@@ -473,7 +500,7 @@ public class DigitTools {
             h = 0;
             lim = 9;
         }
-        else if(c > 102 || (h = hexCodes[c]) < 0)
+        else if(c > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
             return 0;
         else
         {
@@ -481,7 +508,7 @@ public class DigitTools {
         }
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs[i]) > 102 || (h = hexCodes[c]) < 0)
+            if((c = cs[i]) > 102 || (h = Encoding.BASE16.fromEncoded[c]) < 0)
                 return data * len;
             data <<= 4;
             data |= h;
@@ -545,11 +572,11 @@ public class DigitTools {
             lim = 20;
             h = 0;
         }
-        else if(c > 102 || (h = hexCodes[c]) < 0 || h > 9)
+        else if(c > 102 || (h = Encoding.BASE10.fromEncoded[c]) < 0)
             return 0L;
         long data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0 || h > 9)
+            if((c = cs.charAt(i)) > 102 || (h = Encoding.BASE10.fromEncoded[c]) < 0)
                 return data * sign;
             data = data * 10 + h;
         }
@@ -613,7 +640,7 @@ public class DigitTools {
             lim = 11;
             h = 0;
         }
-        else if(c > 102 || (h = hexCodes[c]) < 0 || h > 9)
+        else if(c > 102 || (h = Encoding.BASE10.fromEncoded[c]) < 0)
             return 0;
         else
         {
@@ -621,7 +648,7 @@ public class DigitTools {
         }
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = hexCodes[c]) < 0 || h > 9)
+            if((c = cs.charAt(i)) > 102 || (h = Encoding.BASE10.fromEncoded[c]) < 0)
                 return data * len;
             data = data * 10 + h;
         }
@@ -663,7 +690,7 @@ public class DigitTools {
         char c = cs.charAt(start);
         if(c < '0' || c > '1')
             return 0;
-        long data = hexCodes[c];
+        long data = Encoding.BASE16.fromEncoded[c];
         for (int i = start+1; i < end && i < start+64; i++) {
             if((c = cs.charAt(i)) < '0' || c > '1')
                 return 0;
@@ -708,7 +735,7 @@ public class DigitTools {
         char c = cs.charAt(start);
         if(c < '0' || c > '1')
             return 0;
-        int data = hexCodes[c];
+        int data = Encoding.BASE16.fromEncoded[c];
         for (int i = start+1; i < end && i < start+32; i++) {
             if((c = cs.charAt(i)) < '0' || c > '1')
                 return 0;
@@ -814,6 +841,5 @@ public class DigitTools {
             splat[amount] = intFromDec(source, idx+dl, idx2);
         }
         return splat;
-
     }
 }

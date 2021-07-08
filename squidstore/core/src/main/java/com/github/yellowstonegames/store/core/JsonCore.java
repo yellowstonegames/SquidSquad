@@ -23,13 +23,11 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have serializers registered for all JDKGDXDS types.
      */
     public static void registerAll(@Nonnull Json json) {
-        JsonSupport.registerDistinctRandom(json);
-        JsonSupport.registerLaserRandom(json);
-
         registerChar2D(json);
         registerInt2D(json);
 
         registerEnhancedRandom(json);
+
         registerDiceRule(json);
         registerGapShuffler(json);
         registerHasher(json);
@@ -180,7 +178,10 @@ public final class JsonCore {
                     if(impl == null) impl = ClassReflection.forName(tag);
                     return (EnhancedRandom) json.readValue(impl, jsonData);
                 } catch (ReflectionException | ClassCastException e) {
-                    Gdx.app.error("squidstore", "Error reading an EnhancedRandom value from " + jsonData);
+                    if(Gdx.app != null)
+                        Gdx.app.error("squidstore", "Error reading an EnhancedRandom value from " + jsonData);
+                    else
+                        System.out.println("[squidstore] Error reading an EnhancedRandom value from " + jsonData);
                     return null;
                 }
             }
