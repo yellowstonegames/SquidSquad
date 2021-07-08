@@ -25,6 +25,7 @@ public final class JsonCore {
     public static void registerAll(@Nonnull Json json) {
         registerChar2D(json);
         registerInt2D(json);
+        registerLong2D(json);
 
         registerEnhancedRandom(json);
 

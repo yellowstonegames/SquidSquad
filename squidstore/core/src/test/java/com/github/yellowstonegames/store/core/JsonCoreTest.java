@@ -69,6 +69,32 @@ public class JsonCoreTest {
     }
 
     @Test
+    public void testLong2D() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerLong2D(json);
+        long[][] map = new long[8][8];
+        FourWheelRandom random = new FourWheelRandom(123L);
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < 8; j++) {
+                map[i][j] = random.nextLong();
+            }
+            random.shuffle(map[i]);
+        }
+        String data = json.toJson(map);
+        System.out.println(data);
+        long[][] map2 = json.fromJson(long[][].class, data);
+        for (int y = 0; y < map2.length; y++) {
+            for (int x = 0; x < map2[0].length; x++) {
+                System.out.print(map[y][x]);
+                System.out.print(' ');
+            }
+            System.out.println();
+        }
+        Assert.assertTrue(Arrays.deepEquals(map, map2));
+        System.out.println();
+    }
+
+    @Test
     public void testDiceRule() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerDiceRule(json);
