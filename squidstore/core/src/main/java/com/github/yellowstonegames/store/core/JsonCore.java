@@ -262,6 +262,44 @@ public final class JsonCore {
         });
     }
 
+
+    /**
+     * Registers long[][] with the given Json object, so long[][] can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLong2D(@Nonnull Json json) {
+        json.setSerializer(long[][].class, new Json.Serializer<long[][]>() {
+            @Override
+            public void write(Json json, long[][] object, Class knownType) {
+                if(object == null)
+                {
+                    json.writeValue(null);
+                    return;
+                }
+                int sz = object.length;
+                json.writeArrayStart();
+                for (int i = 0; i < sz; i++) {
+                    json.writeValue(StringTools.join("&", object[i]));
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public long[][] read(Json json, JsonValue jsonData, Class type) {
+                if(jsonData == null || jsonData.isNull())
+                    return null;
+                int sz = jsonData.size;
+                long[][] data = new long[sz][];
+                JsonValue c = jsonData.child();
+                for (int i = 0; i < sz && c != null; i++, c = c.next()) {
+                    data[i] = DigitTools.splitLongFromDec(c.asString(), "&");
+                }
+                return data;
+            }
+        });
+    }
+
     /**
      * Registers Dice.Rule with the given Json object, so Dice.Rule can be written to and read from JSON.
      * This stores a Rule succinctly, using the String representation of its rollCode only.
