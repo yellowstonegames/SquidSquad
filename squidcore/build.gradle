@@ -1,5 +1,5 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'squidcore'
+ext.projectName = 'SquidCore'
 eclipse.project.name = ext.projectName
 
 idea.module.excludeDirs += [file("src/main/java/emu/")]

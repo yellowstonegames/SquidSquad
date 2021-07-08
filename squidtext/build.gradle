@@ -1,5 +1,5 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'squidtext'
+ext.projectName = 'SquidText'
 eclipse.project.name = ext.projectName
 
 dependencies {

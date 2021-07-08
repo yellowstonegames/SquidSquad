@@ -1,5 +1,5 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'squidgrid'
+ext.projectName = 'SquidGrid'
 eclipse.project.name = ext.projectName
 
 compileJava.exclude("emu")

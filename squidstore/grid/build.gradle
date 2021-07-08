@@ -1,16 +1,15 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'SquidGlyph'
+ext.projectName = 'SquidStoreGrid'
 eclipse.project.name = ext.projectName
-sourceSets.test.resources.srcDirs += [ file('../assets').path ]
+sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
 
 dependencies {
     api project(':squidcore')
+    api project(':squidstore:core')
     api project(':squidgrid')
-    api project(':squidsmooth')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"
 
-    testImplementation project(':squidplace')
-    testImplementation project(':squidtext')
     testImplementation "junit:junit:4.13.1"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

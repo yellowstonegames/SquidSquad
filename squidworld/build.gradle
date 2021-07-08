@@ -1,5 +1,5 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'squidworld'
+ext.projectName = 'SquidWorld'
 eclipse.project.name = ext.projectName
 
 sourceSets.test.resources.srcDirs += [ file('../assets').path ]
