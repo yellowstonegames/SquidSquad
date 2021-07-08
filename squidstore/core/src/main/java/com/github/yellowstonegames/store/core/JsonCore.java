@@ -263,6 +263,42 @@ public final class JsonCore {
         });
     }
 
+    /**
+     * Registers float[][] with the given Json object, so float[][] can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerFloat2D(@Nonnull Json json) {
+        json.setSerializer(float[][].class, new Json.Serializer<float[][]>() {
+            @Override
+            public void write(Json json, float[][] object, Class knownType) {
+                if(object == null)
+                {
+                    json.writeValue(null);
+                    return;
+                }
+                int sz = object.length;
+                json.writeArrayStart();
+                for (int i = 0; i < sz; i++) {
+                    json.writeValue(DigitTools.joinFloatsBits("&", object[i]));
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public float[][] read(Json json, JsonValue jsonData, Class type) {
+                if(jsonData == null || jsonData.isNull())
+                    return null;
+                int sz = jsonData.size;
+                float[][] data = new float[sz][];
+                JsonValue c = jsonData.child();
+                for (int i = 0; i < sz && c != null; i++, c = c.next()) {
+                    data[i] = DigitTools.splitFloatFromBits(c.asString(), "&");
+                }
+                return data;
+            }
+        });
+    }
 
     /**
      * Registers long[][] with the given Json object, so long[][] can be written to and read from JSON.
