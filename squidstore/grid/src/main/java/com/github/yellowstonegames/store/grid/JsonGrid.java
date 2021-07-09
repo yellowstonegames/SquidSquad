@@ -10,6 +10,7 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.*;
 import com.github.yellowstonegames.core.*;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.store.core.JsonCore;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ public final class JsonGrid {
      */
     public static void registerAll(@Nonnull Json json) {
         registerCoord(json);
+        registerRegion(json);
     }
 
     /**
@@ -47,6 +49,28 @@ public final class JsonGrid {
             public Coord read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return Coord.get(jsonData.getInt(0), jsonData.getInt(1));
+            }
+        });
+    }
+
+    /**
+     * Registers Region with the given Json object, so Region can be written to and read from JSON.
+     * This is a simple wrapper around Region's built-in {@link Region#serializeToString()} and
+     * {@link Region#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerRegion(@Nonnull Json json) {
+        json.setSerializer(Region.class, new Json.Serializer<Region>() {
+            @Override
+            public void write(Json json, Region object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Region read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Region.deserializeFromString(jsonData.asString());
             }
         });
     }
