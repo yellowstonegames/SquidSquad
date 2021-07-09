@@ -11,6 +11,7 @@ import com.github.tommyettinger.ds.support.*;
 import com.github.yellowstonegames.core.*;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectMap;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.store.core.JsonCore;
 
@@ -127,5 +128,53 @@ public final class JsonGrid {
         });
     }
 
+    /**
+     * Registers CoordObjectOrderedMap with the given Json object, so CoordObjectOrderedMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordObjectOrderedMap(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordObjectOrderedMap.class, new Json.Serializer<CoordObjectOrderedMap>() {
+            @Override
+            public void write(Json json, CoordObjectOrderedMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<Map.Entry<Coord, ?>> es = new CoordObjectOrderedMap.OrderedMapEntries<>(object).iterator();
+                while (es.hasNext()) {
+                    Map.Entry<Coord, ?> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue());
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordObjectOrderedMap<?> read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordObjectOrderedMap<?> data = new CoordObjectOrderedMap<>(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
+                }
+                return data;
+            }
+        });
+
+    }
 
 }
