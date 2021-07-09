@@ -10,10 +10,15 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.*;
 import com.github.yellowstonegames.core.*;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectMap;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.store.core.JsonCore;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public final class JsonGrid {
@@ -74,5 +79,53 @@ public final class JsonGrid {
             }
         });
     }
+    /**
+     * Registers CoordObjectMap with the given Json object, so CoordObjectMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordObjectMap(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordObjectMap.class, new Json.Serializer<CoordObjectMap>() {
+            @Override
+            public void write(Json json, CoordObjectMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<Map.Entry<Coord, ?>> es = new CoordObjectMap.Entries<>(object).iterator();
+                while (es.hasNext()) {
+                    Map.Entry<Coord, ?> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue());
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordObjectMap<?> read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordObjectMap<?> data = new CoordObjectMap<>(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
+                }
+                return data;
+            }
+        });
+    }
+
 
 }
