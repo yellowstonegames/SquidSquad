@@ -20,6 +20,17 @@ package com.github.yellowstonegames.grid;
  * there are effectively no significant structural artifacts in the noise when interpreted as a float.
  */
 public final class IntPointHash extends IPointHash.IntImpl {
+    public IntPointHash() {
+        super();
+    }
+
+    public IntPointHash(int state) {
+        super(state);
+    }
+
+    public int getState() {
+        return state;
+    }
 
     @Override
     public int hashWithState(int x, int y, int state) {

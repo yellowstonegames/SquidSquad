@@ -11,6 +11,18 @@ package com.github.yellowstonegames.grid;
  */
 public final class LongPointHash extends IPointHash.LongImpl
 {
+    public LongPointHash() {
+        super();
+    }
+
+    public LongPointHash(int state) {
+        super(state);
+    }
+
+    public LongPointHash(long state) {
+        super(state);
+    }
+
     @Override
     public int hashWithState(int x, int y, int state) {
         return (int)hashAll(x, y, state);

@@ -394,35 +394,6 @@ public final class JsonCore {
         });
     }
 
-//    public static void registerGapShuffler(@Nonnull Json json) {
-//        JsonSupport.registerObjectList(json);
-//        json.setSerializer(GapShuffler.class, new Json.Serializer<GapShuffler>() {
-//            @Override
-//            public void write(Json json, GapShuffler object, Class knownType) {
-//                json.writeObjectStart();
-//                json.writeValue("rng", object.random, null);
-//                json.writeValue("impl", object.random.getClass().getName(), String.class);
-//                ObjectList items = new ObjectList();
-//                object.fillInto(items);
-//                json.writeValue("items", items, null);
-//                json.writeValue("idx", object.getIndex());
-//                json.writeObjectEnd();
-//            }
-//
-//            @Override
-//            public GapShuffler<?> read(Json json, JsonValue jsonData, Class type) {
-//                if (jsonData == null || jsonData.isNull()) return null;
-//                try {
-//                    Class<?> impl = ClassReflection.forName(json.readValue("impl", String.class, jsonData));
-//                    return new GapShuffler<>(json.readValue("items", ObjectList.class, jsonData), (EnhancedRandom) json.readValue("rng", impl, jsonData), jsonData.get("idx").asInt(), true, false);
-//                } catch (ReflectionException e) {
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-//        });
-//    }
-//
     /**
      * Registers WeightedTable with the given Json object, so WeightedTable can be written to and read from JSON.
      * This is a simple wrapper around WeightedTable's built-in {@link WeightedTable#serializeToString()} and
