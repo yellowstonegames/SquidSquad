@@ -2,21 +2,13 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.DistinctRandom;
-import com.github.tommyettinger.ds.support.FourWheelRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
-import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.GapShuffler;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectMap;
 import com.github.yellowstonegames.grid.Region;
-import com.github.yellowstonegames.store.core.JsonCore;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Map;
 
 public class JsonGridTest {
 
@@ -88,6 +80,24 @@ public class JsonGridTest {
         Assert.assertEquals(region, region2);
 
         System.out.println();
+    }
+
+    @Test
+    public void testCoordObjectMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordObjectMap(json);
+        CoordObjectMap<String> points = new CoordObjectMap<>(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666)},
+                new String[]{"foo", "bar", "baz"});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordObjectMap<?> points2 = json.fromJson(CoordObjectMap.class, data);
+        for(Map.Entry<Coord, ?> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
     }
 
 }
