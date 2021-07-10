@@ -143,4 +143,17 @@ public class JsonGridTest {
             System.out.print(", ");
         }
     }
+
+    @Test
+    public void testRadiance() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerRadiance(json);
+        Radiance radiance, radiance2;
+        radiance = new Radiance(3, 0xF0F0B0FF, 1.5f, 0f, 0.1f, 0.5f);
+        String data = json.toJson(radiance);
+        System.out.println(data);
+        radiance2 = json.fromJson(Radiance.class, data);
+        Assert.assertEquals(radiance, radiance2);
+        System.out.println();
+    }
 }
