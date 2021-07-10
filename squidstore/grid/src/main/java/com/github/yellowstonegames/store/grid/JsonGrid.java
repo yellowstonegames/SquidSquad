@@ -1,19 +1,8 @@
 package com.github.yellowstonegames.store.grid;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.*;
-import com.github.yellowstonegames.core.*;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordObjectMap;
-import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
-import com.github.yellowstonegames.grid.Region;
-import com.github.yellowstonegames.store.core.JsonCore;
+import com.github.yellowstonegames.grid.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -174,7 +163,36 @@ public final class JsonGrid {
                 return data;
             }
         });
+    }
 
+    /**
+     * Registers CoordSet with the given Json object, so CoordSet can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the items.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordSet(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordSet.class, new Json.Serializer<CoordSet>() {
+            @Override
+            public void write(Json json, CoordSet object, Class knownType) {
+                json.writeArrayStart();
+                for (Object o : object) {
+                    json.writeValue(o);
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public CoordSet read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordSet data = new CoordSet(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.add(json.readValue(Coord.class, value));
+                }
+                return data;
+            }
+        });
     }
 
 }
