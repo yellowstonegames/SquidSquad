@@ -86,7 +86,7 @@ public class LightingManager {
      * this manually or by using {@link #moveLight(int, int, int, int)}, {@link #addLight(int, int, Radiance)}, and
      * {@link #removeLight(int, int)}.
      */
-    public ObjectObjectOrderedMap<Coord, Radiance> lights;
+    public CoordObjectOrderedMap<Radiance> lights;
 
     /**
      * A GreasedRegion that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
@@ -155,7 +155,7 @@ public class LightingManager {
         tempColorLighting = new int[width][height];
         tempLightingStrength = new float[width][height];
         Coord.expandPoolTo(width, height);
-        lights = new ObjectObjectOrderedMap<>(32);
+        lights = new CoordObjectOrderedMap<>(32);
         noticeable = new Region(width, height);
     }
 

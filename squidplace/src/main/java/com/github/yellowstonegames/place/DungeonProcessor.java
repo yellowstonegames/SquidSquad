@@ -7,6 +7,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.PoissonDisk;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
@@ -1329,7 +1330,7 @@ public class DungeonProcessor implements PlaceGenerator{
         }
 
         if(islandSpacing > 1 && targetWater > 0) {
-            ObjectOrderedSet<Coord> islands = PoissonDisk.sampleMap(map, islandSpacing, rng, '#', '.', '"', '+', '/', '^', '<', '>');
+            CoordOrderedSet islands = PoissonDisk.sampleMap(map, islandSpacing, rng, '#', '.', '"', '+', '/', '^', '<', '>');
             for (Coord c : islands) {
                 map[c.x][c.y] = '.';
                 if (map[c.x - 1][c.y] != '#' && map[c.x - 1][c.y] != '<' && map[c.x - 1][c.y] != '>')

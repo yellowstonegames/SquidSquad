@@ -6,6 +6,8 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
+import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.PoissonDisk;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
@@ -24,7 +26,7 @@ public class PoissonDiskTest {
 
         // System.out.println(dg);
 
-        ObjectOrderedSet<Coord> disks = PoissonDisk.sampleMap(dun, 4f, rng, '#');
+        CoordOrderedSet disks = PoissonDisk.sampleMap(dun, 4f, rng, '#');
 
         for (Coord c : disks) {
             if (dun[c.x][c.y] != '#')
@@ -38,7 +40,7 @@ public class PoissonDiskTest {
         ArrayTools.fill(dun, '.');
         DungeonTools.wallWrap(dun);
 
-        ObjectObjectOrderedMap<Coord, ObjectList<Coord>> points = PoissonDisk.sampleRectangle(
+        CoordObjectOrderedMap<ObjectList<Coord>> points = PoissonDisk.sampleRectangle(
                 Coord.get(1, 1), Coord.get(78, 78), 2.5f,
                 80, 80, 30, rng);
         for (int i = 0; i < points.size(); i++) {

@@ -2,10 +2,10 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.WeightedTable;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.PoissonDisk;
 
@@ -56,7 +56,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @return evenly spaced Coord points in a list made by PoissonDisk, trimmed down so they aren't all used
      * @see PoissonDisk used to make the list
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> basicPoints(int width, int height, EnhancedRandom rng)
+    public static CoordObjectOrderedMap<ObjectList<Coord>> basicPoints(int width, int height, EnhancedRandom rng)
     {
         return PoissonDisk.sampleRectangle(Coord.get(2, 2), Coord.get(width - 3, height - 3),
                 8f * (width + height) / 120f + 1f, width, height, 20, rng);

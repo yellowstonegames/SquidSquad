@@ -28,7 +28,7 @@ public class PoissonDisk {
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
+    public static CoordObjectOrderedMap<ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY)
     {
         return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new LaserRandom());
@@ -49,7 +49,7 @@ public class PoissonDisk {
      * @param rng an IRNG to use for all random sampling.
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
+    public static CoordObjectOrderedMap<ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
     {
         int radius2 = Math.round(radius);
@@ -67,7 +67,7 @@ public class PoissonDisk {
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
+    public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
     {
         return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new LaserRandom());
     }
@@ -85,7 +85,7 @@ public class PoissonDisk {
      * @param rng an IRNG to use for all random sampling.
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(
+    public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(
             Coord minPosition, Coord maxPosition, float minimumDistance, int pointsPerIteration, EnhancedRandom rng)
     {
         return sample(minPosition, maxPosition, 0f, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, pointsPerIteration, rng);
@@ -106,21 +106,21 @@ public class PoissonDisk {
      * @param rng an IRNG to use for all random sampling.
      * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
      */
-    public static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
+    public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
                                                     int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
     {
         return sample(minPosition, maxPosition, 0f, minimumDistance, maxX, maxY, pointsPerIteration, rng);
     }
 
 
-    public static ObjectOrderedSet<Coord> sampleMap(char[][] map,
+    public static CoordOrderedSet sampleMap(char[][] map,
                                                     float minimumDistance, EnhancedRandom rng, char... blocking)
     {
         return sampleMap(Coord.get(1, 1), Coord.get(map.length - 2, map[0].length - 2),
                 map, minimumDistance, rng, blocking);
     }
 
-    public static ObjectOrderedSet<Coord> sampleMap(Coord minPosition, Coord maxPosition, char[][] map,
+    public static CoordOrderedSet sampleMap(Coord minPosition, Coord maxPosition, char[][] map,
                                                     float minimumDistance, EnhancedRandom rng, char... blocking) {
         int width = map.length;
         int height = map[0].length;
@@ -132,7 +132,7 @@ public class PoissonDisk {
         int gridHeight = (int) (dimensions.y / cellSize) + 1;
         Coord[][] grid = new Coord[gridWidth][gridHeight];
         ObjectList<Coord> activePoints = new ObjectList<>();
-        ObjectOrderedSet<Coord> points = new ObjectOrderedSet<>(128);
+        CoordOrderedSet points = new CoordOrderedSet(128);
 
         //add first point
         Region valid = new Region(map, blocking).notAnd(new Region(width, height).insertRectangle(minPosition.x,
@@ -207,7 +207,7 @@ public class PoissonDisk {
         }
         return points;
     }
-    protected static ObjectObjectOrderedMap<Coord, ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
+    protected static CoordObjectOrderedMap<ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
                                                                                    float maxSampleRadius, float radius,
                                                                                    int xBound, int yBound,
                                                                                    int pointsPerTry, EnhancedRandom random) {
@@ -224,7 +224,7 @@ public class PoissonDisk {
         final float[][] gridY = new float[gridWidth][gridHeight];
         final FloatList qx = new FloatList(false, gridWidth + gridHeight);
         final FloatList qy = new FloatList(false, gridWidth + gridHeight);
-        final ObjectObjectOrderedMap<Coord, ObjectList<Coord>> graph = new ObjectObjectOrderedMap<>(8 + (int) (gridWidth * gridHeight * iCellSize));
+        final CoordObjectOrderedMap<ObjectList<Coord>> graph = new CoordObjectOrderedMap<>(8 + (int) (gridWidth * gridHeight * iCellSize));
         // Pick the first sample.
         graph.put(sample(width * 0.5f, height * 0.5f, iCellSize, qx, qy, gridX, gridY, minPos), new ObjectList<>(4));
 
