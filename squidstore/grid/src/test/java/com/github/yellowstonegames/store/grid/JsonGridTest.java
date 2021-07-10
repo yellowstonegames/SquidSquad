@@ -130,4 +130,17 @@ public class JsonGridTest {
         }
     }
 
+    @Test
+    public void testCoordOrderedSet() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordOrderedSet(json);
+        CoordOrderedSet points = CoordOrderedSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666));
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordOrderedSet points2 = json.fromJson(CoordOrderedSet.class, data);
+        for(Object point : points2) {
+            System.out.print(point);
+            System.out.print(", ");
+        }
+    }
 }
