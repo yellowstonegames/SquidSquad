@@ -2,10 +2,7 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordObjectMap;
-import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -119,5 +116,18 @@ public class JsonGridTest {
         }
     }
 
+    @Test
+    public void testCoordSet() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordSet(json);
+        CoordSet points = CoordSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666));
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordSet points2 = json.fromJson(CoordSet.class, data);
+        for(Object point : points2) {
+            System.out.print(point);
+            System.out.print(", ");
+        }
+    }
 
 }
