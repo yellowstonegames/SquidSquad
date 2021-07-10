@@ -195,4 +195,33 @@ public final class JsonGrid {
         });
     }
 
+    /**
+     * Registers CoordOrderedSet with the given Json object, so CoordOrderedSet can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the items.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordOrderedSet(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordOrderedSet.class, new Json.Serializer<CoordOrderedSet>() {
+            @Override
+            public void write(Json json, CoordOrderedSet object, Class knownType) {
+                json.writeArrayStart();
+                for (Object o : object) {
+                    json.writeValue(o);
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public CoordOrderedSet read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordOrderedSet data = new CoordOrderedSet(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.add(json.readValue(Coord.class, value));
+                }
+                return data;
+            }
+        });
+    }
 }
