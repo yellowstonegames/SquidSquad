@@ -23,6 +23,11 @@ public final class JsonGrid {
     public static void registerAll(@Nonnull Json json) {
         registerCoord(json);
         registerRegion(json);
+        registerCoordSet(json);
+        registerCoordOrderedSet(json);
+        registerCoordObjectMap(json);
+        registerCoordObjectOrderedMap(json);
+        registerRadiance(json);
     }
 
     /**
@@ -69,6 +74,7 @@ public final class JsonGrid {
             }
         });
     }
+
     /**
      * Registers CoordObjectMap with the given Json object, so CoordObjectMap can be written to and read from JSON.
      * This also registers Coord with the given Json object, since it is used for the keys.
@@ -221,6 +227,28 @@ public final class JsonGrid {
                     data.add(json.readValue(Coord.class, value));
                 }
                 return data;
+            }
+        });
+    }
+
+    /**
+     * Registers Radiance with the given Json object, so Radiance can be written to and read from JSON.
+     * This is a simple wrapper around Radiance's built-in {@link Radiance#serializeToString()} and
+     * {@link Radiance#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerRadiance(@Nonnull Json json) {
+        json.setSerializer(Radiance.class, new Json.Serializer<Radiance>() {
+            @Override
+            public void write(Json json, Radiance object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Radiance read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Radiance.deserializeFromString(jsonData.asString());
             }
         });
     }

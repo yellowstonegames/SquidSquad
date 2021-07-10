@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.MathTools;
@@ -33,7 +33,7 @@ public class Radiance {
     /**
      * Randomly-seeded and only used for things that should be visually random, but won't matter for equality.
      */
-    private static final TricycleRandom random = new TricycleRandom();
+    private static final FourWheelRandom random = new FourWheelRandom();
 
     /**
      * How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.
@@ -46,7 +46,7 @@ public class Radiance {
     public int color;
     /**
      * The rate of random continuous change to radiance range, like the light from a campfire. The random component of
-     * the change is determined by a unique seed produced by an internal {@link TricycleRandom}, which will
+     * the change is determined by a unique seed produced by an internal {@link FourWheelRandom}, which will
      * probably make all flicker effects different when flicker is non-0.
      */
     public float flicker;
@@ -70,7 +70,7 @@ public class Radiance {
      */
     public float flare;
     /**
-     * Assigned during construction by an internal {@link TricycleRandom}, this is used for flickering effects, but does
+     * Assigned during construction by an internal {@link FourWheelRandom}, this is used for flickering effects, but does
      * not affect {@link #equals(Object)} or {@link #hashCode()}.
      */
     private final int seed;
