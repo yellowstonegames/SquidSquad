@@ -510,6 +510,61 @@ public class Noise {
     }
 
     /**
+     * Writes all fields of this Noise (except for the {@link #getPointHash()}, which must be stored separately) to a
+     * String and returns it. The result of this method can be used by {@link #deserializeFromString(String)}, though if
+     * you need a particular IPointHash value, you need to set it yourself on the result of that method.
+     * @return a String that stores the data of this Noise object; can be read by {@link #deserializeFromString(String)}
+     */
+    public String serializeToString(){
+        return "`" + seed + '~' + noiseType + '~' + octaves + '~' +
+                fractalType + '~' + interpolation + '~' +
+                cellularReturnType + '~' + cellularDistanceFunction + '~' +
+                BitConversion.floatToReversedIntBits(frequency) + '~' +
+                BitConversion.floatToReversedIntBits(lacunarity) + '~' +
+                BitConversion.floatToReversedIntBits(gain) + '~' +
+                BitConversion.floatToReversedIntBits(gradientPerturbAmp) + '~' +
+                BitConversion.floatToReversedIntBits(foamSharpness) + '~' +
+                BitConversion.floatToReversedIntBits(mutation) + "`";
+    }
+
+    /**
+     * Reads in a String that was produced by {@link #serializeToString()} and produces a copy of the Noise that was
+     * stored into it. Note that neither this method nor serializeToString changes {@link #getPointHash()} from its
+     * default value, so if you need a different value for that, you need to set it yourself on the result of this.
+     * @param data a String produced by {@link #serializeToString()}
+     * @return a new Noise object matching the data stored in the given String
+     */
+    public static Noise deserializeFromString(String data){
+        if(data == null || data.length() < 27)
+            return null;
+        int pos;
+        int seed =                     DigitTools.intFromDec(data,     0, pos = data.indexOf('~'));
+        int noiseType =                DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int octaves =                  DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int fractalType =              DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int interpolation =            DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int cellularReturnType =       DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int cellularDistanceFunction = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+
+        float frequency =          BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float lacunarity =         BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float gain =               BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float gradientPerturbAmp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float foamSharpness =      BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float mutation =           BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('`', pos+1)));
+
+        Noise next = new Noise(seed, frequency, noiseType, octaves, lacunarity, gain);
+        next.fractalType = fractalType;
+        next.interpolation = interpolation;
+        next.gradientPerturbAmp = gradientPerturbAmp;
+        next.cellularReturnType = cellularReturnType;
+        next.cellularDistanceFunction = cellularDistanceFunction;
+        next.foamSharpness = foamSharpness;
+        next.mutation = mutation;
+        return next;
+    }
+
+    /**
      * @return Returns the seed used by this object
      */
     public int getSeed() {
