@@ -156,4 +156,19 @@ public class JsonGridTest {
         Assert.assertEquals(radiance, radiance2);
         System.out.println();
     }
+
+    @Test
+    public void testNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerNoise(json);
+        Noise noise, noise2;
+        noise = new Noise(123321, 0.4f, Noise.FOAM_FRACTAL, 2, 0.625f, 1.6f);
+        noise.setFoamSharpness(0.8f);
+        noise.setFractalType(Noise.RIDGED_MULTI);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(Noise.class, data);
+        Assert.assertEquals(noise, noise2);
+        System.out.println();
+    }
 }
