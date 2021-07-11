@@ -171,4 +171,17 @@ public class JsonGridTest {
         Assert.assertEquals(noise, noise2);
         System.out.println();
     }
+
+    @Test
+    public void testPhantomNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPhantomNoise(json);
+        PhantomNoise noise, noise2;
+        noise = new PhantomNoise(-123L, 4, 0.625f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(PhantomNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        System.out.println();
+    }
 }
