@@ -538,7 +538,7 @@ public class Noise {
         if(data == null || data.length() < 27)
             return null;
         int pos;
-        int seed =                     DigitTools.intFromDec(data,     0, pos = data.indexOf('~'));
+        int seed =                     DigitTools.intFromDec(data,     1, pos = data.indexOf('~'));
         int noiseType =                DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         int octaves =                  DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         int fractalType =              DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
@@ -6669,8 +6669,46 @@ public class Noise {
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Noise noise = (Noise) o;
 
+        if (seed != noise.seed) return false;
+        if (Float.compare(noise.frequency, frequency) != 0) return false;
+        if (interpolation != noise.interpolation) return false;
+        if (noiseType != noise.noiseType) return false;
+        if (octaves != noise.octaves) return false;
+        if (Float.compare(noise.lacunarity, lacunarity) != 0) return false;
+        if (Float.compare(noise.gain, gain) != 0) return false;
+        if (fractalType != noise.fractalType) return false;
+        if (cellularDistanceFunction != noise.cellularDistanceFunction) return false;
+        if (cellularReturnType != noise.cellularReturnType) return false;
+        if (Float.compare(noise.gradientPerturbAmp, gradientPerturbAmp) != 0) return false;
+        if (Float.compare(noise.foamSharpness, foamSharpness) != 0) return false;
+        return Float.compare(noise.mutation, mutation) == 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Noise{" +
+                "seed=" + seed +
+                ", frequency=" + frequency +
+                ", interpolation=" + interpolation +
+                ", noiseType=" + noiseType +
+                ", octaves=" + octaves +
+                ", lacunarity=" + lacunarity +
+                ", gain=" + gain +
+                ", fractalType=" + fractalType +
+                ", cellularDistanceFunction=" + cellularDistanceFunction +
+                ", cellularReturnType=" + cellularReturnType +
+                ", gradientPerturbAmp=" + gradientPerturbAmp +
+                ", foamSharpness=" + foamSharpness +
+                ", mutation=" + mutation +
+                '}';
+    }
 
     public static final float F2f = 0.3660254f;
     public static final float G2f = 0.21132487f;
