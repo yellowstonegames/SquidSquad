@@ -252,4 +252,26 @@ public final class JsonGrid {
             }
         });
     }
+
+    /**
+     * Registers Noise with the given Json object, so Noise can be written to and read from JSON.
+     * This is a simple wrapper around Noise's built-in {@link Noise#serializeToString()} and
+     * {@link Noise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerNoise(@Nonnull Json json) {
+        json.setSerializer(Noise.class, new Json.Serializer<Noise>() {
+            @Override
+            public void write(Json json, Noise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Noise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Noise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
 }
