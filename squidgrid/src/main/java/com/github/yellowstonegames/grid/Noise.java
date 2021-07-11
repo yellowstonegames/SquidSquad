@@ -47,13 +47,14 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     occur over a given span of input values. It defaults to {@code 1f/32f}, though you should try setting this to
  *     {@code 1f} if results look strange.</li>
  *     <li>If your noise type is one of the fractal varieties ({@link #VALUE_FRACTAL}, {@link #PERLIN_FRACTAL},
- *     {@link #SIMPLEX_FRACTAL}, {@link #CUBIC_FRACTAL}, or {@link #FOAM_FRACTAL}):
+ *     {@link #SIMPLEX_FRACTAL}, {@link #CUBIC_FRACTAL}, {@link #FOAM_FRACTAL}, {@link #HONEY_FRACTAL}, or
+ *     {@link #MUTANT_FRACTAL}):
  *     <ul>
  *         <li>Fractal noise can set a fractal type with {@link #setFractalType(int)}, which defaults to {@link #FBM}
  *         (layering noise with different frequencies and strengths), and can also be set to {@link #RIDGED_MULTI}
- *         (which produces strong lines of high values) or {@link #BILLOW} (which is like RIDGED_MULTI but produces
- *         lines of low values). The noise type affects how the other fractal options work, and has a very strong effect
- *         on the appearance of the noise when it changes.</li>
+ *         (which produces strong lines or curves of high values) or {@link #BILLOW} (which is like RIDGED_MULTI but
+ *         produces lines or curves of low values). The noise type affects how the other fractal options work, and has a
+ *         very strong effect on the appearance of the noise when it changes.</li>
  *         <li>Octaves, set with {@link #setFractalOctaves(int)}, are how many "layers" of noise this will calculate on
  *         each call to get fractal noise. Each octave has its frequency changed based on lacunarity (set with
  *         {@link #setFractalLacunarity(float)}), and contributes a different amount to the resulting value, based on
@@ -71,11 +72,20 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     </ul>
  *     </li>
  *     <li>In some cases, you may want unusual or symmetrical artifacts in noise; you can make this happen with
- *     {@link #setPointHash(IPointHash)}, giving it a {@link FlawedPointHash} or a point hash you made, and setting
- *     noise type to {@link #CUBIC_FRACTAL} (or {@link #CUBIC}).</li>
+ *     {@link #setPointHash(IPointHash)}, giving it a {@link FlawedPointHash} or an IPointHash you made, and setting
+ *     noise type to {@link #CUBIC_FRACTAL} (or {@link #CUBIC}). The point hash is only used by cubic noise.</li>
  *     <li>The {@link #CELLULAR} noise type has lots of extra configuration, and not all of it is well-documented, but
  *     experimenting with settings like {@link #setCellularReturnType(int)} and
- *     {@link #setCellularNoiseLookup(Noise)} is a good way to see if it can do what you want.</li>
+ *     {@link #setCellularDistanceFunction(int)} is a good way to see if it can do what you want.</li>
+ *     <li>The {@link #setMutation(float)} method allows you to configure {@link #MUTANT} and {@link #MUTANT_FRACTAL}
+ *     noise in a way that's more precise than changing a seed. Small changes to mutation cause small changes in the
+ *     resulting noise, while large changes are similar to editing the seed. Mutation acts like any other positional
+ *     component, like x or y, and as such is affected by the frequency. The two MUTANT types of noise are extremely
+ *     similar to {@link #FOAM} and {@link #FOAM_FRACTAL}, just with an extra dimension added for mutation.</li>
+ *     <li>You will probably need to adjust the frequency for your particular use case. The default used by
+ *     {@link #instance} is {@code 1.0f/32.0f} or {@code 0.03125f}, but world map generation often uses a frequency of 1
+ *     or around 1, and some types of noise (especially {@link #FOAM}, {@link #MUTANT}, and their _FRACTAL versions)
+ *     need higher frequencies to look comparable to other noise types.</li>
  * </ul>
  */
 public class Noise {
@@ -140,9 +150,9 @@ public class Noise {
      */
     SIMPLEX_FRACTAL = 5,
     /**
-     * Creates a Voronoi diagram of 2D or 3D space and fills cells based on the {@link #setCellularReturnType(int)},
-     * {@link #setCellularDistanceFunction(int)}, and possibly the {@link #setCellularNoiseLookup(Noise)}. This is
-     * more of an advanced usage, but can yield useful results when oddly-shaped areas should have similar values.
+     * Creates a Voronoi diagram of 2D or 3D space and fills cells based on the {@link #setCellularReturnType(int)}
+     * and {@link #setCellularDistanceFunction(int)}. This is more of an advanced usage, but can yield useful results
+     * when oddly-shaped areas should have similar values.
      * <br>
      * <a href="https://i.imgur.com/ScRves7.png">Noise sample at left, FFT at right.</a>
      * <br>
@@ -327,7 +337,8 @@ public class Noise {
      */
     public static final int CELL_VALUE = 0;
     /**
-     * Meant to be used with {@link #setCellularReturnType(int)}.
+     * Meant to be used with {@link #setCellularReturnType(int)}. Note that this does not allow configuring an extra
+     * Noise value to use for lookup (anymore); it always uses 3 octaves of {@link #SIMPLEX_FRACTAL} with {@link #FBM}.
      */
     public static final int NOISE_LOOKUP = 1;
     /**
@@ -370,7 +381,6 @@ public class Noise {
 
     private int cellularDistanceFunction = EUCLIDEAN;
     private int cellularReturnType = CELL_VALUE;
-    private Noise cellularNoiseLookup;
     private float gradientPerturbAmp = 1f / 0.45f;
 
     private float foamSharpness = 1f;
@@ -477,8 +487,8 @@ public class Noise {
 
     /**
      * Copy constructor; copies all non-temporary fields from  {@code other} into this. This uses the same reference to
-     * an {@link IPointHash} set with {@link #setPointHash(IPointHash)} and to another Noise set with
-     * {@link #setCellularNoiseLookup(Noise)}, but otherwise everything it copies is a primitive.
+     * an {@link IPointHash} set with {@link #setPointHash(IPointHash)}, but otherwise everything it copies is a
+     * primitive value.
      * @param other another Noise, which must not be null
      */
     public Noise(final Noise other) {
@@ -488,7 +498,6 @@ public class Noise {
         this.gradientPerturbAmp = other.gradientPerturbAmp;
         this.cellularReturnType = other.cellularReturnType;
         this.cellularDistanceFunction = other.cellularDistanceFunction;
-        this.cellularNoiseLookup = other.cellularNoiseLookup;
         this.foamSharpness = other.foamSharpness;
         this.mutation = other.mutation;
     }
@@ -640,8 +649,7 @@ public class Noise {
      * Sets the return type from cellular noise calculations, allowing an int argument corresponding to one of the
      * following constants from this class: {@link #CELL_VALUE} (0), {@link #NOISE_LOOKUP} (1), {@link #DISTANCE} (2),
      * {@link #DISTANCE_2} (3), {@link #DISTANCE_2_ADD} (4), {@link #DISTANCE_2_SUB} (5), {@link #DISTANCE_2_MUL} (6),
-     * or {@link #DISTANCE_2_DIV} (7). If this isn't called, it will use CELL_VALUE. If this is {@link #NOISE_LOOKUP},
-     * then you must set another Noise with {@link #setCellularNoiseLookup(Noise)}.
+     * or {@link #DISTANCE_2_DIV} (7). If this isn't called, it will use CELL_VALUE.
      * @param cellularReturnType a constant from this class (see above JavaDoc)
      */
     public void setCellularReturnType(int cellularReturnType) {
@@ -649,14 +657,10 @@ public class Noise {
     }
 
     /**
-     * Sets the Noise used to calculate a cell value if cellular return type is {@link #NOISE_LOOKUP}.
-     * There is no default value; this must be called if using noise lookup to set the noise to a non-null value.
-     * The lookup value is acquired through getConfiguredNoise() so ensure you setNoiseType() on the noise lookup.
-     * Honey, Value, Foam, Perlin, and Simplex are recommended.
-     * @param noise another Noise object that should be configured already
+     * A no-op method that is here for compatibility with earlier versions.
+     * @param noise ignored
      */
     public void setCellularNoiseLookup(Noise noise) {
-        cellularNoiseLookup = noise;
     }
 
     /**
@@ -4110,16 +4114,16 @@ public class Noise {
             amp *= 0.5f;
             sum -= (1 - Math.abs(singleSimplex(seed + i, x, y, z))) * amp;
         }
-        amp = gain;
+        amp = 0.5f;
         float ampFractal = 1;
         for (int i = 1; i < octaves; i++) {
             ampFractal += amp;
-            amp *= gain;
+            amp *= 0.5f;
         }
         return sum / ampFractal;
     }
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, and default lacunarity
      * (2) and gain (0.5) in 3D.
      * @param x
      * @param y
@@ -4145,17 +4149,17 @@ public class Noise {
             amp *= 0.5f;
             sum += singleSimplex(seed + i, x, y, z) * amp;
         }
-        amp = gain;
+        amp = 0.5f;
         float ampFractal = 1;
         for (int i = 1; i < octaves; i++) {
             ampFractal += amp;
-            amp *= gain;
+            amp *= 0.5f;
         }
         return sum / ampFractal;
     }
     /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves) and gain (0.5) in 3D.
+     * Generates layered simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
+     * amount of frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 3D.
      * @param x
      * @param y
      * @param z
@@ -4173,6 +4177,7 @@ public class Noise {
 
         float sum = singleSimplex(seed, x, y, z);
         float amp = 1;
+        float gain = 1f / lacunarity;
 
         for (int i = 1; i < octaves; i++) {
             x *= lacunarity;
@@ -4192,8 +4197,8 @@ public class Noise {
     }
 
     /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.
+     * Generates layered simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
+     * of frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.
      * @param x
      * @param y
      * @param z
@@ -4484,17 +4489,17 @@ public class Noise {
             amp *= 0.5f;
             sum -= (1 - Math.abs(singleSimplex(seed + i, x, y))) * amp;
         }
-        amp = gain;
+        amp = 0.5f;
         float ampFractal = 1;
         for (int i = 1; i < octaves; i++) {
             ampFractal += amp;
-            amp *= gain;
+            amp *= 0.5f;
         }
         return sum / ampFractal;
     }
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
-     * (2) and gain (0.5) in 2D.
+     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
+     * (2) and default gain (0.5) in 2D.
      * @param x
      * @param y
      * @param seed
@@ -4516,17 +4521,17 @@ public class Noise {
             amp *= 0.5f;
             sum += singleSimplex(seed + i, x, y) * amp;
         }
-        amp = gain;
+        amp = 0.5f;
         float ampFractal = 1;
         for (int i = 1; i < octaves; i++) {
             ampFractal += amp;
-            amp *= gain;
+            amp *= 0.5f;
         }
         return sum / ampFractal;
     }
     /**
      * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves) and gain (0.5) in D.
+     * frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 2D.
      * @param x
      * @param y
      * @param seed
@@ -4540,6 +4545,7 @@ public class Noise {
 
         float sum = singleSimplex(seed, x, y);
         float amp = 1;
+        float gain = 1.0f / lacunarity;
 
         for (int i = 1; i < octaves; i++) {
             x *= lacunarity;
@@ -5809,7 +5815,7 @@ public class Noise {
 
             case NOISE_LOOKUP:
                 Float3 vec = CELL_3D[hash256(xc, yc, zc, seed)];
-                return cellularNoiseLookup.getConfiguredNoise(xc + vec.x, yc + vec.y, zc + vec.z);
+                return layered3D(xc + vec.x, yc + vec.y, zc + vec.z, 123, 3);
 
             case DISTANCE:
                 return distance - 1;
@@ -5986,7 +5992,7 @@ public class Noise {
 
             case NOISE_LOOKUP:
                 Float2 vec = CELL_2D[hash256(xc, yc, seed)];
-                return cellularNoiseLookup.getConfiguredNoise(xc + vec.x, yc + vec.y);
+                return layered2D(xc + vec.x, yc + vec.y, 123, 3);
 
             case DISTANCE:
                 return distance - 1;
