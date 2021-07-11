@@ -892,7 +892,7 @@ public class DigitTools {
     }
     public static StringBuilder appendJoinedFloatsBits(StringBuilder sb, CharSequence delimiter, float... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        appendHex(sb, BitConversion.floatToReversedIntBits(elements[0]));
+        sb.append(BitConversion.floatToReversedIntBits(elements[0]));
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter).append(BitConversion.floatToReversedIntBits(elements[i]));
         }

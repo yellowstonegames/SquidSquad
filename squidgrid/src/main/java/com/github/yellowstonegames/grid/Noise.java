@@ -30,6 +30,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.StringTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;
 
@@ -82,6 +84,10 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     resulting noise, while large changes are similar to editing the seed. Mutation acts like any other positional
  *     component, like x or y, and as such is affected by the frequency. The two MUTANT types of noise are extremely
  *     similar to {@link #FOAM} and {@link #FOAM_FRACTAL}, just with an extra dimension added for mutation.</li>
+ *     <li>If you are using {@link #FOAM}, {@link #MUTANT}, or their _FRACTAL versions, you can adjust how sharply the
+ *     noise transitions between light and dark values by using {@link #setFoamSharpness(float)}. Higher sharpness may
+ *     be especially useful with more octaves, because most types of noise slide toward producing mostly central values
+ *     with more octaves, and higher sharpness helps counter that "graying out."</li>
  *     <li>You will probably need to adjust the frequency for your particular use case. The default used by
  *     {@link #instance} is {@code 1.0f/32.0f} or {@code 0.03125f}, but world map generation often uses a frequency of 1
  *     or around 1, and some types of noise (especially {@link #FOAM}, {@link #MUTANT}, and their _FRACTAL versions)
@@ -493,6 +499,7 @@ public class Noise {
      */
     public Noise(final Noise other) {
         this(other.seed, other.frequency, other.noiseType, other.octaves, other.lacunarity, other.gain);
+        this.fractalType = other.fractalType;
         this.pointHash = other.pointHash;
         this.interpolation = other.interpolation;
         this.gradientPerturbAmp = other.gradientPerturbAmp;

@@ -143,8 +143,7 @@ public class WeightedTable {
     {
         if(data == null || data.isEmpty())
             return null;
-        int pos = -1;//data.indexOf(':');
-        //int size = StringKit.intFromDec(data, 0, pos);
+        int pos = -1;
         int count = StringTools.count(data, ',') + 1;
         int[] mixed = new int[count];
         for (int i = 0; i < count; i++) {
