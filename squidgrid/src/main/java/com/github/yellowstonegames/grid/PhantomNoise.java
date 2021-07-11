@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
@@ -53,12 +54,12 @@ public class PhantomNoise {
     }
 
     public PhantomNoise(long seed, int dimension) {
-        this(seed, dimension, Math.max(2, dimension));
+        this(seed, dimension, 0.8375f * Math.max(2, dimension));
     }
 
     public PhantomNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
-        this.sharpness = 0.8375f * sharpness;
+        this.sharpness = sharpness;
         working = new float[dim+1];
         points = new float[dim+1];
         vertices = new float[dim+1][dim];
@@ -86,13 +87,28 @@ public class PhantomNoise {
         }
         floors = new int[dim+1];
         hashFloors = new int[dim+1];
-        hasher = new Hasher(Hasher.randomize(seed));
+        hasher = new Hasher(seed);
         inverse = 1f / (dim + 1f);
 //        printDebugInfo();
     }
 
-    protected double valueNoise()
-    {
+    public String serializeToString() {
+        return "`" + hasher.seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
+    }
+
+    public static PhantomNoise deserializeFromString(String data) {
+                if(data == null || data.length() < 7)
+            return null;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
+
+        return new PhantomNoise(seed, dim, sharp);
+
+    }
+
+    protected double valueNoise() {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
@@ -114,8 +130,7 @@ public class PhantomNoise {
         return (sum * 0x1p-32 + 0.5);
     }
 
-    protected double valueNoise2D()
-    {
+    protected double valueNoise2D() {
         hashFloors[2] = BitConversion.floatToRawIntBits(working[2]);
         for (int i = 0; i < 2; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
@@ -191,8 +206,20 @@ public class PhantomNoise {
         result *= inverse;
         return MathTools.barronSpline(result, sharpness, 0.5f) * 2f - 1f;
     }
-    
-    void printDebugInfo(){         
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PhantomNoise that = (PhantomNoise) o;
+
+        if (dim != that.dim) return false;
+        if (Float.compare(that.sharpness, sharpness) != 0) return false;
+        return hasher.seed == that.hasher.seed;
+    }
+
+    void printDebugInfo() {
         System.out.println("PhantomNoise with Dimension " + dim + ":");
         final String dimNames = "xyzwuvabcdefghijklmnopqrst";
         for (int v = 0; v <= dim; v++) {
