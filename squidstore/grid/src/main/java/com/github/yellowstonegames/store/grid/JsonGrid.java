@@ -28,6 +28,8 @@ public final class JsonGrid {
         registerCoordObjectMap(json);
         registerCoordObjectOrderedMap(json);
         registerRadiance(json);
+        registerNoise(json);
+        registerPhantomNoise(json);
     }
 
     /**
@@ -271,6 +273,28 @@ public final class JsonGrid {
             public Noise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return Noise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
+     * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#serializeToString()} and
+     * {@link PhantomNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPhantomNoise(@Nonnull Json json) {
+        json.setSerializer(PhantomNoise.class, new Json.Serializer<PhantomNoise>() {
+            @Override
+            public void write(Json json, PhantomNoise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public PhantomNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return PhantomNoise.deserializeFromString(jsonData.asString());
             }
         });
     }
