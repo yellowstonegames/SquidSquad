@@ -7,4 +7,23 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonTextTest {
+    @Test
+    public void testLanguage() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonText.registerLanguage(json);
+        Language lang, lang2;
+        lang = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
+        String data = json.toJson(lang);
+        System.out.println(data);
+        lang2 = json.fromJson(Language.class, data);
+        Assert.assertEquals(lang, lang2);
+        System.out.println();
+        lang = Language.KOBOLD;
+        data = json.toJson(lang);
+        System.out.println(data);
+        lang2 = json.fromJson(Language.class, data);
+        Assert.assertEquals(lang, lang2);
+        System.out.println();
+    }
+
 }

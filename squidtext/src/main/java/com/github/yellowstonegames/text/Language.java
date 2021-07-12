@@ -4682,10 +4682,7 @@ public class Language {
                         sb.append('~');
                 }
             }
-            for (int i = 0; i < mods.size(); i++) {
-                sb.append('℗').append(mods.getAt(i).serializeToString());
-            }
-            return mixer.addModifiers(mods).summarize(sb.toString());
+            return mixer.summarize(sb.toString()).addModifiers(mods);
         } else
             return mixer.addModifiers(mods);
     }
@@ -4827,6 +4824,14 @@ public class Language {
     public Language addModifiers(Collection<Modifier> mods) {
         Language next = copy();
         next.modifiers.addAll(mods);
+        if(next.summary != null){
+            sb.setLength(0);
+            sb.append(next.summary);
+            for (int i = 0; i < mods.size(); i++) {
+                sb.append('℗').append(next.modifiers.get(i).serializeToString());
+            }
+            next.summarize(sb.toString());
+        }
         return next;
     }
 
@@ -4841,6 +4846,15 @@ public class Language {
     public Language addModifiers(Modifier... mods) {
         Language next = copy();
         Collections.addAll(next.modifiers, mods);
+        if(next.summary != null){
+            sb.setLength(0);
+            sb.append(next.summary);
+            for (int i = 0; i < mods.length; i++) {
+                sb.append('℗').append(next.modifiers.get(i).serializeToString());
+            }
+            next.summarize(sb.toString());
+        }
+
         return next;
     }
 
@@ -4852,6 +4866,9 @@ public class Language {
     public Language removeModifiers() {
         Language next = copy();
         next.modifiers.clear();
+        if(next.summary != null){
+            next.summarize(next.summary.substring(0, next.summary.indexOf('℗')));
+        }
         return next;
     }
 
@@ -5004,7 +5021,7 @@ public class Language {
                 breakIndex = (tempBreak < 0) ? data.length() : tempBreak,
                 tildeIndex = Math.min(data.indexOf('~'), breakIndex), prevTildeIndex = -1;
         if (tildeIndex < 0)
-            tildeIndex = data.length();
+            tildeIndex = breakIndex;
 
         if (snailIndex < 0)
             return ENGLISH.copy();
