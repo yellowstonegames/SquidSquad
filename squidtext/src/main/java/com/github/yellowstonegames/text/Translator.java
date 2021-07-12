@@ -131,7 +131,6 @@ public class Translator{
         public float nextFloat() {
             return (nextLong() * 0x77777777L & 0xFFFFFFL) * 0x1p-24f;
         }
-
     }
 
     /**
@@ -142,9 +141,9 @@ public class Translator{
      * to see how the existing calls to constructors work.
      */
     public Language language;
-    private final SemiRandom rng;
+    private final transient SemiRandom rng;
 
-    String pluralSuffix, verbingSuffix, verbedSuffix, verberSuffix, verbationSuffix,
+    private String pluralSuffix, verbingSuffix, verbedSuffix, verberSuffix, verbationSuffix,
             verbmentSuffix, nounySuffix, nounenSuffix, nounistSuffix, nounismSuffix,
             nounicSuffix, nouniveSuffix, adjectivelySuffix, adjectivestSuffix,
             reverbPrefix, ennounPrefix, preverbPrefix, postverbPrefix,
@@ -398,7 +397,7 @@ se$->z
      */
     public Translator(Language language, long shift)
     {
-        rng = new SemiRandom(0xDF58476D1CE4E5B9L + shift);
+        rng = new SemiRandom(0L);
         table = new ObjectObjectMap<>(512);
         reverse = new ObjectObjectMap<>(512);
         initialize(language, shift);
