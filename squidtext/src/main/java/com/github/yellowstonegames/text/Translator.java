@@ -84,7 +84,12 @@ public class Translator{
 
         @Override
         public long nextLong() {
-            return (state = (state ^ 29L) * 19L) - (state >>> 2);
+            // guarantees all possible states will be used, eventually, for any starting input.
+            long s = ++state;
+            // the next two lines are the smallest, weakest possible XorShift generator, though
+            // they are given a counter instead of their last result, which weakens them further.
+            s ^= s << 7;
+            return s ^ s >>> 9;
         }
 
         @Override
