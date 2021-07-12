@@ -133,12 +133,12 @@ public class PoliticalMapper {
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
          * the shortName to the specified shortName, sets the preferredBiomes to be a Set containing the given Strings
          * in preferredBiomes, and makes the only blocked biome "Ocean". The exact String names that are viable for
-         * biomes can be obtained from a BiomeMapper with {@link BiomeMapper#getBiomeNameTable()}, or from the constants
+         * biomes can be obtained from a BiomeMapper with {@link BiomeMapper#getBiomeTable()}, or from the constants
          * ending in "_BIOME" in {@link com.github.yellowstonegames.place.Biome}.
          * @param language the Language to use for potentially generating place names
          * @param name the formal name of the Faction, such as "The United States of America"
          * @param shortName the short name of the Faction, such as "America"
-         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeNameTable()} value
+         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeTable()} value
          *
          */
         public Faction(Language language, String name, String shortName, String[] preferredBiomes)
@@ -156,11 +156,11 @@ public class PoliticalMapper {
          * the shortName to the specified shortName, sets the preferredBiomes to be a Set containing the given Strings
          * in preferredBiomes, and sets the blocked biomes to be a Set containing exactly the given Strings in
          * blockedBiomes. The exact String names that are viable for biomes can be obtained from a BiomeMapper with
-         * {@link BiomeMapper#getBiomeNameTable()}.
+         * {@link BiomeMapper#getBiomeTable()}.
          * @param language the Language to use for potentially generating place names
          * @param name the formal name of the Faction, such as "The United States of America"
          * @param shortName the short name of the Faction, such as "America"
-         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeNameTable()} value
+         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeTable()} value
          * @param blockedBiomes a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans
          */
         public Faction(Language language, String name, String shortName, String[] preferredBiomes, String[] blockedBiomes)
@@ -179,11 +179,11 @@ public class PoliticalMapper {
          * in preferredBiomes, sets the blocked biomes to be a Set containing exactly the given Strings in
          * blockedBiomes, and sets the preferred height codes to the ints in preferredHeight (with 4 being sea level and
          * 8 being the highest peaks). The exact String names that are viable for biomes can be obtained from a
-         * BiomeMapper with {@link BiomeMapper#getBiomeNameTable()}.
+         * BiomeMapper with {@link BiomeMapper#getBiomeTable()}.
          * @param language the Language to use for potentially generating place names
          * @param name the formal name of the Faction, such as "The United States of America"
          * @param shortName the short name of the Faction, such as "America"
-         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeNameTable()} value
+         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeTable()} value
          * @param blockedBiomes a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans
          * @param preferredHeight an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest
          */
@@ -207,11 +207,11 @@ public class PoliticalMapper {
          * being the highest peaks), and sets the preferred heat codes to the ints in preferredHeat (with the exact
          * values depending on the BiomeMapper, but usually 0-5 range from coldest to hottest). The exact String names
          * that are viable for biomes can be obtained from a BiomeMapper with
-         * {@link BiomeMapper#getBiomeNameTable()}.
+         * {@link BiomeMapper#getBiomeTable()}.
          * @param language the Language to use for potentially generating place names
          * @param name the formal name of the Faction, such as "The United States of America"
          * @param shortName the short name of the Faction, such as "America"
-         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeNameTable()} value
+         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeTable()} value
          * @param blockedBiomes a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans
          * @param preferredHeight an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest
          * @param preferredHeat an int array of heat codes this Faction prefers to claim; typically 0 is coldest and 5 is hottest
@@ -238,11 +238,11 @@ public class PoliticalMapper {
          * depending on the BiomeMapper, but usually 0-5 range from coldest to hottest), and sets the preferred moisture
          * codes to the ints in preferredMoisture (withe the exact values depending on the BiomeMapper, but usually 0-5
          * range from driest to wettest). The exact String names that are viable for biomes can be obtained from a
-         * BiomeMapper with {@link BiomeMapper#getBiomeNameTable()}.
+         * BiomeMapper with {@link BiomeMapper#getBiomeTable()}.
          * @param language the Language to use for potentially generating place names
          * @param name the formal name of the Faction, such as "The United States of America"
          * @param shortName the short name of the Faction, such as "America"
-         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeNameTable()} value
+         * @param preferredBiomes a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's {@link BiomeMapper#getBiomeTable()} value
          * @param blockedBiomes a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans
          * @param preferredHeight an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest
          * @param preferredHeat an int array of heat codes this Faction prefers to claim; typically 0 is coldest and 5 is hottest
@@ -410,7 +410,7 @@ public class PoliticalMapper {
         int[] centers = land.copy().randomScatter(rng, (int) (Math.sqrt(width * height) * 0.1 + 0.999), factionCount).asTightEncoded();
         int cen, cx, cy, cx2, cy2, biome, high, hot, moist, count = centers.length, re;
         String biomeName;
-        Biome[] biomeTable = biomeMapper.getBiomeNameTable();
+        Biome[] biomeTable = biomeMapper.getBiomeTable();
         int[] reorder = new int[count];
         Faction current;
         int[] factionIndices = new int[count];

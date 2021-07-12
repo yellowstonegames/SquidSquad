@@ -15,13 +15,13 @@ public interface BiomeMapper {
      * Gets the most relevant biome code for a given x,y point on the map. Some mappers can store more than one
      * biome at a location, but only the one with the highest influence will be returned by this method. Biome codes
      * are always ints, and are typically between 0 and 60, both inclusive; they are meant to be used as indices
-     * into a table of names or other objects that identify a biome, accessible via {@link #getBiomeNameTable()}.
+     * into a table of names or other objects that identify a biome, accessible via {@link #getBiomeTable()}.
      * Although different classes may define biome codes differently, they should all be able to be used as indices
      * into the String array returned by getBiomeNameTable().
      *
      * @param x the x-coordinate on the map
      * @param y the y-coordinate on the map
-     * @return an int that can be used as an index into the array returned by {@link #getBiomeNameTable()}
+     * @return an int that can be used as an index into the array returned by {@link #getBiomeTable()}
      */
     int getBiomeCode(int x, int y);
 
@@ -60,12 +60,12 @@ public interface BiomeMapper {
      *
      * @return a Biome array that often contains 66 elements, to be used with biome codes as indices.
      */
-    Biome[] getBiomeNameTable();
+    Biome[] getBiomeTable();
 
     /**
      * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
      * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
-     * retrieved with {@link #getBiomeCode(int, int)} and used as indices into {@link #getBiomeNameTable()} or a
+     * retrieved with {@link #getBiomeCode(int, int)} and used as indices into {@link #getBiomeTable()} or a
      * custom biome table.
      *
      * @param world a WorldMapGenerator that should have generated at least one map; it may be at any zoom
@@ -130,7 +130,7 @@ public interface BiomeMapper {
          * @return a direct reference to {@link Biome#TABLE}, a String array containing names of biomes
          */
         @Override
-        public Biome[] getBiomeNameTable() {
+        public Biome[] getBiomeTable() {
             return Biome.TABLE;
         }
 
@@ -326,7 +326,7 @@ public interface BiomeMapper {
          * @return a direct reference to {@link Biome#TABLE}, a Biome array with 66 items
          */
         @Override
-        public Biome[] getBiomeNameTable() {
+        public Biome[] getBiomeTable() {
             return Biome.TABLE;
         }
 
