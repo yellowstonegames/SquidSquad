@@ -24,6 +24,13 @@ public class JsonTextTest {
         lang2 = json.fromJson(Language.class, data);
         Assert.assertEquals(lang, lang2);
         System.out.println();
+        lang = Language.randomLanguage(0x1337BEEFCAFEBABEL).mix(4, Language.ARABIC_ROMANIZED, 5, Language.JAPANESE_ROMANIZED, 3).addModifiers(Language.Modifier.LISP);
+        data = json.toJson(lang);
+        System.out.println(data);
+        lang2 = json.fromJson(Language.class, data);
+        Assert.assertEquals(lang, lang2);
+        System.out.println();
+
     }
 
 }

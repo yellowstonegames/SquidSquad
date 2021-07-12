@@ -4867,7 +4867,7 @@ public class Language {
         Language next = copy();
         next.modifiers.clear();
         if(next.summary != null){
-            next.summarize(next.summary.substring(0, next.summary.indexOf('℗')));
+            next.summarize(StringTools.safeSubstring(next.summary, 0, next.summary.indexOf('℗')));
         }
         return next;
     }
@@ -5030,11 +5030,11 @@ public class Language {
             if (poundIndex >= 0 && poundIndex < snailIndex) // random case
             {
                 pairs.add(randomLanguage(Long.parseLong(data.substring(poundIndex + 1, snailIndex))));
-                pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
+                pairs.add(DigitTools.intFromDec(data, snailIndex + 1, tildeIndex));
                 poundIndex = -1;
             } else {
                 pairs.add(registry.get(registry.keyAt(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
-                pairs.add(Double.valueOf(data.substring(snailIndex + 1, tildeIndex)));
+                pairs.add(DigitTools.intFromDec(data, snailIndex + 1, tildeIndex));
             }
             snailIndex = data.indexOf('@', snailIndex + 1);
             if (snailIndex > breakIndex)
