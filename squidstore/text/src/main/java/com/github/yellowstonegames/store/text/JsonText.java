@@ -20,5 +20,30 @@ public final class JsonText {
      * @param json a libGDX Json object that will have serializers registered for all SquidText types.
      */
     public static void registerAll(@Nonnull Json json) {
+        registerLanguage(json);
     }
+    
+    
+    /**
+     * Registers Language with the given Json object, so Language can be written to and read from JSON.
+     * This is a simple wrapper around Language's built-in {@link Language#serializeToString()} and
+     * {@link Language#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLanguage(@Nonnull Json json) {
+        json.setSerializer(Language.class, new Json.Serializer<Language>() {
+            @Override
+            public void write(Json json, Language object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Language read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Language.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
 }

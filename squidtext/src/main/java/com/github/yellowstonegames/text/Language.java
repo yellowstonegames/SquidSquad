@@ -2,6 +2,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.*;
@@ -23,10 +24,10 @@ import java.util.*;
  * {@link #mix(double, Language, double, Object...)} (when you have a sound in mind that isn't quite met by an
  * existing language).
  * <br>
+ * @see Thesaurus Thesaurus uses this class a lot to generate things like plant names and the titles of nations.
+ * @see Translator Translator uses a Language to reversibly translate English text to nonsense.
  * @author Tommy Ettinger
  */
-// * @see NaturalLanguageCipher NaturalLanguageCipher uses a Language to reversibly translate English text to nonsense.
-// * @see Thesaurus Thesaurus uses this class a lot to generate things like plant names and the titles of nations.
 
 public class Language {
     public final String[] openingVowels, midVowels, openingConsonants, midConsonants, closingConsonants,
@@ -38,7 +39,7 @@ public class Language {
     public final double vowelStartFrequency, vowelEndFrequency, vowelSplitFrequency, syllableEndFrequency;
     public final Pattern[] sanityChecks;
     public final ObjectList<Modifier> modifiers;
-    public static final LaserRandom srng = new LaserRandom();
+    public static final DistinctRandom srng = new DistinctRandom();
     private static final CaseInsensitiveOrderedMap<Language> registry = new CaseInsensitiveOrderedMap<>(64);
     protected String summary;
     protected String name = "Nameless Language";
@@ -5488,7 +5489,7 @@ public class Language {
      * the same name, and all fields in this class are public and modifiable.
      */
     public static class SentenceForm {
-        public LaserRandom rng;
+        public EnhancedRandom rng;
         public int minWords, maxWords, maxChars;
         public String[] midPunctuation, endPunctuation;
         public double midPunctuationFrequency;
@@ -5573,7 +5574,7 @@ public class Language {
                             double midPunctuationFrequency, int maxChars)
         {
             this.language = language;
-            this.rng = new LaserRandom(rng.nextLong(), rng.nextLong());
+            this.rng = rng.copy();
             this.minWords = minWords;
             this.maxWords = maxWords;
             this.midPunctuation = midPunctuation;
@@ -5586,34 +5587,34 @@ public class Language {
             return language.sentence(rng, minWords, maxWords, midPunctuation, endPunctuation,
                     midPunctuationFrequency, maxChars);
         }
-
-        public String serializeToString() {
-            return language.serializeToString() + '℘' +
-                    DigitTools.hex(rng.getStateA()) + DigitTools.hex(rng.getStateB()) + '℘' +
-                    minWords + '℘' +
-                    maxWords + '℘' +
-                    StringTools.join("ℙ", midPunctuation) + '℘' +
-                    StringTools.join("ℙ", endPunctuation) + '℘' +
-                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
-                    maxChars;
-        }
-        public static SentenceForm deserializeFromString(String ser)
-        {
-            int gap = ser.indexOf('℘');
-            Language lang = Language.deserializeFromString(ser.substring(0, gap));
-            LaserRandom rng = new LaserRandom(
-                    DigitTools.longFromHex(ser,gap + 1, gap + 17),
-                    DigitTools.longFromHex(ser, gap + 17, gap + 33));
-            gap = ser.indexOf('℘', gap + 1);
-            int minWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
-            int maxWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
-            String[] midPunctuation =
-                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
-            String[] endPunctuation =
-                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
-            double midFreq = BitConversion.longBitsToDouble(DigitTools.longFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1)));
-            int maxChars = DigitTools.intFromDec(ser,gap + 1, ser.length());
-            return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);
-        }
+//
+//        public String serializeToString() {
+//            return language.serializeToString() + '℘' +
+//                    DigitTools.hex(rng.getStateA()) + DigitTools.hex(rng.getStateB()) + '℘' +
+//                    minWords + '℘' +
+//                    maxWords + '℘' +
+//                    StringTools.join("ℙ", midPunctuation) + '℘' +
+//                    StringTools.join("ℙ", endPunctuation) + '℘' +
+//                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
+//                    maxChars;
+//        }
+//        public static SentenceForm deserializeFromString(String ser)
+//        {
+//            int gap = ser.indexOf('℘');
+//            Language lang = Language.deserializeFromString(ser.substring(0, gap));
+//            LaserRandom rng = new LaserRandom(
+//                    DigitTools.longFromHex(ser,gap + 1, gap + 17),
+//                    DigitTools.longFromHex(ser, gap + 17, gap + 33));
+//            gap = ser.indexOf('℘', gap + 1);
+//            int minWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
+//            int maxWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
+//            String[] midPunctuation =
+//                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+//            String[] endPunctuation =
+//                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+//            double midFreq = BitConversion.longBitsToDouble(DigitTools.longFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1)));
+//            int maxChars = DigitTools.intFromDec(ser,gap + 1, ser.length());
+//            return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);
+//        }
     }
 }
