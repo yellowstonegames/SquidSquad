@@ -2,7 +2,10 @@ package com.github.yellowstonegames.store.text;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.ds.ObjectObjectMap;
+import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.*;
 
@@ -92,6 +95,44 @@ public final class JsonText {
                 current = current.next;
                 int maxChars = current.asInt();
                 return new Language.SentenceForm(language, rng, minWords, maxWords, midPunctuation, endPunctuation, midPunctuationFrequency, maxChars);
+            }
+        });
+    }
+
+    /**
+     * Registers Translator with the given Json object, so Translator can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerTranslator(@Nonnull Json json) {
+        JsonSupport.registerObjectObjectMap(json);
+        registerLanguage(json);
+        json.setSerializer(Translator.class, new Json.Serializer<Translator>() {
+            @Override
+            public void write(Json json, Translator object, Class knownType) {
+                json.writeArrayStart();
+                json.writeValue(object.language, Language.class);
+                json.writeValue((Object) DigitTools.hex(object.shift), String.class);
+                json.writeValue(object.cacheLevel);
+                json.writeValue(object.table, ObjectObjectMap.class);
+                json.writeValue(object.reverse, ObjectObjectMap.class);
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public Translator read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                JsonValue current = jsonData.child;
+                Language language = json.readValue(Language.class, current);
+                current = current.next;
+                long shift = DigitTools.longFromHex(json.readValue(String.class, current));
+                current = current.next;
+                int cacheLevel = current.asInt();
+                current = current.next;
+                ObjectObjectMap<String, String> table = json.readValue(ObjectObjectMap.class, current);
+                current = current.next;
+                ObjectObjectMap<String, String> reverse = json.readValue(ObjectObjectMap.class, current);
+                return new Translator(language, shift, cacheLevel, table, reverse);
             }
         });
     }

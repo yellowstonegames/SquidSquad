@@ -395,11 +395,29 @@ se$->z
      * @param language a Language, typically one of the static constants in that class or a mix of them.
      * @param shift any long; this will be used to alter the specific words generated unless it is 0
      */
-    public Translator(Language language, long shift)
-    {
+    public Translator(Language language, long shift) {
         rng = new SemiRandom(0L);
         table = new ObjectObjectMap<>(512);
         reverse = new ObjectObjectMap<>(512);
+        initialize(language, shift);
+    }
+
+    /**
+     * Constructs a Translator that will use the given style of language generator to produce its text, using
+     * the specified {@code shift} as a long to modify the generated words from the language's normal results,
+     * has the specified cache level, and already has a lookup table and reverse for that populated.
+     * @param language a Language, typically one of the static constants in that class or a mix of them.
+     * @param shift any long; this will be used to alter the specific words generated unless it is 0
+     * @param cacheLevel an int between 0 and 2 inclusive, where 0 caches no values, 1 caches only forward, and 2 both
+     * @param forwardTable corresponds to {@link #table}, mapping untranslated values to generated words
+     * @param reverseTable corresponds to {@link #reverse}, mapping generated words to their untranslated values
+     */
+    public Translator(Language language, long shift, int cacheLevel, Map<String, String> forwardTable,
+                      Map<String, String> reverseTable) {
+        rng = new SemiRandom(0L);
+        table = new ObjectObjectMap<>(forwardTable);
+        reverse = new ObjectObjectMap<>(reverseTable);
+        this.cacheLevel = Math.min(Math.max(cacheLevel, 0), 2);
         initialize(language, shift);
     }
 
@@ -1003,8 +1021,7 @@ se$->z
     }
 
     public void setCacheLevel(int cacheLevel) {
-        if(cacheLevel >= 2) this.cacheLevel = 2;
-        else this.cacheLevel = Math.max(cacheLevel, 0);
+        this.cacheLevel = Math.min(Math.max(cacheLevel, 0), 2);
     }
 
     protected Matcher markupMatcher = Pattern.compile("\\[\\?\\](.*?)(?:\\[\\?\\]|$)").matcher();
