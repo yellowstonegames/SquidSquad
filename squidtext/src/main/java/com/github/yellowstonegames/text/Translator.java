@@ -341,7 +341,7 @@ se$->z
         this(language, 0);
     }
 
-    private Pattern[] additionalPrefixChecks = {
+    private static final Pattern[] additionalPrefixChecks = {
             //17 is REFlags.UNICODE | REFlags.IGNORE_CASE
             Pattern.compile("(?:(?:[pрρ][hн])|[fd])[aаαiτιuμυνv]$", 17),
             Pattern.compile("[kкκcсςq][uμυνv]$", 17),
@@ -1068,4 +1068,38 @@ se$->z
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Translator that = (Translator) o;
+
+        if (cacheLevel != that.cacheLevel) return false;
+        if (shift != that.shift) return false;
+        if (!language.equals(that.language)) return false;
+        if (!pluralSuffix.equals(that.pluralSuffix)) return false;
+        if (!verbingSuffix.equals(that.verbingSuffix)) return false;
+        if (!verbedSuffix.equals(that.verbedSuffix)) return false;
+        if (!verberSuffix.equals(that.verberSuffix)) return false;
+        if (!verbationSuffix.equals(that.verbationSuffix)) return false;
+        if (!verbmentSuffix.equals(that.verbmentSuffix)) return false;
+        if (!nounySuffix.equals(that.nounySuffix)) return false;
+        if (!nounenSuffix.equals(that.nounenSuffix)) return false;
+        if (!nounistSuffix.equals(that.nounistSuffix)) return false;
+        if (!nounismSuffix.equals(that.nounismSuffix)) return false;
+        if (!nounicSuffix.equals(that.nounicSuffix)) return false;
+        if (!nouniveSuffix.equals(that.nouniveSuffix)) return false;
+        if (!adjectivelySuffix.equals(that.adjectivelySuffix)) return false;
+        if (!adjectivestSuffix.equals(that.adjectivestSuffix)) return false;
+        if (!reverbPrefix.equals(that.reverbPrefix)) return false;
+        if (!ennounPrefix.equals(that.ennounPrefix)) return false;
+        if (!preverbPrefix.equals(that.preverbPrefix)) return false;
+        if (!postverbPrefix.equals(that.postverbPrefix)) return false;
+        if (!proverbPrefix.equals(that.proverbPrefix)) return false;
+        if (!antiverbPrefix.equals(that.antiverbPrefix)) return false;
+        if (!disnounPrefix.equals(that.disnounPrefix)) return false;
+        if (!table.equals(that.table)) return false;
+        return reverse.equals(that.reverse);
+    }
 }
