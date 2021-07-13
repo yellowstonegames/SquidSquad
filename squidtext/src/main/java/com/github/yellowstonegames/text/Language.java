@@ -5633,5 +5633,38 @@ public class Language {
 //            int maxChars = DigitTools.intFromDec(ser,gap + 1, ser.length());
 //            return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);
 //        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SentenceForm that = (SentenceForm) o;
+
+            if (minWords != that.minWords) return false;
+            if (maxWords != that.maxWords) return false;
+            if (maxChars != that.maxChars) return false;
+            if (Double.compare(that.midPunctuationFrequency, midPunctuationFrequency) != 0) return false;
+            if (!rng.equals(that.rng)) return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
+            if (!Arrays.equals(midPunctuation, that.midPunctuation)) return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
+            if (!Arrays.equals(endPunctuation, that.endPunctuation)) return false;
+            return language.equals(that.language);
+        }
+
+        @Override
+        public String toString() {
+            return "SentenceForm{" +
+                    "rng=" + rng +
+                    ", minWords=" + minWords +
+                    ", maxWords=" + maxWords +
+                    ", maxChars=" + maxChars +
+                    ", midPunctuation=" + Arrays.toString(midPunctuation) +
+                    ", endPunctuation=" + Arrays.toString(endPunctuation) +
+                    ", midPunctuationFrequency=" + midPunctuationFrequency +
+                    ", language=" + language +
+                    '}';
+        }
     }
 }
