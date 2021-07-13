@@ -45,5 +45,21 @@ public class JsonTextTest {
         Assert.assertEquals(sf, sf2);
         System.out.println();
     }
+    @Test
+    public void testTranslator() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonText.registerTranslator(json);
+        Language lang = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
+        String sentence = "For you, I can translate; I will lower my steep rate; to something affordable; since you are adorable.";
+        Translator t = new Translator(lang, -1L), t2;
+        String cipher1 = t.cipher(sentence);
+        String data = json.toJson(t);
+        System.out.println(data);
+        t2 = json.fromJson(Translator.class, data);
+        System.out.println(cipher1);
+        System.out.println(t2.cipher(sentence));
+        Assert.assertEquals(t, t2);
+        System.out.println();
+    }
 
 }
