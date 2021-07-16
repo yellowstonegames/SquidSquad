@@ -8,7 +8,7 @@ javadoc.exclude("emu")
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:$junitVersion"
 }
 
 jar {

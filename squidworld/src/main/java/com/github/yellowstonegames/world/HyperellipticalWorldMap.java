@@ -33,8 +33,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
             yPositions,
             zPositions;
     protected final int[] edges;
-    private final float alpha, kappa, epsilon;
-    private final float[] Z;
+    public final float alpha, kappa, epsilon;
+    private final float[] buffer;
 
 
     /**
@@ -203,9 +203,9 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
 
         this.alpha = alpha;
         this.kappa = kappa;
-        this.Z = new float[height << 2];
+        this.buffer = new float[height << 2];
         this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
-        ProjectionTools.simpsonODESolveHyperellipse(1, this.Z, 0.25f / height, alpha, kappa, epsilon);
+        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25f / height, alpha, kappa, epsilon);
     }
 
     /**
@@ -234,7 +234,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         alpha = other.alpha;
         kappa = other.kappa;
         epsilon = other.epsilon;
-        Z = Arrays.copyOf(other.Z, other.Z.length);
+        buffer = Arrays.copyOf(other.buffer, other.buffer.length);
     }
 
 
@@ -269,14 +269,14 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
     @Override
     public Coord project(float latitude, float longitude) {
         final float z0 = Math.abs(TrigTools.sin(latitude));
-        final int i = Arrays.binarySearch(Z, z0);
+        final int i = Arrays.binarySearch(buffer, z0);
         final float y;
         if (i >= 0)
-            y = i / (Z.length - 1f);
-        else if (-i - 1 >= Z.length)
-            y = Z[Z.length - 1];
+            y = i / (buffer.length - 1f);
+        else if (-i - 1 >= buffer.length)
+            y = buffer[buffer.length - 1];
         else
-            y = ((z0 - Z[-i - 2]) / (Z[-i - 1] - Z[-i - 2]) + (-i - 2)) / (Z.length - 1f);
+            y = ((z0 - buffer[-i - 2]) / (buffer[-i - 1] - buffer[-i - 2]) + (-i - 2)) / (buffer.length - 1f);
         final int xx = (int) (((longitude - getCenterLongitude() + 12.566370614359172f) % 6.283185307179586f) * Math.abs(alpha + (1 - alpha) * Math.pow(1 - Math.pow(Math.abs(y), kappa), 1 / kappa)) + 0.5f);
         final int yy = (int) (y * Math.signum(latitude) * height * 0.5f + 0.5f);
         return Coord.get(wrapX(xx, yy), wrapY(xx, yy));
@@ -323,7 +323,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
 
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            lon = TrigTools.asin(Z[(int) (0.5f + Math.abs(yPos * iry) * (Z.length - 1))]) * Math.signum(yPos);
+            lon = TrigTools.asin(buffer[(int) (0.5f + Math.abs(yPos * iry) * (buffer.length - 1))]) * Math.signum(yPos);
             qs = TrigTools.sin(lon);
             qc = TrigTools.cos(lon);
 

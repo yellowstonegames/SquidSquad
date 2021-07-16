@@ -54,7 +54,7 @@ public class ProjectionTools {
     /**
      * Solves a simple ODE using Simpson's rule and a constant step size; hard-coded to solve a hyperelliptical map
      * projection task.
-     * @param T The maximum time value at which to sample (must be positive)
+     * @param maximum The maximum time value at which to sample (must be positive)
      * @param y the double array to fill with samples; must not be null and must have length 1 or greater
      * @param h The internal step size (must be positive)
      * @param alpha part of the hyperelliptical projection's parameters 
@@ -62,14 +62,14 @@ public class ProjectionTools {
      * @param epsilon calculated beforehand using {@link #simpsonIntegrateHyperellipse(double, double, double, double)}
      * @return y, after modifications
      */
-    public static float[] simpsonODESolveHyperellipse(final double T, final float[] y, final double h, final double alpha, final double kappa, final double epsilon)
+    public static float[] simpsonODESolveHyperellipse(final double maximum, final float[] y, final double h, final double alpha, final double kappa, final double epsilon)
     {
         final int m = y.length - 1, n = m + 1;
         double t = 0;
         double sum = 0;
         for (int i = 0; i <= m; i++) {
-            while (t < i * T / n) {
-                final double tph = Math.min(t + h, i * T / n);
+            while (t < i * maximum / n) {
+                final double tph = Math.min(t + h, i * maximum / n);
                 sum += (tph - t) / 6.0 * (Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(t), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
                         + 4.0 * Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs((t + tph) * 0.5), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
                         + Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(tph), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon)));

@@ -8,7 +8,7 @@ idea.module.excludeDirs += [file("src/main/java/emu/")]
 dependencies {
     api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
     api "com.github.tommyettinger:regexodus:$regexodusVersion"
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:$junitVersion"
 }
 
 jar {

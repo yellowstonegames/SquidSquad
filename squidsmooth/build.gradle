@@ -11,7 +11,7 @@ dependencies {
     testImplementation project(':squidplace')
     testImplementation project(':squidtext')
     testImplementation project(':squidpath')
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }

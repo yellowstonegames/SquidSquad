@@ -4,7 +4,7 @@ eclipse.project.name = ext.projectName
 
 dependencies {
     api project(':squidcore')
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:$junitVersion"
 }
 
 jar {
