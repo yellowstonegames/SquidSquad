@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.yellowstonegames.old.v300.DiverRNG;
 import com.github.yellowstonegames.old.v300.LightRNG;
 import com.github.yellowstonegames.store.core.JsonCore;
 
@@ -21,9 +22,9 @@ public final class JsonOld {
      */
     public static void registerAll(@Nonnull Json json) {
         registerLightRNG(json);
+        registerDiverRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
-
 
     /**
      * Registers LightRNG with the given Json object, so LightRNG can be written to and read from JSON.
@@ -35,7 +36,7 @@ public final class JsonOld {
         json.setSerializer(LightRNG.class, new Json.Serializer<LightRNG>() {
             @Override
             public void write(Json json, LightRNG object, Class knownType) {
-                json.writeValue("#LigR`" + Long.toString(object.getSelectedState(0), 36) + "`");
+                json.writeValue("#LigR`" + Long.toString(object.getState(), 36) + "`");
             }
 
             @Override
@@ -49,4 +50,27 @@ public final class JsonOld {
         });
     }
 
+    /**
+     * Registers DiverRNG with the given Json object, so DiverRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDiverRNG(@Nonnull Json json) {
+        json.addClassTag("#DivR", DiverRNG.class);
+        json.setSerializer(DiverRNG.class, new Json.Serializer<DiverRNG>() {
+            @Override
+            public void write(Json json, DiverRNG object, Class knownType) {
+                json.writeValue("#DivR`" + Long.toString(object.getSelectedState(0), 36) + "`");
+            }
+
+            @Override
+            public DiverRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new DiverRNG(state);
+            }
+        });
+    }
 }
