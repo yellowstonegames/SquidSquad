@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author Sebastiano Vigna
  * @author Tommy Ettinger
  */
-public final class LightRNG implements LegacyRandom {
+public final class LightRNG implements LegacyRandom, StatefulRandomness {
     public long state; /* The state can be seeded with any value. */
 
     /** Creates a new generator seeded using Math.random. */

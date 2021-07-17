@@ -5,7 +5,7 @@ import com.github.yellowstonegames.core.Hasher;
 
 import javax.annotation.Nonnull;
 
-public final class LinnormRNG implements LegacyRandom {
+public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
     private long state; /* The state can be seeded with any value. */
 
     /**

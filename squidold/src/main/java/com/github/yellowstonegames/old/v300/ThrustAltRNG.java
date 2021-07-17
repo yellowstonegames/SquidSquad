@@ -2,7 +2,7 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-public final class ThrustAltRNG implements LegacyRandom {
+public final class ThrustAltRNG implements LegacyRandom, StatefulRandomness {
     /**
      * Can be any long value.
      */

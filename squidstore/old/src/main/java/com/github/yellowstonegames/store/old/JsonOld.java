@@ -60,7 +60,7 @@ public final class JsonOld {
         json.setSerializer(DiverRNG.class, new Json.Serializer<DiverRNG>() {
             @Override
             public void write(Json json, DiverRNG object, Class knownType) {
-                json.writeValue("#DivR`" + Long.toString(object.getSelectedState(0), 36) + "`");
+                json.writeValue("#DivR`" + Long.toString(object.getState(), 36) + "`");
             }
 
             @Override

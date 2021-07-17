@@ -4,7 +4,7 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class DiverRNG implements LegacyRandom {
+public final class DiverRNG implements LegacyRandom, StatefulRandomness {
 
     private long state; /* The state can be seeded with any value. */
 
@@ -22,6 +22,16 @@ public final class DiverRNG implements LegacyRandom {
 
     public DiverRNG(final String seed) {
         state = CrossHash.hash64(seed);
+    }
+
+    @Override
+    public long getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(long state) {
+        this.state = state;
     }
 
     @Override

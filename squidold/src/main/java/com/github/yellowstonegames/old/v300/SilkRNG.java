@@ -4,7 +4,7 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class SilkRNG implements LegacyRandom {
+public final class SilkRNG implements LegacyRandom, StatefulRandomness {
 
     public int stateA, stateB;
 
