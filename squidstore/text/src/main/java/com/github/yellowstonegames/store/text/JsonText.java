@@ -58,7 +58,7 @@ public final class JsonText {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLanguageSentenceForm(@Nonnull Json json) {
-        JsonCore.registerEnhancedRandom(json);
+        JsonSupport.registerEnhancedRandom(json);
         registerLanguage(json);
         json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
             @Override
