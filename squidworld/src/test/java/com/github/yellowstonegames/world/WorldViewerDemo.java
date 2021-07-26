@@ -28,7 +28,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //    private static final int width = 512, height = 256; // mimic
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400; // fast rotations
-    private static final int width = 300, height = 300;
+//    private static final int width = 300, height = 300;
+//    private static final int width = 200, height = 100; // tiny maps, meant for hex ratio
+    private static final int width = 800, height = 400; // meant for hex ratio
 //    private static final int width = 1600, height = 800;
 //    private static final int width = 900, height = 900;
 //    private static final int width = 700, height = 700;
@@ -102,8 +104,11 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, new FastNoise(rng.nextInt(), 1f, FastNoise.SIMPLEX_FRACTAL, 2), 0.7);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.7);
 //        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.6f);
-        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
-        //world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
+
+//        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
+
+//        world = new RoundSideWorldMap(seed, width, height, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
+        world = new HexagonalWorldMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.9f);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0625, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0, 2.0);
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.6);
@@ -229,23 +234,14 @@ public class WorldViewerDemo extends ApplicationAdapter {
         //// heatModifier defaults to being higher than 1.0 on average here so polar ice caps are smaller.
         world.seedA = (int)(seed & 0xFFFFFFFFL);
         world.seedB = (int) (seed >>> 32);
-        wmv.generate();
-        // earlier settings
-//        wmv.generate((int)(seed & 0xFFFFFFFFL), (int) (seed >>> 32),
-//                0.9 + NumberTools.formCurvedDouble((seed ^ 0x123456789ABCDL) * 0x12345689ABL) * 0.3,
-//                DiverRNG.determineDouble(seed * 0x12345L + 0x54321L) * 0.55 + 0.9);
-        // implementation used in WorldMapView.generate() with no args
-//        wmv.generate(world.seedA, world.seedB,
-//                1.0 + NumberTools.formCurvedDouble((world.seedA ^ 0x123456789ABCDL) * 0x12345689ABL ^ world.seedB) * 0.25,
-//                DiverRNG.determineDouble(world.seedB * 0x12345L + 0x54321L ^ world.seedA) * 0.25 + 1.0);
-
+        wmv.generate(world.seedA, world.seedB, 1f, 1.25f);
         wmv.show();
         ttg = System.currentTimeMillis() - startTime;
     }
     public void rotate()
     {
         long startTime = System.currentTimeMillis();
-        world.setCenterLongitude((startTime & 0x7FFFFFL) * 0x1p-12f);
+        world.setCenterLongitude((startTime & 0x7FFFFFL) * (1f/4096f));
         //// maybe comment in next line if using something other than RotatingSpaceView
 //        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
         //// comment out next line if using something other than RotatingSpaceView

@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * A modified version of the Eckert II projection, shaped like an elongated hexagon. This tries to keep the angles
  * of a regular hexagon, so it could be used for a map with a hexagonal grid; Eckert II uses different angles from
- * a regular hexagon. It looks good when its width is roughly twice its height; an 8:5 ratio seems even better.
+ * a regular hexagon. It looks best when its width is twice its height.
  */
 @Beta
 public class HexagonalWorldMap extends WorldMapGenerator {
@@ -237,14 +237,15 @@ public class HexagonalWorldMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, thb, thx, thy, lon, lat,
-                rx = width * (0.25f * 163.5f / 180f), irx = 1.326500428177002f / rx, hw = width * 0.5f,
-                ry = height * (0.5f * 163.5f / 180f), iry = 1f / ry;
+                rx = width * (0.25f /* * 163.5f / 180f */), irx = /* 1.326500428177002f */ 1.5f / rx, hw = width * 0.5f,
+                ry = height * (0.5f /* * 163.5f / 180f */), iry = 1f / ry;
 
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             thy = yPos * iry;
             thb = 2 - Math.abs(thy) / 1.4472025091165353f;
-            thx = 2 - 0.75f * Math.abs(thy) / 1.4472025091165353f;
+//            thx = thb;
+            thx = 2 - Math.abs(thy) * (0.75f / 1.4472025091165353f);
             //1.4472025091165353 == Math.sqrt(2 * 3.14159265358979323846 / 3);
             lon = (float) Math.sqrt(6.0f * 3.14159265358979323846f) / (thx + thx);
 //                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? 0x1.0p100 : irx / (0.42223820031577125 * (1.0 + thx));
