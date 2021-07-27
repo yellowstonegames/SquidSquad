@@ -181,10 +181,14 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         CoordOrderedSet initial = new CoordOrderedSet(limit);
         final int xOff = rng.next(sector), yOff = rng.next(sector);
         for (int i = 1; initial.size() < limit; i++) {
-            initial.add(Coord.get((vdc(5, i) + xOff & sectorMask) + ((i & sectors - 1) << shift - sectorShift),
-                    (vdc(3, i) + yOff & sectorMask) + (((i >>> sectorShift) & sectors - 1) << shift - sectorShift) ));
+            final Coord pt = Coord.get((vdc(5, i) + xOff & sectorMask) + ((initial.size() & sectors - 1) << shift - sectorShift),
+                    (vdc(3, i) + yOff & sectorMask) + (((initial.size() >>> sectorShift) & sectors - 1) << shift - sectorShift) );
+            initial.add(pt);
+//            System.out.println(pt + " in x sector " + (pt.x >>> shift - sectorShift) + ", y sector " + (pt.y >>> shift - sectorShift)
+//            + ", coded sector " + ((pt.x >>> shift - sectorShift) << sectorShift | (pt.y >>> shift - sectorShift)));
         }
-        rng.shuffle(initial);
+        //// removed because it messes up the initial ordering; could be added back if it shuffled in groups of 16.
+//        rng.shuffle(initial);
         energy.clear();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -196,11 +200,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         Arrays.fill(lightCounts, 0);
 
         for(Coord c : initial) {
-            if((ctr & (lightOccurrence << sectorShift + sectorShift) - 1) == 0) {
-                Arrays.fill(lightCounts, 0);
-            }
-            lightCounts[(c.x >>> shift - sectorShift) << sectorShift | (c.y >>> shift - sectorShift)]++;
-
             energize(c);
             done[c.x][c.y] = ctr++;
         }
