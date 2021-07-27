@@ -237,20 +237,18 @@ public class HexagonalWorldMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, thb, thx, thy, lon, lat,
-                rx = width * (0.25f /* * 163.5f / 180f */), irx = /* 1.326500428177002f */ 1.5f / rx, hw = width * 0.5f,
-                ry = height * (0.5f /* * 163.5f / 180f */), iry = 1f / ry;
+                rx = width * (0.25f), irx = 1.5f / rx, hw = width * 0.5f,
+                ry = height * (0.5f), iry = 1f / ry;
 
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             thy = yPos * iry;
             thb = 2 - Math.abs(thy) / 1.4472025091165353f;
-//            thx = thb;
             thx = 2 - Math.abs(thy) * (0.75f / 1.4472025091165353f);
             //1.4472025091165353 == Math.sqrt(2 * 3.14159265358979323846 / 3);
-            lon = (float) Math.sqrt(6.0f * 3.14159265358979323846f) / (thx + thx);
-//                lon = (thx == Math.PI * 0.5 || thx == Math.PI * -0.5) ? 0x1.0p100 : irx / (0.42223820031577125 * (1.0 + thx));
+            lon = 4.3416075273496055f / (thx + thx);
+            //4.3416075273496055 == Math.sqrt(6.0 * 3.14159265358979323846)
             qs = Math.signum(thy) * (4f - thb * thb) * (1f / 3f);
-//                qs = (thb + (thx + 2.0) * thy) * 0.2800495767557787;
             lat = TrigTools.asin(qs);
 
             qc = TrigTools.cos(lat);
