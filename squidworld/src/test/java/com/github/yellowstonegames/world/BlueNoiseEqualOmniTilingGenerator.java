@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
@@ -21,7 +19,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -45,33 +42,36 @@ import java.util.Date;
  * energy spreads within a sector, it stays there and affects nothing else. Where energy crosses the edge between
  * sectors, such as the right edge of one sector spilling over into the left edge of a neighbor, the spread portion
  * actually extends across the corresponding edges of all sectors (here, all left edges). To avoid spreading much more
- * energy than normal, the dispersed energy is lessened; it is effectively divided by the number of sectors. The rest of
- * the code is roughly the same as Wronski's; we don't have access to Numpy or Jax, so we make do with jdkgdxds.
+ * energy than normal, the dispersed energy is lessened; it is effectively divided by the number of sectors. There is
+ * an extra step for this "Equal" Omni-Tiling generator, needed to ensure each resulting texture has the correct amount
+ * of occurrences of each pixel value. It tracks how many times a sector has been given a value with the current
+ * slowly-rising counter, and won't choose a sector to put energy into if it's already received its full allotment of
+ * cells. The sector tracking is reset when the counter changes. The rest of the code is roughly the same as Wronski's;
+ * we don't have access to Numpy or Jax, so we make do with jdkgdxds.
  * <br>
  * This makes use of some of the more unusual and powerful features in jdkgdxds; that's the reason this tool was moved
  * from SquidLib (which already has existing code to analyze blue noise, and so seemed like a nice fit) to SquidSquad.
  * The "energy" level of each pixel in the grid is tracked by an ObjectFloatOrderedMap with Coord keys. This map is
  * dense, with all 64x64 (or more) cells filled by Coord keys, and the reasons it's used are to pair points with their
- * energies, and because it is an Ordered, so it provides
- * {@link com.github.tommyettinger.ds.Ordered#selectRanked(Comparator, int)}. In libGDX, the Select code only applies to
- * arrays and Arrays (ugh, these names...), but in jdkgdxds, it applies to all Ordered implementations. One could use
- * OrderedMap's orderedKeys in libGDX and selectRanked() with that, but there's no OrderedMap with primitive float keys.
+ * energies, and because it is an Ordered, so it can be sorted. This code sorts the energy grid a lot; it uses the sort
+ * to ensure that when a sector is denied another jolt of energy, the sector that does receive the jolt is the next-best
+ * candidate.
  */
 public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 5125x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 9;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int size = 1 << shift;
     private static final int sectors = 1 << sectorShift;
