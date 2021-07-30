@@ -71,7 +71,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 2;
+    private static final int sectorShift = 3;
 
     private static final int size = 1 << shift;
     private static final int sectors = 1 << sectorShift;
@@ -221,24 +221,20 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             done[low.x][low.y] = ctr;
         }
         ByteBuffer buffer = pm.getPixels();
+        final int toByteShift = Math.max(0, shift + shift - 8);
         if(isTriangular) {
-            final float shrink = 1f / (1 << shift + shift);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
-                    float rnd = done[x][y] * shrink + 0.5f;
+                    float rnd = (done[x][y] >>> toByteShift) * 0x1p-8f + 0.5f;
                     rnd -= (int) rnd;
                     float orig = rnd * 2f - 1f;
                     rnd = (orig == 0f) ? 0f : (float) (orig / Math.sqrt(Math.abs(orig)));
                     rnd = (rnd - Math.signum(orig)) * 127.5f + 127.5f;
-//                buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
                     buffer.putInt((Math.round(rnd) & 0xFF) * 0x01010100 | 0xFF);
-//                pm.drawPixel(x, y, done[x][y] << 8 | 0xFF);
-//                pm.drawPixel(x, y, (done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
                 }
             }
         }
         else {
-            final int toByteShift = Math.max(0, shift + shift - 8);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
                     buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
