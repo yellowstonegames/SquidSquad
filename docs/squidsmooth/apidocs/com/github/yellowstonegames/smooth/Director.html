@@ -106,7 +106,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#container">container</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected long</code></div>
@@ -137,11 +137,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Function)">Director</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Function,java.util.Collection)">Director</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable)">Director</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Function,java.util.Collection,long)">Director</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable,long)">Director</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
  long&nbsp;durationMillis)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -158,19 +158,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDuration()">getDuration</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getContainer()">getContainer</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDuration()">getDuration</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the duration of each glide animation, in milliseconds.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#isPlaying()">isPlaying</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pause()">pause</a></span>()</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#isPlaying()">isPlaying</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#play()">play</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pause()">pause</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#play()">play</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setContainer(java.lang.Iterable)">setContainer</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;container)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setDuration(long)">setDuration</a></span>&#8203;(long&nbsp;duration)</code></div>
@@ -210,7 +216,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="container">
 <h3>container</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</span>&nbsp;<span class="element-name">container</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</span>&nbsp;<span class="element-name">container</span></div>
 </section>
 </li>
 <li>
@@ -253,19 +259,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.function.Function,java.util.Collection)">
+<section class="detail" id="&lt;init&gt;(java.util.function.Function,java.lang.Iterable)">
 <h3>Director</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span>&#8203;<span class="parameters">(@Nonnull
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.function.Function,java.util.Collection,long)">
+<section class="detail" id="&lt;init&gt;(java.util.function.Function,java.lang.Iterable,long)">
 <h3>Director</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span>&#8203;<span class="parameters">(@Nonnull
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,&#8203;? extends <a href="Glider.html" title="interface in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
  long&nbsp;durationMillis)</span></div>
 </section>
 </li>
@@ -328,6 +334,18 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>duration</code> - how long each glide animation should take, in milliseconds</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getContainer()">
+<h3>getContainer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;</span>&nbsp;<span class="element-name">getContainer</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setContainer(java.lang.Iterable)">
+<h3>setContainer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setContainer</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;container)</span></div>
 </section>
 </li>
 </ul>

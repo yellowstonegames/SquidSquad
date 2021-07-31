@@ -348,6 +348,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/XoshiroStarPhi32RNG.html" title="class in com.github.yellowstonegames.old.v300">XoshiroStarPhi32RNG</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#getState()">getState()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#getState()">getState()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
 <dd>
 <div class="block">Get the current internal state of the StatefulRandomness as a long.</div>
@@ -364,6 +366,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the current internal state of the StatefulRandomness as a long.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/StatefulRandomness.html#getState()">getState()</a></span> - Method in interface com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/ThrustAltRNG.html#getState()">getState()</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/ThrustAltRNG.html" title="class in com.github.yellowstonegames.old.v300">ThrustAltRNG</a></dt>
 <dd>
 <div class="block">Get the current internal state of the StatefulRandomness as a long.</div>
@@ -919,6 +923,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the current internal state of this XoshiroStarPhi32RNG with four ints, where each can be any int unless
  they are all 0 (which will be treated as if stateA is 1 and the rest are 0).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/DiverRNG.html#setState(long)">setState(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/DiverRNG.html" title="class in com.github.yellowstonegames.old.v300">DiverRNG</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/GWTRNG.html#setState(long)">setState(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/GWTRNG.html" title="class in com.github.yellowstonegames.old.v300">GWTRNG</a></dt>
 <dd>
 <div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
@@ -935,6 +941,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/StatefulRandomness.html#setState(long)">setState(long)</a></span> - Method in interface com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/ThrustAltRNG.html#setState(long)">setState(long)</a></span> - Method in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/ThrustAltRNG.html" title="class in com.github.yellowstonegames.old.v300">ThrustAltRNG</a></dt>
 <dd>
 <div class="block">Set the current internal state of this StatefulRandomness with a long.</div>
@@ -1018,6 +1026,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/old/v300/SilkRNG.html#stateB">stateB</a></span> - Variable in class com.github.yellowstonegames.old.v300.<a href="com/github/yellowstonegames/old/v300/SilkRNG.html" title="class in com.github.yellowstonegames.old.v300">SilkRNG</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/old/v300/StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300"><span class="type-name-link">StatefulRandomness</span></a> - Interface in <a href="com/github/yellowstonegames/old/v300/package-summary.html">com.github.yellowstonegames.old.v300</a></dt>
+<dd>
+<div class="block">Intended for compatibility with StatefulRandomness from SquidLib 3.x, this should be applied to LegacyRandom
+ implementations that have one <code>long</code> value or two <code>int</code> values for state, and allow freely getting and
+ setting those states.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">

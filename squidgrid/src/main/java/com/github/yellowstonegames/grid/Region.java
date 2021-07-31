@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.BitConversion;
@@ -122,14 +123,17 @@ public class Region implements Collection<Coord> {
     private int ct;
     private int[] counts;
 
-    private void tally()
-    {
-        ct = 0;
-        for (int i = 0, tmp; i < counts.length; i++) {
-            tmp = Long.bitCount(data[i]);
-            counts[i] = tmp == 0 ? 0 : (ct += tmp);
+    /**
+     * A 256-element array of {@link Region}s, each 64x64, where the first Region has an impossibly strict
+     * threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+     * and so on until the last element includes almost all points.
+     */
+    public static final Region[] BLUE_LEVELS = new Region[256];
+    static {
+        BLUE_LEVELS[0] = new Region(64, 64);
+        for (int i = -127; i < 128; i++) {
+            BLUE_LEVELS[i + 128] = new Region(BlueNoise.RAW_2D, -128, i);
         }
-        tallied = true;
     }
 
     /**
@@ -1441,6 +1445,16 @@ public class Region implements Collection<Coord> {
         }
         tallied = false;
         return this;
+    }
+
+    private void tally()
+    {
+        ct = 0;
+        for (int i = 0, tmp; i < counts.length; i++) {
+            tmp = Long.bitCount(data[i]);
+            counts[i] = tmp == 0 ? 0 : (ct += tmp);
+        }
+        tallied = true;
     }
 
     /**
@@ -5501,7 +5515,7 @@ public class Region implements Collection<Coord> {
         if(limit >= 0 && limit < ct)
             ct = limit;
         for (int i = 255; i >= 0; i--) {
-            if(ct >= andWrapping64(BlueNoise.LEVELS[i]).size())
+            if(ct >= andWrapping64(BLUE_LEVELS[i]).size())
                 return this;
         }
         return this;

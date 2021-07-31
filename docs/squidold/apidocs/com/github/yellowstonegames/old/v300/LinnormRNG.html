@@ -78,12 +78,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.github.tommyettinger.ds.support.EnhancedRandom</code>, <code><a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></code></dd>
+<dd><code>com.github.tommyettinger.ds.support.EnhancedRandom</code>, <code><a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></code>, <code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">LinnormRNG</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></span></div>
+implements <a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a>, <a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -253,7 +253,7 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.support.EnhancedRandom">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.support.EnhancedRandom</h3>
-<code>maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextGaussian, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, randomElement, randomElement, randomElement, randomElement, randomElement, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
+<code>maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextGaussian, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, previousLong, randomElement, randomElement, randomElement, randomElement, randomElement, setState, setState, setState, setState, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.yellowstonegames.old.v300.LegacyRandom">Methods inherited from interface&nbsp;com.github.yellowstonegames.old.v300.<a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></h3>
 <code><a href="LegacyRandom.html#nextSignedInt(int)">nextSignedInt</a>, <a href="LegacyRandom.html#nextSignedLong(long)">nextSignedLong</a></code></div>
@@ -519,6 +519,10 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setState</span>&#8203;<span class="parameters">(long&nbsp;seed)</span></div>
 <div class="block">Sets the seed (also the current state) of this generator.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setState</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="StatefulRandomness.html#setState(long)">setState</a></code>&nbsp;in interface&nbsp;<code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>seed</code> - the seed to use for this LinnormRNG, as if it was constructed with this seed.</dd>
 </dl>
@@ -530,6 +534,8 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getState</span>()</div>
 <div class="block">Gets the current state of this generator.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StatefulRandomness.html#getState()">getState</a></code>&nbsp;in interface&nbsp;<code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
 <dt>Returns:</dt>
 <dd>the current seed of this LinnormRNG, changed once per call to nextLong()</dd>
 </dl>

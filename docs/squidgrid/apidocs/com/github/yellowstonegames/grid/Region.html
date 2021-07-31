@@ -205,15 +205,22 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>long[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#data">data</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#height">height</a></span></code></div>
+<div class="col-first even-row-color"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>[]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#BLUE_LEVELS">BLUE_LEVELS</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">A 256-element array of <a href="Region.html" title="class in com.github.yellowstonegames.grid"><code>Region</code></a>s, each 64x64, where the first Region has an impossibly strict
+ threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+ and so on until the last element includes almost all points.</div>
+</div>
+<div class="col-first odd-row-color"><code>long[]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#data">data</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>int</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#width">width</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#height">height</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#width">width</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -1595,6 +1602,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <section class="detail" id="width">
 <h3>width</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">width</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="BLUE_LEVELS">
+<h3>BLUE_LEVELS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>[]</span>&nbsp;<span class="element-name">BLUE_LEVELS</span></div>
+<div class="block">A 256-element array of <a href="Region.html" title="class in com.github.yellowstonegames.grid"><code>Region</code></a>s, each 64x64, where the first Region has an impossibly strict
+ threshold on what points to include (it is empty), but the second has some points far apart, the third has more,
+ and so on until the last element includes almost all points.</div>
 </section>
 </li>
 </ul>

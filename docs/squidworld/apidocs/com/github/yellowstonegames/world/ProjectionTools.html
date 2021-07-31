@@ -125,7 +125,7 @@ loadScripts(document, 'script');</script>
  hyperellipse function.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float[]</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#simpsonODESolveHyperellipse(double,float%5B%5D,double,double,double,double)">simpsonODESolveHyperellipse</a></span>&#8203;(double&nbsp;T,
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#simpsonODESolveHyperellipse(double,float%5B%5D,double,double,double,double)">simpsonODESolveHyperellipse</a></span>&#8203;(double&nbsp;maximum,
  float[]&nbsp;y,
  double&nbsp;h,
  double&nbsp;alpha,
@@ -189,7 +189,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="simpsonODESolveHyperellipse(double,float[],double,double,double,double)">
 <h3>simpsonODESolveHyperellipse</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">simpsonODESolveHyperellipse</span>&#8203;<span class="parameters">(double&nbsp;T,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">simpsonODESolveHyperellipse</span>&#8203;<span class="parameters">(double&nbsp;maximum,
  float[]&nbsp;y,
  double&nbsp;h,
  double&nbsp;alpha,
@@ -199,7 +199,7 @@ loadScripts(document, 'script');</script>
  projection task.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>T</code> - The maximum time value at which to sample (must be positive)</dd>
+<dd><code>maximum</code> - The maximum time value at which to sample (must be positive)</dd>
 <dd><code>y</code> - the double array to fill with samples; must not be null and must have length 1 or greater</dd>
 <dd><code>h</code> - The internal step size (must be positive)</dd>
 <dd><code>alpha</code> - part of the hyperelliptical projection's parameters</dd>

@@ -385,14 +385,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructor that sets the language to the specified Language, sets the name to the specified name and
  the shortName to the specified shortName, sets the preferredBiomes to be a Set containing the given Strings
  in preferredBiomes, and makes the only blocked biome "Ocean". The exact String names that are viable for
- biomes can be obtained from a BiomeMapper with <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a>, or from the constants
+ biomes can be obtained from a BiomeMapper with <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a>, or from the constants
  ending in "_BIOME" in <code>Biome</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - the Language to use for potentially generating place names</dd>
 <dd><code>name</code> - the formal name of the Faction, such as "The United States of America"</dd>
 <dd><code>shortName</code> - the short name of the Faction, such as "America"</dd>
-<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a> value</dd>
+<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a> value</dd>
 </dl>
 </section>
 </li>
@@ -408,13 +408,13 @@ loadScripts(document, 'script');</script>
  the shortName to the specified shortName, sets the preferredBiomes to be a Set containing the given Strings
  in preferredBiomes, and sets the blocked biomes to be a Set containing exactly the given Strings in
  blockedBiomes. The exact String names that are viable for biomes can be obtained from a BiomeMapper with
- <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a>.</div>
+ <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - the Language to use for potentially generating place names</dd>
 <dd><code>name</code> - the formal name of the Faction, such as "The United States of America"</dd>
 <dd><code>shortName</code> - the short name of the Faction, such as "America"</dd>
-<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a> value</dd>
+<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a> value</dd>
 <dd><code>blockedBiomes</code> - a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans</dd>
 </dl>
 </section>
@@ -433,13 +433,13 @@ loadScripts(document, 'script');</script>
  in preferredBiomes, sets the blocked biomes to be a Set containing exactly the given Strings in
  blockedBiomes, and sets the preferred height codes to the ints in preferredHeight (with 4 being sea level and
  8 being the highest peaks). The exact String names that are viable for biomes can be obtained from a
- BiomeMapper with <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a>.</div>
+ BiomeMapper with <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - the Language to use for potentially generating place names</dd>
 <dd><code>name</code> - the formal name of the Faction, such as "The United States of America"</dd>
 <dd><code>shortName</code> - the short name of the Faction, such as "America"</dd>
-<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a> value</dd>
+<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a> value</dd>
 <dd><code>blockedBiomes</code> - a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans</dd>
 <dd><code>preferredHeight</code> - an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest</dd>
 </dl>
@@ -462,13 +462,13 @@ loadScripts(document, 'script');</script>
  being the highest peaks), and sets the preferred heat codes to the ints in preferredHeat (with the exact
  values depending on the BiomeMapper, but usually 0-5 range from coldest to hottest). The exact String names
  that are viable for biomes can be obtained from a BiomeMapper with
- <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a>.</div>
+ <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - the Language to use for potentially generating place names</dd>
 <dd><code>name</code> - the formal name of the Faction, such as "The United States of America"</dd>
 <dd><code>shortName</code> - the short name of the Faction, such as "America"</dd>
-<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a> value</dd>
+<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a> value</dd>
 <dd><code>blockedBiomes</code> - a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans</dd>
 <dd><code>preferredHeight</code> - an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest</dd>
 <dd><code>preferredHeat</code> - an int array of heat codes this Faction prefers to claim; typically 0 is coldest and 5 is hottest</dd>
@@ -494,13 +494,13 @@ loadScripts(document, 'script');</script>
  depending on the BiomeMapper, but usually 0-5 range from coldest to hottest), and sets the preferred moisture
  codes to the ints in preferredMoisture (withe the exact values depending on the BiomeMapper, but usually 0-5
  range from driest to wettest). The exact String names that are viable for biomes can be obtained from a
- BiomeMapper with <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a>.</div>
+ BiomeMapper with <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - the Language to use for potentially generating place names</dd>
 <dd><code>name</code> - the formal name of the Faction, such as "The United States of America"</dd>
 <dd><code>shortName</code> - the short name of the Faction, such as "America"</dd>
-<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeNameTable()"><code>BiomeMapper.getBiomeNameTable()</code></a> value</dd>
+<dd><code>preferredBiomes</code> - a String array of biome names that this Faction prefers, typically taken from a BiomeMapper's <a href="BiomeMapper.html#getBiomeTable()"><code>BiomeMapper.getBiomeTable()</code></a> value</dd>
 <dd><code>blockedBiomes</code> - a String array of biome names that this Faction will never claim; if empty, this Faction may claim oceans</dd>
 <dd><code>preferredHeight</code> - an int array of height codes this Faction prefers to claim; 4 is sea level and 8 is highest</dd>
 <dd><code>preferredHeat</code> - an int array of heat codes this Faction prefers to claim; typically 0 is coldest and 5 is hottest</dd>

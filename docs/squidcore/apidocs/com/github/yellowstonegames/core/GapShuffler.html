@@ -133,22 +133,37 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">GapShuffler</a></span>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements)</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.core.GapShuffler)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;other)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Copy constructor; duplicates <code>other</code>, you know the deal.</div>
+</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate
  infinitely through mostly-random shuffles of the given collection.</div>
 </div>
-<div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
+</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ boolean&nbsp;shareRNG)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,int,boolean)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ int&nbsp;index,
  boolean&nbsp;shareRNG)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
@@ -156,41 +171,52 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,java.lang.String)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,int,boolean,boolean)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ int&nbsp;index,
+ boolean&nbsp;shareRNG,
+ boolean&nbsp;initialShuffle)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Constructor that takes any Collection of T, optionally shuffles it with the given EnhancedRandom (only if
+ <code>initialShuffle</code> is true), and can then
+ iterate infinitely through mostly-random shuffles of the given collection.</div>
+</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,java.lang.String)">GapShuffler</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;elements,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded by <code>seed</code>, and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&nbsp;single)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements)</code></div>
-<div class="col-last even-row-color">
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&nbsp;single)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
 </div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a TricycleRandom
  or LaserRandom), and can then iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
-<div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;items,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
  boolean&nbsp;shareRNG)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
  <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
  iterate infinitely through mostly-random shuffles of the given collection.</div>
 </div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,java.lang.CharSequence)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements,
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(T%5B%5D,java.lang.CharSequence)">GapShuffler</a></span>&#8203;(<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>[]&nbsp;elements,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;seed)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded with the given CharSequence
  (hashed 3 different ways by <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a>), and can then iterate infinitely
  through mostly-random shuffles of the given collection.</div>
@@ -209,11 +235,20 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fillInto(java.util.Collection)">fillInto</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;coll)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fillInto(java.util.Collection)">fillInto</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;coll)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">The internal items used here are protected, but you can still use this method to put a shallow copy of them into
  some other Collection.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getIndex()">getIndex</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Allows getting (but not setting) the internal index this uses as it iterates through shuffled versions of the
+ same collection indefinitely.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getRNG()">getRNG</a></span>()</code></div>
@@ -251,12 +286,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <div class="block">Sets the EnhancedRandom this uses to shuffle the order of elements, optionally sharing a reference between
  outside code and the internal EnhancedRandom (when <code>shareRNG</code> is true).</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Iterable">Methods inherited from interface&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html#forEach(java.util.function.Consumer)" title="class or interface in java.lang" class="external-link">forEach</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Iterable.html#spliterator()" title="class or interface in java.lang" class="external-link">spliterator</a></code></div>
@@ -277,13 +315,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <li>
 <section class="detail" id="random">
 <h3>random</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">random</span></div>
+<div class="member-signature"><span class="annotations">@Nonnull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">random</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="elements">
 <h3>elements</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</span>&nbsp;<span class="element-name">elements</span></div>
+<div class="member-signature"><span class="annotations">@Nonnull
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</span>&nbsp;<span class="element-name">elements</span></div>
 </section>
 </li>
 <li>
@@ -381,6 +421,76 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <dd><code>items</code> - a Collection of T that will not be modified</dd>
 <dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
 <dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,int,boolean)">
+<h3>GapShuffler</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ int&nbsp;index,
+ boolean&nbsp;shareRNG)</span></div>
+<div class="block">Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (typically a <code>TricycleRandom</code>,
+ <code>LaserRandom</code> or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+ to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+ how this works. The random parameter will be copied if <code>shareRNG</code> is true, otherwise the reference will be
+ shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+ gap between identical elements if the elements are unique). This constructor takes an <code>index</code> to allow
+ duplicating an existing GapShuffler given the parts that are externally available (using <a href="#random"><code>random</code></a>,
+ <a href="#fillInto(java.util.Collection)"><code>fillInto(Collection)</code></a>, and <a href="#getIndex()"><code>getIndex()</code></a>). To actually complete a (shallow) copy, <code>shareRNG</code>
+ must be false; to do a deep copy, you need to deep-copy <code>items</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>items</code> - a Collection of T that will not be modified</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
+<dd><code>index</code> - an index in the iteration, as obtained by <a href="#getIndex()"><code>getIndex()</code></a></dd>
+<dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.Collection,com.github.tommyettinger.ds.support.EnhancedRandom,int,boolean,boolean)">
+<h3>GapShuffler</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;items,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ int&nbsp;index,
+ boolean&nbsp;shareRNG,
+ boolean&nbsp;initialShuffle)</span></div>
+<div class="block">Constructor that takes any Collection of T, optionally shuffles it with the given EnhancedRandom (only if
+ <code>initialShuffle</code> is true), and can then
+ iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
+ single element should always have a large amount of "gap" in order between one appearance and the next. It helps
+ to keep the appearance of a gap if every item in items is unique, but that is not necessary and does not affect
+ how this works. The random parameter will be copied if <code>shareRNG</code> is true, otherwise the reference will be
+ shared (which could make the results of this GapShuffler depend on outside code, though it will always maintain a
+ gap between identical elements if the elements are unique). This constructor takes an <code>index</code> to allow
+ duplicating an existing GapShuffler given the parts that are externally available (using <a href="#random"><code>random</code></a>,
+ <a href="#fillInto(java.util.Collection)"><code>fillInto(Collection)</code></a>, and <a href="#getIndex()"><code>getIndex()</code></a>). To actually complete a (shallow) copy, <code>shareRNG</code>
+ must be false; to do a deep copy, you need to deep-copy <code>items</code>. You can use <code>initialShuffle</code> to
+ copy items from another GapShuffler; most of the constructors here act like this does when <code>initialShuffle</code>
+ is true, but the copy constructor <a href="#%3Cinit%3E(com.github.yellowstonegames.core.GapShuffler)"><code>GapShuffler(GapShuffler)</code></a> does not (it uses this method).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>items</code> - a Collection of T that will not be modified</dd>
+<dd><code>random</code> - an EnhancedRandom, such as a LaserRandom; will be copied and not used directly</dd>
+<dd><code>index</code> - an index in the iteration, as obtained by <a href="#getIndex()"><code>getIndex()</code></a></dd>
+<dd><code>shareRNG</code> - if false, <code>random</code> will be copied and no reference will be kept; if true, <code>random</code> will be shared with the outside code</dd>
+<dd><code>initialShuffle</code> - if true, this will shuffle its copy of <code>items</code>; if false, then items will be kept in the same order</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.core.GapShuffler)">
+<h3>GapShuffler</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GapShuffler</span>&#8203;<span class="parameters">(<a href="GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;<a href="GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;&nbsp;other)</span></div>
+<div class="block">Copy constructor; duplicates <code>other</code>, you know the deal. This does not share its <a href="#random"><code>random</code></a> field with
+ <code>other</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>other</code> - another GapShuffler; its item type will also be used here</dd>
 </dl>
 </section>
 </li>
@@ -566,6 +676,40 @@ implements <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>coll</code> - a Collection that will have each of the possible items this can produce added into it, in no particular order</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getIndex()">
+<h3>getIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getIndex</span>()</div>
+<div class="block">Allows getting (but not setting) the internal index this uses as it iterates through shuffled versions of the
+ same collection indefinitely. This is mostly meant for serialization code to be able to replicate the state of
+ this GapShuffler. This is mostly useful with <a href="#fillInto(java.util.Collection)"><code>fillInto(Collection)</code></a> and some kind of insertion-ordered
+ Collection (like <code>ObjectList</code>, which lets the index match an item in that Collection.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>an index used internally to determine how far through a particular shuffle the iteration has gotten</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="equals(java.lang.Object)">
+<h3>equals</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

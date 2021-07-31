@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <h1 title="All&amp;nbsp;Classes" class="title">All&nbsp;Classes</h1>
 </div>
 <div id="all-classes-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interface Summary</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Class Summary</button><button id="all-classes-table-tab6" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab6', 2)" class="table-tab">Annotation Interfaces Summary</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interface Summary</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Class Summary</button><button id="all-classes-table-tab3" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab3', 2)" class="table-tab">Enum Class Summary</button><button id="all-classes-table-tab6" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab6', 2)" class="table-tab">Annotation Interfaces Summary</button></div>
 <div id="all-classes-table.tabpanel" role="tabpanel">
 <div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
@@ -75,25 +75,45 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">A palette of predefined colors as packed Oklab ints, and tools for obtaining Oklab int colors from a description.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;<a href="com/github/yellowstonegames/core/GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/Dice.html" title="class in com.github.yellowstonegames.core">Dice</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="block">Class for emulating various traditional RPG-style dice rolls.</div>
+</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/Dice.Rule.html" title="class in com.github.yellowstonegames.core">Dice.Rule</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="block">A rule for how to roll a particular set of dice and operations to perform on them, such as "3d6+4" to roll three
+ 6-sided dice and add 4 to the result.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="block">Utility class for converting to and from numbers and their String representations.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/yellowstonegames/core/DigitTools.Encoding.html" title="enum class in com.github.yellowstonegames.core">DigitTools.Encoding</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Stores various ways to encode digits, such as binary (<a href="com/github/yellowstonegames/core/DigitTools.Encoding.html#BASE2"><code>DigitTools.Encoding.BASE2</code></a>, or just 0 and 1), decimal (<a href="com/github/yellowstonegames/core/DigitTools.Encoding.html#BASE10"><code>DigitTools.Encoding.BASE10</code></a>,
+ 0 through 9), hexadecimal (<a href="com/github/yellowstonegames/core/DigitTools.Encoding.html#BASE16"><code>DigitTools.Encoding.BASE16</code></a>), and the even larger <a href="com/github/yellowstonegames/core/DigitTools.Encoding.html#BASE36"><code>DigitTools.Encoding.BASE36</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;<a href="com/github/yellowstonegames/core/GapShuffler.html" title="type parameter in GapShuffler">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
  quick succession; that is, there should always be a gap between the same item's occurrences.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab6"><a href="com/github/yellowstonegames/core/annotations/GwtIncompatible.html" title="annotation in com.github.yellowstonegames.core.annotations">GwtIncompatible</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab6">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab6"><a href="com/github/yellowstonegames/core/annotations/GwtIncompatible.html" title="annotation in com.github.yellowstonegames.core.annotations">GwtIncompatible</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab6">
 <div class="block">An annotation for the GWT compiler.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/Hasher.html" title="class in com.github.yellowstonegames.core">Hasher</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">64-bit and 32-bit hashing functions that we can rely on staying the same cross-platform.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab1 all-classes-table"><a href="com/github/yellowstonegames/core/IFlawed.html" title="interface in com.github.yellowstonegames.core">IFlawed</a></div>
-<div class="col-last odd-row-color all-classes-table-tab1 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab1 all-classes-table"><a href="com/github/yellowstonegames/core/IFlawed.html" title="interface in com.github.yellowstonegames.core">IFlawed</a></div>
+<div class="col-last even-row-color all-classes-table-tab1 all-classes-table">
 <div class="block">An empty marker interface to indicate that an implementor has known or intentional issues with a key property of its
  functionality.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/LZByteEncoding.html" title="class in com.github.yellowstonegames.core">LZByteEncoding</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="block">Compresses Strings to byte arrays (and back again) using a type of LZ-compression.</div>
 </div>
 <div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/github/yellowstonegames/core/LZSEncoding.html" title="class in com.github.yellowstonegames.core">LZSEncoding</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">

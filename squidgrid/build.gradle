@@ -7,6 +7,7 @@ javadoc.exclude("emu")
 
 dependencies {
     api project(':squidcore')
+    api "com.github.tommyettinger:bluegrass:$bluegrassVersion"
     testImplementation "junit:junit:$junitVersion"
 }
 

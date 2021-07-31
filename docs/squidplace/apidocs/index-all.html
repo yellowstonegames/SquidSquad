@@ -145,6 +145,25 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.Moisture.html" title="enum class in com.github.yellowstonegames.place"><span class="type-name-link">Biome.Moisture</span></a> - Enum Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill(int[][], int, EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dd>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">blueSpill(int[][], int, EnhancedRandom, boolean)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dd>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill(int, int, int, EnhancedRandom)</a></span> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dd>
+<div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
+ noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
+ range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
+ original point.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/place/Biome.html#BOREAL_FOREST_BIOME">BOREAL_FOREST_BIOME</a></span> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
 <dd>
 <div class="block">Forest that tends to be cold and very wet.</div>

@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.TricycleRandom;
@@ -31,8 +32,8 @@ import java.util.Date;
  * but this approach effectively makes a Wang tiling where any left edge can tile seamlessly with any right edge, and
  * any top edge with any bottom edge. It also makes blue noise textures, rather than point sets, and these textures
  * satisfy the progressive quality of void-and-cluster blue noise. The generated textures have been incorporated into
- * {@link com.github.yellowstonegames.grid.BlueNoise}, which also includes a sample way of quickly laying out textures
- * given a position and a seed in {@link com.github.yellowstonegames.grid.BlueNoise#getSeededOmniTiling(int, int, int)}.
+ * {@link BlueNoise}, which also includes a sample way of quickly laying out textures
+ * given a position and a seed in {@link BlueNoise#getSeeded(int, int, int)}.
  * <br>
  * The technical details of how this differs from void-and-cluster aren't too complex. Normally, void-and-cluster (as
  * Wronski implemented it) spreads out "energy" away from pixels it has selected, and that energy is used to determine

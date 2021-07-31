@@ -269,7 +269,7 @@ implements <a href="BiomeMapper.html" title="interface in com.github.yellowstone
 <div class="block">Gets the biome code for the dominant biome at a given x,y position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.github.yellowstonegames.place.Biome[]</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getBiomeNameTable()">getBiomeNameTable</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getBiomeTable()">getBiomeTable</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a String array where biome codes can be used as indices to look up a name for the biome they refer to.</div>
 </div>
@@ -657,9 +657,9 @@ implements <a href="BiomeMapper.html" title="interface in com.github.yellowstone
 </section>
 </li>
 <li>
-<section class="detail" id="getBiomeNameTable()">
-<h3>getBiomeNameTable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.yellowstonegames.place.Biome[]</span>&nbsp;<span class="element-name">getBiomeNameTable</span>()</div>
+<section class="detail" id="getBiomeTable()">
+<h3>getBiomeTable</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.yellowstonegames.place.Biome[]</span>&nbsp;<span class="element-name">getBiomeTable</span>()</div>
 <div class="block">Gets a String array where biome codes can be used as indices to look up a name for the biome they refer to.
  This table uses 6 levels of heat and 6 levels of moisture, and tracks rivers, coastlines, lakes, and oceans
  as potentially different types of terrain. Biome codes can be obtained with <a href="#getBiomeCode(int,int)"><code>getBiomeCode(int, int)</code></a>.
@@ -674,7 +674,7 @@ implements <a href="BiomeMapper.html" title="interface in com.github.yellowstone
  is affecting biome A with <a href="#extractMixAmount(int)"><code>extractMixAmount(int)</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="BiomeMapper.html#getBiomeNameTable()">getBiomeNameTable</a></code>&nbsp;in interface&nbsp;<code><a href="BiomeMapper.html" title="interface in com.github.yellowstonegames.world">BiomeMapper</a></code></dd>
+<dd><code><a href="BiomeMapper.html#getBiomeTable()">getBiomeTable</a></code>&nbsp;in interface&nbsp;<code><a href="BiomeMapper.html" title="interface in com.github.yellowstonegames.world">BiomeMapper</a></code></dd>
 <dt>Returns:</dt>
 <dd>a direct reference to <code>Biome.TABLE</code>, a Biome array with 66 items</dd>
 </dl>

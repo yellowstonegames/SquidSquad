@@ -218,8 +218,21 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.world.GlobeMap)">GlobeMap</a></span>&#8203;(<a href="GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a>&nbsp;other)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,float)">GlobeMap</a></span>&#8203;(long&nbsp;initialSeed,
+ int&nbsp;mapWidth,
+ int&nbsp;mapHeight,
+ com.github.yellowstonegames.grid.Noise&nbsp;terrainNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;terrainLayeredNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;heatNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;moistureNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;otherRidgedNoise,
+ float&nbsp;octaveMultiplier)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.github.yellowstonegames.world.GlobeMap)">GlobeMap</a></span>&#8203;(<a href="GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a>&nbsp;other)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Copies the SpaceViewWorldMap <code>other</code> to construct a new one that is exactly the same.</div>
 </div>
 </div>
@@ -544,6 +557,46 @@ loadScripts(document, 'script');</script>
 <dd><code>mapWidth</code> - the width of the map(s) to generate; cannot be changed later</dd>
 <dd><code>mapHeight</code> - the height of the map(s) to generate; cannot be changed later</dd>
 <dd><code>noiseGenerator</code> - an instance of a noise generator capable of 3D noise, usually <code>Noise</code></dd>
+<dd><code>octaveMultiplier</code> - used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(long,int,int,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,float)">
+<h3>GlobeMap</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlobeMap</span>&#8203;<span class="parameters">(long&nbsp;initialSeed,
+ int&nbsp;mapWidth,
+ int&nbsp;mapHeight,
+ com.github.yellowstonegames.grid.Noise&nbsp;terrainNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;terrainLayeredNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;heatNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;moistureNoise,
+ com.github.yellowstonegames.grid.Noise&nbsp;otherRidgedNoise,
+ float&nbsp;octaveMultiplier)</span></div>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.
+ Takes an initial seed, the width/height of the map, and parameters for noise
+ generation (a <code>Noise</code> implementation, which is usually <code>Noise.instance</code>, and a
+ multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
+ producing even more detailed noise when zoomed-in). The <code>initialSeed</code> parameter may or may not be used,
+ since you can specify the seed to use when you call <a href="WorldMapGenerator.html#generate(long,long)"><code>WorldMapGenerator.generate(long, long)</code></a>. The width and height of the map
+ cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
+ <code>noiseGenerator</code>, and the seed it's constructed with doesn't matter because this will change the
+ seed several times at different scales of noise (it's fine to use the static <code>Noise.instance</code>
+ because it has no changing state between runs of the program). The <code>octaveMultiplier</code> parameter should
+ probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+ generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
+ that don't require zooming.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>initialSeed</code> - the seed for the LaserRandom this uses; this may also be set per-call to generate</dd>
+<dd><code>mapWidth</code> - the width of the map(s) to generate; cannot be changed later</dd>
+<dd><code>mapHeight</code> - the height of the map(s) to generate; cannot be changed later</dd>
+<dd><code>terrainNoise</code> - a Noise generator (or subclass) that will be used to generate ridged terrain</dd>
+<dd><code>terrainLayeredNoise</code> - a Noise generator (or subclass) that will be used to generate general terrain</dd>
+<dd><code>heatNoise</code> - a Noise generator (or subclass) that will be used to generate heat values</dd>
+<dd><code>moistureNoise</code> - a Noise generator (or subclass) that will be used to generate moisture values</dd>
+<dd><code>otherRidgedNoise</code> - a Noise generator (or subclass) that will be used to generate ridges</dd>
 <dd><code>octaveMultiplier</code> - used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal</dd>
 </dl>
 </section>

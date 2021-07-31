@@ -92,13 +92,14 @@ loadScripts(document, 'script');</script>
      occur over a given span of input values. It defaults to <code>1f/32f</code>, though you should try setting this to
      <code>1f</code> if results look strange.</li>
      <li>If your noise type is one of the fractal varieties (<a href="#VALUE_FRACTAL"><code>VALUE_FRACTAL</code></a>, <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a>,
-     <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a>, <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a>, or <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>):
+     <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a>, <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a>, <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a>, or
+     <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a>):
      <ul>
          <li>Fractal noise can set a fractal type with <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, which defaults to <a href="#FBM"><code>FBM</code></a>
          (layering noise with different frequencies and strengths), and can also be set to <a href="#RIDGED_MULTI"><code>RIDGED_MULTI</code></a>
-         (which produces strong lines of high values) or <a href="#BILLOW"><code>BILLOW</code></a> (which is like RIDGED_MULTI but produces
-         lines of low values). The noise type affects how the other fractal options work, and has a very strong effect
-         on the appearance of the noise when it changes.</li>
+         (which produces strong lines or curves of high values) or <a href="#BILLOW"><code>BILLOW</code></a> (which is like RIDGED_MULTI but
+         produces lines or curves of low values). The noise type affects how the other fractal options work, and has a
+         very strong effect on the appearance of the noise when it changes.</li>
          <li>Octaves, set with <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, are how many "layers" of noise this will calculate on
          each call to get fractal noise. Each octave has its frequency changed based on lacunarity (set with
          <a href="#setFractalLacunarity(float)"><code>setFractalLacunarity(float)</code></a>), and contributes a different amount to the resulting value, based on
@@ -116,11 +117,24 @@ loadScripts(document, 'script');</script>
      </ul>
      </li>
      <li>In some cases, you may want unusual or symmetrical artifacts in noise; you can make this happen with
-     <a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)"><code>setPointHash(IPointHash)</code></a>, giving it a <a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>FlawedPointHash</code></a> or a point hash you made, and setting
-     noise type to <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (or <a href="#CUBIC"><code>CUBIC</code></a>).</li>
+     <a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)"><code>setPointHash(IPointHash)</code></a>, giving it a <a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>FlawedPointHash</code></a> or an IPointHash you made, and setting
+     noise type to <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (or <a href="#CUBIC"><code>CUBIC</code></a>). The point hash is only used by cubic noise.</li>
      <li>The <a href="#CELLULAR"><code>CELLULAR</code></a> noise type has lots of extra configuration, and not all of it is well-documented, but
      experimenting with settings like <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a> and
-     <a href="#setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)"><code>setCellularNoiseLookup(Noise)</code></a> is a good way to see if it can do what you want.</li>
+     <a href="#setCellularDistanceFunction(int)"><code>setCellularDistanceFunction(int)</code></a> is a good way to see if it can do what you want.</li>
+     <li>The <a href="#setMutation(float)"><code>setMutation(float)</code></a> method allows you to configure <a href="#MUTANT"><code>MUTANT</code></a> and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a>
+     noise in a way that's more precise than changing a seed. Small changes to mutation cause small changes in the
+     resulting noise, while large changes are similar to editing the seed. Mutation acts like any other positional
+     component, like x or y, and as such is affected by the frequency. The two MUTANT types of noise are extremely
+     similar to <a href="#FOAM"><code>FOAM</code></a> and <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, just with an extra dimension added for mutation.</li>
+     <li>If you are using <a href="#FOAM"><code>FOAM</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, or their _FRACTAL versions, you can adjust how sharply the
+     noise transitions between light and dark values by using <a href="#setFoamSharpness(float)"><code>setFoamSharpness(float)</code></a>. Higher sharpness may
+     be especially useful with more octaves, because most types of noise slide toward producing mostly central values
+     with more octaves, and higher sharpness helps counter that "graying out."</li>
+     <li>You will probably need to adjust the frequency for your particular use case. The default used by
+     <a href="#instance"><code>instance</code></a> is <code>1.0f/32.0f</code> or <code>0.03125f</code>, but world map generation often uses a frequency of 1
+     or around 1, and some types of noise (especially <a href="#FOAM"><code>FOAM</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, and their _FRACTAL versions)
+     need higher frequencies to look comparable to other noise types.</li>
  </ul></div>
 </section>
 <section class="summary">
@@ -158,10 +172,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#BILLOW">BILLOW</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A less common way to layer octaves of noise, where most results are biased toward higher values,
+ but "valleys" show up filled with much lower values.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#CELL_VALUE">CELL_VALUE</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#CELLULAR">CELLULAR</a></span></code></div>
 <div class="col-last even-row-color">
@@ -182,25 +201,40 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#DISTANCE">DISTANCE</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#DISTANCE_2">DISTANCE_2</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#DISTANCE_2_ADD">DISTANCE_2_ADD</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#DISTANCE_2_DIV">DISTANCE_2_DIV</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#DISTANCE_2_MUL">DISTANCE_2_MUL</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#DISTANCE_2_SUB">DISTANCE_2_SUB</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#EUCLIDEAN">EUCLIDEAN</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Measures distances "as the crow flies."
+ Used only with <a href="#CELLULAR"><code>CELLULAR</code></a> noise.</div>
+</div>
 <div class="col-first even-row-color"><code>static float</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#F2f">F2f</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -212,7 +246,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#FBM">FBM</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">"Standard" layered octaves of noise, where each octave has a different frequency and weight.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#FOAM">FOAM</a></span></code></div>
 <div class="col-last even-row-color">
@@ -287,13 +323,31 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#MANHATTAN">MANHATTAN</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Measures distances on a grid, as if allowing only orthogonal movement (with no diagonals).</div>
+</div>
+<div class="col-first even-row-color"><code>static int</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#MUTANT">MUTANT</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
+ edges somewhat.</div>
+</div>
+<div class="col-first odd-row-color"><code>static int</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#MUTANT_FRACTAL">MUTANT_FRACTAL</a></span></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
+ edges somewhat.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#NATURAL">NATURAL</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Measures distances with an approximation of Euclidean distance that's not 100% accurate.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#NOISE_LOOKUP">NOISE_LOOKUP</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#PERLIN">PERLIN</a></span></code></div>
 <div class="col-last even-row-color">
@@ -316,7 +370,10 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>static int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#RIDGED_MULTI">RIDGED_MULTI</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A way to layer octaves of noise so most values are biased toward low values but "ridges" of high
+ values run across the noise.</div>
+</div>
 <div class="col-first odd-row-color"><code>static int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#SIMPLEX">SIMPLEX</a></span></code></div>
 <div class="col-last odd-row-color">
@@ -419,160 +476,170 @@ loadScripts(document, 'script');</script>
  float&nbsp;d,
  float&nbsp;t)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>protected static float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#dotf(float%5B%5D,float,float)">dotf</a></span>&#8203;(float[]&nbsp;g,
- float&nbsp;x,
- float&nbsp;y)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#deserializeFromString(java.lang.String)">deserializeFromString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Reads in a String that was produced by <a href="#serializeToString()"><code>serializeToString()</code></a> and produces a copy of the Noise that was
+ stored into it.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>protected static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fastFloor(float)">fastFloor</a></span>&#8203;(float&nbsp;f)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>protected static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fastFloor(float)">fastFloor</a></span>&#8203;(float&nbsp;f)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fastRound(float)">fastRound</a></span>&#8203;(float&nbsp;f)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>protected static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fastRound(float)">fastRound</a></span>&#8203;(float&nbsp;f)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCellular(float,float)">getCellular</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCellular(float,float,float)">getCellular</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y,
- float&nbsp;z)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCellular(float,float)">getCellular</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCellular(float,float,float)">getCellular</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">After being configured with the setters in this class, such as <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>,
  <a href="#setFrequency(float)"><code>setFrequency(float)</code></a>, <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, and <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, among others,
  you can call this method to get the particular variety of noise you specified, in 2D.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">After being configured with the setters in this class, such as <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>,
  <a href="#setFrequency(float)"><code>setFrequency(float)</code></a>, <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, and <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, among others,
  you can call this method to get the particular variety of noise you specified, in 3D.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">After being configured with the setters in this class, such as <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>,
  <a href="#setFrequency(float)"><code>setFrequency(float)</code></a>, <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, and <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, among others,
  you can call this method to get the particular variety of noise you specified, in 4D.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">After being configured with the setters in this class, such as <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>,
  <a href="#setFrequency(float)"><code>setFrequency(float)</code></a>, <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, and <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, among others,
  you can call this method to get the particular variety of noise you specified, in 5D.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConfiguredNoise(float,float,float,float,float,float)">getConfiguredNoise</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">After being configured with the setters in this class, such as <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>,
  <a href="#setFrequency(float)"><code>setFrequency(float)</code></a>, <a href="#setFractalOctaves(int)"><code>setFractalOctaves(int)</code></a>, and <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>, among others,
  you can call this method to get the particular variety of noise you specified, in 6D.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y,
- float&nbsp;z)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float,float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y,
- float&nbsp;z,
- float&nbsp;w)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float,float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubic(float,float,float,float)">getCubic</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCubicFractal(float,float,float,float)">getCubicFractal</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoam(float,float,float,float,float,float)">getFoam</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
- float&nbsp;y,
- float&nbsp;z)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float,float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamFractal(float,float,float,float,float,float)">getFoamFractal</a></span>&#8203;(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFoamSharpness()">getFoamSharpness</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets the "sharpness" for the <a href="#FOAM"><code>FOAM</code></a>, <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a>
+ noise types, which is usually around 0.25f to 2.0f, and defaults to 1.0f.</div>
+</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getFractalOctaves()">getFractalOctaves</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
@@ -643,35 +710,71 @@ loadScripts(document, 'script');</script>
  float&nbsp;u,
  float&nbsp;v)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
- double&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getMutation()">getMutation</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets the mutation value used by <a href="#MUTANT"><code>MUTANT</code></a> and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types, which allows making
+ small changes to the result when the mutation values are slightly different.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
- double&nbsp;y,
- double&nbsp;z)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
+ double&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
+ double&nbsp;y,
+ double&nbsp;z)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z,
  double&nbsp;w)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z,
  double&nbsp;w,
  double&nbsp;u)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(double,double,double,double,double,double)">getNoise</a></span>&#8203;(double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z,
  double&nbsp;w,
  double&nbsp;u,
  double&nbsp;v)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(float,float)">getNoise</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(float,float,float)">getNoise</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(float,float,float,float)">getNoise</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(float,float,float,float,float)">getNoise</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoise(float,float,float,float,float,float)">getNoise</a></span>&#8203;(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoiseType()">getNoiseType</a></span>()</code></div>
@@ -681,7 +784,7 @@ loadScripts(document, 'script');</script>
  <a href="#VALUE"><code>VALUE</code></a> (0), <a href="#VALUE_FRACTAL"><code>VALUE_FRACTAL</code></a> (1), <a href="#PERLIN"><code>PERLIN</code></a> (2), <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a> (3),
  <a href="#SIMPLEX"><code>SIMPLEX</code></a> (4), <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> (5), <a href="#CELLULAR"><code>CELLULAR</code></a> (6), <a href="#WHITE_NOISE"><code>WHITE_NOISE</code></a> (7),
  <a href="#CUBIC"><code>CUBIC</code></a> (8), <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (9), <a href="#FOAM"><code>FOAM</code></a> (10), <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a> (11), <a href="#HONEY"><code>HONEY</code></a>
- (12), or <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13).</div>
+ (12), <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13), <a href="#MUTANT"><code>MUTANT</code></a> (14), or <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> (15).</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getNoiseWithSeed(double,double,double,double,double,double,long)">getNoiseWithSeed</a></span>&#8203;(double&nbsp;x,
@@ -1071,8 +1174,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;octaves,
  float&nbsp;frequency)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
- (2) and gain (0.5) in 2D.</div>
+<div class="block">Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
+ (2) and default gain (0.5) in 2D.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#layered2D(float,float,int,int,float,float)">layered2D</a></span>&#8203;(float&nbsp;x,
@@ -1083,7 +1186,7 @@ loadScripts(document, 'script');</script>
  float&nbsp;lacunarity)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (0.5) in D.</div>
+ frequency change between octaves) and gain (<code>1.0f / lacunarity</code>) in 2D.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#layered2D(float,float,int,int,float,float,float)">layered2D</a></span>&#8203;(float&nbsp;x,
@@ -1115,7 +1218,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;octaves,
  float&nbsp;frequency)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+<div class="block">Generates ridged-multi simplex noise with the given amount of octaves, given frequency, and default lacunarity
  (2) and gain (0.5) in 3D.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
@@ -1127,8 +1230,8 @@ loadScripts(document, 'script');</script>
  float&nbsp;frequency,
  float&nbsp;lacunarity)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (0.5) in 3D.</div>
+<div class="block">Generates layered simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
+ amount of frequency change between octaves) and gain (<code>1.0f / lacunarity</code>) in 3D.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#layered3D(float,float,float,int,int,float,float,float)">layered3D</a></span>&#8203;(float&nbsp;x,
@@ -1140,8 +1243,8 @@ loadScripts(document, 'script');</script>
  float&nbsp;lacunarity,
  float&nbsp;gain)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.</div>
+<div class="block">Generates layered simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
+ of frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>protected static float</code></div>
 <div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#quinticInterpolator(float)">quinticInterpolator</a></span>&#8203;(float&nbsp;t)</code></div>
@@ -1209,24 +1312,37 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates ridged-multi simplex noise with the given amount of octaves and specified lacunarity (the amount of
  frequency change between octaves); gain is not used.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularDistanceFunction(int)">setCellularDistanceFunction</a></span>&#8203;(int&nbsp;cellularDistanceFunction)</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#serializeToString()">serializeToString</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Writes all fields of this Noise (except for the <a href="#getPointHash()"><code>getPointHash()</code></a>, which must be stored separately) to a
+ String and returns it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularDistanceFunction(int)">setCellularDistanceFunction</a></span>&#8203;(int&nbsp;cellularDistanceFunction)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the distance function used in cellular noise calculations, allowing an int argument corresponding to one of
  the following constants from this class: <a href="#EUCLIDEAN"><code>EUCLIDEAN</code></a> (0), <a href="#MANHATTAN"><code>MANHATTAN</code></a> (1), or <a href="#NATURAL"><code>NATURAL</code></a> (2).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)">setCellularNoiseLookup</a></span>&#8203;(<a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a>&nbsp;noise)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Sets the Noise used to calculate a cell value if cellular return type is <a href="#NOISE_LOOKUP"><code>NOISE_LOOKUP</code></a>.</div>
-</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularReturnType(int)">setCellularReturnType</a></span>&#8203;(int&nbsp;cellularReturnType)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)">setCellularNoiseLookup</a></span>&#8203;(<a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a>&nbsp;noise)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">A no-op method that is here for compatibility with earlier versions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setCellularReturnType(int)">setCellularReturnType</a></span>&#8203;(int&nbsp;cellularReturnType)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the return type from cellular noise calculations, allowing an int argument corresponding to one of the
  following constants from this class: <a href="#CELL_VALUE"><code>CELL_VALUE</code></a> (0), <a href="#NOISE_LOOKUP"><code>NOISE_LOOKUP</code></a> (1), <a href="#DISTANCE"><code>DISTANCE</code></a> (2),
  <a href="#DISTANCE_2"><code>DISTANCE_2</code></a> (3), <a href="#DISTANCE_2_ADD"><code>DISTANCE_2_ADD</code></a> (4), <a href="#DISTANCE_2_SUB"><code>DISTANCE_2_SUB</code></a> (5), <a href="#DISTANCE_2_MUL"><code>DISTANCE_2_MUL</code></a> (6),
  or <a href="#DISTANCE_2_DIV"><code>DISTANCE_2_DIV</code></a> (7).</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setFoamSharpness(float)">setFoamSharpness</a></span>&#8203;(float&nbsp;foamSharpness)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Only used with <a href="#FOAM"><code>FOAM</code></a>, <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types,
+ this affects how often the noise will produce very high and very low results (more often with high values of
+ foamSharpness), as opposed to mid-range (more often with low values of foamSharpness).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setFractalGain(float)">setFractalGain</a></span>&#8203;(float&nbsp;gain)</code></div>
@@ -1268,59 +1384,75 @@ loadScripts(document, 'script');</script>
  this class (lowest to highest quality): <a href="#LINEAR"><code>LINEAR</code></a> (0), <a href="#HERMITE"><code>HERMITE</code></a> (1), or <a href="#QUINTIC"><code>QUINTIC</code></a> (2).</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setNoiseType(int)">setNoiseType</a></span>&#8203;(int&nbsp;noiseType)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setMutation(float)">setMutation</a></span>&#8203;(float&nbsp;mutation)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Sets the mutation value used by <a href="#MUTANT"><code>MUTANT</code></a> and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types, which can be any finite
+ float.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setNoiseType(int)">setNoiseType</a></span>&#8203;(int&nbsp;noiseType)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the default type of noise returned by <a href="#getConfiguredNoise(float,float)"><code>getConfiguredNoise(float, float)</code></a>, using one of the following constants
  in this class:
  <a href="#VALUE"><code>VALUE</code></a> (0), <a href="#VALUE_FRACTAL"><code>VALUE_FRACTAL</code></a> (1), <a href="#PERLIN"><code>PERLIN</code></a> (2), <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a> (3),
  <a href="#SIMPLEX"><code>SIMPLEX</code></a> (4), <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> (5), <a href="#CELLULAR"><code>CELLULAR</code></a> (6), <a href="#WHITE_NOISE"><code>WHITE_NOISE</code></a> (7),
  <a href="#CUBIC"><code>CUBIC</code></a> (8), <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (9), <a href="#FOAM"><code>FOAM</code></a> (10), <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a> (11), <a href="#HONEY"><code>HONEY</code></a>
- (12), or <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13).</div>
-</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)">setPointHash</a></span>&#8203;(<a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a>&nbsp;hash)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Sets the point hash, typically to one with intentional flaws, as found in <a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>FlawedPointHash</code></a> types.</div>
+ (12), <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13), <a href="#MUTANT"><code>MUTANT</code></a> (14), or <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> (15).</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSeed(int)">setSeed</a></span>&#8203;(int&nbsp;seed)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)">setPointHash</a></span>&#8203;(<a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a>&nbsp;hash)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Sets the point hash, typically to one with intentional flaws, as found in <a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>FlawedPointHash</code></a> types.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSeed(int)">setSeed</a></span>&#8203;(int&nbsp;seed)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the seed used for all noise types, as a long.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleFoam(int,float,float,float,float,float,float,float)">singleFoam</a></span>&#8203;(int&nbsp;seed,
+ float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v,
+ float&nbsp;m)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#singleHoney(int,float,float)">singleHoney</a></span>&#8203;(int&nbsp;seed,
@@ -1427,51 +1559,64 @@ loadScripts(document, 'script');</script>
  float&nbsp;u,
  float&nbsp;v)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Produces noise from 0 to 1, instead of the normal -1 to 1.</div>
-</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
- float&nbsp;x,
- float&nbsp;y,
- float&nbsp;z)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Produces noise from 0 to 1, instead of the normal -1 to 1.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+ float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Produces noise from 0 to 1, instead of the normal -1 to 1.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#valueNoise(int,float,float,float,float,float,float,float)">valueNoise</a></span>&#8203;(int&nbsp;seed,
+ float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v,
+ float&nbsp;m)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -1708,6 +1853,38 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="MUTANT">
+<h3>MUTANT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MUTANT</span></div>
+<div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
+ edges somewhat.
+ <br>
+ <a href="https://i.imgur.com/egjotwb.png">Noise sample at left, FFT at right.</a>
+ <br>
+ This is meant to be used with <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.MUTANT">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MUTANT_FRACTAL">
+<h3>MUTANT_FRACTAL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MUTANT_FRACTAL</span></div>
+<div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
+ edges somewhat.
+ <br>
+ <a href="https://i.imgur.com/egjotwb.png">Noise sample at left, FFT at right.</a>
+ <br>
+ This is meant to be used with <a href="#setNoiseType(int)"><code>setNoiseType(int)</code></a>.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.MUTANT_FRACTAL">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="LINEAR">
 <h3>LINEAR</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">LINEAR</span></div>
@@ -1751,6 +1928,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="FBM">
 <h3>FBM</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">FBM</span></div>
+<div class="block">"Standard" layered octaves of noise, where each octave has a different frequency and weight.
+ Tends to look cloudy with more octaves, and generally like a natural process.
+ <br>
+ Meant to be used with <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.FBM">Constant Field Values</a></dd>
@@ -1761,6 +1942,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="BILLOW">
 <h3>BILLOW</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">BILLOW</span></div>
+<div class="block">A less common way to layer octaves of noise, where most results are biased toward higher values,
+ but "valleys" show up filled with much lower values.
+ This probably has some good uses in 3D or higher noise, but it isn't used too frequently.
+ <br>
+ Meant to be used with <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.BILLOW">Constant Field Values</a></dd>
@@ -1771,6 +1957,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="RIDGED_MULTI">
 <h3>RIDGED_MULTI</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">RIDGED_MULTI</span></div>
+<div class="block">A way to layer octaves of noise so most values are biased toward low values but "ridges" of high
+ values run across the noise. This can be a good way of highlighting the least-natural aspects of
+ some kinds of noise; <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a> has mostly ridges along 45-degree angles,
+ <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> has many ridges along a triangular grid, and so on. <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>
+ and <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> do well with this mode, though, and look something like lightning or
+ bubbling fluids, respectively. Using FOAM or HONEY will have this look natural, but PERLIN in
+ particular will look unnatural if the grid is visible.
+ <br>
+ Meant to be used with <a href="#setFractalType(int)"><code>setFractalType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.RIDGED_MULTI">Constant Field Values</a></dd>
@@ -1781,6 +1976,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="EUCLIDEAN">
 <h3>EUCLIDEAN</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">EUCLIDEAN</span></div>
+<div class="block">Measures distances "as the crow flies."
+ Used only with <a href="#CELLULAR"><code>CELLULAR</code></a> noise.
+ Meant to be used with <a href="#setCellularDistanceFunction(int)"><code>setCellularDistanceFunction(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.EUCLIDEAN">Constant Field Values</a></dd>
@@ -1791,6 +1989,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="MANHATTAN">
 <h3>MANHATTAN</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MANHATTAN</span></div>
+<div class="block">Measures distances on a grid, as if allowing only orthogonal movement (with no diagonals).
+ Used only with <a href="#CELLULAR"><code>CELLULAR</code></a> noise.
+ Meant to be used with <a href="#setCellularDistanceFunction(int)"><code>setCellularDistanceFunction(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.MANHATTAN">Constant Field Values</a></dd>
@@ -1801,6 +2002,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="NATURAL">
 <h3>NATURAL</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">NATURAL</span></div>
+<div class="block">Measures distances with an approximation of Euclidean distance that's not 100% accurate.
+ Used only with <a href="#CELLULAR"><code>CELLULAR</code></a> noise.
+ Meant to be used with <a href="#setCellularDistanceFunction(int)"><code>setCellularDistanceFunction(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.NATURAL">Constant Field Values</a></dd>
@@ -1811,6 +2015,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="CELL_VALUE">
 <h3>CELL_VALUE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">CELL_VALUE</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.CELL_VALUE">Constant Field Values</a></dd>
@@ -1821,6 +2026,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="NOISE_LOOKUP">
 <h3>NOISE_LOOKUP</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">NOISE_LOOKUP</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>. Note that this does not allow configuring an extra
+ Noise value to use for lookup (anymore); it always uses 3 octaves of <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> with <a href="#FBM"><code>FBM</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.NOISE_LOOKUP">Constant Field Values</a></dd>
@@ -1831,6 +2038,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE">
 <h3>DISTANCE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE">Constant Field Values</a></dd>
@@ -1841,6 +2049,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE_2">
 <h3>DISTANCE_2</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE_2</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE_2">Constant Field Values</a></dd>
@@ -1851,6 +2060,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE_2_ADD">
 <h3>DISTANCE_2_ADD</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE_2_ADD</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE_2_ADD">Constant Field Values</a></dd>
@@ -1861,6 +2071,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE_2_SUB">
 <h3>DISTANCE_2_SUB</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE_2_SUB</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE_2_SUB">Constant Field Values</a></dd>
@@ -1871,6 +2082,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE_2_MUL">
 <h3>DISTANCE_2_MUL</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE_2_MUL</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE_2_MUL">Constant Field Values</a></dd>
@@ -1881,6 +2093,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISTANCE_2_DIV">
 <h3>DISTANCE_2_DIV</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DISTANCE_2_DIV</span></div>
+<div class="block">Meant to be used with <a href="#setCellularReturnType(int)"><code>setCellularReturnType(int)</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.Noise.DISTANCE_2_DIV">Constant Field Values</a></dd>
@@ -2142,8 +2355,8 @@ loadScripts(document, 'script');</script>
 <h3>Noise</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Noise</span>&#8203;<span class="parameters">(<a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a>&nbsp;other)</span></div>
 <div class="block">Copy constructor; copies all non-temporary fields from  <code>other</code> into this. This uses the same reference to
- an <a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>IPointHash</code></a> set with <a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)"><code>setPointHash(IPointHash)</code></a> and to another Noise set with
- <a href="#setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)"><code>setCellularNoiseLookup(Noise)</code></a>, but otherwise everything it copies is a primitive.</div>
+ an <a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid"><code>IPointHash</code></a> set with <a href="#setPointHash(com.github.yellowstonegames.grid.IPointHash)"><code>setPointHash(IPointHash)</code></a>, but otherwise everything it copies is a
+ primitive value.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>other</code> - another Noise, which must not be null</dd>
@@ -2159,11 +2372,31 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="dotf(float[],float,float)">
-<h3>dotf</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">dotf</span>&#8203;<span class="parameters">(float[]&nbsp;g,
- float&nbsp;x,
- float&nbsp;y)</span></div>
+<section class="detail" id="serializeToString()">
+<h3>serializeToString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">serializeToString</span>()</div>
+<div class="block">Writes all fields of this Noise (except for the <a href="#getPointHash()"><code>getPointHash()</code></a>, which must be stored separately) to a
+ String and returns it. The result of this method can be used by <a href="#deserializeFromString(java.lang.String)"><code>deserializeFromString(String)</code></a>, though if
+ you need a particular IPointHash value, you need to set it yourself on the result of that method.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a String that stores the data of this Noise object; can be read by <a href="#deserializeFromString(java.lang.String)"><code>deserializeFromString(String)</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="deserializeFromString(java.lang.String)">
+<h3>deserializeFromString</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></span>&nbsp;<span class="element-name">deserializeFromString</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</span></div>
+<div class="block">Reads in a String that was produced by <a href="#serializeToString()"><code>serializeToString()</code></a> and produces a copy of the Noise that was
+ stored into it. Note that neither this method nor serializeToString changes <a href="#getPointHash()"><code>getPointHash()</code></a> from its
+ default value, so if you need a different value for that, you need to set it yourself on the result of this.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>data</code> - a String produced by <a href="#serializeToString()"><code>serializeToString()</code></a></dd>
+<dt>Returns:</dt>
+<dd>a new Noise object matching the data stored in the given String</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -2235,11 +2468,11 @@ loadScripts(document, 'script');</script>
  <a href="#VALUE"><code>VALUE</code></a> (0), <a href="#VALUE_FRACTAL"><code>VALUE_FRACTAL</code></a> (1), <a href="#PERLIN"><code>PERLIN</code></a> (2), <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a> (3),
  <a href="#SIMPLEX"><code>SIMPLEX</code></a> (4), <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> (5), <a href="#CELLULAR"><code>CELLULAR</code></a> (6), <a href="#WHITE_NOISE"><code>WHITE_NOISE</code></a> (7),
  <a href="#CUBIC"><code>CUBIC</code></a> (8), <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (9), <a href="#FOAM"><code>FOAM</code></a> (10), <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a> (11), <a href="#HONEY"><code>HONEY</code></a>
- (12), or <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13).
+ (12), <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13), <a href="#MUTANT"><code>MUTANT</code></a> (14), or <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> (15).
  If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>noiseType</code> - an int from 0 to 13 corresponding to a constant from this class for a noise type</dd>
+<dd><code>noiseType</code> - an int from 0 to 15 corresponding to a constant from this class for a noise type</dd>
 </dl>
 </section>
 </li>
@@ -2252,11 +2485,11 @@ loadScripts(document, 'script');</script>
  <a href="#VALUE"><code>VALUE</code></a> (0), <a href="#VALUE_FRACTAL"><code>VALUE_FRACTAL</code></a> (1), <a href="#PERLIN"><code>PERLIN</code></a> (2), <a href="#PERLIN_FRACTAL"><code>PERLIN_FRACTAL</code></a> (3),
  <a href="#SIMPLEX"><code>SIMPLEX</code></a> (4), <a href="#SIMPLEX_FRACTAL"><code>SIMPLEX_FRACTAL</code></a> (5), <a href="#CELLULAR"><code>CELLULAR</code></a> (6), <a href="#WHITE_NOISE"><code>WHITE_NOISE</code></a> (7),
  <a href="#CUBIC"><code>CUBIC</code></a> (8), <a href="#CUBIC_FRACTAL"><code>CUBIC_FRACTAL</code></a> (9), <a href="#FOAM"><code>FOAM</code></a> (10), <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a> (11), <a href="#HONEY"><code>HONEY</code></a>
- (12), or <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13).
+ (12), <a href="#HONEY_FRACTAL"><code>HONEY_FRACTAL</code></a> (13), <a href="#MUTANT"><code>MUTANT</code></a> (14), or <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> (15).
  The default is SIMPLEX_FRACTAL.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the noise type as a code, from 0 to 13 inclusive</dd>
+<dd>the noise type as a code, from 0 to 15 inclusive</dd>
 </dl>
 </section>
 </li>
@@ -2353,8 +2586,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the return type from cellular noise calculations, allowing an int argument corresponding to one of the
  following constants from this class: <a href="#CELL_VALUE"><code>CELL_VALUE</code></a> (0), <a href="#NOISE_LOOKUP"><code>NOISE_LOOKUP</code></a> (1), <a href="#DISTANCE"><code>DISTANCE</code></a> (2),
  <a href="#DISTANCE_2"><code>DISTANCE_2</code></a> (3), <a href="#DISTANCE_2_ADD"><code>DISTANCE_2_ADD</code></a> (4), <a href="#DISTANCE_2_SUB"><code>DISTANCE_2_SUB</code></a> (5), <a href="#DISTANCE_2_MUL"><code>DISTANCE_2_MUL</code></a> (6),
- or <a href="#DISTANCE_2_DIV"><code>DISTANCE_2_DIV</code></a> (7). If this isn't called, it will use CELL_VALUE. If this is <a href="#NOISE_LOOKUP"><code>NOISE_LOOKUP</code></a>,
- then you must set another Noise with <a href="#setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)"><code>setCellularNoiseLookup(Noise)</code></a>.</div>
+ or <a href="#DISTANCE_2_DIV"><code>DISTANCE_2_DIV</code></a> (7). If this isn't called, it will use CELL_VALUE.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cellularReturnType</code> - a constant from this class (see above JavaDoc)</dd>
@@ -2365,13 +2597,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setCellularNoiseLookup(com.github.yellowstonegames.grid.Noise)">
 <h3>setCellularNoiseLookup</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCellularNoiseLookup</span>&#8203;<span class="parameters">(<a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a>&nbsp;noise)</span></div>
-<div class="block">Sets the Noise used to calculate a cell value if cellular return type is <a href="#NOISE_LOOKUP"><code>NOISE_LOOKUP</code></a>.
- There is no default value; this must be called if using noise lookup to set the noise to a non-null value.
- The lookup value is acquired through getConfiguredNoise() so ensure you setNoiseType() on the noise lookup.
- Honey, Value, Foam, Perlin, and Simplex are recommended.</div>
+<div class="block">A no-op method that is here for compatibility with earlier versions.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>noise</code> - another Noise object that should be configured already</dd>
+<dd><code>noise</code> - ignored</dd>
 </dl>
 </section>
 </li>
@@ -2385,6 +2614,58 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>gradientPerturbAmp</code> - the maximum perturb distance from the original location when using relevant methods</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getFoamSharpness()">
+<h3>getFoamSharpness</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFoamSharpness</span>()</div>
+<div class="block">Gets the "sharpness" for the <a href="#FOAM"><code>FOAM</code></a>, <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a>
+ noise types, which is usually around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results
+ more often, and low values produce mid-range values more often.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the current "sharpness" <a href="#FOAM"><code>FOAM</code></a> and <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a> noise types</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setFoamSharpness(float)">
+<h3>setFoamSharpness</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFoamSharpness</span>&#8203;<span class="parameters">(float&nbsp;foamSharpness)</span></div>
+<div class="block">Only used with <a href="#FOAM"><code>FOAM</code></a>, <a href="#FOAM_FRACTAL"><code>FOAM_FRACTAL</code></a>, <a href="#MUTANT"><code>MUTANT</code></a>, and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types,
+ this affects how often the noise will produce very high and very low results (more often with high values of
+ foamSharpness), as opposed to mid-range (more often with low values of foamSharpness).
+ <br>
+ This defaults to 1.0f if not set.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>foamSharpness</code> - higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMutation()">
+<h3>getMutation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getMutation</span>()</div>
+<div class="block">Gets the mutation value used by <a href="#MUTANT"><code>MUTANT</code></a> and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types, which allows making
+ small changes to the result when the mutation values are slightly different.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the current mutation value, which can be any finite float</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setMutation(float)">
+<h3>setMutation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMutation</span>&#8203;<span class="parameters">(float&nbsp;mutation)</span></div>
+<div class="block">Sets the mutation value used by <a href="#MUTANT"><code>MUTANT</code></a> and <a href="#MUTANT_FRACTAL"><code>MUTANT_FRACTAL</code></a> noise types, which can be any finite
+ float. Small changes to the mutation value cause small changes in the result, unlike changes to the seed.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mutation</code> - the mutation value to use, which can be any finite float</dd>
 </dl>
 </section>
 </li>
@@ -2420,28 +2701,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getNoiseWithSeed(double,double,long)">
-<h3>getNoiseWithSeed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
- double&nbsp;y,
- long&nbsp;seed)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="getNoise(double,double,double)">
 <h3>getNoise</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getNoiseWithSeed(double,double,double,long)">
-<h3>getNoiseWithSeed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
- double&nbsp;y,
- double&nbsp;z,
- long&nbsp;seed)</span></div>
 </section>
 </li>
 <li>
@@ -2454,16 +2718,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getNoiseWithSeed(double,double,double,double,long)">
-<h3>getNoiseWithSeed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
- double&nbsp;y,
- double&nbsp;z,
- double&nbsp;w,
- long&nbsp;seed)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="getNoise(double,double,double,double,double)">
 <h3>getNoise</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(double&nbsp;x,
@@ -2471,17 +2725,6 @@ loadScripts(document, 'script');</script>
  double&nbsp;z,
  double&nbsp;w,
  double&nbsp;u)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getNoiseWithSeed(double,double,double,double,double,long)">
-<h3>getNoiseWithSeed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
- double&nbsp;y,
- double&nbsp;z,
- double&nbsp;w,
- double&nbsp;u,
- long&nbsp;seed)</span></div>
 </section>
 </li>
 <li>
@@ -2496,6 +2739,44 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getNoiseWithSeed(double,double,long)">
+<h3>getNoiseWithSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
+ double&nbsp;y,
+ long&nbsp;seed)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoiseWithSeed(double,double,double,long)">
+<h3>getNoiseWithSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
+ double&nbsp;y,
+ double&nbsp;z,
+ long&nbsp;seed)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoiseWithSeed(double,double,double,double,long)">
+<h3>getNoiseWithSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
+ double&nbsp;y,
+ double&nbsp;z,
+ double&nbsp;w,
+ long&nbsp;seed)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoiseWithSeed(double,double,double,double,double,long)">
+<h3>getNoiseWithSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
+ double&nbsp;y,
+ double&nbsp;z,
+ double&nbsp;w,
+ double&nbsp;u,
+ long&nbsp;seed)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="getNoiseWithSeed(double,double,double,double,double,double,long)">
 <h3>getNoiseWithSeed</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getNoiseWithSeed</span>&#8203;<span class="parameters">(double&nbsp;x,
@@ -2505,6 +2786,51 @@ loadScripts(document, 'script');</script>
  double&nbsp;u,
  double&nbsp;v,
  long&nbsp;seed)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(float&nbsp;x,
+ float&nbsp;y)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span>&#8203;<span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v)</span></div>
 </section>
 </li>
 <li>
@@ -3071,6 +3397,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="valueNoise(int,float,float,float,float,float,float,float)">
+<h3>valueNoise</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">valueNoise</span>&#8203;<span class="parameters">(int&nbsp;seed,
+ float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v,
+ float&nbsp;m)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="getFoam(float,float)">
 <h3>getFoam</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFoam</span>&#8203;<span class="parameters">(float&nbsp;x,
@@ -3202,6 +3541,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="singleFoam(int,float,float,float,float,float,float,float)">
+<h3>singleFoam</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">singleFoam</span>&#8203;<span class="parameters">(int&nbsp;seed,
+ float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v,
+ float&nbsp;m)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="getPerlinFractal(float,float)">
 <h3>getPerlinFractal</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getPerlinFractal</span>&#8203;<span class="parameters">(float&nbsp;x,
@@ -3300,7 +3652,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;seed,
  int&nbsp;octaves,
  float&nbsp;frequency)</span></div>
-<div class="block">Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+<div class="block">Generates ridged-multi simplex noise with the given amount of octaves, given frequency, and default lacunarity
  (2) and gain (0.5) in 3D.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -3324,8 +3676,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;octaves,
  float&nbsp;frequency,
  float&nbsp;lacunarity)</span></div>
-<div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (0.5) in 3D.</div>
+<div class="block">Generates layered simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
+ amount of frequency change between octaves) and gain (<code>1.0f / lacunarity</code>) in 3D.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - </dd>
@@ -3351,8 +3703,8 @@ loadScripts(document, 'script');</script>
  float&nbsp;frequency,
  float&nbsp;lacunarity,
  float&nbsp;gain)</span></div>
-<div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.</div>
+<div class="block">Generates layered simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
+ of frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - </dd>
@@ -3491,8 +3843,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;seed,
  int&nbsp;octaves,
  float&nbsp;frequency)</span></div>
-<div class="block">Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
- (2) and gain (0.5) in 2D.</div>
+<div class="block">Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
+ (2) and default gain (0.5) in 2D.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - </dd>
@@ -3514,7 +3866,7 @@ loadScripts(document, 'script');</script>
  float&nbsp;frequency,
  float&nbsp;lacunarity)</span></div>
 <div class="block">Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
- frequency change between octaves) and gain (0.5) in D.</div>
+ frequency change between octaves) and gain (<code>1.0f / lacunarity</code>) in 2D.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - </dd>
@@ -3938,6 +4290,26 @@ loadScripts(document, 'script');</script>
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="equals(java.lang.Object)">
+<h3>equals</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>

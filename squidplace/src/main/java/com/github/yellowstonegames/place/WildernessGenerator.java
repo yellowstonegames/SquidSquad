@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.ObjectLongOrderedMap;
@@ -7,7 +8,6 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Direction;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
@@ -49,6 +49,129 @@ public class WildernessGenerator implements PlaceGenerator {
     public final int[][] content, floors, colors, environment;
     public final char[][] grid;
     public final long[][] glyphs;
+
+
+    /**
+     * Generates a 2D int array (as with {@code new int[width][height]}) and fills it with the (seeded variant) blue
+     * noise of this class, finding any points with values less than {@code spillerLimit} when brought into a 0-255
+     * range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
+     * original point.
+     * @param width the width of the 2D array to return
+     * @param height the height of the 2D array to return
+     * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
+     * @param rng an EnhancedRandom, such as a LaserRandom, to generate random values during expansion
+     * @return a 2D int array containing ints from 0 (inclusive) to {@code spillerLimit} (exclusive)
+     */
+    public static int[][] blueSpill(int width, int height, int spillerLimit, EnhancedRandom rng) {
+        return blueSpill(new int[width][height], spillerLimit, rng);
+    }
+
+    /**
+     * Modifies {@code toFill} in-place by filling it with the (seeded variant) blue noise of this class, finding any
+     * points with values less than {@code spillerLimit} when brought into a 0-255 range, and then expanding those
+     * points pseudo-randomly while keeping the same value for any expanded range as its original point.
+     * @param toFill a 2D int array that will be modified in-place and entirely replaced; its contents don't matter
+     * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
+     * @param rng an EnhancedRandom, such as a LaserRandom, to generate random values during expansion
+     * @return {@code toFill}, after modifications
+     */
+    public static int[][] blueSpill(int[][] toFill, int spillerLimit, EnhancedRandom rng) {
+        return blueSpill(toFill, spillerLimit, rng, false);
+    }
+    /**
+     * Modifies {@code toFill} in-place by filling it with the (seeded variant) blue noise of this class, finding any
+     * points with values less than {@code spillerLimit} when brought into a 0-255 range, and then expanding those
+     * points pseudo-randomly while keeping the same value for any expanded range as its original point.
+     * @param toFill a 2D int array that will be modified in-place and entirely replaced; its contents don't matter
+     * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
+     * @param rng an EnhancedRandom, such as a LaserRandom, to generate random values during expansion
+     * @return {@code toFill}, after modifications
+     */
+    public static int[][] blueSpill(int[][] toFill, int spillerLimit, EnhancedRandom rng, boolean triangular) {
+        final int width = toFill.length, height = toFill[0].length,
+                xOffset = rng.next(5) + rng.next(5) + 1, yOffset = rng.next(5) + rng.next(5) + 1,
+                seed = rng.nextInt();
+        final Direction[] dirs = Direction.CARDINALS;
+        Direction d;
+        int t, rx, ry, ctr;
+        if(triangular){
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    toFill[x][y] = BlueNoise.getSeededTriangular(x + xOffset, y + yOffset, seed) + 128;
+                }
+            }
+        }
+        else {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    toFill[x][y] = BlueNoise.getSeeded(x + xOffset, y + yOffset, seed) + 128;
+                }
+            }
+        }
+        int[] ox = new int[width], oy = new int[height];
+        boolean anySuccesses = false;
+        do {
+            ctr = 0;
+            ArrayTools.range(ox);
+            ArrayTools.range(oy);
+            ArrayTools.shuffle(ox, rng);
+            ArrayTools.shuffle(oy, rng);
+            for (int x = 0; x < width; x++) {
+                rx = ox[x];
+                for (int y = 0; y < height; y++) {
+                    ry = oy[y];
+                    if ((t = toFill[rx][ry]) < spillerLimit) {
+                        d = dirs[rng.next(2)];
+                        if (rx + d.deltaX >= 0 && rx + d.deltaX < width && ry + d.deltaY >= 0 && ry + d.deltaY < height &&
+                                toFill[rx + d.deltaX][ry + d.deltaY] >= spillerLimit) {
+                            toFill[rx + d.deltaX][ry + d.deltaY] = t;
+                            ctr++;
+                        }
+                        d = dirs[rng.next(2)];
+                        if (rx + d.deltaX >= 0 && rx + d.deltaX < width && ry + d.deltaY >= 0 && ry + d.deltaY < height &&
+                                toFill[rx + d.deltaX][ry + d.deltaY] >= spillerLimit) {
+                            toFill[rx + d.deltaX][ry + d.deltaY] = t;
+                            ctr++;
+                        }
+                    }
+
+                }
+            }
+            if(!anySuccesses && ctr == 0)
+            {
+                ArrayTools.fill(toFill, 0);
+                return toFill;
+            }
+            else
+                anySuccesses = true;
+        } while (ctr > 0);
+        do {
+            ctr = 0;
+            ArrayTools.range(ox);
+            ArrayTools.range(oy);
+            ArrayTools.shuffle(ox, rng);
+            ArrayTools.shuffle(oy, rng);
+            for (int x = 0; x < width; x++) {
+                rx = ox[x];
+                for (int y = 0; y < height; y++) {
+                    ry = oy[y];
+                    if ((t = toFill[rx][ry]) < spillerLimit) {
+                        for (int i = 0; i < 4; i++) {
+                            d = dirs[i];
+                            if (rx + d.deltaX >= 0 && rx + d.deltaX < width && ry + d.deltaY >= 0 && ry + d.deltaY < height &&
+                                    toFill[rx + d.deltaX][ry + d.deltaY] >= spillerLimit) {
+                                toFill[rx + d.deltaX][ry + d.deltaY] = t;
+                                ctr++;
+                            }
+                        }
+                    }
+
+                }
+            }
+        } while (ctr > 0);
+        return toFill;
+    }
+
 
     /**
      * Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.
@@ -454,10 +577,10 @@ public class WildernessGenerator implements PlaceGenerator {
         final int limit = contentTypes.size(), floorLimit = floorTypes.size();
         int b, color;
         long pair;
-        BlueNoise.blueSpill(floors, floorLimit, rng);
+        blueSpill(floors, floorLimit, rng);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if((b = BlueNoise.getSeededOmniTiling(x, y, seed) + 128) < limit)
+                if((b = BlueNoise.getSeeded(x, y, seed) + 128) < limit)
                 {
                     pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;

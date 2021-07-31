@@ -133,6 +133,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">IntPointHash</a></span>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(int)">IntPointHash</a></span>&#8203;(int&nbsp;state)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -147,219 +149,222 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getState()">getState</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 8-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 8-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 8-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">An 8-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash256(int,int,int,int,int,int,int)">hash256</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;v,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 8-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 5-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 5-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 5-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash32(int,int,int,int,int,int,int)">hash32</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;v,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 5-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 6-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 6-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 6-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hash64(int,int,int,int,int,int,int)">hash64</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;v,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 6-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 32-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 32-bit point hash that smashes x, y, and z into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 32-bit point hash that smashes x, y, z, and w into s using XOR and multiplications by harmonious numbers,
  then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;s)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 32-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashAll(int,int,int,int,int,int,int)">hashAll</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;v,
  int&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">A 32-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
  numbers, then runs a simple unary hash on s and returns it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
- int&nbsp;y,
- int&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
- int&nbsp;z,
  int&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;z,
+ int&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashWithState(int,int,int,int,int,int,int)">hashWithState</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;w,
  int&nbsp;u,
  int&nbsp;v,
  int&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -386,6 +391,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IntPointHash</span>()</div>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(int)">
+<h3>IntPointHash</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IntPointHash</span>&#8203;<span class="parameters">(int&nbsp;state)</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -394,6 +405,12 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getState()">
+<h3>getState</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getState</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="hashWithState(int,int,int)">
 <h3>hashWithState</h3>

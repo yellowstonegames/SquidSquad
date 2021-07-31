@@ -149,23 +149,35 @@ loadScripts(document, 'script');</script>
  float&nbsp;x,
  float&nbsp;y)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#extractX(int)">extractX</a></span>&#8203;(int&nbsp;fused)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.yellowstonegames.grid.Coord</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#extractCoord(int)">extractCoord</a></span>&#8203;(int&nbsp;fused)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">A convenience method that extracts the x and y components from <code>fused</code> and returns
+ them as a Coord.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#extractX(int)">extractX</a></span>&#8203;(int&nbsp;fused)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Given a fused x,y pair as an int (typically produced by <a href="#fuse(int,int)"><code>fuse(int, int)</code></a>), this
  gets the x component from it, as an int.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#extractY(int)">extractY</a></span>&#8203;(int&nbsp;fused)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#extractY(int)">extractY</a></span>&#8203;(int&nbsp;fused)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Given a fused x,y pair as an int (typically produced by <a href="#fuse(int,int)"><code>fuse(int, int)</code></a>), this
  gets the y component from it, as an int.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fuse(int,int)">fuse</a></span>&#8203;(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fuse(int,int)">fuse</a></span>&#8203;(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Combines the up-to-15-bit non-negative ints x and y into one non-negative result int.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fuse(com.github.yellowstonegames.grid.Coord)">fuse</a></span>&#8203;(com.github.yellowstonegames.grid.Coord&nbsp;xy)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Combines the up-to-15-bit non-negative x and y components of the Coord <code>xy</code> into one
+ non-negative result int.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#put(int,int,int)">put</a></span>&#8203;(int&nbsp;x,
@@ -300,6 +312,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="fuse(com.github.yellowstonegames.grid.Coord)">
+<h3>fuse</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">fuse</span>&#8203;<span class="parameters">(com.github.yellowstonegames.grid.Coord&nbsp;xy)</span></div>
+<div class="block">Combines the up-to-15-bit non-negative x and y components of the Coord <code>xy</code> into one
+ non-negative result int. This is used to get the keys for a GlyphMap given x,y inputs. Because
+ jdkgdxds uses Fibonacci hashing to scramble keys, there's no concern here from leaving all of
+ x in the lower half of the bits and all of y in the upper half.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>xy</code> - a Coord with non-negative x and y</dd>
+<dt>Returns:</dt>
+<dd>a non-negative int that combines the Coord's x and y into one value</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="extractX(int)">
 <h3>extractX</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">extractX</span>&#8203;<span class="parameters">(int&nbsp;fused)</span></div>
@@ -324,6 +352,19 @@ loadScripts(document, 'script');</script>
 <dd><code>fused</code> - a fused x,y pair as an int as produced by <a href="#fuse(int,int)"><code>fuse(int, int)</code></a></dd>
 <dt>Returns:</dt>
 <dd>the y component of fused</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="extractCoord(int)">
+<h3>extractCoord</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.Coord</span>&nbsp;<span class="element-name">extractCoord</span>&#8203;<span class="parameters">(int&nbsp;fused)</span></div>
+<div class="block">A convenience method that extracts the x and y components from <code>fused</code> and returns
+ them as a Coord.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fused</code> - a fused x,y pair as an int as produced by <a href="#fuse(int,int)"><code>fuse(int, int)</code></a></dd>
+<dt>Returns:</dt>
 </dl>
 </section>
 </li>

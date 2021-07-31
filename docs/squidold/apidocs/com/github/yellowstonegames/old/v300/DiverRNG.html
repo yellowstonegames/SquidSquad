@@ -78,12 +78,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.github.tommyettinger.ds.support.EnhancedRandom</code>, <code><a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></code></dd>
+<dd><code>com.github.tommyettinger.ds.support.EnhancedRandom</code>, <code><a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></code>, <code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">DiverRNG</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></span></div>
+implements <a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a>, <a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -156,114 +156,120 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the current state of this generator.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getStateCount()">getStateCount</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getState()">getState</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getStateCount()">getStateCount</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the number of possible state variables that can be selected with
  <a href="#getSelectedState(int)"><code>getSelectedState(int)</code></a> or <a href="#setSelectedState(int,long)"><code>setSelectedState(int, long)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#next(int)">next</a></span>&#8203;(int&nbsp;bits)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextBoolean()">nextBoolean</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#next(int)">next</a></span>&#8203;(int&nbsp;bits)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextBoolean()">nextBoolean</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a random value, true or false.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextBytes(byte%5B%5D)">nextBytes</a></span>&#8203;(byte[]&nbsp;bytes)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextBytes(byte%5B%5D)">nextBytes</a></span>&#8203;(byte[]&nbsp;bytes)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Given a byte array as a parameter, this will fill the array with random bytes (modifying it
  in-place).</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextDouble()">nextDouble</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextDouble()">nextDouble</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a uniform random double in the range [0.0,1.0)</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextDouble(double)">nextDouble</a></span>&#8203;(double&nbsp;outer)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextDouble(double)">nextDouble</a></span>&#8203;(double&nbsp;outer)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a uniform random double in the range [0.0,outer) given a positive parameter outer.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextFloat()">nextFloat</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextFloat()">nextFloat</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a uniform random float in the range [0.0,1.0)</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt()">nextInt</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt()">nextInt</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Can return any int, positive or negative, of any size permissible in a 32-bit signed integer.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt(int)">nextInt</a></span>&#8203;(int&nbsp;bound)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt(int)">nextInt</a></span>&#8203;(int&nbsp;bound)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Exclusive on the outer bound.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt(int,int)">nextInt</a></span>&#8203;(int&nbsp;inner,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextInt(int,int)">nextInt</a></span>&#8203;(int&nbsp;inner,
  int&nbsp;outer)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Inclusive inner, exclusive outer.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong()">nextLong</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong()">nextLong</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Can return any long, positive or negative, of any size permissible in a 64-bit signed integer.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong(long)">nextLong</a></span>&#8203;(long&nbsp;bound)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong(long)">nextLong</a></span>&#8203;(long&nbsp;bound)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Exclusive on bound (which may be positive or negative), with an inner bound of 0.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong(long,long)">nextLong</a></span>&#8203;(long&nbsp;lower,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#nextLong(long,long)">nextLong</a></span>&#8203;(long&nbsp;lower,
  long&nbsp;upper)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Inclusive inner, exclusive outer; lower and upper can be positive or negative and there's no requirement for one
  to be greater than or less than the other.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static long</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomize(long)">randomize</a></span>&#8203;(long&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static long</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomize(long)">randomize</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">High-quality static randomizing method that takes its state as a parameter; state is expected to change between
  calls to this.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeBounded(long,int)">randomizeBounded</a></span>&#8203;(long&nbsp;state,
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeBounded(long,int)">randomizeBounded</a></span>&#8203;(long&nbsp;state,
  int&nbsp;bound)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">High-quality static randomizing method that takes its state as a parameter and limits output to an int between 0
  (inclusive) and bound (exclusive); state is expected to change between calls to this.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static double</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeDouble(long)">randomizeDouble</a></span>&#8203;(long&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static double</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeDouble(long)">randomizeDouble</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
  will return the same float.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeFloat(long)">randomizeFloat</a></span>&#8203;(long&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#randomizeFloat(long)">randomizeFloat</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
  return the same float.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSeed(long)">setSeed</a></span>&#8203;(long&nbsp;seed)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSeed(long)">setSeed</a></span>&#8203;(long&nbsp;seed)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the seed of this random number generator using a single
  <code>long</code> seed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSelectedState(int,long)">setSelectedState</a></span>&#8203;(int&nbsp;selection,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setSelectedState(int,long)">setSelectedState</a></span>&#8203;(int&nbsp;selection,
  long&nbsp;seed)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sets the seed (also the current state) of this generator.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setState(long)">setState</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
@@ -275,7 +281,7 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.support.EnhancedRandom">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.support.EnhancedRandom</h3>
-<code>maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextGaussian, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, randomElement, randomElement, randomElement, randomElement, randomElement, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
+<code>maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextGaussian, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextSign, nextSignedInt, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, previousLong, randomElement, randomElement, randomElement, randomElement, randomElement, setState, setState, setState, setState, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.yellowstonegames.old.v300.LegacyRandom">Methods inherited from interface&nbsp;com.github.yellowstonegames.old.v300.<a href="LegacyRandom.html" title="interface in com.github.yellowstonegames.old.v300">LegacyRandom</a></h3>
 <code><a href="LegacyRandom.html#nextSignedInt(int)">nextSignedInt</a>, <a href="LegacyRandom.html#nextSignedLong(long)">nextSignedLong</a></code></div>
@@ -317,6 +323,28 @@ implements <a href="LegacyRandom.html" title="interface in com.github.yellowston
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getState()">
+<h3>getState</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getState</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StatefulRandomness.html#getState()">getState</a></code>&nbsp;in interface&nbsp;<code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setState(long)">
+<h3>setState</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setState</span>&#8203;<span class="parameters">(long&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setState</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="StatefulRandomness.html#setState(long)">setState</a></code>&nbsp;in interface&nbsp;<code><a href="StatefulRandomness.html" title="interface in com.github.yellowstonegames.old.v300">StatefulRandomness</a></code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="next(int)">
 <h3>next</h3>

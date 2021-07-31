@@ -366,6 +366,16 @@ loadScripts(document, 'script');</script>
  looks much like a sine wave, curving to have a flat slope when given an integer input and a steep slope when the
  input is halfway between two integers, smoothly curving at any points between those extremes.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static double</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#truncate(double)">truncate</a></span>&#8203;(double&nbsp;n)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Forces precision loss on the given double so very small fluctuations away from an integer will be erased.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#truncate(float)">truncate</a></span>&#8203;(float&nbsp;n)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Forces precision loss on the given float so very small fluctuations away from an integer will be erased.</div>
+</div>
 </div>
 </div>
 </div>
@@ -681,7 +691,9 @@ loadScripts(document, 'script');</script>
  <br>
  This can be used both as an optimization for generating Gaussian random values, and as a way of generating
  Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
- as the input).</div>
+ as the input).
+
+ This implementation delegates to jdkgdxds' <code>EnhancedRandom.probit(double)</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>d</code> - should be between 0 and 1, exclusive, but other values are tolerated</dd>
@@ -1129,6 +1141,36 @@ loadScripts(document, 'script');</script>
 <dd><code>n</code> - the lower bound for the result</dd>
 <dt>Returns:</dt>
 <dd>the next higher power of two that is greater than or equal to n</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="truncate(float)">
+<h3>truncate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">truncate</span>&#8203;<span class="parameters">(float&nbsp;n)</span></div>
+<div class="block">Forces precision loss on the given float so very small fluctuations away from an integer will be erased.
+ This is meant primarily for cleaning up floats so they can be presented without needing scientific notation.
+ It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>n</code> - any float, but typically a fairly small one (between -8 and 8, as a guideline)</dd>
+<dt>Returns:</dt>
+<dd><code>n</code> with its 13 least significant bits effectively removed</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="truncate(double)">
+<h3>truncate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">truncate</span>&#8203;<span class="parameters">(double&nbsp;n)</span></div>
+<div class="block">Forces precision loss on the given double so very small fluctuations away from an integer will be erased.
+ This is meant primarily for cleaning up doubles so they can be presented without needing scientific notation.
+ It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>n</code> - any double, but typically a fairly small one (between -8 and 8, as a guideline)</dd>
+<dt>Returns:</dt>
+<dd><code>n</code> with its 42 least significant bits effectively removed</dd>
 </dl>
 </section>
 </li>

@@ -105,8 +105,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected int[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#edges">edges</a></span></code></div>
+<div class="col-first even-row-color"><code>float</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#alpha">alpha</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected int[]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#edges">edges</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>float</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#epsilon">epsilon</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#heat">heat</a></span></code></div>
@@ -114,57 +120,60 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected static float</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#heatFreq">heatFreq</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#maxHeat0">maxHeat0</a></span></code></div>
+<div class="col-first odd-row-color"><code>float</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#kappa">kappa</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#maxHeat1">maxHeat1</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#maxHeat0">maxHeat0</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#maxWet0">maxWet0</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#maxHeat1">maxHeat1</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#minHeat0">minHeat0</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#maxWet0">maxWet0</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#minHeat1">minHeat1</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#minHeat0">minHeat0</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#minWet0">minWet0</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#minHeat1">minHeat1</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#moisture">moisture</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected static float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#moistureFreq">moistureFreq</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected static float</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#otherFreq">otherFreq</a></span></code></div>
+<div class="col-first odd-row-color"><code>protected float</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#minWet0">minWet0</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#otherRidged">otherRidged</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#moisture">moisture</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#terrain">terrain</a></span></code></div>
+<div class="col-first odd-row-color"><code>protected static float</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#moistureFreq">moistureFreq</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected static float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#terrainFreq">terrainFreq</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#otherFreq">otherFreq</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#terrainLayered">terrainLayered</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#otherRidged">otherRidged</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected static float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#terrainLayeredFreq">terrainLayeredFreq</a></span></code></div>
+<div class="col-first even-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#terrain">terrain</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>float[][]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#xPositions">xPositions</a></span></code></div>
+<div class="col-first odd-row-color"><code>protected static float</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#terrainFreq">terrainFreq</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>com.github.yellowstonegames.grid.Noise</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#terrainLayered">terrainLayered</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected static float</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#terrainLayeredFreq">terrainLayeredFreq</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>float[][]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#yPositions">yPositions</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#xPositions">xPositions</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>float[][]</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#zPositions">zPositions</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#yPositions">yPositions</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>float[][]</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#zPositions">zPositions</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields.inherited.from.class.com.github.yellowstonegames.world.WorldMapGenerator">Fields inherited from class&nbsp;com.github.yellowstonegames.world.<a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></h3>
@@ -434,6 +443,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="edges">
 <h3>edges</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">edges</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="alpha">
+<h3>alpha</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">alpha</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="kappa">
+<h3>kappa</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">kappa</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="epsilon">
+<h3>epsilon</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">epsilon</span></div>
 </section>
 </li>
 </ul>

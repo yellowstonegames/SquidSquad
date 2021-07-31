@@ -358,30 +358,36 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets an English word for a number, if this knows it, where the number is chosen randomly nextInt lowest and
  highest, both inclusive.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#process(java.lang.CharSequence)">process</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#printCategories(boolean)">printCategories</a></span>&#8203;(boolean&nbsp;listFormat)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Prints out all of the categories this knows and then all of the terms this knows, optionally using HTML list
+ formatting.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#process(java.lang.CharSequence)">process</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Given a String, StringBuilder, or other CharSequence that should contain words this knows synonyms for, this
  replaces each occurrence of such a known word with one of its synonyms, leaving unknown words untouched.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long)">refresh</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
+ different version that knows all the same synonyms and categories but will produce different results.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long)">refresh</a></span>&#8203;(long&nbsp;state)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
+ long&nbsp;stateB)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
  different version that knows all the same synonyms and categories but will produce different results.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
- long&nbsp;stateB)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
- different version that knows all the same synonyms and categories but will produce different results.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long,long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#refresh(long,long,long)">refresh</a></span>&#8203;(long&nbsp;stateA,
  long&nbsp;stateB,
  long&nbsp;stateC)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
  different version that knows all the same synonyms and categories but will produce different results.</div>
 </div>
@@ -688,6 +694,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="printCategories(boolean)">
+<h3>printCategories</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">printCategories</span>&#8203;<span class="parameters">(boolean&nbsp;listFormat)</span></div>
+<div class="block">Prints out all of the categories this knows and then all of the terms this knows, optionally using HTML list
+ formatting. The list formatting could be useful for Javadocs, as it is used here. Sorts and makes unique the
+ words in each category, but does not sort categories (to preserve the similarity of some categories at close
+ points in the order). This is probably only going to be used internally.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listFormat</code> - if true, this will format the output as an HTML list, otherwise it will be as plain lines</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="addKnownCategories()">
 <h3>addKnownCategories</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></span>&nbsp;<span class="element-name">addKnownCategories</span>()</div>
@@ -768,10 +788,11 @@ loadScripts(document, 'script');</script>
      <li>lake`noun` : bog, fen, glade, lake, pond, puddle, sea, swamp</li>
      <li>leaf`noun` : bark, blossom, branch, bud, cress, flower, leaf, root, sap, seed, shoot, stalk, stem, thorn, twig, vine, wood, wort</li>
      <li>fruit`noun` : apple, banana, berry, cherry, citron, date, fig, fruit, grape, juniper, kumquat, lemon, lime, loquat, mango, melon, papaya, peach, pear, pineapple, plum, quince</li>
-     <li>nut`noun` : almond, bean, cashew, chestnut, coconut, hazelnut, lentil, nut, pea, peanut, pecan, walnut</li>
-     <li>vegetable`noun` : artichoke, asparagus, avocado, beet, broccoli, cabbage, carrot, cauliflower, celery, corn, eggplant, kale, leek, lettuce, mushroom, onion, potato, pumpkin, radish, rutabaga, spinach, taro, tomato, truffle, yam, zucchini</li>
-     <li>flower`noun` : amaryllis, camellia, chrysanthemum, daisy, dandelion, flower, gardenia, hibiscus, jasmine, lantana, lilac, lily, lotus, mallow, oleander, orchid, peony, petunia, phlox, rose, tulip</li>
-     <li>tree`noun` : alder, beech, birch, cactus, cedar, elm, hazel, juniper, larch, magnolia, mangrove, maple, oak, palm, pine, tree, willow</li>
+     <li>nut`noun` : almond, bean, cashew, chestnut, coconut, hazelnut, lentil, nut, pea, peanut, pecan, pistachio, walnut</li>
+     <li>vegetable`noun` : artichoke, asparagus, avocado, barley, beet, broccoli, cabbage, carrot, cauliflower, celery, corn, eggplant, fennel, garlic, kale, leek, lettuce, mushroom, onion, parsley, potato, pumpkin, radish, rhubarb, rice, rutabaga, spinach, taro, tomato, truffle, wheat, yam, zucchini</li>
+     <li>flower`noun` : amaryllis, camellia, chrysanthemum, daisy, dandelion, flower, gardenia, hibiscus, jasmine, lantana, lilac, lily, lotus, mallow, oleander, orchid, peony, petunia, phlox, plumeria, rose, tulip, yarrow</li>
+     <li>tree`noun` : alder, beech, birch, cactus, cedar, elm, eucalyptus, ficus, hazel, juniper, larch, magnolia, mangrove, maple, oak, palm, pine, tree, willow</li>
+     <li>bush`noun` : aloe, boxwood, bramble, brier, brush, bush, dogwood, fern, flax, hawthorn, hedge, hemp, holly, honeysuckle, kudzu, manzanita, mesquite, milkweed, nettle, privet, ragweed, ragwort, shrub, silkweed, sorrel, tansy, tea, thicket, thistle, tobacco</li>
      <li>flavor`noun` : acid, grease, salt, smoke, soap, spice, sugar</li>
      <li>flavor`adj` : bitter, salty, savory, smoky, sour, spicy, sweet</li>
      <li>color`adj` : black, blue, brown, gray, green, orange, pink, red, violet, white, yellow</li>
@@ -818,8 +839,8 @@ loadScripts(document, 'script');</script>
  There are also terms, which typically produce multiple words procedurally and may use <a href="#defaultLanguage"><code>defaultLanguage</code></a>.
  See <a href="#makePlantName()"><code>makePlantName()</code></a>, <a href="#makeFruitName()"><code>makeFruitName()</code></a>, <a href="#makeNutName()"><code>makeNutName()</code></a>, <a href="#makeFlowerName()"><code>makeFlowerName()</code></a>,
  <a href="#makeVegetableName()"><code>makeVegetableName()</code></a>, and <a href="#makePotionDescription()"><code>makePotionDescription()</code></a> for more info and examples.
- <li>
-     <li>plant`term` : @'s color`adj`\tleaf`noun`, @'s color`adj` flower`noun`, @'s color`adj` tree`noun`, @'s flower`noun`, @'s ground`noun`\tleaf`noun`, @'s sensory`adj`-leaf`noun`, @'s shape`adj` flower`noun`, @'s tree`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj` fruit`noun` tree`noun`, color`adj` nut`noun` tree`noun`, color`adj`-leaf`noun` flower`noun`, color`adj`-vegetable`noun` tree`noun`, flavor`adj` fruit`noun` tree`noun`, flavor`adj` nut`noun` tree`noun`, flavor`noun`\tleaf`noun` tree`noun`, flower`noun` of @, ground`noun`\tflower`noun`, ground`noun`\tleaf`noun`, ground`noun`\tleaf`noun` of @, ground`noun`\tvegetable`noun`, leaf`noun` of @, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-flower`noun`, sensory`adj` tree`noun` of @, sensory`adj` tree`noun`-tree`noun`, sensory`adj`-leaf`noun` flower`noun`, sensory`adj`-leaf`noun` tree`noun`, shape`adj` flower`noun`, shape`adj`-fruit`noun` tree`noun`, shape`adj`-leaf`noun` flower`noun`, shape`adj`-leaf`noun` tree`noun`, shape`adj`-vegetable`noun` tree`noun`, vegetable`noun`-leaf`noun` tree`noun`</li>
+ <ul>
+     <li>plant`term` : @'s bush`noun`, @'s bush`noun`-bush`noun`, @'s bush`noun`-tree`noun`, @'s color`adj`\tleaf`noun`, @'s color`adj` flower`noun`, @'s color`adj` tree`noun`, @'s flower`noun`, @'s flower`noun`-bush`noun`, @'s ground`noun`\tleaf`noun`, @'s sensory`adj`-leaf`noun`, @'s shape`adj` bush`noun`, @'s shape`adj` flower`noun`, @'s tree`noun`, @'s tree`noun`-bush`noun`, @'s tree`noun`-tree`noun`, bush`noun` of @, bush`noun`-bush`noun`, bush`noun`-bush`noun` of @, bush`noun`-tree`noun`, bush`noun`-tree`noun` of @, color`adj`\tleaf`noun` bush`noun`, color`adj`\tleaf`noun` tree`noun`, color`adj` bush`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj` fruit`noun` tree`noun`, color`adj` nut`noun` tree`noun`, color`adj` tree`noun`, color`adj`-leaf`noun` bush`noun`, color`adj`-leaf`noun` flower`noun`, color`adj`-leaf`noun` tree`noun`, color`adj`-vegetable`noun` tree`noun`, flavor`adj` fruit`noun` tree`noun`, flavor`adj` nut`noun` tree`noun`, flavor`noun`\tleaf`noun` tree`noun`, flower`noun` of @, flower`noun`-bush`noun`, flower`noun`-bush`noun` of @, fruit`noun` bush`noun`, fruit`noun` tree`noun`, ground`noun`\tflower`noun`, ground`noun`\tleaf`noun`, ground`noun`\tleaf`noun` of @, ground`noun`\tvegetable`noun`, leaf`noun` of @, nut`noun` bush`noun`, nut`noun` tree`noun`, sensory`adj` bush`noun`, sensory`adj` bush`noun`-bush`noun`, sensory`adj` bush`noun`-tree`noun`, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-bush`noun`, sensory`adj` flower`noun`-flower`noun`, sensory`adj` tree`noun`, sensory`adj` tree`noun` of @, sensory`adj` tree`noun`-bush`noun`, sensory`adj` tree`noun`-tree`noun`, sensory`adj`-leaf`noun` bush`noun`, sensory`adj`-leaf`noun` flower`noun`, sensory`adj`-leaf`noun` of @, sensory`adj`-leaf`noun` tree`noun`, shape`adj` bush`noun` of @, shape`adj` flower`noun`, shape`adj`-fruit`noun` tree`noun`, shape`adj`-leaf`noun` flower`noun`, shape`adj`-leaf`noun` tree`noun`, shape`adj`-vegetable`noun` tree`noun`, tree`noun`-bush`noun`, tree`noun`-bush`noun` of @, tree`noun`-tree`noun`, tree`noun`-tree`noun` of @, vegetable`noun` bush`noun`, vegetable`noun` tree`noun`, vegetable`noun`-leaf`noun` tree`noun`</li>
      <li>fruit`term` : @'s color`adj` fruit`noun`, @'s flavor`adj` fruit`noun`, @'s fruit`noun`, color`adj` fruit`noun`, color`adj` fruit`noun` of @, color`adj` fruit`noun`-fruit`noun`, flavor`adj` fruit`noun`, flavor`adj` fruit`noun` of @, flavor`adj` fruit`noun`-fruit`noun`, fruit`noun` of @, shape`adj` fruit`noun`, shape`adj` fruit`noun`-fruit`noun`</li>
      <li>nut`term` : @'s color`adj` nut`noun`, @'s flavor`adj` nut`noun`, @'s nut`noun`, color`adj` nut`noun`, color`adj` nut`noun` of @, flavor`adj` nut`noun`, nut`noun` of @, sensory`adj` nut`noun`</li>
      <li>vegetable`term` : @'s color`adj` vegetable`noun`, @'s flavor`adj` vegetable`noun`, @'s vegetable`noun`, @'s vegetable`noun`-vegetable`noun`, color`adj` sensory`adj` vegetable`noun`, color`adj` vegetable`noun`, color`adj` vegetable`noun` of @, color`adj` vegetable`noun`-vegetable`noun`, flavor`adj` vegetable`noun`, flavor`adj` vegetable`noun`-vegetable`noun`, sensory`adj` shape`adj` vegetable`noun`, sensory`adj` vegetable`noun`, sensory`adj` vegetable`noun`-vegetable`noun`, shape`adj` color`adj` vegetable`noun`, shape`adj` vegetable`noun`, shape`adj` vegetable`noun`-vegetable`noun`, vegetable`noun` of @</li>

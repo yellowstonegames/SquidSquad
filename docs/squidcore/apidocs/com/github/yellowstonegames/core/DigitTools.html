@@ -44,7 +44,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -80,9 +80,28 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DigitTools</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Utility class for converting to and from numbers and their String representations.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested.class.summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="DigitTools.Encoding.html" title="enum class in com.github.yellowstonegames.core">DigitTools.Encoding</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">Stores various ways to encode digits, such as binary (<a href="DigitTools.Encoding.html#BASE2"><code>DigitTools.Encoding.BASE2</code></a>, or just 0 and 1), decimal (<a href="DigitTools.Encoding.html#BASE10"><code>DigitTools.Encoding.BASE10</code></a>,
+ 0 through 9), hexadecimal (<a href="DigitTools.Encoding.html#BASE16"><code>DigitTools.Encoding.BASE16</code></a>), and the even larger <a href="DigitTools.Encoding.html#BASE36"><code>DigitTools.Encoding.BASE36</code></a>.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field.summary">
@@ -92,23 +111,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static char[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#hexDigits">hexDigits</a></span></code></div>
-<div class="col-last even-row-color">
-<div class="block">Constant storing the 16 hexadecimal digits, as char values, in order.</div>
-</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#mask16">mask16</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#mask32">mask32</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#mask16">mask16</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#mask64">mask64</a></span></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#mask32">mask32</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#mask8">mask8</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#mask64">mask64</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#mask8">mask8</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -164,157 +178,168 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#appendHex(java.lang.StringBuilder,short)">appendHex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link">StringBuilder</a>&nbsp;builder,
  short&nbsp;number)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(byte)">bin</a></span>&#8203;(byte&nbsp;number)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link">StringBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#appendJoinedFloatsBits(java.lang.StringBuilder,java.lang.CharSequence,float...)">appendJoinedFloatsBits</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link">StringBuilder</a>&nbsp;sb,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ float...&nbsp;elements)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(char)">bin</a></span>&#8203;(char&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(byte)">bin</a></span>&#8203;(byte&nbsp;number)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(int)">bin</a></span>&#8203;(int&nbsp;number)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(char)">bin</a></span>&#8203;(char&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(long)">bin</a></span>&#8203;(long&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(int)">bin</a></span>&#8203;(int&nbsp;number)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(short)">bin</a></span>&#8203;(short&nbsp;number)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(long)">bin</a></span>&#8203;(long&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(byte)">hex</a></span>&#8203;(byte&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#bin(short)">bin</a></span>&#8203;(short&nbsp;number)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(byte%5B%5D)">hex</a></span>&#8203;(byte[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(byte)">hex</a></span>&#8203;(byte&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(char)">hex</a></span>&#8203;(char&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(byte%5B%5D)">hex</a></span>&#8203;(byte[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(char%5B%5D)">hex</a></span>&#8203;(char[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(char)">hex</a></span>&#8203;(char&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(double)">hex</a></span>&#8203;(double&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(char%5B%5D)">hex</a></span>&#8203;(char[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(double%5B%5D)">hex</a></span>&#8203;(double[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(double)">hex</a></span>&#8203;(double&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(float)">hex</a></span>&#8203;(float&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(double%5B%5D)">hex</a></span>&#8203;(double[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(float%5B%5D)">hex</a></span>&#8203;(float[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(float)">hex</a></span>&#8203;(float&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(int)">hex</a></span>&#8203;(int&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(float%5B%5D)">hex</a></span>&#8203;(float[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(int%5B%5D)">hex</a></span>&#8203;(int[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(int)">hex</a></span>&#8203;(int&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(long)">hex</a></span>&#8203;(long&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(int%5B%5D)">hex</a></span>&#8203;(int[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(long%5B%5D)">hex</a></span>&#8203;(long[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(long)">hex</a></span>&#8203;(long&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(short)">hex</a></span>&#8203;(short&nbsp;number)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(long%5B%5D)">hex</a></span>&#8203;(long[]&nbsp;numbers)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(short%5B%5D)">hex</a></span>&#8203;(short[]&nbsp;numbers)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(short)">hex</a></span>&#8203;(short&nbsp;number)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(boolean...)">hexHash</a></span>&#8203;(boolean...&nbsp;array)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
-</div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hex(short%5B%5D)">hex</a></span>&#8203;(short[]&nbsp;numbers)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(byte...)">hexHash</a></span>&#8203;(byte...&nbsp;array)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(boolean...)">hexHash</a></span>&#8203;(boolean...&nbsp;array)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(char...)">hexHash</a></span>&#8203;(char...&nbsp;array)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(byte...)">hexHash</a></span>&#8203;(byte...&nbsp;array)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(double...)">hexHash</a></span>&#8203;(double...&nbsp;array)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(char...)">hexHash</a></span>&#8203;(char...&nbsp;array)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(float...)">hexHash</a></span>&#8203;(float...&nbsp;array)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(double...)">hexHash</a></span>&#8203;(double...&nbsp;array)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(int...)">hexHash</a></span>&#8203;(int...&nbsp;array)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(float...)">hexHash</a></span>&#8203;(float...&nbsp;array)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(long...)">hexHash</a></span>&#8203;(long...&nbsp;array)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(int...)">hexHash</a></span>&#8203;(int...&nbsp;array)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(short...)">hexHash</a></span>&#8203;(short...&nbsp;array)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(long...)">hexHash</a></span>&#8203;(long...&nbsp;array)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hexHash(short...)">hexHash</a></span>&#8203;(short...&nbsp;array)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Hashes <code>array</code> using <a href="Hasher.html" title="class in com.github.yellowstonegames.core"><code>Hasher</code></a> and converts that hash to a hexadecimal String.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromBin(java.lang.CharSequence)">intFromBin</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Reads in a CharSequence containing only binary digits (only 0 and 1) and returns the int they represent,
+ reading at most 32 characters and returning the result if valid or 0 otherwise.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromBin(java.lang.CharSequence)">intFromBin</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromBin(java.lang.CharSequence,int,int)">intFromBin</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
+ int&nbsp;start,
+ int&nbsp;end)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Reads in a CharSequence containing only binary digits (only 0 and 1) and returns the int they represent,
  reading at most 32 characters and returning the result if valid or 0 otherwise.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromBin(java.lang.CharSequence,int,int)">intFromBin</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
- int&nbsp;start,
- int&nbsp;end)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromDec(java.lang.CharSequence)">intFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Reads in a CharSequence containing only binary digits (only 0 and 1) and returns the int they represent,
- reading at most 32 characters and returning the result if valid or 0 otherwise.</div>
+<div class="block">Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
+ int they represent, reading at most 10 characters (11 if there is a sign) and returning the result if valid, or 0
+ if nothing could be read.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromDec(java.lang.CharSequence)">intFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromDec(java.lang.CharSequence,int,int)">intFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
+ int&nbsp;start,
+ int&nbsp;end)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
  int they represent, reading at most 10 characters (11 if there is a sign) and returning the result if valid, or 0
  if nothing could be read.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromDec(java.lang.CharSequence,int,int)">intFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(char%5B%5D,int,int)">intFromHex</a></span>&#8203;(char[]&nbsp;cs,
  int&nbsp;start,
  int&nbsp;end)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
- int they represent, reading at most 10 characters (11 if there is a sign) and returning the result if valid, or 0
- if nothing could be read.</div>
-</div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(char%5B%5D,int,int)">intFromHex</a></span>&#8203;(char[]&nbsp;cs,
- int&nbsp;start,
- int&nbsp;end)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Reads in a char[] containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
  and returns the int they represent, reading at most 8 characters (9 if there is a sign) and returning the result
  if valid, or 0 if nothing could be read.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(java.lang.CharSequence)">intFromHex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
+ and returns the int they represent, reading at most 8 characters (9 if there is a sign) and returning the result
+ if valid, or 0 if nothing could be read.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(java.lang.CharSequence)">intFromHex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(java.lang.CharSequence,int,int)">intFromHex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
+ int&nbsp;start,
+ int&nbsp;end)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
  and returns the int they represent, reading at most 8 characters (9 if there is a sign) and returning the result
  if valid, or 0 if nothing could be read.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#intFromHex(java.lang.CharSequence,int,int)">intFromHex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs,
- int&nbsp;start,
- int&nbsp;end)</code></div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#joinFloatsBits(java.lang.CharSequence,float...)">joinFloatsBits</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ float...&nbsp;elements)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Reads in a CharSequence containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
- and returns the int they represent, reading at most 8 characters (9 if there is a sign) and returning the result
- if valid, or 0 if nothing could be read.</div>
+<div class="block">Joins an array or varargs of floats into a String, separated by <code>delimiter</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static long</code></div>
 <div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#longFromBin(java.lang.CharSequence)">longFromBin</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;cs)</code></div>
@@ -371,6 +396,27 @@ loadScripts(document, 'script');</script>
  and returns the long they represent, reading at most 16 characters (17 if there is a sign) and returning the
  result if valid, or 0 if nothing could be read.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static float[]</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#splitFloatFromBits(java.lang.String,java.lang.String)">splitFloatFromBits</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Given a String containing decimal (seeming nonsense) numbers separated by <code>delimiter</code> (which is permitted
+ to be present at the end or absent), this parses the numbers into a float array.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[]</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#splitIntFromDec(java.lang.String,java.lang.String)">splitIntFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Given a String containing decimal numbers separated by <code>delimiter</code> (which is permitted to be present at the
+ end or absent), this parses the numbers into an int array.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static long[]</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#splitLongFromDec(java.lang.String,java.lang.String)">splitLongFromDec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Given a String containing decimal numbers separated by <code>delimiter</code> (which is permitted to be present at the
+ end or absent), this parses the numbers into a long array.</div>
+</div>
 </div>
 </div>
 </div>
@@ -426,13 +472,6 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd><a href="../../../../constant-values.html#com.github.yellowstonegames.core.DigitTools.mask8">Constant Field Values</a></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="hexDigits">
-<h3>hexDigits</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">char[]</span>&nbsp;<span class="element-name">hexDigits</span></div>
-<div class="block">Constant storing the 16 hexadecimal digits, as char values, in order.</div>
 </section>
 </li>
 </ul>
@@ -1086,6 +1125,84 @@ loadScripts(document, 'script');</script>
 <dd><code>array</code> - a non-null, non-empty double array</dd>
 <dt>Returns:</dt>
 <dd>the 16-hex-digit representation of array's hash as a hexadecimal number</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="splitLongFromDec(java.lang.String,java.lang.String)">
+<h3>splitLongFromDec</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long[]</span>&nbsp;<span class="element-name">splitLongFromDec</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</span></div>
+<div class="block">Given a String containing decimal numbers separated by <code>delimiter</code> (which is permitted to be present at the
+ end or absent), this parses the numbers into a long array. The <code>source</code> is commonly generated by
+ <a href="StringTools.html#join(java.lang.CharSequence,long...)"><code>StringTools.join(CharSequence, long...)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>source</code> - a String containing decimal numbers separated by <code>delimiter</code></dd>
+<dd><code>delimiter</code> - a non-null, non-empty String that separates numbers in the source</dd>
+<dt>Returns:</dt>
+<dd>a long array containing the numbers found in <code>source</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="splitIntFromDec(java.lang.String,java.lang.String)">
+<h3>splitIntFromDec</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">splitIntFromDec</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</span></div>
+<div class="block">Given a String containing decimal numbers separated by <code>delimiter</code> (which is permitted to be present at the
+ end or absent), this parses the numbers into an int array. The <code>source</code> is commonly generated by
+ <a href="StringTools.html#join(java.lang.CharSequence,int...)"><code>StringTools.join(CharSequence, int...)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>source</code> - a String containing decimal numbers separated by <code>delimiter</code></dd>
+<dd><code>delimiter</code> - a non-null, non-empty String that separates numbers in the source</dd>
+<dt>Returns:</dt>
+<dd>an int array containing the numbers found in <code>source</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="joinFloatsBits(java.lang.CharSequence,float...)">
+<h3>joinFloatsBits</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">joinFloatsBits</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ float...&nbsp;elements)</span></div>
+<div class="block">Joins an array or varargs of floats into a String, separated by <code>delimiter</code>. This does not write the floats
+ conventionally; instead it converts them to their int bits and reverses the bytes of that int before appending it
+ to the String. This means the float <code>0.0f</code> is written as <code>0</code>, most small powers of 2 are 3 or 4
+ digits, and the longest numbers have the very least-significant bits set. This is meant to be decoded by
+ <a href="#splitFloatFromBits(java.lang.String,java.lang.String)"><code>splitFloatFromBits(String, String)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>delimiter</code> - what separates the encoded float elements</dd>
+<dd><code>elements</code> - an array or varargs of float to encode</dd>
+<dt>Returns:</dt>
+<dd>a String that holds the encoded floats</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="appendJoinedFloatsBits(java.lang.StringBuilder,java.lang.CharSequence,float...)">
+<h3>appendJoinedFloatsBits</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link">StringBuilder</a></span>&nbsp;<span class="element-name">appendJoinedFloatsBits</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link">StringBuilder</a>&nbsp;sb,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ float...&nbsp;elements)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="splitFloatFromBits(java.lang.String,java.lang.String)">
+<h3>splitFloatFromBits</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">splitFloatFromBits</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;delimiter)</span></div>
+<div class="block">Given a String containing decimal (seeming nonsense) numbers separated by <code>delimiter</code> (which is permitted
+ to be present at the end or absent), this parses the numbers into a float array. The <code>source</code> is commonly
+ generated by <a href="#joinFloatsBits(java.lang.CharSequence,float...)"><code>joinFloatsBits(CharSequence, float...)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>source</code> - a String containing decimal numbers separated by <code>delimiter</code></dd>
+<dd><code>delimiter</code> - a non-null, non-empty String that separates numbers in the source</dd>
+<dt>Returns:</dt>
+<dd>a float array containing the numbers found in <code>source</code></dd>
 </dl>
 </section>
 </li>

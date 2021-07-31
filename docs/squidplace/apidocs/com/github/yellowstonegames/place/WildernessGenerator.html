@@ -239,51 +239,81 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">contentByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
+ int&nbsp;spillerLimit,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">blueSpill</a></span>&#8203;(int[][]&nbsp;toFill,
+ int&nbsp;spillerLimit,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ boolean&nbsp;triangular)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static int[][]</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">blueSpill</a></span>&#8203;(int&nbsp;width,
+ int&nbsp;height,
+ int&nbsp;spillerLimit,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
+ noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
+ range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
+ original point.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">contentByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectLongOrderedMap&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#defaultViewer()">defaultViewer</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">floorsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectLongOrderedMap&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#defaultViewer()">defaultViewer</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)">floorsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome,
  com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#generate()">generate</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#generate()">generate</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Produces a map by filling the <a href="#floors"><code>floors</code></a> 2D array with indices into <a href="#floorTypes"><code>floorTypes</code></a>, and similarly
  filling the <a href="#content"><code>content</code></a> 2D array with indices into <a href="#contentTypes"><code>contentTypes</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int[][]</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getEnvironment()">getEnvironment</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int[][]</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getEnvironment()">getEnvironment</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
  in <a href="DungeonTools.html" title="class in com.github.yellowstonegames.place"><code>DungeonTools</code></a> like <a href="DungeonTools.html#NATURAL_WALL"><code>DungeonTools.NATURAL_WALL</code></a> or <a href="DungeonTools.html#ROOM_FLOOR"><code>DungeonTools.ROOM_FLOOR</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getPlaceGrid()">getPlaceGrid</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>char[][]</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getPlaceGrid()">getPlaceGrid</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the most recently-produced place as a 2D char array, usually produced by calling <a href="#generate()"><code>generate()</code></a> or
  some similar method present in a specific implementation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeRepeats(java.lang.Object...)">makeRepeats</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeRepeats(java.lang.Object...)">makeRepeats</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeShuffledRepeats(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.Object...)">makeShuffledRepeats</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pathsByBiome(com.github.yellowstonegames.place.Biome)">pathsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeShuffledRepeats(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.Object...)">makeShuffledRepeats</a></span>&#8203;(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;rest)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pathsByBiome(com.github.yellowstonegames.place.Biome)">pathsByBiome</a></span>&#8203;(<a href="Biome.html" title="class in com.github.yellowstonegames.place">Biome</a>&nbsp;biome)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets a list of Strings that are really just the names of types of path tile for wilderness areas.</div>
 </div>
 </div>
@@ -452,6 +482,67 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<h3>blueSpill</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int&nbsp;width,
+ int&nbsp;height,
+ int&nbsp;spillerLimit,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
+ noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
+ range, and then expanding those points pseudo-randomly while keeping the same value for any expanded range as its
+ original point.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>width</code> - the width of the 2D array to return</dd>
+<dd><code>height</code> - the height of the 2D array to return</dd>
+<dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dt>Returns:</dt>
+<dd>a 2D int array containing ints from 0 (inclusive) to <code>spillerLimit</code> (exclusive)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<h3>blueSpill</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int[][]&nbsp;toFill,
+ int&nbsp;spillerLimit,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
+<dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dt>Returns:</dt>
+<dd><code>toFill</code>, after modifications</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="blueSpill(int[][],int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
+<h3>blueSpill</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">blueSpill</span>&#8203;<span class="parameters">(int[][]&nbsp;toFill,
+ int&nbsp;spillerLimit,
+ com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ boolean&nbsp;triangular)</span></div>
+<div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
+ points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
+ points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
+<dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dt>Returns:</dt>
+<dd><code>toFill</code>, after modifications</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="makeRepeats(java.lang.Object...)">
 <h3>makeRepeats</h3>

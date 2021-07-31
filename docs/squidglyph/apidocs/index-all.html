@@ -103,6 +103,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlyphMap.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float,float)">draw(Batch, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#draw(com.badlogic.gdx.graphics.g2d.Batch,com.github.yellowstonegames.glyph.Font)">draw(Batch, Font)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawBlocks(com.badlogic.gdx.graphics.g2d.Batch,int%5B%5D%5B%5D,float,float)">drawBlocks(Batch, int[][], float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>
 <div class="block">Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.</div>
@@ -110,6 +112,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float)">drawGlyph(Batch, long, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>
 <div class="block">Draws the specified glyph with a Batch at the given x, y position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyph(com.badlogic.gdx.graphics.g2d.Batch,long,float,float,float)">drawGlyph(Batch, long, float, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
+<dd>
+<div class="block">Draws the specified glyph with a Batch at the given x, y position and with the specified counterclockwise
+ rotation, measured in turns.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#drawGlyphs(com.badlogic.gdx.graphics.g2d.Batch,com.github.yellowstonegames.glyph.Layout,float,float)">drawGlyphs(Batch, Layout, float, float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>
 <dd>
@@ -152,6 +159,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Must be called before drawing anything with an MSDF font; does not need to be called for other fonts unless you
  are mixing them with MSDF fonts or other shaders.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlyphMap.html#extractCoord(int)">extractCoord(int)</a></span> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dd>
+<div class="block">A convenience method that extracts the x and y components from <code>fused</code> and returns
+ them as a Coord.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlyphMap.html#extractX(int)">extractX(int)</a></span> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>
@@ -260,6 +272,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Combines the up-to-15-bit non-negative ints x and y into one non-negative result int.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlyphMap.html#fuse(com.github.yellowstonegames.grid.Coord)">fuse(Coord)</a></span> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dd>
+<div class="block">Combines the up-to-15-bit non-negative x and y components of the Coord <code>xy</code> into one
+ non-negative result int.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -297,6 +314,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
  scale cleanly to even very large sizes (using an SDF technique).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getGlyph()">getGlyph()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#getHeight()">getHeight()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getInconsolataLGC()">getInconsolataLGC()</a></span> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
@@ -316,6 +335,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#getLine(int)">getLine(int)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getLocation()">getLocation()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#getMaxLines()">getMaxLines()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>
 <div class="block">The maximum number of <a href="com/github/yellowstonegames/glyph/Line.html" title="class in com.github.yellowstonegames.glyph"><code>Line</code></a>s this Layout can contain.</div>
@@ -324,9 +345,32 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a Font configured to use a clean variable-width font, Open Sans.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getRotation()">getRotation()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#getTargetWidth()">getTargetWidth()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#getWidth()">getWidth()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getX()">getX()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getY()">getY()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph"><span class="type-name-link">GlidingGlyph</span></a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>
+<div class="block">A single <code>long</code> that a <a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph"><code>Font</code></a> can render as a glyph with color and styles, given a location that can
+ smoothly change as a <code>CoordGlider</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long)">GlidingGlyph(long)</a></span> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord)">GlidingGlyph(long, Coord)</a></span> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">GlidingGlyph(long, Coord, Coord)</a></span> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float)">GlidingGlyph(long, Coord, Coord, float)</a></span> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)">GlidingGlyph(long, Coord, Coord, float, float)</a></span> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#glyph">glyph</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph"><span class="type-name-link">GlyphMap</span></a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
 <dd>&nbsp;</dd>
@@ -406,6 +450,8 @@ loadScripts(document, 'script');</script>
 <div class="block">The gritty parsing code that pulls relevant info from a FNT file and uses it to assemble the
  many <code>TextureRegion</code>s this has for each glyph.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#location">location</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
@@ -489,6 +535,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/KnownFonts.html#resume()">resume()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#rotation">rotation</a></span> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -528,10 +576,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the ellipsis text, which replaces the last few glyphs if non-null and the text added would exceed
  the <a href="com/github/yellowstonegames/glyph/Layout.html#getMaxLines()"><code>Layout.getMaxLines()</code></a> of this Layout.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setGlyph(long)">setGlyph(long)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setLocation(com.github.yellowstonegames.smooth.CoordGlider)">setLocation(CoordGlider)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#setMaxLines(int)">setMaxLines(int)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>
 <div class="block">Sets the maximum number of <a href="com/github/yellowstonegames/glyph/Line.html" title="class in com.github.yellowstonegames.glyph"><code>Line</code></a>s this Layout can contain; this is always at least 1.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setRotation(com.github.yellowstonegames.smooth.FloatGlider)">setRotation(FloatGlider)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Layout.html#setTargetWidth(float)">setTargetWidth(float)</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Layout.html" title="class in com.github.yellowstonegames.glyph">Layout</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/yellowstonegames/glyph/Font.html#setTextureFilter()">setTextureFilter()</a></span> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/Font.html" title="class in com.github.yellowstonegames.glyph">Font</a></dt>

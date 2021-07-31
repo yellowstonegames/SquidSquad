@@ -129,7 +129,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the most relevant biome code for a given x,y point on the map.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>com.github.yellowstonegames.place.Biome[]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#getBiomeNameTable()">getBiomeNameTable</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#getBiomeTable()">getBiomeTable</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
 <div class="block">Gets a <code>Biome</code> array where biome codes can be used as indices to look up a name for the biome they refer
  to.</div>
@@ -174,7 +174,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the most relevant biome code for a given x,y point on the map. Some mappers can store more than one
  biome at a location, but only the one with the highest influence will be returned by this method. Biome codes
  are always ints, and are typically between 0 and 60, both inclusive; they are meant to be used as indices
- into a table of names or other objects that identify a biome, accessible via <a href="#getBiomeNameTable()"><code>getBiomeNameTable()</code></a>.
+ into a table of names or other objects that identify a biome, accessible via <a href="#getBiomeTable()"><code>getBiomeTable()</code></a>.
  Although different classes may define biome codes differently, they should all be able to be used as indices
  into the String array returned by getBiomeNameTable().</div>
 <dl class="notes">
@@ -182,7 +182,7 @@ loadScripts(document, 'script');</script>
 <dd><code>x</code> - the x-coordinate on the map</dd>
 <dd><code>y</code> - the y-coordinate on the map</dd>
 <dt>Returns:</dt>
-<dd>an int that can be used as an index into the array returned by <a href="#getBiomeNameTable()"><code>getBiomeNameTable()</code></a></dd>
+<dd>an int that can be used as an index into the array returned by <a href="#getBiomeTable()"><code>getBiomeTable()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -224,9 +224,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getBiomeNameTable()">
-<h3>getBiomeNameTable</h3>
-<div class="member-signature"><span class="return-type">com.github.yellowstonegames.place.Biome[]</span>&nbsp;<span class="element-name">getBiomeNameTable</span>()</div>
+<section class="detail" id="getBiomeTable()">
+<h3>getBiomeTable</h3>
+<div class="member-signature"><span class="return-type">com.github.yellowstonegames.place.Biome[]</span>&nbsp;<span class="element-name">getBiomeTable</span>()</div>
 <div class="block">Gets a <code>Biome</code> array where biome codes can be used as indices to look up a name for the biome they refer
  to. It's common for implementations to use the existing table in <code>Biome.TABLE</code>; the 66-element array format
  that uses is encouraged for implementing classes if they use 6 levels of heat and 6 levels of moisture, and track
@@ -245,7 +245,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">makeBiomes</span>&#8203;<span class="parameters">(<a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a>&nbsp;world)</span></div>
 <div class="block">Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
  assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
- retrieved with <a href="#getBiomeCode(int,int)"><code>getBiomeCode(int, int)</code></a> and used as indices into <a href="#getBiomeNameTable()"><code>getBiomeNameTable()</code></a> or a
+ retrieved with <a href="#getBiomeCode(int,int)"><code>getBiomeCode(int, int)</code></a> and used as indices into <a href="#getBiomeTable()"><code>getBiomeTable()</code></a> or a
  custom biome table.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

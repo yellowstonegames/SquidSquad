@@ -81,8 +81,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">A palette of predefined colors as packed Oklab ints, and tools for obtaining Oklab int colors from a description.</div>
 </div>
+<div class="col-first even-row-color"><a href="Dice.html" title="class in com.github.yellowstonegames.core">Dice</a></div>
+<div class="col-last even-row-color">
+<div class="block">Class for emulating various traditional RPG-style dice rolls.</div>
+</div>
+<div class="col-first odd-row-color"><a href="Dice.Rule.html" title="class in com.github.yellowstonegames.core">Dice.Rule</a></div>
+<div class="col-last odd-row-color">
+<div class="block">A rule for how to roll a particular set of dice and operations to perform on them, such as "3d6+4" to roll three
+ 6-sided dice and add 4 to the result.</div>
+</div>
 <div class="col-first even-row-color"><a href="DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Utility class for converting to and from numbers and their String representations.</div>
+</div>
 <div class="col-first odd-row-color"><a href="GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color">
 <div class="block">Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
@@ -92,27 +103,43 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">64-bit and 32-bit hashing functions that we can rely on staying the same cross-platform.</div>
 </div>
-<div class="col-first odd-row-color"><a href="LZSEncoding.html" title="class in com.github.yellowstonegames.core">LZSEncoding</a></div>
+<div class="col-first odd-row-color"><a href="LZByteEncoding.html" title="class in com.github.yellowstonegames.core">LZByteEncoding</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Compresses Strings to byte arrays (and back again) using a type of LZ-compression.</div>
+</div>
+<div class="col-first even-row-color"><a href="LZSEncoding.html" title="class in com.github.yellowstonegames.core">LZSEncoding</a></div>
+<div class="col-last even-row-color">
 <div class="block">Implements LZ-String compression, for taking a large String and compressing it to a (usually) smaller one.</div>
 </div>
-<div class="col-first even-row-color"><a href="MathTools.html" title="class in com.github.yellowstonegames.core">MathTools</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="MathTools.html" title="class in com.github.yellowstonegames.core">MathTools</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Mathematical operations not provided by <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Math.html" title="class or interface in java.lang" class="external-link"><code>java.lang.Math</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="StringTools.html" title="class in com.github.yellowstonegames.core">StringTools</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="StringTools.html" title="class in com.github.yellowstonegames.core">StringTools</a></div>
+<div class="col-last even-row-color">
 <div class="block">Various utility functions for handling readable natural-language text.</div>
 </div>
-<div class="col-first even-row-color"><a href="TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="TrigTools.html" title="class in com.github.yellowstonegames.core">TrigTools</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Various fast trigonometric approximations that don't use a lookup table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="WeightedTable.html" title="class in com.github.yellowstonegames.core">WeightedTable</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="WeightedTable.html" title="class in com.github.yellowstonegames.core">WeightedTable</a></div>
+<div class="col-last even-row-color">
 <div class="block">A different approach to the same task as a probability table, though this only looks up an appropriate index
  instead of also storing items it can choose; allows positive doubles for weights but does not allow nested tables for
  simplicity.</div>
+</div>
+</div>
+</li>
+<li>
+<div class="caption"><span>Enum Class Summary</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Enum Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="DigitTools.Encoding.html" title="enum class in com.github.yellowstonegames.core">DigitTools.Encoding</a></div>
+<div class="col-last even-row-color">
+<div class="block">Stores various ways to encode digits, such as binary (<a href="DigitTools.Encoding.html#BASE2"><code>DigitTools.Encoding.BASE2</code></a>, or just 0 and 1), decimal (<a href="DigitTools.Encoding.html#BASE10"><code>DigitTools.Encoding.BASE10</code></a>,
+ 0 through 9), hexadecimal (<a href="DigitTools.Encoding.html#BASE16"><code>DigitTools.Encoding.BASE16</code></a>), and the even larger <a href="DigitTools.Encoding.html#BASE36"><code>DigitTools.Encoding.BASE36</code></a>.</div>
 </div>
 </div>
 </li>
