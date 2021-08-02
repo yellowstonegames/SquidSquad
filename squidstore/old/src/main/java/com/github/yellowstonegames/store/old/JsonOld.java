@@ -3,10 +3,9 @@ package com.github.yellowstonegames.store.old;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.yellowstonegames.old.v300.DiverRNG;
+import com.github.yellowstonegames.old.v300.GWTRNG;
 import com.github.yellowstonegames.old.v300.LightRNG;
-import com.github.yellowstonegames.store.core.JsonCore;
 
 import javax.annotation.Nonnull;
 
@@ -23,6 +22,7 @@ public final class JsonOld {
     public static void registerAll(@Nonnull Json json) {
         registerLightRNG(json);
         registerDiverRNG(json);
+        registerGWTRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
 
@@ -73,4 +73,29 @@ public final class JsonOld {
             }
         });
     }
+    /**
+     * Registers GWTRNG with the given Json object, so GWTRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerGWTRNG(@Nonnull Json json) {
+        json.addClassTag("#GWTR", GWTRNG.class);
+        json.setSerializer(GWTRNG.class, new Json.Serializer<GWTRNG>() {
+            @Override
+            public void write(Json json, GWTRNG object, Class knownType) {
+                json.writeValue("#GWTR`" + Long.toString(object.getState(), 36) + "`");
+            }
+
+            @Override
+            public GWTRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new GWTRNG(state);
+            }
+        });
+    }
+
+
 }
