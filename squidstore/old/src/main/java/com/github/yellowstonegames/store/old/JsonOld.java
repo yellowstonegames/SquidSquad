@@ -23,6 +23,7 @@ public final class JsonOld {
         registerGWTRNG(json);
         registerSilkRNG(json);
         registerLinnormRNG(json);
+        registerThrustAltRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
 
@@ -142,6 +143,30 @@ public final class JsonOld {
                 final int tick = s.indexOf('`', 6);
                 final long state = Long.parseLong(s.substring(6, tick), 36);
                 return new SilkRNG(state);
+            }
+        });
+    }
+
+    /**
+     * Registers ThrustAltRNG with the given Json object, so ThrustAltRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerThrustAltRNG(@Nonnull Json json) {
+        json.addClassTag("#ThAR", ThrustAltRNG.class);
+        json.setSerializer(ThrustAltRNG.class, new Json.Serializer<ThrustAltRNG>() {
+            @Override
+            public void write(Json json, ThrustAltRNG object, Class knownType) {
+                json.writeValue("#ThAR`" + Long.toString(object.getState(), 36) + "`");
+            }
+
+            @Override
+            public ThrustAltRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new ThrustAltRNG(state);
             }
         });
     }
