@@ -3,10 +3,7 @@ package com.github.yellowstonegames.store.old;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.yellowstonegames.old.v300.DiverRNG;
-import com.github.yellowstonegames.old.v300.GWTRNG;
-import com.github.yellowstonegames.old.v300.LightRNG;
-import com.github.yellowstonegames.old.v300.LinnormRNG;
+import com.github.yellowstonegames.old.v300.*;
 
 import javax.annotation.Nonnull;
 
@@ -24,6 +21,7 @@ public final class JsonOld {
         registerLightRNG(json);
         registerDiverRNG(json);
         registerGWTRNG(json);
+        registerSilkRNG(json);
         registerLinnormRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
@@ -120,6 +118,30 @@ public final class JsonOld {
                 final int tick = s.indexOf('`', 6);
                 final long state = Long.parseLong(s.substring(6, tick), 36);
                 return new LinnormRNG(state);
+            }
+        });
+    }
+
+    /**
+     * Registers SilkRNG with the given Json object, so SilkRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSilkRNG(@Nonnull Json json) {
+        json.addClassTag("#SilR", SilkRNG.class);
+        json.setSerializer(SilkRNG.class, new Json.Serializer<SilkRNG>() {
+            @Override
+            public void write(Json json, SilkRNG object, Class knownType) {
+                json.writeValue("#SilR`" + Long.toString(object.getState(), 36) + "`");
+            }
+
+            @Override
+            public SilkRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new SilkRNG(state);
             }
         });
     }
