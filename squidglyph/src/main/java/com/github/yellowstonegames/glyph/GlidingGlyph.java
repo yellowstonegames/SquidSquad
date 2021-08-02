@@ -2,6 +2,7 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.smooth.AngleGlider;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.FloatGlider;
 
@@ -9,13 +10,14 @@ import javax.annotation.Nonnull;
 
 /**
  * A single {@code long} that a {@link Font} can render as a glyph with color and styles, given a location that can
- * smoothly change as a {@link CoordGlider}. May optionally have an unchanging or a changing rotation.
+ * smoothly change as a {@link CoordGlider}. May optionally have an unchanging or a changing rotation as an
+ * {@link AngleGlider}.
  */
 public class GlidingGlyph {
     @Nonnull
     public CoordGlider location;
     @Nonnull
-    public FloatGlider rotation;
+    public AngleGlider rotation;
     public long glyph;
 
     private GlidingGlyph() {
@@ -32,19 +34,19 @@ public class GlidingGlyph {
     public GlidingGlyph(long glyph, Coord start, Coord end) {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
-        rotation = new FloatGlider();
+        rotation = new AngleGlider();
     }
 
     public GlidingGlyph(long glyph, Coord start, Coord end, float rotation) {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
-        this.rotation = new FloatGlider(rotation);
+        this.rotation = new AngleGlider(rotation);
     }
 
     public GlidingGlyph(long glyph, Coord start, Coord end, float rotationStart, float rotationEnd) {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
-        rotation = new FloatGlider(rotationStart, rotationEnd);
+        rotation = new AngleGlider(rotationStart, rotationEnd);
     }
 
     public float getX()
@@ -67,11 +69,11 @@ public class GlidingGlyph {
     }
 
     @Nonnull
-    public FloatGlider getRotation() {
+    public AngleGlider getRotation() {
         return rotation;
     }
 
-    public void setRotation(@Nonnull FloatGlider rotation) {
+    public void setRotation(@Nonnull AngleGlider rotation) {
         this.rotation = rotation;
     }
 
@@ -84,6 +86,6 @@ public class GlidingGlyph {
     }
 
     public void draw(Batch batch, Font font){
-        font.drawGlyph(batch, glyph, location.getX(), location.getY(), rotation.getValue());
+        font.drawGlyph(batch, glyph, location.getX(), location.getY(), rotation.getAngle());
     }
 }

@@ -472,6 +472,19 @@ public final class MathTools
         return fromValue + (toValue - fromValue) * progress;
     }
 
+    /** Linearly interpolates between two angles in turns. Takes into account that angles wrap at 1.0 and always takes
+     * the direction with the smallest delta angle.
+     *
+     * @param fromTurns start angle in turns
+     * @param toTurns target angle in turns
+     * @param progress interpolation value in the range [0, 1]
+     * @return the interpolated angle in the range [0, 1) */
+    public static float lerpAngle_ (float fromTurns, float toTurns, float progress) {
+        float d = toTurns - fromTurns + 0.5f;
+        d = fromTurns + progress * (d - fastFloor(d) - 0.5f);
+        return d - fastFloor(d);
+    }
+
     /**
      * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
