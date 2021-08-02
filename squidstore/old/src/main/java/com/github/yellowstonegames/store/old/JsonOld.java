@@ -6,6 +6,7 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.old.v300.DiverRNG;
 import com.github.yellowstonegames.old.v300.GWTRNG;
 import com.github.yellowstonegames.old.v300.LightRNG;
+import com.github.yellowstonegames.old.v300.LinnormRNG;
 
 import javax.annotation.Nonnull;
 
@@ -23,6 +24,7 @@ public final class JsonOld {
         registerLightRNG(json);
         registerDiverRNG(json);
         registerGWTRNG(json);
+        registerLinnormRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
 
@@ -73,6 +75,7 @@ public final class JsonOld {
             }
         });
     }
+
     /**
      * Registers GWTRNG with the given Json object, so GWTRNG can be written to and read from JSON.
      *
@@ -97,5 +100,28 @@ public final class JsonOld {
         });
     }
 
+    /**
+     * Registers LinnormRNG with the given Json object, so LinnormRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLinnormRNG(@Nonnull Json json) {
+        json.addClassTag("#LinR", LinnormRNG.class);
+        json.setSerializer(LinnormRNG.class, new Json.Serializer<LinnormRNG>() {
+            @Override
+            public void write(Json json, LinnormRNG object, Class knownType) {
+                json.writeValue("#LinR`" + Long.toString(object.getState(), 36) + "`");
+            }
+
+            @Override
+            public LinnormRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
+                final int tick = s.indexOf('`', 6);
+                final long state = Long.parseLong(s.substring(6, tick), 36);
+                return new LinnormRNG(state);
+            }
+        });
+    }
 
 }
