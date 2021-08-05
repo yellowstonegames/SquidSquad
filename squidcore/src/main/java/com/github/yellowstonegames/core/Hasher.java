@@ -65,16 +65,19 @@ public class Hasher {
      * Fast static randomizing method that takes its state as a parameter; state is expected to change between calls to
      * this. It is recommended that you use {@code DiverRNG.determine(++state)} or {@code DiverRNG.determine(--state)}
      * to produce a sequence of different numbers, and you may have slightly worse quality with increments or decrements
-     * other than 1. All longs are accepted by this method, and all longs can be produced; unlike several other classes'
-     * determine() methods, passing 0 here does not return 0.
+     * other than 1. All longs are accepted by this method, and all longs can be produced. Passing 0 here does not
+     * cause this to return 0.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @return any long
@@ -88,22 +91,27 @@ public class Hasher {
      * calls to this. It is suggested that you use {@code DiverRNG.randomize(++state)} or
      * {@code DiverRNG.randomize(--state)} to produce a sequence of different numbers, but any increments are allowed
      * (even-number increments won't be able to produce all outputs, but their quality will be fine for the numbers they
-     * can produce). All longs are accepted by this method, and all longs can be produced; unlike several other classes'
-     * determine() methods, passing 0 here does not return 0.
+     * can produce). All longs are accepted by this method, and all longs can be produced. Passing 0 here does not
+     * cause this to return 0.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @return any long
      */
     public static long randomize(long state) {
-        return (state = ((state = (state ^ (state << 41 | state >>> 23) ^ (state << 17 | state >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L) ^ state >>> 43 ^ state >>> 31 ^ state >>> 23) * 0xDB4F0B9175AE2165L) ^ state >>> 28;
+        return (state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23 ^ state >>> 51;
+        // older Pelican mixer
+//        return (state = ((state = (state ^ (state << 41 | state >>> 23) ^ (state << 17 | state >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L) ^ state >>> 43 ^ state >>> 31 ^ state >>> 23) * 0xDB4F0B9175AE2165L) ^ state >>> 28;
     }
 
     /**
@@ -115,12 +123,15 @@ public class Hasher {
      * odd-number values for bound, this isn't possible for most generators). The bound can be negative.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@code determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @param bound the outer exclusive bound, as an int
@@ -140,12 +151,15 @@ public class Hasher {
      * bound, this isn't possible for most generators). The bound can be negative.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @param bound the outer exclusive bound, as an int
@@ -153,22 +167,26 @@ public class Hasher {
      */
 
     public static int randomizeBounded(long state, int bound) {
-        return (bound = (int) ((bound * (((state = ((state = (state ^ (state << 41 | state >>> 23) ^ (state << 17 | state >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L) ^ state >>> 43 ^ state >>> 31 ^ state >>> 23) * 0xDB4F0B9175AE2165L) ^ state >>> 28) & 0xFFFFFFFFL)) >> 32)) + (bound >>> 31);
+        return (bound = (int) ((bound * (((state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23 ^ state >>> 51) & 0xFFFFFFFFL)) >> 32)) + (bound >>> 31);
     }
 
     /**
      * Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
      * return the same float. This is expected to be called with a changing variable, e.g.
      * {@code determineFloat(++state)}, where the increment for state should generally be 1. The period is 2 to the 64
-     * if you increment or decrement by 1, but there are only 2 to the 30 possible floats between 0 and 1.
+     * if you increment or decrement by 1, but there are only 2 to the 30 possible floats between 0 and 1, and this can
+     * only return 2 to the 24 of them (a requirement for the returned values to be uniform).
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
      *              using {@code determineFloat(++state)} is recommended to go forwards or
@@ -184,15 +202,19 @@ public class Hasher {
      * return the same float. This is expected to be called with a changing variable, e.g.
      * {@code randomizeFloat(++state)}, where the increment for state can be any value and should usually be odd
      * (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by any odd
-     * number, but there are only 2 to the 30 possible floats between 0 and 1.
+     * number, but there are only 2 to the 30 possible floats between 0 and 1, and this can only return 2 to the 24 of
+     * them (a requirement for the returned values to be uniform).
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
      *              using {@code randomizeFloat(++state)} is recommended to go forwards or
@@ -200,8 +222,7 @@ public class Hasher {
      * @return a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by {@code state}
      */
     public static float randomizeFloat(long state) {
-        return (((state = (state ^ (state << 41 | state >>> 23) ^ (state << 17 | state >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L) ^ state >>> 43 ^ state >>> 31 ^ state >>> 23) * 0xDB4F0B9175AE2165L >>> 40) * 0x1p-24f;
-
+        return ((((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) >>> 40) * 0x1p-24f;
     }
 
     /**
@@ -211,12 +232,15 @@ public class Hasher {
      * if you increment or decrement by 1, but there are only 2 to the 62 possible doubles between 0 and 1.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@link #randomizeDouble(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
      *              using {@code determineDouble(++state)} is recommended to go forwards or
@@ -235,12 +259,15 @@ public class Hasher {
      * there are only 2 to the 62 possible doubles between 0 and 1.
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm based
-     * on Pelle Evensen's rrxmrrxmsx_0 and evaluated with
-     * <a href="http://mostlymangling.blogspot.com/2019/01/better-stronger-mixer-and-test-procedure.html">the same
-     * testing requirements Evensen used for rrxmrrxmsx_0</a>; it will have excellent quality regardless of patterns in
-     * input but will be about 30% slower than {@code determine()}. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input.
+     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
+     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
+     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
+     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
+     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
+     * {@code randomizeDouble(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
      *              using {@code randomizeDouble(++state)} is recommended to go forwards or
@@ -248,7 +275,7 @@ public class Hasher {
      * @return a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by {@code state}
      */
     public static double randomizeDouble(long state) {
-        return (((state = ((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53;
+        return (((state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23) >>> 11) * 0x1p-53;
     }
 
     public Hasher(final CharSequence seed) {
