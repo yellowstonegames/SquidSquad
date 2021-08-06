@@ -2,13 +2,18 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
  * A variant on jdkgdxds' {@link ObjectOrderedSet} class that only holds Coord items, and can do so more efficiently.
+ * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
+ * the maximum values for Coord x and y.
  */
+@NotNullDefault
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     public CoordOrderedSet() {
         super();
@@ -39,9 +44,14 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     }
 
     @Override
-    protected int place(@Nonnull Object item) {
+    protected int place(Object item) {
         final int x = ((Coord)item).x, y = ((Coord)item).y;
         return y + ((x + y) * (x + y + 1) >> 1) & mask;
+    }
+
+    @Override
+    protected boolean equate(Object left, @Nullable Object right) {
+        return left == right;
     }
 
     public static CoordOrderedSet with(Coord item) {

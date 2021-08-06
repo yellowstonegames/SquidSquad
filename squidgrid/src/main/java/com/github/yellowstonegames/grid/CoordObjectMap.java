@@ -2,14 +2,19 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
 /**
  * A variant on jdkgdxds' {@link ObjectObjectMap} class that only uses Coord keys, and can do so more efficiently.
+ * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
+ * the maximum values for Coord x and y.
  */
+@NotNullDefault
 public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     public CoordObjectMap() {
         super();
@@ -40,10 +45,16 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     @Override
-    protected int place(@Nonnull Object item) {
+    protected int place(Object item) {
         final int x = ((Coord)item).x, y = ((Coord)item).y;
         return y + ((x + y) * (x + y + 1) >> 1) & mask;
     }
+
+    @Override
+    protected boolean equate(Object left, @Nullable Object right) {
+        return left == right;
+    }
+
     /**
      * Constructs a single-entry map given one key and one value.
      * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
