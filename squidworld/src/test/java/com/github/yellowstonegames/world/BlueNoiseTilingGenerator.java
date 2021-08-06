@@ -16,6 +16,7 @@ import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -47,6 +48,11 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
             // Cantor pairing function
             return y + ((x + y) * (x + y + 1) >> 1) & mask;
         }
+
+        @Override
+        protected boolean equate(@Nonnull Object left, @Nullable Object right) {
+            return left == right;
+        }
     };
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
@@ -57,6 +63,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
         path = "out/blueNoise/" + date + "/tiling/";
         
