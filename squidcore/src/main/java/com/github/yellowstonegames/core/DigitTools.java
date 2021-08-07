@@ -20,8 +20,8 @@ public class DigitTools {
         BASE10("0123456789"),
         BASE16("0123456789ABCDEF"),
         BASE36("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", false),
-        URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$", false);
+        BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '='),
+        URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$');
 
         /**
          * The digits this will encode to, in order from smallest to largest.
@@ -32,21 +32,50 @@ public class DigitTools {
          */
         public final int[] fromEncoded;
 
+        /**
+         * When an encoding needs to indicate that a char is not considered part of a number, it uses this padding char;
+         * this is mostly relevant for Base-64 and URI-safe encodings.
+         */
+        public final char paddingChar;
+        private final int length1Byte, length2Byte, length4Byte, length8Byte, base;
+        private final char[] progress;
         Encoding(String digits){
-            this(digits, true);
+            this(digits, true, ' ');
         }
-        Encoding(String digits, boolean caseInsensitive){
+        Encoding(String digits, boolean caseInsensitive, char padding){
+            paddingChar = padding;
             toEncoded = digits.toCharArray();
+            base = toEncoded.length;
             fromEncoded = new int[128];
-            if(caseInsensitive)
-                Arrays.fill(fromEncoded, -1);
-            for (int i = 0; i < toEncoded.length; i++) {
+
+            //if(caseInsensitive)
+            Arrays.fill(fromEncoded, -1);
+
+            for (int i = 0; i < base; i++) {
                 char to = toEncoded[i];
                 fromEncoded[to] = i;
                 if(caseInsensitive)
                     fromEncoded[Character.toLowerCase(to)] = i;
             }
+            double logBase = 1.0 / Math.log(base);
+            length1Byte = (int)Math.ceil(Math.log(0x1p8) * logBase);
+            length2Byte = (int)Math.ceil(Math.log(0x1p16) * logBase);
+            length4Byte = (int)Math.ceil(Math.log(0x1p32) * logBase);
+            length8Byte = (int)Math.ceil(Math.log(0x1p64) * logBase);
+            progress = new char[length8Byte];
         }
+        public String encode(int number) {
+            final int len = length4Byte - 1;
+            final int sign = number >> -1;
+            number = number + sign ^ sign; // fast abs
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign)) % base];
+            return String.valueOf(progress, 0, length4Byte);
+        }
+
     }
     public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
             mask32 = "00000000000000000000000000000000",
