@@ -68,6 +68,44 @@ public class DigitTools {
 
         /**
          * Converts the given {@code number} to the base specified by this Encoding, returning a new String.
+         * @param number any long
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public String encode(long number) {
+            final int len = length8Byte - 1;
+            final long sign = number & 0x8000000000000000L;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[(int)(number % base)];
+                number /= base;
+            }
+            progress[0] = toEncoded[(int)((number | (base >>> 1 & sign >> -1)) % base)];
+            return String.valueOf(progress, 0, length8Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, appending the result to
+         * {@code builder}.
+         * @param builder a non-null StringBuilder that will be modified (appended to)
+         * @param number any long
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public StringBuilder appendEncoded(@Nonnull StringBuilder builder, long number) {
+            final int len = length8Byte - 1;
+            final long sign = number & 0x8000000000000000L;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[(int)(number % base)];
+                number /= base;
+            }
+            progress[0] = toEncoded[(int)((number | (base >>> 1 & sign >> -1)) % base)];
+            return builder.append(progress, 0, length8Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, returning a new String.
          * @param number any int
          * @return a new String containing {@code number} in the radix this specifies.
          */
@@ -75,7 +113,7 @@ public class DigitTools {
         public String encode(int number) {
             final int len = length4Byte - 1;
             final int sign = number & 0x80000000;
-            number = number ^ sign;
+            number ^= sign;
             for (int i = 0; i < len; i++) {
                 progress[len - i] = toEncoded[number % base];
                 number /= base;
@@ -95,7 +133,7 @@ public class DigitTools {
         public StringBuilder appendEncoded(@Nonnull StringBuilder builder, int number) {
             final int len = length4Byte - 1;
             final int sign = number & 0x80000000;
-            number = number ^ sign;
+            number ^= sign;
             for (int i = 0; i < len; i++) {
                 progress[len - i] = toEncoded[number % base];
                 number /= base;
