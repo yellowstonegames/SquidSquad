@@ -66,13 +66,13 @@ public class DigitTools {
         }
         public String encode(int number) {
             final int len = length4Byte - 1;
-            final int sign = number >> -1;
-            number = number + sign ^ sign; // fast abs
+            final int sign = number & 0x80000000;
+            number = number ^ sign;
             for (int i = 0; i < len; i++) {
                 progress[len - i] = toEncoded[number % base];
                 number /= base;
             }
-            progress[0] = toEncoded[(number | (base >>> 1 & sign)) % base];
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return String.valueOf(progress, 0, length4Byte);
         }
 

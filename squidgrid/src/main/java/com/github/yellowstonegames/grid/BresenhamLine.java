@@ -177,11 +177,13 @@ public class BresenhamLine implements LineDrawer {
             buffer.clear();
         }
 
+        // double ax and ay
         ax <<= 1;
         ay <<= 1;
 
-        int signx = (dx >> 31 | -dx >>> 31); // project nayuki signum
-        int signy = (dy >> 31 | -dy >>> 31); // project nayuki signum
+        // integer signum or sign-of, thanks to project nayuki
+        int signx = (dx >> 31 | -dx >>> 31);
+        int signy = (dy >> 31 | -dy >>> 31);
 
         int x = startX;
         int y = startY;
@@ -215,7 +217,6 @@ public class BresenhamLine implements LineDrawer {
                     x += signx;
                     deltax -= ay;
                 }
-
 
                 y += signy;
                 deltax += ax;
