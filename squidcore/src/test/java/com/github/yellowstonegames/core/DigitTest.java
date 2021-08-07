@@ -11,5 +11,10 @@ public class DigitTest {
         for (int i : inputs) {
             Assert.assertEquals(DigitTools.hex(i), DigitTools.Encoding.BASE16.encode(i));
         }
+        StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
+        for (int i : inputs) {
+            Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendEncoded(esb, i).toString());
+        }
+
     }
 }

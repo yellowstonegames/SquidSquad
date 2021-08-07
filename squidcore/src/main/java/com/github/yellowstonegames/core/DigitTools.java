@@ -2,6 +2,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -64,6 +65,13 @@ public class DigitTools {
             length8Byte = (int)Math.ceil(Math.log(0x1p64) * logBase);
             progress = new char[length8Byte];
         }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, returning a new String.
+         * @param number any int
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
         public String encode(int number) {
             final int len = length4Byte - 1;
             final int sign = number & 0x80000000;
@@ -74,6 +82,26 @@ public class DigitTools {
             }
             progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return String.valueOf(progress, 0, length4Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, appending the result to
+         * {@code builder}.
+         * @param builder a non-null StringBuilder that will be modified (appended to)
+         * @param number any int
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public StringBuilder appendEncoded(@Nonnull StringBuilder builder, int number) {
+            final int len = length4Byte - 1;
+            final int sign = number & 0x80000000;
+            number = number ^ sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
+            return builder.append(progress, 0, length4Byte);
         }
 
     }
