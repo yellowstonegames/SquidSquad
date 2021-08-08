@@ -72,7 +72,7 @@ public class DigitTools {
          * @return a new String containing {@code number} in the radix this specifies.
          */
         @Nonnull
-        public String encode(long number) {
+        public String unsigned(long number) {
             final int len = length8Byte - 1;
             final long sign = number & 0x8000000000000000L;
             number ^= sign;
@@ -92,7 +92,7 @@ public class DigitTools {
          * @return a new String containing {@code number} in the radix this specifies.
          */
         @Nonnull
-        public StringBuilder appendEncoded(@Nonnull StringBuilder builder, long number) {
+        public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, long number) {
             final int len = length8Byte - 1;
             final long sign = number & 0x8000000000000000L;
             number ^= sign;
@@ -110,7 +110,7 @@ public class DigitTools {
          * @return a new String containing {@code number} in the radix this specifies.
          */
         @Nonnull
-        public String encode(int number) {
+        public String unsigned(int number) {
             final int len = length4Byte - 1;
             final int sign = number & 0x80000000;
             number ^= sign;
@@ -130,7 +130,7 @@ public class DigitTools {
          * @return a new String containing {@code number} in the radix this specifies.
          */
         @Nonnull
-        public StringBuilder appendEncoded(@Nonnull StringBuilder builder, int number) {
+        public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, int number) {
             final int len = length4Byte - 1;
             final int sign = number & 0x80000000;
             number ^= sign;
@@ -140,6 +140,44 @@ public class DigitTools {
             }
             progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return builder.append(progress, 0, length4Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, returning a new String.
+         * @param number any short
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public String unsigned(short number) {
+            final int len = length2Byte - 1;
+            final int sign = number & 0xFFFF8000;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
+            return String.valueOf(progress, 0, length2Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, appending the result to
+         * {@code builder}.
+         * @param builder a non-null StringBuilder that will be modified (appended to)
+         * @param number any short
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, short number) {
+            final int len = length2Byte - 1;
+            final int sign = number & 0xFFFF8000;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
+            return builder.append(progress, 0, length2Byte);
         }
 
     }
