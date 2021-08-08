@@ -2711,21 +2711,20 @@ public class Noise {
         float xin = p2;
         float yin = p0;
         final float a = valueNoise(seed, xin, yin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p1;
         yin = p2;
         final float b = valueNoise(seed, xin + a, yin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         final float c = valueNoise(seed, xin + b, yin);
         final float result = (a + b + c) * F3f;
         final float sharp = foamSharpness * 2.2f;
+
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     public float getFoamFractal(float x, float y) {
@@ -2873,20 +2872,17 @@ public class Noise {
         float yin = p2;
         float zin = p0;
         final float a = valueNoise(seed, xin, yin, zin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p3;
         final float b = valueNoise(seed, xin + a, yin, zin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p1;
         yin = p2;
         zin = p3;
         final float c = valueNoise(seed, xin + b, yin, zin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
@@ -2895,8 +2891,8 @@ public class Noise {
         final float result = (a + b + c + d) * 0.25f;
         final float sharp = foamSharpness * 3.3f;
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
 
     }
 
@@ -2968,29 +2964,25 @@ public class Noise {
         float zin = p3;
         float win = p4;
         final float a = valueNoise(seed, xin, yin, zin, win);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p2;
         zin = p3;
         win = p4;
         final float b = valueNoise(seed, xin + a, yin, zin, win);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p3;
         win = p4;
         final float c = valueNoise(seed, xin + b, yin, zin, win);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
         win = p4;
         final float d = valueNoise(seed, xin + c, yin, zin, win);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
@@ -3000,8 +2992,8 @@ public class Noise {
         final float result = (a + b + c + d + e) * 0.2f;
         final float sharp = foamSharpness * 4.4f;
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
     public float getFoamFractal(float x, float y, float z, float w, float u) {
         x *= frequency;
@@ -3094,40 +3086,35 @@ public class Noise {
         float win = p4;
         float uin = p5;
         final float a = valueNoise(seed, xin, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p2;
         zin = p3;
         win = p4;
         uin = p5;
         final float b = valueNoise(seed, xin + a, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p3;
         win = p4;
         uin = p5;
         final float c = valueNoise(seed, xin + b, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
         win = p4;
         uin = p5;
         final float d = valueNoise(seed, xin + c, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
         win = p3;
         uin = p5;
         final float e = valueNoise(seed, xin + d, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
@@ -3138,9 +3125,8 @@ public class Noise {
         final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
         final float sharp = foamSharpness * 5.5f;
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
-
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
     
     public float getFoamFractal(float x, float y, float z, float w, float u, float v) {
@@ -3239,8 +3225,7 @@ public class Noise {
         float uin = p1;
         float vin = p4;
         final float a = valueNoise(seed, xin, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p2;
         yin = p6;
         zin = p0;
@@ -3248,8 +3233,7 @@ public class Noise {
         uin = p5;
         vin = p3;
         final float b = valueNoise(seed, xin + a, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p1;
         yin = p2;
         zin = p3;
@@ -3257,8 +3241,7 @@ public class Noise {
         uin = p6;
         vin = p5;
         final float c = valueNoise(seed, xin + b, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p6;
         yin = p0;
         zin = p2;
@@ -3266,8 +3249,7 @@ public class Noise {
         uin = p4;
         vin = p1;
         final float d = valueNoise(seed, xin + c, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p2;
         yin = p1;
         zin = p5;
@@ -3275,8 +3257,7 @@ public class Noise {
         uin = p3;
         vin = p6;
         final float e = valueNoise(seed, xin + d, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p0;
         yin = p4;
         zin = p6;
@@ -3284,8 +3265,7 @@ public class Noise {
         uin = p1;
         vin = p2;
         final float f = valueNoise(seed, xin + e, yin, zin, win, uin, vin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p5;
         yin = p1;
         zin = p2;
@@ -3296,8 +3276,8 @@ public class Noise {
         final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
         final float sharp = foamSharpness * 6.6f;
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     private float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
@@ -3377,8 +3357,7 @@ public class Noise {
         float vin = p4;
         float min = p5;
         final float a = valueNoise(seed, xin, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p2;
         yin = p3;
         zin = p0;
@@ -3387,8 +3366,7 @@ public class Noise {
         vin = p5;
         min = p7;
         final float b = valueNoise(seed, xin + a, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p1;
         yin = p2;
         zin = p4;
@@ -3397,8 +3375,7 @@ public class Noise {
         vin = p7;
         min = p6;
         final float c = valueNoise(seed, xin + b, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p7;
         yin = p0;
         zin = p2;
@@ -3407,8 +3384,7 @@ public class Noise {
         vin = p6;
         min = p1;
         final float d = valueNoise(seed, xin + c, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p3;
         yin = p1;
         zin = p5;
@@ -3417,8 +3393,7 @@ public class Noise {
         vin = p0;
         min = p2;
         final float e = valueNoise(seed, xin + d, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p4;
         yin = p7;
         zin = p6;
@@ -3427,8 +3402,7 @@ public class Noise {
         vin = p1;
         min = p3;
         final float f = valueNoise(seed, xin + e, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p5;
         yin = p4;
         zin = p7;
@@ -3437,8 +3411,7 @@ public class Noise {
         vin = p3;
         min = p0;
         final float g = valueNoise(seed, xin + f, yin, zin, win, uin, vin, min);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
+        seed += 0x9E377;
         xin = p6;
         yin = p5;
         zin = p1;
@@ -3450,8 +3423,8 @@ public class Noise {
         final float result = (a + b + c + d + e + f + g + h) * 0.125f;
         final float sharp = foamSharpness * 7.7f;
         final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
-        return (((one * 0.5f - sign) * (result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign) * 2f - 1f;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     // Classic Perlin Noise
@@ -6296,8 +6269,7 @@ public class Noise {
 //        return singleSimplex(seed, x + BitConversion.swayRandomized(seed, y) * 0.25f, y + BitConversion.swayRandomized(seed, x) * 0.25f);
         
 //        final float a = singleSimplex(seed, x, y);
-//        seed += 0x9E3779BD;
-//        seed ^= seed >>> 14;
+//        seed += 0x9E377;
 //        final float b = singleSimplex(seed, x + a * 0.25f, y);
 //        return TrigTools.sin_((a + b) * 0.25f);
     }
