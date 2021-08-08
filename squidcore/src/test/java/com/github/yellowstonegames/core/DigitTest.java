@@ -42,4 +42,17 @@ public class DigitTest {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendUnsigned(esb, i).toString());
         }
     }
+
+    @Test
+    public void testHexByte() {
+        byte[] inputs = new byte[]{0x00, 0x01, (byte)0xFF, 0x7F,
+                (byte)0x80, 0x12, (byte)0x89, (byte)0xCD, (byte)0x65};
+        for (byte i : inputs) {
+            Assert.assertEquals(DigitTools.hex(i), DigitTools.Encoding.BASE16.unsigned(i));
+        }
+        StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
+        for (byte i : inputs) {
+            Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendUnsigned(esb, i).toString());
+        }
+    }
 }
