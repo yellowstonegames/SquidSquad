@@ -180,6 +180,43 @@ public class DigitTools {
             return builder.append(progress, 0, length2Byte);
         }
 
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, returning a new String.
+         * @param number any byte
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public String unsigned(byte number) {
+            final int len = length1Byte - 1;
+            final int sign = number & 0xFFFFFF80;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
+            return String.valueOf(progress, 0, length1Byte);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding, appending the result to
+         * {@code builder}.
+         * @param builder a non-null StringBuilder that will be modified (appended to)
+         * @param number any byte
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, byte number) {
+            final int len = length1Byte - 1;
+            final int sign = number & 0xFFFFFF80;
+            number ^= sign;
+            for (int i = 0; i < len; i++) {
+                progress[len - i] = toEncoded[number % base];
+                number /= base;
+            }
+            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
+            return builder.append(progress, 0, length1Byte);
+        }
     }
     public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
             mask32 = "00000000000000000000000000000000",
