@@ -29,4 +29,17 @@ public class DigitTest {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendUnsigned(esb, i).toString());
         }
     }
+
+    @Test
+    public void testHexShort() {
+        short[] inputs = new short[]{0x0000, 0x0001, (short)0xFFFF, 0x7FFF,
+                (short)0x8000, 0x1234, (short)0x89AB, (short)0xCDEF, (short)0x8765};
+        for (short i : inputs) {
+            Assert.assertEquals(DigitTools.hex(i), DigitTools.Encoding.BASE16.unsigned(i));
+        }
+        StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
+        for (short i : inputs) {
+            Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendUnsigned(esb, i).toString());
+        }
+    }
 }
