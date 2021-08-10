@@ -31,7 +31,7 @@ public class BlueNoiseCodeGen extends ApplicationAdapter {
             byte[] brights = new byte[len];
             for (int i = 0; i < len; i++) {
                 brights[i] = buf.get(i);
-                brights[i] += -128;
+                brights[i] += -128; // just used because it casts to byte automatically
             }
             pix.dispose();
             generatePreloadCode(brights, "BlueNoiseOmniTri.txt");

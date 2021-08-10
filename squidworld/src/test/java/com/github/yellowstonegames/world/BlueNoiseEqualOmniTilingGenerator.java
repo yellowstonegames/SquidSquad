@@ -69,11 +69,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 5125x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 9;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int size = 1 << shift;
     private static final int sectors = 1 << sectorShift;
@@ -84,6 +84,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int wrapMask = sectorMask >>> 1;
     private static final float fraction = 1f / totalSectors;
     private static final int lightOccurrence = 1;//size * size >>> 8 + sectorShift + sectorShift;
+    private static final int triAdjust = Integer.numberOfTrailingZeros(size * size >>> 8 + sectorShift + sectorShift);
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
     private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
@@ -230,10 +231,10 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         ByteBuffer buffer = pm.getPixels();
         if(isTriangular) {
-            final int toKindaByteShift = Math.max(0, shift + shift - 8 - 2);
+            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
-                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + 2) - 1));
+                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
                     // old tri map
 //                    r += 0.5f;
 //                    r -= (int) r;
