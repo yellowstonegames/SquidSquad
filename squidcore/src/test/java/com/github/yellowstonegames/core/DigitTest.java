@@ -89,12 +89,12 @@ public class DigitTest {
         for (int i : inputs) {
             Assert.assertTrue(Integer.toString(i, 36).equalsIgnoreCase(DigitTools.Encoding.BASE36.signed(i)));
         }
-//        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
-//        for (int i : inputs) {
-//            Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), DigitTools.Encoding.BASE16.appendUnsigned(esb, i).toString());
-//        }
-//        for (int i : inputs) {
-//            Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), DigitTools.Encoding.BASE2.appendUnsigned(esb, i).toString());
-//        }
+        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
+        for (int i : inputs) {
+            Assert.assertEquals(sb.append(i).toString(), DigitTools.Encoding.BASE10.appendSigned(esb, i).toString());
+        }
+        for (int i : inputs) {
+            Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), DigitTools.Encoding.BASE2.appendSigned(esb, i).toString());
+        }
     }
 }
