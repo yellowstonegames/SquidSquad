@@ -5394,7 +5394,7 @@ public class Noise {
         return singleCubic(0, x, y);
     }
 
-    private final static float CUBIC_2D_BOUNDING = 1f / 2.25f;
+    private final static float CUBIC_2D_BOUNDING = 1f / 1.5f;
 
     private float singleCubic(int seed, float x, float y) {
         int x1 = fastFloor(x);
@@ -5493,7 +5493,7 @@ public class Noise {
         return singleCubic(seed, x * frequency, y * frequency, z * frequency);
     }
 
-    private final static float CUBIC_3D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f);
+    private final static float CUBIC_3D_BOUNDING = 2f / (1.5f * 1.5f * 1.5f);
 
     private float singleCubic(int seed, float x, float y, float z) {
         int x1 = fastFloor(x);
@@ -5617,7 +5617,7 @@ public class Noise {
         return singleCubic(seed, x * frequency, y * frequency, z * frequency, w * frequency);
     }
 
-    private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f * 1.5f);
+    private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f);
 
     private float singleCubic(int seed, float x, float y, float z, float w) {
         int x1 = fastFloor(x);
