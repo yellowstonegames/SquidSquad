@@ -116,4 +116,22 @@ public class DigitTest {
         }
     }
 
+    @Test
+    public void testSignedShort() {
+        short[] inputs = {0, 1, -1, 32767, -32768, 1234, -9876};
+        for (short i : inputs) {
+            Assert.assertTrue(Integer.toString(i).equalsIgnoreCase(DigitTools.Encoding.BASE10.signed(i)));
+        }
+        for (short i : inputs) {
+            Assert.assertTrue(Integer.toString(i, 36).equalsIgnoreCase(DigitTools.Encoding.BASE36.signed(i)));
+        }
+        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
+        for (short i : inputs) {
+            Assert.assertEquals(sb.append(i).toString(), DigitTools.Encoding.BASE10.appendSigned(esb, i).toString());
+        }
+        for (short i : inputs) {
+            Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), DigitTools.Encoding.BASE2.appendSigned(esb, i).toString());
+        }
+    }
+
 }
