@@ -81,6 +81,24 @@ public class DigitTest {
     }
 
     @Test
+    public void testSignedLong() {
+        long[] inputs = {0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L, -98765L};
+        for (long i : inputs) {
+            Assert.assertTrue(Long.toString(i).equalsIgnoreCase(DigitTools.Encoding.BASE10.signed(i)));
+        }
+        for (long i : inputs) {
+            Assert.assertTrue(Long.toString(i, 36).equalsIgnoreCase(DigitTools.Encoding.BASE36.signed(i)));
+        }
+        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
+        for (long i : inputs) {
+            Assert.assertEquals(sb.append(i).toString(), DigitTools.Encoding.BASE10.appendSigned(esb, i).toString());
+        }
+        for (long i : inputs) {
+            Assert.assertEquals(sb.append(Long.toString(i, 2)).toString(), DigitTools.Encoding.BASE2.appendSigned(esb, i).toString());
+        }
+    }
+
+    @Test
     public void testSignedInt() {
         int[] inputs = {0, 1, -1, 2147483647, -2147483648, 1234, -98765};
         for (int i : inputs) {
@@ -97,4 +115,5 @@ public class DigitTest {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), DigitTools.Encoding.BASE2.appendSigned(esb, i).toString());
         }
     }
+
 }
