@@ -108,7 +108,7 @@ public class DigitTools {
         /**
          * Converts the given {@code number} to the base specified by this Encoding as signed, returning a new String.
          * This can vary in how many chars it uses, since it does not show leading zeroes and may use a {@code -} sign.
-         * @param number any int
+         * @param number any long
          * @return a new String containing {@code number} in the radix this specifies.
          */
         @Nonnull
@@ -133,7 +133,7 @@ public class DigitTools {
          * {@code builder}. This can vary in how many chars it uses, since it does not show leading zeroes and may use a
          * {@code -} sign.
          * @param builder a non-null StringBuilder that will be modified (appended to)
-         * @param number any int
+         * @param number any long
          * @return {@code builder}, with the encoded {@code number} appended
          */
         @Nonnull
@@ -277,6 +277,53 @@ public class DigitTools {
             }
             progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return builder.append(progress, 0, length2Byte);
+        }
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding as signed, returning a new String.
+         * This can vary in how many chars it uses, since it does not show leading zeroes and may use a {@code -} sign.
+         * @param number any short
+         * @return a new String containing {@code number} in the radix this specifies.
+         */
+        @Nonnull
+        public String signed(short number) {
+            int run = length8Byte;
+            final int sign = number >> -1;
+            // number is made negative because 0x80000000 and -(0x80000000) are both negative.
+            // then modulus later will also return a negative number or 0, and we can negate that to get a good index.
+            number = (short) -(number + sign ^ sign);
+            for (; ; run--) {
+                progress[run] = toEncoded[-(number % base)];
+                if((number /= base) == 0) break;
+            }
+            if(sign != 0) {
+                progress[--run] = '-';
+            }
+            return String.valueOf(progress, run, length8Byte + 1 - run);
+        }
+
+        /**
+         * Converts the given {@code number} to the base specified by this Encoding as signed, appending the result to
+         * {@code builder}. This can vary in how many chars it uses, since it does not show leading zeroes and may use a
+         * {@code -} sign.
+         * @param builder a non-null StringBuilder that will be modified (appended to)
+         * @param number any short
+         * @return {@code builder}, with the encoded {@code number} appended
+         */
+        @Nonnull
+        public StringBuilder appendSigned(@Nonnull StringBuilder builder, short number) {
+            int run = length8Byte;
+            final int sign = number >> -1;
+            // number is made negative because 0x80000000 and -(0x80000000) are both negative.
+            // then modulus later will also return a negative number or 0, and we can negate that to get a good index.
+            number = (short)-(number + sign ^ sign);
+            for (; ; run--) {
+                progress[run] = toEncoded[-(number % base)];
+                if((number /= base) == 0) break;
+            }
+            if(sign != 0) {
+                progress[--run] = '-';
+            }
+            return builder.append(progress, run, length8Byte + 1 - run);
         }
 
         /**
