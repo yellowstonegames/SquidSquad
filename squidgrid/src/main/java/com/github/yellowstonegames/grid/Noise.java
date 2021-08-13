@@ -1722,7 +1722,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleValue(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -1831,7 +1831,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -1964,7 +1964,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -2117,7 +2117,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -2319,7 +2319,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -2783,7 +2783,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             t = x;
             x = y * lacunarity;
@@ -2849,7 +2849,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -2938,7 +2938,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3057,7 +3057,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3194,7 +3194,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3327,7 +3327,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v, m));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3481,7 +3481,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3583,7 +3583,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3746,7 +3746,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -3890,7 +3890,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4092,7 +4092,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4353,7 +4353,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4367,7 +4367,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4708,7 +4708,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4721,7 +4721,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -4910,7 +4910,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -5136,7 +5136,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -5290,7 +5290,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -5379,7 +5379,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleCubic(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -5480,7 +5480,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleCubic(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -5604,7 +5604,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleCubic(seed + i, x, y, z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -6330,7 +6330,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             t = x;
             x = y * lacunarity;
@@ -6395,7 +6395,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y, z));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -6455,7 +6455,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -6535,7 +6535,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
@@ -6620,7 +6620,7 @@ public class Noise {
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5);
+            correction += (exp *= 0.5f);
             sum += spike * exp;
             x *= lacunarity;
             y *= lacunarity;
