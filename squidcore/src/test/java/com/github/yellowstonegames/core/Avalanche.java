@@ -242,10 +242,11 @@ public class Avalanche {
 //    private static final int lower = 8, upper = 41, inc = 4;
     private static final int lower = 13, upper = 20, inc = 1;
 
-    public static long mix(final long v, final int shiftB, final int shiftC, final int iterations) {
+    public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
+        long stateD = 0L;
         for (int i = 0; i < iterations; i++) {
 //            final long a0 = stateA;
 //            final long b0 = stateB;
@@ -276,12 +277,22 @@ public class Avalanche {
 //            stateB = Long.rotateLeft(b0, shiftB);
 //            stateC = Long.rotateLeft(c0, shiftC);
 
-            final long a0 = stateA;
-            final long b0 = stateB;
-            final long c0 = stateC;
-            stateA = 0xC6BC279692B5C323L + c0;
-            stateB = Long.rotateLeft(a0, shiftB) + c0;
-            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
+//            final long a0 = stateA;
+//            final long b0 = stateB;
+//            final long c0 = stateC;
+//            stateA = 0xC6BC279692B5C323L + c0;
+//            stateB = Long.rotateLeft(a0, shiftB) + c0;
+//            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
+
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            stateA = fa + 0xC6BC279692B5C323L;
+            stateB = Long.rotateLeft(fa, shiftA) + fd;
+            stateC = Long.rotateLeft(fd, shiftB) ^ fb;
+            stateD = Long.rotateLeft(fb, shiftC) + fc;
+
         }
         return stateB;
     }
@@ -295,14 +306,17 @@ public class Avalanche {
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
             for (int iterations = lower; iterations < upper; iterations += inc) {
-                for (int sb = 1; sb < 64; sb++) {
-                    for (int sc = 1; sc < 64; sc++) {
+                int sa = 2, sb = 3, sc = 5;
+                for (int p = 0; p < 0x1000; p++) {
+                    sa = (sa >>> 1 ^ (-(sa & 1) & 0x30));
+                    if(sa < 23) sb = (sb >>> 1 ^ (-(sb & 1) & 0x30));
+                    if(sb < 11) sc = (sc >>> 1 ^ (-(sc & 1) & 0x30));
                         ArrayTools.fill(A, 0L);
                         for (long n = 0; n < N; n++) {
                             long v = rng.nextLong();
-                            long w = mix(v, sb, sc, iterations);
+                            long w = mix(v, sa, sb, sc, iterations);
                             for (int i = 0; i < 64; i++) {
-                                long x = w ^ mix(v ^ (1L << i), sb, sc, iterations);
+                                long x = w ^ mix(v ^ (1L << i), sa, sb, sc, iterations);
                                 for (int j = 0; j < 64; j++) {
                                     A[i][j] += ((x >>> j) & 1L);
                                 }
@@ -316,17 +330,51 @@ public class Avalanche {
                             }
                         }
                         double result = sumsq * 0x1p-10 / N;
-                        res.put(sb | sc << 6, result);
-                        totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
-                    }
+                        int id = (sa & 63) | (sb & 63) << 6 | (sc & 63) << 12;
+                        res.put(id, result);
+                        totals.put(id, result + totals.getOrDefault(id, 0.0));
+
                 }
                 System.out.println("Completed run for " + iterations + " iterations, order 1.");
                 res.sortByValue(Double::compareTo);
                 System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
                 for (int i = 0; i < 10; i++) {
                     final int k = res.keyAt(i);
-                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6 & 63) + "," + (k >>> 12) + " with value " + res.getAt(i));
                 }
+
+//                for (int sb = 1; sb < 64; sb++) {
+//                    for (int sc = 1; sc < 64; sc++) {
+//                        ArrayTools.fill(A, 0L);
+//                        for (long n = 0; n < N; n++) {
+//                            long v = rng.nextLong();
+//                            long w = mix(v, sb, sc, iterations);
+//                            for (int i = 0; i < 64; i++) {
+//                                long x = w ^ mix(v ^ (1L << i), sb, sc, iterations);
+//                                for (int j = 0; j < 64; j++) {
+//                                    A[i][j] += ((x >>> j) & 1L);
+//                                }
+//                            }
+//                        }
+//                        double sumsq = 0.0;
+//                        for (int i = 0; i < 64; i++) {
+//                            for (int j = 0; j < 64; j++) {
+//                                double v = A[i][j] - N * 0.5;
+//                                sumsq += v * v;
+//                            }
+//                        }
+//                        double result = sumsq * 0x1p-10 / N;
+//                        res.put(sb | sc << 6, result);
+//                        totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
+//                    }
+//                }
+//                System.out.println("Completed run for " + iterations + " iterations, order 1.");
+//                res.sortByValue(Double::compareTo);
+//                System.out.println("Order 1, Best Ten with " + iterations + " iterations:");
+//                for (int i = 0; i < 10; i++) {
+//                    final int k = res.keyAt(i);
+//                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+//                }
 //                System.out.println("Order 1, Worst Ten with " + iterations + " iterations:");
 //                for (int i = res.size() - 10; i < res.size(); i++) {
 //                    final int k = res.keyAt(i);
@@ -337,8 +385,15 @@ public class Avalanche {
             System.out.println("Order 1, Best Ten with total:");
             for (int i = 0; i < 10; i++) {
                 final int k = totals.keyAt(i);
-                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
+                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6 & 63) + "," + (k >>> 12) + " with value " + res.getAt(i));
             }
+//            totals.sortByValue(Double::compareTo);
+//            System.out.println("Order 1, Best Ten with total:");
+//            for (int i = 0; i < 10; i++) {
+//                final int k = totals.keyAt(i);
+//                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
+//            }
+
 //            System.out.println("Order 1, Worst Ten with total:");
 //            for (int i = totals.size() - 10; i < totals.size(); i++) {
 //                final int k = totals.keyAt(i);
@@ -352,41 +407,80 @@ public class Avalanche {
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
             for (int iterations = lower; iterations < upper; iterations += inc) {
-                for (int sb = 1; sb < 64; sb++) {
-                    for (int sc = 1; sc < 64; sc++) {
-                        ArrayTools.fill(A, 0L);
-                        for (long n = 0; n < N; n++) {
-                            long v = rng.nextLong();
-                            long w = mix(v, sb, sc, iterations);
-                            for (int i = 0, p = 0; i < 64; i++) {
-                                for (int h = i + 1; h < 64; h++) {
-                                    long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sb, sc, iterations);
-                                    for (int j = 0; j < 64; j++) {
-                                        A[p][j] += ((x >>> j) & 1L);
-                                    }
-                                    p++;
+                int sa = 2, sb = 3, sc = 5;
+                for (int e = 0; e < 0x1000; e++) {
+                    sa = (sa >>> 1 ^ (-(sa & 1) & 0x30));
+                    if (sa < 23) sb = (sb >>> 1 ^ (-(sb & 1) & 0x30));
+                    if (sb < 11) sc = (sc >>> 1 ^ (-(sc & 1) & 0x30));
+                    ArrayTools.fill(A, 0L);
+                    for (long n = 0; n < N; n++) {
+                        long v = rng.nextLong();
+                        long w = mix(v, sa, sb, sc, iterations);
+                        for (int i = 0, p = 0; i < 64; i++) {
+                            for (int h = i + 1; h < 64; h++) {
+                                long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sa, sb, sc, iterations);
+                                for (int j = 0; j < 64; j++) {
+                                    A[p][j] += ((x >>> j) & 1L);
                                 }
+                                p++;
                             }
                         }
-                        double sumsq = 0.0;
-                        for (int i = 0; i < 2016; i++) {
-                            for (int j = 0; j < 64; j++) {
-                                double v = A[i][j] - N * 0.5;
-                                sumsq += v * v;
-                            }
-                        }
-                        double result = sumsq * 0x1p-10 / N;
-                        res.put(sb | sc << 6, result);
-                        totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
                     }
+                    double sumsq = 0.0;
+                    for (int i = 0; i < 2016; i++) {
+                        for (int j = 0; j < 64; j++) {
+                            double v = A[i][j] - N * 0.5;
+                            sumsq += v * v;
+                        }
+                    }
+                    double result = sumsq * 0x1p-10 / N;
+                    int id = (sa & 63) | (sb & 63) << 6 | (sc & 63) << 12;
+                    res.put(id, result);
+                    totals.put(id, result + totals.getOrDefault(id, 0.0));
                 }
                 System.out.println("Completed run for " + iterations + " iterations, order 2.");
                 res.sortByValue(Double::compareTo);
                 System.out.println("Order 2, Best Ten with " + iterations + " iterations:");
                 for (int i = 0; i < 10; i++) {
                     final int k = res.keyAt(i);
-                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6 & 63) + "," + (k >>> 12) + " with value " + res.getAt(i));
                 }
+//                for (int sb = 1; sb < 64; sb++) {
+//                    for (int sc = 1; sc < 64; sc++) {
+//                        ArrayTools.fill(A, 0L);
+//                        for (long n = 0; n < N; n++) {
+//                            long v = rng.nextLong();
+//                            long w = mix(v, sb, sc, iterations);
+//                            for (int i = 0, p = 0; i < 64; i++) {
+//                                for (int h = i + 1; h < 64; h++) {
+//                                    long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sb, sc, iterations);
+//                                    for (int j = 0; j < 64; j++) {
+//                                        A[p][j] += ((x >>> j) & 1L);
+//                                    }
+//                                    p++;
+//                                }
+//                            }
+//                        }
+//                        double sumsq = 0.0;
+//                        for (int i = 0; i < 2016; i++) {
+//                            for (int j = 0; j < 64; j++) {
+//                                double v = A[i][j] - N * 0.5;
+//                                sumsq += v * v;
+//                            }
+//                        }
+//                        double result = sumsq * 0x1p-10 / N;
+//                        res.put(sb | sc << 6, result);
+//                        totals.put(sb | sc << 6, result + totals.getOrDefault(sb | sc << 6, 0.0));
+//                    }
+//                }
+//                System.out.println("Completed run for " + iterations + " iterations, order 2.");
+//                res.sortByValue(Double::compareTo);
+//                System.out.println("Order 2, Best Ten with " + iterations + " iterations:");
+//                for (int i = 0; i < 10; i++) {
+//                    final int k = res.keyAt(i);
+//                    System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + res.getAt(i));
+//                }
+
 //                System.out.println("Order 2, Worst Ten with " + iterations + " iterations:");
 //                for (int i = res.size() - 10; i < res.size(); i++) {
 //                    final int k = res.keyAt(i);
@@ -397,7 +491,7 @@ public class Avalanche {
             System.out.println("Order 2, Best Ten with total:");
             for (int i = 0; i < 10; i++) {
                 final int k = totals.keyAt(i);
-                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6) + " with value " + totals.getAt(i));
+                System.out.println("#" + i + ": " + (k & 63) + "," + (k >>> 6 & 63) + "," + (k >>> 12) + " with value " + res.getAt(i));
             }
 //            System.out.println("Order 2, Worst Ten with total:");
 //            for (int i = totals.size() - 10; i < totals.size(); i++) {

@@ -189,7 +189,7 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 26, shiftC = 9; // great contender
 //    private static final int shiftB = 27, shiftC = 9;  // current best
 //    private static final int shiftB = 34, shiftC = 42;
-    private static final int shiftB = 21, shiftC = 0;
+//    private static final int shiftB = 21, shiftC = 0;
 //    private static final int shiftB = 11, shiftC = 0;
 //    private static final int shiftB = 7, shiftC = 0;
 //    private static final int shiftB = 42, shiftC = 0;
@@ -198,10 +198,13 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 47, shiftC = 55;
 //    private static final int shiftB = 20, shiftC = 55;
 
+//    private static final int shiftA = 8, shiftB = 46, shiftC = 51;
+    private static final int shiftA = 23, shiftB = 35, shiftC = 44;
     public static long mix(final long v, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
+        long stateD = 0L;
         for (int i = 0; i < iterations; i++) {
 //            final long a0 = stateA;
 //            final long b0 = stateB;
@@ -221,9 +224,14 @@ public class AvalancheEvaluator {
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
-            stateA = 0xD1342543DE82EF95L * fc;
-            stateB = fa ^ fb ^ fc;
-            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
+            final long fd = stateD;
+            stateA = fa + 0xC6BC279692B5C323L;
+            stateB = Long.rotateLeft(fa, shiftA) + fd;
+            stateC = Long.rotateLeft(fd, shiftB) ^ fb;
+            stateD = Long.rotateLeft(fb, shiftC) + fc;
+//            stateA = 0xD1342543DE82EF95L * fc;
+//            stateB = fa ^ fb ^ fc;
+//            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
 
 //            final long xp = stateA;
 //            final long yp = stateB;
@@ -234,7 +242,7 @@ public class AvalancheEvaluator {
 //            stateC = zp - yp;
 //            stateC = Long.rotateLeft(stateC, shiftC);
         }
-        return stateB;
+        return stateD;
     }
 
     public static void main(String[] args) {
