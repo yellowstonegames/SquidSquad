@@ -134,4 +134,22 @@ public class DigitTest {
         }
     }
 
+    @Test
+    public void testSignedByte() {
+        byte[] inputs = {0, 1, -1, 127, -128, 12, -87};
+        for (byte i : inputs) {
+            Assert.assertTrue(Integer.toString(i).equalsIgnoreCase(DigitTools.Encoding.BASE10.signed(i)));
+        }
+        for (byte i : inputs) {
+            Assert.assertTrue(Integer.toString(i, 36).equalsIgnoreCase(DigitTools.Encoding.BASE36.signed(i)));
+        }
+        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
+        for (byte i : inputs) {
+            Assert.assertEquals(sb.append(i).toString(), DigitTools.Encoding.BASE10.appendSigned(esb, i).toString());
+        }
+        for (byte i : inputs) {
+            Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), DigitTools.Encoding.BASE2.appendSigned(esb, i).toString());
+        }
+    }
+
 }
