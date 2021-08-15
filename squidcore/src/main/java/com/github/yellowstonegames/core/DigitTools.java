@@ -155,6 +155,80 @@ public class DigitTools {
         }
 
         /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the long they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(long)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FFFFFFFFFFFFFFFF" would return the long -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FFFFFFFFFFFFFFFF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
+         * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+         * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @return the long that cs represents
+         */
+        public long readLong(final CharSequence cs) {
+            return readLong(cs, 0, cs.length());
+        }
+
+        /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the long they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(long)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FFFFFFFFFFFFFFFF" would return the long -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FFFFFFFFFFFFFFFF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
+         * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+         * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @param start the (inclusive) first character position in cs to read
+         * @param end the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+         * @return the long that cs represents
+         */
+        public long readLong(final CharSequence cs, final int start, int end) {
+            int len, h, lim;
+            if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                    || (len = cs.length()) - start <= 0 || end > len)
+                return 0;
+            char c = cs.charAt(start);
+            if (c == '-') {
+                len = -1;
+                h = 0;
+                lim = length8Byte + 1;
+            } else if (c == '+') {
+                len = 1;
+                h = 0;
+                lim = length8Byte + 1;
+            } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+                return 0;
+            else {
+                len = 1;
+                lim = length8Byte;
+            }
+            long data = h;
+            for (int i = start + 1; i < end && i < start + lim; i++) {
+                if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+                    return data * len;
+                data *= base;
+                data += h;
+            }
+            return data * len;
+        }
+
+        /**
          * Converts the given {@code number} to the base specified by this Encoding as unsigned, returning a new String.
          * This always uses the same number of chars in any String it returns, as long as the Encoding is the same.
          * @param number any int

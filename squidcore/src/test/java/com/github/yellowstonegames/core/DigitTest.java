@@ -152,4 +152,19 @@ public class DigitTest {
         }
     }
 
+    @Test
+    public void testReadLong(){
+        long[] inputs = {/*0x00000000L, 0x00000001L, 0xFFFFFFFFL, 0x7FFFFFFFL,
+                */0xFFFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
+                0x80000000L,  0x8000000000000000L, 0x12345678L, 0x89ABCDEFL, 0x1234567890ABCDEFL, 0xFEDCBA0987654321L};
+
+        for(DigitTools.Encoding enc : DigitTools.Encoding.values())
+        {
+            for(long in : inputs){
+                Assert.assertEquals(in, enc.readLong(enc.signed(in)));
+                Assert.assertEquals(in, enc.readLong(enc.unsigned(in)));
+            }
+        }
+
+    }
 }
