@@ -306,8 +306,8 @@ public class Avalanche {
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
             for (int iterations = lower; iterations < upper; iterations += inc) {
-                int sa = 2, sb = 3, sc = 5;
-                for (int p = 0; p < 0x1000; p++) {
+                int sa = 1, sb = 3, sc = 5;
+                for (int p = 0; p < 0x4000; p++) {
                     sa = (sa >>> 1 ^ (-(sa & 1) & 0x30));
                     if(sa < 23) sb = (sb >>> 1 ^ (-(sb & 1) & 0x30));
                     if(sb < 11) sc = (sc >>> 1 ^ (-(sc & 1) & 0x30));
@@ -407,8 +407,8 @@ public class Avalanche {
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
             for (int iterations = lower; iterations < upper; iterations += inc) {
-                int sa = 2, sb = 3, sc = 5;
-                for (int e = 0; e < 0x1000; e++) {
+                int sa = 1, sb = 3, sc = 5;
+                for (int e = 0; e < 0x4000; e++) {
                     sa = (sa >>> 1 ^ (-(sa & 1) & 0x30));
                     if (sa < 23) sb = (sb >>> 1 ^ (-(sb & 1) & 0x30));
                     if (sb < 11) sc = (sc >>> 1 ^ (-(sc & 1) & 0x30));

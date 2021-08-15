@@ -198,8 +198,11 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 47, shiftC = 55;
 //    private static final int shiftB = 20, shiftC = 55;
 
-//    private static final int shiftA = 8, shiftB = 46, shiftC = 51;
-    private static final int shiftA = 23, shiftB = 35, shiftC = 44;
+    private static final int shiftA = 60, shiftB = 17, shiftC = 38; //627.3542709350586, 4471.4318108558655
+//    private static final int shiftA = 23, shiftB = 35, shiftC = 44; //644.3578462600708, 4726.132109165192
+//    private static final int shiftA = 8, shiftB = 46, shiftC = 51; //684.567777633667, 4961.644707202911
+//    private static final int shiftA = 40, shiftB = 60, shiftC = 25; //836.2562255859375, 5996.780225276947
+//    private static final int shiftA = 38, shiftB = 22, shiftC = 26; //1098.985773563385, 7984.284327983856
     public static long mix(final long v, final int iterations) {
         long stateA = v;
         long stateB = 0L;
@@ -274,7 +277,7 @@ public class AvalancheEvaluator {
                 System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
-            System.out.println("Order 1: " + shiftB + "," + shiftC + " with value " + total);
+            System.out.println("Order 1: " + shiftA + "," + shiftB + "," + shiftC + " with value " + total);
         }
         // Order 2
         {
@@ -306,7 +309,7 @@ public class AvalancheEvaluator {
                 System.out.println("With " + iterations + " iterations: " + result);
                 total += result;
             }
-            System.out.println("Order 2: " + shiftB + "," + shiftC + " with value " + total);
+            System.out.println("Order 2: " + shiftA + "," + shiftB + "," + shiftC + " with value " + total);
         }
     }
 }
