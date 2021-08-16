@@ -94,13 +94,12 @@ public class DigitTools {
         @Nonnull
         public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, long number) {
             final int len = length8Byte - 1;
-            final long sign = number & 0x8000000000000000L;
-            number ^= sign;
-            for (int i = 0; i < len; i++) {
-                progress[len - i] = toEncoded[(int)(number % base)];
-                number /= base;
+            final int halfBase = base >>> 1;
+            for (int i = 0; i <= len; i++) {
+                long quotient = (number >>> 1) / halfBase;
+                progress[len - i] = toEncoded[(int)(number - quotient * base)];
+                number = quotient;
             }
-            progress[0] = toEncoded[(int)((number | (base >>> 1 & sign >> -1)) % base)];
             return builder.append(progress, 0, length8Byte);
         }
 
@@ -254,13 +253,12 @@ public class DigitTools {
         @Nonnull
         public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, int number) {
             final int len = length4Byte - 1;
-            final int sign = number & 0x80000000;
-            number ^= sign;
-            for (int i = 0; i < len; i++) {
-                progress[len - i] = toEncoded[number % base];
-                number /= base;
+            final int halfBase = base >>> 1;
+            for (int i = 0; i <= len; i++) {
+                int quotient = (number >>> 1) / halfBase;
+                progress[len - i] = toEncoded[number - quotient * base];
+                number = quotient;
             }
-            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return builder.append(progress, 0, length4Byte);
         }
 
@@ -340,13 +338,12 @@ public class DigitTools {
         @Nonnull
         public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, short number) {
             final int len = length2Byte - 1;
-            final int sign = number & 0xFFFF8000;
-            number ^= sign;
-            for (int i = 0; i < len; i++) {
-                progress[len - i] = toEncoded[number % base];
-                number /= base;
+            final int halfBase = base >>> 1;
+            for (int i = 0; i <= len; i++) {
+                short quotient = (short) ((number >>> 1) / halfBase);
+                progress[len - i] = toEncoded[number - quotient * base];
+                number = quotient;
             }
-            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return builder.append(progress, 0, length2Byte);
         }
         /**
@@ -425,13 +422,12 @@ public class DigitTools {
         @Nonnull
         public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, byte number) {
             final int len = length1Byte - 1;
-            final int sign = number & 0xFFFFFF80;
-            number ^= sign;
-            for (int i = 0; i < len; i++) {
-                progress[len - i] = toEncoded[number % base];
-                number /= base;
+            final int halfBase = base >>> 1;
+            for (int i = 0; i <= len; i++) {
+                byte quotient = (byte) ((number >>> 1) / halfBase);
+                progress[len - i] = toEncoded[number - quotient * base];
+                number = quotient;
             }
-            progress[0] = toEncoded[(number | (base >>> 1 & sign >> -1)) % base];
             return builder.append(progress, 0, length1Byte);
         }
         /**
