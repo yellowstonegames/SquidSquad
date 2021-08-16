@@ -192,4 +192,17 @@ public class DigitTest {
             }
         }
     }
+
+    @Test
+    public void testReadByte(){
+        byte[] inputs = {0, 1, -1, 127, -128, 12, -87};
+
+        for(DigitTools.Encoding enc : DigitTools.Encoding.values())
+        {
+            for(byte in : inputs){
+                Assert.assertEquals(in, enc.readByte(enc.signed(in)));
+                Assert.assertEquals(in, enc.readByte(enc.unsigned(in)));
+            }
+        }
+    }
 }
