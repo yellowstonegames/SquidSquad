@@ -399,9 +399,9 @@ public class DigitTools {
             final int len = length2Byte - 1;
             final int halfBase = base >>> 1;
             for (int i = 0; i <= len; i++) {
-                short quotient = (short) ((number >>> 1) / halfBase);
-                progress[len - i] = toEncoded[number - quotient * base];
-                number = quotient;
+                int quotient = (((number & 0xFFFF) >>> 1) / halfBase);
+                progress[len - i] = toEncoded[(number & 0xFFFF) - quotient * base];
+                number = (short) quotient;
             }
             return String.valueOf(progress, 0, length2Byte);
         }
@@ -418,9 +418,9 @@ public class DigitTools {
             final int len = length2Byte - 1;
             final int halfBase = base >>> 1;
             for (int i = 0; i <= len; i++) {
-                short quotient = (short) ((number >>> 1) / halfBase);
-                progress[len - i] = toEncoded[number - quotient * base];
-                number = quotient;
+                int quotient = (((number & 0xFFFF) >>> 1) / halfBase);
+                progress[len - i] = toEncoded[(number & 0xFFFF) - quotient * base];
+                number = (short) quotient;
             }
             return builder.append(progress, 0, length2Byte);
         }
@@ -524,16 +524,16 @@ public class DigitTools {
             if (c == '-') {
                 len = -1;
                 h = 0;
-                lim = length8Byte + 1;
+                lim = length2Byte + 1;
             } else if (c == '+') {
                 len = 1;
                 h = 0;
-                lim = length8Byte + 1;
+                lim = length2Byte + 1;
             } else if (c >= 128 || (h = fromEncoded[c]) < 0)
                 return 0;
             else {
                 len = 1;
-                lim = length8Byte;
+                lim = length2Byte;
             }
             short data = (short) h;
             for (int i = start + 1; i < end && i < start + lim; i++) {
@@ -556,9 +556,9 @@ public class DigitTools {
             final int len = length1Byte - 1;
             final int halfBase = base >>> 1;
             for (int i = 0; i <= len; i++) {
-                byte quotient = (byte) ((number >>> 1) / halfBase);
-                progress[len - i] = toEncoded[number - quotient * base];
-                number = quotient;
+                int quotient = (((number & 0xFF) >>> 1) / halfBase);
+                progress[len - i] = toEncoded[(number & 0xFF) - quotient * base];
+                number = (byte) quotient;
             }
             return String.valueOf(progress, 0, length1Byte);
         }
@@ -575,9 +575,9 @@ public class DigitTools {
             final int len = length1Byte - 1;
             final int halfBase = base >>> 1;
             for (int i = 0; i <= len; i++) {
-                byte quotient = (byte) ((number >>> 1) / halfBase);
-                progress[len - i] = toEncoded[number - quotient * base];
-                number = quotient;
+                int quotient = (((number & 0xFF) >>> 1) / halfBase);
+                progress[len - i] = toEncoded[(number & 0xFF) - quotient * base];
+                number = (byte) quotient;
             }
             return builder.append(progress, 0, length1Byte);
         }
