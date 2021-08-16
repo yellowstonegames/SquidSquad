@@ -165,6 +165,18 @@ public class DigitTest {
                 Assert.assertEquals(in, enc.readLong(enc.unsigned(in)));
             }
         }
+    }
 
+    @Test
+    public void testReadInt(){
+        int[] inputs = {0, 1, -1, 2147483647, -2147483647, -2147483648, 1234, -98765};
+
+        for(DigitTools.Encoding enc : DigitTools.Encoding.values())
+        {
+            for(long in : inputs){
+                Assert.assertEquals(in, enc.readLong(enc.signed(in)));
+                Assert.assertEquals(in, enc.readLong(enc.unsigned(in)));
+            }
+        }
     }
 }
