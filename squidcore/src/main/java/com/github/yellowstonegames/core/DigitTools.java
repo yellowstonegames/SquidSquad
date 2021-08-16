@@ -38,7 +38,11 @@ public class DigitTools {
          * this is mostly relevant for Base-64 and URI-safe encodings.
          */
         public final char paddingChar;
-        private final int length1Byte, length2Byte, length4Byte, length8Byte, base;
+        /**
+         * What base or radix this Encoding uses; if you use {@link #unsigned(int)}, then base must be an even number.
+         */
+        public final int base;
+        private final int length1Byte, length2Byte, length4Byte, length8Byte;
         private final char[] progress;
         Encoding(String digits){
             this(digits, true, ' ');
@@ -308,6 +312,80 @@ public class DigitTools {
                 progress[--run] = '-';
             }
             return builder.append(progress, run, length8Byte + 1 - run);
+        }
+
+        /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the int they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(int)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FFFFFFFF" would return the int -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FFFFFFFF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which is an odd omission from earlier
+         * JDKs. This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit,
+         * or stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @return the int that cs represents
+         */
+        public int readInt(final CharSequence cs) {
+            return readInt(cs, 0, cs.length());
+        }
+
+        /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the int they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(int)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FFFFFFFF" would return the int -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FFFFFFFF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which is an odd omission from earlier JDKs.
+         * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+         * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @param start the (inclusive) first character position in cs to read
+         * @param end the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+         * @return the int that cs represents
+         */
+        public int readInt(final CharSequence cs, final int start, int end) {
+            int len, h, lim;
+            if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                    || (len = cs.length()) - start <= 0 || end > len)
+                return 0;
+            char c = cs.charAt(start);
+            if (c == '-') {
+                len = -1;
+                h = 0;
+                lim = length4Byte + 1;
+            } else if (c == '+') {
+                len = 1;
+                h = 0;
+                lim = length4Byte + 1;
+            } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+                return 0;
+            else {
+                len = 1;
+                lim = length4Byte;
+            }
+            int data = h;
+            for (int i = start + 1; i < end && i < start + lim; i++) {
+                if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+                    return data * len;
+                data *= base;
+                data += h;
+            }
+            return data * len;
         }
 
         /**
