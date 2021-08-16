@@ -173,9 +173,22 @@ public class DigitTest {
 
         for(DigitTools.Encoding enc : DigitTools.Encoding.values())
         {
-            for(long in : inputs){
-                Assert.assertEquals(in, enc.readLong(enc.signed(in)));
-                Assert.assertEquals(in, enc.readLong(enc.unsigned(in)));
+            for(int in : inputs){
+                Assert.assertEquals(in, enc.readInt(enc.signed(in)));
+                Assert.assertEquals(in, enc.readInt(enc.unsigned(in)));
+            }
+        }
+    }
+
+    @Test
+    public void testReadShort(){
+        short[] inputs = {0, 1, -1, 32767, -32768, 1234, -9876};
+
+        for(DigitTools.Encoding enc : DigitTools.Encoding.values())
+        {
+            for(short in : inputs){
+                Assert.assertEquals(in, enc.readShort(enc.signed(in)));
+                Assert.assertEquals(in, enc.readShort(enc.unsigned(in)));
             }
         }
     }
