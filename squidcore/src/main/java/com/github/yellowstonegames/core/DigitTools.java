@@ -628,6 +628,80 @@ public class DigitTools {
             }
             return builder.append(progress, run, length8Byte + 1 - run);
         }
+
+        /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the byte they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(byte)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FF" would return the byte -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for bytes.
+         * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+         * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @return the byte that cs represents
+         */
+        public byte readByte(final CharSequence cs) {
+            return readByte(cs, 0, cs.length());
+        }
+
+        /**
+         * Reads in a CharSequence containing only the digits present in this Encoding, with an optional sign at the
+         * start, and returns the byte they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
+         * if present. This can also represent negative numbers as they are printed by such methods as String.format
+         * given a %x in the formatting string, or this class' {@link #unsigned(byte)} method; that is, if the first
+         * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+         * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+         * when using base-16, "FF" would return the byte -1 when passed to this, though you could also
+         * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+         * with "-FF", then both indicate a negative number, but the digits will be processed first
+         * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+         * <br>
+         * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for bytes.
+         * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+         * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+         * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+         * @param cs a CharSequence, such as a String, containing only the digits in this Encoding and/or an optional initial sign (+ or -)
+         * @param start the (inclusive) first character position in cs to read
+         * @param end the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+         * @return the byte that cs represents
+         */
+        public byte readByte(final CharSequence cs, final int start, int end) {
+            int len, h, lim;
+            if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                    || (len = cs.length()) - start <= 0 || end > len)
+                return 0;
+            char c = cs.charAt(start);
+            if (c == '-') {
+                len = -1;
+                h = 0;
+                lim = length1Byte + 1;
+            } else if (c == '+') {
+                len = 1;
+                h = 0;
+                lim = length1Byte + 1;
+            } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+                return 0;
+            else {
+                len = 1;
+                lim = length1Byte;
+            }
+            byte data = (byte) h;
+            for (int i = start + 1; i < end && i < start + lim; i++) {
+                if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+                    return (byte) (data * len);
+                data *= base;
+                data += h;
+            }
+            return (byte) (data * len);
+        }
     }
     public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
             mask32 = "00000000000000000000000000000000",
