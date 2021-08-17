@@ -23,8 +23,8 @@ public enum Base {
     BASE10("0123456789"),
     BASE16("0123456789ABCDEF"),
     BASE36("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-    BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '='),
-    URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$');
+    BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '=', '*', '~'),
+    URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
 
     /**
      * The digits this will encode to, in order from smallest to largest. These must all be in the ASCII range.
@@ -42,6 +42,8 @@ public enum Base {
      * defaults to the space char, {@code ' '}, if not specified.
      */
     public final char paddingChar;
+    public final char positiveSign;
+    public final char negativeSign;
     /**
      * What base or radix this uses; if you use {@link #unsigned(int)}, then base must be an even number.
      */
@@ -50,11 +52,13 @@ public enum Base {
     private final char[] progress;
 
     Base(String digits) {
-        this(digits, true, ' ');
+        this(digits, true, ' ', '+', '-');
     }
 
-    Base(String digits, boolean caseInsensitive, char padding) {
+    Base(String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
         paddingChar = padding;
+        this.positiveSign = positiveSign;
+        this.negativeSign = negativeSign;
         toEncoded = digits.toCharArray();
         base = toEncoded.length;
         fromEncoded = new int[128];
@@ -134,7 +138,7 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return String.valueOf(progress, run, length8Byte + 1 - run);
     }
@@ -160,15 +164,16 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return builder.append(progress, run, length8Byte + 1 - run);
     }
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the long they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the long they represent, or 0 if nothing could be read. The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(long)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -191,8 +196,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the long they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the long they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(long)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -217,11 +223,11 @@ public enum Base {
                 || (len = cs.length()) - start <= 0 || end > len)
             return 0;
         char c = cs.charAt(start);
-        if (c == '-') {
+        if (c == negativeSign) {
             len = -1;
             h = 0;
             lim = length8Byte + 1;
-        } else if (c == '+') {
+        } else if (c == positiveSign) {
             len = 1;
             h = 0;
             lim = length8Byte + 1;
@@ -299,7 +305,7 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return String.valueOf(progress, run, length8Byte + 1 - run);
     }
@@ -325,15 +331,16 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return builder.append(progress, run, length8Byte + 1 - run);
     }
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the int they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the int they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(int)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -356,8 +363,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the int they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the int they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(int)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -382,11 +390,11 @@ public enum Base {
                 || (len = cs.length()) - start <= 0 || end > len)
             return 0;
         char c = cs.charAt(start);
-        if (c == '-') {
+        if (c == negativeSign) {
             len = -1;
             h = 0;
             lim = length4Byte + 1;
-        } else if (c == '+') {
+        } else if (c == positiveSign) {
             len = 1;
             h = 0;
             lim = length4Byte + 1;
@@ -464,7 +472,7 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return String.valueOf(progress, run, length8Byte + 1 - run);
     }
@@ -490,15 +498,16 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return builder.append(progress, run, length8Byte + 1 - run);
     }
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the short they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the short they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(short)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -521,8 +530,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the short they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the short they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(short)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -547,11 +557,11 @@ public enum Base {
                 || (len = cs.length()) - start <= 0 || end > len)
             return 0;
         char c = cs.charAt(start);
-        if (c == '-') {
+        if (c == negativeSign) {
             len = -1;
             h = 0;
             lim = length2Byte + 1;
-        } else if (c == '+') {
+        } else if (c == positiveSign) {
             len = 1;
             h = 0;
             lim = length2Byte + 1;
@@ -629,7 +639,7 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return String.valueOf(progress, run, length8Byte + 1 - run);
     }
@@ -655,15 +665,16 @@ public enum Base {
             if ((number /= base) == 0) break;
         }
         if (sign != 0) {
-            progress[--run] = '-';
+            progress[--run] = negativeSign;
         }
         return builder.append(progress, run, length8Byte + 1 - run);
     }
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the byte they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the byte they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(byte)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -686,8 +697,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the byte they represent, or 0 if nothing could be read. The leading sign can be '+' or '-'
-     * if present. This can also represent negative numbers as they are printed by such methods as String.format
+     * start, and returns the byte they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
      * given a %x in the formatting string, or this class' {@link #unsigned(byte)} method; that is, if the first
      * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
      * for octal), then the whole number represents a negative number, using two's complement and so on. This means
@@ -712,11 +724,11 @@ public enum Base {
                 || (len = cs.length()) - start <= 0 || end > len)
             return 0;
         char c = cs.charAt(start);
-        if (c == '-') {
+        if (c == negativeSign) {
             len = -1;
             h = 0;
             lim = length1Byte + 1;
-        } else if (c == '+') {
+        } else if (c == positiveSign) {
             len = 1;
             h = 0;
             lim = length1Byte + 1;
@@ -789,8 +801,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the double those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
-     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * start, and returns the double those bits represent, or 0.0 if nothing could be read. The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
      * <br>
      * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
@@ -806,8 +819,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the double those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
-     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * start, and returns the double those bits represent, or 0.0 if nothing could be read.  The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
      * <br>
      * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
@@ -877,8 +891,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the float those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
-     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * start, and returns the float those bits represent, or 0.0 if nothing could be read.  The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(float)}, {@link #unsigned(float)}, or their append versions.
      * <br>
      * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
@@ -894,8 +909,9 @@ public enum Base {
 
     /**
      * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
-     * start, and returns the float those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
-     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * start, and returns the float those bits represent, or 0.0 if nothing could be read.  The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(float)}, {@link #unsigned(float)}, or their append versions.
      * <br>
      * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
