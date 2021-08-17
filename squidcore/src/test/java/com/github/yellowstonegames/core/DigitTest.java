@@ -168,22 +168,6 @@ public class DigitTest {
     }
 
     @Test
-    public void testReadDouble(){
-        double[] inputs = {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1};
-
-        for(Base enc : Base.values())
-        {
-            for(double in : inputs){
-                Assert.assertEquals(in, enc.readDouble(enc.signed(in)), Double.MIN_VALUE);
-                Assert.assertEquals(in, enc.readDouble(enc.unsigned(in)), Double.MIN_VALUE);
-            }
-            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.signed(Double.NaN))));
-            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.unsigned(Double.NaN))));
-        }
-    }
-
-    @Test
     public void testReadInt(){
         int[] inputs = {0, 1, -1, 2147483647, -2147483647, -2147483648, 1234, -98765};
 
@@ -219,6 +203,38 @@ public class DigitTest {
                 Assert.assertEquals(in, enc.readByte(enc.signed(in)));
                 Assert.assertEquals(in, enc.readByte(enc.unsigned(in)));
             }
+        }
+    }
+
+    @Test
+    public void testReadDouble(){
+        double[] inputs = {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1};
+
+        for(Base enc : Base.values())
+        {
+            for(double in : inputs){
+                Assert.assertEquals(in, enc.readDouble(enc.signed(in)), Double.MIN_VALUE);
+                Assert.assertEquals(in, enc.readDouble(enc.unsigned(in)), Double.MIN_VALUE);
+            }
+            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.signed(Double.NaN))));
+            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.unsigned(Double.NaN))));
+        }
+    }
+
+    @Test
+    public void testReadFloat(){
+        float[] inputs = {0.0f, -0.0f, 1.0f, -1.0f, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
+                Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f};
+
+        for(Base enc : Base.values())
+        {
+            for(float in : inputs){
+                Assert.assertEquals(in, enc.readFloat(enc.signed(in)), Float.MIN_VALUE);
+                Assert.assertEquals(in, enc.readFloat(enc.unsigned(in)), Float.MIN_VALUE);
+            }
+            Assert.assertTrue(Float.isNaN(enc.readFloat(enc.signed(Float.NaN))));
+            Assert.assertTrue(Float.isNaN(enc.readFloat(enc.unsigned(Float.NaN))));
         }
     }
 }
