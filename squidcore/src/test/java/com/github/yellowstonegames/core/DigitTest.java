@@ -154,8 +154,8 @@ public class DigitTest {
 
     @Test
     public void testReadLong(){
-        long[] inputs = {/*0x00000000L, 0x00000001L, 0xFFFFFFFFL, 0x7FFFFFFFL,
-                */0xFFFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
+        long[] inputs = {0x00000000L, 0x00000001L, 0xFFFFFFFFL, 0x7FFFFFFFL,
+                0xFFFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
                 0x80000000L,  0x8000000000000000L, 0x12345678L, 0x89ABCDEFL, 0x1234567890ABCDEFL, 0xFEDCBA0987654321L};
 
         for(Base enc : Base.values())
@@ -164,6 +164,22 @@ public class DigitTest {
                 Assert.assertEquals(in, enc.readLong(enc.signed(in)));
                 Assert.assertEquals(in, enc.readLong(enc.unsigned(in)));
             }
+        }
+    }
+
+    @Test
+    public void testReadDouble(){
+        double[] inputs = {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1};
+
+        for(Base enc : Base.values())
+        {
+            for(double in : inputs){
+                Assert.assertEquals(in, enc.readDouble(enc.signed(in)), Double.MIN_VALUE);
+                Assert.assertEquals(in, enc.readDouble(enc.unsigned(in)), Double.MIN_VALUE);
+            }
+            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.signed(Double.NaN))));
+            Assert.assertTrue(Double.isNaN(enc.readDouble(enc.unsigned(Double.NaN))));
         }
     }
 
