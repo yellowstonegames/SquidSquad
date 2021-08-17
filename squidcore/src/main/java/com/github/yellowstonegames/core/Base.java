@@ -266,6 +266,67 @@ public enum Base {
         return appendUnsigned(builder, BitConversion.doubleToRawLongBits(number));
     }
 
+    /**
+     * Converts the bits of the given {@code number} to this Base as signed, returning a new String.
+     * This can vary in how many chars it uses, since it does not show leading zeroes and may use a {@code -} sign.
+     *
+     * @param number any double
+     * @return a new String containing {@code number} in the radix this specifies.
+     */
+    @Nonnull
+    public String signed(double number) {
+        return signed(BitConversion.doubleToRawLongBits(number));
+    }
+
+    /**
+     * Converts the bits of the given {@code number} to this Base as signed, appending the result to
+     * {@code builder}. This can vary in how many chars it uses, since it does not show leading zeroes and may use a
+     * {@code -} sign.
+     *
+     * @param builder a non-null StringBuilder that will be modified (appended to)
+     * @param number  any double
+     * @return {@code builder}, with the encoded {@code number} appended
+     */
+    @Nonnull
+    public StringBuilder appendSigned(@Nonnull StringBuilder builder, double number) {
+        return appendSigned(builder, BitConversion.doubleToRawLongBits(number));
+    }
+
+    /**
+     * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the double those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
+     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
+     * <br>
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @return the double that cs represents
+     */
+    public double readDouble(final CharSequence cs) {
+        return BitConversion.longBitsToDouble(readLong(cs, 0, cs.length()));
+    }
+
+    /**
+     * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the double those bits represent, or 0.0 if nothing could be read. The leading sign can be '+'
+     * or '-' if present. This is meant entirely for non-human-editable content, and the digit strings this can read
+     * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
+     * <br>
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the double that cs represents
+     */
+    public double readDouble(final CharSequence cs, final int start, int end) {
+        return BitConversion.longBitsToDouble(readLong(cs, start, end));
+    }
 
     /**
      * Converts the given {@code number} to this Base as unsigned, returning a new String.
