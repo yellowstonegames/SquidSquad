@@ -1,9 +1,15 @@
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.ds.support.FourWheelRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class DigitTest {
+
+    public static final ObjectList<Base> BASES = ObjectList.with(Base.BASE2, Base.BASE8, Base.BASE10, Base.BASE16,
+            Base.BASE36, Base.BASE64, Base.URI_SAFE, Base.scrambledBase(new DistinctRandom(123L)), Base.scrambledBase(new FourWheelRandom(1234L)));
 
     @Test
     public void testUnsignedInt() {
@@ -158,7 +164,7 @@ public class DigitTest {
                 0xFFFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
                 0x80000000L,  0x8000000000000000L, 0x12345678L, 0x89ABCDEFL, 0x1234567890ABCDEFL, 0xFEDCBA0987654321L};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(long in : inputs){
                 Assert.assertEquals(in, enc.readLong(enc.signed(in)));
@@ -171,7 +177,7 @@ public class DigitTest {
     public void testReadInt(){
         int[] inputs = {0, 1, -1, 2147483647, -2147483647, -2147483648, 1234, -98765};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(int in : inputs){
                 Assert.assertEquals(in, enc.readInt(enc.signed(in)));
@@ -184,7 +190,7 @@ public class DigitTest {
     public void testReadShort(){
         short[] inputs = {0, 1, -1, 32767, -32768, 1234, -9876};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(short in : inputs){
                 Assert.assertEquals(in, enc.readShort(enc.signed(in)));
@@ -197,7 +203,7 @@ public class DigitTest {
     public void testReadByte(){
         byte[] inputs = {0, 1, -1, 127, -128, 12, -87};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(byte in : inputs){
                 Assert.assertEquals(in, enc.readByte(enc.signed(in)));
@@ -211,7 +217,7 @@ public class DigitTest {
         double[] inputs = {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(double in : inputs){
                 Assert.assertEquals(in, enc.readDouble(enc.signed(in)), Double.MIN_VALUE);
@@ -227,7 +233,7 @@ public class DigitTest {
         float[] inputs = {0.0f, -0.0f, 1.0f, -1.0f, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
                 Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f};
 
-        for(Base enc : Base.values())
+        for(Base enc : BASES)
         {
             for(float in : inputs){
                 Assert.assertEquals(in, enc.readFloat(enc.signed(in)), Float.MIN_VALUE);

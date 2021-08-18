@@ -128,10 +128,10 @@ public class Base {
         random.shuffle(options);
         char plus = options[options.length - 2], minus = options[options.length - 1];
 
-        Base base = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, ' ',
+        Base base = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-", false, ' ',
                 plus, minus);
 
-        System.arraycopy(options, 0, base.toEncoded, 0, 70);
+        System.arraycopy(options, 0, base.toEncoded, 0, 72);
         Arrays.fill(base.fromEncoded, -1);
 
         for (int i = 0; i < base.base; i++) {
