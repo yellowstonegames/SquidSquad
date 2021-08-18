@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.support.BitConversion;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Provides ways to encode digits in different base systems, or radixes, and decode numbers written in those bases. This
@@ -17,14 +18,47 @@ import java.util.Arrays;
  * of number, but it is capable of reading both the signed and unsigned results, and never throws an Exception (it just
  * returns 0 if no number could be read).
  */
-public enum Base {
-    BASE2("01"),
-    BASE8("01234567"),
-    BASE10("0123456789"),
-    BASE16("0123456789ABCDEF"),
-    BASE36("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-    BASE64("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '=', '*', '~'),
-    URI_SAFE("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
+public class Base {
+    /**
+     * Binary, using the digits 0 and 1.
+     */
+    public static final Base BASE2  = new Base("01");
+    /**
+     * Octal, using the digits 0-7.
+     */
+    public static final Base BASE8  = new Base("01234567");
+    /**
+     * Decimal, using the digits 0-9.
+     */
+    public static final Base BASE10 = new Base("0123456789");
+    /**
+     * Hexadecimal, using the digits 0-9 and then A-F (case-insensitive).
+     */
+    public static final Base BASE16 = new Base("0123456789ABCDEF");
+    /**
+     * Hexatrigesimal, using the digits 0-9 and then A-Z (case-insensitive).
+     */
+    public static final Base BASE36 = new Base("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    /**
+     * One of two base-64 schemes available here, this is the more-standard one, using the digits A-Z, then a-z, then
+     * 0-9, then + and / (case-sensitive). This uses * in place of + to indicate a positive sign, and ~ in place of - .
+     */
+    public static final Base BASE64 = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '=', '*', '~');
+    /**
+     * One of two base-64 schemes available here, this is meant for URI-encoding, using the digits A-Z, then a-z, then
+     * 0-9, then + and - (case-sensitive). This uses * in place of + to indicate a positive sign, and ~ in place of - .
+     */
+    public static final Base URI_SAFE = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
+
+    private static final List<Base> BASES = Arrays.asList(BASE2, BASE8, BASE10, BASE16, BASE36, BASE64, URI_SAFE);
+
+    /**
+     * Returns an immutable List of the Base instances this knows about from the start. Mostly useful for testing.
+     * @return an immutable List of all Base instances this knows about from the start
+     */
+    public static List<Base> values() {
+        return BASES;
+    }
 
     /**
      * The digits this will encode to, in order from smallest to largest. These must all be in the ASCII range.
@@ -51,11 +85,11 @@ public enum Base {
     private final int length1Byte, length2Byte, length4Byte, length8Byte;
     private final char[] progress;
 
-    Base(String digits) {
+    public Base(String digits) {
         this(digits, true, ' ', '+', '-');
     }
 
-    Base(String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
+    public Base(String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
         paddingChar = padding;
         this.positiveSign = positiveSign;
         this.negativeSign = negativeSign;
