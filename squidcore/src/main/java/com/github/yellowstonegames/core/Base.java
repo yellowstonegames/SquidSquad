@@ -249,7 +249,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -274,7 +274,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -416,7 +416,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which is an odd omission from earlier
-     * JDKs. This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit,
+     * JDKs. This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit,
      * or stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -441,7 +441,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which is an odd omission from earlier JDKs.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -583,7 +583,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for shorts.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -608,7 +608,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for shorts.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -750,7 +750,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for bytes.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -775,7 +775,7 @@ public class Base {
      * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
      * <br>
      * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for bytes.
-     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -872,7 +872,7 @@ public class Base {
      * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
      * <br>
-     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -890,7 +890,7 @@ public class Base {
      * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
      * <br>
-     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -962,7 +962,7 @@ public class Base {
      * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(float)}, {@link #unsigned(float)}, or their append versions.
      * <br>
-     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -980,7 +980,7 @@ public class Base {
      * This is meant entirely for non-human-editable content, and the digit strings this can read
      * will almost always be produced by {@link #signed(float)}, {@link #unsigned(float)}, or their append versions.
      * <br>
-     * This doesn't throw on invalid input, instead returning 0 if the first char is not a hex digit, or
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
@@ -991,6 +991,149 @@ public class Base {
      */
     public float readFloat(final CharSequence cs, final int start, int end) {
         return BitConversion.intBitsToFloat(readInt(cs, start, end));
+    }
+
+    /**
+     * Converts the given {@code number} to this Base as unsigned, returning a new String.
+     * This always uses the same number of chars in any String it returns, as long as the Base is the same.
+     *
+     * @param number any char
+     * @return a new String containing {@code number} in the radix this specifies.
+     */
+    @Nonnull
+    public String unsigned(char number) {
+        final int len = length2Byte - 1;
+        for (int i = 0; i <= len; i++) {
+            int quotient = number / base;
+            progress[len - i] = toEncoded[(number & 0xFFFF) - quotient * base];
+            number = (char) quotient;
+        }
+        return String.valueOf(progress, 0, length2Byte);
+    }
+
+    /**
+     * Converts the given {@code number} to this Base as unsigned, appending the result to
+     * {@code builder}.
+     *
+     * @param builder a non-null StringBuilder that will be modified (appended to)
+     * @param number  any char
+     * @return {@code builder}, with the encoded {@code number} appended
+     */
+    @Nonnull
+    public StringBuilder appendUnsigned(@Nonnull StringBuilder builder, char number) {
+        final int len = length2Byte - 1;
+        for (int i = 0; i <= len; i++) {
+            int quotient = number / base;
+            progress[len - i] = toEncoded[(number & 0xFFFF) - quotient * base];
+            number = (char) quotient;
+        }
+        return builder.append(progress, 0, length2Byte);
+    }
+
+    /**
+     * Converts the given {@code number} to this Base as signed, returning a new String.
+     * This can vary in how many chars it uses, since it does not show leading zeroes and may use a {@code -} sign.
+     *
+     * @param number any char
+     * @return a new String containing {@code number} in the radix this specifies.
+     */
+    @Nonnull
+    public String signed(char number) {
+        int run = length8Byte;
+        for (; ; run--) {
+            progress[run] = toEncoded[number % base];
+            if ((number /= base) == 0) break;
+        }
+        return String.valueOf(progress, run, length8Byte + 1 - run);
+    }
+
+    /**
+     * Converts the given {@code number} to this Base as signed, appending the result to
+     * {@code builder}. This can vary in how many chars it uses, since it does not show leading zeroes and may use a
+     * {@code -} sign.
+     *
+     * @param builder a non-null StringBuilder that will be modified (appended to)
+     * @param number  any char
+     * @return {@code builder}, with the encoded {@code number} appended
+     */
+    @Nonnull
+    public StringBuilder appendSigned(@Nonnull StringBuilder builder, char number) {
+        int run = length8Byte;
+        for (; ; run--) {
+            progress[run] = toEncoded[number % base];
+            if ((number /= base) == 0) break;
+        }
+        return builder.append(progress, run, length8Byte + 1 - run);
+    }
+
+    /**
+     * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the char they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * Note that chars are unsigned 16-bit numbers by default, so even having a sign runs counter to the normal
+     * behavior; {@link #unsigned(char)} behaves as Java expects it, while {@link #signed(char)} is the anomaly.
+     * This means chars are always in the 0 to 65535 range, so if you give this a String representing a negative number,
+     * it treats it like a negative short and effectively casts it to char.
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for chars.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @return the char that cs represents
+     */
+    public char readChar(final CharSequence cs) {
+        return readChar(cs, 0, cs.length());
+    }
+
+    /**
+     * Reads in a CharSequence containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the char they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * Note that chars are unsigned 16-bit numbers by default, so even having a sign runs counter to the normal
+     * behavior; {@link #unsigned(char)} behaves as Java expects it, while {@link #signed(char)} is the anomaly.
+     * This means chars are always in the 0 to 65535 range, so if you give this a String representing a negative number,
+     * it treats it like a negative short and effectively casts it to char.
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for chars.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the char that cs represents
+     */
+    public char readChar(final CharSequence cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length()) - start <= 0 || end > len)
+            return 0;
+        char c = cs.charAt(start);
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length2Byte;
+        }
+        char data = (char) h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
+                return (char) (data * len);
+            data *= base;
+            data += h;
+        }
+        return (char) (data * len);
     }
 
 }
