@@ -102,9 +102,9 @@ public class Base {
 
         for (int i = 0; i < base; i++) {
             char to = toEncoded[i];
-            fromEncoded[to] = i;
+            fromEncoded[to & 127] = i;
             if (caseInsensitive)
-                fromEncoded[Character.toLowerCase(to)] = i;
+                fromEncoded[Character.toLowerCase(to) & 127] = i;
         }
         double logBase = 1.0 / Math.log(base);
         length1Byte = (int) Math.ceil(Math.log(0x1p8) * logBase);
@@ -265,7 +265,7 @@ public class Base {
             len = 1;
             h = 0;
             lim = length8Byte + 1;
-        } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+        } else if ((h = fromEncoded[c & 127]) < 0)
             return 0;
         else {
             len = 1;
@@ -273,7 +273,7 @@ public class Base {
         }
         long data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+            if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
                 return data * len;
             data *= base;
             data += h;
@@ -432,7 +432,7 @@ public class Base {
             len = 1;
             h = 0;
             lim = length4Byte + 1;
-        } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+        } else if ((h = fromEncoded[c & 127]) < 0)
             return 0;
         else {
             len = 1;
@@ -440,7 +440,7 @@ public class Base {
         }
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+            if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
                 return data * len;
             data *= base;
             data += h;
@@ -599,7 +599,7 @@ public class Base {
             len = 1;
             h = 0;
             lim = length2Byte + 1;
-        } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+        } else if ((h = fromEncoded[c & 127]) < 0)
             return 0;
         else {
             len = 1;
@@ -607,7 +607,7 @@ public class Base {
         }
         short data = (short) h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+            if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
                 return (short) (data * len);
             data *= base;
             data += h;
@@ -766,7 +766,7 @@ public class Base {
             len = 1;
             h = 0;
             lim = length1Byte + 1;
-        } else if (c >= 128 || (h = fromEncoded[c]) < 0)
+        } else if ((h = fromEncoded[c & 127]) < 0)
             return 0;
         else {
             len = 1;
@@ -774,7 +774,7 @@ public class Base {
         }
         byte data = (byte) h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) >= 128 || (h = fromEncoded[c]) < 0)
+            if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
                 return (byte) (data * len);
             data *= base;
             data += h;
