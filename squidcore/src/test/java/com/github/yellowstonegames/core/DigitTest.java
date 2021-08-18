@@ -68,6 +68,25 @@ public class DigitTest {
     }
 
     @Test
+    public void testUnsignedChar() {
+        char[] inputs = new char[]{0x0000, 0x0001, (char)0xFFFF, 0x7FFF,
+                (char)0x8000, 0x1234, (char)0x89AB, (char)0xCDEF, (char)0x8765};
+        for (char i : inputs) {
+            Assert.assertEquals(DigitTools.hex(i), Base.BASE16.unsigned(i));
+        }
+        for (char i : inputs) {
+            Assert.assertEquals(DigitTools.bin(i), Base.BASE2.unsigned(i));
+        }
+        StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
+        for (char i : inputs) {
+            Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
+        }
+        for (char i : inputs) {
+            Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
+        }
+    }
+
+    @Test
     public void testUnsignedByte() {
         byte[] inputs = new byte[]{0x00, 0x01, (byte)0xFF, 0x7F,
                 (byte)0x80, 0x12, (byte)0x89, (byte)0xCD, (byte)0x65};
@@ -141,6 +160,24 @@ public class DigitTest {
     }
 
     @Test
+    public void testSignedChar() {
+        char[] inputs = {0, 1, 0xFFFF, 32767, 0x8000, 1234, 49876};
+        for (char i : inputs) {
+            Assert.assertTrue(Integer.toString(i).equalsIgnoreCase(Base.BASE10.signed(i)));
+        }
+        for (char i : inputs) {
+            Assert.assertTrue(Integer.toString(i, 36).equalsIgnoreCase(Base.BASE36.signed(i)));
+        }
+        StringBuilder sb = new StringBuilder(), esb = new StringBuilder();
+        for (char i : inputs) {
+            Assert.assertEquals(sb.append((int)i).toString(), Base.BASE10.appendSigned(esb, i).toString());
+        }
+        for (char i : inputs) {
+            Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
+        }
+    }
+
+    @Test
     public void testSignedByte() {
         byte[] inputs = {0, 1, -1, 127, -128, 12, -87};
         for (byte i : inputs) {
@@ -195,6 +232,19 @@ public class DigitTest {
             for(short in : inputs){
                 Assert.assertEquals(in, enc.readShort(enc.signed(in)));
                 Assert.assertEquals(in, enc.readShort(enc.unsigned(in)));
+            }
+        }
+    }
+
+    @Test
+    public void testReadChar(){
+        char[] inputs = {0, 1, 0xFFFF, 32767, 0x8000, 1234, 49876};
+
+        for(Base enc : BASES)
+        {
+            for(char in : inputs){
+                Assert.assertEquals(in, enc.readChar(enc.signed(in)));
+                Assert.assertEquals(in, enc.readChar(enc.unsigned(in)));
             }
         }
     }
