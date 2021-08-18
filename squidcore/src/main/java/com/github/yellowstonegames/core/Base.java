@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -97,7 +98,6 @@ public class Base {
         base = toEncoded.length;
         fromEncoded = new int[128];
 
-        //if(caseInsensitive)
         Arrays.fill(fromEncoded, -1);
 
         for (int i = 0; i < base; i++) {
@@ -112,6 +112,38 @@ public class Base {
         length4Byte = (int) Math.ceil(Math.log(0x1p32) * logBase);
         length8Byte = (int) Math.ceil(Math.log(0x1p64) * logBase);
         progress = new char[length8Byte + 1];
+    }
+
+    /**
+     * Returns a seemingly-gibberish Base that uses a radix of 72 and a randomly-ordered set of characters to represent
+     * the different digit values. This is randomized by an EnhancedRandom, so if the parameter is seeded identically
+     * (and is the same implementation), then an equivalent Base will be produced. This randomly chooses 72 digits from
+     * a large set, <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&amp;*-_=+</code>, and
+     * sets the positive and negative signs to two different chars left over. The padding char is always space, ' '.
+     * @param random an EnhancedRandom used to shuffle the possible digits and assign values for other items
+     * @return a new Base with 72 random digits, as well as a random positive and negative sign
+     */
+    public static Base scrambledBase(@Nonnull EnhancedRandom random){
+        char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-_=+".toCharArray();
+        random.shuffle(options);
+        char plus = options[options.length - 2], minus = options[options.length - 1];
+
+        Base base = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, ' ',
+                plus, minus);
+
+        System.arraycopy(options, 0, base.toEncoded, 0, 70);
+        Arrays.fill(base.fromEncoded, -1);
+
+        for (int i = 0; i < base.base; i++) {
+            base.fromEncoded[base.toEncoded[i] & 127] = i;
+        }
+
+        for (int i = 0; i < 128; i++) {
+            if(i != ' ' && i != plus && i != minus && base.fromEncoded[i] == -1)
+                base.fromEncoded[i] = random.next(6);
+        }
+
+        return base;
     }
 
     /**
