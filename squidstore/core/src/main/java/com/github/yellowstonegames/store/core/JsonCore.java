@@ -26,6 +26,7 @@ public final class JsonCore {
         registerChar2D(json);
         registerInt2D(json);
         registerLong2D(json);
+        registerFloat2D(json);
 
         JsonSupport.registerEnhancedRandom(json);
 
@@ -33,6 +34,7 @@ public final class JsonCore {
         registerGapShuffler(json);
         registerHasher(json);
         registerWeightedTable(json);
+        registerBase(json);
     }
 
     /**
@@ -282,4 +284,28 @@ public final class JsonCore {
             }
         });
     }
+
+
+    /**
+     * Registers Base with the given Json object, so Base can be written to and read from JSON.
+     * This is a simple wrapper around Base's built-in {@link Base#serializeToString()} and
+     * {@link Base#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerBase(@Nonnull Json json) {
+        json.setSerializer(Base.class, new Json.Serializer<Base>() {
+            @Override
+            public void write(Json json, Base object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Base read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Base.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
 }
