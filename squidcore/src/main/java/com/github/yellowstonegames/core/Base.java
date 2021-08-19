@@ -77,8 +77,19 @@ public class Base {
      * defaults to the space char, {@code ' '}, if not specified.
      */
     public final char paddingChar;
+    /**
+     * Can be used to indicate positive numbers; like {@code +} in most numeral systems, this is usually ignored.
+     */
     public final char positiveSign;
+    /**
+     * Used to indicate negative numbers with {@link #signed(int)} and when reading them back with
+     * {@link #readInt(CharSequence)}; like {@code -} in most numeral systems.
+     */
     public final char negativeSign;
+    /**
+     * Will be true if this base system treats upper- and lower-case letters present in the encoding as the same.
+     */
+    public final boolean caseInsensitive;
     /**
      * What base or radix this uses; if you use {@link #unsigned(int)}, then base must be an even number.
      */
@@ -92,6 +103,7 @@ public class Base {
 
     public Base(String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
         paddingChar = padding;
+        this.caseInsensitive = caseInsensitive;
         this.positiveSign = positiveSign;
         this.negativeSign = negativeSign;
         toEncoded = digits.toCharArray();
@@ -118,13 +130,13 @@ public class Base {
      * Returns a seemingly-gibberish Base that uses a radix of 72 and a randomly-ordered set of characters to represent
      * the different digit values. This is randomized by an EnhancedRandom, so if the parameter is seeded identically
      * (and is the same implementation), then an equivalent Base will be produced. This randomly chooses 72 digits from
-     * a large set, <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&amp;*-_=+</code>, and
+     * a large set, <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&amp;*-|=+</code>, and
      * sets the positive and negative signs to two different chars left over. The padding char is always space, ' '.
      * @param random an EnhancedRandom used to shuffle the possible digits
      * @return a new Base with 72 random digits, as well as a random positive and negative sign
      */
     public static Base scrambledBase(@Nonnull EnhancedRandom random){
-        char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-_=+".toCharArray();
+        char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-|=+".toCharArray();
         random.shuffle(options);
         char plus = options[options.length - 2], minus = options[options.length - 1];
 
@@ -139,6 +151,29 @@ public class Base {
         }
 
         return base;
+    }
+
+    /**
+     * Stores this Base as a compact String; the String this produces is usually given to
+     * {@link #deserializeFromString(String)} to restore the Base. Note that if you are using
+     * {@link #scrambledBase(EnhancedRandom)}, you are also able to serialize the EnhancedRandom or its state, and that
+     * can be used to produce a scrambled base again; this could be useful to conceal a scrambled base slightly.
+     * @return a String that can be given to {@link #deserializeFromString(String)} to obtain this Base again
+     */
+    public String serializeToString() {
+        return String.valueOf(toEncoded) + (caseInsensitive ? '1' : '0') + paddingChar + positiveSign + negativeSign;
+    }
+
+    /**
+     * Given a String of a serialized Base (almost always produced by {@link #serializeToString()}), this re-creates
+     * that Base and returns it.
+     * @param data a String that was almost always produced by {@link #serializeToString()}
+     * @return the Base that {@code data} stores
+     */
+    public static Base deserializeFromString(String data) {
+        int len;
+        if(data == null || (len = data.length()) < 5) return null;
+        return new Base(data.substring(0, len - 4), data.charAt(len - 4) != '0', data.charAt(len - 3), data.charAt(len - 2), data.charAt(len - 1));
     }
 
     /**
