@@ -1166,4 +1166,28 @@ public class Base {
         return (char) (data * len);
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Base base = (Base) o;
+
+        if (paddingChar != base.paddingChar) return false;
+        if (positiveSign != base.positiveSign) return false;
+        if (negativeSign != base.negativeSign) return false;
+        if (caseInsensitive != base.caseInsensitive) return false;
+        return Arrays.equals(toEncoded, base.toEncoded);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Hasher.marbas.hash(toEncoded);
+        result = 31 * result + (caseInsensitive ? 1 : 0);
+        result = 31 * result + (int) paddingChar;
+        result = 31 * result + (int) positiveSign;
+        result = 31 * result + (int) negativeSign;
+        return result;
+    }
 }

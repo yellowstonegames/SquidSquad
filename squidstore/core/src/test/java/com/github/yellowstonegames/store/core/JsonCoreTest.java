@@ -2,12 +2,14 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
+import com.github.yellowstonegames.core.Base;
 import com.github.yellowstonegames.core.Dice;
 import com.github.yellowstonegames.core.GapShuffler;
 import org.junit.Assert;
@@ -173,6 +175,31 @@ public class JsonCoreTest {
             GapShuffler<?> gs2 = json.fromJson(GapShuffler.class, data);
             Assert.assertEquals(gs, gs2);
             Assert.assertEquals(gs.next(), gs2.next());
+        }
+    }
+
+    @Test
+    public void testBase() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerBase(json);
+        FourWheelRandom random = new FourWheelRandom(1234567890L);
+        ObjectList<Base> bases = new ObjectList<>(Base.values());
+        bases.add(Base.scrambledBase(random));
+        bases.add(Base.scrambledBase(random));
+        bases.add(Base.scrambledBase(random));
+        for(Base b : bases){
+            random.setSeed(-12345L);
+            String data = json.toJson(b);
+            Base b2 = json.fromJson(Base.class, data);
+            Assert.assertEquals(b, b2);
+            for (int i = 0; i < 100; i++) {
+                long ln = random.nextLong();
+                Assert.assertEquals(b.unsigned(ln), b2.unsigned(ln));
+                Assert.assertEquals(b.signed(ln), b2.signed(ln));
+                float fl = random.nextFloat(-100f, 100f);
+                Assert.assertEquals(b.unsigned(fl), b2.unsigned(fl));
+                Assert.assertEquals(b.signed(fl), b2.signed(fl));
+            }
         }
     }
 }
