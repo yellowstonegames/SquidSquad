@@ -283,7 +283,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the long that cs represents
      */
     public long readLong(final CharSequence cs) {
@@ -308,7 +308,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the long that cs represents
@@ -336,6 +336,59 @@ public class Base {
         long data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
             if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
+                return data * len;
+            data *= base;
+            data += h;
+        }
+        return data * len;
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the long they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
+     * given a %x in the formatting string, or this class' {@link #unsigned(long)} method; that is, if the first
+     * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+     * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+     * when using base-16, "FFFFFFFFFFFFFFFF" would return the long -1 when passed to this, though you could also
+     * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+     * with "-FFFFFFFFFFFFFFFF", then both indicate a negative number, but the digits will be processed first
+     * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+     * <br>
+     * Should be fairly close to Java 8's Long.parseUnsignedLong method, which is an odd omission from earlier JDKs.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the long that cs represents
+     */
+    public long readLong(final char[] cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length) - start <= 0 || end > len)
+            return 0;
+        char c = cs[start];
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length8Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length8Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length8Byte;
+        }
+        long data = h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs[i] & 127]) < 0)
                 return data * len;
             data *= base;
             data += h;
@@ -450,7 +503,7 @@ public class Base {
      * or stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the int that cs represents
      */
     public int readInt(final CharSequence cs) {
@@ -475,7 +528,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the int that cs represents
@@ -503,6 +556,59 @@ public class Base {
         int data = h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
             if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
+                return data * len;
+            data *= base;
+            data += h;
+        }
+        return data * len;
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the int they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
+     * given a %x in the formatting string, or this class' {@link #unsigned(int)} method; that is, if the first
+     * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+     * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+     * when using base-16, "FFFFFFFF" would return the int -1 when passed to this, though you could also
+     * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+     * with "-FFFFFFFF", then both indicate a negative number, but the digits will be processed first
+     * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which is an odd omission from earlier JDKs.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the int that cs represents
+     */
+    public int readInt(final char[] cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length) - start <= 0 || end > len)
+            return 0;
+        char c = cs[start];
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length4Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length4Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length4Byte;
+        }
+        int data = h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs[i] & 127]) < 0)
                 return data * len;
             data *= base;
             data += h;
@@ -617,7 +723,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the short that cs represents
      */
     public short readShort(final CharSequence cs) {
@@ -642,7 +748,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the short that cs represents
@@ -670,6 +776,59 @@ public class Base {
         short data = (short) h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
             if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
+                return (short) (data * len);
+            data *= base;
+            data += h;
+        }
+        return (short) (data * len);
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the short they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
+     * given a %x in the formatting string, or this class' {@link #unsigned(short)} method; that is, if the first
+     * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+     * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+     * when using base-16, "FFFF" would return the short -1 when passed to this, though you could also
+     * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+     * with "-FFFF", then both indicate a negative number, but the digits will be processed first
+     * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for shorts.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the short that cs represents
+     */
+    public short readShort(final char[] cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length) - start <= 0 || end > len)
+            return 0;
+        char c = cs[start];
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length2Byte;
+        }
+        short data = (short) h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs[i] & 127]) < 0)
                 return (short) (data * len);
             data *= base;
             data += h;
@@ -784,7 +943,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the byte that cs represents
      */
     public byte readByte(final CharSequence cs) {
@@ -809,7 +968,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the byte that cs represents
@@ -837,6 +996,59 @@ public class Base {
         byte data = (byte) h;
         for (int i = start + 1; i < end && i < start + lim; i++) {
             if ((h = fromEncoded[cs.charAt(i) & 127]) < 0)
+                return (byte) (data * len);
+            data *= base;
+            data += h;
+        }
+        return (byte) (data * len);
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the byte they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * This can also represent negative numbers as they are printed by such methods as String.format
+     * given a %x in the formatting string, or this class' {@link #unsigned(byte)} method; that is, if the first
+     * char of a max-length digit sequence is in the upper half of possible digits (such as 8 for hex digits or 4
+     * for octal), then the whole number represents a negative number, using two's complement and so on. This means
+     * when using base-16, "FF" would return the byte -1 when passed to this, though you could also
+     * simply use "-1". If you use both '-' at the start and have the most significant digit as 8 or higher, such as
+     * with "-FF", then both indicate a negative number, but the digits will be processed first
+     * (producing -1) and then the whole thing will be multiplied by -1 to flip the sign again (returning 1).
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for bytes.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the byte that cs represents
+     */
+    public byte readByte(final char[] cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length) - start <= 0 || end > len)
+            return 0;
+        char c = cs[start];
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length1Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length1Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length1Byte;
+        }
+        byte data = (byte) h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs[i] & 127]) < 0)
                 return (byte) (data * len);
             data *= base;
             data += h;
@@ -906,7 +1118,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the double that cs represents
      */
     public double readDouble(final CharSequence cs) {
@@ -924,12 +1136,32 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the double that cs represents
      */
     public double readDouble(final CharSequence cs, final int start, int end) {
+        return BitConversion.longBitsToDouble(readLong(cs, start, end));
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the double those bits represent, or 0.0 if nothing could be read.  The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
+     * will almost always be produced by {@link #signed(double)}, {@link #unsigned(double)}, or their append versions.
+     * <br>
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the double that cs represents
+     */
+    public double readDouble(final char[] cs, final int start, int end) {
         return BitConversion.longBitsToDouble(readLong(cs, start, end));
     }
 
@@ -996,7 +1228,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the float that cs represents
      */
     public float readFloat(final CharSequence cs) {
@@ -1014,12 +1246,32 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the float that cs represents
      */
     public float readFloat(final CharSequence cs, final int start, int end) {
+        return BitConversion.intBitsToFloat(readInt(cs, start, end));
+    }
+
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the float those bits represent, or 0.0 if nothing could be read.  The leading sign can be
+     * {@link #positiveSign} or {@link #negativeSign} if present, and is almost always '+' or '-'.
+     * This is meant entirely for non-human-editable content, and the digit strings this can read
+     * will almost always be produced by {@link #signed(float)}, {@link #unsigned(float)}, or their append versions.
+     * <br>
+     * This doesn't throw on invalid input, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the float that cs represents
+     */
+    public float readFloat(final char[] cs, final int start, int end) {
         return BitConversion.intBitsToFloat(readInt(cs, start, end));
     }
 
@@ -1110,7 +1362,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @return the char that cs represents
      */
     public char readChar(final CharSequence cs) {
@@ -1131,7 +1383,7 @@ public class Base {
      * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
      *
-     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (+ or -)
+     * @param cs    a CharSequence, such as a String, containing only the digits in this Base and/or an optional initial sign (usually + or -)
      * @param start the (inclusive) first character position in cs to read
      * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
      * @return the char that cs represents
@@ -1166,6 +1418,54 @@ public class Base {
         return (char) (data * len);
     }
 
+    /**
+     * Reads in a char array containing only the digits present in this Base, with an optional sign at the
+     * start, and returns the char they represent, or 0 if nothing could be read.  The leading sign can be the
+     * {@link #positiveSign} or {@link #negativeSign} if present; these are almost always '+' and '-'.
+     * Note that chars are unsigned 16-bit numbers by default, so even having a sign runs counter to the normal
+     * behavior; {@link #unsigned(char)} behaves as Java expects it, while {@link #signed(char)} is the anomaly.
+     * This means chars are always in the 0 to 65535 range, so if you give this a String representing a negative number,
+     * it treats it like a negative short and effectively casts it to char.
+     * <br>
+     * Should be fairly close to Java 8's Integer.parseUnsignedInt method, which doesn't exist for chars.
+     * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a valid digit, or
+     * stopping the parse process early if an invalid digit is read before end is reached. If the parse is stopped
+     * early, this behaves as you would expect for a number with fewer digits, and simply doesn't fill the larger places.
+     *
+     * @param cs    a char array containing only the digits in this Base and/or an optional initial sign (usually + or -)
+     * @param start the (inclusive) first character position in cs to read
+     * @param end   the (exclusive) last character position in cs to read (this after reading enough chars to represent the largest possible value)
+     * @return the char that cs represents
+     */
+    public char readChar(final char[] cs, final int start, int end) {
+        int len, h, lim;
+        if (cs == null || start < 0 || end <= 0 || end - start <= 0
+                || (len = cs.length) - start <= 0 || end > len)
+            return 0;
+        char c = cs[start];
+        if (c == negativeSign) {
+            len = -1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if (c == positiveSign) {
+            len = 1;
+            h = 0;
+            lim = length2Byte + 1;
+        } else if ((h = fromEncoded[c & 127]) < 0)
+            return 0;
+        else {
+            len = 1;
+            lim = length2Byte;
+        }
+        char data = (char) h;
+        for (int i = start + 1; i < end && i < start + lim; i++) {
+            if ((h = fromEncoded[cs[i] & 127]) < 0)
+                return (char) (data * len);
+            data *= base;
+            data += h;
+        }
+        return (char) (data * len);
+    }
 
     @Override
     public boolean equals(Object o) {
