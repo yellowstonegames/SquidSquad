@@ -3,15 +3,12 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.support.BitConversion;
 
 /**
- * Utility class for converting to and from numbers and their String representations.
+ * Utility class for converting to and from numbers and their String representations; this is mostly wrappers around
+ * {@link Base} for compatibility. New code should generally prefer using one of the predefined Base constants in that
+ * class, since you can control whether you want signed or unsigned output using the Base API. This class only produces
+ * unsigned output from its wrapper methods.
  */
 public class DigitTools {
-    public static final String mask64 = "0000000000000000000000000000000000000000000000000000000000000000",
-            mask32 = "00000000000000000000000000000000",
-            mask16 = "0000000000000000",
-            mask8 = "00000000";
-
-    private static final StringBuilder hexBuilder = new StringBuilder(16).append(mask16);
     public static String hex(long number) {
         return Base.BASE16.unsigned(number);
     }
@@ -235,37 +232,7 @@ public class DigitTools {
      */
     public static long longFromHex(final char[] cs, final int start, int end)
     {
-        int len, h, lim = 16;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length) - start <= 0 || end > len)
-            return 0;
-        char c = cs[start];
-        if(c == '-')
-        {
-            len = -1;
-            h = 0;
-            lim = 17;
-        }
-        else if(c == '+')
-        {
-            len = 1;
-            h = 0;
-            lim = 17;
-        }
-        else if(c > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-            return 0;
-        else
-        {
-            len = 1;
-        }
-        int data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs[i]) > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-                return data * len;
-            data <<= 4;
-            data |= h;
-        }
-        return data * len;
+        return Base.BASE16.readLong(cs, start, end);
     }
 
     /**
@@ -314,37 +281,7 @@ public class DigitTools {
      */
     public static int intFromHex(final CharSequence cs, final int start, int end)
     {
-        int len, h, lim = 8;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if(c == '-')
-        {
-            len = -1;
-            h = 0;
-            lim = 9;
-        }
-        else if(c == '+')
-        {
-            len = 1;
-            h = 0;
-            lim = 9;
-        }
-        else if(c > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-            return 0;
-        else
-        {
-            len = 1;
-        }
-        int data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-                return data * len;
-            data <<= 4;
-            data |= h;
-        }
-        return data * len;
+        return Base.BASE16.readInt(cs, start, end);
     }
     /**
      * Reads in a char[] containing only hex digits (only 0-9, a-f, and A-F) with an optional sign at the start
@@ -369,37 +306,7 @@ public class DigitTools {
      */
     public static int intFromHex(final char[] cs, final int start, int end)
     {
-        int len, h, lim = 8;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length) - start <= 0 || end > len)
-            return 0;
-        char c = cs[start];
-        if(c == '-')
-        {
-            len = -1;
-            h = 0;
-            lim = 9;
-        }
-        else if(c == '+')
-        {
-            len = 1;
-            h = 0;
-            lim = 9;
-        }
-        else if(c > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-            return 0;
-        else
-        {
-            len = 1;
-        }
-        int data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs[i]) > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-                return data * len;
-            data <<= 4;
-            data |= h;
-        }
-        return data * len;
+        return Base.BASE16.readInt(cs, start, end);
     }
     /**
      * Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
@@ -441,32 +348,7 @@ public class DigitTools {
      */
     public static long longFromDec(final CharSequence cs, final int start, int end)
     {
-        int len, h, lim = 19;
-        long sign = 1L;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0L;
-        char c = cs.charAt(start);
-        if(c == '-')
-        {
-            sign = -1L;
-            lim = 20;
-            h = 0;
-        }
-        else if(c == '+')
-        {
-            lim = 20;
-            h = 0;
-        }
-        else if(c > 102 || (h = Base.BASE10.fromEncoded[c]) < 0)
-            return 0L;
-        long data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = Base.BASE10.fromEncoded[c]) < 0)
-                return data * sign;
-            data = data * 10 + h;
-        }
-        return data * sign;
+        return Base.BASE10.readLong(cs, start, end);
     }
     /**
      * Reads in a CharSequence containing only decimal digits (0-9) with an optional sign at the start and returns the
@@ -509,36 +391,7 @@ public class DigitTools {
      */
     public static int intFromDec(final CharSequence cs, final int start, int end)
     {
-        int len, h, lim = 10;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if(c == '-')
-        {
-            len = -1;
-            lim = 11;
-            h = 0;
-        }
-        else if(c == '+')
-        {
-            len = 1;
-            lim = 11;
-            h = 0;
-        }
-        else if(c > 102 || (h = Base.BASE10.fromEncoded[c]) < 0)
-            return 0;
-        else
-        {
-            len = 1;
-        }
-        int data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if((c = cs.charAt(i)) > 102 || (h = Base.BASE10.fromEncoded[c]) < 0)
-                return data * len;
-            data = data * 10 + h;
-        }
-        return data * len;
+        return Base.BASE10.readInt(cs, start, end);
     }
     /**
      * Reads in a CharSequence containing only binary digits (only 0 and 1) and returns the long they represent,
@@ -569,21 +422,7 @@ public class DigitTools {
      */
     public static long longFromBin(CharSequence cs, final int start, final int end)
     {
-        int len;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if(c < '0' || c > '1')
-            return 0;
-        long data = Base.BASE16.fromEncoded[c];
-        for (int i = start+1; i < end && i < start+64; i++) {
-            if((c = cs.charAt(i)) < '0' || c > '1')
-                return 0;
-            data <<= 1;
-            data |= c - '0';
-        }
-        return data;
+        return Base.BASE2.readLong(cs, start, end);
     }
     /**
      * Reads in a CharSequence containing only binary digits (only 0 and 1) and returns the int they represent,
@@ -614,21 +453,7 @@ public class DigitTools {
      */
     public static int intFromBin(CharSequence cs, final int start, final int end)
     {
-        int len;
-        if(cs == null || start < 0 || end <=0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if(c < '0' || c > '1')
-            return 0;
-        int data = Base.BASE16.fromEncoded[c];
-        for (int i = start+1; i < end && i < start+32; i++) {
-            if((c = cs.charAt(i)) < '0' || c > '1')
-                return 0;
-            data <<= 1;
-            data |= c - '0';
-        }
-        return data;
+        return Base.BASE2.readInt(cs, start, end);
     }
 
     /**
