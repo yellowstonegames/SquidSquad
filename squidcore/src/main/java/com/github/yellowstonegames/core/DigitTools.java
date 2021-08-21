@@ -13,107 +13,53 @@ public class DigitTools {
 
     private static final StringBuilder hexBuilder = new StringBuilder(16).append(mask16);
     public static String hex(long number) {
-        for (int i = 0; i < 16; i++) {
-            hexBuilder.setCharAt(15 - i, Base.BASE16.toEncoded[(int)(number >> (i << 2) & 15)]);
-        }
-        return hexBuilder.toString();
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(double number) {
-        // avoids creating temporary long values, which can be slow on GWT
-        int h = BitConversion.doubleToLowIntBits(number);
-        for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(15 - i, Base.BASE16.toEncoded[(h >> (i << 2) & 15)]);
-        }
-        h = BitConversion.doubleToHighIntBits(number);
-        for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, Base.BASE16.toEncoded[(h >> (i << 2) & 15)]);
-        }
-        return hexBuilder.toString();
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(int number) {
-        for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, Base.BASE16.toEncoded[(number >> (i << 2) & 15)]);
-        }
-        return hexBuilder.substring(0, 8);
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(float number) {
-        final int h = BitConversion.floatToRawIntBits(number);
-        for (int i = 0; i < 8; i++) {
-            hexBuilder.setCharAt(7 - i, Base.BASE16.toEncoded[(h >> (i << 2) & 15)]);
-        }
-        return hexBuilder.substring(0, 8);
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(short number) {
-        for (int i = 0; i < 4; i++) {
-            hexBuilder.setCharAt(3 - i, Base.BASE16.toEncoded[(number >> (i << 2) & 15)]);
-        }
-        return hexBuilder.substring(0, 4);
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(char number) {
-        for (int i = 0; i < 4; i++) {
-            hexBuilder.setCharAt(3 - i, Base.BASE16.toEncoded[(number >> (i << 2) & 15)]);
-        }
-        return hexBuilder.substring(0, 4);
+        return Base.BASE16.unsigned(number);
     }
 
     public static String hex(byte number) {
-        hexBuilder.setCharAt(0, Base.BASE16.toEncoded[(number >> 4 & 15)]);
-        hexBuilder.setCharAt(1, Base.BASE16.toEncoded[(number & 15)]);
-        return hexBuilder.substring(0, 2);
+        return Base.BASE16.unsigned(number);
     }
 
     public static StringBuilder appendHex(StringBuilder builder, long number){
-        for (int i = 60; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(int)(number >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, double number){
-        // avoids creating temporary long values, which can be slow on GWT
-        int h = BitConversion.doubleToHighIntBits(number);
-        for (int i = 28; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(h >> i & 15)]);
-        }
-        h = BitConversion.doubleToLowIntBits(number);
-        for (int i = 28; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(h >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, int number){
-        for (int i = 28; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(number >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, float number){
-        final int h = BitConversion.floatToRawIntBits(number);
-        for (int i = 28; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(h >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, short number){
-        for (int i = 12; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(number >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, char number){
-        for (int i = 12; i >= 0; i -= 4) {
-            builder.append(Base.BASE16.toEncoded[(number >> i & 15)]);
-        }
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
     public static StringBuilder appendHex(StringBuilder builder, byte number){
-        builder.append(Base.BASE16.toEncoded[(number >> 4 & 15)]);
-        builder.append(Base.BASE16.toEncoded[(number & 15)]);
-        return builder;
+        return Base.BASE16.appendUnsigned(builder, number);
     }
 
     public static String hex(long[] numbers) {
@@ -188,28 +134,31 @@ public class DigitTools {
     }
 
     public static String bin(long number) {
-        String h = Long.toBinaryString(number);
-        return mask64.substring(0, 64 - h.length()) + h;
+        return Base.BASE2.unsigned(number);
     }
 
     public static String bin(int number) {
-        String h = Integer.toBinaryString(number);
-        return mask32.substring(0, 32 - h.length()) + h;
+        return Base.BASE2.unsigned(number);
+    }
+
+    public static String bin(double number) {
+        return Base.BASE2.unsigned(number);
+    }
+
+    public static String bin(float number) {
+        return Base.BASE2.unsigned(number);
     }
 
     public static String bin(short number) {
-        String h = Integer.toBinaryString(number & 0xffff);
-        return mask16.substring(0, 16 - h.length()) + h;
+        return Base.BASE2.unsigned(number);
     }
 
     public static String bin(char number) {
-        String h = Integer.toBinaryString(number & 0xffff);
-        return mask16.substring(0, 16 - h.length()) + h;
+        return Base.BASE2.unsigned(number);
     }
 
     public static String bin(byte number) {
-        String h = Integer.toBinaryString(number & 0xff);
-        return mask8.substring(0, 8 - h.length()) + h;
+        return Base.BASE2.unsigned(number);
     }
 
     /**
@@ -227,6 +176,8 @@ public class DigitTools {
      * stopping the parse process early if a non-hex-digit char is read before the end of cs is reached. If the parse is
      * stopped early, this behaves as you would expect for a number with less digits, and simply doesn't fill the larger
      * places.
+     * <br>
+     * This is simply a wrapper around {@link Base#readLong(CharSequence, int, int)}.
      * @param cs a CharSequence, such as a String, containing only hex digits with an optional sign (no 0x at the start)
      * @return the long that cs represents
      */
@@ -250,38 +201,15 @@ public class DigitTools {
      * This doesn't throw on invalid input, though, instead returning 0 if the first char is not a hex digit, or
      * stopping the parse process early if a non-hex-digit char is read before end is reached. If the parse is stopped
      * early, this behaves as you would expect for a number with less digits, and simply doesn't fill the larger places.
+     * <br>
+     * This is simply a wrapper around {@link Base#readLong(CharSequence, int, int)}.
      * @param cs a CharSequence, such as a String, containing only hex digits with an optional sign (no 0x at the start)
      * @param start the (inclusive) first character position in cs to read
      * @param end the (exclusive) last character position in cs to read (this stops after 16 characters if end is too large)
      * @return the long that cs represents
      */
     public static long longFromHex(final CharSequence cs, final int start, int end) {
-        int len, h, lim = 16;
-        if (cs == null || start < 0 || end <= 0 || end - start <= 0
-                || (len = cs.length()) - start <= 0 || end > len)
-            return 0;
-        char c = cs.charAt(start);
-        if (c == '-') {
-            len = -1;
-            h = 0;
-            lim = 17;
-        } else if (c == '+') {
-            len = 1;
-            h = 0;
-            lim = 17;
-        } else if (c > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-            return 0;
-        else {
-            len = 1;
-        }
-        long data = h;
-        for (int i = start + 1; i < end && i < start + lim; i++) {
-            if ((c = cs.charAt(i)) > 102 || (h = Base.BASE16.fromEncoded[c]) < 0)
-                return data * len;
-            data <<= 4;
-            data |= h;
-        }
-        return data * len;
+        return Base.BASE16.readLong(cs, start, end);
     }
 
     /**
