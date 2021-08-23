@@ -16,12 +16,10 @@ public class SequenceGlider<T extends Glider> implements Glider {
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
     protected T[] sequence;
     protected float[] durations;
-    protected int active;
-    protected float passed;
+    protected int active = 0;
+    protected float passed = 0f;
 
     public SequenceGlider(T[] gliders, float[] lengths){
-        active = 0;
-        passed = 0f;
         final int len = Math.min(gliders.length, lengths.length);
         sequence = Arrays.copyOf(gliders, len);
         durations = Arrays.copyOf(lengths, len);
