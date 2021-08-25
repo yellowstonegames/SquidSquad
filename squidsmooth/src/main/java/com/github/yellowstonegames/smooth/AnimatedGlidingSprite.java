@@ -11,7 +11,8 @@ import com.github.yellowstonegames.grid.Coord;
  * {@link #getLocation()}, which should be used to determine or change where this started its move, where it is going,
  * and how far it has gone between the two. You Must Call {@link #animate(float)} with an increasing float parameter
  * when you want the animation to be playing; otherwise it will stay on the first frame (or a later frame if you stop
- * calling animate() at some other point).
+ * calling animate() at some other point). You can use the {@link VectorSequenceGlider} {@link #smallMotion} to move
+ * this Sprite at a finer resolution than between Coords for start and end points.
  * <br>
  * You probably want to use Textures with a width and height of 1 world unit in
  * your Animation, and {@link #setSize(float, float)} on this to {@code 1, 1}; this avoids the need to convert between
@@ -20,6 +21,7 @@ import com.github.yellowstonegames.grid.Coord;
 public class AnimatedGlidingSprite extends Sprite {
     public Animation<? extends TextureRegion> animation;
     public CoordGlider location;
+    public VectorSequenceGlider smallMotion;
 
     private AnimatedGlidingSprite()
     {
@@ -40,6 +42,7 @@ public class AnimatedGlidingSprite extends Sprite {
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
         location = new CoordGlider(start, end);
+        smallMotion = VectorSequenceGlider.EMPTY.copy();
     }
 
     /**
@@ -57,16 +60,16 @@ public class AnimatedGlidingSprite extends Sprite {
     
     public float getX()
     {
-        return location.getX();
+        return location.getX() + smallMotion.getX();
     }
 
     public float getY()
     {
-        return location.getY();
+        return location.getY() + smallMotion.getY();
     }
     @Override
     public float[] getVertices() {
-        super.setPosition(location.getX(), location.getY());
+        super.setPosition(getX(), getY());
         return super.getVertices();
     }
 

@@ -16,6 +16,29 @@ import static com.github.yellowstonegames.grid.Direction.*;
 @Beta
 public class VectorSequenceGlider extends SequenceGlider<VectorGlider> {
 
+    /**
+     * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using
+     * {@link #copy()} instead of modifying this global reference, though there aren't many changes that will make a
+     * difference in the behavior of this particular global.
+     */
+    public static final VectorSequenceGlider EMPTY = new VectorSequenceGlider();
+
+    /**
+     * Predefined gliders for bump animations in different directions (keyed by that direction). It is strongly
+     * recommended that you copy the VectorSequenceGlider value using {@link #copy()}, and avoid using it directly.
+     */
+    public static final ObjectObjectOrderedMap<Direction, VectorSequenceGlider> BUMPS =
+            ObjectObjectOrderedMap.with(
+                    UP,         new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0, 0.5f)), new VectorGlider(new Vector2(0, -0.5f))}, new float[]{3f, 5f}),
+                    UP_RIGHT,   new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.35f, 0.35f)), new VectorGlider(new Vector2(-0.35f, -0.35f))}, new float[]{3f, 5f}),
+                    RIGHT,      new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.5f, 0f)), new VectorGlider(new Vector2(-0.5f, 0f))}, new float[]{3f, 5f}),
+                    DOWN_RIGHT, new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.35f, -0.35f)), new VectorGlider(new Vector2(-0.35f, 0.35f))}, new float[]{3f, 5f}),
+                    DOWN,       new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0, -0.5f)), new VectorGlider(new Vector2(0, 0.5f))}, new float[]{3f, 5f}),
+                    DOWN_LEFT,  new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.35f, -0.35f)), new VectorGlider(new Vector2(0.35f, 0.35f))}, new float[]{3f, 5f}),
+                    LEFT,       new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.5f, 0f)), new VectorGlider(new Vector2(0.5f, 0f))}, new float[]{3f, 5f}),
+                    UP_LEFT,    new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.35f, -0.35f)), new VectorGlider(new Vector2(0.35f, 0.35f))}, new float[]{3f, 5f})
+            );
+
     public VectorSequenceGlider(){
         this(new VectorGlider[0], new float[0]);
     }
