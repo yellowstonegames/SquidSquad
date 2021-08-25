@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing color using an int-based color (often RGBA8888, but possibly produced by
@@ -19,14 +20,13 @@ public class IntColorGlider implements Glider {
     protected int start = 0;
     protected int end = 0;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nullable Runnable completeRunner;
 
     public IntColorGlider() {
     }
 
     public int getColor()
     {
-        if(change >= 1f)
-            return (start = end);
         return DescriptiveColor.lerpColors(start, end, interpolation.apply(change));
     }
 
@@ -37,7 +37,9 @@ public class IntColorGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        this.change = Math.max(0f, Math.min(1f, change));
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
+            onComplete();
+        }
     }
 
     @Override
@@ -68,6 +70,14 @@ public class IntColorGlider implements Glider {
     public void setEnd(int end) {
         this.end = end;
         change = 0f;
+    }
+
+    @Override
+    public void onComplete() {
+        start = end;
+        if(completeRunner != null) {
+            completeRunner.run();
+        }
     }
 
     @Override
