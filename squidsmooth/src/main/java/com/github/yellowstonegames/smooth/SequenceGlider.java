@@ -23,6 +23,10 @@ public class SequenceGlider<T extends Glider> implements Glider {
     protected float passed = 0f;
     protected @Nullable Runnable completeRunner;
 
+    protected SequenceGlider(){
+        sequence = null;
+        durations = null;
+    }
     public SequenceGlider(T[] gliders, float[] lengths){
         final int len = Math.min(gliders.length, lengths.length);
         sequence = Arrays.copyOf(gliders, len);

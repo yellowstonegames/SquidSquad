@@ -30,12 +30,12 @@ public class VectorGlider implements Glider {
     }
 
     /**
-     * Copies start into start and into end; does not continue to use the reference to the parameter start.
-     * @param start will be copied into both start and end
+     * Assigns {@link Vector2#Zero} into start and end into end; does not continue to use the reference to the parameter end, or Zero.
+     * @param end will be copied into end
      */
-    public VectorGlider(@Nonnull Vector2 start) {
-        this.start = start.cpy();
-        this.end = start.cpy();
+    public VectorGlider(@Nonnull Vector2 end) {
+        this.start = new Vector2(0f, 0f);
+        this.end = end.cpy();
     }
 
     /**
@@ -46,6 +46,13 @@ public class VectorGlider implements Glider {
     public VectorGlider(@Nonnull Vector2 start, @Nonnull Vector2 end) {
         this.start = start.cpy();
         this.end = end.cpy();
+    }
+
+    public VectorGlider(VectorGlider other) {
+        this(other.start, other.end);
+        this.change = other.change;
+        this.interpolation = other.interpolation;
+        this.completeRunner = other.completeRunner;
     }
 
     public float getX()
