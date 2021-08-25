@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float position using a libGDX Vector2 for the start and the end, with a change
@@ -21,6 +22,7 @@ public class VectorGlider implements Glider {
     protected @Nonnull Vector2 start;
     protected @Nonnull Vector2 end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nullable Runnable completeRunner;
 
     public VectorGlider() {
         start = new Vector2();
@@ -48,15 +50,11 @@ public class VectorGlider implements Glider {
 
     public float getX()
     {
-        if(change >= 1f)
-            return start.set(end).x;
         return interpolation.apply(start.x, end.x, change);
     }
 
     public float getY()
     {
-        if(change >= 1f)
-            return start.set(end).y;
         return interpolation.apply(start.y, end.y, change);
     }
 
@@ -67,7 +65,8 @@ public class VectorGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        this.change = Math.max(0f, Math.min(1f, change));
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f)
+            onComplete();
     }
 
     @Override
@@ -100,6 +99,14 @@ public class VectorGlider implements Glider {
     public void setEnd(@Nonnull Vector2 end) {
         this.end.set(end);
         change = 0f;
+    }
+
+    @Override
+    public void onComplete() {
+        start.set(end);
+        if(completeRunner != null) {
+            completeRunner.run();
+        }
     }
 
     @Override
