@@ -1,9 +1,12 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -18,6 +21,7 @@ public class SequenceGlider<T extends Glider> implements Glider {
     protected float[] durations;
     protected int active = 0;
     protected float passed = 0f;
+    protected @Nullable Runnable completeRunner;
 
     public SequenceGlider(T[] gliders, float[] lengths){
         final int len = Math.min(gliders.length, lengths.length);
@@ -42,6 +46,9 @@ public class SequenceGlider<T extends Glider> implements Glider {
                 passed += durations[active];
                 ++active;
             }
+            if(active == sequence.length) {
+                onComplete();
+            }
         }
     }
 
@@ -59,5 +66,45 @@ public class SequenceGlider<T extends Glider> implements Glider {
         passed = 0f;
     }
 
+    @Override
+    public void onComplete() {
+        if(completeRunner != null)
+            completeRunner.run();
+    }
 
+    @Nullable
+    public Runnable getCompleteRunner() {
+        return completeRunner;
+    }
+
+    public void setCompleteRunner(@Nullable Runnable completeRunner) {
+        this.completeRunner = completeRunner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SequenceGlider<?> that = (SequenceGlider<?>) o;
+
+        if (Float.compare(that.change, change) != 0) return false;
+        if (active != that.active) return false;
+        if (Float.compare(that.passed, passed) != 0) return false;
+        if (!interpolation.equals(that.interpolation)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(sequence, that.sequence)) return false;
+        return Arrays.equals(durations, that.durations);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = BitConversion.floatToIntBits(change);
+        result = 31 * result + interpolation.hashCode();
+        result = 31 * result + Hasher.haagenti.hash(sequence);
+        result = 31 * result + Hasher.haagenti.hash(durations);
+        result = 31 * result + active;
+        result = 31 * result + BitConversion.floatToIntBits(passed);
+        return result;
+    }
 }
