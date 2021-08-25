@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.ds.support.BitConversion;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float value using any float for the start and the end, with a change
@@ -18,6 +19,7 @@ public class FloatGlider implements Glider {
     protected float start;
     protected float end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nullable Runnable completeRunner;
 
     public FloatGlider() {
         start = 0f;
@@ -35,8 +37,6 @@ public class FloatGlider implements Glider {
     }
 
     public float getValue() {
-        if (change >= 1f)
-            return (start = end);
         return interpolation.apply(start, end, change);
     }
 
@@ -47,7 +47,8 @@ public class FloatGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        this.change = Math.max(0f, Math.min(1f, change));
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f)
+            onComplete();
     }
 
     @Override
@@ -78,6 +79,14 @@ public class FloatGlider implements Glider {
     public void setEnd(float end) {
         this.end = end;
         change = 0f;
+    }
+
+    @Override
+    public void onComplete() {
+        start = end;
+        if(completeRunner != null) {
+            completeRunner.run();
+        }
     }
 
     @Override
