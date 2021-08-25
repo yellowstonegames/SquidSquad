@@ -16,4 +16,12 @@ public interface Glider {
     Interpolation getInterpolation();
 
     void setInterpolation(@Nonnull Interpolation interpolation);
+
+    /**
+     * Typically called in {@link #setChange(float)} when change reaches at least 1.0. The default implementation does
+     * nothing, but implementing classes are encouraged to have this call a user-supplied {@link Runnable}, to give the
+     * most flexibility to the user.
+     */
+    default void onComplete() {
+    }
 }

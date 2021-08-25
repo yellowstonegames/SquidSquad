@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float position using an exact Coord for the start and the end, with a change
@@ -18,6 +19,7 @@ public class CoordGlider implements Glider {
     protected @Nonnull Coord start;
     protected @Nonnull Coord end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nullable Runnable completeRunner;
 
     public CoordGlider() {
         start = Coord.get(0, 0);
@@ -34,15 +36,11 @@ public class CoordGlider implements Glider {
 
     public float getX()
     {
-        if(change >= 1f)
-            return (start = end).x;
         return interpolation.apply(start.x, end.x, change);
     }
 
     public float getY()
     {
-        if(change >= 1f)
-            return (start = end).y;
         return interpolation.apply(start.y, end.y, change);
     }
 
@@ -53,7 +51,8 @@ public class CoordGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        this.change = Math.max(0f, Math.min(1f, change));
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f)
+            onComplete();
     }
 
     @Override
@@ -86,6 +85,22 @@ public class CoordGlider implements Glider {
     public void setEnd(@Nonnull Coord end) {
         this.end = end;
         change = 0f;
+    }
+
+    @Nullable
+    public Runnable getCompleteRunner() {
+        return completeRunner;
+    }
+
+    public void setCompleteRunner(@Nullable Runnable completeRunner) {
+        this.completeRunner = completeRunner;
+    }
+
+    @Override
+    public void onComplete() {
+        start = end;
+        if(completeRunner != null)
+            completeRunner.run();
     }
 
     @Override
