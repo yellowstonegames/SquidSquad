@@ -5,6 +5,7 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.MathTools;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float value that represents an angle, using floats measured in turns (between
@@ -25,6 +26,7 @@ public class AngleGlider implements Glider {
     protected float start;
     protected float end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nullable Runnable completeRunner;
 
     public AngleGlider() {
         start = 0f;
@@ -42,8 +44,6 @@ public class AngleGlider implements Glider {
     }
 
     public float getAngle() {
-        if (change >= 1f)
-            return (start = end);
         return MathTools.lerpAngle_(start, end, interpolation.apply(change));
     }
 
@@ -54,7 +54,9 @@ public class AngleGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        this.change = Math.max(0f, Math.min(1f, change));
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
+            onComplete();
+        }
     }
 
     @Override
@@ -85,6 +87,14 @@ public class AngleGlider implements Glider {
     public void setEnd(float end) {
         this.end = end;
         change = 0f;
+    }
+
+    @Override
+    public void onComplete() {
+        start = end;
+        if(completeRunner != null) {
+            completeRunner.run();
+        }
     }
 
     @Override

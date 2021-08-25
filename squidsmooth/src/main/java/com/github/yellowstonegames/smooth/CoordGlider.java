@@ -51,8 +51,9 @@ public class CoordGlider implements Glider {
 
     @Override
     public void setChange(float change) {
-        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f)
+        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
             onComplete();
+        }
     }
 
     @Override
