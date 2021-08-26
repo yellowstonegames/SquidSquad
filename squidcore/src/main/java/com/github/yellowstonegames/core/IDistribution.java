@@ -281,4 +281,19 @@ public interface IDistribution {
         }
 
     }
+
+    /**
+     * A variant on SpikeDistribution that has its range shrunk and moved from {@code [-1,1)} to {@code [0,1)}. It is a
+     * {@link SimpleDistribution}, and the spike is centered on 0.5.
+     */
+    class SimpleSpikeDistribution extends SimpleDistribution implements IDistribution
+    {
+        public static final SimpleSpikeDistribution instance = new SimpleSpikeDistribution();
+
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            final double d = (rng.nextDouble() - 0.5) * 2.0;
+            return d * d * d * 0.5 + 0.5;
+        }
+    }
 }
