@@ -11,10 +11,10 @@ import java.util.Arrays;
 
 /**
  * Runs more than one Glider in a sequence. Meant to be subclassed with a specific Glider type for T.
- * @param <T> a Glider type
+ * @param <T> an IGlider type
  */
 @Beta
-public class SequenceGlider<T extends Glider> implements Glider {
+public class SequenceGlider<T extends IGlider> implements IGlider {
     protected float change = 0f;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
     protected T[] sequence;

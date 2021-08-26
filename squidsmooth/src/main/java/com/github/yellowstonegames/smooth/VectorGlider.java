@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * This is extremely similar to {@link CoordGlider}, but instead of locking positions to integer coordinates, this
  * allows movement to non-integer positions. This should be useful for small movements like shaking or bumping.
  */
-public class VectorGlider implements Glider {
+public class VectorGlider implements IGlider {
     protected float change = 0f;
     protected @Nonnull Vector2 start;
     protected @Nonnull Vector2 end;

@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 /**
  * An interface for properties that change smoothly as {@link #setChange(float)} is called.
  */
-public interface Glider {
+public interface IGlider {
     float getChange();
 
     void setChange(float change);

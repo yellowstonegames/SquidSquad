@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * radians (by multiplying an angle in turns by {@link com.github.yellowstonegames.core.TrigTools#PI2}) or to degrees
  * (by multiplying an angle in turns by {@code 360)}).
  */
-public class AngleGlider implements Glider {
+public class AngleGlider implements IGlider {
     protected float change = 0f;
     protected float start;
     protected float end;

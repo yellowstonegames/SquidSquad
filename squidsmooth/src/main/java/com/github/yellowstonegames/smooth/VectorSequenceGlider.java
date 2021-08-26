@@ -24,7 +24,7 @@ public class VectorSequenceGlider extends SequenceGlider<VectorGlider> {
     public static final VectorSequenceGlider EMPTY = new VectorSequenceGlider();
 
     /**
-     * Predefined gliders for bump animations in different directions (keyed by that direction). It is strongly
+     * Predefined VectorSequenceGliders for bump animations in different directions (keyed by that direction). It is strongly
      * recommended that you copy the VectorSequenceGlider value using {@link #copy()}, and avoid using it directly.
      */
     public static final ObjectObjectOrderedMap<Direction, VectorSequenceGlider> BUMPS =

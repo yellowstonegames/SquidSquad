@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
  * every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
  */
-public class FloatGlider implements Glider {
+public class FloatGlider implements IGlider {
     protected float change = 0f;
     protected float start;
     protected float end;
