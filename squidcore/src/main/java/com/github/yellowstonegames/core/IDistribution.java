@@ -16,7 +16,7 @@ public interface IDistribution {
      * @param rng an EnhancedRandom that this will get one or more random numbers from
      * @return a float within the range of {@link #getLowerBound()} and {@link #getUpperBound()}
      */
-    float nextFloat(EnhancedRandom rng);
+    double nextDouble(EnhancedRandom rng);
 
     /**
      * Gets the lower bound of the distribution. The documentation should specify whether the bound is inclusive or
@@ -47,22 +47,19 @@ public interface IDistribution {
         {
             return new SimpleDistribution() {
                 @Override
-                public float nextFloat(EnhancedRandom rng) {
-                    final float v = otherDistribution.nextFloat(rng);
-                    return v - (v >= 0f ? (int) v : (int)v - 1);
+                public double nextDouble(EnhancedRandom rng) {
+                    final double v = otherDistribution.nextDouble(rng);
+                    return v - (v >= 0.0 ? (int) v : (int)v - 1);
                 }
             };
         }
-////TODO: when GaussianDistribution is back, add this back to docs.
-
-//         * Using the offset allows distributions like {@link GaussianDistribution}, which are centered on 0.0, to become
-//         * centered halfway on 0.5, making the result of this distribution have a Gaussian-like peak on 0.5 instead of
-//         * peaking at the bounds when offset is 0.0.
 
         /**
          * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
          * bounds) by getting the fractional component of {@code offset} plus a result from {@code otherDistribution}.
-         *
+         * Using the offset allows distributions like {@link GaussianDistribution}, which are centered on 0.0, to become
+         * centered halfway on 0.5, making the result of this distribution have a Gaussian-like peak on 0.5 instead of
+         * peaking at the bounds when offset is 0.0.
          * @param otherDistribution any other IDistribution
          * @return a new anonymous implementation of SimpleDistribution that gets the fractional part of {@code otherDistribution}.
          */
@@ -70,16 +67,16 @@ public interface IDistribution {
         {
             return new SimpleDistribution() {
                 @Override
-                public float nextFloat(EnhancedRandom rng) {
-                    final float v = otherDistribution.nextFloat(rng) + offset;
-                    return v - (v >= 0f ? (int) v : (int)v - 1);
+                public double nextDouble(EnhancedRandom rng) {
+                    final double v = otherDistribution.nextDouble(rng) + offset;
+                    return v - (v >= 0.0 ? (int) v : (int)v - 1);
                 }
             };
         }
 
         /**
          * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
-         * bounds) by simply clamping results that are below 0 to 0 and at least 1 to 0.0.99999994 (the largest
+         * bounds) by simply clamping results that are below 0 to 0 and at least 1 to 0.9999999999999999 (the largest
          * float less than 1.0 than can be represented). This will behave very oddly for distributions that are
          * centered on 0.0; for those you probably want {@link #fractionalOffsetDistribution(IDistribution, float)}.
          * @param otherDistribution any other IDistribution
@@ -89,8 +86,8 @@ public interface IDistribution {
         {
             return new SimpleDistribution() {
                 @Override
-                public float nextFloat(EnhancedRandom rng) {
-                    return Math.max(0f, Math.min(0.99999994f, otherDistribution.nextFloat(rng)));
+                public double nextDouble(EnhancedRandom rng) {
+                    return Math.max(0.0, Math.min(0.9999999999999999, otherDistribution.nextDouble(rng)));
                 }
             };
         }
@@ -113,6 +110,38 @@ public interface IDistribution {
         @Override
         public float getUpperBound() {
             return 1f;
+        }
+    }
+
+    /**
+     * On each call to getDouble(), this gets one Gaussian ("normally") distributed double value with mean 0.0 and
+     * standard deviation 1. It simply calls {@link EnhancedRandom#nextGaussian()}. If you want to change the standard
+     * deviation, multiply the result of nextDouble() by your desired standard deviation; if you then want to change the
+     * mean, add your desired mean to that last result.
+     */
+    class GaussianDistribution implements IDistribution {
+
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            return rng.nextGaussian();
+        }
+
+        /**
+         * The lower exclusive bound is technically negative infinity, but in practice is only -7.929080009460449 .
+         * @return negative infinity
+         */
+        @Override
+        public float getLowerBound() {
+            return Float.NEGATIVE_INFINITY;
+        }
+
+        /**
+         * The upper exclusive bound is technically positive infinity, but in practice is only 7.929080009460449 .
+         * @return positive infinity
+         */
+        @Override
+        public float getUpperBound() {
+            return Float.POSITIVE_INFINITY;
         }
     }
 }
