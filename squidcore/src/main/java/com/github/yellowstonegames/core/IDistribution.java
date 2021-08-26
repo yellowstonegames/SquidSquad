@@ -23,16 +23,16 @@ public interface IDistribution {
      * exclusive; if unspecified, it can be assumed to be inclusive (like {@link EnhancedRandom#nextDouble()}).
      * @return the lower bound of the distribution
      */
-    default float getLowerBound(){
-        return 0f;
+    default double getLowerBound(){
+        return 0.0;
     }
     /**
      * Gets the upper bound of the distribution. The documentation should specify whether the bound is inclusive or
      * exclusive; if unspecified, it can be assumed to be exclusive (like {@link EnhancedRandom#nextDouble()}).
      * @return the upper bound of the distribution
      */
-    default float getUpperBound(){
-        return 1f;
+    default double getUpperBound(){
+        return 1.0;
     }
     
     abstract class SimpleDistribution implements IDistribution {
@@ -98,8 +98,8 @@ public interface IDistribution {
          * @return the lower inclusive bound of the distribution, 0.0
          */
         @Override
-        public float getLowerBound() {
-            return 0f;
+        public double getLowerBound() {
+            return 0.0;
         }
 
         /**
@@ -108,8 +108,8 @@ public interface IDistribution {
          * @return the upper exclusive bound of the distribution, 1.0
          */
         @Override
-        public float getUpperBound() {
-            return 1f;
+        public double getUpperBound() {
+            return 1.0;
         }
     }
 
@@ -132,8 +132,8 @@ public interface IDistribution {
          * @return negative infinity
          */
         @Override
-        public float getLowerBound() {
-            return Float.NEGATIVE_INFINITY;
+        public double getLowerBound() {
+            return Double.NEGATIVE_INFINITY;
         }
 
         /**
@@ -141,8 +141,8 @@ public interface IDistribution {
          * @return positive infinity
          */
         @Override
-        public float getUpperBound() {
-            return Float.POSITIVE_INFINITY;
+        public double getUpperBound() {
+            return Double.POSITIVE_INFINITY;
         }
     }
     /**
@@ -248,5 +248,37 @@ public interface IDistribution {
             return i_lambda < 0.0 ? 0.0 : Double.POSITIVE_INFINITY;
         }
     }
+    /**
+     * An IDistribution that produces results between -1.0 inclusive and 1.0 exclusive, but is much more likely to produce
+     * results near 0.0, and does not "round off" like a Gaussian curve around the midpoint.
+     */
+    class SpikeDistribution implements IDistribution {
+        public static final SpikeDistribution instance = new SpikeDistribution();
 
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            final double d = (rng.nextDouble() - 0.5) * 2.0;
+            return d * d * d;
+        }
+
+        /**
+         * Gets the lower bound of the distribution, which is -1, inclusive.
+         * @return the lower bound of the distribution
+         */
+        @Override
+        public double getLowerBound() {
+            return -1.0;
+        }
+
+        /**
+         * Gets the upper bound of the distribution, which is 1, exclusive.
+         *
+         * @return the upper bound of the distribution
+         */
+        @Override
+        public double getUpperBound() {
+            return 1.0;
+        }
+
+    }
 }
