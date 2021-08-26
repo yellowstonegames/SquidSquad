@@ -120,6 +120,7 @@ public interface IDistribution {
      * mean, add your desired mean to that last result.
      */
     class GaussianDistribution implements IDistribution {
+        public static final GaussianDistribution instance = new GaussianDistribution();
 
         @Override
         public double nextDouble(EnhancedRandom rng) {
@@ -144,4 +145,19 @@ public interface IDistribution {
             return Float.POSITIVE_INFINITY;
         }
     }
+    /**
+     * An IDistribution that produces results between 0.0 inclusive and 1.0 exclusive, but is much more likely to produce
+     * results near 0.0 or 1.0, further from 0.5.
+     */
+    class BathtubDistribution extends IDistribution.SimpleDistribution implements IDistribution {
+        public static final BathtubDistribution instance = new BathtubDistribution();
+
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            double d = (rng.nextDouble() - 0.5) * 2.0;
+            d = d * d * d + 1.0;
+            return d - (int)d;
+        }
+    }
+
 }
