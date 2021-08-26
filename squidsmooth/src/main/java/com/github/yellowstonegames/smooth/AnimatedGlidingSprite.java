@@ -22,6 +22,7 @@ public class AnimatedGlidingSprite extends Sprite {
     public Animation<? extends TextureRegion> animation;
     public CoordGlider location;
     public VectorSequenceGlider smallMotion;
+    protected final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
     {
@@ -31,6 +32,7 @@ public class AnimatedGlidingSprite extends Sprite {
         super();
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
+        smallMotion = ownEmptyMotion;
     }
 
     public AnimatedGlidingSprite(Animation<? extends TextureRegion> animation, Coord coord) {
@@ -42,7 +44,7 @@ public class AnimatedGlidingSprite extends Sprite {
         this.animation = animation;
         setRegion(animation.getKeyFrame(0f));
         location = new CoordGlider(start, end);
-        smallMotion = VectorSequenceGlider.EMPTY.copy();
+        smallMotion = ownEmptyMotion;
     }
 
     /**
@@ -87,5 +89,14 @@ public class AnimatedGlidingSprite extends Sprite {
 
     public void setLocation(CoordGlider location) {
         this.location = location;
+    }
+
+    public VectorSequenceGlider getSmallMotion() {
+        return smallMotion;
+    }
+
+    public void setSmallMotion(VectorSequenceGlider smallMotion) {
+        if(smallMotion == null) this.smallMotion = ownEmptyMotion;
+        else this.smallMotion = smallMotion;
     }
 }
