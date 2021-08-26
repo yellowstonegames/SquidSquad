@@ -1,0 +1,118 @@
+package com.github.yellowstonegames.core;
+
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+
+/**
+ * A way to take an {@link EnhancedRandom} and get one or more random numbers from it to produce a float in some statistical
+ * distribution, such as Gaussian (also called the normal distribution), exponential, or various simpler schemes that
+ * don't have common mathematical names. An example of the last category is "spike" for a distribution that is very
+ * likely to be 0 and quickly drops off to being less likely for positive or negative results between 0 and -1 or 1, or
+ * "bathtub" for the "spike" distribution's fractional part from 0 to 1 (which is likely to be 0 or 1 and very unlikely
+ * to be near 0.5).
+ */
+public interface IDistribution {
+    /**
+     * Gets a float between {@link #getLowerBound()} and {@link #getUpperBound()} that obeys this distribution.
+     * @param rng an EnhancedRandom that this will get one or more random numbers from
+     * @return a float within the range of {@link #getLowerBound()} and {@link #getUpperBound()}
+     */
+    float nextFloat(EnhancedRandom rng);
+
+    /**
+     * Gets the lower bound of the distribution. The documentation should specify whether the bound is inclusive or
+     * exclusive; if unspecified, it can be assumed to be inclusive (like {@link EnhancedRandom#nextDouble()}).
+     * @return the lower bound of the distribution
+     */
+    default float getLowerBound(){
+        return 0f;
+    }
+    /**
+     * Gets the upper bound of the distribution. The documentation should specify whether the bound is inclusive or
+     * exclusive; if unspecified, it can be assumed to be exclusive (like {@link EnhancedRandom#nextDouble()}).
+     * @return the upper bound of the distribution
+     */
+    default float getUpperBound(){
+        return 1f;
+    }
+    
+    abstract class SimpleDistribution implements IDistribution {
+
+        /**
+         * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
+         * bounds) by getting the fractional component of a result from {@code otherDistribution}.
+         * @param otherDistribution any other IDistribution
+         * @return a new anonymous implementation of SimpleDistribution that gets the fractional part of {@code otherDistribution}.
+         */
+        public static SimpleDistribution fractionalDistribution(final IDistribution otherDistribution)
+        {
+            return new SimpleDistribution() {
+                @Override
+                public float nextFloat(EnhancedRandom rng) {
+                    final float v = otherDistribution.nextFloat(rng);
+                    return v - (v >= 0f ? (int) v : (int)v - 1);
+                }
+            };
+        }
+////TODO: when GaussianDistribution is back, add this back to docs.
+
+//         * Using the offset allows distributions like {@link GaussianDistribution}, which are centered on 0.0, to become
+//         * centered halfway on 0.5, making the result of this distribution have a Gaussian-like peak on 0.5 instead of
+//         * peaking at the bounds when offset is 0.0.
+
+        /**
+         * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
+         * bounds) by getting the fractional component of {@code offset} plus a result from {@code otherDistribution}.
+         *
+         * @param otherDistribution any other IDistribution
+         * @return a new anonymous implementation of SimpleDistribution that gets the fractional part of {@code otherDistribution}.
+         */
+        public static SimpleDistribution fractionalOffsetDistribution(final IDistribution otherDistribution, final float offset)
+        {
+            return new SimpleDistribution() {
+                @Override
+                public float nextFloat(EnhancedRandom rng) {
+                    final float v = otherDistribution.nextFloat(rng) + offset;
+                    return v - (v >= 0f ? (int) v : (int)v - 1);
+                }
+            };
+        }
+
+        /**
+         * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
+         * bounds) by simply clamping results that are below 0 to 0 and at least 1 to 0.0.99999994 (the largest
+         * float less than 1.0 than can be represented). This will behave very oddly for distributions that are
+         * centered on 0.0; for those you probably want {@link #fractionalOffsetDistribution(IDistribution, float)}.
+         * @param otherDistribution any other IDistribution
+         * @return a new anonymous implementation of SimpleDistribution that clamps {@code otherDistribution} in range.
+         */
+        public static SimpleDistribution clampedDistribution(final IDistribution otherDistribution)
+        {
+            return new SimpleDistribution() {
+                @Override
+                public float nextFloat(EnhancedRandom rng) {
+                    return Math.max(0f, Math.min(0.99999994f, otherDistribution.nextFloat(rng)));
+                }
+            };
+        }
+
+        /**
+         * Gets the lower inclusive bound, which is 0.0.
+         *
+         * @return the lower inclusive bound of the distribution, 0.0
+         */
+        @Override
+        public float getLowerBound() {
+            return 0f;
+        }
+
+        /**
+         * Gets the upper exclusive bound of the distribution, which is 1.0.
+         *
+         * @return the upper exclusive bound of the distribution, 1.0
+         */
+        @Override
+        public float getUpperBound() {
+            return 1f;
+        }
+    }
+}
