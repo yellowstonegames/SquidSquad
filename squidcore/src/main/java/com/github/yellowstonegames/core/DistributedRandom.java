@@ -3,6 +3,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -50,7 +51,7 @@ public class DistributedRandom extends Random implements EnhancedRandom {
 
     @Override
     public int next(int bits) {
-        return (int)((1L << bits) * distribution.nextDouble(random));
+        return (int)(long)((1L << bits) * distribution.nextDouble(random));
     }
 
     @Override
@@ -64,6 +65,42 @@ public class DistributedRandom extends Random implements EnhancedRandom {
     }
 
     @Override
+    public void nextBytes(@Nonnull byte[] bytes) {
+        for (int i = 0; i < bytes.length; ) { for (int n = Math.min(bytes.length - i, 8); n-- > 0;) { bytes[i++] = (byte)(256 * distribution.nextDouble(random)); } }
+    }
+
+    @Override
+    public int nextInt() {
+        return (int)(long)(0x1p32 * distribution.nextDouble(random));
+    }
+
+    @Override
+    public int nextInt(int bound) {
+        return (int)(bound * distribution.nextDouble(random)) & ~(bound >> 31);
+    }
+
+    @Override
+    public int nextSignedInt(int outerBound) {
+        return (int)(outerBound * distribution.nextDouble(random));
+    }
+
+    @Override
+    public boolean nextBoolean() {
+        return distribution.nextDouble(random) < 0.5f;
+    }
+
+    /**
+     * Because nextGaussian() already specifies a distribution, this uses {@link FourWheelRandom#nextGaussian()} as-is.
+     * @return the next pseudorandom, approximately Gaussian ("normally") distributed double value with mean 0.0 and
+     *         standard deviation 1.0 from this random number generator's sequence
+     */
+    @Override
+    public double nextGaussian() {
+        return random.nextGaussian();
+    }
+
+    @Override
+    @Nonnull
     public DistributedRandom copy() {
         return new DistributedRandom(distribution, random.getStateA(), random.getStateB(), random.getStateC(), random.getStateD());
     }
