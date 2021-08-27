@@ -1405,11 +1405,13 @@ public class DungeonProcessor implements PlaceGenerator{
      * @return sb, after modifications, for chaining
      */
     public StringBuilder appendTo(StringBuilder sb) {
-        for (int y = height - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                sb.append(dungeon[x][y]);
+        if(dungeon != null) {
+            for (int y = height - 1; y >= 0; y--) {
+                for (int x = 0; x < width; x++) {
+                    sb.append(dungeon[x][y]);
+                }
+                sb.append('\n');
             }
-            sb.append('\n');
         }
         return sb;
     }
