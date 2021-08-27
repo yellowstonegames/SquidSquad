@@ -118,6 +118,7 @@ public interface IDistribution {
      * likelihood. Its range is the same as {@link EnhancedRandom#nextDouble()}: inclusive on 0, exclusive on 1.
      */
     class UniformDistribution extends SimpleDistribution {
+        public static final UniformDistribution instance = new UniformDistribution();
         @Override
         public double nextDouble(EnhancedRandom rng) {
             return rng.nextDouble();
