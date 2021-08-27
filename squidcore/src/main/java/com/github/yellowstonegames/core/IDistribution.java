@@ -114,6 +114,17 @@ public interface IDistribution {
     }
 
     /**
+     * The simplest possible distribution; this returns every possible double in its range with approximately equal
+     * likelihood. Its range is the same as {@link EnhancedRandom#nextDouble()}: inclusive on 0, exclusive on 1.
+     */
+    class UniformDistribution extends SimpleDistribution {
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            return rng.nextDouble();
+        }
+    }
+
+    /**
      * On each call to getDouble(), this gets one Gaussian ("normally") distributed double value with mean 0.0 and
      * standard deviation 1. It simply calls {@link EnhancedRandom#nextGaussian()}. If you want to change the standard
      * deviation, multiply the result of nextDouble() by your desired standard deviation; if you then want to change the
