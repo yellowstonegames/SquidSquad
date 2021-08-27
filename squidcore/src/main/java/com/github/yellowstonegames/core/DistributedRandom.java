@@ -99,6 +99,26 @@ public class DistributedRandom extends Random implements EnhancedRandom {
         return random.nextGaussian();
     }
 
+    /**
+     * This acts the same as {@link FourWheelRandom#nextExclusiveDoubleEquidistant()}; it does not use the optimizations
+     * from {@link FourWheelRandom#nextExclusiveDouble()}, because those aren't reasonable when distributed.
+     * @return a pseudo-random double between 0.0, exclusive, and 1.0, exclusive
+     */
+    @Override
+    public double nextExclusiveDouble() {
+        return (nextLong(0x1FFFFFFFFFFFFFL) + 1L) * 0x1p-53;
+    }
+
+    /**
+     * This acts the same as {@link FourWheelRandom#nextExclusiveFloatEquidistant()}; it does not use the optimizations
+     * from {@link FourWheelRandom#nextExclusiveFloat()}, because those aren't reasonable when distributed.
+     * @return a pseudo-random float between 0.0, exclusive, and 1.0, exclusive
+     */
+    @Override
+    public float nextExclusiveFloat() {
+        return (nextInt(0xFFFFFF) + 1) * 0x1p-24f;
+    }
+
     @Override
     @Nonnull
     public DistributedRandom copy() {
@@ -160,5 +180,21 @@ public class DistributedRandom extends Random implements EnhancedRandom {
     @Override
     public void setSeed(long seed) {
         random.setSeed(seed);
+    }
+
+    public IDistribution.SimpleDistribution getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(IDistribution.SimpleDistribution distribution) {
+        this.distribution = distribution;
+    }
+
+    public FourWheelRandom getRandom() {
+        return random;
+    }
+
+    public void setRandom(FourWheelRandom random) {
+        this.random = random;
     }
 }
