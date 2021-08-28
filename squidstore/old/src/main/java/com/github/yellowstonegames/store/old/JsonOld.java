@@ -3,6 +3,7 @@ package com.github.yellowstonegames.store.old;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
+import com.github.yellowstonegames.core.Base;
 import com.github.yellowstonegames.old.v300.*;
 
 import javax.annotation.Nonnull;
@@ -45,7 +46,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new LightRNG(state);
             }
         });
@@ -69,7 +70,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new DiverRNG(state);
             }
         });
@@ -93,7 +94,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new GWTRNG(state);
             }
         });
@@ -117,7 +118,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new LinnormRNG(state);
             }
         });
@@ -141,7 +142,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new SilkRNG(state);
             }
         });
@@ -165,7 +166,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Long.parseLong(s.substring(6, tick), 36);
+                final long state = Base.BASE36.readLong(s, 6, tick);
                 return new ThrustAltRNG(state);
             }
         });

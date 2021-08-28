@@ -280,7 +280,7 @@ public final class JsonCore {
             @Override
             public Hasher read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new Hasher(Long.valueOf(jsonData.asString(), 36));
+                return new Hasher(Base.BASE36.readLong(jsonData.asString()));
             }
         });
     }
