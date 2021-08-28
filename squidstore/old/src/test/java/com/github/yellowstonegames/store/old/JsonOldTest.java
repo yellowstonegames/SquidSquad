@@ -2,10 +2,7 @@ package com.github.yellowstonegames.store.old;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.yellowstonegames.old.v300.DiverRNG;
-import com.github.yellowstonegames.old.v300.GWTRNG;
-import com.github.yellowstonegames.old.v300.LightRNG;
-import com.github.yellowstonegames.old.v300.SilkRNG;
+import com.github.yellowstonegames.old.v300.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,6 +29,32 @@ public class JsonOldTest {
         String data = json.toJson(random);
         System.out.println(data);
         DiverRNG random2 = json.fromJson(DiverRNG.class, data);
+        System.out.println(Long.toString(random2.getSelectedState(0), 36));
+        Assert.assertEquals(random.nextLong(), random2.nextLong());
+    }
+
+    @Test
+    public void testLinnormRNG() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerLinnormRNG(json);
+        LinnormRNG random = new LinnormRNG(123456789);
+        random.nextLong();
+        String data = json.toJson(random);
+        System.out.println(data);
+        LinnormRNG random2 = json.fromJson(LinnormRNG.class, data);
+        System.out.println(Long.toString(random2.getSelectedState(0), 36));
+        Assert.assertEquals(random.nextLong(), random2.nextLong());
+    }
+
+    @Test
+    public void testThrustAltRNG() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerThrustAltRNG(json);
+        ThrustAltRNG random = new ThrustAltRNG(123456789);
+        random.nextLong();
+        String data = json.toJson(random);
+        System.out.println(data);
+        ThrustAltRNG random2 = json.fromJson(ThrustAltRNG.class, data);
         System.out.println(Long.toString(random2.getSelectedState(0), 36));
         Assert.assertEquals(random.nextLong(), random2.nextLong());
     }
