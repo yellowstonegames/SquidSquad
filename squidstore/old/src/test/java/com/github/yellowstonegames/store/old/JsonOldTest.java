@@ -84,4 +84,17 @@ public class JsonOldTest {
         System.out.println(Long.toString(random2.getSelectedState(0), 36));
         Assert.assertEquals(random.nextLong(), random2.nextLong());
     }
+
+    @Test
+    public void testLongPeriodRNG() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerLongPeriodRNG(json);
+        LongPeriodRNG random = new LongPeriodRNG(123456789);
+        random.nextLong();
+        String data = json.toJson(random);
+        System.out.println(data);
+        LongPeriodRNG random2 = json.fromJson(LongPeriodRNG.class, data);
+        System.out.println(Long.toString(random2.getSelectedState(0), 36));
+        Assert.assertEquals(random.nextLong(), random2.nextLong());
+    }
 }

@@ -25,6 +25,7 @@ public final class JsonOld {
         registerSilkRNG(json);
         registerLinnormRNG(json);
         registerThrustAltRNG(json);
+        registerLongPeriodRNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
 
@@ -168,6 +169,40 @@ public final class JsonOld {
                 final int tick = s.indexOf('`', 6);
                 final long state = Base.BASE36.readLong(s, 6, tick);
                 return new ThrustAltRNG(state);
+            }
+        });
+    }
+
+    /**
+     * Registers LongPeriodRNG with the given Json object, so LongPeriodRNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLongPeriodRNG(@Nonnull Json json) {
+        json.addClassTag("#LPeR", LongPeriodRNG.class);
+        json.setSerializer(LongPeriodRNG.class, new Json.Serializer<LongPeriodRNG>() {
+            @Override
+            public void write(Json json, LongPeriodRNG object, Class knownType) {
+                StringBuilder sb = new StringBuilder(31);
+                Base.BASE36.appendSigned(sb, object.choice);
+                for (int i = 0; i < 16; i++) {
+                    sb.append('~');
+                    Base.BASE36.appendSigned(sb, object.state[i]);
+                }
+                json.writeValue("#LPeR`" + sb + "`");
+            }
+
+            @Override
+            public LongPeriodRNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 40) return null;
+                int delim = 6;
+                LongPeriodRNG rng = new LongPeriodRNG(1L);
+                rng.choice = Base.BASE36.readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                for (int i = 0; i < 16; i++) {
+                    rng.state[i] = Base.BASE36.readLong(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                }
+                return rng;
             }
         });
     }
