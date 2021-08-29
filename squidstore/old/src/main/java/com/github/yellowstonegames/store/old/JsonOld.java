@@ -207,4 +207,39 @@ public final class JsonOld {
         });
     }
 
+    /**
+     * Registers XoshiroStarPhi32RNG with the given Json object, so XoshiroStarPhi32RNG can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerXoshiroStarPhi32RNG(@Nonnull Json json) {
+        json.addClassTag("#XSPR", XoshiroStarPhi32RNG.class);
+        json.setSerializer(XoshiroStarPhi32RNG.class, new Json.Serializer<XoshiroStarPhi32RNG>() {
+            @Override
+            public void write(Json json, XoshiroStarPhi32RNG object, Class knownType) {
+                StringBuilder sb = new StringBuilder(31);
+                Base.BASE36.appendSigned(sb, object.getStateA());
+                sb.append('~');
+                Base.BASE36.appendSigned(sb, object.getStateB());
+                sb.append('~');
+                Base.BASE36.appendSigned(sb, object.getStateC());
+                sb.append('~');
+                Base.BASE36.appendSigned(sb, object.getStateD());
+                json.writeValue("#XSPR`" + sb + "`");
+            }
+
+            @Override
+            public XoshiroStarPhi32RNG read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 14) return null;
+                int delim = 6;
+                int stateA = Base.BASE36.readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                int stateB = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int stateC = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int stateD = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
+                return new XoshiroStarPhi32RNG(stateA, stateB, stateC, stateD);
+            }
+        });
+    }
+
 }
