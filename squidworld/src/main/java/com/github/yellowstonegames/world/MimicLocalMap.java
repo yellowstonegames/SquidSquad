@@ -127,7 +127,7 @@ public class MimicLocalMap extends LocalMap {
      * room than it would with most text-based formats, and even beats uncompressed binary storage of the map by a
      * factor of 9.4f. The map data won't change here, so this should stay compatible.
      */
-    public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮰囨䈢ħ䐤࠰ࠨ•Ⱙအ䎢ŘňÆ䴣ȢؤF䭠゠ᔤ∠偰ഀ\u0560₠ኼܨā᭮笁\u242AЦᇅ扰रࠦ吠䠪ࠦ䠧娮⠬䠬❁Ềក\u1CAA͠敠ἒ慽Ê䄄洡儠䋻䨡㈠䙬坈མŨྈ䞻䛊哚晪⁞倰h·䡂Ļæ抂㴢္\u082E搧䈠ᇩᒠ᩠ɀ༨ʨڤʃ奲ࢠ፠ᆙả䝆䮳りĩ(ॠી᧰྄e॑ᤙ䒠剠⁌ဥࠩФΝ䂂⢴ᑠ㺀ᢣ䗨dBqÚ扜冢\u0FE5\u0A62䐠劣ေ¯䂍䞀ၰ\u0E67ᐓ〈ᄠ塠Ѡ̀ာ⠤ᡤŒęጓ憒‱〿䌳℔ᐼ䊢⁚䤿ӣ◚㙀\u0C74Ӹ抠⣀ĨǊǸ䁃း₺Ý䂁ᜤ䢑V⁄樫焠\u0A60\u2E78⎲Ĉ䁎勯戡璠悈ᠥ嘡⩩‰ನ檨㡕䶪၁@恑ࠣ䘣ࢠᅀᡎ劰桠Өॢಸ熛փࢸ䀹ఽ䅠勖ਰ۴̄ጺಢ䈠ᙠᨭ\u2FE0焠Ӡܼ䇂䒠ᯀԨĠ愜᪅䦥㶐ୀ\u09C5Ƣ*䂕ॹ∠咠р\u0604У無~⁆Г椠痠\u1CA9Ⱓס㩖ᝋ司楠२ญⳘ䬣汤ǿã㱩ᖷ掠Àݒ㑁c‾䮴,\u2452僢ᰣ缠ɋ乨\u0378䁡绑ס傓䁔瀾ሺÑ䀤ो刡开烀\u0A76Ё䈠䈰״Áj⁑䠡戢碠㘀አ䃉㪙嘈ʂø⸪௰₈㐲暤ƩDᬿ䂖剙書\u0FE0㴢\u0089㘩Ĉ䰵掀栰杁4〡Ƞ⭀\u1AE0㠰㹨Zコത\u009E䂖ࠠⴠ縣吠ᆠʡ㡀䀧否䣝Ӧ愠Ⓚ\u1CA2ಠո*①ӈԥ獀խ@㟬箬㐱\u31BE簽Ɛᩆᇞ稯禚⟶⣑аβǚ㥎Ḇ⌢㑆 搡⁗ဣ刣\u0C45䑒8怺₵⤦a5ਵ㏰ᩄ猢ฦ䬞㐷䈠呠カ愠ۀ\u1C92傠ᅼ߃ᙊ䢨ၠླྀš亀ƴ̰刷ʼ墨愠  ";
+    public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮱ᅨ䄢īФࢰࡠ⁀傠אୠ↡\u009A̴ǈర߀ᙠḪ͞ń䅡抠䅡*ۄHԨࡁူـူ※ɞ䃉値ㄸ磰ሢ刡䑂曨ໄͨĨҸިʲ₰ᆰɭপ恨⠼怴\u202E悘″ₐ⁀⫀\u0080᥀\u0D49ᾇ䃸䁙ԩaဩ㞽硑乌䂉怺\u16FE⠧Ф䨠憐吨䁤⁓倰⠭㟳∠攡È䀤⁝〹濇䃥ᥨᄡ\u0B00ᕔṀذࠡ吠Ց㈢檲䂔›l⩠䐤䨡ሰ碠⩈㎺䴥hƬȢ℡♬㱠ᵀരೈdВÈ棵䓠ɀېŨڐ∣䤠梠╠\u0AA9\u1AD9栦䐢听ጡ䒠杔྄╻ඌ璶濟Ở俢㛾╚h䁉ྨËÆ㰯⟠淎ɀϴˈⱽ•ᠭ⩨\u243ChȚƞ㱀ǳ͢ð䂇፭䇁K်ࠢ䘡灳વ敁⑬⇪喑㠡㎺掲ਣ⒳ਲ峸ϥ═呷‴䠠䉤籠ጰڢ䲡㰳䕴Ǐ!‧ࠧᨡᒠрைћᦒ娰ڥá)⁖R棨款௩ૄ滕■◐䀫瀹痖㨨֪䐣無c⁖ິŶ恕 䠪⤩剷ဦȦ㨈㇀ψڒè䀤\u1AE8òŪⱀƼޅ⩧ଽ\u20FA®摆ὦሡ窠\u0EBAࠤ爡奷⇡ᖒ\u009B䀤Č灉穜汨ਁᆀ䄨Ý䅹\u20C0ɢ͡㋎㺮\u0A80䆽ჍҪވ⦬ᰢ欠啔ါ䐢⁖祿ෛ爘㸣೫࠹\u1BF4樒糰䁖簭䦗甚‸ધڜ厌ᬎ械䀨̠䄠ᯀä戽ဠ☠㪁↣⩠Ƅa婆拀Ⓚ۴,圵ࠨ䀬䘥ᅻ㗧怤ᨨărં咠ӨƑɔࠠड桉\u0E910〸ጱ朰²,ईġ䠡䌦漒\u0E64Ĕ䁁ඐ浶䆡ᠲ⟐䕌ղV‧⃑嘳С㶠⨩䄈İǊð\u202Aᐦ㴚ဦᔣ⼢ษ倰⛫呁ᙂ⪃⠡ଠ砳۹䮺Р䲠╰䈠٠ᨨÐ䃫ኵဲ\u1943㋺ဤ㸡偭Р ";
 
     /**
      * Constructs a 256x256 unprojected local map that will use land forms with a similar shape to Australia.
