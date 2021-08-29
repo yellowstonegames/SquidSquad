@@ -54,8 +54,6 @@ public final class LZSEncoding {
             return null;
         if (compressed.isEmpty())
             return "";
-        // function(index) { return getBaseValue(keyStrBase64,
-        // input.charAt(index)); }
         return _decompress(compressed.length(), 32, compressed, valStrBase64, 0);
     }
 
@@ -353,7 +351,6 @@ public final class LZSEncoding {
         return _decompress(compressed.length(), 32768, compressed, null, 0);
     }
 
-    //val = (modify == null) ? (char) (getNextValue[0] + offset) : modify[getNextValue[0]];
     private native static String _decompress(int length, int resetValue, String comp, String modify, int offset) /*-{
     var dictionary = [],
         next,
