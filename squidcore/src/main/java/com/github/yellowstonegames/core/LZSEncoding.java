@@ -68,10 +68,9 @@ public final class LZSEncoding {
     public static String decompressFromBase64(String compressed) {
         if (compressed == null)
             return null;
-        if (compressed.isEmpty())
+        if (compressed.length() == 0)
             return "";
-        final char[] input = compressed.toCharArray();
-        return _decompress(input.length, 32, input, valStrBase64);
+        return _decompress(compressed.length(), compressed, valStrBase64);
     }
 
     /**
@@ -94,10 +93,9 @@ public final class LZSEncoding {
     public static String decompressFromUTF16(String compressed) {
         if (compressed == null)
             return null;
-        if (compressed.isEmpty())
+        if (compressed.length() == 0)
             return "";
-        final char[] comp = compressed.toCharArray();
-        return _decompress(comp.length, 16384, comp, -32);
+        return _decompress(compressed.length(), 16384, compressed, -32);
     }
 
     /**
@@ -118,9 +116,8 @@ public final class LZSEncoding {
      */
     public static String decompressFromEncodedURIComponent(String compressed) {
         if (compressed == null) return null;
-        if (compressed.isEmpty()) return "";
-        final char[] input = compressed.toCharArray();
-        return _decompress(input.length, 32, input, valStrUriSafe);
+        if (compressed.length() == 0) return "";
+        return _decompress(compressed.length(), compressed, valStrUriSafe);
     }
 
     /**
@@ -347,19 +344,19 @@ public final class LZSEncoding {
             return null;
         if (compressed.isEmpty())
             return "";
-        return _decompress(compressed.length(), 32768, compressed.toCharArray(), 0);
+        return _decompress(compressed.length(), 32768, compressed, 0);
     }
 
-    private static String _decompress(int length, int resetValue, char[] getNextValue, char[] modify) {
+    private static String _decompress(int length, String getNextValue, char[] modify) {
         if(getNextValue == null)
             return null;
-        if(getNextValue.length == 0)
+        if(getNextValue.length() == 0)
             return "";
         ObjectList<String> dictionary = new ObjectList<>();
-        int enlargeIn = 4, dictSize = 4, numBits = 3, position = resetValue, index = 1, resb, maxpower, power;
+        int enlargeIn = 4, dictSize = 4, numBits = 3, position = 32, index = 1, resb, maxpower, power;
         String entry, w, c;
         ObjectList<String> result = new ObjectList<>();
-        char bits, val = modify[getNextValue[0]];
+        char bits, val = modify[getNextValue.charAt(0)];
 
         for (char i = 0; i < 3; i++) {
             dictionary.add(i, String.valueOf(i));
@@ -372,8 +369,8 @@ public final class LZSEncoding {
             resb = val & position;
             position >>= 1;
             if (position == 0) {
-                position = resetValue;
-                val = modify[getNextValue[index++]];
+                position = 32;
+                val = modify[getNextValue.charAt(index++)];
             }
             bits |= (resb > 0 ? 1 : 0) << power++;
         }
@@ -387,8 +384,8 @@ public final class LZSEncoding {
                     resb = val & position;
                     position >>= 1;
                     if (position == 0) {
-                        position = resetValue;
-                        val = modify[getNextValue[index++]];
+                        position = 32;
+                        val = modify[getNextValue.charAt(index++)];
                     }
                     bits |= (resb > 0 ? 1 : 0) << power++;
                 }
@@ -402,8 +399,8 @@ public final class LZSEncoding {
                     resb = val & position;
                     position >>= 1;
                     if (position == 0) {
-                        position = resetValue;
-                        val = modify[getNextValue[index++]];
+                        position = 32;
+                        val = modify[getNextValue.charAt(index++)];
                     }
                     bits |= (resb > 0 ? 1 : 0) << power++;
                 }
@@ -426,8 +423,8 @@ public final class LZSEncoding {
                 resb = val & position;
                 position >>= 1;
                 if (position == 0) {
-                    position = resetValue;
-                    val = modify[getNextValue[index++]];
+                    position = 32;
+                    val = modify[getNextValue.charAt(index++)];
                 }
                 cc |= (resb > 0 ? 1 : 0) << power++;
             }
@@ -440,8 +437,8 @@ public final class LZSEncoding {
                         resb = val & position;
                         position >>= 1;
                         if (position == 0) {
-                            position = resetValue;
-                            val = modify[getNextValue[index++]];
+                            position = 32;
+                            val = modify[getNextValue.charAt(index++)];
                         }
                         bits |= (resb > 0 ? 1 : 0) << power++;
                     }
@@ -458,8 +455,8 @@ public final class LZSEncoding {
                         resb = val & position;
                         position >>= 1;
                         if (position == 0) {
-                            position = resetValue;
-                            val = modify[getNextValue[index++]];
+                            position = 32;
+                            val = modify[getNextValue.charAt(index++)];
                         }
                         bits |= (resb > 0 ? 1 : 0) << power++;
                     }
@@ -505,16 +502,16 @@ public final class LZSEncoding {
         }
 
     }
-    private static String _decompress(int length, int resetValue, char[] getNextValue, int offset) {
+    private static String _decompress(int length, int resetValue, String getNextValue, int offset) {
         if(getNextValue == null)
             return null;
-        if(getNextValue.length == 0)
+        if(getNextValue.length() == 0)
             return "";
         ObjectList<String> dictionary = new ObjectList<>();
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = resetValue, index = 1, resb, maxpower, power;
         String entry, w, c;
         ObjectList<String> result = new ObjectList<>();
-        char bits, val = (char) (getNextValue[0] + offset);
+        char bits, val = (char) (getNextValue.charAt(0) + offset);
 
         for (char i = 0; i < 3; i++) {
             dictionary.add(i, String.valueOf(i));
@@ -528,7 +525,7 @@ public final class LZSEncoding {
             position >>= 1;
             if (position == 0) {
                 position = resetValue;
-                val = (char) (getNextValue[index++] + offset);
+                val = (char) (getNextValue.charAt(index++) + offset);
             }
             bits |= (resb > 0 ? 1 : 0) << power++;
         }
@@ -543,7 +540,7 @@ public final class LZSEncoding {
                     position >>= 1;
                     if (position == 0) {
                         position = resetValue;
-                        val = (char) (getNextValue[index++] + offset);
+                        val = (char) (getNextValue.charAt(index++) + offset);
                     }
                     bits |= (resb > 0 ? 1 : 0) << power++;
                 }
@@ -558,7 +555,7 @@ public final class LZSEncoding {
                     position >>= 1;
                     if (position == 0) {
                         position = resetValue;
-                        val = (char) (getNextValue[index++] + offset);
+                        val = (char) (getNextValue.charAt(index++) + offset);
                     }
                     bits |= (resb > 0 ? 1 : 0) << power++;
                 }
@@ -582,7 +579,7 @@ public final class LZSEncoding {
                 position >>= 1;
                 if (position == 0) {
                     position = resetValue;
-                    val = (char) (getNextValue[index++] + offset);
+                    val = (char) (getNextValue.charAt(index++) + offset);
                 }
                 cc |= (resb > 0 ? 1 : 0) << power++;
             }
@@ -596,7 +593,7 @@ public final class LZSEncoding {
                         position >>= 1;
                         if (position == 0) {
                             position = resetValue;
-                            val = (char) (getNextValue[index++] + offset);
+                            val = (char) (getNextValue.charAt(index++) + offset);
                         }
                         bits |= (resb > 0 ? 1 : 0) << power++;
                     }
@@ -614,7 +611,7 @@ public final class LZSEncoding {
                         position >>= 1;
                         if (position == 0) {
                             position = resetValue;
-                            val = (char) (getNextValue[index++] + offset);
+                            val = (char) (getNextValue.charAt(index++) + offset);
                         }
                         bits |= (resb > 0 ? 1 : 0) << power++;
                     }
@@ -658,6 +655,5 @@ public final class LZSEncoding {
             }
 
         }
-
     }
 }
