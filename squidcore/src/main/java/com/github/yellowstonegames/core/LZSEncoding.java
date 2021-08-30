@@ -9,9 +9,9 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.ObjectIntMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Implements LZ-String compression, for taking a large String and compressing it to a (usually) smaller one.
@@ -134,8 +134,11 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>();
-        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>();
+//        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>();
+//        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>();
+        //// evaluating if what SquidLib uses is much faster... It does autobox a lot.
+        HashMap<String, Integer> context_dictionary = new HashMap<>();
+        HashSet<String> context_dictionaryToCreate = new HashSet<>();
         String context_c;
         String context_wc;
         String context_w = "";
@@ -338,8 +341,11 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>();
-        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>();
+//        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>();
+//        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>();
+        //// evaluating if what SquidLib uses is much faster... It does autobox a lot.
+        HashMap<String, Integer> context_dictionary = new HashMap<>();
+        HashSet<String> context_dictionaryToCreate = new HashSet<>();
         String context_c;
         String context_wc;
         String context_w = "";
@@ -556,10 +562,10 @@ public final class LZSEncoding {
             return null;
         if(getNextValue.length() == 0)
             return "";
-        ObjectList<String> dictionary = new ObjectList<>();
+        ArrayList<String> dictionary = new ArrayList<>();
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = 32, index = 1, resb, maxpower, power;
         String entry, w, c;
-        ObjectList<String> result = new ObjectList<>();
+        ArrayList<String> result = new ArrayList<>();
         char bits, val = modify[getNextValue.charAt(0)];
 
         for (char i = 0; i < 3; i++) {
@@ -710,10 +716,10 @@ public final class LZSEncoding {
             return null;
         if(getNextValue.length() == 0)
             return "";
-        ObjectList<String> dictionary = new ObjectList<>();
+        ArrayList<String> dictionary = new ArrayList<>();
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = resetValue, index = 1, resb, maxpower, power;
         String entry, w, c;
-        ObjectList<String> result = new ObjectList<>();
+        ArrayList<String> result = new ArrayList<>();
         char bits, val = (char) (getNextValue.charAt(0) + offset);
 
         for (char i = 0; i < 3; i++) {
