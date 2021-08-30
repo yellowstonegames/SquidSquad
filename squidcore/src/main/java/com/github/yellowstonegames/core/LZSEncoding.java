@@ -138,21 +138,11 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        ObjectIntMap<String> context_dictionary = new ObjectIntMap<String>(uncompressedStr.length() >>> 4){
-            @Override
-            protected int place(@Nonnull Object item) {
-                return Hasher.zeta.hash((String)item) & mask;
-            }
-        };
-        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<String>(uncompressedStr.length() >>> 4){
-            @Override
-            protected int place(@Nonnull Object item) {
-                return Hasher.zeta.hash(((String)item)) & mask;
-            }
-        };
+//        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>(uncompressedStr.length() >>> 4);
+//        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>(uncompressedStr.length() >>> 4);
         //// evaluating if what SquidLib uses is much faster... It does autobox a lot.
-//        HashMap<String, Integer> context_dictionary = new HashMap<>();
-//        HashSet<String> context_dictionaryToCreate = new HashSet<>();
+        HashMap<String, Integer> context_dictionary = new HashMap<>(uncompressedStr.length() >>> 4);
+        HashSet<String> context_dictionaryToCreate = new HashSet<>(uncompressedStr.length() >>> 4);
         String context_c;
         String context_wc;
         String context_w = "";
@@ -355,21 +345,11 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        ObjectIntMap<String> context_dictionary = new ObjectIntMap<String>(){
-            @Override
-            protected int place(@Nonnull Object item) {
-                return Hasher.zeta.hash((String)item) & mask;
-            }
-        };
-        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<String>(){
-            @Override
-            protected int place(@Nonnull Object item) {
-                return Hasher.zeta.hash((String)item) & mask;
-            }
-        };
+//        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>(uncompressedStr.length() >>> 4);
+//        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>(uncompressedStr.length() >>> 4);
         //// evaluating if what SquidLib uses is much faster... It does autobox a lot.
-//        HashMap<String, Integer> context_dictionary = new HashMap<>();
-//        HashSet<String> context_dictionaryToCreate = new HashSet<>();
+        HashMap<String, Integer> context_dictionary = new HashMap<>(uncompressedStr.length() >>> 4);
+        HashSet<String> context_dictionaryToCreate = new HashSet<>(uncompressedStr.length() >>> 4);
         String context_c;
         String context_wc;
         String context_w = "";
