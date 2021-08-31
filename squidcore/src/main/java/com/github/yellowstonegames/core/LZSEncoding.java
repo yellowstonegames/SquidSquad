@@ -135,8 +135,8 @@ public final class LZSEncoding {
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
         // This boxes int to Integer, but HashMap is vastly better with containsKey() calls with String keys, somehow.
-        HashMap<String, Integer> context_dictionary = new HashMap<>(uncompressedStr.length() >>> 3, 0.5f);
-        HashSet<String> context_dictionaryToCreate = new HashSet<>(uncompressedStr.length() >>> 3, 0.5f);
+        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;
         String context_w = "";
@@ -339,8 +339,8 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        HashMap<String, Integer> context_dictionary = new HashMap<>(uncompressedStr.length() >>> 3, 0.5f);
-        HashSet<String> context_dictionaryToCreate = new HashSet<>(uncompressedStr.length() >>> 3, 0.5f);
+        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;
         String context_w = "";
