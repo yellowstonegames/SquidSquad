@@ -1,9 +1,10 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ByteList;
-import com.github.tommyettinger.ds.ObjectIntMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectSet;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Compresses Strings to byte arrays (and back again) using a type of LZ-compression. This is very similar to
@@ -27,8 +28,8 @@ public class LZByteEncoding {
         if (uncompressedStr.isEmpty()) return new byte[0];
         final int bitsPerChar = 8;
         int i, value;
-        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>();
-        ObjectSet<String> context_dictionaryToCreate = new ObjectSet<>();
+        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;
         String context_w = "";
@@ -241,7 +242,7 @@ public class LZByteEncoding {
         if(length == 0)
             return "";
         final int resetValue = 128;
-        ObjectList<String> dictionary = new ObjectList<>();
+        ArrayList<String> dictionary = new ArrayList<>(256);
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = resetValue, index = 1, resb, maxpower, power;
         String entry, w, c;
         StringBuilder res = new StringBuilder(length);
@@ -414,7 +415,7 @@ public class LZByteEncoding {
         byte[] res = new byte[amount];
         idx = 0;
         for (int i = 0; i < amount; i++) {
-            res[i] = (byte) DigitTools.intFromDec(source, idx, idx = source.indexOf(',', idx+1));
+            res[i] = Base.BASE10.readByte(source, idx, idx = source.indexOf(',', idx+1));
         }
         return res;
     }
