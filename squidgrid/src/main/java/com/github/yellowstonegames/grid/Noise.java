@@ -321,18 +321,21 @@ public class Noise {
 
     /**
      * Measures distances "as the crow flies."
+     * All points at an equal distance from the origin form a circle.
      * Used only with {@link #CELLULAR} noise.
      * Meant to be used with {@link #setCellularDistanceFunction(int)}.
      */
     public static final int EUCLIDEAN = 0;
     /**
      * Measures distances on a grid, as if allowing only orthogonal movement (with no diagonals).
+     * All points at an equal distance from the origin form a diamond shape.
      * Used only with {@link #CELLULAR} noise.
      * Meant to be used with {@link #setCellularDistanceFunction(int)}.
      */
     public static final int MANHATTAN = 1;
     /**
      * Measures distances with an approximation of Euclidean distance that's not 100% accurate.
+     * All points at an equal distance from the origin form a rough octagon.
      * Used only with {@link #CELLULAR} noise.
      * Meant to be used with {@link #setCellularDistanceFunction(int)}.
      */
@@ -372,26 +375,74 @@ public class Noise {
      */
     public static final int DISTANCE_2_DIV = 7;
 
-    private int seed;
+    /**
+     * @see #getSeed()
+     */
+    protected int seed;
+
+    /**
+     * @see #getFrequency()
+     */
     protected float frequency = 0.03125f;
+
+    /**
+     * @see #getInterpolation()
+     */
     protected int interpolation = HERMITE;
 
-    private int noiseType = SIMPLEX_FRACTAL;
+    /**
+     * @see #getNoiseType()
+     */
+    protected int noiseType = SIMPLEX_FRACTAL;
 
-    private int octaves = 1;
-    private float lacunarity = 2f;
-    private float gain = 0.5f;
-    private int fractalType = FBM;
+    /**
+     * @see #getFractalOctaves()
+     */
+    protected int octaves = 1;
+
+    /**
+     * @see #getFractalLacunarity()
+     */
+    protected float lacunarity = 2f;
+    /**
+     * @see #getFractalGain()
+     */
+    protected float gain = 0.5f;
+    /**
+     * @see #getFractalType()
+     */
+    protected int fractalType = FBM;
 
     private float fractalBounding;
 
-    private int cellularDistanceFunction = EUCLIDEAN;
-    private int cellularReturnType = CELL_VALUE;
-    private float gradientPerturbAmp = 1f / 0.45f;
+    /**
+     * @see #getCellularDistanceFunction()
+     */
+    protected int cellularDistanceFunction = EUCLIDEAN;
 
-    private float foamSharpness = 1f;
-    private float mutation = 0f;
+    /**
+     * @see #getCellularReturnType()
+     */
+    protected int cellularReturnType = CELL_VALUE;
 
+    /**
+     * @see #getGradientPerturbAmp()
+     */
+    protected float gradientPerturbAmp = 1f / 0.45f;
+
+    /**
+     * @see #getFoamSharpness()
+     */
+    protected float foamSharpness = 1f;
+
+    /**
+     * @see #getMutation()
+     */
+    protected float mutation = 0f;
+
+    /**
+     * @see #getPointHash()
+     */
     protected IPointHash pointHash = new IntPointHash();
 
     /**
@@ -603,21 +654,35 @@ public class Noise {
     /**
      * Changes the interpolation method used to smooth between noise values, using one of the following constants from
      * this class (lowest to highest quality): {@link #LINEAR} (0), {@link #HERMITE} (1), or {@link #QUINTIC} (2). If
-     * this is not called, it defaults to HERMITE. This is used in Value, Perlin, and Position Perturbing.
+     * this is not called, it defaults to HERMITE. This is used in Value, Perlin, and Position Perturbing, and because
+     * it is used in Value, that makes it also apply to Foam, Honey, and Mutant.
      * @param interpolation an int (0, 1, or 2) corresponding to a constant from this class for an interpolation type
      */
     public void setInterpolation(int interpolation) {
-        this.interpolation = interpolation;
+        this.interpolation = Math.min(Math.max(interpolation, 0), 2);
+    }
+
+    /**
+     * Gets the constant corresponding to the interpolation method used to smooth between noise values. This is always
+     * one of the constants {@link #LINEAR} (0), {@link #HERMITE} (1), or {@link #QUINTIC} (2). If this is not called,
+     * it defaults to HERMITE. This is used in Value, Perlin, and Position Perturbing, and because it is used in Value,
+     * that makes it also apply to Foam, Honey, and Mutant.
+     * @return an int (0, 1, or 2) corresponding to a constant from this class for an interpolation type
+     */
+    public int getInterpolation() {
+        return interpolation;
     }
     
     /**
-     * Sets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following constants
-     * in this class:
+     * Sets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following
+     * constants in this class:
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
-     * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL.
+     * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL. Note that if you have a fractal noise
+     * type, you can get the corresponding non-fractal noise type by subtracting 1 from the constant this returns. The
+     * reverse is not always true, because Cellular and White Noise have no fractal version.
      * @param noiseType an int from 0 to 15 corresponding to a constant from this class for a noise type
      */
     public void setNoiseType(int noiseType) {
@@ -625,13 +690,15 @@ public class Noise {
     }
 
     /**
-     * Gets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following constants
-     * in this class:
+     * Gets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following
+     * constants in this class:
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
-     * The default is SIMPLEX_FRACTAL.
+     * The default is SIMPLEX_FRACTAL. Note that if you have a fractal noise type, you can get the corresponding
+     * non-fractal noise type by subtracting 1 from the constant this returns. The reverse is not always true, because
+     * Cellular and White Noise have no fractal version.
      * @return the noise type as a code, from 0 to 15 inclusive
      */
     public int getNoiseType()
@@ -668,6 +735,15 @@ public class Noise {
     }
 
     /**
+     * Gets the octave lacunarity for all fractal noise types.
+     * Lacunarity is a multiplicative change to frequency between octaves. If this wasn't changed, it defaults to 2.
+     * @return a float that will be used for the lacunarity of fractal noise types; commonly 2.0 or 0.5
+     */
+    public float getFractalLacunarity() {
+        return lacunarity;
+    }
+
+    /**
      * Sets the octave gain for all fractal noise types.
      * If this isn't called, it defaults to 0.5.
      * @param gain the gain between octaves, as a float
@@ -675,6 +751,16 @@ public class Noise {
     public void setFractalGain(float gain) {
         this.gain = gain;
         calculateFractalBounding();
+    }
+
+    /**
+     * Sets the octave gain for all fractal noise types.
+     * This is typically related to {@link #getFractalLacunarity()}, with gain falling as lacunarity rises.
+     * If this wasn't changed, it defaults to 0.5.
+     * @return the gain between octaves, as a float
+     */
+    public float getFractalGain() {
+        return gain;
     }
 
     /**
@@ -708,6 +794,16 @@ public class Noise {
     }
 
     /**
+     * Gets the distance function used in cellular noise calculations, as an int constant from this class:
+     * {@link #EUCLIDEAN} (0), {@link #MANHATTAN} (1), or {@link #NATURAL} (2). If this wasn't changed, it will use
+     * EUCLIDEAN.
+     * @return an int that can be 0, 1, or 2, corresponding to a constant from this class
+     */
+    public int getCellularDistanceFunction() {
+        return cellularDistanceFunction;
+    }
+
+    /**
      * Sets the return type from cellular noise calculations, allowing an int argument corresponding to one of the
      * following constants from this class: {@link #CELL_VALUE} (0), {@link #NOISE_LOOKUP} (1), {@link #DISTANCE} (2),
      * {@link #DISTANCE_2} (3), {@link #DISTANCE_2_ADD} (4), {@link #DISTANCE_2_SUB} (5), {@link #DISTANCE_2_MUL} (6),
@@ -716,6 +812,17 @@ public class Noise {
      */
     public void setCellularReturnType(int cellularReturnType) {
         this.cellularReturnType = cellularReturnType;
+    }
+
+    /**
+     * Gets the return type from cellular noise calculations, corresponding to a constant from this class:
+     * {@link #CELL_VALUE} (0), {@link #NOISE_LOOKUP} (1), {@link #DISTANCE} (2), {@link #DISTANCE_2} (3),
+     * {@link #DISTANCE_2_ADD} (4), {@link #DISTANCE_2_SUB} (5), {@link #DISTANCE_2_MUL} (6), or
+     * {@link #DISTANCE_2_DIV} (7). If this wasn't changed, it will use CELL_VALUE.
+     * @return a constant from this class representing a type of cellular noise calculation
+     */
+    public int getCellularReturnType() {
+        return cellularReturnType;
     }
 
     /**
@@ -732,7 +839,17 @@ public class Noise {
      * @param gradientPerturbAmp the maximum perturb distance from the original location when using relevant methods
      */
     public void setGradientPerturbAmp(float gradientPerturbAmp) {
-        this.gradientPerturbAmp = gradientPerturbAmp / (float) 0.45;
+        this.gradientPerturbAmp = gradientPerturbAmp / 0.45f;
+    }
+
+    /**
+     * Gets the maximum perturb distance from original location when using {@link #gradientPerturb2(float[])},
+     * {@link #gradientPerturb3(float[])}, {@link #gradientPerturbFractal2(float[])}, or
+     * {@link #gradientPerturbFractal3(float[])}; the default is 1.0.
+     * @return the maximum perturb distance from the original location when using relevant methods
+     */
+    public float getGradientPerturbAmp(){
+        return gradientPerturbAmp * 0.45f;
     }
 
     /**
