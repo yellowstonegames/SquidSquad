@@ -1469,15 +1469,6 @@ public class Noise {
                     default:
                         return singleSimplexFractalFBM(x, y, z, w);
                 }
-//            case CELLULAR:
-//                switch (cellularReturnType) {
-//                    case CELL_VALUE:
-//                    case NOISE_LOOKUP:
-//                    case DISTANCE:
-//                        return singleCellular(x, y, z);
-//                    default:
-//                        return singleCellular2Edge(x, y, z);
-//                }
             case WHITE_NOISE:
                 return getWhiteNoise(x, y, z, w);
             case CUBIC:
@@ -2677,6 +2668,13 @@ public class Noise {
         int mFloor = m >= 0 ? (int) m : (int) m - 1;
         m -= mFloor;
         m *= m * (3 - 2 * m);
+        xFloor *= 0xEBEDF;
+        yFloor *= 0xD96EB;
+        zFloor *= 0xC862B;
+        wFloor *= 0xB8ACD;
+        uFloor *= 0xAA323;
+        vFloor *= 0x9CDA5;
+        mFloor *= 0x908E3;
         return
                 ((1 - m) *
                         ((1 - v) *
@@ -5659,7 +5657,6 @@ public class Noise {
                         ys),
                 zs) * CUBIC_3D_BOUNDING;
     }
-
 
     public float getCubicFractal(float x, float y, float z, float w) {
         x *= frequency;
