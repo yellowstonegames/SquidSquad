@@ -271,7 +271,7 @@ public interface LineDrawer {
 
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
-     * the number of Coords returned reaches maxLength.. Returns an array
+     * the number of Coords returned reaches maxLength. Returns an array
      * of Coord instead of an ObjectList.
      * This allocates a new array with each call, sized to fit the
      * line exactly.
