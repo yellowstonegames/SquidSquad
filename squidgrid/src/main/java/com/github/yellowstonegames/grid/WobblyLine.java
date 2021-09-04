@@ -55,17 +55,36 @@ public class WobblyLine {
      */
     public static ObjectList<Coord> line(int startX, int startY, int endX, int endY,
                                    int width, int height, float weight, EnhancedRandom rng) {
-        ObjectList<Coord> pts = new ObjectList<>();
+        return line(startX, startY, endX, endY, width, height, weight, rng,
+                new ObjectList<>(Math.abs(startX - endX) + Math.abs(startY - endY)));
+    }
+    /**
+     * Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm. Returns a List of Coord
+     * in order. Modifies buffer if it is non-null, or creates an ObjectList if buffer is null.
+     * @param startX x of starting point
+     * @param startY y of starting point
+     * @param endX   x of ending point
+     * @param endY   y of ending point
+     * @param width maximum map width
+     * @param height maximum map height
+     * @param weight between 0.5 and 1.0, usually. 0.6 makes very random walks, 0.9 is almost a straight line.
+     * @param rng the random number generator to use
+     * @param buffer an ObjectList of Coord that will be appended to if non-null or created if null
+     * @return buffer, after changes, including (startX, startY) and (endX, endY) and all points walked between
+     */
+    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY,
+                                   int width, int height, float weight, EnhancedRandom rng, ObjectList<Coord> buffer) {
+        if(buffer == null) buffer = new ObjectList<>(Math.abs(startX - endX) + Math.abs(startY - endY));
         Coord start = Coord.get(startX, startY);
         Direction dir;
         do {
-            pts.add(start);
+            buffer.add(start);
             dir = stepWobbly(start.x, start.y, endX, endY, weight, width, height, rng);
             start = start.translate(dir);
             if(start.x < 1 || start.y < 1 || start.x >= width - 1 || start.y >= height - 1)
                 break;
         }while (dir != Direction.NONE);
-        return pts;
+        return buffer;
     }
 
     /**
