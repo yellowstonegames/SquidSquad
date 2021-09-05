@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectSet;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
@@ -84,7 +83,7 @@ public class FOV {
             ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP, Direction.UP_LEFT,
             Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
     private static final ArrayDeque<Coord> dq = new ArrayDeque<>();
-    private static final ObjectSet<Coord> lightWorkspace = new ObjectSet<>(256);
+    private static final CoordSet lightWorkspace = new CoordSet(256);
 
     /**
      * Static usage only.
@@ -423,6 +422,32 @@ public class FOV {
         lightWorkspace.clear();
         doRippleFOV(light, MathTools.clamp(rippleLooseness, 1, 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
         return light;
+    }
+
+    /**
+     * Like the {@link #reuseFOV(float[][], float[][], int, int, float, Radius)} method, but this is meant for sound
+     * rather than light, and so uses Ripple FOV with maximum looseness, and expects a sound resistance map rather than
+     * a light one. Other parameters are similar; you can get a sound resistance map from
+     * {@link #generateSoundResistances(char[][])}, {@code sound} will be modified and returned (it will be overwritten,
+     * but its size should be the same as the resistance map), there's a starting x,y position for the sound, a radius
+     * in cells, and a {@link Radius} enum constant to choose the distance measurement.
+     * <br>
+     * If you have loud background noise in a map, you can simulate all other sounds being harder to hear by subtracting
+     * some value from all results in {@code sound}. With the default settings in
+     * {@link #generateSoundResistances(char[][])}, thin walls (one cell thick) and doors will allow some sound through,
+     * while thick walls (two or more cells) will allow none.
+     * <br>
+     * This method should not be used from multiple threads; it uses internal static state.
+     * @param resistanceMap probably calculated with {@link #generateSoundResistances(char[][])}; 1.0f blocks sound, 0.0f allows it
+     * @param sound will be overwritten! Should be initialized with the same size as {@code resistanceMap}
+     * @param x starting x position to emit sound from
+     * @param y starting y position to emit sound from
+     * @param radius the maximum distance to extend from the starting x,y position
+     * @param radiusTechnique how to measure distance; typically {@link Radius#CIRCLE}.
+     * @return {@code sound}, after writing the sound field into it; 1.0f is max volume and 0.0f is inaudible
+     */
+    public static float[][] reuseSoundField(float[][] resistanceMap, float[][] sound, int x, int y, float radius, Radius radiusTechnique) {
+        return reuseRippleFOV(resistanceMap, sound, 6, x, y, radius, radiusTechnique);
     }
 
     /**
@@ -1171,6 +1196,7 @@ public class FOV {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
+                    case ' ':
                     case '\1':
                     case '├':
                     case '┤':
@@ -1327,6 +1353,7 @@ public class FOV {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
+                    case ' ':
                     case '\1':
                     case '├':
                     case '┤':
@@ -1443,6 +1470,56 @@ public class FOV {
                             portion[x][y+1] = portion[x+1][y+1] = portion[x+2][y+1] =
                                     /*portion[x][y+2] =*/ portion[x+1][y+2] = /*portion[x+2][y+2] =*/ 1.0f;
                         break;
+                }
+            }
+        }
+        return portion;
+    }
+    /**
+     * Given a char[][] for the map, produces a float[][] that can be used with the sound-related methods here, allowing
+     * sound to pass through thin-enough walls and doors. It expects any doors to be represented by '+' if
+     * closed or '/' if open, any walls to be '#' or box drawing characters, anything that can't possibly let sound
+     * through to be ' ' or Unicode u0001, and lets everything else permit sound to pass freely. Open doors slightly
+     * obscure sound (by 5%), closed doors obscure 30% of sound coming from the other side, walls block 55% of the
+     * sound (making walls that are 2-cells-thick block all sound, but 1-cell-thick walls won't), the ' ' and Unicode 1
+     * cells block all sound, and everything else lets sound through.
+     *
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @return a resistance map meant for sound resistance rather than light, with clear cells assigned 0.0f and fully-blocked ones 1.0f
+     */
+    public static float[][] generateSoundResistances(char[][] map) {
+        int width = map.length;
+        int height = map[0].length;
+        float[][] portion = new float[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (map[i][j]) {
+                    case ' ':
+                    case '\1':
+                        portion[i][j] = 1.0f;
+                        break;
+                    case '├':
+                    case '┤':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '┐':
+                    case '└':
+                    case '┘':
+                    case '│':
+                    case '─':
+                    case '┼':
+                    case '#':
+                        portion[i][j] = 0.55f;
+                        break;
+                    case '/':
+                        portion[i][j] = 0.05f;
+                        break;
+                    case '+':
+                        portion[i][j] = 0.3f;
+                        break;
+                    default:
+                        portion[i][j] = 0.0f;
                 }
             }
         }
