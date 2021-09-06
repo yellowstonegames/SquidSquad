@@ -77,6 +77,33 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         positionMap.remove(v.getCoordPosition());
         return true;
     }
+    public boolean removeAt(int index){
+        if(index < 0 || index >= idMap.size()) return false;
+        idMap.removeAt(index);
+        positionMap.removeAt(index);
+        return true;
+    }
+
+    /**
+     * Attempts to move the V located at {@code oldPosition} to {@code newPosition} without changing its position in the
+     * iteration order. If this succeeds, it returns the moved V and sets the internal position in that V using
+     * {@link IGridIdentified#setCoordPosition(Coord)}. This can fail if there is already a V at {@code newPosition}, in
+     * which case this returns that V without changing anything. It can also fail if there isn't a V at
+     * {@code oldPosition}, in which case this returns null.
+     * @param oldPosition the Coord to look up for the V to move
+     * @param newPosition the Coord to try to move the V into
+     * @return on success, the moved V; on failure because newPosition is occupied, that occupant; on failure because
+     * there wasn't a V present to move, null
+     */
+    public V move(Coord oldPosition, Coord newPosition) {
+        V occupant = positionMap.getOrDefault(newPosition, null);
+        if(occupant != null) return occupant;
+        occupant = positionMap.get(oldPosition);
+        if(occupant == null) return null;
+        positionMap.alter(oldPosition, newPosition);
+        occupant.setCoordPosition(newPosition);
+        return occupant;
+    }
 
     @Override
     public void clear() {
