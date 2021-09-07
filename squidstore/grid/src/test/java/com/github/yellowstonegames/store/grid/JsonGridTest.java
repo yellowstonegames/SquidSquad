@@ -184,4 +184,64 @@ public class JsonGridTest {
         Assert.assertEquals(noise, noise2);
         System.out.println();
     }
+
+    public static class IGI implements IGridIdentified {
+        public final int id;
+        public Coord position;
+        private static int COUNTER = 0;
+
+        public IGI(){
+            id = COUNTER++;
+            position = Coord.get(0, 0);
+        }
+        public IGI(Coord pos){
+            id = COUNTER++;
+            position = pos;
+        }
+        public IGI(int id, Coord pos){
+            this.id = id;
+            position = pos;
+        }
+
+        @Override
+        public int getIdentifier() {
+            return id;
+        }
+
+        @Override
+        public Coord getCoordPosition() {
+            return position;
+        }
+
+        @Override
+        public void setCoordPosition(Coord position) {
+            this.position = position;
+        }
+
+        @Override
+        public String toString() {
+            return "IGI{" +
+                    "position=" + position +
+                    '}';
+        }
+    }
+    @Test
+    public void testSpatialMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerSpatialMap(json);
+        SpatialMap<IGI> points = new SpatialMap<>(8);
+        points.add(new IGI(Coord.get(1, 2)));
+        points.add(new IGI(Coord.get(2, 2)));
+        points.add(new IGI(Coord.get(1, 3)));
+        points.add(new IGI(Coord.get(2, 3)));
+        String data = json.toJson(points);
+        System.out.println(data);
+        SpatialMap<IGridIdentified> points2 = json.fromJson(SpatialMap.class, data);
+        for(IGridIdentified pair : points2.values()) {
+            System.out.print(pair);
+            System.out.print("; ");
+        }
+    }
+
+
 }

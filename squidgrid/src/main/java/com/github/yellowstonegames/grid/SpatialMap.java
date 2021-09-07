@@ -22,8 +22,8 @@ import java.util.*;
  */
 @Beta
 public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V> {
-    public CoordObjectOrderedMap<V> positionMap;
-    public IntObjectOrderedMap<V> idMap;
+    public final CoordObjectOrderedMap<V> positionMap;
+    public final IntObjectOrderedMap<V> idMap;
 
     public SpatialMap(){
         this(16, 0.75f);

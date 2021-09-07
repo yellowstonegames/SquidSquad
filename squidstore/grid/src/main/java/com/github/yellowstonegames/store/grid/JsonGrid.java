@@ -2,6 +2,7 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 
 import javax.annotation.Nonnull;
@@ -297,5 +298,37 @@ public final class JsonGrid {
                 return PhantomNoise.deserializeFromString(jsonData.asString());
             }
         });
+    }
+
+    /**
+     * Registers SpatialMap with the given Json object, so SpatialMap can be written to and read from JSON.
+     * This also registers Coord, CoordObjectOrderedMap, and IntObjectOrderedMap with the given Json object.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSpatialMap(@Nonnull Json json) {
+        registerCoordObjectOrderedMap(json);
+        JsonSupport.registerIntObjectOrderedMap(json);
+        json.setSerializer(SpatialMap.class, new Json.Serializer<SpatialMap>() {
+            @Override
+            public void write(Json json, SpatialMap object, Class knownType) {
+                json.writeArrayStart();
+                for (Object o : object.values()) {
+                    json.writeValue(o, null);
+                }
+                json.writeArrayEnd();
+            }
+
+            @Override
+            public SpatialMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                SpatialMap<?> data = new SpatialMap<>(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.add(json.readValue(null, value));
+                }
+                return data;
+            }
+        });
+
     }
 }
