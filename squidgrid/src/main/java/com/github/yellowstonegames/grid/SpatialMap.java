@@ -2,14 +2,24 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import java.util.PrimitiveIterator;
+import java.util.*;
 
+/**
+ * A type of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.
+ * This requires its {@code V} values to implement {@link IGridIdentified}, which makes this able to associate each V
+ * with its own position and id. The most commonly-used non-standard method here is probably
+ * {@link #move(Coord, Coord)}, which gets the value at a position and attempts to move it to another position, updating
+ * the value's internal position in the process. There are variants on most methods for id ({@link #getById(int)}),
+ * position ({@link #getByPosition(Coord)}), iteration order index ({@link #getAt(int)}), and often the value itself
+ * ({@link #contains(Object)}).
+ * @param <V> the type of all values; this must implement {@link IGridIdentified}
+ */
 @Beta
 public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V> {
     public CoordObjectOrderedMap<V> positionMap;
@@ -25,6 +35,11 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
     public SpatialMap(int capacity, float loadFactor){
         positionMap = new CoordObjectOrderedMap<>(capacity, loadFactor);
         idMap = new IntObjectOrderedMap<>(capacity, loadFactor);
+    }
+
+    public SpatialMap(SpatialMap<? extends V> other) {
+        positionMap = new CoordObjectOrderedMap<>(other.positionMap);
+        idMap = new IntObjectOrderedMap<>(other.idMap);
     }
 
     public boolean add(@Nonnull V value){
@@ -46,6 +61,18 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
             idMap.put(id, value);
             return true;
         }
+    }
+
+    public Collection<V> values() {
+        return idMap.values();
+    }
+
+    public Set<Coord> positions() {
+        return positionMap.keySet();
+    }
+
+    public PrimitiveCollection.OfInt ids() {
+        return idMap.keySet();
     }
 
     @Override
@@ -86,18 +113,21 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         }
         return false;
     }
+
     public boolean removePosition(Coord pos){
         V v = positionMap.remove(pos);
         if(v == null) return false;
         idMap.remove(v.getIdentifier());
         return true;
     }
+
     public boolean removeId(int id){
         V v = idMap.remove(id);
         if(v == null) return false;
         positionMap.remove(v.getCoordPosition());
         return true;
     }
+
     public boolean removeAt(int index){
         if(index < 0 || index >= idMap.size()) return false;
         idMap.removeAt(index);
@@ -107,6 +137,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
 
     @Nullable
     public V getAt(int index) {
+        if(index < 0 || index >= idMap.size()) return null;
         return idMap.getAt(index);
     }
     @Nullable
@@ -160,11 +191,34 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         if(mover == null) return null;
         return move(mover.getCoordPosition(), newPosition);
     }
+    /**
+     * Attempts to move the V at the given {@code index} in the iteration order to {@code newPosition} without changing
+     * its position in the iteration order. If this succeeds, it returns the moved V and sets the internal position in
+     * that V using {@link IGridIdentified#setCoordPosition(Coord)}. This can fail if there is already a V at
+     * {@code newPosition}, in which case this returns that V without changing anything. It can also fail if index is
+     * negative or &gt;= the size of this SpatialMap, in which case this returns null.
+     * @param index the int index in the iteration order for the V to move
+     * @param newPosition the Coord to try to move the V into
+     * @return on success, the moved V; on failure because newPosition is occupied, that occupant; on failure because
+     * there the index was out of bounds, null
+     */
+    @Nullable
+    public V moveAt(int index, Coord newPosition){
+        if(index < 0 || index >= positionMap.size()) return null;
+        Coord pos = positionMap.keyAt(index);
+        return move(pos, newPosition);
+    }
 
     @Override
     public void clear() {
         idMap.clear();
         positionMap.clear();
+    }
+
+    public void shuffle(EnhancedRandom rng) {
+        EnhancedRandom r2 = rng.copy();
+        idMap.shuffle(rng);
+        positionMap.shuffle(r2);
     }
 
     @Override
