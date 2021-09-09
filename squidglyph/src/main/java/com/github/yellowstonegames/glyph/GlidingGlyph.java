@@ -5,22 +5,29 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.smooth.AngleGlider;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.FloatGlider;
+import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 
 import javax.annotation.Nonnull;
 
 /**
  * A single {@code long} that a {@link Font} can render as a glyph with color and styles, given a location that can
  * smoothly change as a {@link CoordGlider}. May optionally have an unchanging or a changing rotation as an
- * {@link AngleGlider}.
+ * {@link AngleGlider}, and can adjust its position between-grid-cells using a {@link VectorSequenceGlider}.
  */
 public class GlidingGlyph {
     @Nonnull
     public CoordGlider location;
     @Nonnull
     public AngleGlider rotation;
+    @Nonnull
+    public VectorSequenceGlider smallMotion;
+
     public long glyph;
 
+    protected final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
+
     private GlidingGlyph() {
+        this(' ');
     }
 
     public GlidingGlyph(long glyph) {
@@ -35,28 +42,31 @@ public class GlidingGlyph {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
         rotation = new AngleGlider();
+        smallMotion = ownEmptyMotion;
     }
 
     public GlidingGlyph(long glyph, Coord start, Coord end, float rotation) {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
         this.rotation = new AngleGlider(rotation);
+        smallMotion = ownEmptyMotion;
     }
 
     public GlidingGlyph(long glyph, Coord start, Coord end, float rotationStart, float rotationEnd) {
         this.glyph = glyph;
         location = new CoordGlider(start, end);
         rotation = new AngleGlider(rotationStart, rotationEnd);
+        smallMotion = ownEmptyMotion;
     }
 
     public float getX()
     {
-        return location.getX();
+        return location.getX() + smallMotion.getX();
     }
 
     public float getY()
     {
-        return location.getY();
+        return location.getY() + smallMotion.getY();
     }
 
     @Nonnull
@@ -86,6 +96,16 @@ public class GlidingGlyph {
     }
 
     public void draw(Batch batch, Font font){
-        font.drawGlyph(batch, glyph, location.getX(), location.getY(), rotation.getAngle());
+        font.drawGlyph(batch, glyph, getX(), getY(), rotation.getAngle());
     }
+    @Nonnull
+    public VectorSequenceGlider getSmallMotion() {
+        return smallMotion;
+    }
+
+    public void setSmallMotion(VectorSequenceGlider smallMotion) {
+        if(smallMotion == null) this.smallMotion = ownEmptyMotion;
+        else this.smallMotion = smallMotion;
+    }
+
 }

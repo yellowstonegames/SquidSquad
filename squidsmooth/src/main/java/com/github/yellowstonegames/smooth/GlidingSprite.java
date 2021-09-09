@@ -9,7 +9,7 @@ import com.github.yellowstonegames.grid.Coord;
  * position. The {@link CoordGlider} is publicly available as {@link #location} or with {@link #getLocation()}, which
  * should be used to determine or change where this started its move, where it is going, and how far it has gone between
  * the two. You probably want to use a Texture with a width and height of 1 world unit, because by default this calls
- * {@code setSize(1, 1};} in its constructor; this avoids the need to convert between Coord units in the CoordGlider and
+ * {@code setSize(1, 1);} in its constructor; this avoids the need to convert between Coord units in the CoordGlider and
  * some other unit in the world.
  */
 public class GlidingSprite extends Sprite {
