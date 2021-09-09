@@ -9,10 +9,9 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.LineTools;
+import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.DungeonProcessor;
 
 import java.text.DateFormat;
@@ -25,9 +24,14 @@ public class DungeonMapTest extends ApplicationAdapter {
     private SpriteBatch batch;
     private GlyphMap gm;
     private DungeonProcessor dungeonProcessor;
+    private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
 
     private static final int GRID_WIDTH = 60;
     private static final int GRID_HEIGHT = 32;
+
+    private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
+    private static final int SHALLOW_OKLAB = describeOklab("dull denim");
+    private static final int STONE_OKLAB = describeOklab("darkmost gray gray duller butter");
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -53,31 +57,33 @@ public class DungeonMapTest extends ApplicationAdapter {
 
         dungeonProcessor = new DungeonProcessor(60, 32, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 15);
+        waves.setFractalType(Noise.RIDGED_MULTI);
         regenerate();
     }
 
     public void regenerate(){
-        final char[][] dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true);
+        dungeonProcessor.setPlaceGrid(LineTools.hashesToLines(dungeonProcessor.generate(), true));
         gm.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gm.map.clear();
-        int deepOklab = describeOklab("dark dull cobalt");
-        int shallowOklab = describeOklab("dull denim");
-        int stoneOklab = describeOklab("darkmost gray gray duller butter");
-        int deep = toRGBA8888(deepOklab);
-        int shallow = toRGBA8888(shallowOklab);
-        int stone = toRGBA8888(stoneOklab);
-        long deepText = toRGBA8888(offsetLightness(deepOklab));
-        long shallowText = toRGBA8888(offsetLightness(shallowOklab));
-        long stoneText = toRGBA8888(offsetLightness(stoneOklab));
+
+        recolor();
+    }
+
+    public void recolor(){
+        int stone = toRGBA8888(STONE_OKLAB);
+        long deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
+        long shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
+        long stoneText = toRGBA8888(offsetLightness(STONE_OKLAB));
+        char[][] dungeon = dungeonProcessor.getPlaceGrid();
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 switch (dungeon[x][y]){
                     case '~':
-                        gm.backgrounds[x][y] = deep;
+                        gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, Math.max(0, waves.getConfiguredNoise(x, y, (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f))));
                         gm.put(x, y, deepText << 32 | dungeon[x][y]);
                         break;
                     case ',':
-                        gm.backgrounds[x][y] = shallow;
+                        gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, Math.max(0, waves.getConfiguredNoise(x, y, (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f))));
                         gm.put(x, y, shallowText << 32 | dungeon[x][y]);
                         break;
                     case ' ':
@@ -91,13 +97,14 @@ public class DungeonMapTest extends ApplicationAdapter {
         }
 
     }
-
     @Override
     public void render() {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             Gdx.app.exit();
         if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
             regenerate();
+        else
+            recolor();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Camera camera = gm.viewport.getCamera();
