@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -28,7 +29,7 @@ public class DungeonMapTest extends ApplicationAdapter {
     private SpriteBatch batch;
     private GlyphMap gm;
     private DungeonProcessor dungeonProcessor;
-    private char[][] bare;
+    private char[][] bare, dungeon, prunedDungeon;
     private float[][] res, light;
     private Region seen, inView;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
@@ -75,6 +76,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
+        prunedDungeon = new char[GRID_WIDTH][GRID_HEIGHT];
         inView = new Region(GRID_WIDTH, GRID_HEIGHT);
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -118,65 +120,68 @@ public class DungeonMapTest extends ApplicationAdapter {
         final Coord next = cg.getStart().translate(way);
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
             cg.setEnd(next);
-            cg.setCompleteRunner(() ->
-                    seen.or(inView.refill(FOV.reuseFOV(res, light, cg.getEnd().x, cg.getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f)));
+            cg.setCompleteRunner(() -> {
+                seen.or(inView.refill(FOV.reuseFOV(res, light, cg.getEnd().x, cg.getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+                LineTools.pruneLines(dungeon, seen, prunedDungeon);
+            });
             director.play();
         }
     }
 
     public void regenerate(){
-        dungeonProcessor.setPlaceGrid(LineTools.hashesToLines(dungeonProcessor.generate(), true));
+        dungeonProcessor.setPlaceGrid(dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true));
         bare = dungeonProcessor.getBarePlaceGrid();
+        ArrayTools.insert(dungeon, prunedDungeon, 0, 0);
         res = FOV.generateSimpleResistances(bare);
         Coord player = new Region(bare, '.').singleRandom(dungeonProcessor.rng);
         glyphs.first().getLocation().setStart(player);
         glyphs.first().getLocation().setEnd(player);
-        seen.or(inView.refill(FOV.reuseFOV(res, light, player.x, player.y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+        seen.remake(inView.refill(FOV.reuseFOV(res, light, player.x, player.y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+        LineTools.pruneLines(dungeon, seen, prunedDungeon);
         gm.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gm.map.clear();
     }
 
     public void recolor(){
-        char[][] dungeon = dungeonProcessor.getPlaceGrid();
         Coord player = glyphs.first().location.getStart();
         float modifiedTime = (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f;
-        FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(dungeonProcessor.rng.getStateA(), modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
+        FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 if(inView.contains(x, y)) {
-                    switch (dungeon[x][y]) {
+                    switch (prunedDungeon[x][y]) {
                         case '~':
                             gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
-                            gm.put(x, y, deepText << 32 | dungeon[x][y]);
+                            gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
                             break;
                         case ',':
                             gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
-                            gm.put(x, y, shallowText << 32 | dungeon[x][y]);
+                            gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
                             break;
                         case ' ':
                             gm.backgrounds[x][y] = 0;
                             break;
                         default:
                             gm.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
-                            gm.put(x, y, stoneText << 32 | dungeon[x][y]);
+                            gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
                     }
                 }
                 else if(seen.contains(x, y)){
-                    switch (dungeon[x][y]) {
+                    switch (prunedDungeon[x][y]) {
                         case '~':
                             gm.backgrounds[x][y] = toRGBA8888(edit(DEEP_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, deepText << 32 | dungeon[x][y]);
+                            gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
                             break;
                         case ',':
                             gm.backgrounds[x][y] = toRGBA8888(edit(SHALLOW_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, shallowText << 32 | dungeon[x][y]);
+                            gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
                             break;
                         case ' ':
                             gm.backgrounds[x][y] = 0;
                             break;
                         default:
                             gm.backgrounds[x][y] = toRGBA8888(edit(STONE_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, stoneText << 32 | dungeon[x][y]);
+                            gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
                     }
                 }
                 else {

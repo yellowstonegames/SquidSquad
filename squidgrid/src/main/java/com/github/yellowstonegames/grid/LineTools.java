@@ -554,23 +554,23 @@ public class LineTools {
                             break;
                         case '┘':
                         case '┛':
-                            writeInto[x][y] = symbols[3 & mask];
+                            writeInto[x][y] = symbols[9 & mask];
                             break;
                         case '└':
                         case '┗':
-                            writeInto[x][y] = symbols[6 & mask];
+                            writeInto[x][y] = symbols[12 & mask];
                             break;
                         case '┐':
                         case '┓':
-                            writeInto[x][y] = symbols[9 & mask];
+                            writeInto[x][y] = symbols[3 & mask];
                             break;
                         case '┌':
                         case '┏':
-                            writeInto[x][y] = symbols[12 & mask];
+                            writeInto[x][y] = symbols[6 & mask];
                             break;
                         case '┴':
                         case '┻':
-                            writeInto[x][y] = symbols[7 & mask];
+                            writeInto[x][y] = symbols[13 & mask];
                             break;
                         case '┤':
                         case '┫':
@@ -578,7 +578,7 @@ public class LineTools {
                             break;
                         case '┬':
                         case '┳':
-                            writeInto[x][y] = symbols[13 & mask];
+                            writeInto[x][y] = symbols[7 & mask];
                             break;
                         case '├':
                         case '┣':
@@ -594,7 +594,7 @@ public class LineTools {
                             break;
                         case '╵':
                         case '╹':
-                            writeInto[x][y] = symbols[2 & mask];
+                            writeInto[x][y] = symbols[8 & mask];
                             break;
                         case '╶':
                         case '╺':
@@ -602,7 +602,7 @@ public class LineTools {
                             break;
                         case '╷':
                         case '╻':
-                            writeInto[x][y] = symbols[8 & mask];
+                            writeInto[x][y] = symbols[2 & mask];
                             break;
                     }
                 }
