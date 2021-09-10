@@ -3,20 +3,24 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.Hasher;
-import com.github.yellowstonegames.grid.LineTools;
-import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.smooth.CoordGlider;
+import com.github.yellowstonegames.smooth.Director;
 
 import java.text.DateFormat;
 import java.util.Date;
 
+import static com.badlogic.gdx.Input.Keys.*;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 public class DungeonMapTest extends ApplicationAdapter {
@@ -24,7 +28,10 @@ public class DungeonMapTest extends ApplicationAdapter {
     private SpriteBatch batch;
     private GlyphMap gm;
     private DungeonProcessor dungeonProcessor;
+    private char[][] bare;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
+    private Director<GlidingGlyph> director;
+    private ObjectList<GlidingGlyph> glyphs;
 
     private static final int GRID_WIDTH = 60;
     private static final int GRID_HEIGHT = 32;
@@ -54,19 +61,75 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getAStarry();
         gm = new GlyphMap(font, 60, 32);
-
+        glyphs = new ObjectList<>(1);
+        director = new Director<>(GlidingGlyph::getLocation, glyphs);
+        director.setDuration(100L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 15);
         waves.setFractalType(Noise.RIDGED_MULTI);
+
+        Gdx.input.setInputProcessor(new InputAdapter(){
+            @Override
+            public boolean keyDown(int keycode) {
+                CoordGlider cg = glyphs.first().getLocation();
+                Coord next;
+                switch (keycode){
+                    case ESCAPE:
+                    case Q:
+                        Gdx.app.exit();
+                        break;
+                    case R:
+                        regenerate();
+                        break;
+                    case W:
+                    case UP:
+                        next = cg.getStart().translate(Direction.UP);
+                        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
+                            cg.setEnd(next);
+                            director.play();
+                        }
+                        break;
+                    case A:
+                    case LEFT:
+                        next = cg.getStart().translate(Direction.LEFT);
+                        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
+                            cg.setEnd(next);
+                            director.play();
+                        }
+                        break;
+                    case S:
+                    case DOWN:
+                        next = cg.getStart().translate(Direction.DOWN);
+                        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
+                            cg.setEnd(next);
+                            director.play();
+                        }
+                        break;
+                    case D:
+                    case RIGHT:
+                        next = cg.getStart().translate(Direction.RIGHT);
+                        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
+                            cg.setEnd(next);
+                            director.play();
+                        }
+                        break;
+                    default: return false;
+                }
+                return true;
+            }
+        });
+
         regenerate();
     }
 
     public void regenerate(){
         dungeonProcessor.setPlaceGrid(LineTools.hashesToLines(dungeonProcessor.generate(), true));
+        bare = dungeonProcessor.getBarePlaceGrid();
+        Coord player = new Region(bare, '.').singleRandom(dungeonProcessor.rng);
+        glyphs.clear();
+        glyphs.add(new GlidingGlyph((long) describe("red orange") << 32 | '@', player));
         gm.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gm.map.clear();
-
-        recolor();
     }
 
     public void recolor(){
@@ -99,12 +162,8 @@ public class DungeonMapTest extends ApplicationAdapter {
     }
     @Override
     public void render() {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            Gdx.app.exit();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
-            regenerate();
-        else
-            recolor();
+        recolor();
+        director.step();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Camera camera = gm.viewport.getCamera();
@@ -114,6 +173,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         gm.draw(batch, 0, 0);
+        glyphs.first().draw(batch, gm.font);
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
