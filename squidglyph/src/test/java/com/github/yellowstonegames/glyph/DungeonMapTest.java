@@ -22,6 +22,7 @@ import java.util.Date;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
+import static com.github.yellowstonegames.core.MathTools.swayRandomized;
 
 public class DungeonMapTest extends ApplicationAdapter {
 
@@ -29,6 +30,7 @@ public class DungeonMapTest extends ApplicationAdapter {
     private GlyphMap gm;
     private DungeonProcessor dungeonProcessor;
     private char[][] bare;
+    private float[][] res, light;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private Director<GlidingGlyph> director;
     private ObjectList<GlidingGlyph> glyphs;
@@ -38,14 +40,18 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
     private static final int SHALLOW_OKLAB = describeOklab("dull denim");
-    private static final int STONE_OKLAB = describeOklab("darkmost gray gray duller butter");
+    private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
+    private static final long deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
+    private static final long shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
+    private static final long stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
         config.setWindowedMode(GRID_WIDTH * 20, GRID_HEIGHT * 20);
         config.disableAudio(true);
-        config.useVsync(false);
+        config.setForegroundFPS(120);
+        config.useVsync(true);
         new Lwjgl3Application(new DungeonMapTest(), config);
     }
 
@@ -65,9 +71,9 @@ public class DungeonMapTest extends ApplicationAdapter {
         director = new Director<>(GlidingGlyph::getLocation, glyphs);
         director.setDuration(100L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
-        dungeonProcessor.addWater(DungeonProcessor.ALL, 15);
+        dungeonProcessor.addWater(DungeonProcessor.ALL, 40);
         waves.setFractalType(Noise.RIDGED_MULTI);
-
+        light = new float[GRID_WIDTH][GRID_HEIGHT];
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean keyDown(int keycode) {
@@ -125,6 +131,7 @@ public class DungeonMapTest extends ApplicationAdapter {
     public void regenerate(){
         dungeonProcessor.setPlaceGrid(LineTools.hashesToLines(dungeonProcessor.generate(), true));
         bare = dungeonProcessor.getBarePlaceGrid();
+        res = FOV.generateSimpleResistances(bare);
         Coord player = new Region(bare, '.').singleRandom(dungeonProcessor.rng);
         glyphs.clear();
         glyphs.add(new GlidingGlyph((long) describe("red orange") << 32 | '@', player));
@@ -133,27 +140,26 @@ public class DungeonMapTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        int stone = toRGBA8888(STONE_OKLAB);
-        long deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
-        long shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
-        long stoneText = toRGBA8888(offsetLightness(STONE_OKLAB));
         char[][] dungeon = dungeonProcessor.getPlaceGrid();
+        Coord player = glyphs.first().location.getStart();
+        float modifiedTime = (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f;
+        FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(dungeonProcessor.rng.getStateA(), modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 switch (dungeon[x][y]){
                     case '~':
-                        gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, Math.max(0, waves.getConfiguredNoise(x, y, (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f))));
+                        gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
                         gm.put(x, y, deepText << 32 | dungeon[x][y]);
                         break;
                     case ',':
-                        gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, Math.max(0, waves.getConfiguredNoise(x, y, (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f))));
+                        gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
                         gm.put(x, y, shallowText << 32 | dungeon[x][y]);
                         break;
                     case ' ':
                         gm.backgrounds[x][y] = 0;
                         break;
                     default:
-                        gm.backgrounds[x][y] = stone;
+                        gm.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
                         gm.put(x, y, stoneText << 32 | dungeon[x][y]);
                 }
             }
