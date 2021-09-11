@@ -38,8 +38,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 16);
     private FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 32);
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
-    private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube};
-    private int hashIndex = 5;
+    private FlawedPointHash.LowLeaningHash low = new FlawedPointHash.LowLeaningHash(123);
+    private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, low};
+    private int hashIndex = 6;
 
     private static final int width = 512, height = 512;
 

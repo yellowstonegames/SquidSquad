@@ -401,4 +401,57 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
                     ^ w) * 0x1000193 ^ u) * 0x1000193 ^ v) * 0x1000193;
         }
     }
+
+    /**
+     * Makes smaller results on average, with a biased average at about 25% of the range instead of 50% of the range for
+     * most non-biased hashes.
+     */
+    class LowLeaningHash extends IntImpl implements FlawedPointHash {
+        public LowLeaningHash() {
+            super();
+        }
+
+        public LowLeaningHash(int state) {
+            super(state);
+        }
+
+        public int getState() {
+            return state;
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int s) {
+            s ^= x * 0x1827F5 ^ y * 0x123C21;
+            s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
+            return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int s) {
+            s ^= x * 0x1A36A9 ^ y * 0x157931 ^ z * 0x119725;
+            s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
+            return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int s) {
+            s ^= x * 0x1B69E1 ^ y * 0x177C0B ^ z * 0x141E5D ^ w * 0x113C31;
+            s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
+            return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int s) {
+            s ^= x * 0x1C3360 ^ y * 0x18DA3A ^ z * 0x15E6DA ^ w * 0x134D28 ^ u * 0x110280;
+            s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
+            return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int v, int s) {
+            s ^= x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
+            s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
+            return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
+        }
+    }
 }
