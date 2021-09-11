@@ -5610,7 +5610,8 @@ public class Noise {
         return singleCubic(seed, x * frequency, y * frequency, z * frequency);
     }
 
-    private final static float CUBIC_3D_BOUNDING = 2f / (1.5f * 1.5f * 1.5f);
+    //TODO: This could also be made more accurate, probably; it was 2f / (1.5f * 1.5f * 1.5f), which went out of range.
+    private final static float CUBIC_3D_BOUNDING = 1f / 2.25f;
 
     private float singleCubic(int seed, float x, float y, float z) {
         int x1 = fastFloor(x);
