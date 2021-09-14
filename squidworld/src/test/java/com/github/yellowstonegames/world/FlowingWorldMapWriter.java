@@ -61,8 +61,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
@@ -86,8 +86,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         Noise terrainNoise = new Noise(fn) {
             @Override
@@ -204,8 +206,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         worldTime = System.currentTimeMillis();
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
-            mutationA = TrigTools.cos_(angle) * 0.125f;
-            mutationB = TrigTools.sin_(angle) * 0.125f;
+            mutationA = TrigTools.cos_(angle) * 0.5f;
+            mutationB = TrigTools.sin_(angle) * 0.5f;
             world.setCenterLongitude(angle * MathUtils.PI2);
             generate(hash);
             wmv.getBiomeMapper().makeBiomes(world);
