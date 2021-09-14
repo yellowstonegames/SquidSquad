@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.ds.support.*;
@@ -238,6 +240,51 @@ public final class JsonCore {
             public GapShuffler<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return new GapShuffler<>(json.readValue("items", ObjectList.class, jsonData), json.readValue("rng", EnhancedRandom.class, jsonData), jsonData.get("idx").asInt(), true, false);
+            }
+        });
+    }
+
+    /**
+     * Registers ProbabilityTable with the given Json object, so ProbabilityTable can be written to and read from JSON.
+     * This registers serialization/deserialization for ObjectList as well, since ProbabilityTable requires it.
+     * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
+     * use {@link JsonSupport#registerAtomicLong(Json)} (if you don't know what type the random number generator uses),
+     * or just call {@link #registerAll(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerProbabilityTable(@Nonnull Json json) {
+        JsonSupport.registerEnhancedRandom(json);
+        JsonSupport.registerObjectList(json);
+        JsonSupport.registerIntList(json);
+        JsonSupport.registerNumberedSet(json);
+        json.addClassTag("#PrbT", ProbabilityTable.class);
+        json.setSerializer(ProbabilityTable.class, new Json.Serializer<ProbabilityTable>() {
+            @Override
+            public void write(Json json, ProbabilityTable object, Class knownType) {
+                json.writeObjectStart();
+                json.writeType(ProbabilityTable.class);
+                json.writeValue("rng", object.rng, null);
+                json.writeValue("table", object.table, NumberedSet.class);
+                json.writeValue("extra", object.extraTable, ObjectList.class, ProbabilityTable.class);
+                json.writeValue("weight", object.weights, IntList.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public ProbabilityTable<?> read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                ProbabilityTable pt = new ProbabilityTable<>(json.readValue("rng", EnhancedRandom.class, jsonData));
+                NumberedSet ns = json.readValue("table", NumberedSet.class, jsonData);
+                ObjectList ex = json.readValue("extra", ObjectList.class, ProbabilityTable.class, jsonData);
+                IntList wt = json.readValue("weight", IntList.class, jsonData);
+                for (int i = 0; i < ns.size(); i++) {
+                    pt.add(ns.getAt(i), wt.get(i));
+                }
+                for (int i = 0, w = ns.size(); i < ex.size(); i++, w++) {
+                    pt.add((ProbabilityTable) ex.get(i), wt.get(w));
+                }
+                return pt;
             }
         });
     }

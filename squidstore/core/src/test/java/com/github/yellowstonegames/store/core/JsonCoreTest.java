@@ -8,10 +8,7 @@ import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
-import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.core.Base;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.GapShuffler;
+import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -202,4 +199,29 @@ public class JsonCoreTest {
             }
         }
     }
+    @Test
+    public void testProbabilityTable(){
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerProbabilityTable(json);
+        ProbabilityTable<String> earth = new ProbabilityTable<>("earth");
+        ProbabilityTable<String> air = new ProbabilityTable<>("air");
+        ProbabilityTable<String> water = new ProbabilityTable<>("water");
+        ProbabilityTable<String> fire = new ProbabilityTable<>("fire");
+        earth.add("rock", 1).add("dirt", 1);
+        air.add("wind", 1).add("cloud", 1);
+        water.add("wave", 1).add("depths", 1);
+        fire.add("disco", 1).add("inferno", 1);
+        ProbabilityTable<String> all = new ProbabilityTable<>("aether");
+        all.add(earth, 1).add(air, 1).add(water, 1).add(fire, 1);
+        ProbabilityTable<String> copy = all.copy();
+        Assert.assertNotNull(all.random());
+        Assert.assertNotNull(copy.random());
+
+        String data = json.toJson(all);
+        System.out.println(data);
+        ProbabilityTable readBack = json.fromJson(ProbabilityTable.class, data);
+        Assert.assertEquals(copy.random(), readBack.random());
+
+    }
+
 }

@@ -249,7 +249,7 @@ public class ProbabilityTable<T> {
     }
 
     /**
-     * Given an OrderedMap of ProbabilityTable keys and Integer weight values, adds all keys as nested tables with their
+     * Given an ObjectIntMap of ProbabilityTable keys and int weight values, adds all keys as nested tables with their
      * corresponding weights into this ProbabilityTable. All ProbabilityTable keys should have the same T type as this
      * ProbabilityTable. You may want to use {@link ObjectIntMap#with(Object, Number, Object...)} to produce the
      * parameter, unless you already have one.
@@ -333,7 +333,7 @@ public class ProbabilityTable<T> {
      * Provides a set of the nested ProbabilityTable values in this table, without reference
      * to their weight. Does not include normal values (non-table); for that, use items().
      *
-     * @return a "sorted" set of all nested tables stored, really sorted in insertion order
+     * @return a List of all nested tables stored, in insertion order
      */
     public ObjectList<ProbabilityTable<T>> tables() {
         return extraTable;
