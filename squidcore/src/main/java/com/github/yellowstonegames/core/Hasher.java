@@ -426,12 +426,6 @@ public class Hasher {
             ose_, amy_, orias_, vapula_, zagan_, valac_, andras_, flauros_,
             andrealphus_, kimaris_, amdusias_, belial_, decarabia_, seere_, dantalion_, andromalius_};
 
-    /*
-
-    */
-    /*
-
-    */
     public long hash64(final boolean[] data) {
         if (data == null) return 0;
         long seed = this.seed;//seed = b1 ^ b1 >>> 29 ^ b1 >>> 43 ^ b1 << 7 ^ b1 << 53;
@@ -461,9 +455,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b2, b1 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ b3, data[len-2] ^ data[len-1] << 8 ^ b4); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 8, b2 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -480,9 +474,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -499,9 +493,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -518,9 +512,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -642,9 +636,9 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         return mum(seed ^ seed << 16, len - start ^ b0);
     }
@@ -669,9 +663,9 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
         return mum(seed ^ seed << 16, len - start ^ b0);
     }
@@ -841,7 +835,6 @@ public class Hasher {
         return h - (h >>> 31) + (h << 33);
     }
 
-
     public int hash(final boolean[] data) {
         if (data == null) return 0;
         long seed = this.seed;//b1 ^ b1 >>> 41 ^ b1 << 53;
@@ -857,7 +850,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ (data[len-2] ? 0x9E3779B9L : 0x7F4A7C15L), b0 ^ (data[len-1] ? 0x9E3779B9L : 0x7F4A7C15L)); break;
             case 3: seed = mum(seed ^ (data[len-3] ? 0x9E3779B9L : 0x7F4A7C15L), b2 ^ (data[len-2] ? 0x9E3779B9L : 0x7F4A7C15L)) ^ mum(seed ^ (data[len-1] ? 0x9E3779B9 : 0x7F4A7C15), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public int hash(final byte[] data) {
         if (data == null) return 0;
@@ -870,11 +864,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b2, b1 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ b3, data[len-2] ^ data[len-1] << 8 ^ b4); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 8, b2 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final short[] data) {
@@ -888,11 +883,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final char[] data) {
@@ -906,11 +902,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+                seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final CharSequence data) {
@@ -924,11 +921,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public int hash(final int[] data) {
         if (data == null) return 0;
@@ -945,7 +943,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ data[len-2], b0 ^ data[len-1]); break;
             case 3: seed = mum(seed ^ data[len-3], b2 ^ data[len-2]) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public int hash(final int[] data, final int length) {
         if (data == null) return 0;
@@ -961,7 +960,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ data[length-2], b0 ^ data[length-1]); break;
             case 3: seed = mum(seed ^ data[length-3], b2 ^ data[length-2]) ^ mum(seed ^ data[length-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, length ^ b0);
+        seed = (seed ^ seed << 16) * (length ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final long[] data) {
@@ -1000,7 +1000,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ floatToRawIntBits(data[len-2]), b0 ^ floatToRawIntBits(data[len-1])); break;
             case 3: seed = mum(seed ^ floatToRawIntBits(data[len-3]), b2 ^ floatToRawIntBits(data[len-2])) ^ mum(seed ^ floatToRawIntBits(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public int hash(final double[] data) {
         if (data == null) return 0;
@@ -1043,11 +1044,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     /**
@@ -1070,11 +1072,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
 
@@ -1094,7 +1097,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final int[][] data) {
@@ -1113,7 +1117,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final long[][] data) {
@@ -1132,7 +1137,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final CharSequence[] data) {
@@ -1151,7 +1157,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final CharSequence[]... data) {
@@ -1170,7 +1177,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final Iterable<? extends CharSequence> data) {
@@ -1185,7 +1193,8 @@ public class Hasher {
                     mum(hash(it.next()) ^ b1, (it.hasNext() ? hash(it.next()) ^ b2 ^ ++len : b2)) + seed,
                     mum((it.hasNext() ? hash(it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(it.next()) ^ b4 ^ ++len : b4)));
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+                seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final List<? extends CharSequence> data) {
@@ -1204,7 +1213,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data.get(len-2)), b0 ^ hash(data.get(len-1))); break;
             case 3: seed = mum(seed ^ hash(data.get(len-3)), b2 ^ hash(data.get(len-2))) ^ mum(seed ^ hash(data.get(len-1)), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final Object[] data) {
@@ -1223,7 +1233,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(data[len-2]), b0 ^ hash(data[len-1])); break;
             case 3: seed = mum(seed ^ hash(data[len-3]), b2 ^ hash(data[len-2])) ^ mum(seed ^ hash(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public int hash(final Object data) {
@@ -1261,9 +1272,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b2, b1 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ b3, data[len-2] ^ data[len-1] << 8 ^ b4); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 8, b2 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -1280,9 +1291,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -1299,9 +1310,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -1318,9 +1329,9 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
         seed = (seed ^ seed << 16) * (len ^ b0);
         return seed - (seed >>> 31) + (seed << 33);
@@ -1444,11 +1455,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     /**
@@ -1471,11 +1483,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
-        return mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
 
@@ -1660,7 +1673,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ (data[len-2] ? 0x9E3779B9L : 0x7F4A7C15L), b0 ^ (data[len-1] ? 0x9E3779B9L : 0x7F4A7C15L)); break;
             case 3: seed = mum(seed ^ (data[len-3] ? 0x9E3779B9L : 0x7F4A7C15L), b2 ^ (data[len-2] ? 0x9E3779B9L : 0x7F4A7C15L)) ^ mum(seed ^ (data[len-1] ? 0x9E3779B9 : 0x7F4A7C15), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public static int hash(long seed, final byte[] data) {
         if (data == null) return 0;
@@ -1673,11 +1687,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b2, b1 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ b3, data[len-2] ^ data[len-1] << 8 ^ b4); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 8, b2 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final short[] data) {
@@ -1691,11 +1706,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ data[len-2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final char[] data) {
@@ -1709,11 +1725,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final CharSequence data) {
@@ -1727,11 +1744,12 @@ public class Hasher {
         }
         switch (len & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public static int hash(long seed, final int[] data) {
         if (data == null) return 0;
@@ -1748,7 +1766,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ data[len-2], b0 ^ data[len-1]); break;
             case 3: seed = mum(seed ^ data[len-3], b2 ^ data[len-2]) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public static int hash(long seed, final int[] data, final int length) {
         if (data == null) return 0;
@@ -1764,7 +1783,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ data[length-2], b0 ^ data[length-1]); break;
             case 3: seed = mum(seed ^ data[length-3], b2 ^ data[length-2]) ^ mum(seed ^ data[length-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, length ^ b0);
+        seed = (seed ^ seed << 16) * (length ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final long[] data) {
@@ -1804,7 +1824,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ floatToRawIntBits(data[len-2]), b0 ^ floatToRawIntBits(data[len-1])); break;
             case 3: seed = mum(seed ^ floatToRawIntBits(data[len-3]), b2 ^ floatToRawIntBits(data[len-2])) ^ mum(seed ^ floatToRawIntBits(data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+                seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
     public static int hash(long seed, final double[] data) {
         if (data == null) return 0;
@@ -1848,11 +1869,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data[len-1]); break;
-            case 2: seed = mum(seed ^ data[len-2], b3 ^ data[len-1]); break;
-            case 3: seed = mum(seed ^ data[len-3] ^ (long) data[len - 2] << 16, b1 ^ data[len-1]); break;
+            case 1: seed = mum(seed, b3 ^ data[len-1]); break;
+            case 2: seed = mum(seed ^ data[len-2], data[len-1] ^ b0); break;
+            case 3: seed = mum(seed ^ data[len-3], data[len-2] ^ b2) ^ mum(seed ^ data[len-1], b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     /**
@@ -1875,11 +1897,12 @@ public class Hasher {
         }
         switch (len - start & 3) {
             case 0: seed = mum(b1 ^ seed, b4 + seed); break;
-            case 1: seed = mum(seed ^ b3, b4 ^ data.charAt(len-1)); break;
-            case 2: seed = mum(seed ^ data.charAt(len-2), b3 ^ data.charAt(len-1)); break;
-            case 3: seed = mum(seed ^ data.charAt(len-3) ^ (long) data.charAt(len - 2) << 16, b1 ^ data.charAt(len-1)); break;
+            case 1: seed = mum(seed, b3 ^ data.charAt(len-1)); break;
+            case 2: seed = mum(seed ^ data.charAt(len-2), data.charAt(len-1) ^ b0); break;
+            case 3: seed = mum(seed ^ data.charAt(len-3), data.charAt(len-2) ^ b2) ^ mum(seed ^ data.charAt(len-1), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len - start ^ b0);
+        seed = (seed ^ seed << 16) * (len - start ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
 
@@ -1899,7 +1922,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final int[][] data) {
@@ -1918,7 +1942,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final long[][] data) {
@@ -1937,7 +1962,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final CharSequence[] data) {
@@ -1956,7 +1982,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final CharSequence[]... data) {
@@ -1975,7 +2002,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final Iterable<? extends CharSequence> data) {
@@ -1990,7 +2018,8 @@ public class Hasher {
                     mum(hash(seed, it.next()) ^ b1, (it.hasNext() ? hash(seed, it.next()) ^ b2 ^ ++len : b2)) + seed,
                     mum((it.hasNext() ? hash(seed, it.next()) ^ b3 ^ ++len : b3), (it.hasNext() ? hash(seed, it.next()) ^ b4 ^ ++len : b4)));
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final List<? extends CharSequence> data) {
@@ -2009,7 +2038,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data.get(len-2)), b0 ^ hash(seed, data.get(len-1))); break;
             case 3: seed = mum(seed ^ hash(seed, data.get(len-3)), b2 ^ hash(seed, data.get(len-2))) ^ mum(seed ^ hash(seed, data.get(len-1)), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final Object[] data) {
@@ -2028,7 +2058,8 @@ public class Hasher {
             case 2: seed = mum(seed ^ hash(seed, data[len-2]), b0 ^ hash(seed, data[len-1])); break;
             case 3: seed = mum(seed ^ hash(seed, data[len-3]), b2 ^ hash(seed, data[len-2])) ^ mum(seed ^ hash(seed, data[len-1]), b4); break;
         }
-        return (int) mum(seed ^ seed << 16, len ^ b0);
+        seed = (seed ^ seed << 16) * (len ^ b0);
+        return (int)(seed - (seed >>> 32));
     }
 
     public static int hash(long seed, final Object data) {
