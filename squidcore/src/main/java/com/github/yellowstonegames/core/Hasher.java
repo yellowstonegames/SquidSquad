@@ -426,6 +426,12 @@ public class Hasher {
             ose_, amy_, orias_, vapula_, zagan_, valac_, andras_, flauros_,
             andrealphus_, kimaris_, amdusias_, belial_, decarabia_, seere_, dantalion_, andromalius_};
 
+    /*
+
+    */
+    /*
+
+    */
     public long hash64(final boolean[] data) {
         if (data == null) return 0;
         long seed = this.seed;//seed = b1 ^ b1 >>> 29 ^ b1 >>> 43 ^ b1 << 7 ^ b1 << 53;
@@ -571,11 +577,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ data[len-1]); break;
-            case 2: seed = wow(seed + data[len-2], b2 + data[len-1]); break;
-            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) ^ wow(seed + data[len-1], seed ^ b3); break;
+            case 2: seed = wow(seed + data[len-2], b2 ^ data[len-1]); break;
+            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) + wow(seed + data[len-1], seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return seed - (seed >>> 31) + (seed << 33);
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return seed ^ seed >>> 23 ^ seed >>> 42;
     }
     public long hash64(final float[] data) {
         if (data == null) return 0;
@@ -609,11 +615,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ doubleToRawLongBits(data[len-1])); break;
-            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 + doubleToRawLongBits(data[len-1])); break;
-            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) ^ wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
+            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 ^ doubleToRawLongBits(data[len-1])); break;
+            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) + wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return seed - (seed >>> 31) + (seed << 33);
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return seed ^ seed >>> 23 ^ seed >>> 42;
     }
 
     /**
@@ -972,11 +978,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ data[len-1]); break;
-            case 2: seed = wow(seed + data[len-2], b2 + data[len-1]); break;
-            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) ^ wow(seed + data[len-1], seed ^ b3); break;
+            case 2: seed = wow(seed + data[len-2], b2 ^ data[len-1]); break;
+            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) + wow(seed + data[len-1], seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return (int)(seed - (seed >>> 32));
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return (int)(seed ^ seed >>> 23 ^ seed >>> 42);
     }
 
     public int hash(final float[] data) {
@@ -1010,11 +1016,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ doubleToRawLongBits(data[len-1])); break;
-            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 + doubleToRawLongBits(data[len-1])); break;
-            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) ^ wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
+            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 ^ doubleToRawLongBits(data[len-1])); break;
+            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) + wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return (int)(seed - (seed >>> 32));
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return (int)(seed ^ seed >>> 23 ^ seed >>> 42);
     }
 
     /**
@@ -1372,11 +1378,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ data[len-1]); break;
-            case 2: seed = wow(seed + data[len-2], b2 + data[len-1]); break;
-            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) ^ wow(seed + data[len-1], seed ^ b3); break;
+            case 2: seed = wow(seed + data[len-2], b2 ^ data[len-1]); break;
+            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) + wow(seed + data[len-1], seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return seed - (seed >>> 31) + (seed << 33);
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return seed ^ seed >>> 23 ^ seed >>> 42;
     }
     public static long hash64(long seed, final float[] data) {
         if (data == null) return 0L;
@@ -1411,11 +1417,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ doubleToRawLongBits(data[len-1])); break;
-            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 + doubleToRawLongBits(data[len-1])); break;
-            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) ^ wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
+            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 ^ doubleToRawLongBits(data[len-1])); break;
+            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) + wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return seed - (seed >>> 31) + (seed << 33);
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return seed ^ seed >>> 23 ^ seed >>> 42;
     }
 
     /**
@@ -1776,11 +1782,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ data[len-1]); break;
-            case 2: seed = wow(seed + data[len-2], b2 + data[len-1]); break;
-            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) ^ wow(seed + data[len-1], seed ^ b3); break;
+            case 2: seed = wow(seed + data[len-2], b2 ^ data[len-1]); break;
+            case 3: seed = wow(seed + data[len-3], b2 + data[len-2]) + wow(seed + data[len-1], seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return (int)(seed - (seed >>> 32));
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return (int)(seed ^ seed >>> 23 ^ seed >>> 42);
     }
 
     public static int hash(long seed, final float[] data) {
@@ -1815,11 +1821,11 @@ public class Hasher {
         seed += b5;
         switch (len & 3) {
             case 1: seed = wow(seed, b1 ^ doubleToRawLongBits(data[len-1])); break;
-            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 + doubleToRawLongBits(data[len-1])); break;
-            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) ^ wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
+            case 2: seed = wow(seed + doubleToRawLongBits(data[len-2]), b2 ^ doubleToRawLongBits(data[len-1])); break;
+            case 3: seed = wow(seed + doubleToRawLongBits(data[len-3]), b2 + doubleToRawLongBits(data[len-2])) + wow(seed + doubleToRawLongBits(data[len-1]), seed ^ b3); break;
         }
-        seed = (seed ^ seed << 16) * (len ^ b0 ^ seed >>> 32);
-        return (int)(seed - (seed >>> 32));
+        seed = (seed ^ seed >>> 16) * (b0 ^ (len + seed) << 4);
+        return (int)(seed ^ seed >>> 23 ^ seed >>> 42);
     }
 
     /**
