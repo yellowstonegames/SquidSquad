@@ -4,15 +4,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.IntLongMap;
-import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.ds.*;
 import com.github.yellowstonegames.grid.Coord;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class GlyphMap {
     protected int gridWidth;
     protected int gridHeight;
-    public IntLongOrderedMap map;
+    public ObjectLongOrderedMap<Coord> map;
     public int[][] backgrounds = null;
     public Font font;
     public Viewport viewport;
@@ -21,19 +22,44 @@ public class GlyphMap {
      * Does not set {@link #font}, you will have to set it later.
      */
     public GlyphMap(){
-        map = new IntLongOrderedMap(4096);
+        map = new ObjectLongOrderedMap<Coord>(4096){
+            @Override
+            protected int place(@Nonnull Object item) {
+                final Coord c = ((Coord)item);
+                final int x = c.x, y = c.y;
+                return y + ((x + y) * (x + y + 1) >> 1) & mask;
+            }
+
+            @Override
+            protected boolean equate(@Nonnull Object left, @Nullable Object right) {
+                return left == right;
+            }
+        };
         viewport = new StretchViewport(64, 64);
     }
     public GlyphMap(Font font){
         this(font, 64, 64);
     }
     public GlyphMap(Font font, int gridWidth, int gridHeight){
+        Coord.expandPoolTo(gridWidth, gridHeight);
         this.font = new Font(font);
         if(this.font.distanceField != Font.DistanceFieldType.STANDARD)
             this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        map = new IntLongOrderedMap(gridWidth * gridHeight);
+        map = new ObjectLongOrderedMap<Coord>(gridWidth * gridHeight){
+            @Override
+            protected int place(@Nonnull Object item) {
+                final Coord c = ((Coord)item);
+                final int x = c.x, y = c.y;
+                return y + ((x + y) * (x + y + 1) >> 1) & mask;
+            }
+
+            @Override
+            protected boolean equate(@Nonnull Object left, @Nullable Object right) {
+                return left == right;
+            }
+        };
         viewport = new StretchViewport(gridWidth, gridHeight);
         viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
         viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
@@ -98,18 +124,18 @@ public class GlyphMap {
     }
 
     public void put(int x, int y, int codepoint) {
-        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
+        map.put(Coord.get(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
     }
 
     public void put(int x, int y, int codepoint, int color) {
-        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
+        map.put(Coord.get(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
     }
 
     public void put(int x, int y, long glyph) {
-        map.put(fuse(x, y), glyph);
+        map.put(Coord.get(x, y), glyph);
     }
 
-    public void put(int fused, long glyph){
+    public void put(Coord fused, long glyph){
         map.put(fused, glyph);
     }
 
@@ -118,11 +144,11 @@ public class GlyphMap {
         font.enableShader(batch);
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
-        int pos;
-        IntList order = map.order();
+        Coord pos;
+        ObjectList<Coord> order = map.order();
         for(int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            font.drawGlyph(batch, map.getAt(i), x + extractX(pos) * font.cellWidth, y + extractY(pos) * font.cellHeight);
+            font.drawGlyph(batch, map.getAt(i), x + pos.x * font.cellWidth, y + pos.y * font.cellHeight);
         }
     }
 
@@ -131,15 +157,32 @@ public class GlyphMap {
         font.enableShader(batch);
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
-        int pos;
-        float xPos, yPos, cellWidth = font.cellWidth * 0.5f, cellHeight = font.cellHeight * 0.5f;
-        IntList order = map.order();
+        Coord pos;
+        ObjectList<Coord> order = map.order();
+        float xPos, yPos, cellWidth = font.cellWidth * 2f, cellHeight = font.cellHeight * 2f;
         for(int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            xPos = x + extractX(pos) * font.cellWidth;
-            yPos = y + extractY(pos) * font.cellHeight;
+            xPos = x + pos.x * font.cellWidth;
+            yPos = y + pos.y * font.cellHeight;
             if(limit.boundsInFrustum(xPos, yPos, 0, cellWidth, cellHeight, 1f))
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
+        }
+    }
+
+    public void draw(Batch batch, float x, float y, int startX, int startY, int endX, int endY) {
+        viewport.apply(false);
+        font.enableShader(batch);
+        if(backgrounds != null)
+            font.drawBlocks(batch, backgrounds, x, y);
+        Coord pos;
+        long glyph;
+        for (int xx = startX; xx < endX; xx++) {
+            for (int yy = startY; yy < endY; yy++) {
+                pos = Coord.get(xx, yy);
+                glyph = map.getOrDefault(pos, 0L);
+                if(glyph != 0L)
+                    font.drawGlyph(batch, glyph, x + xx * font.cellWidth, y + yy * font.cellHeight);
+            }
         }
     }
 

@@ -51,7 +51,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     private Camera camera;
     private EnhancedRandom rng;
     private long seedA, seedB;
-    private Vector3 position, previousPosition, nextPosition;
+    private Vector3 position, previousPosition, nextPosition, temp;
 //    private WorldMapGenerator.MimicMap world;
     private HyperellipticalWorldMap world;
     private WorldMapView wmv;
@@ -115,6 +115,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         position = new Vector3(bigWidth * 0.25f, bigHeight * 0.25f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
+        temp = new Vector3();
         input = new InputAdapter(){
             @Override
             public boolean keyDown(int keycode) {
@@ -325,9 +326,18 @@ public class WorldMapTextDemo extends ApplicationAdapter {
 //        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
         batch.setProjectionMatrix(camera.combined);
+
+        temp.set(0, Gdx.graphics.getBackBufferHeight(), 0);
+        view.unproject(temp);
+        int lowX = MathUtils.floor(temp.x);
+        int lowY = MathUtils.floor(temp.y);
         batch.begin();
-        display.draw(batch, 0f, 0f, camera.frustum);
+        display.draw(batch, 0f, 0f, lowX, lowY, lowX + shownWidth + 1, lowY + shownHeight + 1);
         batch.end();
+
+//        batch.begin();
+//        display.draw(batch, 0f, 0f, camera.frustum);
+//        batch.end();
     }
 
     @Override

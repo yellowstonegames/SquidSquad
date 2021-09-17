@@ -50,7 +50,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
     private Camera camera;
     private DistinctRandom rng;
     private long seed;
-    private Vector3 position, previousPosition, nextPosition;
+    private Vector3 position, previousPosition, nextPosition, temp;
 //    private WorldMapGenerator.MimicMap world;
     private HyperellipticalWorldMap world;
     private WorldMapView wmv;
@@ -113,6 +113,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         position = new Vector3(bigWidth * 0.5f, bigHeight * 0.5f, 0);
         previousPosition = position.cpy();
         nextPosition = position.cpy();
+        temp = new Vector3();
 
 /*
         position = new Vector3(bigWidth * 0.25f, bigHeight * 0.25f, 0);
@@ -187,8 +188,8 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
-                    nextPosition.set(MathUtils.clamp(MathUtils.round(nextPosition.x), 0, bigWidth - 1),
-                            MathUtils.clamp(MathUtils.round(nextPosition.y), 0, bigHeight -1), nextPosition.z);
+                    nextPosition.set(MathUtils.clamp((nextPosition.x), 0, bigWidth - 1),
+                            MathUtils.clamp((nextPosition.y), 0, bigHeight -1), nextPosition.z);
                     counter = System.currentTimeMillis();
                     moveAmount = 0f;
                 }
@@ -343,8 +344,12 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         camera.position.set(position);
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
         batch.setProjectionMatrix(camera.combined);
+        temp.set(0, Gdx.graphics.getBackBufferHeight(), 0);
+        view.unproject(temp);
+        int lowX = MathUtils.floor(temp.x);
+        int lowY = MathUtils.floor(temp.y);
         batch.begin();
-        display.draw(batch, 0f, 0f, camera.frustum);
+        display.draw(batch, 0f, 0f, lowX, lowY, lowX + shownWidth + 1, lowY + shownHeight + 1);
         batch.end();
     }
     @Override
