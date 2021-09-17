@@ -155,7 +155,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 previousPosition.set(position);
                 nextPosition.set(screenX, screenY, 0);
-                camera.unproject(nextPosition);
+                view.unproject(nextPosition);
                 nextPosition.set(MathUtils.clamp(nextPosition.x, 0, bigWidth - 1), MathUtils.clamp(nextPosition.y, 0, bigHeight - 1), nextPosition.z);
                 counter = System.currentTimeMillis();
                 moveAmount = 0f;
@@ -228,6 +228,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             }
         }
         //counter = 0L;
+        putMap();
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -320,15 +321,12 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             }
         }
         camera.position.set(position);
-        view.apply(false);
 
-//        camera.position.set(position);
-        // need to display the map every frame, since we clear the screen to avoid artifacts.
-        putMap();
-        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
+//        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
+        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownWidth - 1.25f * position.y);
+        display.draw(batch, 0f, 0f, camera.frustum);
         batch.end();
     }
 
@@ -336,7 +334,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     public void resize(int width, int height) {
         super.resize(width, height);
         display.resize(width, height);
-        view.update(width, height, true);
+        view.update(width, height, false);
         view.apply(false);
     }
 

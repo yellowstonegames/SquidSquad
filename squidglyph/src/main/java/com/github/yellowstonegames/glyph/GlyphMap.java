@@ -1,8 +1,10 @@
 package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.yellowstonegames.grid.Coord;
@@ -117,9 +119,27 @@ public class GlyphMap {
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
-        for(IntLongMap.Entry e : map) {
-            pos = e.key;
-            font.drawGlyph(batch, e.value, x + extractX(pos) * font.cellWidth, y + (extractY(pos)) * font.cellHeight);
+        IntList order = map.order();
+        for(int i = 0, n = order.size(); i < n; i++) {
+            pos = order.get(i);
+            font.drawGlyph(batch, map.getAt(i), x + extractX(pos) * font.cellWidth, y + extractY(pos) * font.cellHeight);
+        }
+    }
+
+    public void draw(Batch batch, float x, float y, Frustum limit) {
+        viewport.apply(false);
+        font.enableShader(batch);
+        if(backgrounds != null)
+            font.drawBlocks(batch, backgrounds, x, y);
+        int pos;
+        float xPos, yPos, cellWidth = font.cellWidth * 0.5f, cellHeight = font.cellHeight * 0.5f;
+        IntList order = map.order();
+        for(int i = 0, n = order.size(); i < n; i++) {
+            pos = order.get(i);
+            xPos = x + extractX(pos) * font.cellWidth;
+            yPos = y + extractY(pos) * font.cellHeight;
+            if(limit.boundsInFrustum(xPos, yPos, 0, cellWidth, cellHeight, 1f))
+                font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
     }
 

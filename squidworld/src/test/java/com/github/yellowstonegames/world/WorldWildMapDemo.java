@@ -155,6 +155,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                 {
                     zoomed = false;
                     position.set(previousPosition);
+                    putMap();
                     return true;
                 }
                 if(button == Input.Buttons.RIGHT)
@@ -180,6 +181,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //                    );
                     wildMap.generate();
                     nextPosition.set(previousPosition);
+                    putMap();
                 }
                 else {
                     previousPosition.set(position);
@@ -228,6 +230,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                 cities.put(points[i], lang.word(rng, false).toUpperCase());
             }
         }
+        putMap();
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -333,22 +336,15 @@ public class WorldWildMapDemo extends ApplicationAdapter {
             } else {
                 previousPosition.set(position);
                 nextPosition.set(position);
-                nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
                 moveAmount = 0f;
                 counter = System.currentTimeMillis();
             }
         }
         camera.position.set(position);
-        // need to display the map every frame, since we clear the screen to avoid artifacts.
-        putMap();
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        if(zoomed)
-            display.draw(batch, position.x - 0.5f * shownWidth, position.y - 0.5f * shownHeight);
-        else
-            display.draw(batch, -0.5f, -0.5f);
-//            display.draw(batch, 0.125f * shownWidth - 1.25f * position.x, 0.125f * shownHeight - 1.25f * position.y);
+        display.draw(batch, 0f, 0f, camera.frustum);
         batch.end();
     }
     @Override

@@ -337,7 +337,7 @@ public class Hasher {
      * of their 64 bits containing relevant data) instead of mum's 32-bit sections of its inputs, and outputs a
      * 64-bit result that can have any of its bits used.
      * <br>
-     * This was changed so it distributes bits from both inputs a little better on July 6, 2019.
+     * This was changed so that it distributes bits from both inputs a little better on July 6, 2019.
      *
      * @param a any long
      * @param b any long
