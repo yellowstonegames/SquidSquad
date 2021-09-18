@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -22,9 +23,11 @@ import com.github.yellowstonegames.glyph.KnownFonts;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.IntPointHash;
+import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Thesaurus;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.differentiateLightness;
 import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
@@ -55,6 +58,8 @@ public class WorldWildMapDemo extends ApplicationAdapter {
     private HyperellipticalWorldMap world;
     private WorldMapView wmv;
     private PoliticalMapper pm;
+    private Thesaurus thesaurus;
+    private ObjectList<PoliticalMapper.Faction> factions;
     private IntObjectOrderedMap<Language> atlas;
     private CoordObjectOrderedMap<String> cities;
     private WildernessGenerator wildMap;
@@ -102,13 +107,16 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMimicMap(seed, basis, FastNoise.instance, 0.8);
 //        pix.dispose();
 
+        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(Noise.FOAM_FRACTAL);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seed, bigWidth, bigHeight, WorldMapGenerator.DEFAULT_NOISE, 0.8f);
         //world = new WorldMapGenerator.TilingMap(seed, bigWidth, bigHeight, WhirlingNoise.instance, 0.9);
         wmv = new WorldMapView(world);
         pm = new PoliticalMapper();
         cities = new CoordObjectOrderedMap<>(96);
+        factions = new ObjectList<>(80);
         atlas = new IntObjectOrderedMap<>(80);
+        thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
 
         position = new Vector3(bigWidth * 0.5f, bigHeight * 0.5f, 0);
         previousPosition = position.cpy();
@@ -211,10 +219,13 @@ public class WorldWildMapDemo extends ApplicationAdapter {
         wmv.show();
         atlas.clear();
         for (int i = 0; i < 64; i++) {
-            atlas.put(ArrayTools.letterAt(i),
-                    rng.randomElement(Language.romanizedHumanLanguages).mix(rng.randomElement(Language.romanizedHumanLanguages), rng.nextFloat()).removeAccents());
+            Language lang = rng.randomElement(Language.romanizedHumanLanguages)
+                    .mix(Language.romanizedLanguages[rng.nextInt(Language.romanizedLanguages.length - 7)], // - 7 removes fancy, imp, and alien langs
+                            rng.nextFloat(0.125f)).removeAccents();
+            factions.add(new PoliticalMapper.Faction(lang, thesaurus.makeNationName(lang)));
+            atlas.put(ArrayTools.letterAt(i), lang);
         }
-        final char[][] political = pm.generate(rng.nextLong(), world, wmv.biomeMapper, 1);
+        final char[][] political = pm.generate(rng.nextLong(), world, wmv.getBiomeMapper(), factions, 64, 1f);
         cities.clear();
         Coord[] points = world.landData
                 .copy() // don't want to edit the actual land map
@@ -280,7 +291,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     case 0:
                     case 1:
                     case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
+                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
                         break;
                     case 3:
                         display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
@@ -303,26 +314,15 @@ public class WorldWildMapDemo extends ApplicationAdapter {
             Coord ct = cities.keyAt(i);
             String cname = cities.getAt(i);
             if(cname == null) continue;
-            int nationColor = toRGBA8888(differentiateLightness(
-                    DescriptiveColor.COLORS_BY_HUE.get((int) ((pm.politicalMap[ct.x][ct.y] * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
-                    0xFE7F7F40)); // dark gray
+            int nationColor = toRGBA8888(differentiateLightness(DescriptiveColor.edit(
+                    DescriptiveColor.COLORS_BY_HUE.get((int) (((pm.politicalMap[ct.x][ct.y] + rng.getSelectedState(0)) * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
+                    0.15f, 0f, 0f, 0f, 1.2f, 0.8f, 0.8f, 1f), 0xFE7F7F40)); // dark gray
             display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x][ct.y])));
             int pos = ct.x - (cname.length() >> 1);
-            if(ct.y >= display.backgrounds[0].length - 1 || pos + cname.length() >= display.backgrounds.length) continue;
+            if(ct.y >= display.backgrounds[0].length - 1 || pos < 0 || pos + cname.length() >= display.backgrounds.length) continue;
             for (int j = 0; j < cname.length(); pos++, j++) {
                 display.backgrounds[pos][ct.y + 1] = dark;
                 display.put(pos, ct.y + 1, cname.charAt(j), nationColor);
-            }
-        }
-        for (int i = 0; i < cities.size(); i++) {
-            Coord ct = cities.keyAt(i);
-            String cname = cities.getAt(i);
-            int bg = DescriptiveColor.describe("dullest chocolate");
-            int fg = DescriptiveColor.describe("dull yellow");
-            display.put(ct.x, ct.y, '□', bg);
-            for (int j = ct.x - (cname.length() >> 1), k = 0; j < cname.length() && j < display.backgrounds.length; j++, k++) {
-                display.put(j, ct.y + 1, cname.charAt(k), fg);
-                display.backgrounds[j][ct.y + 1] = bg;
             }
         }
     }

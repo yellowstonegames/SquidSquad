@@ -268,7 +268,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                     case 0:
                     case 1:
                     case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[44], oklab[x][y])));
+                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
                         break;
                     case 3:
                         display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
@@ -291,12 +291,12 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             Coord ct = cities.keyAt(i);
             String cname = cities.getAt(i);
             if(cname == null) continue;
-            int nationColor = toRGBA8888(differentiateLightness(
-                    DescriptiveColor.COLORS_BY_HUE.get((int) ((pm.politicalMap[ct.x][ct.y] * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
-                    0xFE7F7F40)); // dark gray
+            int nationColor = toRGBA8888(differentiateLightness(DescriptiveColor.edit(
+                    DescriptiveColor.COLORS_BY_HUE.get((int) (((pm.politicalMap[ct.x][ct.y] + rng.getSelectedState(0)) * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
+                    0.15f, 0f, 0f, 0f, 1.2f, 0.8f, 0.8f, 1f), 0xFE7F7F40)); // dark gray
             display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x][ct.y])));
             int pos = ct.x - (cname.length() >> 1);
-            if(ct.y >= display.backgrounds[0].length - 1 || pos + cname.length() >= display.backgrounds.length) continue;
+            if(ct.y >= display.backgrounds[0].length - 1 || pos < 0 || pos + cname.length() >= display.backgrounds.length) continue;
             for (int j = 0; j < cname.length(); pos++, j++) {
                 display.backgrounds[pos][ct.y + 1] = dark;
                 display.put(pos, ct.y + 1, cname.charAt(j), nationColor);
