@@ -66,7 +66,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         noise.setPointHash(pointHashes[hashIndex]);
         noise.setFractalType(Noise.RIDGED_MULTI);
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.SCATTER);
         gif.palette = new PaletteReducer(new int[] {
                 0x00000000, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
                 0x080808FF, 0x090909FF, 0x0A0A0AFF, 0x0B0B0BFF, 0x0C0C0CFF, 0x0D0D0DFF, 0x0E0E0EFF, 0x0F0F0FFF,
@@ -141,7 +141,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                 switch (keycode) {
                     case W:
                         frames.clear();
-                        noise.setFrequency(0x1p-3f);
+                        if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-3f);
                         for (int c = 0; c < 256; c++) {
                             Pixmap p = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < 256; x++) {
@@ -197,7 +197,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         break;
                     case COMMA: // foam sharpness
-                        noise.setFoamSharpness(TrigTools.sinDegrees((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) * 0.875f + 1.125f);
+                        noise.setFoamSharpness(TrigTools.sinDegrees((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.25f);
                         System.out.println(noise.getFoamSharpness());
                         break;
                     case I: // inverse mode
