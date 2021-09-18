@@ -2895,17 +2895,17 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
-        float t;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            t = x;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
+            float t = x;
             x = y * lacunarity;
             y = t * lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
 
@@ -2962,16 +2962,17 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
     public float getFoam(float x, float y, float z) {
@@ -3051,17 +3052,18 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
             w *= lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
     public float getFoam(float x, float y, float z, float w) {
@@ -3170,18 +3172,19 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
             w *= lacunarity;
             u *= lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
     public float getFoam(float x, float y, float z, float w, float u) {
@@ -3307,11 +3310,12 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -3319,7 +3323,7 @@ public class Noise {
             u *= lacunarity;
             v *= lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
     public float getFoam(float x, float y, float z, float w, float u, float v) {
@@ -3440,11 +3444,12 @@ public class Noise {
 
     private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0, amp = 1, ampBias = 1f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v, m));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+            spike *= spike * amp;
+            amp = Math.min(1f, spike + spike);
+            sum += (spike * (ampBias += ampBias));
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -3453,7 +3458,7 @@ public class Noise {
             v *= lacunarity;
             m *= lacunarity;
         }
-        return sum * 2f / correction - 1f;
+        return sum / (ampBias - 1f) - 1f;
     }
 
     public float singleFoam(int seed, float x, float y, float z, float w, float u, float v, float m) {
