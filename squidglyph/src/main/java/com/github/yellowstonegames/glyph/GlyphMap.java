@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.yellowstonegames.grid.Coord;
 
@@ -21,12 +20,7 @@ public class GlyphMap {
      * Does not set {@link #font}, you will have to set it later.
      */
     public GlyphMap(){
-        map = new IntLongOrderedMap(4096){
-            @Override
-            protected int place(int item) {
-                return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
-            }
-        };
+        map = new IntLongOrderedMap(4096);
         viewport = new StretchViewport(64, 64);
     }
     public GlyphMap(Font font){
@@ -38,12 +32,7 @@ public class GlyphMap {
             this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        map = new IntLongOrderedMap(gridWidth * gridHeight){
-            @Override
-            protected int place(int item) {
-                return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
-            }
-        };
+        map = new IntLongOrderedMap(gridWidth * gridHeight);
         viewport = new StretchViewport(gridWidth, gridHeight);
         viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
         viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
@@ -123,6 +112,12 @@ public class GlyphMap {
         map.put(fused, glyph);
     }
 
+    /**
+     * Draws the entire GlyphMap at the given x,y for its lower-left corner. Does no clipping.
+     * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
+     * @param x x of the lower-left corner, in world units
+     * @param y y of the lower-left corner, in world units
+     */
     public void draw(Batch batch, float x, float y) {
         viewport.apply(false);
         font.enableShader(batch);
@@ -136,6 +131,14 @@ public class GlyphMap {
         }
     }
 
+    /**
+     * Draws part of the GlyphMap at the given x,y for its lower-left corner. Still iterates through all keys in order,
+     * but only draws those that are visible in the given {@link Frustum} {@code limit}.
+     * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
+     * @param x x of the lower-left corner, in world units
+     * @param y y of the lower-left corner, in world units
+     * @param limit a Frustum, usually obtained from {@link com.badlogic.gdx.graphics.Camera#frustum} that delimits what will be shown.
+     */
     public void draw(Batch batch, float x, float y, Frustum limit) {
         viewport.apply(false);
         font.enableShader(batch);
@@ -153,18 +156,32 @@ public class GlyphMap {
         }
     }
 
-    public void draw(Batch batch, float x, float y, int startX, int startY, int endX, int endY) {
+    /**
+     * Draws part of the GlyphMap at the given x,y for its lower-left corner. Only draws cells between startCellX
+     * (inclusive) and endCellX (exclusive), and likewise for startCellY and endCellY, where those ints represent cell
+     * positions and not screen or world positions. This only even considers keys that are in the given start-to-end
+     * rectangle, and doesn't check keys or values outside it. This is probably the most efficient of the draw() methods
+     * here, but requires you to know what the start and end bounds are.
+     * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
+     * @param x x of the lower-left corner, in world units
+     * @param y y of the lower-left corner, in world units
+     * @param startCellX the inclusive x of the lower-left corner, measured in cells, to start rendering at
+     * @param startCellY the inclusive y of the lower-left corner, measured in cells, to start rendering at
+     * @param endCellX the exclusive x of the upper-right corner, measured in cells, to stop rendering at
+     * @param endCellY the exclusive y of the upper-right corner, measured in cells, to stop rendering at
+     */
+    public void draw(Batch batch, float x, float y, int startCellX, int startCellY, int endCellX, int endCellY) {
         viewport.apply(false);
         font.enableShader(batch);
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         long glyph;
-        for (int xx = startX; xx < endX; xx++) {
-            for (int yy = startY; yy < endY; yy++) {
+        for (int xx = startCellX; xx < endCellX; xx++) {
+            for (int yy = startCellY; yy < endCellY; yy++) {
                 pos = fuse(xx, yy);
                 glyph = map.getOrDefault(pos, 0L);
-                if(glyph != 0L)
+                if((glyph & 0x000000FE00000000L) != 0L) // if pos was found and glyph is not transparent
                     font.drawGlyph(batch, glyph, x + xx * font.cellWidth, y + yy * font.cellHeight);
             }
         }

@@ -140,7 +140,6 @@ public class NoiseVisualizer extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case W:
-                        frames.clear();
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-3f);
                         for (int c = 0; c < 256; c++) {
                             Pixmap p = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
@@ -156,6 +155,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         }
                         Gdx.files.local("out/").mkdirs();
                         gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 12);
+                        for (int i = 0; i < frames.size; i++) {
+                            frames.get(i).dispose();
+                        }
+                        frames.clear();
                         break;
                     case P: //pause
                         keepGoing = !keepGoing;
