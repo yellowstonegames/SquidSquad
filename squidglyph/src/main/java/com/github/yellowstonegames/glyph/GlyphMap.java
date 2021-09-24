@@ -137,7 +137,7 @@ public class GlyphMap {
      * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      * @param x x of the lower-left corner, in world units
      * @param y y of the lower-left corner, in world units
-     * @param limit a Frustum, usually obtained from {@link com.badlogic.gdx.graphics.Camera#frustum} that delimits what will be shown.
+     * @param limit a Frustum, usually obtained from {@link com.badlogic.gdx.graphics.Camera#frustum}, that delimits what will be rendered
      */
     public void draw(Batch batch, float x, float y, Frustum limit) {
         viewport.apply(false);
