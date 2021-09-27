@@ -11,6 +11,7 @@ import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
+import regexodus.Pattern;
 
 import java.util.Arrays;
 
@@ -222,6 +223,21 @@ public class JsonCoreTest {
         ProbabilityTable readBack = json.fromJson(ProbabilityTable.class, data);
         Assert.assertEquals(copy.random(), readBack.random());
 
+    }
+
+    @Test
+    public void testPattern() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerPattern(json);
+        Pattern pat = Pattern.compile("(\\w+\\s*){4}", "ui");
+        String data = json.toJson(pat);
+        Pattern pat2 = json.fromJson(Pattern.class, data);
+        ////TODO: fix Pattern.equals(), or whatever part is broken, in Regexodus.
+//        Assert.assertEquals(pat, pat2);
+        System.out.println(pat.matches("cold chopped beef salad"));
+        Assert.assertEquals(pat.matches("cold chopped beef salad"), pat2.matches("cold chopped beef salad"));
+        System.out.println(pat.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"));
+        Assert.assertEquals(pat.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"), pat2.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"));
     }
 
 }

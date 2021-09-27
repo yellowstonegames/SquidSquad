@@ -2,6 +2,7 @@ package com.github.yellowstonegames.store.text;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,9 +11,12 @@ public class JsonTextTest {
     @Test
     public void testLanguage() {
         Json json = new Json(JsonWriter.OutputType.minimal);
-        JsonText.registerLanguage(json);
         Language lang, lang2;
         lang = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
+        JsonCore.registerPattern(json);
+        // If you really want to see what this looks like without registerLanguage... Uncomment the next line.
+//        System.out.println(json.toJson(lang));
+        JsonText.registerLanguage(json);
         String data = json.toJson(lang);
         System.out.println(data);
         lang2 = json.fromJson(Language.class, data);

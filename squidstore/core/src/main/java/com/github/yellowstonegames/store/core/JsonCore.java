@@ -1,16 +1,15 @@
 package com.github.yellowstonegames.store.core;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.*;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.*;
+import regexodus.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -351,6 +350,28 @@ public final class JsonCore {
             public Base read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return Base.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers Pattern with the given Json object, so Pattern can be written to and read from JSON.
+     * This is a simple wrapper around Pattern's built-in {@link Pattern#serializeToString()} and
+     * {@link Pattern#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPattern(@Nonnull Json json) {
+        json.setSerializer(Pattern.class, new Json.Serializer<Pattern>() {
+            @Override
+            public void write(Json json, Pattern object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public Pattern read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Pattern.deserializeFromString(jsonData.asString());
             }
         });
     }
