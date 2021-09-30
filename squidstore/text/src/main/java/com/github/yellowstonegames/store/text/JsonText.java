@@ -27,17 +27,22 @@ public final class JsonText {
     public static void registerAll(@Nonnull Json json) {
         registerLanguage(json);
         registerLanguageSentenceForm(json);
+        registerTranslator(json);
     }
     
     
     /**
      * Registers Language with the given Json object, so Language can be written to and read from JSON.
      * This is a simple wrapper around Language's built-in {@link Language#serializeToString()} and
-     * {@link Language#deserializeFromString(String)} methods.
+     * {@link Language#deserializeFromString(String)} methods. Out of an abundance of caution, this also
+     * registers Pattern from RegExodus, because that class serializes into a much more compact form with
+     * custom registration than without, and because there's a risk with unregistered Pattern
+     * serialization (using Json) of hitting an infinite cycle. There's no such risk with it registered.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLanguage(@Nonnull Json json) {
+        JsonCore.registerPattern(json);
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
             @Override
             public void write(Json json, Language object, Class knownType) {
