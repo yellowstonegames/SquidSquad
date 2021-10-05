@@ -2,6 +2,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.yellowstonegames.core.annotations.Beta;
 
+import javax.annotation.Nonnull;
+
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
  * the sequence in memory. Uses a Feistel network, as described in
@@ -194,5 +196,31 @@ public class IntShuffler {
         next.key0 = key0;
         next.key1 = key1;
         return next;
+    }
+
+    public String serializeToString() {
+        StringBuilder sb = new StringBuilder("`");
+        Base.BASE36.appendSigned(sb, bound);
+        sb.append('~');
+        Base.BASE36.appendSigned(sb, index);
+        sb.append('~');
+        Base.BASE36.appendSigned(sb, key0);
+        sb.append('~');
+        Base.BASE36.appendSigned(sb, key1);
+        return sb.append('`').toString();
+    }
+
+    public static IntShuffler deserializeFromString(@Nonnull String data) {
+        if(data.length() < 9) return null;
+        int idx = 1;
+        int bound = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
+        int index = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
+        int key0  = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
+        int key1  = Base.BASE36.readInt(data, idx, data.indexOf('`', idx + 1));
+        IntShuffler is = new IntShuffler(bound, 0);
+        is.index = index;
+        is.key0 = key0;
+        is.key1 = key1;
+        return is;
     }
 }

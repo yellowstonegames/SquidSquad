@@ -36,6 +36,9 @@ public final class JsonCore {
         registerHasher(json);
         registerWeightedTable(json);
         registerBase(json);
+        registerIntShuffler(json);
+
+        registerPattern(json);
     }
 
     /**
@@ -350,6 +353,20 @@ public final class JsonCore {
             public Base read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return Base.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    public static void registerIntShuffler(@Nonnull Json json) {
+        json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
+            @Override
+            public void write(Json json, IntShuffler object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public IntShuffler read(Json json, JsonValue jsonData, Class type) {
+                return IntShuffler.deserializeFromString(jsonData.asString());
             }
         });
     }
