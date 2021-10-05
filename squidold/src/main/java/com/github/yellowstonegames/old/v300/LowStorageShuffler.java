@@ -1,4 +1,4 @@
-package com.github.yellowstonegames.old.v300.squidmath;
+package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.MathTools;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
- * of the sequence in memory. Uses a Feistel network, as described in
+ * the sequence in memory. Uses a Feistel network, as described in
  * <a href="https://blog.demofox.org/2013/07/06/fast-lightweight-random-shuffle-functionality-fixed/">this post by Alan Wolfe</a>.
  * The API is very simple; you construct a LowStorageShuffler by specifying how many items it can shuffle, and you can
  * optionally use a seed (it will be random if you don't specify a seed). Call {@link #next()} on a LowStorageShuffler
@@ -29,8 +29,7 @@ import java.io.Serializable;
  * @author Alan Wolfe
  * @author Tommy Ettinger
  */
-public class LowStorageShuffler implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class LowStorageShuffler {
     public final int bound;
     protected int index, pow4, halfBits, leftMask, rightMask;
     protected int key0, key1;
