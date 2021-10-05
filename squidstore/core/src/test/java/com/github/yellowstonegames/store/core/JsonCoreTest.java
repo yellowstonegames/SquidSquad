@@ -200,6 +200,7 @@ public class JsonCoreTest {
             }
         }
     }
+
     @Test
     public void testProbabilityTable(){
         Json json = new Json(JsonWriter.OutputType.minimal);
@@ -232,12 +233,24 @@ public class JsonCoreTest {
         Pattern pat = Pattern.compile("(\\w+\\s*){4}", "ui");
         String data = json.toJson(pat);
         Pattern pat2 = json.fromJson(Pattern.class, data);
-        ////TODO: fix Pattern.equals(), or whatever part is broken, in Regexodus.
-//        Assert.assertEquals(pat, pat2);
+        Assert.assertEquals(pat, pat2);
         System.out.println(pat.matches("cold chopped beef salad"));
         Assert.assertEquals(pat.matches("cold chopped beef salad"), pat2.matches("cold chopped beef salad"));
         System.out.println(pat.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"));
         Assert.assertEquals(pat.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"), pat2.matches("aаαΛe езξεЗΣiτ ιyуλγУo оюσοuμυνv"));
+    }
+    @Test
+    public void testIntShuffler() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerIntShuffler(json);
+        FourWheelRandom random = new FourWheelRandom(1234567890L);
+        IntShuffler shuffler = new IntShuffler(10, random.nextInt());
+        shuffler.next();
+        String data = json.toJson(shuffler);
+        System.out.println(data);
+        IntShuffler shuffler2 = json.fromJson(IntShuffler.class, data);
+        Assert.assertEquals(shuffler, shuffler2);
+        Assert.assertEquals(shuffler.next(), shuffler2.next());
     }
 
 }

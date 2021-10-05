@@ -212,15 +212,37 @@ public class IntShuffler {
 
     public static IntShuffler deserializeFromString(@Nonnull String data) {
         if(data.length() < 9) return null;
-        int idx = 1;
-        int bound = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
-        int index = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
-        int key0  = Base.BASE36.readInt(data, idx, idx = data.indexOf('~', idx + 1));
-        int key1  = Base.BASE36.readInt(data, idx, data.indexOf('`', idx + 1));
+        int idx = 0;
+        int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        int index = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        int key0  = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        int key1  = Base.BASE36.readInt(data, idx + 1, data.indexOf('`', idx + 1));
         IntShuffler is = new IntShuffler(bound, 0);
         is.index = index;
         is.key0 = key0;
         is.key1 = key1;
         return is;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IntShuffler that = (IntShuffler) o;
+
+        if (bound != that.bound) return false;
+        if (index != that.index) return false;
+        if (key0 != that.key0) return false;
+        return key1 == that.key1;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bound;
+        result = 31 * result + index;
+        result = 31 * result + key0;
+        result = 31 * result + key1;
+        return result;
     }
 }
