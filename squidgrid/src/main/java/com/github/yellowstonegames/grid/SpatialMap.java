@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
@@ -21,7 +22,7 @@ import java.util.*;
  * @param <V> the type of all values; this must implement {@link IGridIdentified}
  */
 @Beta
-public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V> {
+public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V> implements Arrangeable {
     public final CoordObjectOrderedMap<V> positionMap;
     public final IntObjectOrderedMap<V> idMap;
 
@@ -215,10 +216,16 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         positionMap.clear();
     }
 
-    public void shuffle(EnhancedRandom rng) {
-        EnhancedRandom r2 = rng.copy();
-        idMap.shuffle(rng);
-        positionMap.shuffle(r2);
+    @Override
+    public void swap(int first, int second) {
+        idMap.swap(first, second);
+        positionMap.swap(first, second);
+    }
+
+    @Override
+    public void reverse() {
+        idMap.reverse();
+        positionMap.reverse();
     }
 
     @Override
