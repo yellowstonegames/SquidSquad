@@ -2,7 +2,6 @@ package com.github.yellowstonegames.old.v300;
 
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import javax.annotation.Nonnull;
 
@@ -43,7 +42,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
     }
 
     /**
-     * Hashes {@code seed} using both {@link Hasher#hash(CharSequence)} and {@link String#hashCode()} and uses those
+     * Hashes {@code seed} using both {@link CrossHash#hash(CharSequence)} and {@link String#hashCode()} and uses those
      * two results as the two states with {@link #setState(int, int)}. If seed is null, this won't call
      * String.hashCode() on it and will instead use 1 as that state (to avoid the forbidden double-zero case).
      * @param seed any String; may be null

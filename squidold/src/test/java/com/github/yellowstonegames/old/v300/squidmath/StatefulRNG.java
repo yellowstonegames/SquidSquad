@@ -1,7 +1,5 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
-import com.github.yellowstonegames.core.Hasher;
-
 import java.io.Serializable;
 
 /**
@@ -43,7 +41,7 @@ public class StatefulRNG extends RNG implements Serializable, IStatefulRNG {
      * longer has the older, worse one. The latest change in June switched to DiverRNG instead of LightRNG.
      */
     public StatefulRNG(CharSequence seedString) {
-        this(new DiverRNG(Hasher.andras.hash64(seedString)));
+        this(new DiverRNG(CrossHash.hash64(seedString)));
     }
 
     @Override

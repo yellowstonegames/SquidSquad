@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.old.v300.CrossHash;
 
 import java.io.Serializable;
@@ -390,6 +389,6 @@ public final class LongPeriodRNG implements RandomnessSource, Serializable {
 
     @Override
     public int hashCode() {
-        return Hasher.predefined[choice].hash(state);
+        return CrossHash.Mist.predefined[choice].hash(state);
     }
 }

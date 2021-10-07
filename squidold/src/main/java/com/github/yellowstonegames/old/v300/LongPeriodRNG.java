@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import java.util.Arrays;
 
@@ -387,7 +386,7 @@ public final class LongPeriodRNG implements LegacyRandom {
 
     @Override
     public int hashCode() {
-        return Hasher.predefined[choice].hash(state);
+        return CrossHash.Mist.predefined[choice].hash(state);
     }
 
     @Override

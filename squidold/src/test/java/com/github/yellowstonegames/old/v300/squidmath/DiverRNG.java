@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import java.io.Serializable;
 
@@ -24,7 +23,7 @@ public final class DiverRNG implements StatefulRandomness, Serializable {
     }
 
     public DiverRNG(final String seed) {
-        state = Hasher.andras.hash64(seed);
+        state = CrossHash.hash64(seed);
     }
 
     @Override

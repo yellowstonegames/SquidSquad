@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import java.io.Serializable;
 
@@ -44,7 +43,7 @@ public final class SilkRNG extends AbstractRNG implements IStatefulRNG, Serializ
     }
 
     public SilkRNG(final String seed) {
-        setState(Hasher.andras.hash(seed), seed == null ? 0 : seed.hashCode());
+        setState(CrossHash.hash(seed), seed == null ? 0 : seed.hashCode());
     }
 
     /**

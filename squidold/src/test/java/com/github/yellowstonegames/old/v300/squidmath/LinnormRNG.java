@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import java.io.Serializable;
 
@@ -28,11 +27,11 @@ public final class LinnormRNG implements RandomnessSource, StatefulRandomness, S
     }
 
     /**
-     * Constructor that hashes seed with {@link com.github.yellowstonegames.core.Hasher#hash64(CharSequence)} and uses the result as the state.
+     * Constructor that hashes seed with {@link CrossHash#hash64(CharSequence)} and uses the result as the state.
      * @param seed any CharSequence, such as a String or StringBuilder; should probably not be null (it might work?)
      */
     public LinnormRNG(final CharSequence seed) {
-        state = Hasher.andras.hash64(seed);
+        state = CrossHash.hash64(seed);
     }
 
     @Override

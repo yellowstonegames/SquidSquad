@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +24,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
     }
 
     /**
-     * Constructor that hashes seed with {@link Hasher#hash64(CharSequence)} and uses the result as the state.
+     * Constructor that hashes seed with {@link CrossHash#hash64(CharSequence)} and uses the result as the state.
      * @param seed any CharSequence, such as a String or StringBuilder; should probably not be null (it might work?)
      */
     public LinnormRNG(final CharSequence seed) {

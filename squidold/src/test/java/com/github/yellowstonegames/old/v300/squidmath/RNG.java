@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.tommyettinger.ds.support.BitConversion;
-import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.MathTools;
 
 import java.io.Serializable;
@@ -33,12 +32,12 @@ public class RNG implements Serializable, IRNG {
 
     /**
      * String-seeded constructor; uses a platform-independent hash of the String (it does not use String.hashCode,
-     * instead using {@link Hasher#hash64(CharSequence)}) as a seed for {@link DiverRNG}, which is of high quality,
+     * instead using {@link CrossHash#hash64(CharSequence)}) as a seed for {@link DiverRNG}, which is of high quality,
      * but low period (which rarely matters for games), and has excellent speed, tiny state size, and natively generates
      * 64-bit numbers.
      */
     public RNG(CharSequence seedString) {
-        this(new DiverRNG(Hasher.andras.hash64(seedString)));
+        this(new DiverRNG(CrossHash.hash64(seedString)));
     }
 
     /**
