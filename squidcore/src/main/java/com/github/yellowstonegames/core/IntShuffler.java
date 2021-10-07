@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * to get the next distinct int in the shuffled ordering; next() will return -1 if there are no more distinct ints (if
  * {@link #bound} items have already been returned). You can go back to the previous item with {@link #previous()},
  * which similarly returns -1 if it can't go earlier in the sequence. You can restart the sequence with
- * {@link #restart()} to use the same sequence over again, or {@link #restart(int)} to use a different seed (the bound
+ * {@link #restart()} to use the same sequence over again, or {@link #restart(long)} to use a different seed (the bound
  * is fixed).
  * <br>
  * This differs from the version in Alan Wolfe's example code and blog post; it uses a very different round function,
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * version he uses doesn't have anything like MurmurHash3's fmix32() to adequately avalanche bits, and since all keys
  * are small keys with the usage of MurmurHash2 in his code, avalanche is the most important thing. It's also perfectly
  * fine to use irreversible operations in a Feistel network round function, and I do that since it seems to improve
- * randomness slightly. The {@link #round(int, int)} method used here reuses the {@link Hasher#wow(long, long)} method;
+ * randomness slightly. The {@link #round(long, long)} method used here reuses the {@link Hasher#wow(long, long)} method;
  * it acts like an unbalanced, irreversible PRNG with two states, and that turns out to be just fine for a Feistel
  * network. Using 4 rounds turns out to be overkill in this case. This also uses a different seed for each round.
  *
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 public class IntShuffler {
     public final int bound;
     protected int index, pow4, halfBits, leftMask, rightMask;
-    protected int key0, key1;
+    protected long key0, key1;
 
     /**
      * Constructs an IntShuffler with a random seed and a bound of 10.
@@ -46,7 +46,8 @@ public class IntShuffler {
      */
     public IntShuffler(int bound)
     {
-        this(bound, (int)((Math.random() * 2.0 - 1.0) * 0x80000000));
+        this(bound, (long) ((Math.random() - 0.5) * 0x1p52)
+                ^ (long) ((Math.random() - 0.5) * 0x1p64));
     }
 
     /**
@@ -54,7 +55,7 @@ public class IntShuffler {
      * @param bound how many distinct ints this can return
      * @param seed any int; will be used to get several seeds used internally
      */
-    public IntShuffler(int bound, int seed)
+    public IntShuffler(int bound, long seed)
     {
         // initialize our state
         this.bound = bound;
@@ -122,36 +123,34 @@ public class IntShuffler {
         index = 0;
     }
 
-    /**
-     * Used to rearrange the bits of seeds this is given in a way that should partly randomize them.
-     * This is, at the time of writing, the best two-multiply unary hash that skeeto's hash-prospector
-     * (<a href="https://github.com/skeeto/hash-prospector">available here</a>) has found.
-     * @param z any int
-     * @return a pseudo-random but deterministic change of z
-     */
-    public static int determine(int z)
-    {
-        z ^= z >>> 15;
-        z *= 0xD168AAADL;
-        z ^= z >>> 15;
-        z *= 0xAF723597L;
-        return z ^ z >>> 15;
-    }
+//    /**
+//     * Used to rearrange the bits of seeds this is given in a way that should partly randomize them.
+//     * This is, at the time of writing, the best two-multiply unary hash that skeeto's hash-prospector
+//     * (<a href="https://github.com/skeeto/hash-prospector">available here</a>) has found.
+//     * @param z any int
+//     * @return a pseudo-random but deterministic change of z
+//     */
+//    public static int determine(int z)
+//    {
+//        z ^= z >>> 15;
+//        z *= 0xD168AAADL;
+//        z ^= z >>> 15;
+//        z *= 0xAF723597L;
+//        return z ^ z >>> 15;
+//    }
     /**
      * Starts the sequence over, but can change the seed (completely changing the sequence). If {@code seed} is the same
      * as the seed given in the constructor, this will use the same sequence, acting like {@link #restart()}.
      * @param seed any int; will be used to get several seeds used internally
      */
-    public void restart(int seed)
+    public void restart(long seed)
     {
         index = 0;
-        key0 = determine(seed ^ 0xDE4D * ~bound);
-        key1 = determine(key0 ^ 0xBA55 * bound);
-        key0 ^= determine(~key1 ^ 0xBEEF * bound);
-        key1 ^= determine(~key0 ^ 0x1337 * bound);
+        key0 = Hasher.randomize(seed + Hasher.b3 * bound);
+        key1 = Hasher.randomize(seed ^ Hasher.b4 * ~bound);
     }
 
-    public static int round(int data, int seed)
+    public static int round(long data, long seed)
     {
         return (int)Hasher.wow(data + Hasher.b1, seed - Hasher.b2);
 //        final int s = seed + data;
@@ -215,8 +214,8 @@ public class IntShuffler {
         int idx = 0;
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
         int index = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
-        int key0  = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
-        int key1  = Base.BASE36.readInt(data, idx + 1, data.indexOf('`', idx + 1));
+        long key0 = Base.BASE36.readLong(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        long key1 = Base.BASE36.readLong(data, idx + 1, data.indexOf('`', idx + 1));
         IntShuffler is = new IntShuffler(bound, 0);
         is.index = index;
         is.key0 = key0;
@@ -241,8 +240,8 @@ public class IntShuffler {
     public int hashCode() {
         int result = bound;
         result = 31 * result + index;
-        result = 31 * result + key0;
-        result = 31 * result + key1;
+        result = 31 * result + (int) (key0 ^ (key0 >>> 32));
+        result = 31 * result + (int) (key1 ^ (key1 >>> 32));
         return result;
     }
 }

@@ -243,13 +243,14 @@ public class JsonCoreTest {
     public void testIntShuffler() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerIntShuffler(json);
-        FourWheelRandom random = new FourWheelRandom(1234567890L);
-        IntShuffler shuffler = new IntShuffler(10, random.nextInt());
+        IntShuffler shuffler = new IntShuffler(10, 123456789);
         shuffler.next();
         String data = json.toJson(shuffler);
         System.out.println(data);
         IntShuffler shuffler2 = json.fromJson(IntShuffler.class, data);
         Assert.assertEquals(shuffler, shuffler2);
+        Assert.assertEquals(shuffler.next(), shuffler2.next());
+        Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
     }
 
