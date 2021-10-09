@@ -4,7 +4,7 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
+public class LinnormRNG implements LegacyRandom, StatefulRandomness {
     private long state; /* The state can be seeded with any value. */
 
     /**
@@ -32,7 +32,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
     }
 
     @Override
-    public final int next(int bits)
+    public int next(int bits)
     {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
@@ -45,7 +45,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      * @return any long, all 64 bits are random
      */
     @Override
-    public final long nextLong() {
+    public long nextLong() {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return (z ^ z >>> 25);
@@ -69,7 +69,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return any int, all 32 bits are random
      */
-    public final int nextInt() {
+    public int nextInt() {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return (int)(z ^ z >>> 25);
@@ -82,7 +82,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      * @param bound the upper bound; should be positive
      * @return a random int between 0 (inclusive) and bound (exclusive)
      */
-    public final int nextInt(final int bound) {
+    public int nextInt(final int bound) {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return (int)((bound * ((z ^ z >>> 25) & 0xFFFFFFFFL)) >> 32);
@@ -95,7 +95,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      * @param outer the outer bound, exclusive, can be positive or negative, usually greater than inner
      * @return a random int between inner (inclusive) and outer (exclusive)
      */
-    public final int nextInt(final int inner, final int outer) {
+    public int nextInt(final int inner, final int outer) {
         return inner + nextInt(outer - inner);
     }
 
@@ -138,7 +138,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      * @param upper the upper bound, exclusive, can be positive or negative
      * @return a random long that may be equal to lower and will otherwise be between lower and upper
      */
-    public final long nextLong(final long lower, final long upper) {
+    public long nextLong(final long lower, final long upper) {
         return lower + nextLong(upper - lower);
     }
 
@@ -147,7 +147,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random double at least equal to 0.0 and less than 1.0
      */
-    public final double nextDouble() {
+    public double nextDouble() {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return ((z ^ z >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53;
@@ -161,7 +161,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      * @param outer the exclusive outer bound, can be negative
      * @return a random double between 0.0 (inclusive) and outer (exclusive)
      */
-    public final double nextDouble(final double outer) {
+    public double nextDouble(final double outer) {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return ((z ^ z >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53 * outer;
@@ -172,7 +172,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random float at least equal to 0.0 and less than 1.0
      */
-    public final float nextFloat() {
+    public float nextFloat() {
         return (nextLong() >>> 8 & 0xFFFFFFL) * 0x1p-24f;
     }
 
@@ -182,7 +182,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random true or false value.
      */
-    public final boolean nextBoolean() {
+    public boolean nextBoolean() {
         long z = (state = state * 0x369DEA0F31A53F85L + 1L);
         return ((z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L) < 0;
     }
@@ -193,7 +193,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @param bytes a byte array that will have its contents overwritten with random bytes.
      */
-    public final void nextBytes(final byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         int i = bytes.length, n;
         while (i != 0) {
             n = Math.min(i, 8);
@@ -206,7 +206,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @param seed the seed to use for this LinnormRNG, as if it was constructed with this seed.
      */
-    public final void setState(final long seed) {
+    public void setState(final long seed) {
         state = seed;
     }
 
@@ -215,7 +215,7 @@ public final class LinnormRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return the current seed of this LinnormRNG, changed once per call to nextLong()
      */
-    public final long getState() {
+    public long getState() {
         return state;
     }
 

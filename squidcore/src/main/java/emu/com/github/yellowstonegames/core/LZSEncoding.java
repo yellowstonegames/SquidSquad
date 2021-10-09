@@ -9,7 +9,7 @@
 
 package com.github.yellowstonegames.core;
 
-public final class LZSEncoding {
+public class LZSEncoding {
 
     private LZSEncoding() {};
     private static final String keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

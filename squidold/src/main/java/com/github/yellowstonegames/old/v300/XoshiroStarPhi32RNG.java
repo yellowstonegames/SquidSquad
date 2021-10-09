@@ -4,8 +4,8 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class XoshiroStarPhi32RNG implements LegacyRandom {
-    private int stateA, stateB, stateC, stateD;
+public class XoshiroStarPhi32RNG implements LegacyRandom {
+    protected int stateA, stateB, stateC, stateD;
 
     /**
      * Creates a new generator seeded using four calls to Math.random().
@@ -43,7 +43,7 @@ public final class XoshiroStarPhi32RNG implements LegacyRandom {
     }
 
     @Override
-    public final int next(int bits) {
+    public int next(int bits) {
         final int result = stateB * 31;	        
         final int t = stateB << 9;
         stateC ^= stateA;
@@ -59,7 +59,7 @@ public final class XoshiroStarPhi32RNG implements LegacyRandom {
      * Can return any int, positive or negative, of any size permissible in a 32-bit signed integer.
      * @return any int, all 32 bits are random
      */
-    public final int nextInt() {
+    public int nextInt() {
         final int result = stateB * 31;
         final int t = stateB << 9;
         stateC ^= stateA;
@@ -72,7 +72,7 @@ public final class XoshiroStarPhi32RNG implements LegacyRandom {
     }
 
     @Override
-    public final long nextLong() {
+    public long nextLong() {
         int result = stateB * 31;
         int t = stateB << 9;
         stateC ^= stateA;

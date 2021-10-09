@@ -4,7 +4,7 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class DiverRNG implements LegacyRandom, StatefulRandomness {
+public class DiverRNG implements LegacyRandom, StatefulRandomness {
 
     private long state; /* The state can be seeded with any value. */
 
@@ -35,7 +35,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
     }
 
     @Override
-    public final int next(int bits)
+    public int next(int bits)
     {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
@@ -48,7 +48,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @return any long, all 64 bits are random
      */
     @Override
-    public final long nextLong() {
+    public long nextLong() {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return (z ^ z >>> 25);
@@ -72,7 +72,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return any int, all 32 bits are random
      */
-    public final int nextInt() {
+    public int nextInt() {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return (int)(z ^ z >>> 25);
@@ -85,7 +85,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @param bound the upper bound; should be positive
      * @return a random int between 0 (inclusive) and bound (exclusive)
      */
-    public final int nextInt(final int bound) {
+    public int nextInt(final int bound) {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return (int)((bound * ((z ^ z >>> 25) & 0xFFFFFFFFL)) >> 32);
@@ -98,7 +98,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @param outer the outer bound, exclusive, can be positive or negative, usually greater than inner
      * @return a random int between inner (inclusive) and outer (exclusive)
      */
-    public final int nextInt(final int inner, final int outer) {
+    public int nextInt(final int inner, final int outer) {
         return inner + nextInt(outer - inner);
     }
 
@@ -135,7 +135,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @param upper the upper bound, exclusive, can be positive or negative
      * @return a random long that may be equal to lower and will otherwise be between lower and upper
      */
-    public final long nextLong(final long lower, final long upper) {
+    public long nextLong(final long lower, final long upper) {
         return lower + nextLong(upper - lower);
     }
     
@@ -144,7 +144,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random double at least equal to 0.0 and less than 1.0
      */
-    public final double nextDouble() {
+    public double nextDouble() {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return ((z ^ z >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53;
@@ -158,7 +158,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @param outer the exclusive outer bound, can be negative
      * @return a random double between 0.0 (inclusive) and outer (exclusive)
      */
-    public final double nextDouble(final double outer) {
+    public double nextDouble(final double outer) {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return ((z ^ z >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53 * outer;
@@ -169,7 +169,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random float at least equal to 0.0 and less than 1.0
      */
-    public final float nextFloat() {
+    public float nextFloat() {
         long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         z = (z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L;
         return ((int)(z ^ z >>> 25) >>> 8) * 0x1p-24f;
@@ -181,7 +181,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      *
      * @return a random true or false value.
      */
-    public final boolean nextBoolean() {
+    public boolean nextBoolean() {
         final long z = (state = (state ^ 0x6C8E9CF570932BD5L) * 0xC6BC279692B5CC83L);
         return ((z << 27 | z >>> 37) * 0xDB4F0B9175AE2165L) < 0;
     }
@@ -192,7 +192,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      *
      * @param bytes a byte array that will have its contents overwritten with random bytes.
      */
-    public final void nextBytes(final byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         int i = bytes.length, n;
         while (i != 0) {
             n = Math.min(i, 8);
@@ -206,7 +206,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @param seed the seed to use for this LightRNG, as if it was constructed with this seed.
      */
     @Override
-    public final void setSelectedState(final int selection, final long seed) {
+    public void setSelectedState(final int selection, final long seed) {
         state = seed;
     }
 
@@ -216,7 +216,7 @@ public final class DiverRNG implements LegacyRandom, StatefulRandomness {
      * @return the current seed of this LightRNG, changed once per call to nextLong()
      */
     @Override
-    public final long getSelectedState(final int selection) {
+    public long getSelectedState(final int selection) {
         return state;
     }
 

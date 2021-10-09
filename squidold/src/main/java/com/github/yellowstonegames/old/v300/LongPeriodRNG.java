@@ -40,7 +40,7 @@ import java.util.Arrays;
  * Ported from CC0-licensed C code by Sebastiano Vigna, at http://xorshift.di.unimi.it/xorshift1024star.c
  * @author Tommy Ettinger
  */
-public final class LongPeriodRNG implements LegacyRandom {
+public class LongPeriodRNG implements LegacyRandom {
 
     public final long[] state = new long[16];
     public int choice;

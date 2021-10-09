@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author Sebastiano Vigna
  * @author Tommy Ettinger
  */
-public final class LightRNG implements LegacyRandom, StatefulRandomness {
+public class LightRNG implements LegacyRandom, StatefulRandomness {
     public long state; /* The state can be seeded with any value. */
 
     /** Creates a new generator seeded using Math.random. */
@@ -51,7 +51,7 @@ public final class LightRNG implements LegacyRandom, StatefulRandomness {
      * @return a pseudo-random int that uses at most the specified amount of bits
      */
     @Override
-    public final int next( int bits ) {
+    public int next( int bits ) {
         long z = state += 0x9E3779B97F4A7C15L;
         z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
         z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
@@ -62,7 +62,7 @@ public final class LightRNG implements LegacyRandom, StatefulRandomness {
      * @return any long, all 64 bits are random
      */
     @Override
-    public final long nextLong() {
+    public long nextLong() {
         long z = state += 0x9E3779B97F4A7C15L;
         z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
         z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;

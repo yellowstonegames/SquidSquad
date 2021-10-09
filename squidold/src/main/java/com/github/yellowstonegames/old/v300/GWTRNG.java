@@ -5,7 +5,7 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public final class GWTRNG implements LegacyRandom, StatefulRandomness {
+public class GWTRNG implements LegacyRandom, StatefulRandomness {
     public int stateA, stateB;
 
     /**
@@ -59,7 +59,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a random number that fits in the specified number of bits
      */
     @Override
-    public final int next(int bits) {
+    public int next(int bits) {
         final int s0 = stateA;
         final int s1 = stateB ^ s0;
         final int result = s0 * 31;
@@ -74,7 +74,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a 32-bit random int.
      */
     @Override
-    public final int nextInt() {
+    public int nextInt() {
         final int s0 = stateA;
         final int s1 = stateB ^ s0;
         final int result = s0 * 31;
@@ -90,7 +90,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return the found number
      */
     @Override
-    public final int nextInt(final int bound) {
+    public int nextInt(final int bound) {
         final int s0 = stateA;
         final int s1 = stateB ^ s0;
         final int result = s0 * 31;
@@ -105,7 +105,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a 64-bit random long.
      */
     @Override
-    public final long nextLong() {
+    public long nextLong() {
         int s0 = stateA;
         int s1 = stateB ^ s0;
         final int high = s0 * 31;
@@ -126,7 +126,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a random boolean.
      */
     @Override
-    public final boolean nextBoolean() {
+    public boolean nextBoolean() {
         int s0 = stateA;
         int s1 = stateB ^ s0;
         final int high = s0 * 31;
@@ -144,7 +144,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a double between 0.0 (inclusive) and 0.9999999999999999 (inclusive)
      */
     @Override
-    public final double nextDouble() {
+    public double nextDouble() {
         int s0 = stateA;
         int s1 = stateB ^ s0;
         final int high = s0 * 31;
@@ -165,7 +165,7 @@ public final class GWTRNG implements LegacyRandom, StatefulRandomness {
      * @return a float between 0f (inclusive) and 0.99999994f (inclusive)
      */
     @Override
-    public final float nextFloat() {
+    public float nextFloat() {
         final int s0 = stateA;
         final int s1 = stateB ^ s0;
         final int result = s0 * 31;

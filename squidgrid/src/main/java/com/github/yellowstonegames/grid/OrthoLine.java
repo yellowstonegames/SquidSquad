@@ -10,7 +10,7 @@ import java.util.List;
  * distances for measurements.
  * Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!
  */
-public final class OrthoLine implements LineDrawer {
+public class OrthoLine implements LineDrawer {
 
     /**
      * A buffer of Coord as an ObjectList; this is cleared and reused by the drawLine() methods, so its state can only

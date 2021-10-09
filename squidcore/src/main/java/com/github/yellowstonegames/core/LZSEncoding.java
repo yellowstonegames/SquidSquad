@@ -25,7 +25,7 @@ import java.util.HashSet;
  * LocalStorage on GWT. This class is also sometimes used internally when a large compressed String in Java source code
  * makes more sense than an even larger resource file.
  */
-public final class LZSEncoding {
+public class LZSEncoding {
 
     private LZSEncoding () {}
     private static final char[] keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".toCharArray(),
