@@ -9,11 +9,10 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordOrderedSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +68,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 9;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
@@ -82,7 +81,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sector = size >>> sectorShift;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
-    private static final int wrapMask = sectorMask * 3 >>> 2;
+    private static final int wrapMask = sector * 13 >>> 4;
     private static final float fraction = 1f / totalSectors;
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
@@ -107,7 +106,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private FourWheelRandom rng;
+    private LaserRandom rng;
     private PixmapIO.PNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
@@ -126,7 +125,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new FourWheelRandom(Hasher.hash64(1L, date));
+        rng = new LaserRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -187,7 +186,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     {
         long startTime = System.currentTimeMillis();
 
-        final int limit = (size >>> 4) * (size >>> 4);
+        final int limit = (size >>> 3) * (size >>> 3);
         int[] positions = ArrayTools.range(limit);
         for (int i = 0; i <= limit - totalSectors; i += totalSectors) {
             rng.shuffle(positions, i, totalSectors);
@@ -197,7 +196,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         for (int i = 1; i <= limit; i++) {
             int sz = positions[i - 1];
             final Coord pt = Coord.get((vdc(5, i) + xOff & sectorMask) + ((sz & sectors - 1) << shift - sectorShift),
-                    (vdc(7, i) + yOff & sectorMask) + (((sz >>> sectorShift) & sectors - 1) << shift - sectorShift) );
+                    (vdc(3, i) + yOff & sectorMask) + (((sz >>> sectorShift) & sectors - 1) << shift - sectorShift) );
             initial[i-1] = pt;
         }
 //        CoordOrderedSet initial = new CoordOrderedSet(limit);
