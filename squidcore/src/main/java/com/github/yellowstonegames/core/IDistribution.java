@@ -13,6 +13,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 public interface IDistribution {
     /**
      * Gets a float between {@link #getLowerBound()} and {@link #getUpperBound()} that obeys this distribution.
+     *
      * @param rng an EnhancedRandom that this will get one or more random numbers from
      * @return a float within the range of {@link #getLowerBound()} and {@link #getUpperBound()}
      */
@@ -21,35 +22,38 @@ public interface IDistribution {
     /**
      * Gets the lower bound of the distribution. The documentation should specify whether the bound is inclusive or
      * exclusive; if unspecified, it can be assumed to be inclusive (like {@link EnhancedRandom#nextDouble()}).
+     *
      * @return the lower bound of the distribution
      */
-    default double getLowerBound(){
+    default double getLowerBound() {
         return 0.0;
     }
+
     /**
      * Gets the upper bound of the distribution. The documentation should specify whether the bound is inclusive or
      * exclusive; if unspecified, it can be assumed to be exclusive (like {@link EnhancedRandom#nextDouble()}).
+     *
      * @return the upper bound of the distribution
      */
-    default double getUpperBound(){
+    default double getUpperBound() {
         return 1.0;
     }
-    
+
     abstract class SimpleDistribution implements IDistribution {
 
         /**
          * Makes a new SimpleDistribution implementation given any IDistribution (typically one with large or infinite
          * bounds) by getting the fractional component of a result from {@code otherDistribution}.
+         *
          * @param otherDistribution any other IDistribution
          * @return a new anonymous implementation of SimpleDistribution that gets the fractional part of {@code otherDistribution}.
          */
-        public static SimpleDistribution fractionalDistribution(final IDistribution otherDistribution)
-        {
+        public static SimpleDistribution fractionalDistribution(final IDistribution otherDistribution) {
             return new SimpleDistribution() {
                 @Override
                 public double nextDouble(EnhancedRandom rng) {
                     final double v = otherDistribution.nextDouble(rng);
-                    return v - (v >= 0.0 ? (int) v : (int)v - 1);
+                    return v - (v >= 0.0 ? (int) v : (int) v - 1);
                 }
             };
         }
@@ -60,16 +64,16 @@ public interface IDistribution {
          * Using the offset allows distributions like {@link GaussianDistribution}, which are centered on 0.0, to become
          * centered halfway on 0.5, making the result of this distribution have a Gaussian-like peak on 0.5 instead of
          * peaking at the bounds when offset is 0.0.
+         *
          * @param otherDistribution any other IDistribution
          * @return a new anonymous implementation of SimpleDistribution that gets the fractional part of {@code otherDistribution}.
          */
-        public static SimpleDistribution fractionalOffsetDistribution(final IDistribution otherDistribution, final float offset)
-        {
+        public static SimpleDistribution fractionalOffsetDistribution(final IDistribution otherDistribution, final float offset) {
             return new SimpleDistribution() {
                 @Override
                 public double nextDouble(EnhancedRandom rng) {
                     final double v = otherDistribution.nextDouble(rng) + offset;
-                    return v - (v >= 0.0 ? (int) v : (int)v - 1);
+                    return v - (v >= 0.0 ? (int) v : (int) v - 1);
                 }
             };
         }
@@ -79,11 +83,11 @@ public interface IDistribution {
          * bounds) by simply clamping results that are below 0 to 0 and at least 1 to 0.9999999999999999 (the largest
          * float less than 1.0 than can be represented). This will behave very oddly for distributions that are
          * centered on 0.0; for those you probably want {@link #fractionalOffsetDistribution(IDistribution, float)}.
+         *
          * @param otherDistribution any other IDistribution
          * @return a new anonymous implementation of SimpleDistribution that clamps {@code otherDistribution} in range.
          */
-        public static SimpleDistribution clampedDistribution(final IDistribution otherDistribution)
-        {
+        public static SimpleDistribution clampedDistribution(final IDistribution otherDistribution) {
             return new SimpleDistribution() {
                 @Override
                 public double nextDouble(EnhancedRandom rng) {
@@ -119,6 +123,7 @@ public interface IDistribution {
      */
     class UniformDistribution extends SimpleDistribution {
         public static final UniformDistribution instance = new UniformDistribution();
+
         @Override
         public double nextDouble(EnhancedRandom rng) {
             return rng.nextDouble();
@@ -141,6 +146,7 @@ public interface IDistribution {
 
         /**
          * The lower exclusive bound is technically negative infinity, but in practice is only -7.929080009460449 .
+         *
          * @return negative infinity
          */
         @Override
@@ -150,6 +156,7 @@ public interface IDistribution {
 
         /**
          * The upper exclusive bound is technically positive infinity, but in practice is only 7.929080009460449 .
+         *
          * @return positive infinity
          */
         @Override
@@ -157,6 +164,7 @@ public interface IDistribution {
             return Double.POSITIVE_INFINITY;
         }
     }
+
     /**
      * An IDistribution that produces results between 0.0 inclusive and 1.0 exclusive, but is much more likely to produce
      * results near 0.0 or 1.0, further from 0.5.
@@ -168,9 +176,10 @@ public interface IDistribution {
         public double nextDouble(EnhancedRandom rng) {
             double d = (rng.nextDouble() - 0.5) * 2.0;
             d = d * d * d + 1.0;
-            return d - (int)d;
+            return d - (int) d;
         }
     }
+
     /**
      * An IDistribution that allows a parameter to determine how many calls to {@link EnhancedRandom#nextDouble()} to make and average
      * whenever a double is requested. When this parameter {@code degree} is 1, this is uniform; when it is 2, this is a
@@ -183,12 +192,12 @@ public interface IDistribution {
         public static final CurvedBoundedDistribution instanceGaussianLike = new CurvedBoundedDistribution(6);
         private int degree;
         private double i_degree;
-        public CurvedBoundedDistribution()
-        {
+
+        public CurvedBoundedDistribution() {
             this(3);
         }
-        public CurvedBoundedDistribution(int degree)
-        {
+
+        public CurvedBoundedDistribution(int degree) {
             this.degree = Math.max(degree, 1);
             i_degree = 1.0 / this.degree;
         }
@@ -211,6 +220,7 @@ public interface IDistribution {
             return sum * i_degree;
         }
     }
+
     /**
      * An IDistribution that implements the <a href="https://en.wikipedia.org/wiki/Exponential_distribution">Exponential
      * distribution</a>. Takes lambda as a parameter during construction (default 1), and lambda also has
@@ -221,12 +231,12 @@ public interface IDistribution {
         public static final ExponentialDistribution instance_0_5 = new ExponentialDistribution(0.5);
         public static final ExponentialDistribution instance_1_5 = new ExponentialDistribution(1.5);
         private double i_lambda;
-        public ExponentialDistribution()
-        {
+
+        public ExponentialDistribution() {
             i_lambda = 1.0;
         }
-        public ExponentialDistribution(double lambda)
-        {
+
+        public ExponentialDistribution(double lambda) {
             i_lambda = 1.0 / lambda;
         }
 
@@ -242,8 +252,10 @@ public interface IDistribution {
         public double nextDouble(EnhancedRandom rng) {
             return Math.log(rng.nextExclusiveDouble()) * i_lambda;
         }
+
         /**
          * The lower exclusive bound is 0 while lambda is positive; it is negative infinity if lambda is negative.
+         *
          * @return zero, or negative infinity if lambda is negative.
          */
         @Override
@@ -253,6 +265,7 @@ public interface IDistribution {
 
         /**
          * The upper exclusive bound is infinity while lambda is positive; it is 0 if lambda is negative.
+         *
          * @return positive infinity, or zero if lambda is negative.
          */
         @Override
@@ -260,6 +273,7 @@ public interface IDistribution {
             return i_lambda < 0.0 ? 0.0 : Double.POSITIVE_INFINITY;
         }
     }
+
     /**
      * An IDistribution that produces results between -1.0 inclusive and 1.0 exclusive, but is much more likely to produce
      * results near 0.0, and does not "round off" like a Gaussian curve around the midpoint.
@@ -275,6 +289,7 @@ public interface IDistribution {
 
         /**
          * Gets the lower bound of the distribution, which is -1, inclusive.
+         *
          * @return the lower bound of the distribution
          */
         @Override
@@ -298,14 +313,113 @@ public interface IDistribution {
      * A variant on SpikeDistribution that has its range shrunk and moved from {@code [-1,1)} to {@code [0,1)}. It is a
      * {@link SimpleDistribution}, and the spike is centered on 0.5.
      */
-    class SimpleSpikeDistribution extends SimpleDistribution implements IDistribution
-    {
+    class SimpleSpikeDistribution extends SimpleDistribution implements IDistribution {
         public static final SimpleSpikeDistribution instance = new SimpleSpikeDistribution();
 
         @Override
         public double nextDouble(EnhancedRandom rng) {
             final double d = (rng.nextDouble() - 0.5) * 2.0;
             return d * d * d * 0.5 + 0.5;
+        }
+    }
+
+    /**
+     * Allows forming oddly-shaped, not-quite-symmetrical, parameterized distributions.
+     * You should probably see <a href="https://en.wikipedia.org/wiki/Kumaraswamy_distribution">
+     * The Kumaraswamy Distribution Wikipedia article</a>
+     * to get familiar with what parameters can produce what shapes of distribution.
+     * <br>
+     * The most likely usage I can see for this is to toy with players who try to analyze game
+     * statistics and find reasonable formulas, especially if you give random shape parameters
+     * (though probably just a little random). The lopsided nature of most distributions this
+     * encompasses can also be used to bias results in or out of favor for the player.
+     */
+    class KumaraswamyDistribution extends SimpleDistribution implements IDistribution {
+
+        private double shapeA;
+        private double shapeB;
+
+        /**
+         * Creates a KumaraswamyDistribution with shape parameters a=0.5, b=0.5 .
+         */
+        public KumaraswamyDistribution() {
+            shapeA = 2.0;
+            shapeB = 2.0;
+        }
+
+        /**
+         * Creates a KumaraswamyDistribution with the given shape parameters.
+         *
+         * @param a a shape parameter that must be greater than 0
+         * @param b a shape parameter that must be greater than 0
+         */
+        public KumaraswamyDistribution(double a, double b) {
+            if (a <= 0 || b <= 0) throw new IllegalArgumentException("Neither a nor b can be 0 or less.");
+            this.shapeA = 1.0 / a;
+            this.shapeB = 1.0 / b;
+        }
+
+        @Override
+        public double nextDouble(EnhancedRandom rng) {
+            return Math.pow(1.0 - Math.pow(rng.nextExclusiveDouble(), shapeB), shapeA);
+        }
+
+        /**
+         * The lower bound is exclusive on 0.0.
+         *
+         * @return 0.0, which is exclusive here
+         */
+        @Override
+        public double getLowerBound() {
+            return 0.0;
+        }
+
+        /**
+         * The upper bound is exclusive on 1.0.
+         *
+         * @return 1.0, which is exclusive here
+         */
+        @Override
+        public double getUpperBound() {
+            return 1.0;
+        }
+
+        /**
+         * Gets shape parameter a.
+         *
+         * @return shape parameter a
+         */
+        public double getA() {
+            return 1.0 / shapeA;
+        }
+
+        /**
+         * Sets shape parameter a.
+         *
+         * @param a must be greater than 0
+         */
+        public void setA(double a) {
+            if (a > 0)
+                this.shapeA = 1.0 / a;
+        }
+
+        /**
+         * Gets shape parameter b.
+         *
+         * @return shape parameter b
+         */
+        public double getB() {
+            return 1.0 / shapeB;
+        }
+
+        /**
+         * Sets shape parameter b.
+         *
+         * @param b must be greater than 0
+         */
+        public void setB(double b) {
+            if (b > 0)
+                this.shapeB = 1.0 / b;
         }
     }
 }
