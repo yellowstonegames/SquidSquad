@@ -354,7 +354,7 @@ public interface IDistribution {
          * @param b a shape parameter that must be greater than 0
          */
         public KumaraswamyDistribution(double a, double b) {
-            if (a <= 0 || b <= 0) throw new IllegalArgumentException("Neither a nor b can be 0 or less.");
+            if (a <= 0 || b <= 0) throw new IllegalArgumentException("Both a and b must be greater than 0.");
             this.shapeA = 1.0 / a;
             this.shapeB = 1.0 / b;
         }
