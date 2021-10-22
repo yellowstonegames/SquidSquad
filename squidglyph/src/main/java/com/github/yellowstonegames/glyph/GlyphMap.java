@@ -1,5 +1,7 @@
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -17,6 +19,21 @@ public class GlyphMap {
     public int[][] backgrounds = null;
     public Font font;
     public Viewport viewport;
+    /**
+     * This is mostly here to help ColorLookup get RGBA8888 colors from valid descriptions, or null from invalid ones.
+     * @param description a color description, as a lower-case String matching the format covered in {@link DescriptiveColor#describe(CharSequence)}
+     * @return an Integer that either contains an RGBA8888 color (if description was valid) or null otherwise
+     */
+    public static Integer getRgba(final String description){
+        if(description == null || description.length() == 0) return null;
+        int oklab = DescriptiveColor.describeOklab(description);
+        if(oklab == 0) {
+            Color c = Colors.get(description);
+            if(c == null) return null;
+            return Color.rgba8888(c);
+        }
+        return DescriptiveColor.toRGBA8888(oklab);
+    }
 
     /**
      * Does not set {@link #font}, you will have to set it later.
@@ -30,7 +47,7 @@ public class GlyphMap {
     }
     public GlyphMap(Font font, int gridWidth, int gridHeight){
         this.font = new Font(font);
-        this.font.setColorLookup(DescriptiveColor::getRgba);
+        this.font.setColorLookup(GlyphMap::getRgba);
         if(this.font.distanceField != Font.DistanceFieldType.STANDARD)
             this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         this.gridWidth = gridWidth;

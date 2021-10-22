@@ -1778,17 +1778,6 @@ public final class DescriptiveColor {
     }
 
     /**
-     * This is mostly here to help ColorLookup get RGBA8888 colors from valid descriptions, or null from invalid ones.
-     * @param description a color description, as a lower-case String matching the format covered in {@link #describe(CharSequence)}
-     * @return an Integer that either contains an RGBA8888 color (if description was valid) or null otherwise
-     */
-    public static Integer getRgba(final String description){
-        if(description == null || description.length() == 0) return null;
-        int oklab = describeOklab(description);
-        if(oklab == 0) return null;
-        return toRGBA8888(oklab);
-    }
-    /**
      * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
      * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
      * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
