@@ -3,6 +3,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 /**
  * A different approach to the same task as a probability table, though this only looks up an appropriate index
@@ -111,6 +112,22 @@ public class WeightedTable {
     {
         size = mixed.length >> 1;
         this.mixed = mixed;
+    }
+
+    /**
+     * Copy constructor; avoids sharing any state between this and the original.
+     * @param other another WeightedTable to copy; no state will be shared
+     */
+    public WeightedTable(WeightedTable other){
+        this(Arrays.copyOf(other.mixed, other.mixed.length), true);
+    }
+
+    /**
+     * Copies this WeightedTable; avoids sharing any state between this and the copy.
+     * @return an exact copy of this WeightedTable
+     */
+    public WeightedTable copy() {
+        return new WeightedTable(this);
     }
     /**
      * Gets an index of one of the weights in this WeightedTable, with the choice determined deterministically by the

@@ -223,7 +223,24 @@ public class JsonCoreTest {
         System.out.println(data);
         ProbabilityTable readBack = json.fromJson(ProbabilityTable.class, data);
         Assert.assertEquals(copy.random(), readBack.random());
+    }
 
+    @Test
+    public void testWeightedTable(){
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerWeightedTable(json);
+        String[] items = {"earth", "air", "water", "fire", "aether"};
+        WeightedTable table = new WeightedTable(1.0, 2.0, 3.5, 4.1, 0.6);
+        WeightedTable copy = table.copy();
+        int index = table.random(123);
+        Assert.assertTrue(index >= 0 && index < items.length);
+        index = copy.random(123);
+        Assert.assertTrue(index >= 0 && index < items.length);
+
+        String data = json.toJson(table);
+        System.out.println(data);
+        WeightedTable readBack = json.fromJson(WeightedTable.class, data);
+        Assert.assertEquals(copy.random(124), readBack.random(124));
     }
 
     @Test
