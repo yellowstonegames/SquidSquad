@@ -2,8 +2,10 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
+import com.github.tommyettinger.textra.Font;
+import com.github.yellowstonegames.core.DescriptiveColor;
 
-import static com.github.yellowstonegames.glyph.Font.DistanceFieldType.*;
+import static com.github.tommyettinger.textra.Font.DistanceFieldType.*;
 
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
@@ -44,6 +46,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.cozette = new Font("Cozette.fnt", "Cozette.png", STANDARD, 1, 1, 0, -1);
+                instance.cozette.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,6 +78,7 @@ public class KnownFonts implements LifecycleListener {
             try {
                 instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", STANDARD, 2, 0, 0, 0);
                 instance.openSans.setTextureFilter();
+                instance.openSans.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -110,6 +114,7 @@ public class KnownFonts implements LifecycleListener {
             try {
                 instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(18, 18);
                 instance.astarry.distanceFieldCrispness = 3f;
+                instance.astarry.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -147,6 +152,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", MSDF, 2f, 1f, -5.5f, -1.5f);
+                instance.cascadiaMono.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -181,6 +187,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", MSDF, 1f, 4f, -1.5f, -4.5f);
+                instance.dejaVuSansMono.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -212,6 +219,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f);
+                instance.inconsolataLGC.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -249,6 +257,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", MSDF, 3f, 6, -4f, -7);
+                instance.iosevka.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -286,6 +295,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, 3f, 6, -4f, -7);
+                instance.iosevkaSlab.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -321,6 +331,7 @@ public class KnownFonts implements LifecycleListener {
         {
             try {
                 instance.gentium = new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f);
+                instance.gentium.setColorLookup(DescriptiveColor::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }

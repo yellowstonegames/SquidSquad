@@ -855,9 +855,9 @@ public class Font implements Disposable {
         }
     }
 
-
     /**
      * Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.
+     * This assumes there is a full-block character at char u0000; Glamer produces fonts that have this already.
      * The {@code colors} parameter should be a rectangular 2D array, and because any colors that are the default int
      * value {@code 0} will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
      * then nothing will be drawn there. This is usually called before other methods that draw foreground text.
@@ -872,7 +872,27 @@ public class Font implements Disposable {
      * @param y the y position in world space to draw the text at (lower left corner)
      */
     public void drawBlocks(Batch batch, int[][] colors, float x, float y) {
-        final TextureRegion block = mapping.get(0);
+        drawBlocks(batch, '\u0000', colors, x, y);
+    }
+    /**
+     * Draws a grid made of rectangular blocks of int colors (typically RGBA) at the given x,y position in world space.
+     * The {@code blockChar} should visually be represented by a very large block, occupying all of a monospaced cell.
+     * The {@code colors} parameter should be a rectangular 2D array, and because any colors that are the default int
+     * value {@code 0} will be treated as transparent RGBA values, if a value is not assigned to a slot in the array
+     * then nothing will be drawn there. This is usually called before other methods that draw foreground text.
+     * <br>
+     * Internally, this uses {@link Batch#draw(Texture, float[], int, int)} to draw each rectangle with minimal
+     * overhead, and this also means it is unaffected by the batch color. If you want to alter the colors using a
+     * shader, the shader will receive each color in {@code colors} as its {@code a_color} attribute, the same as if it
+     * was passed via the batch color.
+     * @param batch typically a SpriteBatch
+     * @param blockChar which char renders as a full block, occupying an entire monospaced cell with a color
+     * @param colors a 2D rectangular array of int colors (typically RGBA)
+     * @param x the x position in world space to draw the text at (lower left corner)
+     * @param y the y position in world space to draw the text at (lower left corner)
+     */
+    public void drawBlocks(Batch batch, char blockChar, int[][] colors, float x, float y) {
+        final TextureRegion block = mapping.get(blockChar);
         if(block == null) return;
         final Texture parent = block.getTexture();
         final float u = block.getU() + (block.getU2() - block.getU()) * 0.25f,
@@ -904,7 +924,7 @@ public class Font implements Disposable {
         vertices[19] = v;
         for (int xi = 0, xn = colors.length, yn = colors[0].length; xi < xn; xi++) {
             for (int yi = 0; yi < yn; yi++) {
-                if((colors[xi][yi] & 254) >= 2) {
+                if((colors[xi][yi] & 254) != 0) {
                     vertices[2] = vertices[7] = vertices[12] = vertices[17] =
                             BitConversion.reversedIntBitsToFloat(colors[xi][yi] & -2);
                     batch.draw(parent, vertices, 0, 20);
@@ -1720,12 +1740,12 @@ public class Font implements Disposable {
                 char ch = text.charAt(i);
                 if (isLowerCase(ch)) {
                     if ((capitalize && !previousWasLetter) || capsLock) {
-                        ch = Character.toUpperCase(ch);
+                        ch = Category.caseUp(ch);
                     }
                     previousWasLetter = true;
                 } else if (isUpperCase(ch)) {
                     if ((capitalize && previousWasLetter) || lowerCase) {
-                        ch = Character.toLowerCase(ch);
+                        ch = Category.caseDown(ch);
                     }
                     previousWasLetter = true;
                 } else {

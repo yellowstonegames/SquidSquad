@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.Align;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.LineTools;
-
+import com.github.tommyettinger.textra.Font;
+import com.github.tommyettinger.textra.Layout;
 public class FontTest extends ApplicationAdapter {
 
     Font font;

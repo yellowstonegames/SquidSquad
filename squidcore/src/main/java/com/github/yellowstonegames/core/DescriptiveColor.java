@@ -1776,6 +1776,18 @@ public final class DescriptiveColor {
         }
         return toRGBA8888(describeOklab(description, initial == '|' ? 1 : 0, description.length()));
     }
+
+    /**
+     * This is mostly here to help ColorLookup get RGBA8888 colors from valid descriptions, or null from invalid ones.
+     * @param description a color description, as a lower-case String matching the format covered in {@link #describe(CharSequence)}
+     * @return an Integer that either contains an RGBA8888 color (if description was valid) or null otherwise
+     */
+    public static Integer getRgba(final String description){
+        if(description == null || description.length() == 0) return null;
+        int oklab = describeOklab(description);
+        if(oklab == 0) return null;
+        return toRGBA8888(oklab);
+    }
     /**
      * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
      * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
@@ -1852,7 +1864,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.get(term));
+                        mixing.add(NAMED.getOrDefault(term, 0));
                     }
                     break;
                 case 'r':
@@ -1872,7 +1884,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.get(term));
+                        mixing.add(NAMED.getOrDefault(term, 0));
                     }
                     break;
                 case 'd':
@@ -1907,15 +1919,17 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.get(term));
+                        mixing.add(NAMED.getOrDefault(term, 0));
                     }
                     break;
                 default:
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.getOrDefault(term, 0));
                     break;
             }
         }
+        if(mixing.size() == 0) return 0;
         int result = mix(mixing.items, 0, mixing.size());
+        if(result == 0) return 0;
 
         if (intensity > 0) result = lighten(result, intensity);
         else if (intensity < 0) result = darken(result, -intensity);

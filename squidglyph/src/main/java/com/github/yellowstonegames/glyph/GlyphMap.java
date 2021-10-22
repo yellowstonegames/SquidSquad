@@ -6,7 +6,9 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.tommyettinger.textra.Font;
 
 public class GlyphMap {
     protected int gridWidth;
@@ -28,6 +30,7 @@ public class GlyphMap {
     }
     public GlyphMap(Font font, int gridWidth, int gridHeight){
         this.font = new Font(font);
+        this.font.setColorLookup(DescriptiveColor::getRgba);
         if(this.font.distanceField != Font.DistanceFieldType.STANDARD)
             this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         this.gridWidth = gridWidth;

@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.smooth.AngleGlider;
 import com.github.yellowstonegames.smooth.CoordGlider;
-import com.github.yellowstonegames.smooth.FloatGlider;
 import com.github.yellowstonegames.smooth.VectorSequenceGlider;
-
+import com.github.tommyettinger.textra.Font;
 import javax.annotation.Nonnull;
 
 /**

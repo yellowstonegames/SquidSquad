@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
-
+import com.github.tommyettinger.textra.Font;
 public class GlyphMapTest extends ApplicationAdapter {
 
     Font font;

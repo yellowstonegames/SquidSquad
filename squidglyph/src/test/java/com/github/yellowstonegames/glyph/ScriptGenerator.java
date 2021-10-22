@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.grid.WaveFunctionCollapse;
-
+import com.github.tommyettinger.textra.Font;
 public class ScriptGenerator extends ApplicationAdapter {
     Font font;
     TricycleRandom random;
