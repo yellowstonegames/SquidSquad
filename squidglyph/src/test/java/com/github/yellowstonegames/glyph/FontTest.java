@@ -43,7 +43,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
-        font = KnownFonts.getGentium().scaleTo(48, 48);
+//        font = KnownFonts.getGentium().scaleTo(48, 48);
+        font = KnownFonts.getLibertinusSerif();
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);

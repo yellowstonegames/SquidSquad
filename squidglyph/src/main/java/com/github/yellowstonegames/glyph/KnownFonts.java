@@ -350,7 +350,7 @@ public class KnownFonts implements LifecycleListener {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
      * needs to be scaled so that it has much larger width than height; the default is 150x32.
      * <br>
-     * Preview: <a href="https://i.imgur.com/YPO7Hq0.png">Image link</a>
+     * Preview: <a href="https://i.imgur.com/nESDlFJ.png">Image link</a>
      * <br>
      * Needs files:
      * <ul>
@@ -366,7 +366,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.libertinusSerif == null)
         {
             try {
-                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 0f, 5f, 0f, -2f).scaleTo(150, 32);
+                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 6f, 0f, -2f, 0f).scaleTo(150, 32);
                 instance.libertinusSerif.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
