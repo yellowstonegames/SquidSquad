@@ -44,11 +44,14 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
 //        font = KnownFonts.getGentium().scaleTo(48, 48);
-        font = KnownFonts.getLibertinusSerif();
+//        font = KnownFonts.getLibertinusSerif();
+        font = KnownFonts.getKingthingsFoundation().scaleTo(60, 70);
+
+//        font.setColorLookup(GlyphMap::getRgba);
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
-        layout = new Layout(font).setTargetWidth(670f);
+        layout = new Layout(font).setTargetWidth(Gdx.graphics.getWidth());
         backgrounds = new int[(int) Math.ceil(800 / font.cellWidth)][(int) Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
                 nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown");
@@ -72,18 +75,23 @@ public class FontTest extends ApplicationAdapter {
 //        font.markup("The [_][dark dull blue purple]BLADE[] of [*][/][|dark richest yellow]KINGS[] strikes!", glyphs[2] = new LongList());
 //        font.markup("[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", glyphs[3] = new LongList());
 
-        font.markup("[#007711FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", layout);
+//        font.markup("[#007711FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", layout);
+//
+//        font.markup("\n[*]Водяной[] — в славянской мифологии дух, обитающий в воде, хозяин вод[^][BLUE][[2][]."
+//                + "\nВоплощение стихии воды как отрицательного и опасного начала[^][BLUE][[3][[citation needed][].", layout);
+//
+//        font.markup("\nThe [dark rich red]MAW[] of the [/][lighter dull sky]wendigo[/] (wendigo)[] [*]appears[*]!"
+//                        + "\nThe [_][dark gray]BLADE[] of [*][/][rich light yellow]DYNAST-KINGS[] strikes!"
+//                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?"
+//                        + "\n[dark dull bronze yellow]φ[] = (1 + 5[^]0.5[^]) * 0.5"
+//                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![]"
+//                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
+//                , layout);
 
-        font.markup("\n[*]Водяной[] — в славянской мифологии дух, обитающий в воде, хозяин вод[^][BLUE][[2][]."
-                + "\nВоплощение стихии воды как отрицательного и опасного начала[^][BLUE][[3][[citation needed][].", layout);
-
-        font.markup("\nThe [dark rich red]MAW[] of the [/][lighter dull sky]wendigo[/] (wendigo)[] [*]appears[*]!"
-                        + "\nThe [_][dark gray]BLADE[] of [*][/][rich light yellow]DYNAST-KINGS[] strikes!"
-                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?"
-                        + "\n[dark dull bronze yellow]φ[] = (1 + 5[^]0.5[^]) * 0.5"
-                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![]"
-                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
-                , layout);
+        font.markup("'You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!' the [dark rich gold]King[] admonished."
+                +" 'Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
+                " unreasonable mercy for your wretched souls. To the Trappists ye shall go; I am in need of" +
+                " a [darkest bronze]stout brew[].'", layout);
     }
 
     @Override

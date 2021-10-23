@@ -345,7 +345,7 @@ public class KnownFonts implements LifecycleListener {
     /**
      * Returns a Font already configured to use a variable-width serif font with good Unicode support, that should
      * scale cleanly to even very large sizes (using an MSDF technique).
-     * Caches the result for later calls. The font used is libertinus Serif, an open-source (SIL Open Font
+     * Caches the result for later calls. The font used is Libertinus Serif, an open-source (SIL Open Font
      * License) typeface. It supports a lot of glyphs, including quite a bit of extended Latin, Greek, and Cyrillic.
      * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
      * needs to be scaled so that it has much larger width than height; the default is 150x32.
@@ -358,7 +358,7 @@ public class KnownFonts implements LifecycleListener {
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.png</li>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-License.txt</li>
      * </ul>
-     * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using SDF
+     * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using MSDF
      */
     public static Font getLibertinusSerif()
     {
@@ -377,6 +377,40 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getLibertinusSerif() not found.");
     }
 
+    private Font kingthingsFoundation;
+    /**
+     * Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
+     * scale cleanly to even very large sizes (using an MSDF technique).
+     * Caches the result for later calls. The font used is Kingthings Foundation, a free (custom permissive license)
+     * typeface. It supports only ASCII.
+     * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/qAf2Pt3.png">Image link</a>
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf using MSDF
+     */
+    public static Font getKingthingsFoundation()
+    {
+        initialize();
+        if(instance.kingthingsFoundation == null)
+        {
+            try {
+                instance.kingthingsFoundation = new Font("KingthingsFoundation-msdf.fnt", MSDF, 0, 0, 17, 0);
+                instance.kingthingsFoundation.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.kingthingsFoundation != null)
+            return new Font(instance.kingthingsFoundation);
+        throw new RuntimeException("Assets for getKingthingsFoundation() not found.");
+    }
 
     @Override
     public void pause() {
@@ -430,6 +464,10 @@ public class KnownFonts implements LifecycleListener {
         if(libertinusSerif != null){
             libertinusSerif.dispose();
             libertinusSerif = null;
+        }
+        if(kingthingsFoundation != null){
+            kingthingsFoundation.dispose();
+            kingthingsFoundation = null;
         }
     }
 }
