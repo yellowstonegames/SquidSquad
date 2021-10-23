@@ -3,7 +3,6 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
 import com.github.tommyettinger.textra.Font;
-import com.github.yellowstonegames.core.DescriptiveColor;
 
 import static com.github.tommyettinger.textra.Font.DistanceFieldType.*;
 
@@ -67,6 +66,7 @@ public class KnownFonts implements LifecycleListener {
      * <ul>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.fnt</li>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-License.txt</li>
      * </ul>
      * @return the Font object that represents the variable-width font OpenSans
      */
@@ -341,6 +341,42 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getGentium() not found.");
     }
 
+    private Font libertinusSerif;
+    /**
+     * Returns a Font already configured to use a variable-width serif font with good Unicode support, that should
+     * scale cleanly to even very large sizes (using an MSDF technique).
+     * Caches the result for later calls. The font used is libertinus Serif, an open-source (SIL Open Font
+     * License) typeface. It supports a lot of glyphs, including quite a bit of extended Latin, Greek, and Cyrillic.
+     * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
+     * needs to be scaled so that it has much larger width than height; the default is 150x32.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/YPO7Hq0.png">Image link</a>
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using SDF
+     */
+    public static Font getLibertinusSerif()
+    {
+        initialize();
+        if(instance.libertinusSerif == null)
+        {
+            try {
+                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 0f, 5f, 0f, -2f).scaleTo(150, 32);
+                instance.libertinusSerif.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.libertinusSerif != null)
+            return new Font(instance.libertinusSerif);
+        throw new RuntimeException("Assets for getLibertinusSerif() not found.");
+    }
+
 
     @Override
     public void pause() {
@@ -390,6 +426,10 @@ public class KnownFonts implements LifecycleListener {
         if(gentium != null){
             gentium.dispose();
             gentium = null;
+        }
+        if(libertinusSerif != null){
+            libertinusSerif.dispose();
+            libertinusSerif = null;
         }
     }
 }
