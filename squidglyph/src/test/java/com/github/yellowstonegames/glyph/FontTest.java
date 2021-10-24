@@ -45,9 +45,9 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getAStarry();
 //        font = KnownFonts.getGentium().scaleTo(48, 48);
 //        font = KnownFonts.getLibertinusSerif();
-        font = KnownFonts.getKingthingsFoundation().scaleTo(60, 70);
+        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
 
-//        font.setColorLookup(GlyphMap::getRgba);
+        font.setColorLookup(GlyphMap::getRgba);
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
@@ -88,10 +88,10 @@ public class FontTest extends ApplicationAdapter {
 //                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
 //                , layout);
 
-        font.markup("'You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!' the [dark rich gold]King[] admonished."
-                +" 'Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
-                " unreasonable mercy for your wretched souls. To the Trappists ye shall go; I am in need of" +
-                " a [darkest bronze]stout brew[].'", layout);
+        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
+                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
+                " unreasonable mercy for your wretched souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
+                " a [darkest bronze]stout brew[].\"", layout);
     }
 
     @Override

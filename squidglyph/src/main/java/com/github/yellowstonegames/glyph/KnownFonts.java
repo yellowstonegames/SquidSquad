@@ -380,17 +380,17 @@ public class KnownFonts implements LifecycleListener {
     private Font kingthingsFoundation;
     /**
      * Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
-     * scale cleanly to even very large sizes (using an MSDF technique).
+     * scale pretty well from a height of about 90 down to a height of maybe 30.
      * Caches the result for later calls. The font used is Kingthings Foundation, a free (custom permissive license)
      * typeface. It supports only ASCII.
-     * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/qAf2Pt3.png">Image link</a>
+     * Preview: <a href="https://i.imgur.com/5C7IVTk.png">Image link</a> (uses width=45, height=64)
      * <br>
      * Needs files:
      * <ul>
-     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-msdf.fnt</li>
-     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png</li>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf using MSDF
@@ -401,7 +401,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kingthingsFoundation == null)
         {
             try {
-                instance.kingthingsFoundation = new Font("KingthingsFoundation-msdf.fnt", MSDF, 0, 0, 17, 0);
+                instance.kingthingsFoundation = new Font("KingthingsFoundation-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
                 instance.kingthingsFoundation.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
