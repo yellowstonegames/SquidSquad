@@ -393,7 +393,7 @@ public class KnownFonts implements LifecycleListener {
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png</li>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
      * </ul>
-     * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf using MSDF
+     * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf
      */
     public static Font getKingthingsFoundation()
     {
@@ -410,6 +410,41 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kingthingsFoundation != null)
             return new Font(instance.kingthingsFoundation);
         throw new RuntimeException("Assets for getKingthingsFoundation() not found.");
+    }
+
+    private Font oxanium;
+    /**
+     * Returns a Font already configured to use a variable-width "science-fiction/high-tech" font, that should
+     * scale pretty well down, but not up.
+     * Caches the result for later calls. The font used is Oxanium, a free (OFL) typeface. It supports a lot of Latin
+     * and extended Latin, but not Greek or Cyrillic.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/mjN6geE.png">Image link</a> (uses width=40, height=50)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Oxanium.ttf
+     */
+    public static Font getOxanium()
+    {
+        initialize();
+        if(instance.oxanium == null)
+        {
+            try {
+                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 1, 0, -3, 0).setTextureFilter();
+                instance.oxanium.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.oxanium != null)
+            return new Font(instance.oxanium);
+        throw new RuntimeException("Assets for getOxanium() not found.");
     }
 
     @Override
@@ -468,6 +503,10 @@ public class KnownFonts implements LifecycleListener {
         if(kingthingsFoundation != null){
             kingthingsFoundation.dispose();
             kingthingsFoundation = null;
+        }
+        if(oxanium != null){
+            oxanium.dispose();
+            oxanium = null;
         }
     }
 }

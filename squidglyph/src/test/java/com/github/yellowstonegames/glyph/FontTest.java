@@ -45,7 +45,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getAStarry();
 //        font = KnownFonts.getGentium().scaleTo(48, 48);
 //        font = KnownFonts.getLibertinusSerif();
-        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
+//        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
+        font = KnownFonts.getOxanium().scaleTo(40, 50);
 
         font.setColorLookup(GlyphMap::getRgba);
 
@@ -88,17 +89,22 @@ public class FontTest extends ApplicationAdapter {
 //                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
 //                , layout);
 
-        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
-                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
-                " unreasonable mercy for your wretched souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
-                " a [darkest bronze]stout brew[].\"", layout);
+//        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
+//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
+//                " unreasonable mercy for your wretched souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
+//                " a [darkest bronze]stout brew[].\"", layout);
+
+        font.markup("\"[/]HOSTILE ACTION DETECTED[/].\" The computerized voice was barely audible over the klaxons blaring throughout [darker rich purple]Starship Andromalius[]."
+                +" \"[!]Would somebody shut that thing off[!]? We're quite aware by now!\" [orange]Captain Luiz Tigre[] shouted at no one in particular, while frantically flipping the remaining" +
+                " switches on the capacitor controls. \"Sir, we need to get the [silver]teleprojector[] online. Send a party aboard, say they're negotiators.\" [light sky]First Admiral Zototh[] said with urgency." +
+                " \"[*]Negotiators[*]? Are you serious?\" \"I said to [/]say[/] they're negotiators... just with really big guns.\"", layout);
     }
 
     @Override
     public void render() {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = font.cellHeight * (layout.lines() - 1);
+        float x = 0, y = font.cellHeight * (layout.lines() - 0.5f);
         batch.begin();
         font.enableShader(batch);
 
