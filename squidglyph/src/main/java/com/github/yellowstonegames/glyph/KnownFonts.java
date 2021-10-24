@@ -385,7 +385,7 @@ public class KnownFonts implements LifecycleListener {
      * typeface. It supports only ASCII.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/5C7IVTk.png">Image link</a> (uses width=45, height=64)
+     * Preview: <a href="https://i.imgur.com/iARdQEa.png">Image link</a> (uses width=45, height=64)
      * <br>
      * Needs files:
      * <ul>
