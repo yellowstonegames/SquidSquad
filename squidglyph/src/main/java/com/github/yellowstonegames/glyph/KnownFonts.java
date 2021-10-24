@@ -447,6 +447,41 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getOxanium() not found.");
     }
 
+    private Font kaffeesatz;
+    /**
+     * Returns a Font already configured to use a variable-width, narrow, humanist font, that should
+     * scale pretty well down, but not up.
+     * Caches the result for later calls. The font used is Yanone Kaffeesatz, a free (OFL) typeface. It supports a lot
+     * of Latin, Cyrillic, and some extended Latin, but not Greek.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/NS4ErXx.png">Image link</a> (uses width=45, height=55)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf
+     */
+    public static Font getYanoneKaffeesatz()
+    {
+        initialize();
+        if(instance.kaffeesatz == null)
+        {
+            try {
+                instance.kaffeesatz = new Font("YanoneKaffeesatz-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
+                instance.kaffeesatz.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.kaffeesatz != null)
+            return new Font(instance.kaffeesatz);
+        throw new RuntimeException("Assets for getYanoneKaffeesatz() not found.");
+    }
+
     @Override
     public void pause() {
 
@@ -507,6 +542,10 @@ public class KnownFonts implements LifecycleListener {
         if(oxanium != null){
             oxanium.dispose();
             oxanium = null;
+        }
+        if(kaffeesatz != null){
+            kaffeesatz.dispose();
+            kaffeesatz = null;
         }
     }
 }
