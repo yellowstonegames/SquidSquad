@@ -1577,6 +1577,33 @@ public class Base {
     }
 
 
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * char array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @return a char array of the numbers found in source
+     */
+    public char[] charSplit(String source, String delimiter) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new char[0];
+        int amount = StringTools.count(source, delimiter);
+        if (amount <= 0) return new char[]{readChar(source)};
+        char[] splat = new char[amount+1];
+        int dl = delimiter.length(), idx = -dl, idx2;
+        for (int i = 0; i < amount; i++) {
+            splat[i] = readChar(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+        }
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        {
+            splat[amount] = readChar(source, idx+dl, source.length());
+        }
+        else
+        {
+            splat[amount] = readChar(source, idx+dl, idx2);
+        }
+        return splat;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
