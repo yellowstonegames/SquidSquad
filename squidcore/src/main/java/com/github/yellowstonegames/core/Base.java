@@ -1658,6 +1658,42 @@ public class Base {
         return splat;
     }
 
+    /**
+     * Given a long array and a delimiter to separate the items of that array, produces a String containing all longs
+     * from elements, in this Base, separated by delimiter.
+     * @param delimiter the separator to put between numbers
+     * @param elements a long array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, long[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a long array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all longs from elements, in this Base, separated by delimiter.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a long array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, long[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
