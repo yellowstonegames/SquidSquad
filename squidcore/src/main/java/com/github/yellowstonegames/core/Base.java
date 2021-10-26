@@ -1470,6 +1470,33 @@ public class Base {
 
     /**
      * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as an
+     * long array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @return a long array of the numbers found in source
+     */
+    public long[] longSplit(String source, String delimiter) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new long[0];
+        int amount = StringTools.count(source, delimiter);
+        if (amount <= 0) return new long[]{readLong(source)};
+        long[] splat = new long[amount+1];
+        int dl = delimiter.length(), idx = -dl, idx2;
+        for (int i = 0; i < amount; i++) {
+            splat[i] = readLong(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+        }
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        {
+            splat[amount] = readLong(source, idx+dl, source.length());
+        }
+        else
+        {
+            splat[amount] = readLong(source, idx+dl, idx2);
+        }
+        return splat;
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as an
      * int array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
      * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
      * @param delimiter the String that separates numbers in the source
