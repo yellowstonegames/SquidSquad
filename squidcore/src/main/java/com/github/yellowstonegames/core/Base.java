@@ -1694,6 +1694,42 @@ public class Base {
         return sb;
     }
 
+    /**
+     * Given an int array and a delimiter to separate the items of that array, produces a String containing all ints
+     * from elements, in this Base, separated by delimiter.
+     * @param delimiter the separator to put between numbers
+     * @param elements an int array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, int[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given an int array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all ints from elements, in this Base, separated by delimiter.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements an int array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, int[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
