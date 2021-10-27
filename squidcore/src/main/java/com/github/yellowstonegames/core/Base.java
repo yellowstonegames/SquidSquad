@@ -1467,7 +1467,6 @@ public class Base {
         return (char) (data * len);
     }
 
-
     /**
      * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
      * long array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
@@ -1575,7 +1574,6 @@ public class Base {
         }
         return splat;
     }
-
 
     /**
      * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
@@ -1721,6 +1719,190 @@ public class Base {
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
     public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, int[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a short array and a delimiter to separate the items of that array, produces a String containing all shorts
+     * from elements, in this Base, separated by delimiter.
+     * @param delimiter the separator to put between numbers
+     * @param elements a short array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, short[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a short array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all shorts from elements, in this Base, separated by delimiter.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a short array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, short[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a byte array and a delimiter to separate the items of that array, produces a String containing all bytes
+     * from elements, in this Base, separated by delimiter.
+     * @param delimiter the separator to put between numbers
+     * @param elements a byte array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, byte[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a byte array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all bytes from elements, in this Base, separated by delimiter.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a byte array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, byte[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a char array and a delimiter to separate the items of that array, produces a String containing all chars
+     * (as numbers) from elements, in this Base, separated by delimiter.
+     * @param delimiter the separator to put between numbers
+     * @param elements a char array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, char[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a char array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all chars (as numbers) from elements, in this Base, separated by delimiter.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a char array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, char[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a double array and a delimiter to separate the items of that array, produces a String containing all doubles
+     * from elements, in this Base, separated by delimiter. This uses {@link #appendSigned(StringBuilder, double)},
+     * which means this does not produce human-readable numbers.
+     * @param delimiter the separator to put between numbers
+     * @param elements a double array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, double[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a double array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all doubles from elements, in this Base, separated by delimiter. This uses
+     * {@link #appendSigned(StringBuilder, double)}, which means this does not produce human-readable numbers.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a double array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, double[] elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a float array and a delimiter to separate the items of that array, produces a String containing all floats
+     * from elements, in this Base, separated by delimiter. This uses {@link #appendSigned(StringBuilder, float)},
+     * which means this does not produce human-readable numbers.
+     * @param delimiter the separator to put between numbers
+     * @param elements a float array; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public String join(CharSequence delimiter, float[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 3);
+        sb.append(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter);
+            appendSigned(sb, elements[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Given a float array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all floats from elements, in this Base, separated by delimiter. This uses
+     * {@link #appendSigned(StringBuilder, float)}, which means this does not produce human-readable numbers.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements a float array; if null, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by delimiter
+     */
+    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, float[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
         for (int i = 1; i < elements.length; i++) {
