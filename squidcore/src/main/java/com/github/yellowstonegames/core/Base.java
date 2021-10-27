@@ -1913,6 +1913,142 @@ public class Base {
         return sb;
     }
 
+    /**
+     * Primarily for internal use; this generalizes all the 1D appendJoined() methods for arrays (here, of numbers).
+     * @param <A> almost certainly an array of a number type; could potentially be an array of a non-number type, but that isn't used here
+     */
+    @FunctionalInterface
+    public interface IJoinedAppender<A>  {
+        StringBuilder appendJoined(StringBuilder sb, String delimiter, A elements);
+    }
+
+    /**
+     * Used to implement the other appendJoined2D() methods.
+     * @param sb a StringBuilder that will be appended to
+     * @param majorDelimiter the delimiter that separates the outer layers
+     * @param minorDelimiter the delimiter that separates individual items
+     * @param elements where A is a 1D array type, this is a 2D array with the same element type as A
+     * @param fn almost always a method reference to an {@link #appendJoined(StringBuilder, String, int[])} method
+     * @param <A> a 1D array type
+     * @return sb, for chaining
+     */
+    private <A> StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, A[] elements, IJoinedAppender<A> fn) {
+        if(majorDelimiter == null || minorDelimiter == null || majorDelimiter.equals(minorDelimiter))
+            throw new IllegalArgumentException("The delimiters must be different and non-null.");
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        for (int i = 0; i < elements.length; i++) {
+            sb.append(majorDelimiter);
+            fn.appendJoined(sb, minorDelimiter, elements[i]);
+        }
+        return sb;
+    }
+
+    /**
+     * Given a long 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all longs from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a long 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, long[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given an int 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all ints from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements an int 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, int[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given a short 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all shorts from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a short 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, short[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given a byte 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all bytes from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a byte 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, byte[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given a char 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all chars from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a char 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, char[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given a double 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all doubles from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a double 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, double[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+    /**
+     * Given a float 2D array, a major delimiter to separate the inner arrays, a minor delimiter to separate the items in
+     * each inner array, and a StringBuilder to append to, appends to the StringBuilder all floats from elements, in this
+     * Base, separated by minor delimiter and then by major delimiter. For any non-null, non-empty elements, this will
+     * append at least one major delimiter before it appends any items.
+     * @param sb the StringBuilder to append to; if null, this returns null
+     * @param majorDelimiter the separator to put between arrays
+     * @param minorDelimiter the separator to put between numbers
+     * @param elements a float 2D array; if null or empty, this returns sb without changes
+     * @return a String containing all numbers in elements, written in this Base, separated by the delimiters
+     */
+    public StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, float[][] elements){
+        return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
