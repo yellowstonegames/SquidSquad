@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.ds.IdentityObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 
@@ -1663,10 +1664,10 @@ public class Base {
      * @param elements a long array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, long[] elements) {
+    public String join(String delimiter, long[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1682,9 +1683,9 @@ public class Base {
      * @param elements a long array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, long[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, long[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1699,10 +1700,10 @@ public class Base {
      * @param elements an int array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, int[] elements) {
+    public String join(String delimiter, int[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1718,9 +1719,9 @@ public class Base {
      * @param elements an int array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, int[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, int[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1735,10 +1736,10 @@ public class Base {
      * @param elements a short array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, short[] elements) {
+    public String join(String delimiter, short[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1754,9 +1755,9 @@ public class Base {
      * @param elements a short array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, short[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, short[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1771,10 +1772,10 @@ public class Base {
      * @param elements a byte array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, byte[] elements) {
+    public String join(String delimiter, byte[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1790,9 +1791,9 @@ public class Base {
      * @param elements a byte array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, byte[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, byte[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1807,10 +1808,10 @@ public class Base {
      * @param elements a char array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, char[] elements) {
+    public String join(String delimiter, char[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1826,9 +1827,9 @@ public class Base {
      * @param elements a char array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, char[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, char[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1844,10 +1845,10 @@ public class Base {
      * @param elements a double array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, double[] elements) {
+    public String join(String delimiter, double[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1864,9 +1865,9 @@ public class Base {
      * @param elements a double array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, double[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, double[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1882,10 +1883,10 @@ public class Base {
      * @param elements a float array; if null, this returns an empty String
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public String join(CharSequence delimiter, float[] elements) {
+    public String join(String delimiter, float[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 3);
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
@@ -1902,9 +1903,9 @@ public class Base {
      * @param elements a float array; if null, this returns sb without changes
      * @return a String containing all numbers in elements, written in this Base, separated by delimiter
      */
-    public StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, float[] elements) {
+    public StringBuilder appendJoined(StringBuilder sb, String delimiter, float[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]);
+        appendSigned(sb, elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter);
             appendSigned(sb, elements[i]);
