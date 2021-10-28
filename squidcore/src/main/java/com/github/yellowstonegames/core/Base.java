@@ -1720,7 +1720,7 @@ public class Base {
         if(source == null) return new double[0];
         return doubleSplit(source, delimiter, 0, source.length());
     }
-    
+
     /**
      * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
      * float array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
@@ -2038,15 +2038,15 @@ public class Base {
         A split(String source, String delimiter, int startIndex, int endIndex);
     }
 
-    private <A> A[] split2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex, ISplitter<A> fn){
+    private <A> A[] split2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex, ISplitter<A> fn, A[] dummy){
         if(majorDelimiter == null || minorDelimiter == null || majorDelimiter.equals(minorDelimiter)
                 || majorDelimiter.length() == 0 || minorDelimiter.length() == 0)
             throw new IllegalArgumentException("The delimiters must be different, non-null, and non-empty.");
         if(source == null || source.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return null;
         int amount = StringTools.count(source, majorDelimiter, startIndex, endIndex);
-        if (amount <= 0) return (A[]) new Object[0];
-        Object[] splat = new Object[amount];
+        if (amount <= 0) return Arrays.copyOf(dummy, 0);
+        A[] splat = Arrays.copyOf(dummy, amount);
         int dl = majorDelimiter.length(), idx = startIndex, idx2;
         for (int i = 0; i < amount - 1; i++) {
             splat[i] = fn.split(source, minorDelimiter, idx+dl, idx = source.indexOf(majorDelimiter, idx+dl));
@@ -2059,7 +2059,7 @@ public class Base {
         {
             splat[amount - 1] = fn.split(source, minorDelimiter, idx+dl, idx2);
         }
-        return (A[])splat;
+        return splat;
 
     }
 
@@ -2190,6 +2190,37 @@ public class Base {
         return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
     }
 
+    private static final long[][] LONG2D = new long[0][0];
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * long array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, long[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D long array of the numbers found in source
+     */
+    public long[][] longSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::longSplit, LONG2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * long array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, long[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D long array of the numbers found in source
+     */
+    public long[][] longSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new long[0][0];
+        return longSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
 
     @Override
     public boolean equals(Object o) {

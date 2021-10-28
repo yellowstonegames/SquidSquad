@@ -121,9 +121,16 @@ public class DigitTest {
         for (long i : inputs) {
             Assert.assertEquals(sb.append(Long.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        long[][] inputs2D = {
+                {0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L, -98765L,},
+                {-98765L, 0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L,},
+                {1234L, -98765L, 0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L,},
+        };
         for(Base b : BASES){
             Assert.assertArrayEquals(b.longSplit(b.join(" ", inputs), " "), inputs);
             Assert.assertArrayEquals(b.longSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+            Assert.assertArrayEquals(b.longSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(b.longSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
