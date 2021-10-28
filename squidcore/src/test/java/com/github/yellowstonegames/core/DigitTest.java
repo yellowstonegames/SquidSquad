@@ -121,6 +121,10 @@ public class DigitTest {
         for (long i : inputs) {
             Assert.assertEquals(sb.append(Long.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        for(Base b : BASES){
+            Assert.assertArrayEquals(b.longSplit(b.join(" ", inputs), " "), inputs);
+            Assert.assertArrayEquals(b.longSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+        }
     }
 
     @Test
@@ -138,6 +142,10 @@ public class DigitTest {
         }
         for (int i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
+        }
+        for(Base b : BASES){
+            Assert.assertArrayEquals(b.intSplit(b.join(" ", inputs), " "), inputs);
+            Assert.assertArrayEquals(b.intSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
         }
     }
 
@@ -157,6 +165,10 @@ public class DigitTest {
         for (short i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        for(Base b : BASES){
+            Assert.assertArrayEquals(b.shortSplit(b.join(" ", inputs), " "), inputs);
+            Assert.assertArrayEquals(b.shortSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+        }
     }
 
     @Test
@@ -175,6 +187,10 @@ public class DigitTest {
         for (char i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        for(Base b : BASES){
+            Assert.assertArrayEquals(b.charSplit(b.join(" ", inputs), " "), inputs);
+            Assert.assertArrayEquals(b.charSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+        }
     }
 
     @Test
@@ -192,6 +208,10 @@ public class DigitTest {
         }
         for (byte i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
+        }
+        for(Base b : BASES){
+            Assert.assertArrayEquals(b.byteSplit(b.join(" ", inputs), " "), inputs);
+            Assert.assertArrayEquals(b.byteSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
         }
     }
 
