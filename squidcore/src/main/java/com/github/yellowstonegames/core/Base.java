@@ -1,6 +1,5 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.IdentityObjectMap;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 
@@ -2190,7 +2189,8 @@ public class Base {
         return appendJoined2D(sb, majorDelimiter, minorDelimiter, elements, this::appendJoined);
     }
 
-    private static final long[][] LONG2D = new long[0][0];
+    private static final long[][] long2D = new long[0][0];
+
     /**
      * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
      * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
@@ -2204,7 +2204,7 @@ public class Base {
      * @return a 2D long array of the numbers found in source
      */
     public long[][] longSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
-        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::longSplit, LONG2D);
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::longSplit, long2D);
     }
 
     /**
@@ -2221,6 +2221,205 @@ public class Base {
         if(source == null) return new long[0][0];
         return longSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
     }
+
+    private static final int[][] int2D = new int[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * int array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, int[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D int array of the numbers found in source
+     */
+    public int[][] intSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::intSplit, int2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * int array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, int[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D int array of the numbers found in source
+     */
+    public int[][] intSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new int[0][0];
+        return intSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
+    private static final short[][] short2D = new short[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * short array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, short[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D short array of the numbers found in source
+     */
+    public short[][] shortSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::shortSplit, short2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * short array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, short[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D short array of the numbers found in source
+     */
+    public short[][] shortSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new short[0][0];
+        return shortSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
+    private static final byte[][] byte2D = new byte[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * byte array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, byte[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D byte array of the numbers found in source
+     */
+    public byte[][] byteSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::byteSplit, byte2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * byte array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, byte[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D byte array of the numbers found in source
+     */
+    public byte[][] byteSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new byte[0][0];
+        return byteSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
+    private static final char[][] char2D = new char[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * char array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, char[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D char array of the numbers found in source
+     */
+    public char[][] charSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::charSplit, char2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * char array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, char[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D char array of the numbers found in source
+     */
+    public char[][] charSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new char[0][0];
+        return charSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
+    private static final double[][] double2D = new double[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * double array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, double[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D double array of the numbers found in source
+     */
+    public double[][] doubleSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::doubleSplit, double2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * double array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, double[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D double array of the numbers found in source
+     */
+    public double[][] doubleSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new double[0][0];
+        return doubleSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
+    private static final float[][] float2D = new float[0][0];
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * float array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, float[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a 2D float array of the numbers found in source
+     */
+    public float[][] floatSplit2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex) {
+        return split2D(source, majorDelimiter, minorDelimiter, startIndex, endIndex, this::floatSplit, float2D);
+    }
+
+    /**
+     * Given a String containing sequences of numbers in this Base, with the sequences separated by instances of
+     * majorDelimiter and the numbers within a sequence separated by minorDelimiter returns those numbers as a 2D
+     * float array. This is specifically meant to read the format produced by
+     * {@link #appendJoined(StringBuilder, String, float[])}, including the initial majorDelimiter before each sequence.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param majorDelimiter the separator between sequences
+     * @param minorDelimiter the separator between numbers
+     * @return a 2D float array of the numbers found in source
+     */
+    public float[][] floatSplit2D(String source, String majorDelimiter, String minorDelimiter){
+        if(source == null) return new float[0][0];
+        return floatSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
+    }
+
 
     @Override
     public boolean equals(Object o) {
