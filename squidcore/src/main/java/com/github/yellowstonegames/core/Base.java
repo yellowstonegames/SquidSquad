@@ -1473,24 +1473,69 @@ public class Base {
      * long array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
      * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
      * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
      * @return a long array of the numbers found in source
      */
-    public long[] longSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new long[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new long[]{readLong(source)};
+    public long[] longSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new long[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new long[]{readLong(source, startIndex, endIndex)};
         long[] splat = new long[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
             splat[i] = readLong(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readLong(source, idx+dl, source.length());
+            splat[amount] = readLong(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
             splat[amount] = readLong(source, idx+dl, idx2);
+        }
+        return splat;
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * long array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @return a long array of the numbers found in source
+     */
+    public long[] longSplit(String source, String delimiter){
+        if(source == null) return new long[0];
+        return longSplit(source, delimiter, 0, source.length());
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as an
+     * int array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return an int array of the numbers found in source
+     */
+    public int[] intSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new int[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new int[]{readInt(source, startIndex, endIndex)};
+        int[] splat = new int[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
+        for (int i = 0; i < amount; i++) {
+            splat[i] = readInt(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+        }
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
+        {
+            splat[amount] = readInt(source, idx+dl, Math.min(source.length(), endIndex));
+        }
+        else
+        {
+            splat[amount] = readInt(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1502,22 +1547,37 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return an int array of the numbers found in source
      */
-    public int[] intSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new int[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new int[]{readInt(source)};
-        int[] splat = new int[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+    public int[] intSplit(String source, String delimiter){
+        if(source == null) return new int[0];
+        return intSplit(source, delimiter, 0, source.length());
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * short array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a short array of the numbers found in source
+     */
+    public short[] shortSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new short[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new short[]{readShort(source, startIndex, endIndex)};
+        short[] splat = new short[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
-            splat[i] = readInt(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+            splat[i] = readShort(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readInt(source, idx+dl, source.length());
+            splat[amount] = readShort(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
-            splat[amount] = readInt(source, idx+dl, idx2);
+            splat[amount] = readShort(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1529,22 +1589,37 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return a short array of the numbers found in source
      */
-    public short[] shortSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new short[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new short[]{readShort(source)};
-        short[] splat = new short[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+    public short[] shortSplit(String source, String delimiter){
+        if(source == null) return new short[0];
+        return shortSplit(source, delimiter, 0, source.length());
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * byte array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a byte array of the numbers found in source
+     */
+    public byte[] byteSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new byte[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new byte[]{readByte(source, startIndex, endIndex)};
+        byte[] splat = new byte[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
-            splat[i] = readShort(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+            splat[i] = readByte(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readShort(source, idx+dl, source.length());
+            splat[amount] = readByte(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
-            splat[amount] = readShort(source, idx+dl, idx2);
+            splat[amount] = readByte(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1556,22 +1631,38 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return a byte array of the numbers found in source
      */
-    public byte[] byteSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new byte[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new byte[]{readByte(source)};
-        byte[] splat = new byte[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+    public byte[] byteSplit(String source, String delimiter){
+        if(source == null) return new byte[0];
+        return byteSplit(source, delimiter, 0, source.length());
+    }
+
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * char array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a char array of the numbers found in source
+     */
+    public char[] charSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new char[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new char[]{readChar(source, startIndex, endIndex)};
+        char[] splat = new char[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
-            splat[i] = readByte(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+            splat[i] = readChar(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readByte(source, idx+dl, source.length());
+            splat[amount] = readChar(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
-            splat[amount] = readByte(source, idx+dl, idx2);
+            splat[amount] = readChar(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1583,22 +1674,37 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return a char array of the numbers found in source
      */
-    public char[] charSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new char[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new char[]{readChar(source)};
-        char[] splat = new char[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+    public char[] charSplit(String source, String delimiter){
+        if(source == null) return new char[0];
+        return charSplit(source, delimiter, 0, source.length());
+    }
+
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * double array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a double array of the numbers found in source
+     */
+    public double[] doubleSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new double[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new double[]{readDouble(source, startIndex, endIndex)};
+        double[] splat = new double[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
-            splat[i] = readChar(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+            splat[i] = readDouble(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readChar(source, idx+dl, source.length());
+            splat[amount] = readDouble(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
-            splat[amount] = readChar(source, idx+dl, idx2);
+            splat[amount] = readDouble(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1610,22 +1716,37 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return a double array of the numbers found in source
      */
-    public double[] doubleSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new double[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new double[]{readDouble(source)};
-        double[] splat = new double[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
+    public double[] doubleSplit(String source, String delimiter){
+        if(source == null) return new double[0];
+        return doubleSplit(source, delimiter, 0, source.length());
+    }
+    
+    /**
+     * Given a String containing numbers in this Base, separated by instances of delimiter, returns those numbers as a
+     * float array. If source or delimiter is null, or if source or delimiter is empty, this returns an empty array.
+     * @param source a String of numbers in this base, separated by a delimiter, with no trailing delimiter
+     * @param delimiter the String that separates numbers in the source
+     * @param startIndex the first index, inclusive, in source to split from
+     * @param endIndex the last index, exclusive, in source to split from
+     * @return a float array of the numbers found in source
+     */
+    public float[] floatSplit(String source, String delimiter, int startIndex, int endIndex) {
+        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new float[0];
+        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        if (amount <= 0) return new float[]{readFloat(source, startIndex, endIndex)};
+        float[] splat = new float[amount+1];
+        int dl = delimiter.length(), idx = startIndex-dl, idx2;
         for (int i = 0; i < amount; i++) {
-            splat[i] = readDouble(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
+            splat[i] = readFloat(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
         }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
+        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0 || idx2 >= endIndex)
         {
-            splat[amount] = readDouble(source, idx+dl, source.length());
+            splat[amount] = readFloat(source, idx+dl, Math.min(source.length(), endIndex));
         }
         else
         {
-            splat[amount] = readDouble(source, idx+dl, idx2);
+            splat[amount] = readFloat(source, idx+dl, idx2);
         }
         return splat;
     }
@@ -1637,24 +1758,9 @@ public class Base {
      * @param delimiter the String that separates numbers in the source
      * @return a float array of the numbers found in source
      */
-    public float[] floatSplit(String source, String delimiter) {
-        if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0) return new float[0];
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new float[]{readFloat(source)};
-        float[] splat = new float[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
-        for (int i = 0; i < amount; i++) {
-            splat[i] = readFloat(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
-        }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
-        {
-            splat[amount] = readFloat(source, idx+dl, source.length());
-        }
-        else
-        {
-            splat[amount] = readFloat(source, idx+dl, idx2);
-        }
-        return splat;
+    public float[] floatSplit(String source, String delimiter){
+        if(source == null) return new float[0];
+        return floatSplit(source, delimiter, 0, source.length());
     }
 
     /**
