@@ -323,6 +323,15 @@ public class DigitTest {
         double[] inputs = {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1};
 
+        double[][] inputs2D = {
+                {0.0, -0.0, 1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                        Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1},
+                {1.0, -1.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                        Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1},
+                {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                        Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL, 1.5, -1.1},
+        };
+
         for(Base enc : BASES)
         {
             for(double in : inputs){
@@ -331,6 +340,10 @@ public class DigitTest {
             }
             Assert.assertTrue(Double.isNaN(enc.readDouble(enc.signed(Double.NaN))));
             Assert.assertTrue(Double.isNaN(enc.readDouble(enc.unsigned(Double.NaN))));
+            Assert.assertArrayEquals(enc.doubleSplit(enc.join(" ", inputs), " "), inputs, 0.00001);
+            Assert.assertArrayEquals(enc.doubleSplit(" " + enc.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs, 0.00001);
+            Assert.assertArrayEquals(enc.doubleSplit2D(enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(enc.doubleSplit2D(" " + enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
@@ -338,6 +351,13 @@ public class DigitTest {
     public void testReadFloat(){
         float[] inputs = {0.0f, -0.0f, 1.0f, -1.0f, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
                 Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f};
+
+        float[][] inputs2D = {{0.0f, -0.0f, 1.0f, -1.0f, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
+                Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f},
+                {1.0f, -1.0f, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
+                        Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f},
+                {Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY,
+                        Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL, 1.5f, -1.1f},};
 
         for(Base enc : BASES)
         {
@@ -347,6 +367,10 @@ public class DigitTest {
             }
             Assert.assertTrue(Float.isNaN(enc.readFloat(enc.signed(Float.NaN))));
             Assert.assertTrue(Float.isNaN(enc.readFloat(enc.unsigned(Float.NaN))));
+            Assert.assertArrayEquals(enc.floatSplit(enc.join(" ", inputs), " "), inputs, 0.00001f);
+            Assert.assertArrayEquals(enc.floatSplit(" " + enc.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs, 0.00001f);
+            Assert.assertArrayEquals(enc.floatSplit2D(enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(enc.floatSplit2D(" " + enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 }
