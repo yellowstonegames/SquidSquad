@@ -123,8 +123,8 @@ public class DigitTest {
         }
         long[][] inputs2D = {
                 {0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L, -98765L,},
-                {-98765L, 0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L,},
-                {1234L, -98765L, 0L, 1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L,},
+                {1L, -1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L, -98765L,},
+                {-1L, 9223372036854775807L, -9223372036854775808L, 2147483647L, -2147483648L, 1234L, -98765L,},
         };
         for(Base b : BASES){
             Assert.assertArrayEquals(b.longSplit(b.join(" ", inputs), " "), inputs);
@@ -150,9 +150,17 @@ public class DigitTest {
         for (int i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        int[][] inputs2D = {
+                {0, 1, -1, 2147483647, -2147483648, 1234, -98765},
+                {1, -1, 2147483647, -2147483648, 1234, -98765},
+                {-1, 2147483647, -2147483648, 1234, -98765},
+        };
+
         for(Base b : BASES){
             Assert.assertArrayEquals(b.intSplit(b.join(" ", inputs), " "), inputs);
             Assert.assertArrayEquals(b.intSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+            Assert.assertArrayEquals(b.intSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(b.intSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
@@ -172,9 +180,16 @@ public class DigitTest {
         for (short i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        short[][] inputs2D = {
+                {0, 1, -1, 32767, -32768, 1234, -9876},
+                {1, -1, 32767, -32768, 1234, -9876},
+                {-1, 32767, -32768, 1234, -9876},
+        };
         for(Base b : BASES){
             Assert.assertArrayEquals(b.shortSplit(b.join(" ", inputs), " "), inputs);
             Assert.assertArrayEquals(b.shortSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+            Assert.assertArrayEquals(b.shortSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(b.shortSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
@@ -194,9 +209,16 @@ public class DigitTest {
         for (char i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        char[][] inputs2D = {
+                {0, 1, 0xFFFF, 32767, 0x8000, 1234, 49876},
+                {1, 0xFFFF, 32767, 0x8000, 1234, 49876},
+                {0xFFFF, 32767, 0x8000, 1234, 49876},
+        };
         for(Base b : BASES){
             Assert.assertArrayEquals(b.charSplit(b.join(" ", inputs), " "), inputs);
             Assert.assertArrayEquals(b.charSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+            Assert.assertArrayEquals(b.charSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(b.charSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
@@ -216,9 +238,16 @@ public class DigitTest {
         for (byte i : inputs) {
             Assert.assertEquals(sb.append(Integer.toString(i, 2)).toString(), Base.BASE2.appendSigned(esb, i).toString());
         }
+        byte[][] inputs2D = {
+                {0, 1, -1, 127, -128, 12, -87},
+                {1, -1, 127, -128, 12, -87},
+                {-1, 127, -128, 12, -87},
+        };
         for(Base b : BASES){
             Assert.assertArrayEquals(b.byteSplit(b.join(" ", inputs), " "), inputs);
             Assert.assertArrayEquals(b.byteSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
+            Assert.assertArrayEquals(b.byteSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
+            Assert.assertArrayEquals(b.byteSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
         }
     }
 
