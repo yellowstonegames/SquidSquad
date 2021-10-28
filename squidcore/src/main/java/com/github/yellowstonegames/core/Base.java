@@ -2024,8 +2024,43 @@ public class Base {
      * @param <A> almost certainly an array of a number type; could potentially be an array of a non-number type, but that isn't used here
      */
     @FunctionalInterface
-    public interface IJoinedAppender<A>  {
+    public interface IJoinedAppender<A> {
         StringBuilder appendJoined(StringBuilder sb, String delimiter, A elements);
+    }
+
+    /**
+     * Primarily for internal use; this generalizes all the 1D typeSplit() methods that produce arrays of some primitive
+     * type (here, always numbers).
+     * @param <A> almost certainly an array of a number type; could potentially be an array of a non-number type, but that isn't used here
+     */
+    @FunctionalInterface
+    public interface ISplitter<A> {
+        A split(String source, String delimiter, int startIndex, int endIndex);
+    }
+
+    private <A> A[] split2D(String source, String majorDelimiter, String minorDelimiter, int startIndex, int endIndex, ISplitter<A> fn){
+        if(majorDelimiter == null || minorDelimiter == null || majorDelimiter.equals(minorDelimiter)
+                || majorDelimiter.length() == 0 || minorDelimiter.length() == 0)
+            throw new IllegalArgumentException("The delimiters must be different, non-null, and non-empty.");
+        if(source == null || source.length() == 0
+                || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return null;
+        int amount = StringTools.count(source, majorDelimiter, startIndex, endIndex);
+        if (amount <= 0) return (A[]) new Object[0];
+        Object[] splat = new Object[amount];
+        int dl = majorDelimiter.length(), idx = startIndex, idx2;
+        for (int i = 0; i < amount - 1; i++) {
+            splat[i] = fn.split(source, minorDelimiter, idx+dl, idx = source.indexOf(majorDelimiter, idx+dl));
+        }
+        if((idx2 = source.indexOf(majorDelimiter, idx+dl)) < 0 || idx2 >= endIndex)
+        {
+            splat[amount - 1] = fn.split(source, minorDelimiter, idx+dl, Math.min(source.length(), endIndex));
+        }
+        else
+        {
+            splat[amount - 1] = fn.split(source, minorDelimiter, idx+dl, idx2);
+        }
+        return (A[])splat;
+
     }
 
     /**
@@ -2039,8 +2074,9 @@ public class Base {
      * @return sb, for chaining
      */
     private <A> StringBuilder appendJoined2D(StringBuilder sb, String majorDelimiter, String minorDelimiter, A[] elements, IJoinedAppender<A> fn) {
-        if(majorDelimiter == null || minorDelimiter == null || majorDelimiter.equals(minorDelimiter))
-            throw new IllegalArgumentException("The delimiters must be different and non-null.");
+        if(majorDelimiter == null || minorDelimiter == null || majorDelimiter.equals(minorDelimiter)
+                || majorDelimiter.length() == 0 || minorDelimiter.length() == 0)
+            throw new IllegalArgumentException("The delimiters must be different, non-null, and non-empty.");
         if (sb == null || elements == null || elements.length == 0) return sb;
         for (int i = 0; i < elements.length; i++) {
             sb.append(majorDelimiter);
