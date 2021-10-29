@@ -60,13 +60,13 @@ public class DungeonMapTest extends ApplicationAdapter {
     public void create() {
         LaserRandom random = new LaserRandom(Hasher.decarabia.hash64(DateFormat.getDateInstance().format(new Date())));
         batch = new SpriteBatch();
-        Font font = KnownFonts.getIosevkaSlab().scaleTo(20f, 20f);
+        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
-//        font = KnownFonts.getCozette();
-//        font = KnownFonts.getAStarry();
+//        Font font = KnownFonts.getCozette();
+//        Font font = KnownFonts.getAStarry();
         gm = new GlyphMap(font, 60, 32);
         glyphs = ObjectList.with(new GlidingGlyph((long) describe("red orange") << 32 | '@', Coord.get(1, 1)));
         director = new Director<>(GlidingGlyph::getLocation, glyphs);
@@ -151,11 +151,11 @@ public class DungeonMapTest extends ApplicationAdapter {
                 if(inView.contains(x, y)) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
-                            gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
+                            gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
                             gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
                             break;
                         case ',':
-                            gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime))));
+                            gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
                             gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
                             break;
                         case ' ':
