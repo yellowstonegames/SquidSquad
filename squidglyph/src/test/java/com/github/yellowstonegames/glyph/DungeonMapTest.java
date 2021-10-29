@@ -68,7 +68,14 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
         gm = new GlyphMap(font, 60, 32);
-        glyphs = ObjectList.with(new GlidingGlyph((long) describe("red orange") << 32 | '@', Coord.get(1, 1)));
+        GlidingGlyph playerGlyph = new GlidingGlyph((long) describe("red orange") << 32 | '@', Coord.get(1, 1));
+        playerGlyph.getLocation().setCompleteRunner(() -> {
+            seen.or(inView.refill(FOV.reuseFOV(res, light, playerGlyph.getLocation().getEnd().x, playerGlyph.getLocation().getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+            LineTools.pruneLines(dungeon, seen, prunedDungeon);
+        });
+
+        glyphs = ObjectList.with(playerGlyph);
+
         director = new Director<>(GlidingGlyph::getLocation, glyphs);
         director.setDuration(100L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
@@ -120,10 +127,6 @@ public class DungeonMapTest extends ApplicationAdapter {
         final Coord next = cg.getStart().translate(way);
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
             cg.setEnd(next);
-            cg.setCompleteRunner(() -> {
-                seen.or(inView.refill(FOV.reuseFOV(res, light, cg.getEnd().x, cg.getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
-                LineTools.pruneLines(dungeon, seen, prunedDungeon);
-            });
             director.play();
         }
     }
