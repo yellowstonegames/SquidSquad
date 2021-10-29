@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.yellowstonegames.core.StringTools.count;
+
 /**
  * Provides ways to encode digits in different base systems, or radixes, and decode numbers written in those bases. This
  * includes base systems such as binary ({@link #BASE2}, using just 0 and 1), octal ({@link #BASE8}, 0 through 7),
@@ -51,10 +53,16 @@ public class Base {
      */
     public static final Base URI_SAFE = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
 
+    /**
+     * All Base instances this knows about from its own constants.
+     * We use Arrays.asList() here to ensure the returned List is immutable.
+     */
     private static final List<Base> BASES = Arrays.asList(BASE2, BASE8, BASE10, BASE16, BASE36, BASE64, URI_SAFE);
 
     /**
      * Returns an immutable List of the Base instances this knows about from the start. Mostly useful for testing.
+     * This is something like an enum's values() method, but unlike an enum, this returns the same, immutable List every
+     * time it is called.
      * @return an immutable List of all Base instances this knows about from the start
      */
     public static List<Base> values() {
@@ -63,11 +71,19 @@ public class Base {
 
     /**
      * The digits this will encode to, in order from smallest to largest. These must all be in the ASCII range.
+     * <br>
+     * This should not be changed after the Base has been used; changing this makes a Base incompatible with its
+     * previously-returned numbers as Strings.
      */
     public final char[] toEncoded;
     /**
      * An array of the digit values corresponding to different ASCII codepoints, with -1 used for codepoints that do
      * not correspond to any digit in this base.
+     * <br>
+     * This should not be changed after the Base has been used; changing this makes a Base incompatible with its
+     * previously-returned numbers as Strings. You can change it in conjunction with {@link #toEncoded} as part of
+     * creating a different Base, but if you are doing that to obfuscate output, you can use
+     * {@link #scrambledBase(EnhancedRandom)} instead.
      */
     public final int[] fromEncoded;
 
@@ -94,13 +110,41 @@ public class Base {
      * What base or radix this uses; if you use {@link #unsigned(int)}, then base must be an even number.
      */
     public final int base;
+    /**
+     * Internal; stored lengths of the most common number sizes in this base.
+     */
     private final int length1Byte, length2Byte, length4Byte, length8Byte;
+    /**
+     * Internal; used for temporary buffer space.
+     */
     private final char[] progress;
 
+    /**
+     * Constructs a Base with the given digits, ordered from smallest to largest, with any letters in the digits treated
+     * as case-insensitive, and the normal sign characters '+' and '-'. All digits must be unique when compared as
+     * case-insensitive; this means you can't have 'a' and 'A' both in the digits String, or any other repeats. You also
+     * can't use ' ', '+', or '-' in digits, and all chars in it should usually be ASCII. In many cases, Unicode
+     * numbering systems outside of ASCII, but within a block of 128 or fewer chars may work, but this isn't assured.
+     * @param digits a String with two or more ASCII characters, all unique; none can be ' ', '+', or '-'
+     */
     public Base(String digits) {
         this(digits, true, ' ', '+', '-');
     }
 
+    /**
+     * Constructs a base with the given digits, ordered from smallest to largest, specified treatment for case, and
+     * specified padding char (currently unused other than to provide a separator), positive sign, and negative sign.
+     * All digits must be unique, and if caseInsensitive is true, must also be unique when compared as
+     * case-insensitive; this means that if caseInsensitive is true, you can't have 'a' and 'A' both in the digits
+     * String, and you can never have any repeats. You also can't use padding, positiveSign, or negativeSign in digits,
+     * and all chars in it should usually be ASCII. In many cases, Unicode numbering systems outside of ASCII, but
+     * within a block of 128 or fewer chars may work, but this isn't assured.
+     * @param digits a String with two or more ASCII characters, all unique; none can be the same as the later sign parameters
+     * @param caseInsensitive if true, digits will be converted to upper-case before any operations on them.
+     * @param padding only used to guarantee a separator is possible between numbers
+     * @param positiveSign typically '+'
+     * @param negativeSign typically '-'
+     */
     public Base(String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
         paddingChar = padding;
         this.caseInsensitive = caseInsensitive;
@@ -116,7 +160,7 @@ public class Base {
             char to = toEncoded[i];
             fromEncoded[to & 127] = i;
             if (caseInsensitive)
-                fromEncoded[Character.toLowerCase(to) & 127] = i;
+                fromEncoded[Character.toUpperCase(to) & 127] = i;
         }
         double logBase = 1.0 / Math.log(base);
         length1Byte = (int) Math.ceil(Math.log(0x1p8) * logBase);
@@ -1479,7 +1523,7 @@ public class Base {
     public long[] longSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new long[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new long[]{readLong(source, startIndex, endIndex)};
         long[] splat = new long[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1521,7 +1565,7 @@ public class Base {
     public int[] intSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new int[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new int[]{readInt(source, startIndex, endIndex)};
         int[] splat = new int[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1563,7 +1607,7 @@ public class Base {
     public short[] shortSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new short[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new short[]{readShort(source, startIndex, endIndex)};
         short[] splat = new short[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1605,7 +1649,7 @@ public class Base {
     public byte[] byteSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new byte[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new byte[]{readByte(source, startIndex, endIndex)};
         byte[] splat = new byte[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1648,7 +1692,7 @@ public class Base {
     public char[] charSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new char[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new char[]{readChar(source, startIndex, endIndex)};
         char[] splat = new char[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1690,7 +1734,7 @@ public class Base {
     public double[] doubleSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new double[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new double[]{readDouble(source, startIndex, endIndex)};
         double[] splat = new double[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -1732,7 +1776,7 @@ public class Base {
     public float[] floatSplit(String source, String delimiter, int startIndex, int endIndex) {
         if(source == null || delimiter == null || source.length() == 0 || delimiter.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return new float[0];
-        int amount = StringTools.count(source, delimiter, startIndex, endIndex);
+        int amount = count(source, delimiter, startIndex, endIndex);
         if (amount <= 0) return new float[]{readFloat(source, startIndex, endIndex)};
         float[] splat = new float[amount+1];
         int dl = delimiter.length(), idx = startIndex-dl, idx2;
@@ -2043,7 +2087,7 @@ public class Base {
             throw new IllegalArgumentException("The delimiters must be different, non-null, and non-empty.");
         if(source == null || source.length() == 0
                 || endIndex <= startIndex || startIndex < 0 || startIndex >= source.length()) return null;
-        int amount = StringTools.count(source, majorDelimiter, startIndex, endIndex);
+        int amount = count(source, majorDelimiter, startIndex, endIndex);
         if (amount <= 0) return Arrays.copyOf(dummy, 0);
         A[] splat = Arrays.copyOf(dummy, amount);
         int dl = majorDelimiter.length(), idx = startIndex, idx2;
@@ -2419,7 +2463,6 @@ public class Base {
         if(source == null) return new float[0][0];
         return floatSplit2D(source, majorDelimiter, minorDelimiter, 0, source.length());
     }
-
 
     @Override
     public boolean equals(Object o) {
