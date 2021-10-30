@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.ds.support.Base;
 import com.github.tommyettinger.ds.support.BitConversion;
 
 /**

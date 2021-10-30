@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ByteList;
+import com.github.tommyettinger.ds.support.Base;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -397,7 +398,8 @@ public class LZByteEncoding {
      * @return a readable String containing a verbose representation of the given bytes
      */
     public static String join(byte... elements) {
-        return StringTools.join(",", elements);
+        if(elements == null) return null;
+        return Base.BASE10.join(",", elements);
     }
 
     /**
@@ -407,17 +409,7 @@ public class LZByteEncoding {
      */
     public static byte[] readJoined(String source) {
         if(source == null) return null;
-        final int length = source.length();
-        if(length == 0) return new byte[0];
-        int amount = 1, idx = -1;
-        while ((idx = source.indexOf(',', idx+1)) >= 0)
-            ++amount;
-        byte[] res = new byte[amount];
-        idx = 0;
-        for (int i = 0; i < amount; i++) {
-            res[i] = Base.BASE10.readByte(source, idx, idx = source.indexOf(',', idx+1));
-        }
-        return res;
+        return Base.BASE10.byteSplit(source, ",");
     }
 
 }

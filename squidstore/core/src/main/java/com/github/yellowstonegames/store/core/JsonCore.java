@@ -35,7 +35,6 @@ public final class JsonCore {
         registerGapShuffler(json);
         registerHasher(json);
         registerWeightedTable(json);
-        registerBase(json);
         registerIntShuffler(json);
 
         registerPattern(json);
@@ -315,7 +314,7 @@ public final class JsonCore {
 
     /**
      * Registers Hasher with the given Json object, so Hasher can be written to and read from JSON.
-     * This just stores the seed (which is a single {@code long}) as a base-36 String.
+     * This just stores the seed (which is a single {@code long}) as a String in the current Base used by JsonSupport.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -323,40 +322,17 @@ public final class JsonCore {
         json.setSerializer(Hasher.class, new Json.Serializer<Hasher>() {
             @Override
             public void write(Json json, Hasher object, Class knownType) {
-                json.writeValue(Long.toString(object.seed, 36));
+                json.writeValue(JsonSupport.getNumeralBase().signed(object.seed));
             }
 
             @Override
             public Hasher read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new Hasher(Base.BASE36.readLong(jsonData.asString()));
+                return new Hasher(JsonSupport.getNumeralBase().readLong(jsonData.asString()));
             }
         });
     }
-
-
-    /**
-     * Registers Base with the given Json object, so Base can be written to and read from JSON.
-     * This is a simple wrapper around Base's built-in {@link Base#serializeToString()} and
-     * {@link Base#deserializeFromString(String)} methods.
-     *
-     * @param json a libGDX Json object that will have a serializer registered
-     */
-    public static void registerBase(@Nonnull Json json) {
-        json.setSerializer(Base.class, new Json.Serializer<Base>() {
-            @Override
-            public void write(Json json, Base object, Class knownType) {
-                json.writeValue(object.serializeToString());
-            }
-
-            @Override
-            public Base read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return Base.deserializeFromString(jsonData.asString());
-            }
-        });
-    }
-
+    
     public static void registerIntShuffler(@Nonnull Json json) {
         json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
             @Override

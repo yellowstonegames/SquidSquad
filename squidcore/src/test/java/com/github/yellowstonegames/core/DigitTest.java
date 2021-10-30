@@ -5,6 +5,7 @@ import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import org.junit.Assert;
 import org.junit.Test;
+import com.github.tommyettinger.ds.support.Base;
 
 public class DigitTest {
 
@@ -23,8 +24,6 @@ public class DigitTest {
         StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
         for (int i : inputs) {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
-        }
-        for (int i : inputs) {
             Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
         }
     }
@@ -42,8 +41,6 @@ public class DigitTest {
         StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
         for (long i : inputs) {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
-        }
-        for (long i : inputs) {
             Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
         }
     }
@@ -61,8 +58,6 @@ public class DigitTest {
         StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
         for (short i : inputs) {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
-        }
-        for (short i : inputs) {
             Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
         }
     }
@@ -80,8 +75,6 @@ public class DigitTest {
         StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
         for (char i : inputs) {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
-        }
-        for (char i : inputs) {
             Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
         }
     }
@@ -99,8 +92,6 @@ public class DigitTest {
         StringBuilder sb = new StringBuilder("0x"), esb = new StringBuilder("0x");
         for (byte i : inputs) {
             Assert.assertEquals(DigitTools.appendHex(sb, i).toString(), Base.BASE16.appendUnsigned(esb, i).toString());
-        }
-        for (byte i : inputs) {
             Assert.assertEquals(sb.append(DigitTools.bin(i)).toString(), Base.BASE2.appendUnsigned(esb, i).toString());
         }
     }

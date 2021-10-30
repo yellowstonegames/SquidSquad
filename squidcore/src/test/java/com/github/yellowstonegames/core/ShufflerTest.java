@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.support.FourWheelRandom;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import com.github.tommyettinger.ds.support.Base;
 
 public class ShufflerTest {
     @Test

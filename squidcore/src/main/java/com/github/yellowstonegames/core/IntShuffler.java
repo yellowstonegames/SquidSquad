@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.tommyettinger.ds.support.Base;
 
 import javax.annotation.Nonnull;
 

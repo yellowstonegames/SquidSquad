@@ -8,6 +8,7 @@ import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.ds.support.Base;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -179,7 +180,7 @@ public class JsonCoreTest {
     @Test
     public void testBase() {
         Json json = new Json(JsonWriter.OutputType.minimal);
-        JsonCore.registerBase(json);
+        JsonSupport.registerBase(json);
         FourWheelRandom random = new FourWheelRandom(1234567890L);
         ObjectList<Base> bases = new ObjectList<>(Base.values());
         bases.add(Base.scrambledBase(random));

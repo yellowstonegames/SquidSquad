@@ -3,7 +3,7 @@ package com.github.yellowstonegames.store.old;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.yellowstonegames.core.Base;
+import com.github.tommyettinger.ds.support.Base;
 import com.github.yellowstonegames.old.v300.*;
 
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ public final class JsonOld {
         json.setSerializer(LightRNG.class, new Json.Serializer<LightRNG>() {
             @Override
             public void write(Json json, LightRNG object, Class knownType) {
-                json.writeValue("#LigR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("#LigR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
             }
 
             @Override
@@ -47,7 +47,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new LightRNG(state);
             }
         });
@@ -71,7 +71,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new DiverRNG(state);
             }
         });
@@ -87,7 +87,7 @@ public final class JsonOld {
         json.setSerializer(GWTRNG.class, new Json.Serializer<GWTRNG>() {
             @Override
             public void write(Json json, GWTRNG object, Class knownType) {
-                json.writeValue("#GWTR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("#GWTR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
             }
 
             @Override
@@ -95,7 +95,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new GWTRNG(state);
             }
         });
@@ -111,7 +111,7 @@ public final class JsonOld {
         json.setSerializer(LinnormRNG.class, new Json.Serializer<LinnormRNG>() {
             @Override
             public void write(Json json, LinnormRNG object, Class knownType) {
-                json.writeValue("#LinR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("#LinR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
             }
 
             @Override
@@ -119,7 +119,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new LinnormRNG(state);
             }
         });
@@ -135,7 +135,7 @@ public final class JsonOld {
         json.setSerializer(SilkRNG.class, new Json.Serializer<SilkRNG>() {
             @Override
             public void write(Json json, SilkRNG object, Class knownType) {
-                json.writeValue("#SilR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("#SilR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
             }
 
             @Override
@@ -143,7 +143,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new SilkRNG(state);
             }
         });
@@ -159,7 +159,7 @@ public final class JsonOld {
         json.setSerializer(ThrustAltRNG.class, new Json.Serializer<ThrustAltRNG>() {
             @Override
             public void write(Json json, ThrustAltRNG object, Class knownType) {
-                json.writeValue("#ThAR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("#ThAR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
             }
 
             @Override
@@ -167,7 +167,7 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
                 final int tick = s.indexOf('`', 6);
-                final long state = Base.BASE36.readLong(s, 6, tick);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
                 return new ThrustAltRNG(state);
             }
         });
@@ -184,10 +184,10 @@ public final class JsonOld {
             @Override
             public void write(Json json, LongPeriodRNG object, Class knownType) {
                 StringBuilder sb = new StringBuilder(31);
-                Base.BASE36.appendSigned(sb, object.choice);
+                JsonSupport.getNumeralBase().appendSigned(sb, object.choice);
                 for (int i = 0; i < 16; i++) {
                     sb.append('~');
-                    Base.BASE36.appendSigned(sb, object.state[i]);
+                    JsonSupport.getNumeralBase().appendSigned(sb, object.state[i]);
                 }
                 json.writeValue("#LPeR`" + sb + "`");
             }
@@ -198,9 +198,9 @@ public final class JsonOld {
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 40) return null;
                 int delim = 6;
                 LongPeriodRNG rng = new LongPeriodRNG(1L);
-                rng.choice = Base.BASE36.readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                rng.choice = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
                 for (int i = 0; i < 16; i++) {
-                    rng.state[i] = Base.BASE36.readLong(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                    rng.state[i] = JsonSupport.getNumeralBase().readLong(s, delim + 1, delim = s.indexOf('~', delim + 1));
                 }
                 return rng;
             }
@@ -218,13 +218,13 @@ public final class JsonOld {
             @Override
             public void write(Json json, XoshiroStarPhi32RNG object, Class knownType) {
                 StringBuilder sb = new StringBuilder(31);
-                Base.BASE36.appendSigned(sb, object.getStateA());
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateA());
                 sb.append('~');
-                Base.BASE36.appendSigned(sb, object.getStateB());
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateB());
                 sb.append('~');
-                Base.BASE36.appendSigned(sb, object.getStateC());
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateC());
                 sb.append('~');
-                Base.BASE36.appendSigned(sb, object.getStateD());
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateD());
                 json.writeValue("#XSPR`" + sb + "`");
             }
 
@@ -233,10 +233,10 @@ public final class JsonOld {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 14) return null;
                 int delim = 6;
-                int stateA = Base.BASE36.readInt(s, delim, delim = s.indexOf('~', delim + 1));
-                int stateB = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
-                int stateC = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
-                int stateD = Base.BASE36.readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
+                int stateA = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                int stateB = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int stateC = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int stateD = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
                 return new XoshiroStarPhi32RNG(stateA, stateB, stateC, stateD);
             }
         });
