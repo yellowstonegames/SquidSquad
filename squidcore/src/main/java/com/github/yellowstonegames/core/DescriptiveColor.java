@@ -769,6 +769,28 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Changes the curve of a requested L value so that it matches the internally-used curve. This takes a curve with a
+     * very-dark area similar to sRGB (a very small one), and makes it significantly larger. This is typically used on
+     * "to Oklab" conversions.
+     * @param L lightness, from 0 to 1 inclusive
+     * @return an adjusted L value that can be used internally
+     */
+    public static float forwardLight(final float L) {
+        return (L - 1f) / (1f - L * 0.4285714f) + 1f;
+    }
+
+    /**
+     * Changes the curve of the internally-used lightness when it is output to another format. This makes the very-dark
+     * area smaller, matching (kind-of) the curve that the standard sRGB lightness uses. This is typically used on "from
+     * Oklab" conversions.
+     * @param L lightness, from 0 to 1 inclusive
+     * @return an adjusted L value that can be fed into a conversion to RGBA or something similar
+     */
+    private static float reverseLight(final float L) {
+        return (L - 1f) / (1f + L * 0.75f) + 1f;
+    }
+
+    /**
      * Converts a packed Oklab int color in the format used by constants in this class to an RGBA8888 int.
      * This format of int can be used with Pixmap and in some other places in libGDX.
      * @param oklab a packed int color, as from a constant in this class
@@ -776,7 +798,7 @@ public final class DescriptiveColor {
      */
     public static int toRGBA8888(final int oklab)
     {
-        final float L = (oklab & 0xff) / 255f;
+        final float L = reverseLight((oklab & 0xff) / 255f);
         final float A = ((oklab >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((oklab >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -828,7 +850,7 @@ public final class DescriptiveColor {
      */
     public static float oklabIntToFloat(final int packed)
     {
-        final float L = (packed & 0xff) / 255f;
+        final float L = reverseLight((packed & 0xff) / 255f);
         final float A = ((packed >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((packed >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -855,7 +877,7 @@ public final class DescriptiveColor {
         final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
 
         return (
-                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
                         | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
                         | (rgba & 0xFE) << 24);
@@ -875,7 +897,7 @@ public final class DescriptiveColor {
         final float m = cbrtPositive(0.2118591070f * r + 0.6807189584f * g + 0.1074065790f * b);
         final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
         return (
-                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
                         | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
                         | (abgr & 0xFE000000));
@@ -897,7 +919,7 @@ public final class DescriptiveColor {
         final float m = cbrtPositive(0.2118591070f * r + 0.6807189584f * g + 0.1074065790f * b);
         final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
         return (
-                Math.min(Math.max((int)((0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
                         | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
                         | ((int)(a * 255f) << 24 & 0xFE000000));
@@ -910,7 +932,7 @@ public final class DescriptiveColor {
      */
     public static int redInt(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -926,7 +948,7 @@ public final class DescriptiveColor {
      */
     public static int greenInt(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -942,7 +964,7 @@ public final class DescriptiveColor {
      */
     public static int blueInt(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -969,7 +991,7 @@ public final class DescriptiveColor {
      */
     public static float red(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -985,7 +1007,7 @@ public final class DescriptiveColor {
      */
     public static float green(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
@@ -1001,7 +1023,7 @@ public final class DescriptiveColor {
      */
     public static float blue(final int encoded)
     {
-        final float L = (encoded & 0xff) / 255f;
+        final float L = reverseLight((encoded & 0xff) / 255f);
         final float A = ((encoded >>> 8 & 0xff) - 127.5f) / 127.5f;
         final float B = ((encoded >>> 16 & 0xff) - 127.5f) / 127.5f;
         final float l = cube(L + 0.3963377774f * A + 0.2158037573f * B);
