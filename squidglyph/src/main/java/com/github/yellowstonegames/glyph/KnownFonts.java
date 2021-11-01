@@ -488,7 +488,8 @@ public class KnownFonts implements LifecycleListener {
      * Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
      * Caches the result for later calls. The font used is Canada1500, a free (public domain, via CC0) typeface by Ray
      * Larabie. It supports quite a lot of Latin-based scripts, Greek, Cyrillic, Canadian Aboriginal Syllabic, arrows,
-     * many dingbats, and more.
+     * many dingbats, and more. This font can look good at its natural size, which uses width roughly equal to height,
+     * or narrowed down so width is smaller.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
      * Preview: <a href="https://i.imgur.com/WOxlCZb.png">Image link</a> (uses width=40, height=58)
@@ -515,6 +516,42 @@ public class KnownFonts implements LifecycleListener {
         }
         if(instance.canada != null)
             return new Font(instance.canada);
+        throw new RuntimeException("Assets for getCanada() not found.");
+    }
+
+   private Font robotoCondensed;
+    /**
+     * Returns a Font already configured to use a very-legible condensed variable-width font with excellent Unicode
+     * support, that should scale pretty well from a height of about 62 down to a height of maybe 20.
+     * Caches the result for later calls. The font used is Roboto Condensed, a free (Apache 2.0) typeface by Christian
+     * Robertson. It supports Latin-based scripts almost entirely, plus Greek, (extended) Cyrillic, and more.
+     * This font is meant to be condensed in its natural appearance, but can be scaled to be wider if desired.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/ytyx61F.png">Image link</a> (uses width=40, height=58)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font RobotoCondensed.ttf
+     */
+    public static Font getRobotoCondensed()
+    {
+        initialize();
+        if(instance.robotoCondensed == null)
+        {
+            try {
+                instance.robotoCondensed = new Font("RobotoCondensed-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
+                instance.robotoCondensed.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.robotoCondensed != null)
+            return new Font(instance.robotoCondensed);
         throw new RuntimeException("Assets for getCanada() not found.");
     }
 
