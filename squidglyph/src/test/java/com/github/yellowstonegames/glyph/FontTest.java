@@ -25,7 +25,7 @@ public class FontTest extends ApplicationAdapter {
         config.setTitle("Font test");
         config.setWindowedMode(800, 640);
         config.disableAudio(true);
-        config.useVsync(false);
+        config.useVsync(true);
         new Lwjgl3Application(new FontTest(), config);
     }
 
@@ -47,7 +47,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getLibertinusSerif();
 //        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
 //        font = KnownFonts.getOxanium().scaleTo(40, 50);
-        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 55);
+//        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 55);
+        font = KnownFonts.getCanada().scaleTo(40, 58);
 
         font.setColorLookup(GlyphMap::getRgba);
 

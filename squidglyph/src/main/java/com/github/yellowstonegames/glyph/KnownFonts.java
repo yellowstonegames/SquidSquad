@@ -482,6 +482,43 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getYanoneKaffeesatz() not found.");
     }
 
+    private Font canada;
+    /**
+     * Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
+     * Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
+     * Caches the result for later calls. The font used is Canada1500, a free (public domain, via CC0) typeface by Ray
+     * Larabie. It supports quite a lot of Latin-based scripts, Greek, Cyrillic, Canadian Aboriginal Syllabic, arrows,
+     * many dingbats, and more.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/WOxlCZb.png">Image link</a> (uses width=40, height=58)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-License.txt</li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Canada1500.ttf
+     */
+    public static Font getCanada()
+    {
+        initialize();
+        if(instance.canada == null)
+        {
+            try {
+                instance.canada = new Font("Canada1500-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
+                instance.canada.setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.canada != null)
+            return new Font(instance.canada);
+        throw new RuntimeException("Assets for getCanada() not found.");
+    }
+
+
     @Override
     public void pause() {
 
