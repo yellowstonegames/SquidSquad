@@ -420,7 +420,7 @@ public class KnownFonts implements LifecycleListener {
      * and extended Latin, but not Greek or Cyrillic.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/mjN6geE.png">Image link</a> (uses width=40, height=50)
+     * Preview: <a href="https://i.imgur.com/uQzCEo9.png">Image link</a> (uses width=40, height=50)
      * <br>
      * Needs files:
      * <ul>
@@ -436,7 +436,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.oxanium == null)
         {
             try {
-                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 2, 0, -2, 0).setTextureFilter();
+                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 3, 0, -3, 0).setTextureFilter();
                 instance.oxanium.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();

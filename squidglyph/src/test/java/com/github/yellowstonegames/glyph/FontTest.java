@@ -46,8 +46,8 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getGentium().scaleTo(48, 48);
 //        font = KnownFonts.getLibertinusSerif();
 //        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
-//        font = KnownFonts.getOxanium().scaleTo(40, 50);
-        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
+        font = KnownFonts.getOxanium().scaleTo(40, 50);
+//        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);
 //        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
 
