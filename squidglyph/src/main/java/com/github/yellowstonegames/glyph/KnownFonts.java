@@ -382,12 +382,19 @@ public class KnownFonts implements LifecycleListener {
      * Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
      * scale pretty well from a height of about 90 down to a height of maybe 30.
      * Caches the result for later calls. The font used is Kingthings Foundation, a free (custom permissive license)
-     * typeface. It supports only ASCII.
+     * typeface; this has faux-bold applied already in order to make some ornamental curls visible at more sizes. You
+     * can still apply bold again using markup. It supports only ASCII.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/iARdQEa.png">Image link</a> (uses width=45, height=64)
+     * Preview: <a href="https://i.imgur.com/DwXRXd3.png">Image link</a> (uses width=45, height=60)
      * <br>
      * Needs files:
+     * <ul>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-bold.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-bold.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
+     * </ul>
+     * You may instead want the non-bold version, but this doesn't have a pre-made instance in KnownFonts:
      * <ul>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.fnt</li>
      *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png</li>
@@ -401,7 +408,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kingthingsFoundation == null)
         {
             try {
-                instance.kingthingsFoundation = new Font("KingthingsFoundation-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
+                instance.kingthingsFoundation = new Font("KingthingsFoundation-bold.fnt", STANDARD, 2, 0, -2.5f, 0).setTextureFilter();
                 instance.kingthingsFoundation.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
