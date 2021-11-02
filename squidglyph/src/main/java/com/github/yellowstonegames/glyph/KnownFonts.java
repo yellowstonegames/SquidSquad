@@ -436,7 +436,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.oxanium == null)
         {
             try {
-                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 1, 0, -3, 0).setTextureFilter();
+                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 2, 0, -2, 0).setTextureFilter();
                 instance.oxanium.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -455,7 +455,7 @@ public class KnownFonts implements LifecycleListener {
      * of Latin, Cyrillic, and some extended Latin, but not Greek.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/NS4ErXx.png">Image link</a> (uses width=45, height=55)
+     * Preview: <a href="https://i.imgur.com/qSdhTsw.png">Image link</a> (uses width=45, height=60)
      * <br>
      * Needs files:
      * <ul>
@@ -471,7 +471,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kaffeesatz == null)
         {
             try {
-                instance.kaffeesatz = new Font("YanoneKaffeesatz-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
+                instance.kaffeesatz = new Font("YanoneKaffeesatz-standard.fnt", STANDARD, 2f, 0, -2f, 0).setTextureFilter();
                 instance.kaffeesatz.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -492,7 +492,7 @@ public class KnownFonts implements LifecycleListener {
      * or narrowed down so width is smaller.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * <br>
-     * Preview: <a href="https://i.imgur.com/WOxlCZb.png">Image link</a> (uses width=40, height=58)
+     * Preview: <a href="https://i.imgur.com/KFUOFSz.png">Image link</a> (uses width=40, height=58)
      * <br>
      * Needs files:
      * <ul>

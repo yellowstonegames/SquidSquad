@@ -47,9 +47,9 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getLibertinusSerif();
 //        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 64);
 //        font = KnownFonts.getOxanium().scaleTo(40, 50);
-//        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 55);
+        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);
-        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
+//        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
 
         font.setColorLookup(GlyphMap::getRgba);
 
@@ -93,7 +93,7 @@ public class FontTest extends ApplicationAdapter {
 //                , layout);
 
 //        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
-//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your[_] heads[] by morning. But alas, I am stricken with" +
+//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your heads[] by morning. But alas, I am stricken with" +
 //                " unreasonable mercy for your [~]wretched[~] souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
 //                " a [darkest bronze]stout brew[].\"", layout);
 
