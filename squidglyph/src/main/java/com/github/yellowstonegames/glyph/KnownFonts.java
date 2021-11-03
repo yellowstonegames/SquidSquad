@@ -6,6 +6,18 @@ import com.github.tommyettinger.textra.Font;
 
 import static com.github.tommyettinger.textra.Font.DistanceFieldType.*;
 
+/**
+ * Preconfigured static {@link Font} instances, with any important metric adjustments already applied. This uses a
+ * singleton to ensure each font exists at most once, and implements {@link LifecycleListener} to ensure that when the
+ * disposal stage of the lifecycle is called, then all Font instances here will be disposed and assigned null. This may
+ * do more regarding its LifecycleListener code in the future, if Android turns out to need more work.
+ * <br>
+ * Typical usage involves calling one of the static methods like {@link #getCozette()} or {@link #getGentium()} to get a
+ * particular Font. This knows a fair amount of fonts, but it doesn't require the image assets for all of those to be
+ * present in a game -- only the files mentioned in the documentation for a method are needed, and only if you call that
+ * method. It's likely that many games would only use one font file, and so would generally only need a .fnt file, a
+ * .png file, and some kind of license file. They could ignore all other assets required by other fonts.
+ */
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
 
@@ -312,7 +324,8 @@ public class KnownFonts implements LifecycleListener {
      * Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
      * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
      * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
-     * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily.
+     * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
+     * crisp enough when zoomed out.
      * <br>
      * Preview: <a href="https://i.imgur.com/JXGbHVf.png">Image link</a>
      * <br>
@@ -559,7 +572,7 @@ public class KnownFonts implements LifecycleListener {
         }
         if(instance.robotoCondensed != null)
             return new Font(instance.robotoCondensed);
-        throw new RuntimeException("Assets for getCanada() not found.");
+        throw new RuntimeException("Assets for getRobotoCondensed() not found.");
     }
 
 
