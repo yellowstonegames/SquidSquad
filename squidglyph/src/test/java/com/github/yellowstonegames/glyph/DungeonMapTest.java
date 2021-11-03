@@ -124,6 +124,9 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     public void move(Direction way){
         final CoordGlider cg = glyphs.first().getLocation();
+        // this prevents movements from restarting while a slide is already in progress.
+        if(cg.getChange() != 0f && cg.getChange() != 1f) return;
+
         final Coord next = cg.getStart().translate(way);
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
             cg.setEnd(next);

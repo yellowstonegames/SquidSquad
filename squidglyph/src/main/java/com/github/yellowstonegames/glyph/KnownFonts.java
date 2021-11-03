@@ -17,6 +17,12 @@ import static com.github.tommyettinger.textra.Font.DistanceFieldType.*;
  * present in a game -- only the files mentioned in the documentation for a method are needed, and only if you call that
  * method. It's likely that many games would only use one font file, and so would generally only need a .fnt file, a
  * .png file, and some kind of license file. They could ignore all other assets required by other fonts.
+ * <br>
+ * This KnownFonts class is mostly the same as the KnownFonts class in textratypist (the dependency that provides Font),
+ * except each Font this returns automatically sets the ColorLookup of each Font so the description options in
+ * {@link com.github.yellowstonegames.core.DescriptiveColor#describe(CharSequence)} can be used. If you use the
+ * KnownFonts class from textratypist, each Font will still work, but you have to use colors known by
+ * {@link com.badlogic.gdx.graphics.Colors} if you look them up by name, and can't modify lightness or saturation.
  */
 public class KnownFonts implements LifecycleListener {
     private static KnownFonts instance;
