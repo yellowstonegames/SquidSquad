@@ -8,11 +8,16 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
+import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
@@ -31,10 +36,15 @@ public class DungeonMapTest extends ApplicationAdapter {
     private DungeonProcessor dungeonProcessor;
     private char[][] bare, dungeon, prunedDungeon;
     private float[][] res, light;
-    private Region seen, inView;
+    private Region seen, inView, blockage;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private Director<GlidingGlyph> director;
     private ObjectList<GlidingGlyph> glyphs;
+    private DijkstraMap playerToCursor;
+    private final ObjectList<Coord> toCursor = new ObjectList<>(100);
+    private final ObjectList<Coord> awaitedMoves = new ObjectList<>(50);
+    private Coord cursor = Coord.get(-1, -1);
+    private final Vector2 pos = new Vector2();
 
     private static final int GRID_WIDTH = 60;
     private static final int GRID_HEIGHT = 32;
@@ -83,6 +93,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
+        blockage = new Region(GRID_WIDTH, GRID_HEIGHT);
         prunedDungeon = new char[GRID_WIDTH][GRID_HEIGHT];
         inView = new Region(GRID_WIDTH, GRID_HEIGHT);
         Gdx.input.setInputProcessor(new InputAdapter(){
@@ -117,6 +128,56 @@ public class DungeonMapTest extends ApplicationAdapter {
                 }
                 return true;
             }
+            // if the user clicks and mouseMoved hasn't already assigned a path to toCursor, then we call mouseMoved
+            // ourselves and copy toCursor over to awaitedMoves.
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                pos.set(screenX, screenY);
+                gm.viewport.unproject(pos);
+                if (onGrid(MathUtils.floor(pos.x), MathUtils.floor(pos.y))) {
+                    mouseMoved(screenX, screenY);
+                    awaitedMoves.addAll(toCursor);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                return mouseMoved(screenX, screenY);
+            }
+
+            // causes the path to the mouse position to become highlighted (toCursor contains a list of Coords that
+            // receive highlighting). Uses DijkstraMap.findPathPreScanned() to find the path, which is rather fast.
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                if(!awaitedMoves.isEmpty())
+                    return false;
+                pos.set(screenX, screenY);
+                gm.viewport.unproject(pos);
+                if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
+                    // we also need to check if screenX or screenY is the same cell.
+                    if (cursor.x == screenX && cursor.y == screenY) {
+                        return false;
+                    }
+                    cursor = Coord.get(screenX, screenY);
+                    // This uses DijkstraMap.findPathPreScannned() to get a path as a List of Coord from the current
+                    // player position to the position the user clicked on. The "PreScanned" part is an optimization
+                    // that's special to DijkstraMap; because the part of the map that is viable to move into has
+                    // already been fully analyzed by the DijkstraMap.partialScan() method at the start of the
+                    // program, and re-calculated whenever the player moves, we only need to do a fraction of the
+                    // work to find the best path with that info.
+                    toCursor.clear();
+                    playerToCursor.findPathPreScanned(toCursor, cursor);
+                    // findPathPreScanned includes the current cell (goal) by default, which is helpful when
+                    // you're finding a path to a monster or loot, and want to bump into it, but here can be
+                    // confusing because you would "move into yourself" as your first move without this.
+                    if (!toCursor.isEmpty()) {
+                        toCursor.remove(0);
+                    }
+                }
+                return false;
+            }
         });
 
         regenerate();
@@ -143,36 +204,51 @@ public class DungeonMapTest extends ApplicationAdapter {
         glyphs.first().getLocation().setStart(player);
         glyphs.first().getLocation().setEnd(player);
         seen.remake(inView.refill(FOV.reuseFOV(res, light, player.x, player.y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+        blockage.remake(seen).not().fringe8way();
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
         gm.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gm.map.clear();
+        if(playerToCursor == null)
+            playerToCursor = new DijkstraMap(bare, Measurement.EUCLIDEAN);
+        else
+            playerToCursor.initialize(bare);
+        playerToCursor.setGoal(player);
+        playerToCursor.partialScan(13, blockage);
     }
 
     public void recolor(){
         Coord player = glyphs.first().location.getStart();
         float modifiedTime = (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f;
+        int rainbow = toRGBA8888(
+                maximizeSaturation(130,
+                        (int) (TrigTools.sin_(modifiedTime * 0.2f) * 30f) + 128, (int) (TrigTools.cos_(modifiedTime * 0.2f) * 30f) + 128, 255));
         FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if(inView.contains(x, y)) {
-                    switch (prunedDungeon[x][y]) {
-                        case '~':
-                            gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                            gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
-                            break;
-                        case ',':
-                            gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                            gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
-                            break;
-                        case ' ':
-                            gm.backgrounds[x][y] = 0;
-                            break;
-                        default:
-                            gm.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
-                            gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
+                if (inView.contains(x, y)) {
+                    if(toCursor.contains(Coord.get(x, y))){
+                        gm.backgrounds[x][y] = rainbow;
+                        gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
                     }
-                }
-                else if(seen.contains(x, y)){
+                    else {
+                        switch (prunedDungeon[x][y]) {
+                            case '~':
+                                gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
+                                gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
+                                break;
+                            case ',':
+                                gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
+                                gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
+                                break;
+                            case ' ':
+                                gm.backgrounds[x][y] = 0;
+                                break;
+                            default:
+                                gm.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
+                                gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
+                        }
+                    }
+                } else if (seen.contains(x, y)) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
                             gm.backgrounds[x][y] = toRGBA8888(edit(DEEP_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
@@ -189,13 +265,11 @@ public class DungeonMapTest extends ApplicationAdapter {
                             gm.backgrounds[x][y] = toRGBA8888(edit(STONE_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
                             gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
                     }
-                }
-                else {
+                } else {
                     gm.backgrounds[x][y] = 0;
                 }
             }
         }
-
     }
     @Override
     public void render() {
@@ -220,4 +294,10 @@ public class DungeonMapTest extends ApplicationAdapter {
         super.resize(width, height);
         gm.resize(width, height);
     }
+
+    private boolean onGrid(int screenX, int screenY)
+    {
+        return screenX >= 0 && screenX < GRID_WIDTH && screenY >= 0 && screenY < GRID_HEIGHT;
+    }
+
 }
