@@ -81,6 +81,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         GlidingGlyph playerGlyph = new GlidingGlyph((long) describe("red orange") << 32 | '@', Coord.get(1, 1));
         playerGlyph.getLocation().setCompleteRunner(() -> {
             seen.or(inView.refill(FOV.reuseFOV(res, light, playerGlyph.getLocation().getEnd().x, playerGlyph.getLocation().getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+            blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         });
 
@@ -218,10 +219,10 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     public void recolor(){
         Coord player = glyphs.first().location.getStart();
-        float modifiedTime = (System.currentTimeMillis() & 0xFFFFFL) * 0x1p-9f;
+        float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         int rainbow = toRGBA8888(
-                maximizeSaturation(130,
-                        (int) (TrigTools.sin_(modifiedTime * 0.2f) * 30f) + 128, (int) (TrigTools.cos_(modifiedTime * 0.2f) * 30f) + 128, 255));
+                limitToGamut(100,
+                        (int) (TrigTools.sin_(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cos_(modifiedTime * 0.2f) * 40f) + 128, 255));
         FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
