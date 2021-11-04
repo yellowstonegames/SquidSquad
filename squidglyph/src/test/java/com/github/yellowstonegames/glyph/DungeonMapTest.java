@@ -275,6 +275,39 @@ public class DungeonMapTest extends ApplicationAdapter {
     public void render() {
         recolor();
         director.step();
+
+        if(!director.isPlaying() && !awaitedMoves.isEmpty())
+        {
+            Coord m = awaitedMoves.remove(0);
+            if (!toCursor.isEmpty())
+                toCursor.remove(0);
+            move(glyphs.first().getLocation().getStart().toGoTo(m));
+        }
+        else {
+            if (!director.isPlaying()) {
+//                postMove();
+                // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
+                // re-calculate the distances from all cells to the player. We don't need to calculate this information on
+                // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
+                if (awaitedMoves.isEmpty()) {
+                    // the next two lines remove any lingering data needed for earlier paths
+                    playerToCursor.clearGoals();
+                    playerToCursor.resetMap();
+                    // the next line marks the player as a "goal" cell, which seems counter-intuitive, but it works because all
+                    // cells will try to find the distance between themselves and the nearest goal, and once this is found, the
+                    // distances don't change as long as the goals don't change. Since the mouse will move and new paths will be
+                    // found, but the player doesn't move until a cell is clicked, the "goal" is the non-changing cell, so the
+                    // player's position, and the "target" of a pathfinding method like DijkstraMap.findPathPreScanned() is the
+                    // currently-moused-over cell, which we only need to set where the mouse is being handled.
+                    playerToCursor.setGoal(glyphs.first().location.getStart());
+                    // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
+                    // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
+                    // GreasedRegion that contains the cells just past the edge of the player's FOV area.
+                    playerToCursor.partialScan(13, blockage);
+                }
+            }
+        }
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Camera camera = gm.viewport.getCamera();
