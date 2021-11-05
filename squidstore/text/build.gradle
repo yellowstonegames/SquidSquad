@@ -8,7 +8,10 @@ dependencies {
     api project(':squidstore:core')
     api project(':squidtext')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-    api "com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"
+    api("com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"){
+        exclude module: 'jdkgdxds'
+    }
+    api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"

@@ -244,4 +244,22 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         buffer.append('}');
         return buffer.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SpatialMap<?> that = (SpatialMap<?>) o;
+
+        if (!positionMap.equals(that.positionMap)) return false;
+        return idMap.equals(that.idMap);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = positionMap.hashCode();
+        result = 31 * result + idMap.hashCode();
+        return result;
+    }
 }

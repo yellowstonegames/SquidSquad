@@ -221,8 +221,25 @@ public class JsonGridTest {
         @Override
         public String toString() {
             return "IGI{" +
-                    "position=" + position +
+                    "id=" + id +
+                    ", position=" + position +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            IGI igi = (IGI) o;
+
+            if (id != igi.id) return false;
+            return position != null ? position.equals(igi.position) : igi.position == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return id;
         }
     }
     @Test
@@ -236,11 +253,17 @@ public class JsonGridTest {
         points.add(new IGI(Coord.get(2, 3)));
         String data = json.toJson(points);
         System.out.println(data);
-        SpatialMap<IGridIdentified> points2 = json.fromJson(SpatialMap.class, data);
-        for(IGridIdentified pair : points2.values()) {
-            System.out.print(pair);
-            System.out.print("; ");
-        }
+        SpatialMap<IGI> points2 = json.fromJson(SpatialMap.class, data);
+//        if(!points.equals(points2)){
+//            System.out.println(json.toJson(points2));
+//        }
+        Assert.assertEquals(points, points2);
+//        for(IGridIdentified pair : points2.values()) {
+//            System.out.print(pair);
+//            System.out.print("; ");
+//        }
+    }
+
     }
 
 
