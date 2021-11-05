@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.store.core.JsonCore;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -329,6 +330,20 @@ public final class JsonGrid {
                 return data;
             }
         });
+    }
 
+    /**
+     * Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.
+     * This does not register a custom serializer for LightingManager, but instead allows Json to handle it and
+     * registers all types of field in a LightingManager in one go.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLightingManager(@Nonnull Json json) {
+        registerRegion(json);
+        registerRadiance(json);
+        registerCoordObjectOrderedMap(json);
+        JsonCore.registerFloat2D(json);
+        JsonCore.registerInt2D(json);
     }
 }

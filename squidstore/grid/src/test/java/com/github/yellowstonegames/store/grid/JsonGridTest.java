@@ -264,6 +264,15 @@ public class JsonGridTest {
 //        }
     }
 
+    @Test
+    public void testLightingManager() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerLightingManager(json);
+        LightingManager lm = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
+        String data = json.toJson(lm);
+        System.out.println(data);
+        LightingManager lm2 = json.fromJson(LightingManager.class, data);
+        Assert.assertEquals(lm, lm2);
     }
 
 

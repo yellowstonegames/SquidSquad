@@ -3,6 +3,8 @@ package com.github.yellowstonegames.grid;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
+import java.util.Arrays;
+
 /**
  * A convenience class that makes dealing with multiple colored light sources easier.
  * All fields are public and documented to encourage their use alongside the API methods. The typical usage case for
@@ -617,4 +619,43 @@ public class LightingManager {
         return fovResult;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LightingManager that = (LightingManager) o;
+
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        if (backgroundColor != that.backgroundColor) return false;
+        if (Float.compare(that.viewerRange, viewerRange) != 0) return false;
+        if (radiusStrategy != that.radiusStrategy) return false;
+        if (!Arrays.deepEquals(resistances, that.resistances)) return false;
+        if (!Arrays.deepEquals(fovResult, that.fovResult)) return false;
+        if (!Arrays.deepEquals(losResult, that.losResult)) return false;
+        if (!Arrays.deepEquals(lightFromFOV, that.lightFromFOV)) return false;
+        if (!Arrays.deepEquals(lightingStrength, that.lightingStrength)) return false;
+        if (!Arrays.deepEquals(colorLighting, that.colorLighting)) return false;
+        if (lights != null ? !lights.equals(that.lights) : that.lights != null) return false;
+        return noticeable != null ? noticeable.equals(that.noticeable) : that.noticeable == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = radiusStrategy != null ? radiusStrategy.hashCode() : 0;
+        result = 31 * result + Arrays.deepHashCode(resistances);
+        result = 31 * result + Arrays.deepHashCode(fovResult);
+        result = 31 * result + Arrays.deepHashCode(losResult);
+        result = 31 * result + Arrays.deepHashCode(lightFromFOV);
+        result = 31 * result + Arrays.deepHashCode(lightingStrength);
+        result = 31 * result + Arrays.deepHashCode(colorLighting);
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + backgroundColor;
+        result = 31 * result + (viewerRange != +0.0f ? Float.floatToIntBits(viewerRange) : 0);
+        result = 31 * result + (lights != null ? lights.hashCode() : 0);
+        result = 31 * result + (noticeable != null ? noticeable.hashCode() : 0);
+        return result;
+    }
 }
