@@ -1,6 +1,5 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
@@ -44,13 +43,18 @@ public class LightingManager {
      */
     public float[][] losResult;
     /**
-     * Temporary storage array used for calculations involving {@link #fovResult}; it sometimes may make sense for other
-     * code to use this as temporary storage as well.
+     * Used for calculations involving {@link #fovResult}, generally with each colored light individually updating this
+     * 2D array and then having this array wiped clean. This serves as an intermediate storage step between the update
+     * methods and {@link #mixColoredLighting(float)}; the latter depends on this to be set by an update method or by
+     * {@link #calculateFOV}.
      */
-    public float[][] tempFOV;
+    public float[][] lightFromFOV;
 
+    /**
+     * Used to determine the lighting power, but not colors, of all lights in the scene. This is set in the update
+     * methods and used in {@link #mixColoredLighting(float)} and {@link #draw(int[][])}.
+     */
     public float[][] lightingStrength;
-    public float[][] tempLightingStrength;
     /**
      * A 2D array that stores the color of light in each cell, as a packed Oklab int color. This 2D array is the size of
      * the map, as defined by {@link #resistances} initially and later available in {@link #width} and {@link #height}.
@@ -148,12 +152,11 @@ public class LightingManager {
         width = resistances.length;
         height = resistances[0].length;
         fovResult = new float[width][height];
-        tempFOV = new float[width][height];
+        lightFromFOV = new float[width][height];
         losResult = new float[width][height];
         colorLighting = ArrayTools.fill(DescriptiveColor.WHITE, width, height);
         lightingStrength = new float[width][height];
         tempColorLighting = new int[width][height];
-        tempLightingStrength = new float[width][height];
         Coord.expandPoolTo(width, height);
         lights = new CoordObjectOrderedMap<>(32);
         noticeable = new Region(width, height);
@@ -260,7 +263,7 @@ public class LightingManager {
     public void mixColoredLighting(float flare)
     {
         int[][] basis = colorLighting, other = tempColorLighting;
-        float[][] basisStrength = lightingStrength, otherStrength = tempLightingStrength;
+        float[][] basisStrength = lightingStrength, otherStrength = lightFromFOV;
         flare += 1f;
         float bs;
         int b;
@@ -325,17 +328,18 @@ public class LightingManager {
     }
 
     /**
-     * Edits {@link #colorLighting} by adding in and mixing the given color where the light strength in {@link #tempFOV}
+     * Edits {@link #colorLighting} by adding in and mixing the given color where the light strength in {@link #lightFromFOV}
      * is greater than 0, with that strength boosted by flare (which can be any finite float greater than -1f, but is
      * usually from 0f to 1f when increasing strength).
      * Primarily used internally, but exposed so outside code can do the same things this class can.
      * @param flare boosts the effective strength of lighting in {@link #tempColorLighting}; usually from 0 to 1
+     * @param color the color to mix in where the light strength in {@link #lightFromFOV} is greater than 0
      */
     public void mixColoredLighting(float flare, int color)
     {
         final int[][] basis = colorLighting;
         final float[][] basisStrength = lightingStrength;
-        final float[][] otherStrength = tempFOV;
+        final float[][] otherStrength = lightFromFOV;
         flare += 1f;
         float bs, os;
         int b, o;
@@ -355,19 +359,19 @@ public class LightingManager {
                             if ((losResult[x][y + 1] > 0 && otherStrength[x][y + 1] > 0 && resistances[x][y + 1] < 1)
                                     || (x > 0 && losResult[x - 1][y + 1] > 0 && otherStrength[x - 1][y + 1] > 0 && resistances[x - 1][y + 1] < 1)
                                     || (x < width - 1 && losResult[x + 1][y + 1] > 0 && otherStrength[x + 1][y + 1] > 0 && resistances[x + 1][y + 1] < 1)) {
-                                os = (float) otherStrength[x][y];
+                                os = otherStrength[x][y];
                             }
                         }
                         if (x > 0 && losResult[x - 1][y] > 0 && otherStrength[x - 1][y] > 0 && resistances[x - 1][y] < 1) {
-                            os = (float) otherStrength[x][y];
+                            os = otherStrength[x][y];
                         }
                         if (x < width - 1 && losResult[x + 1][y] > 0 && otherStrength[x + 1][y] > 0 && resistances[x + 1][y] < 1) {
-                            os = (float) otherStrength[x][y];
+                            os = otherStrength[x][y];
                         }
                         if(os > 0f) o = color;
                         else continue;
                     } else {
-                        if((os = (float) otherStrength[x][y]) != 0) o = color;
+                        if((os = otherStrength[x][y]) != 0) o = color;
                         else continue;
                     }
                     bs = basisStrength[x][y];
@@ -416,7 +420,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, tempFOV, pos.x, pos.y, radiance.currentRange());
+            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange());
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
@@ -452,7 +456,7 @@ public class LightingManager {
             pos = lights.keyAt(i);
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, tempFOV, pos.x, pos.y, radiance.currentRange());
+            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange());
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = 0; x < width; x++) {
@@ -489,7 +493,7 @@ public class LightingManager {
      */
     public void updateUI(int lightX, int lightY, Radiance radiance)
     {
-        FOV.reuseFOV(resistances, tempFOV, lightX, lightY, radiance.currentRange());
+        FOV.reuseFOV(resistances, lightFromFOV, lightX, lightY, radiance.currentRange());
         mixColoredLighting(radiance.flare, radiance.color);
     }
 
@@ -600,7 +604,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, tempFOV, pos.x, pos.y, radiance.range);
+            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.range);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
