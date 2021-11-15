@@ -136,9 +136,8 @@ public class DungeonProcessor implements PlaceGenerator{
     public int mazeFX;
     protected int height, width;
     public Coord stairsUp, stairsDown;
-    public LaserRandom rng;
-    protected long rebuildSeedA;
-    protected long rebuildSeedB;
+    public EnhancedRandom rng;
+    protected EnhancedRandom rebuildRNG;
     protected boolean seedFixed;
     protected int environmentType = 1;
 
@@ -250,8 +249,7 @@ public class DungeonProcessor implements PlaceGenerator{
     public DungeonProcessor()
     {
         rng = new LaserRandom();
-        rebuildSeedA = rng.getStateA();
-        rebuildSeedB = rng.getStateB();
+        rebuildRNG = rng.copy();
         height = 40;
         width = 40;
         roomFX = new ObjectIntMap<>();
@@ -274,22 +272,20 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
     /**
-     * Make a DungeonProcessor with the given height, width, and RNG. Use this if you want to seed the RNG. If
-     * width or height is greater than 256, then this will expand the Coord pool from its 256x256 default so it stores a
-     * reference to each Coord that might be used in the creation of the dungeon (if width and height are 300 and 300,
-     * the Coord pool will be 300x300; if width and height are 500 and 100, the Coord pool will be 500x256 because it
-     * won't shrink below the default size of 256x256).
+     * Make a DungeonProcessor with the given height, width, and EnhancedRandom. Use this if you want to seed the random
+     * number generator. If width or height is greater than 256, then this will expand the Coord pool from its 256x256
+     * default, so it stores a reference to each Coord that might be used in the creation of the dungeon (if width and
+     * height are 300 and 300, the Coord pool will be 300x300; if width and height are 500 and 100, the Coord pool will
+     * be 500x256 because it won't shrink below the default size of 256x256).
      * @param width The width of the dungeon in cells
      * @param height The height of the dungeon in cells
-     * @param rng The RNG to use for all purposes in this class; if it is a LaserRandom, then it will be used as-is,
-     *            but if it is not a LaserRandom, a new LaserRandom will be used, randomly seeded by this parameter
+     * @param rng The EnhancedRandom to use for all purposes in this class; can be any implementation that allows reading its state
      */
-    public DungeonProcessor(int width, int height, LaserRandom rng)
+    public DungeonProcessor(int width, int height, EnhancedRandom rng)
     {
         Coord.expandPoolTo(width, height);
         this.rng = rng;
-        rebuildSeedA = this.rng.getStateA();
-        rebuildSeedB = this.rng.getStateB();
+        rebuildRNG = this.rng.copy();
         this.height = height;
         this.width = width;
         roomFX = new ObjectIntMap<>();
@@ -304,8 +300,7 @@ public class DungeonProcessor implements PlaceGenerator{
     public DungeonProcessor(DungeonProcessor copying)
     {
         rng = copying.rng.copy();
-        rebuildSeedA = rng.getStateA();
-        rebuildSeedB = rng.getStateB();
+        rebuildRNG = rng.copy();
         height = copying.height;
         width = copying.width;
         Coord.expandPoolTo(width, height);
@@ -314,10 +309,17 @@ public class DungeonProcessor implements PlaceGenerator{
         caveFX = new ObjectIntMap<>();
         doorFX = copying.doorFX;
         lakeFX = copying.lakeFX;
+        mazeFX = copying.mazeFX;
         deepLakeGlyph = copying.deepLakeGlyph;
         shallowLakeGlyph = copying.shallowLakeGlyph;
         dungeon = copying.dungeon;
         environment = copying.environment;
+        environmentType = copying.environmentType;
+        seedFixed = copying.seedFixed;
+        stairsDown = copying.stairsDown;
+        stairsUp = copying.stairsUp;
+        finder = copying.finder;
+        placement = copying.placement;
     }
 
     /**
@@ -791,8 +793,7 @@ public class DungeonProcessor implements PlaceGenerator{
      */
     public char[][] generate(TilesetType kind)
     {
-        rebuildSeedA = rng.getStateA();
-        rebuildSeedB = rng.getStateB();
+        rebuildRNG.setWith(rng);
         environmentType = kind.environment();
         DungeonBoneGen gen = new DungeonBoneGen(rng);
         char[][] map = DungeonTools.wallWrap(gen.generate(kind, width, height));
@@ -869,8 +870,7 @@ public class DungeonProcessor implements PlaceGenerator{
     {
         if(!seedFixed)
         {
-            rebuildSeedA = rng.getStateA();
-            rebuildSeedB = rng.getStateB();
+            rebuildRNG.setWith(rng);
         }
         seedFixed = false;
         char[][] map = DungeonTools.wallWrap(baseDungeon);
@@ -958,8 +958,7 @@ public class DungeonProcessor implements PlaceGenerator{
     public char[][] generateRespectingStairs(char[][] baseDungeon, int[][] environment) {
         if(!seedFixed)
         {
-            rebuildSeedA = rng.getStateA();
-            rebuildSeedB = rng.getStateB();
+            rebuildRNG.setWith(rng);
         }
         seedFixed = false;
         char[][] map = DungeonTools.wallWrap(baseDungeon);
@@ -1363,38 +1362,21 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
     /**
-     * Gets the first part of the seed that can be used to rebuild an identical dungeon to the latest one generated (or
-     * the seed that will be used to generate the first dungeon if none has been made yet). You can pass the long this
-     * returns to {@link LaserRandom#setStateA(long)} and should also obtain the second part of the seed with
-     * {@link #getRebuildSeedB()}, passing it to {@link LaserRandom#setStateB(long)}. Assuming all other calls to
-     * generate a dungeon are identical, will ensure generate() or generateRespectingStairs() will produce the same
-     * dungeon output as the dungeon originally generated with the seed this returned.
+     * Gets the seed EnhancedRandom that can be used to rebuild an identical dungeon to the latest one generated (or the
+     * seed that will be used to generate the first dungeon if none has been made yet). You can pass the EnhancedRandom
+     * this returns to {@link EnhancedRandom#setWith(EnhancedRandom)} to fill an existing EnhancedRandom of the same
+     * type with this state. Assuming all other calls to generate a dungeon are identical, this will ensure generate()
+     * or generateRespectingStairs() will produce the same dungeon output as the dungeon originally generated with the
+     * seed this returned.
      * <br>
-     * You can also call getStateA() on the rng field yourself immediately before generating a dungeon, but this method
-     * handles some complexities of when the state is actually used to generate a dungeon; since LaserRandom objects can
-     * be shared between different classes that use random numbers, the state could change between when you call
-     * getStateA() and when this class generates a dungeon. Using the rebuild seed getters eliminates that confusion.
-     * @return a seed as a long that can be passed to setStateA() on this class' rng field to recreate a dungeon
+     * You can also just copy {@link #rng} yourself immediately before generating a dungeon, but this method
+     * handles some complexities of when the state is actually used to generate a dungeon; since EnhancedRandom objects
+     * can be shared between different classes that use random numbers, the state could change between when you copy the
+     * state and when this class generates a dungeon. Using the rebuild seed RNG eliminates that confusion.
+     * @return a seed as an EnhancedRandom that can be assigned to {@link #rng} to recreate a dungeon
      */
-    public long getRebuildSeedA() {
-        return rebuildSeedA;
-    }
-    /**
-     * Gets the second part of the seed that can be used to rebuild an identical dungeon to the latest one generated (or
-     * the seed that will be used to generate the first dungeon if none has been made yet). You can pass the long this
-     * returns to {@link LaserRandom#setStateB(long)} and should also obtain the first part of the seed with
-     * {@link #getRebuildSeedA()}, passing it to {@link LaserRandom#setStateA(long)}. Assuming all other calls to
-     * generate a dungeon are identical, will ensure generate() or generateRespectingStairs() will produce the same
-     * dungeon output as the dungeon originally generated with the seed this returned.
-     * <br>
-     * You can also call getStateB() on the rng field yourself immediately before generating a dungeon, but this method
-     * handles some complexities of when the state is actually used to generate a dungeon; since LaserRandom objects can
-     * be shared between different classes that use random numbers, the state could change between when you call
-     * getStateB() and when this class generates a dungeon. Using the rebuild seed getters eliminates that confusion.
-     * @return a seed as a long that can be passed to setStateA() on this class' rng field to recreate a dungeon
-     */
-    public long getRebuildSeedB() {
-        return rebuildSeedB;
+    public EnhancedRandom getRebuildRNG() {
+        return rebuildRNG;
     }
 
     /**
