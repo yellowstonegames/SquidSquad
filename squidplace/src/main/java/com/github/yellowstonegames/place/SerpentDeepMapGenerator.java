@@ -109,12 +109,12 @@ public class SerpentDeepMapGenerator {
                      j < 2;
                      j++) {
                     int x2 = random.nextInt(Math.max(0, tx - 2), tx);
-                    int x3 = random.nextInt(tx + 1, Math.min(tx + 3, 15));
+                    int x3 = Math.min(random.nextInt(tx + 1, tx + 3), 15);
                     int y2 = random.nextInt(Math.max(0, ty - 2), ty);
-                    int y3 = random.nextInt(ty + 1, Math.min(ty + 3, 15));
-                    if (x3 < 16 && random.nextBoolean())
+                    int y3 = Math.min(random.nextInt(ty + 1, ty + 3), 15);
+                    if (random.nextBoolean())
                         x2 = x3;
-                    if (y3 < 16 && random.nextBoolean())
+                    if (random.nextBoolean())
                         y2 = y3;
                     cl.add(Coord.get(columns[x2], rows[y2]));
                     if (random.nextDouble() >= branchingChance)
