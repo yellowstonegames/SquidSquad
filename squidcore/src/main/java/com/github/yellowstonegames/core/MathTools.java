@@ -484,6 +484,43 @@ public final class MathTools
         d = fromTurns + progress * (d - fastFloor(d) - 0.5f);
         return d - fastFloor(d);
     }
+    /**
+     * Limited-use; takes any double and produces a double in the -1.0 to 1.0 range, with similar inputs producing
+     * close to a consistent rate of up and down through the range. This is meant for noise, where it may be useful to
+     * limit the amount of change between nearby points' noise values and prevent sudden "jumps" in noise value. An
+     * input of any even number should produce something very close to -1.0, any odd
+     * number should produce something very close to 1.0, and any number halfway between two incremental integers (like
+     * 8.5 or -10.5) should produce 0.0 or a very small fraction. This method is closely related to
+     * {@link #sway(double)}, which will smoothly curve its output to produce more values that are close to -1 or 1.
+     * @param value any double
+     * @return a double from -1.0 (inclusive) to 1.0 (inclusive)
+     */
+    public static double zigzag(double value)
+    {
+        long floor = (value >= 0.0 ? (long) value : (long) value - 1L);
+        value -= floor;
+        floor = (-(floor & 1L) | 1L);
+        return value * (floor << 1) - floor;
+    }
+
+    /**
+     * Limited-use; takes any float and produces a float in the -1f to 1f range, with similar inputs producing
+     * close to a consistent rate of up and down through the range. This is meant for noise, where it may be useful to
+     * limit the amount of change between nearby points' noise values and prevent sudden "jumps" in noise value. An
+     * input of any even number should produce something very close to -1f, any odd
+     * number should produce something very close to 1f, and any number halfway between two incremental integers (like
+     * 8.5f or -10.5f) should produce 0f or a very small fraction. This method is closely related to
+     * {@link #sway(float)}, which will smoothly curve its output to produce more values that are close to -1 or 1.
+     * @param value any float
+     * @return a float from -1f (inclusive) to 1f (inclusive)
+     */
+    public static float zigzag(float value)
+    {
+        int floor = (value >= 0f ? (int) value : (int) value - 1);
+        value -= floor;
+        floor = (-(floor & 1) | 1);
+        return value * (floor << 1) - floor;
+    }
 
     /**
      * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}

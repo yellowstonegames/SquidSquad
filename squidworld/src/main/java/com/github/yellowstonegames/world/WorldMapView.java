@@ -5,6 +5,8 @@ import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.place.Biome;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
+import static com.github.yellowstonegames.core.MathTools.PI;
+import static com.github.yellowstonegames.core.MathTools.zigzag;
 
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
@@ -100,16 +102,6 @@ public class WorldMapView {
      */
     public void initialize(float hue, float saturation, float brightness, float contrast)
     {
-//        float b, diff;
-//        for (int i = 0; i < 60; i++) {
-//            b = BIOME_TABLE[i];
-//            diff = ((b % 1.0f) - 0.48f) * 0.27f * contrast;
-//            BIOME_COLOR_TABLE[i] = b = SColor.toEditedFloat((diff >= 0)
-//                    ? SColor.lightenFloat(biomeColors[(int)b], diff)
-//                    : SColor.darkenFloat(biomeColors[(int)b], -diff), hue, saturation, brightness, 0f);
-//            BIOME_DARK_COLOR_TABLE[i] = SColor.darkenFloat(b, 0.08f);
-//        }
-//        BIOME_COLOR_TABLE[60] = BIOME_DARK_COLOR_TABLE[60] = emptyColor;
         int b;
         for (int i = 0; i < 66; i++) {
             b = describeOklab(Biome.TABLE[i].colorDescription);
@@ -119,6 +111,33 @@ public class WorldMapView {
                 b = oklabByHSL(hue + hue(b), saturation + saturation(b), brightness + channelL(b), 1f);
                 BIOME_COLOR_TABLE[i] = b;
                 BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f * contrast);
+            }
+        }
+    }
+
+    /**
+     * Uses the current colors in {@link #BIOME_COLOR_TABLE} to partly-randomize themselves, and also incorporates three
+     * random floats from the {@link com.github.tommyettinger.ds.support.LaserRandom} stored in {@link #getWorld()}.
+     * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
+     * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
+     * ice will still map to white, and different shades of ocean blue will become different shades of some color (which
+     * could still be some sort of blue). This can be a useful alternative to
+     * {@link #initialize(float, float, float, float)}, because that method hue-rotates all colors by the same amount,
+     * while this method adjusts each input hue differently and based on their original value. You may want to call
+     * {@link #initialize()} (either with no arguments or with four) before each call to this, because changes this
+     * makes to the color table would be read back the second time this is called without reinitialization.
+     */
+    public void alter()
+    {
+        int b;
+        float h = world.rng.nextFloat(0.5f) + 1f, s = world.rng.nextFloat(0.5f) + 1f, l = world.rng.nextFloat(0.5f) + 1f;
+        for (int i = 0; i < 66; i++) {
+            b = BIOME_COLOR_TABLE[i];
+            if (i != 60) {
+                float hue = hue(b), saturation = saturation(b), lightness = channelL(b);
+                b = oklabByHSL(zigzag((hue * h + saturation + lightness) * 0.5f), saturation + zigzag(lightness * s) * 0.1f, lightness + zigzag(saturation * l) * 0.1f, 1f);
+                BIOME_COLOR_TABLE[i] = b;
+                BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
             }
         }
     }

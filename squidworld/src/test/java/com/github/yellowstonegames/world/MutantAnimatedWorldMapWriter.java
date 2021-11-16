@@ -17,7 +17,6 @@ import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.IPointHash;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -29,21 +28,14 @@ import java.util.Date;
  * Writes one or more spinning globes to the out/ folder.
  */
 public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
-//    private static final int width = 1920, height = 1080;
-//    private static final int width = 256, height = 256; // localMimic
-//    private static final int width = 420, height = 210; // mimic, elliptical
-//    private static final int width = 512, height = 256; // mimic, elliptical
-//    private static final int width = 1024, height = 512; // mimic, elliptical
-//    private static final int width = 2048, height = 1024; // mimic, elliptical
+//    private static final int width = 400, height = 400;
 //    private static final int width = 256, height = 256; // space view
-//    private static final int width = 1200, height = 400; // squat
     private static final int width = 300, height = 300;
-    //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 8;
 //    private static final boolean FLOWING_LAND = true;
-//    private static final boolean ALIEN_COLORS = false;
+    private static final boolean ALIEN_COLORS = true;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -86,7 +78,8 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-        path = "out/worldsAnimated/" + date + "/Mutant/";
+//        path = "out/worldsAnimated/" + date + "/Mutant/";
+        path = "out/worldsAnimated/" + date + "/MutantAlien/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -115,7 +108,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.SCATTER);
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
-        //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
+//        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
         seed = rng.getSelectedState(0);
         
@@ -189,9 +182,6 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         world.rng.setSeed(seed);
         world.seedA = world.rng.getStateA();
         world.seedB = world.rng.getStateB();
-//        if(ALIEN_COLORS) {
-//            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
-//        }
         wmv.generate(0.9f, 1.25f);
         ttg = System.currentTimeMillis() - startTime;
     }
@@ -201,6 +191,14 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         long hash;
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
+        world.rng.setSeed(hash);
+        if(ALIEN_COLORS) {
+//            wmv.getWorld().rng.setSeed(hash);
+            wmv.initialize();
+            wmv.alter();
+//            wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
+        }
+
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
             world.setCenterLongitude(angle * MathUtils.PI2);
