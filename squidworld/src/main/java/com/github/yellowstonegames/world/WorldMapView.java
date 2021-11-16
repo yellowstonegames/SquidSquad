@@ -91,6 +91,39 @@ public class WorldMapView {
     }
 
     /**
+     * Initializes the color tables this uses for all biomes, but allows rotating all hues and adjusting
+     * brightness/saturation/contrast to produce maps of non-Earth-like planets.
+     * @param hue hue rotation; 0.0 and 1.0 are no rotation, and 0.5 is maximum rotation
+     * @param saturation added to the saturation of a biome color; usually close to 0.0, always between -1 and 1
+     * @param brightness added to the lightness of a biome color; often close to 0.0, always between -1 and 1
+     * @param contrast multiplies the darkening factor for the dark sections of biomes; typically very close to 1
+     */
+    public void initialize(float hue, float saturation, float brightness, float contrast)
+    {
+//        float b, diff;
+//        for (int i = 0; i < 60; i++) {
+//            b = BIOME_TABLE[i];
+//            diff = ((b % 1.0f) - 0.48f) * 0.27f * contrast;
+//            BIOME_COLOR_TABLE[i] = b = SColor.toEditedFloat((diff >= 0)
+//                    ? SColor.lightenFloat(biomeColors[(int)b], diff)
+//                    : SColor.darkenFloat(biomeColors[(int)b], -diff), hue, saturation, brightness, 0f);
+//            BIOME_DARK_COLOR_TABLE[i] = SColor.darkenFloat(b, 0.08f);
+//        }
+//        BIOME_COLOR_TABLE[60] = BIOME_DARK_COLOR_TABLE[60] = emptyColor;
+        int b;
+        for (int i = 0; i < 66; i++) {
+            b = describeOklab(Biome.TABLE[i].colorDescription);
+            if (i == 60)
+                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = b;
+            else {
+                b = oklabByHSL(hue + hue(b), saturation + saturation(b), brightness + channelL(b), 1f);
+                BIOME_COLOR_TABLE[i] = b;
+                BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f * contrast);
+            }
+        }
+    }
+
+    /**
      * Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
      * There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
      * type of color can be any of the color constants from {@link DescriptiveColor}, may be produced by
