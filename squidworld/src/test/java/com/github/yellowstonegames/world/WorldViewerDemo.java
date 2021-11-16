@@ -110,15 +110,15 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
 //        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
 
-        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 2);
-        terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 2);
+        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
+        terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         heatNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 2);
-//        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.75f);
+        otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
+        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
 
 //        world = new MimicWorldMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
-        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
+//        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
 //        world = new RoundSideWorldMap(seed, width, height, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
 //        world = new HexagonalWorldMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.9f);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0625, 2.5);

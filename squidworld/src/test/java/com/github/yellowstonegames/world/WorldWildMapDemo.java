@@ -172,10 +172,10 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     previousPosition.set(position);
                     nextPosition.set(screenX, screenY, 0);
                     camera.unproject(nextPosition);
-                    nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
+//                    nextPosition.set(MathUtils.round(nextPosition.x), MathUtils.round(nextPosition.y), nextPosition.z);
                     position.set(0.5f * shownWidth, (0.5f * shownHeight), position.z);
                     zoomed = true;
-                    final int hash = IntPointHash.hashAll((int)nextPosition.x, (int)nextPosition.y, 0x13579BDF);
+                    final int hash = IntPointHash.hashAll((int)(nextPosition.x), (int)(nextPosition.y), 0x13579BDF);
                     final int code = wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1),
                             MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1));
                     wildMap = new WildernessGenerator(shownWidth, shownHeight,
@@ -302,9 +302,9 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                         codeA = dbm.extractPartA(bc);
                         mix = dbm.extractMixAmount(bc);
                         if (mix <= 0.5) {
-                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
+                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
                         } else {
-                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
+                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
                         }
                 }
             }

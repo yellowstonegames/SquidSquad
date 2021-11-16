@@ -1636,15 +1636,14 @@ public final class DescriptiveColor {
      * @param alpha will be clamped between 0 and 1
      * @return a packed Oklab int color that tries to match the requested hue, saturation, and lightness
      */
-    public static float oklabByHSL(float hue, float saturation, float lightness, float alpha) {
+    public static int oklabByHSL(float hue, float saturation, float lightness, float alpha) {
         lightness = Math.min(Math.max(lightness, 0f), 1f);
         saturation = Math.min(Math.max(saturation, 0f), 1f);
-        hue -= (int)(hue + 0x1p14) - 0x4000;
+        hue -= (int)(hue + 0x1p14) - 0x4000; // subtracts floor
         alpha = Math.min(Math.max(alpha, 0f), 1f);
         final int idx = (int) (lightness * 255.999f) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] * saturation * 0.5f;
-        return BitConversion.intBitsToFloat(
-                (int) (alpha * 127.999f) << 25 |
+        return ((int) (alpha * 127.999f) << 25 |
                         (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
                         (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
                         (int) (lightness * 255.999f));
@@ -1669,12 +1668,11 @@ public final class DescriptiveColor {
     public static int oklabByHCL(float hue, float chroma, float lightness, float alpha) {
         lightness = Math.min(Math.max(lightness, 0f), 1f);
         chroma = Math.max(chroma, 0f);
-        hue -= (int)(hue + 0x1p14) - 0x4000;
+        hue -= (int)(hue + 0x1p14) - 0x4000; // subtracts floor
         alpha = Math.min(Math.max(alpha, 0f), 1f);
         final int idx = (int) (lightness * 255.999f) << 8 | (int) (256f * hue);
         final float dist = Math.min(chroma * 127.5f, GAMUT_DATA[idx]);
-        return (
-                (int) (alpha * 127.999f) << 25 |
+        return ((int) (alpha * 127.999f) << 25 |
                         (int) (TrigTools.sin_(hue) * dist + 127.999f) << 16 |
                         (int) (TrigTools.cos_(hue) * dist + 127.999f) << 8 |
                         (int) (lightness * 255.999f));
