@@ -184,7 +184,7 @@ public class Biome {
             new Biome(HOT, WETTEST, '¥',  "TemperateRainforest", "dark rich fern"),
             new Biome(HOTTER, WETTEST, '¶',  "TropicalRainforest", "darkest green"),
             new Biome(HOTTEST, WETTEST, '¶',  "TropicalRainforest", "darker cactus"),
-            new Biome(COLDEST, COAST, '‰',  "Rocky", "dark dullmost chartreuse"),
+            new Biome(COLDEST, COAST, '‰',  "Rocky", "lightmost dullmost denim"),
             new Biome(COLDER, COAST, '‰',  "Rocky", "lightest dullmost cactus"),
             new Biome(COLD, COAST, '…',  "Beach", "lighter dullest saffron"),
             new Biome(HOT, COAST, '…',  "Beach", "lightmost dullest saffron"),

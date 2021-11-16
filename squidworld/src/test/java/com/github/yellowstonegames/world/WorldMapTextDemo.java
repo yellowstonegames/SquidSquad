@@ -160,7 +160,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                 nextPosition.set(MathUtils.clamp(nextPosition.x, 0, bigWidth - 1), MathUtils.clamp(nextPosition.y, 0, bigHeight - 1), nextPosition.z);
                 counter = System.currentTimeMillis();
                 moveAmount = 0f;
-                System.out.printf("%c at %s\n", BIOME_CHARS[wmv.biomeMapper.getBiomeCode(Math.round(nextPosition.x), Math.round(nextPosition.y))], nextPosition);
+                int bc = wmv.biomeMapper.getBiomeCode((int)(nextPosition.x), (int)(nextPosition.y));
+                int code = wmv.biomeMapper.biomeCodeData[(int)(nextPosition.x)][(int)(nextPosition.y)];
+                System.out.printf("%c at %s with priority %d and biome A %s, B %s\n", BIOME_CHARS[bc], nextPosition, code >>> 20, wmv.biomeMapper.getBiomeTable()[wmv.biomeMapper.extractPartA(code)], wmv.biomeMapper.getBiomeTable()[wmv.biomeMapper.extractPartB(code)]);
                 return true;
             }
         };
@@ -259,9 +261,9 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         case 3:
                             display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
                             continue PER_CELL;
-                        case 4:
-                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
-                            continue PER_CELL;
+//                        case 4:
+//                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
+//                            continue PER_CELL;
                     }
                 }
                 switch (hc) {

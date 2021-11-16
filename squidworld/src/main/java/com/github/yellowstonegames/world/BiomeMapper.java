@@ -296,7 +296,7 @@ public interface BiomeMapper {
         @Override
         public int getBiomeCode(int x, int y) {
             int code = biomeCodeData[x][y];
-            if(code < 0x2000000) return code & 1023;
+            if(code < 0x20000000) return code & 1023;
             return (code >>> 10) & 1023;
         }
 
@@ -482,14 +482,12 @@ public interface BiomeMapper {
 
                     heatCodeData[x][y] = hc;
                     moistureCodeData[x][y] = mc;
-                    // 54 == 9 * 6, 9 is used for Ocean groups
-                    bc = heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
+                    bc = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
                             : isLake ? hc + 48 : heightCode == 4 ? hc + 36 : hc + mc * 6;
 
                     if(heightCode < 4) {
                         mc = 9;
-                    }
-                    else if (moist >= (wetterValueUpper + (wettestValueUpper - wettestValueLower) * 0.2f)) {
+                    } else if (moist >= (wetterValueUpper + (wettestValueUpper - wettestValueLower) * 0.2f)) {
                         mc = 5;
                     } else if (moist >= (wetValueUpper + (wetterValueUpper - wetterValueLower) * 0.2f)) {
                         mc = 4;
@@ -517,13 +515,18 @@ public interface BiomeMapper {
                         hc = 0;
                     }
 
-                    bc |= (hc + mc * 6) << 10;
+//                    bc |= (hc + mc * 6) << 10;
+                    bc |= (heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
+                           : isLake ? hc + 48 : hc + mc * 6) << 10;
+
                     if(heightCode < 4)
                         biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0) * 1000.0) << 20;
-                    else biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
+                    else {
+                        biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
 // multiplier affected by changes to sandUpper, not sure why this needs to be different from SquidLib
-                            ? (high - WorldMapGenerator.sandLower) * 10240.0
-                            : MathTools.sway((high + moist) * (4.1 + high - hot)) * 512 + 512) << 20;
+                                ? (high - WorldMapGenerator.sandLower) * 2048.0
+                                : MathTools.sway((high + moist) * (4.1 + high - hot)) * 512 + 512) << 20;
+                    }
                 }
             }
         }
