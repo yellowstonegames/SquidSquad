@@ -182,10 +182,10 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //                            Biome.TABLE[code], hash, ~hash);
                     //TODO: still need to get MixedWildernessGenerator working
                     wildMap = new WildernessGenerator.MixedWildernessGenerator(
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x+1), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y  ), 0, bigHeight - 1))], hash, ~hash),
                             new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x+1), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y+1), 0, bigHeight - 1))], hash, ~hash),
-                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x  ), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y+1), 0, bigHeight - 1))], hash, ~hash),
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x+1), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y  ), 0, bigHeight - 1))], hash, ~hash),
                             new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x  ), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y  ), 0, bigHeight - 1))], hash, ~hash),
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x  ), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y+1), 0, bigHeight - 1))], hash, ~hash),
                             rng
                     );
                     wildMap.generate();

@@ -664,10 +664,10 @@ public class WildernessGenerator implements PlaceGenerator {
         
         protected void preparePieceMap() {
             ArrayTools.fill(pieceMap, 255);
-            pieceMap[width - 1][0] = 0; // northeast
-            pieceMap[width - 1][height - 1] = 1; // southeast
-            pieceMap[0][height - 1] = 2; // southwest
-            pieceMap[0][0] = 3; //northwest
+            pieceMap[width - 1][height - 1] = 0; // northeast
+            pieceMap[width - 1][0] = 1; // southeast
+            pieceMap[0][0] = 2; // southwest
+            pieceMap[0][height - 1] = 3; //northwest
             final int spillerLimit = 4;
             final Direction[] dirs = Direction.CARDINALS;
             Direction d;
@@ -739,22 +739,25 @@ public class WildernessGenerator implements PlaceGenerator {
                 pieces[i].generate();
             }
             preparePieceMap();
-            int p, c;
+            int p, c, color, floor;
             long pair;
             WildernessGenerator piece;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     p = pieceMap[x][y];
                     piece = pieces[p];
-                    floors[x][y] = piece.floors[x][y] + minFloors[p];
+                    floors[x][y] = floor = piece.floors[x][y] + minFloors[p];
                     if ((c = piece.content[x][y]) >= 0) {
                         pair = viewer.get(contentTypes.get(content[x][y] = c + minContents[p]));
                         grid[x][y] = (char) pair;
-                        colors[x][y] = (int) (pair >>> 32);
+                        colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floor)) >>> 32));
+                        glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.differentiateLightness((int)(pair >>> 32), color)) << 32;
+
                     } else {
                         pair = viewer.get(floorTypes.get(floors[x][y]));
                         grid[x][y] = (char) pair;
-                        colors[x][y] = (int) (pair >>> 32);
+                        colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
+                        glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.offsetLightness(color)) << 32;
                     }
                 }
             }
