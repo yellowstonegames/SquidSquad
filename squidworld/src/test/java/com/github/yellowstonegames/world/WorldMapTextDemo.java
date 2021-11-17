@@ -276,15 +276,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
                         display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
                         break;
                     default:
-                        int bc = dbm.biomeCodeData[x][y];
-                        codeB = dbm.extractPartB(bc);
-                        codeA = dbm.extractPartA(bc);
-                        mix = dbm.extractMixAmount(bc);
-                        if (mix <= 0.5) {
-                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
-                        } else {
-                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
-                        }
+                        int bc = dbm.getBiomeCode(x,y);
+                        display.put(x, y, BIOME_CHARS[bc], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[bc], oklab[x][y])));
                 }
             }
         }

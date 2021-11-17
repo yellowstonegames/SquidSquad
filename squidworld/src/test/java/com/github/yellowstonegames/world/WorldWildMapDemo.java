@@ -178,16 +178,16 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                     final int hash = IntPointHash.hashAll((int)(nextPosition.x), (int)(nextPosition.y), 0x13579BDF);
                     final int code = wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x), 0, bigWidth - 1),
                             MathUtils.clamp((int) (nextPosition.y), 0, bigHeight - 1));
-                    wildMap = new WildernessGenerator(shownWidth, shownHeight,
-                            Biome.TABLE[code], hash, ~hash);
+//                    wildMap = new WildernessGenerator(shownWidth, shownHeight,
+//                            Biome.TABLE[code], hash, ~hash);
                     //TODO: still need to get MixedWildernessGenerator working
-//                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x)+1, (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y))], hash, ~hash),
-//                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode((int)(previousPosition.x + nextPosition.x),   (int) (previousPosition.y + nextPosition.y)+1)], hash, ~hash),
-//                            rng
-//                    );
+                    wildMap = new WildernessGenerator.MixedWildernessGenerator(
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x+1), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y  ), 0, bigHeight - 1))], hash, ~hash),
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x+1), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y+1), 0, bigHeight - 1))], hash, ~hash),
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x  ), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y+1), 0, bigHeight - 1))], hash, ~hash),
+                            new WildernessGenerator(shownWidth, shownHeight, Biome.TABLE[wmv.getBiomeMapper().getBiomeCode(MathUtils.clamp((int)(nextPosition.x  ), 0, bigWidth - 1), MathUtils.clamp((int) (nextPosition.y  ), 0, bigHeight - 1))], hash, ~hash),
+                            rng
+                    );
                     wildMap.generate();
                     nextPosition.set(previousPosition);
                     putMap();
@@ -282,9 +282,9 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                         case 3:
                             display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
                             continue PER_CELL;
-                        case 4:
-                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
-                            continue PER_CELL;
+//                        case 4:
+//                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
+//                            continue PER_CELL;
                     }
                 }
                 switch (hc) {
@@ -297,15 +297,8 @@ public class WorldWildMapDemo extends ApplicationAdapter {
                         display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
                         break;
                     default:
-                        int bc = dbm.biomeCodeData[x][y];
-                        codeB = dbm.extractPartB(bc);
-                        codeA = dbm.extractPartA(bc);
-                        mix = dbm.extractMixAmount(bc);
-                        if (mix <= 0.5) {
-                            display.put(x, y, BIOME_CHARS[codeA], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeA], oklab[x][y])));
-                        } else {
-                            display.put(x, y, BIOME_CHARS[codeB], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[codeB], oklab[x][y])));
-                        }
+                        int bc = dbm.getBiomeCode(x, y);
+                        display.put(x, y, BIOME_CHARS[bc], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[bc], oklab[x][y])));
                 }
             }
         }
