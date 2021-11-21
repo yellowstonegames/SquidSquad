@@ -34,7 +34,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
     private static final int LIMIT = 5;
     private static final boolean FLOWING_LAND = true;
-    private static final boolean ALIEN_COLORS = true;
+    private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
 
     private Thesaurus thesaurus;
@@ -61,9 +61,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
-        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
@@ -78,19 +78,19 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.SCATTER);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
-        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
+//        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
         seed = rng.getSelectedState(0);
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         Noise terrainNoise = new Noise(fn) {
             @Override
@@ -226,8 +226,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             if(i % 18 == 17) System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new PaletteReducer(pms);
-        writer.palette.setDitherStrength(0.5f);
+        writer.palette = new PaletteReducer();
+        writer.palette.setDitherStrength(0.75f);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
 
         System.out.println();

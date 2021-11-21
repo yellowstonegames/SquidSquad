@@ -114,7 +114,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.SCATTER);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
