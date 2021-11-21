@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -23,6 +24,7 @@ import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -53,6 +55,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
+    private PixmapIO.PNG pngWriter;
     
     private String date, path;
     private float mutationA, mutationB;
@@ -61,10 +64,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
+        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         if(!Gdx.files.local(path).exists())
@@ -80,6 +84,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
         writer.setFlipY(false);
+        pngWriter = new PixmapIO.PNG();
+        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
@@ -88,9 +94,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         thesaurus = new Thesaurus(rng);
 
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         Noise terrainNoise = new Noise(fn) {
             @Override
@@ -155,7 +163,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.6f);
+        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 1f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -199,36 +207,43 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         String name = makeName(thesaurus);
         while (Gdx.files.local(path + name + ".gif").exists())
             name = makeName(thesaurus);
+        Gdx.files.local(path + name + "_frames/").mkdirs();
         long hash;
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
-        if(ALIEN_COLORS) {
+        if (ALIEN_COLORS) {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
         wmv.world.heatModifier = world.rng.nextFloat(1.15f, 1.5f);
-        for (int i = 0; i < pm.length; i++) {
-            float angle = i * MathUtils.PI2 / (float)pm.length;
-            mutationA = MathUtils.cos(angle) * 0.25f;
-            mutationB = MathUtils.sin(angle) * 0.25f;
-            world.setCenterLongitude(angle);
-            generate(hash);
-            wmv.getBiomeMapper().makeBiomes(world);
-            int[][] cm = wmv.show();
-            pm[i].setColor(INK);
-            pm[i].fill();
+        try {
+            for (int i = 0; i < pm.length; i++) {
+                float angle = i * MathUtils.PI2 / (float) pm.length;
+                mutationA = MathUtils.cos(angle) * 0.25f;
+                mutationB = MathUtils.sin(angle) * 0.25f;
+                world.setCenterLongitude(angle);
+                generate(hash);
+                wmv.getBiomeMapper().makeBiomes(world);
+                int[][] cm = wmv.show();
+                pm[i].setColor(INK);
+                pm[i].fill();
 
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    pm[i].drawPixel(x, y, cm[x][y]);
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        pm[i].drawPixel(x, y, cm[x][y]);
+                    }
                 }
+                pngWriter.write(Gdx.files.local(path + name + "_frames/frame_" + i + ".png"), pm[i]);
+                if (i % 18 == 17)
+                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
-            if(i % 18 == 17) System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
+            Array<Pixmap> pms = new Array<>(pm);
+            writer.palette = new PaletteReducer();
+            writer.palette.setDitherStrength(1f);
+            writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new PaletteReducer();
-        writer.palette.setDitherStrength(0.75f);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
