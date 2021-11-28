@@ -217,7 +217,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         }
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette = new PaletteReducer(pms);
-        writer.palette.setDitherStrength(0.5f);
+        writer.palette.setDitherStrength(1f);
         writer.write(Gdx.files.local(path + name + String.format("-%1.5f.gif", noise.getMutation()).replaceFirst("\\.", "_")), pms, 30);
 
         System.out.println();

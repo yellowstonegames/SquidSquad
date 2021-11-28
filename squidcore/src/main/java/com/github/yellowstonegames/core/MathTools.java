@@ -436,12 +436,15 @@ public final class MathTools
     }
     /**
      * Like {@link Math#floor(double)}, but takes a float and returns an int.
-     * Doesn't consider "weird floats" like INFINITY and NaN.
+     * Doesn't consider "weird floats" like INFINITY and NaN. This method will only properly floor
+     * floats from {@code -16384} to {@code Float.MAX_VALUE - 16384}.
+     * <br>
+     * Taken from libGDX MathUtils.
      * @param t the float to find the floor for
      * @return the floor of t, as an int
      */
     public static int fastFloor(float t) {
-        return t >= 0f ? (int) t : (int) t - 1;
+        return ((int)(t + 0x1p14) - 0x4000);
     }
     /**
      * Like {@link Math#ceil(double)}, but returns an int.
