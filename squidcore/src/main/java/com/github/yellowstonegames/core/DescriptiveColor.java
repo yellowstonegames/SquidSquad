@@ -1362,8 +1362,8 @@ public final class DescriptiveColor {
         final float dist = GAMUT_DATA[idx] * 0.5f;
         if(dist * dist * 0x1p-16f + 0x1p-14f >= (A * A + B * B))
             return (int) (alpha * 255.999f) << 24 |
-                    (int) (B * 255.999f) << 16 |
-                    (int) (A * 255.999f) << 8 |
+                    (int) ((B + 0.5f) * 255.999f) << 16 |
+                    (int) ((A + 0.5f) * 255.999f) << 8 |
                     (int) (L * 255.999f);
         return (int) (alpha * 255.999f) << 24 |
                         (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
