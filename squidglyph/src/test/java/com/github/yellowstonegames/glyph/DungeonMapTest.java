@@ -90,7 +90,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         glyphs = ObjectList.with(playerGlyph);
 
         director = new Director<>(GlidingGlyph::getLocation, glyphs, 100L);
-        directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 500L);
+        directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 300L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 40);
         waves.setFractalType(Noise.RIDGED_MULTI);
