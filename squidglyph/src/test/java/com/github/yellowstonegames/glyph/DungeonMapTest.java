@@ -22,6 +22,8 @@ import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
 import com.github.tommyettinger.textra.Font;
+import com.github.yellowstonegames.smooth.VectorSequenceGlider;
+
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -38,7 +40,7 @@ public class DungeonMapTest extends ApplicationAdapter {
     private float[][] res, light;
     private Region seen, inView, blockage;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
-    private Director<GlidingGlyph> director;
+    private Director<GlidingGlyph> director, directorSmall;
     private ObjectList<GlidingGlyph> glyphs;
     private DijkstraMap playerToCursor;
     private final ObjectList<Coord> toCursor = new ObjectList<>(100);
@@ -87,8 +89,8 @@ public class DungeonMapTest extends ApplicationAdapter {
 
         glyphs = ObjectList.with(playerGlyph);
 
-        director = new Director<>(GlidingGlyph::getLocation, glyphs);
-        director.setDuration(100L);
+        director = new Director<>(GlidingGlyph::getLocation, glyphs, 100L);
+        directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 100L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 40);
         waves.setFractalType(Noise.RIDGED_MULTI);
@@ -194,6 +196,12 @@ public class DungeonMapTest extends ApplicationAdapter {
             cg.setEnd(next);
             director.play();
         }
+        else{
+            VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(way, glyphs.first().ownEmptyMotion).copy();
+            small.setCompleteRunner(() -> glyphs.first().setSmallMotion(glyphs.first().ownEmptyMotion));
+            glyphs.first().setSmallMotion(small);
+            directorSmall.play();
+        }
     }
 
     public void regenerate(){
@@ -276,8 +284,9 @@ public class DungeonMapTest extends ApplicationAdapter {
     public void render() {
         recolor();
         director.step();
+        directorSmall.step();
 
-        if(!director.isPlaying() && !awaitedMoves.isEmpty())
+        if(!director.isPlaying() && !directorSmall.isPlaying() && !awaitedMoves.isEmpty())
         {
             Coord m = awaitedMoves.remove(0);
             if (!toCursor.isEmpty())
@@ -285,7 +294,7 @@ public class DungeonMapTest extends ApplicationAdapter {
             move(glyphs.first().getLocation().getStart().toGoTo(m));
         }
         else {
-            if (!director.isPlaying()) {
+            if (!director.isPlaying() && !directorSmall.isPlaying()) {
 //                postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on

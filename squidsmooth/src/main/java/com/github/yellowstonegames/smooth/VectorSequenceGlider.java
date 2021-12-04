@@ -14,7 +14,7 @@ import static com.github.yellowstonegames.grid.Direction.*;
  * Very experimental; allows chaining a sequence of VectorGlider movements.
  */
 @Beta
-public class VectorSequenceGlider extends SequenceGlider<VectorGlider> {
+public class VectorSequenceGlider extends SequenceGlider<VectorGlider> implements IGlider {
 
     /**
      * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using
@@ -47,7 +47,7 @@ public class VectorSequenceGlider extends SequenceGlider<VectorGlider> {
     }
 
     public VectorSequenceGlider(VectorSequenceGlider other){
-        super(new VectorGlider[other.sequence.length], new float[other.sequence.length]);
+        super(new VectorGlider[other.sequence.length], new float[other.durations.length]);
         for (int i = 0; i < other.sequence.length; i++) {
             sequence[i] = new VectorGlider(other.sequence[i]);
             durations[i] = other.durations[i];
