@@ -31,8 +31,14 @@ public class SequenceGlider<T extends IGlider> implements IGlider {
         final int len = Math.min(gliders.length, lengths.length);
         sequence = Arrays.copyOf(gliders, len);
         durations = Arrays.copyOf(lengths, len);
+        float sum = 0f;
         for (int i = 0; i < len; i++) {
-            durations[i] /= len;
+            sum += durations[i];
+        }
+        if(sum > 0) {
+            for (int i = 0; i < len; i++) {
+                durations[i] /= sum;
+            }
         }
     }
 

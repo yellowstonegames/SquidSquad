@@ -80,7 +80,7 @@ public class VectorSequenceGlider extends SequenceGlider<VectorGlider> implement
             return sequence[sequence.length - 1].end.y;
         if(sequence[active].change >= 1f)
             return sequence[active].end.y;
-        return interpolation.apply(sequence[active].start.y, sequence[active].end.y, change);
+        return interpolation.apply(sequence[active].start.y, sequence[active].end.y, sequence[active].change);
     }
 
     @Override
