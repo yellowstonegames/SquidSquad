@@ -198,11 +198,14 @@ public class AvalancheEvaluator {
 //    private static final int shiftB = 47, shiftC = 55;
 //    private static final int shiftB = 20, shiftC = 55;
 
-    private static final int shiftA = 60, shiftB = 17, shiftC = 38; //627.3542709350586, 4471.4318108558655
+//    private static final int shiftA = 60, shiftB = 17, shiftC = 38; //627.3542709350586, 4471.4318108558655
 //    private static final int shiftA = 23, shiftB = 35, shiftC = 44; //644.3578462600708, 4726.132109165192
 //    private static final int shiftA = 8, shiftB = 46, shiftC = 51; //684.567777633667, 4961.644707202911
 //    private static final int shiftA = 40, shiftB = 60, shiftC = 25; //836.2562255859375, 5996.780225276947
 //    private static final int shiftA = 38, shiftB = 22, shiftC = 26; //1098.985773563385, 7984.284327983856
+
+//    private static final int shiftA = 41, shiftB = 31, shiftC = 36; //1888.7793316841125, 21652.011834144592
+    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //478.7903299331665, 3286.795153617859
     public static long mix(final long v, final int iterations) {
         long stateA = v;
         long stateB = 0L;
@@ -223,15 +226,15 @@ public class AvalancheEvaluator {
 //            stateA = 0xD1B54A32D192ED03L * a0;
 //            stateB = Long.rotateLeft(b0, shiftB);
 //            stateC = Long.rotateLeft(c0, shiftC);
-            
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
             stateA = fa + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(fa, shiftA) + fd;
-            stateC = Long.rotateLeft(fd, shiftB) ^ fb;
-            stateD = Long.rotateLeft(fb, shiftC) + fc;
+            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
+            stateC = Long.rotateLeft(fb, shiftB) + fd;
+            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
 //            stateA = 0xD1342543DE82EF95L * fc;
 //            stateB = fa ^ fb ^ fc;
 //            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;

@@ -240,7 +240,7 @@ public class Avalanche {
     private static final long N = 1L << 6;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 13, upper = 20, inc = 1;
+    private static final int lower = 10, upper = 20, inc = 1;
 
     public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
@@ -289,12 +289,11 @@ public class Avalanche {
             final long fc = stateC;
             final long fd = stateD;
             stateA = fa + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(fa, shiftA) + fd;
-            stateC = Long.rotateLeft(fd, shiftB) ^ fb;
-            stateD = Long.rotateLeft(fb, shiftC) + fc;
-
+            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
+            stateC = Long.rotateLeft(fb, shiftB) + fd;
+            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
         }
-        return stateB;
+        return stateD;
     }
 
     public static void main(String[] args) {
