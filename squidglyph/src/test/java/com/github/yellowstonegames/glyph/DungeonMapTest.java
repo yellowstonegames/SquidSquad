@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
@@ -71,7 +73,7 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        LaserRandom random = new LaserRandom(Hasher.decarabia.hash64(DateFormat.getDateInstance().format(new Date())));
+        EnhancedRandom random = new FourWheelRandom(Hasher.decarabia.hash64(DateFormat.getDateInstance().format(new Date())));
         batch = new SpriteBatch();
         Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
@@ -81,7 +83,7 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
         gm = new GlyphMap(font, 60, 32);
-        GlidingGlyph playerGlyph = new GlidingGlyph((long) describe("red orange") << 32 | '@', Coord.get(1, 1));
+        GlidingGlyph playerGlyph = new GlidingGlyph('@', describe("red orange"), Coord.get(1, 1));
         playerGlyph.getLocation().setCompleteRunner(() -> {
             seen.or(inView.refill(FOV.reuseFOV(res, light, playerGlyph.getLocation().getEnd().x, playerGlyph.getLocation().getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
             blockage.remake(seen).not().fringe8way();
@@ -90,7 +92,7 @@ public class DungeonMapTest extends ApplicationAdapter {
 
         glyphs = ObjectList.with(playerGlyph);
 
-        director = new Director<>(GlidingGlyph::getLocation, glyphs, 100L);
+        director = new Director<>(GlidingGlyph::getLocation, glyphs, 150L);
         directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 300L);
         dungeonProcessor = new DungeonProcessor(60, 32, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 40);

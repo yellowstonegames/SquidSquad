@@ -58,6 +58,36 @@ public class GlidingGlyph {
         smallMotion = ownEmptyMotion;
     }
 
+    public GlidingGlyph(char chr, Coord start, Coord end, float rotationStart, float rotationEnd) {
+        this.glyph = 0xFFFFFFFF00000000L | chr;
+        location = new CoordGlider(start, end);
+        rotation = new AngleGlider(rotationStart, rotationEnd);
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char chr, int rgbaColor, Coord coord) {
+        this.glyph = (long) rgbaColor << 32 | chr;
+        location = new CoordGlider(coord, coord);
+        rotation = new AngleGlider();
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char chr, int rgbaColor, Coord start, Coord end, float rotationStart, float rotationEnd) {
+        this.glyph = (long) rgbaColor << 32 | chr;
+        location = new CoordGlider(start, end);
+        rotation = new AngleGlider(rotationStart, rotationEnd);
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char chr, int rgbaColor, boolean bold, boolean oblique, boolean underline,
+                        boolean strikethrough, Coord start, Coord end, float rotationStart, float rotationEnd) {
+        this.glyph = (long) rgbaColor << 32 | chr | (bold ? Font.BOLD : 0L) | (oblique ? Font.OBLIQUE : 0L)
+                | (underline ? Font.UNDERLINE : 0L) | (strikethrough ? Font.STRIKETHROUGH : 0L);
+        location = new CoordGlider(start, end);
+        rotation = new AngleGlider(rotationStart, rotationEnd);
+        smallMotion = ownEmptyMotion;
+    }
+
     public float getX()
     {
         return location.getX() + smallMotion.getX();
