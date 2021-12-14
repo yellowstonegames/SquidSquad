@@ -27,6 +27,7 @@ import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 import java.text.DateFormat;
 import java.util.Date;
 
+import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
 import static com.github.yellowstonegames.core.MathTools.swayRandomized;
@@ -99,10 +100,9 @@ public class DungeonMapTest extends ApplicationAdapter {
         blockage = new Region(GRID_WIDTH, GRID_HEIGHT);
         prunedDungeon = new char[GRID_WIDTH][GRID_HEIGHT];
         inView = new Region(GRID_WIDTH, GRID_HEIGHT);
-        Gdx.input.setInputProcessor(new InputAdapter(){
+        input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean keyDown(int keycode) {
-                Coord next;
                 switch (keycode){
                     case ESCAPE:
                     case Q:
@@ -111,22 +111,51 @@ public class DungeonMapTest extends ApplicationAdapter {
                     case R:
                         regenerate();
                         break;
-                    case W:
-                    case UP:
-                        move(Direction.UP);
-                        break;
-                    case A:
-                    case LEFT:
-                        move(Direction.LEFT);
-                        break;
-                    case S:
-                    case DOWN:
-                        move(Direction.DOWN);
-                        break;
-                    case D:
-                    case RIGHT:
-                        move(Direction.RIGHT);
-                        break;
+//                    case W:
+//                    case K:
+//                    case UP:
+//                    case NUMPAD_8:
+//                        move(Direction.UP);
+//                        break;
+//                    case A:
+//                    case H:
+//                    case LEFT:
+//                    case NUMPAD_4:
+//                        move(Direction.LEFT);
+//                        break;
+//                    case S:
+//                    case J:
+//                    case DOWN:
+//                    case NUMPAD_2:
+//                        move(Direction.DOWN);
+//                        break;
+//                    case D:
+//                    case L:
+//                    case RIGHT:
+//                    case NUMPAD_6:
+//                        move(Direction.RIGHT);
+//                        break;
+//                    case Y:
+//                    case NUMPAD_7:
+//                        move(Direction.UP_LEFT);
+//                        break;
+//                    case U:
+//                    case NUMPAD_9:
+//                        move(Direction.UP_RIGHT);
+//                        break;
+//                    case B:
+//                    case NUMPAD_1:
+//                        move(Direction.DOWN_LEFT);
+//                        break;
+//                    case N:
+//                    case NUMPAD_3:
+//                        move(Direction.DOWN_RIGHT);
+//                        break;
+//                    case NUMPAD_5:
+//                    case PERIOD:
+//                    case NUMPAD_DOT:
+//                        move(Direction.NONE);
+//                        break;
                     default: return false;
                 }
                 return true;
@@ -280,11 +309,34 @@ public class DungeonMapTest extends ApplicationAdapter {
             }
         }
     }
+
+    public void handleHeldKeys() {
+        if(input.isKeyPressed(W)  || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
+            move(Direction.UP);
+        else if(input.isKeyPressed(A)  || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
+            move(Direction.LEFT);
+        else if(input.isKeyPressed(S)  || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
+            move(Direction.DOWN);
+        else if(input.isKeyPressed(D)  || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
+            move(Direction.RIGHT);
+        else if(input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
+            move(Direction.UP_LEFT);
+        else if(input.isKeyPressed(U) || input.isKeyPressed(NUMPAD_9))
+            move(Direction.UP_RIGHT);
+        else if(input.isKeyPressed(B) || input.isKeyPressed(NUMPAD_1))
+            move(Direction.DOWN_LEFT);
+        else if(input.isKeyPressed(N) || input.isKeyPressed(NUMPAD_3))
+            move(Direction.DOWN_RIGHT);
+        else if(input.isKeyPressed(PERIOD) || input.isKeyPressed(NUMPAD_5) || input.isKeyPressed(NUMPAD_DOT))
+            move(Direction.NONE);
+    }
+
     @Override
     public void render() {
         recolor();
         director.step();
         directorSmall.step();
+        handleHeldKeys();
 
         if(!director.isPlaying() && !directorSmall.isPlaying() && !awaitedMoves.isEmpty())
         {
