@@ -4,7 +4,6 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 /**
  * An EnhancedRandom that delegates to a {@link FourWheelRandom}, but runs it through a user-controlled
@@ -12,7 +11,7 @@ import java.util.Random;
  * Generating random long values is trickier because a distribution works on doubles, and doubles only provide 52 bits
  * of usable random data, while a long can need as many as 64.
  */
-public class DistributedRandom extends Random implements EnhancedRandom {
+public class DistributedRandom implements EnhancedRandom {
 
     protected IDistribution.SimpleDistribution distribution;
     protected FourWheelRandom random;

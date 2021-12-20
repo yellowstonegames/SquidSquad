@@ -113,51 +113,6 @@ public class DungeonMapTest extends ApplicationAdapter {
                     case R:
                         regenerate();
                         break;
-//                    case W:
-//                    case K:
-//                    case UP:
-//                    case NUMPAD_8:
-//                        move(Direction.UP);
-//                        break;
-//                    case A:
-//                    case H:
-//                    case LEFT:
-//                    case NUMPAD_4:
-//                        move(Direction.LEFT);
-//                        break;
-//                    case S:
-//                    case J:
-//                    case DOWN:
-//                    case NUMPAD_2:
-//                        move(Direction.DOWN);
-//                        break;
-//                    case D:
-//                    case L:
-//                    case RIGHT:
-//                    case NUMPAD_6:
-//                        move(Direction.RIGHT);
-//                        break;
-//                    case Y:
-//                    case NUMPAD_7:
-//                        move(Direction.UP_LEFT);
-//                        break;
-//                    case U:
-//                    case NUMPAD_9:
-//                        move(Direction.UP_RIGHT);
-//                        break;
-//                    case B:
-//                    case NUMPAD_1:
-//                        move(Direction.DOWN_LEFT);
-//                        break;
-//                    case N:
-//                    case NUMPAD_3:
-//                        move(Direction.DOWN_RIGHT);
-//                        break;
-//                    case NUMPAD_5:
-//                    case PERIOD:
-//                    case NUMPAD_DOT:
-//                        move(Direction.NONE);
-//                        break;
                     default: return false;
                 }
                 return true;
@@ -312,13 +267,16 @@ public class DungeonMapTest extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Supports WASD, vi-keys (hjklyubn), arrow keys, and numpad for movement, plus '.' or numpad 5 to stay still.
+     */
     public void handleHeldKeys() {
-        if(input.isKeyPressed(W)  || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
-            move(Direction.UP);
-        else if(input.isKeyPressed(A)  || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
+        if(input.isKeyPressed(A)  || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
             move(Direction.LEFT);
         else if(input.isKeyPressed(S)  || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
             move(Direction.DOWN);
+        else if(input.isKeyPressed(W)  || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
+            move(Direction.UP);
         else if(input.isKeyPressed(D)  || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
             move(Direction.RIGHT);
         else if(input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
