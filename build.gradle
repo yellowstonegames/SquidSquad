@@ -45,6 +45,7 @@ subprojects {
 		maven { url 'https://jitpack.io' }
 	}
     compileJava.exclude("emu")
+    compileTestJava.exclude("emu")
     javadoc.exclude("emu")
     javadoc.options.source("16")
     javadoc.destinationDir = file("../docs/$name/apidocs")

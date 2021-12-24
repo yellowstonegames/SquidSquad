@@ -14,6 +14,7 @@ dependencies {
     testImplementation project(':squidtext')
     testImplementation project(':squidpath')
     testImplementation "junit:junit:$junitVersion"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }

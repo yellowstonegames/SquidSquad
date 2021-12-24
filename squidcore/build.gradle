@@ -9,6 +9,7 @@ dependencies {
     api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
     api "com.github.tommyettinger:regexodus:$regexodusVersion"
     testImplementation "junit:junit:$junitVersion"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"
 }
 
 jar {
