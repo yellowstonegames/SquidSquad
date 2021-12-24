@@ -150,13 +150,14 @@ public class IntShuffler {
         key0 = Hasher.randomize(seed + Hasher.b3 * bound);
         key1 = Hasher.randomize(seed ^ Hasher.b4 * ~bound);
     }
-
+//// Just noted here for reference. The Hasher.b0 through b5 constants are 64-bit odd numbers with random-like bits.
+//    public static long wow(final long a, final long b) {
+//        final long n = (a ^ (b << 39 | b >>> 25)) * (b ^ (a << 39 | a >>> 25));
+//        return n ^ (n >>> 32);
+//    }
     public static int round(long data, long seed)
     {
         return (int)Hasher.wow(data + Hasher.b1, seed - Hasher.b2);
-//        final int s = seed + data;
-//        final int x = (s ^ s >>> 17) * (seed - data + 0x9E3779BB >> 12) - s;
-//        return x ^ x >>> 15;
     }
 
     /**
