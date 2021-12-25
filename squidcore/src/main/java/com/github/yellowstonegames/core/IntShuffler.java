@@ -5,6 +5,8 @@ import com.github.tommyettinger.ds.support.Base;
 
 import javax.annotation.Nonnull;
 
+import static com.github.yellowstonegames.core.Hasher.*;
+
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
  * the sequence in memory. Uses a Feistel network, as described in
@@ -17,14 +19,14 @@ import javax.annotation.Nonnull;
  * {@link #restart()} to use the same sequence over again, or {@link #restart(long)} to use a different seed (the bound
  * is fixed).
  * <br>
- * This differs from the version in Alan Wolfe's example code and blog post; it uses a very different round function,
- * and it only uses 2 rounds of it (instead of 4). Wolfe's round function is MurmurHash2, but as far as I can tell the
+ * This differs from the version in Alan Wolfe's example code and blog post; it uses a very different round function.
+ * Wolfe's round function is MurmurHash2, but as far as I can tell the
  * version he uses doesn't have anything like MurmurHash3's fmix32() to adequately avalanche bits, and since all keys
  * are small keys with the usage of MurmurHash2 in his code, avalanche is the most important thing. It's also perfectly
  * fine to use irreversible operations in a Feistel network round function, and I do that since it seems to improve
- * randomness slightly. The {@link #round(long, long)} method used here reuses the {@link Hasher#wow(long, long)} method;
- * it acts like an unbalanced, irreversible PRNG with two states, and that turns out to be just fine for a Feistel
- * network. Using 4 rounds turns out to be overkill in this case. This also uses a different seed for each round.
+ * randomness slightly. The {@link #round(long, long)} method used here reuses the {@link Hasher#wow(long, long)}
+ * method; it acts like an unbalanced, irreversible PRNG with two states, and that turns out to be just fine for a
+ * Feistel network. This also uses a different seed for each round.
  *
  * @author Alan Wolfe
  * @author Tommy Ettinger
@@ -33,7 +35,7 @@ import javax.annotation.Nonnull;
 public class IntShuffler {
     public final int bound;
     protected int index, pow4, halfBits, leftMask, rightMask;
-    protected long key0, key1;
+    protected long key0, key1, key2, key3;
 
     /**
      * Constructs an IntShuffler with a random seed and a bound of 10.
@@ -124,21 +126,6 @@ public class IntShuffler {
         index = 0;
     }
 
-//    /**
-//     * Used to rearrange the bits of seeds this is given in a way that should partly randomize them.
-//     * This is, at the time of writing, the best two-multiply unary hash that skeeto's hash-prospector
-//     * (<a href="https://github.com/skeeto/hash-prospector">available here</a>) has found.
-//     * @param z any int
-//     * @return a pseudo-random but deterministic change of z
-//     */
-//    public static int determine(int z)
-//    {
-//        z ^= z >>> 15;
-//        z *= 0xD168AAADL;
-//        z ^= z >>> 15;
-//        z *= 0xAF723597L;
-//        return z ^ z >>> 15;
-//    }
     /**
      * Starts the sequence over, but can change the seed (completely changing the sequence). If {@code seed} is the same
      * as the seed given in the constructor, this will use the same sequence, acting like {@link #restart()}.
@@ -147,21 +134,22 @@ public class IntShuffler {
     public void restart(long seed)
     {
         index = 0;
-        key0 = Hasher.randomize(seed + Hasher.b3 * bound);
-        key1 = Hasher.randomize(seed ^ Hasher.b4 * ~bound);
+        key0 = randomize(seed + b3);
+        key1 = randomize(seed ^ b4);
+        key2 = randomize(seed - b1);
+        key3 = randomize(seed ^ b2);
     }
-//// Just noted here for reference. The Hasher.b0 through b5 constants are 64-bit odd numbers with random-like bits.
-//    public static long wow(final long a, final long b) {
-//        final long n = (a ^ (b << 39 | b >>> 25)) * (b ^ (a << 39 | a >>> 25));
-//        return n ^ (n >>> 32);
-//    }
+    public static int wow(final long a, final long b) {
+        final long n = (a ^ (b << 39 | b >>> 25)) * (b ^ (a << 39 | a >>> 25));
+        return (int) (n >>> 32 ^ n);
+    }
     public static int round(long data, long seed)
     {
-        return (int)Hasher.wow(data + Hasher.b1, seed - Hasher.b2);
+        return (wow(data + b1, seed - b2));
     }
 
     /**
-     * Encodes an index with a 2-round Feistel network. It is possible that someone would want to override this method
+     * Encodes an index with a 4-round Feistel network. It is possible that someone would want to override this method
      * to use more or less rounds, but there must always be an even number.
      * @param index the index to cipher; must be between 0 and {@link #pow4}, inclusive
      * @return the ciphered index, which might not be less than bound but will be less than or equal to {@link #pow4}
@@ -171,17 +159,18 @@ public class IntShuffler {
         // break our index into the left and right half
         int left = (index & leftMask) >>> halfBits;
         int right = (index & rightMask);
-        // do 2 Feistel rounds
-        int newRight = left ^ (round(right, key0) & rightMask);
+        // do 4 Feistel rounds
+        int newRight;
+        newRight = left + round(right, key0) & rightMask;
         left = right;
         right = newRight;
-        newRight = left ^ (round(right, key1) & rightMask);
-//        left = right;
-//        right = newRight;
-//        newRight = left ^ (round(right, key2) & rightMask);
-//        left = right;
-//        right = newRight;
-//        newRight = left ^ (round(right, key3) & rightMask);
+        newRight = left + round(right, key1) & rightMask;
+        left = right;
+        right = newRight;
+        newRight = left + round(right, key2) & rightMask;
+        left = right;
+        right = newRight;
+        newRight = left + round(right, key3) & rightMask;
 
         // put the left and right back together to form the encrypted index
         return right << halfBits | newRight;
@@ -196,6 +185,8 @@ public class IntShuffler {
         next.index = index;
         next.key0 = key0;
         next.key1 = key1;
+        next.key2 = key2;
+        next.key3 = key3;
         return next;
     }
 
@@ -208,6 +199,10 @@ public class IntShuffler {
         Base.BASE36.appendSigned(sb, key0);
         sb.append('~');
         Base.BASE36.appendSigned(sb, key1);
+        sb.append('~');
+        Base.BASE36.appendSigned(sb, key2);
+        sb.append('~');
+        Base.BASE36.appendSigned(sb, key3);
         return sb.append('`').toString();
     }
 
@@ -217,11 +212,15 @@ public class IntShuffler {
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
         int index = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
         long key0 = Base.BASE36.readLong(data, idx + 1, idx = data.indexOf('~', idx + 1));
-        long key1 = Base.BASE36.readLong(data, idx + 1, data.indexOf('`', idx + 1));
+        long key1 = Base.BASE36.readLong(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        long key2 = Base.BASE36.readLong(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        long key3 = Base.BASE36.readLong(data, idx + 1, data.indexOf('`', idx + 1));
         IntShuffler is = new IntShuffler(bound, 0);
         is.index = index;
         is.key0 = key0;
         is.key1 = key1;
+        is.key2 = key2;
+        is.key3 = key3;
         return is;
     }
 
@@ -235,7 +234,9 @@ public class IntShuffler {
         if (bound != that.bound) return false;
         if (index != that.index) return false;
         if (key0 != that.key0) return false;
-        return key1 == that.key1;
+        if (key1 != that.key1) return false;
+        if (key2 != that.key2) return false;
+        return key3 == that.key3;
     }
 
     @Override
@@ -244,6 +245,8 @@ public class IntShuffler {
         result = 31 * result + index;
         result = 31 * result + (int) (key0 ^ (key0 >>> 32));
         result = 31 * result + (int) (key1 ^ (key1 >>> 32));
+        result = 31 * result + (int) (key2 ^ (key2 >>> 32));
+        result = 31 * result + (int) (key3 ^ (key3 >>> 32));
         return result;
     }
 }

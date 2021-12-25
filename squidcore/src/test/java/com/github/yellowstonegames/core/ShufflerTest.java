@@ -36,9 +36,8 @@ public class ShufflerTest {
     }
 
     @Test
-    public void testIntShufflerBounds()
-    {
-        for (int i = 3; i <= 80; i += 7) {
+    public void testIntShufflerBounds() {
+        for (int i = 3; i <= 80; i += 1) {
             IntShuffler lss = new IntShuffler(i, 31337);
             System.out.printf("Bound %02d: %d", i, lss.next());
             for (int j = 1; j < i; j++) {
@@ -48,8 +47,7 @@ public class ShufflerTest {
         }
     }
     @Test
-    public void testIntShufflerReseed()
-    {
+    public void testIntShufflerReseed() {
         IntShuffler lss = new IntShuffler(7, 0);
         for (int i = 0; i < 30; i++) {
             lss.restart(i);
@@ -61,8 +59,7 @@ public class ShufflerTest {
         }
     }
     @Test
-    public void testIntShufflerReverse()
-    {
+    public void testIntShufflerReverse() {
         IntShuffler lss = new IntShuffler(7, 0);
         for (int i = 0; i < 10; i++) {
             lss.restart(i);
@@ -77,6 +74,20 @@ public class ShufflerTest {
             }
             System.out.println();
 
+        }
+    }
+
+    public static void main(String[] args) {
+        int bound = 16, seed = 0;
+        IntShuffler is = new IntShuffler(bound, seed);
+        int[] buckets = new int[bound];
+        for (int i = 0; i < 1000000; i++) {
+            is.restart(seed++);
+            buckets[is.next()]++;
+        }
+        for (int i = 0; i < bound; i++) {
+            int count = Math.round(buckets[i] * bound / (10000f));
+            System.out.printf("% 3d : %6d , %0"+count+"d\n", i, count, 0);
         }
     }
 }
