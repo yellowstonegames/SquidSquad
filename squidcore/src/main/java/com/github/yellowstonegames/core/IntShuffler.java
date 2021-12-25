@@ -139,13 +139,9 @@ public class IntShuffler {
         key2 = randomize(seed - b1);
         key3 = randomize(seed ^ b2);
     }
-    public static int wow(final long a, final long b) {
-        final long n = (a ^ (b << 39 | b >>> 25)) * (b ^ (a << 39 | a >>> 25));
-        return (int) (n >>> 32 ^ n);
-    }
     public static int round(long data, long seed)
     {
-        return (wow(data + b1, seed - b2));
+        return (int) (wow(data + b1, seed - b2));
     }
 
     /**

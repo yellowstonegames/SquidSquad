@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.FourWheelRandom;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -77,6 +78,25 @@ public class ShufflerTest {
         }
     }
 
+    @Test
+    public void testManyBounds() {
+        for (int bound = 3; bound <= 42; bound++) {
+            int seed = 0;
+            IntShuffler is = new IntShuffler(bound, seed);
+            int[] buckets = new int[bound];
+            for (int i = 0; i < 1000000; i++) {
+                is.restart(seed++);
+                buckets[is.next()]++;
+            }
+            int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
+            for (int i = 0; i < bound; i++) {
+                mn = Math.min(mn, buckets[i]);
+                mx = Math.max(mx, buckets[i]);
+            }
+            Assert.assertTrue((mx - mn) * bound < 75000);
+        }
+    }
+
     public static void main(String[] args) {
         int bound = 16, seed = 0;
         IntShuffler is = new IntShuffler(bound, seed);
@@ -85,9 +105,15 @@ public class ShufflerTest {
             is.restart(seed++);
             buckets[is.next()]++;
         }
+        int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
         for (int i = 0; i < bound; i++) {
-            int count = Math.round(buckets[i] * bound / (10000f));
+            int count = Math.round(buckets[i] * bound / 10000f);
+            mn = Math.min(mn, buckets[i]);
+            mx = Math.max(mx, buckets[i]);
             System.out.printf("% 3d : %6d , %0"+count+"d\n", i, count, 0);
         }
+        System.out.println("Smallest bucket     : " + mn);
+        System.out.println("Largest bucket      : " + mx);
+        System.out.println("Adjusted difference : " + (mx - mn) * bound / 10000f);
     }
 }
