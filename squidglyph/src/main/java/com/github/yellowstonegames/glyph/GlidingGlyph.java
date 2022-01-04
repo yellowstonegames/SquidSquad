@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.github.tommyettinger.textra.ColorLookup;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.smooth.AngleGlider;
 import com.github.yellowstonegames.smooth.CoordGlider;
@@ -28,6 +29,8 @@ import javax.annotation.Nonnull;
  * A single {@code long} that a {@link Font} can render as a glyph with color and styles, given a location that can
  * smoothly change as a {@link CoordGlider}. May optionally have an unchanging or a changing rotation as an
  * {@link AngleGlider}, and can adjust its position between-grid-cells using a {@link VectorSequenceGlider}.
+ * This allows constructing a GlidingGlyph with an existing {@code long} as Font uses them, as a char and a String of
+ * Font markup (see {@link Font#markupGlyph(char, String, ColorLookup)}, or as a char and several optional parameters.
  */
 public class GlidingGlyph {
     @Nonnull
@@ -69,6 +72,35 @@ public class GlidingGlyph {
 
     public GlidingGlyph(long glyph, Coord start, Coord end, float rotationStart, float rotationEnd) {
         this.glyph = glyph;
+        location = new CoordGlider(start, end);
+        rotation = new AngleGlider(rotationStart, rotationEnd);
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char glyph, String markup) {
+        this(Font.markupGlyph(glyph, markup, GlyphMap::getRgba), Coord.get(0, 0));
+    }
+
+    public GlidingGlyph(char glyph, String markup, Coord coord) {
+        this(Font.markupGlyph(glyph, markup, GlyphMap::getRgba), coord, coord);
+    }
+
+    public GlidingGlyph(char glyph, String markup, Coord start, Coord end) {
+        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
+        location = new CoordGlider(start, end);
+        rotation = new AngleGlider();
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char glyph, String markup, Coord start, Coord end, float rotation) {
+        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
+        location = new CoordGlider(start, end);
+        this.rotation = new AngleGlider(rotation);
+        smallMotion = ownEmptyMotion;
+    }
+
+    public GlidingGlyph(char glyph, String markup, Coord start, Coord end, float rotationStart, float rotationEnd) {
+        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
         location = new CoordGlider(start, end);
         rotation = new AngleGlider(rotationStart, rotationEnd);
         smallMotion = ownEmptyMotion;
