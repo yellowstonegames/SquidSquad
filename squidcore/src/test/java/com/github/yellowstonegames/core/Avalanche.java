@@ -247,6 +247,7 @@ public class Avalanche {
         long stateB = 0L;
         long stateC = 0L;
         long stateD = 0L;
+        final long constant = 0xC6BC279692B5C323L * shiftC | 1L;
         for (int i = 0; i < iterations; i++) {
 //            final long a0 = stateA;
 //            final long b0 = stateB;
@@ -284,16 +285,49 @@ public class Avalanche {
 //            stateB = Long.rotateLeft(a0, shiftB) + c0;
 //            stateC = Long.rotateLeft(b0, shiftC) ^ a0;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = fa + 0xC6BC279692B5C323L;
+//            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
+//            stateC = Long.rotateLeft(fb, shiftB) + fd;
+//            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
+
+//            Order 1, Best Ten with total:
+//            #0: 33,24,18 with value 0.9357757568359375
+//            #1: 34,58,36 with value 0.9372100830078125
+//            #2: 35,46,58 with value 0.9389801025390625
+//            #3: 56,31,3 with value 0.9401092529296875
+//            #4: 34,26,63 with value 0.9407196044921875
+//            #5: 57,32,3 with value 0.9438934326171875
+//            #6: 56,10,23 with value 0.94439697265625
+//            #7: 8,57,11 with value 0.944580078125
+//            #8: 45,58,11 with value 0.9450836181640625
+//            #9: 33,57,61 with value 0.9460906982421875
+//            Order 2, Best Ten with total:
+//            #0: 35,46,58 with value 31.112884521484375
+//            #1: 45,58,11 with value 31.152130126953125
+//            #2: 34,58,36 with value 31.155364990234375
+//            #3: 56,10,23 with value 31.165542602539062
+//            #4: 56,31,3 with value 31.182052612304688
+//            #5: 39,56,20 with value 31.184097290039062
+//            #6: 44,57,16 with value 31.186752319335938
+//            #7: 57,10,32 with value 31.186767578125
+//            #8: 58,19,63 with value 31.194747924804688
+//            #9: 19,57,16 with value 31.197494506835938
+
+            // 35,46,58 is best? constant is 0x06A0F81D3D2E35EFL
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            stateA = fa + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
-            stateC = Long.rotateLeft(fb, shiftB) + fd;
-            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
+            stateA = Long.rotateLeft(fb + fc, shiftA);
+            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+            stateC = fa + fb;
+            stateD = fd + constant;
         }
-        return stateD;
+        return stateC;
     }
 
     public static void main(String[] args) {
