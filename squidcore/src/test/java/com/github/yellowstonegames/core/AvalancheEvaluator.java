@@ -205,7 +205,30 @@ public class AvalancheEvaluator {
 //    private static final int shiftA = 38, shiftB = 22, shiftC = 26; //1098.985773563385, 7984.284327983856
 
 //    private static final int shiftA = 41, shiftB = 31, shiftC = 36; //1888.7793316841125, 21652.011834144592
-    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //478.7903299331665, 3286.795153617859
+//    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //478.7903299331665, 3286.795153617859
+
+    // uses a xorshift by shiftC on fa + fb
+//    private static final int shiftA = 35, shiftB = 46, shiftC = 58; //2653.063545703888, 39629.37545967102
+//    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //2623.6071248054504, 38092.00607776642
+//    private static final int shiftA = 51, shiftB = 39, shiftC = 11; //441.1982617378235, 3610.378014087677
+//    private static final int shiftA = 48, shiftB = 61, shiftC = 21; //297.73691511154175, 2426.498821735382
+//    private static final int shiftA = 49, shiftB = 13, shiftC = 21; //261.5510506629944, 1977.7154269218445
+//    private static final int shiftA = 27, shiftB = 41, shiftC = 11; //250.93736696243286, 1598.0102729797363
+//    private static final int shiftA = 48, shiftB = 33, shiftC = 21; //217.55797004699707, 1501.3805575370789
+//    private static final int shiftA = 50, shiftB = 15, shiftC = 9; //135.1098837852478, 873.8072996139526
+    private static final int shiftA = 34, shiftB = 52, shiftC = 11; //83.50280618667603, 613.0883617401123
+
+    // uses (0xC6BC279692B5C323L * shiftC | 1L); for the increment
+//    private static final int shiftA = 35, shiftB = 46, shiftC = 58; //4560.8842606544495, 75829.18932628632
+
+    // uses (Hashers.determine(shiftC) | 1L); for the increment
+//    private static final int shiftA = 33, shiftB = 57, shiftC = 61; //4583.470088005066, 77454.88206100464
+//    private static final int shiftA = 49, shiftB = 13, shiftC = 21; //4565.860271930695, 76767.28993225098
+//    private static final int shiftA = 38, shiftB = 55, shiftC = 54; //4709.632997512817, 77462.94840621948
+
+    private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
+//    private static final long constant = Hasher.determine(shiftC) | 1L;
+
     public static long mix(final long v, final int iterations) {
         long stateA = v;
         long stateB = 0L;
@@ -227,14 +250,15 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(b0, shiftB);
 //            stateC = Long.rotateLeft(c0, shiftC);
 
-            final long fa = stateA;
-            final long fb = stateB;
-            final long fc = stateC;
-            final long fd = stateD;
-            stateA = fa + 0xC6BC279692B5C323L;
-            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
-            stateC = Long.rotateLeft(fb, shiftB) + fd;
-            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = fa + 0xC6BC279692B5C323L;
+//            stateB = Long.rotateLeft(fd, shiftA) ^ fa;
+//            stateC = Long.rotateLeft(fb, shiftB) + fd;
+//            stateD = Long.rotateLeft(fc, shiftC) ^ fb;
+
 //            stateA = 0xD1342543DE82EF95L * fc;
 //            stateB = fa ^ fb ^ fc;
 //            stateC = Long.rotateLeft(fb, shiftB) + 0xC6BC279692B5C323L;
@@ -247,8 +271,37 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(stateB, shiftB);
 //            stateC = zp - yp;
 //            stateC = Long.rotateLeft(stateC, shiftC);
+
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            final long ab = fa + fb;
+            stateA = Long.rotateLeft(fb + fc, shiftA);
+            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+            stateC = ab ^ ab >>> shiftC;
+            stateD = fd + 0xC6BC279692B5C323L;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long ab = fa + fb;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = (ab ^ ab >>> shiftC);
+//            stateD = fd + 0xC6BC279692B5C323L;
         }
-        return stateD;
+        return stateC;
     }
 
     public static void main(String[] args) {

@@ -2,6 +2,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.ds.support.FourWheelRandom;
 /*
 lower=9, upper=19, inc=1, N=1L<<10
 
@@ -242,12 +243,13 @@ public class Avalanche {
 //    private static final int lower = 8, upper = 41, inc = 4;
     private static final int lower = 10, upper = 20, inc = 1;
 
-    public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
+    public static long mix(final long v, final int shiftA, final int shiftB, final long shiftC, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
         long stateD = 0L;
-        final long constant = 0xC6BC279692B5C323L * shiftC | 1L;
+//        final long constant = 0xC6BC279692B5C323L * shiftC | 1L;
+        final long constant = 0xC6BC279692B5C323L;
         for (int i = 0; i < iterations; i++) {
 //            final long a0 = stateA;
 //            final long b0 = stateB;
@@ -317,7 +319,16 @@ public class Avalanche {
 //            #8: 58,19,63 with value 31.194747924804688
 //            #9: 19,57,16 with value 31.197494506835938
 
-            // 35,46,58 is best? constant is 0x06A0F81D3D2E35EFL
+//            // 35,46,58 is best? constant is 0x06A0F81D3D2E35EFL
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constant;
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
@@ -325,7 +336,7 @@ public class Avalanche {
             stateA = Long.rotateLeft(fb + fc, shiftA);
             stateB = Long.rotateLeft(fc ^ fd, shiftB);
             stateC = fa + fb;
-            stateD = fd + constant;
+            stateD = fd + shiftC;
         }
         return stateC;
     }
@@ -347,9 +358,10 @@ public class Avalanche {
                         ArrayTools.fill(A, 0L);
                         for (long n = 0; n < N; n++) {
                             long v = rng.nextLong();
-                            long w = mix(v, sa, sb, sc, iterations);
+                            long c = Hasher.determine(sc)|1L;
+                            long w = mix(v, sa, sb, c, iterations);
                             for (int i = 0; i < 64; i++) {
-                                long x = w ^ mix(v ^ (1L << i), sa, sb, sc, iterations);
+                                long x = w ^ mix(v ^ (1L << i), sa, sb, c, iterations);
                                 for (int j = 0; j < 64; j++) {
                                     A[i][j] += ((x >>> j) & 1L);
                                 }
@@ -448,10 +460,11 @@ public class Avalanche {
                     ArrayTools.fill(A, 0L);
                     for (long n = 0; n < N; n++) {
                         long v = rng.nextLong();
-                        long w = mix(v, sa, sb, sc, iterations);
+                        long c = Hasher.determine(sc)|1L;
+                        long w = mix(v, sa, sb, c, iterations);
                         for (int i = 0, p = 0; i < 64; i++) {
                             for (int h = i + 1; h < 64; h++) {
-                                long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sa, sb, sc, iterations);
+                                long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sa, sb, c, iterations);
                                 for (int j = 0; j < 64; j++) {
                                     A[p][j] += ((x >>> j) & 1L);
                                 }
