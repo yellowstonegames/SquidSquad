@@ -207,16 +207,18 @@ public class AvalancheEvaluator {
 //    private static final int shiftA = 41, shiftB = 31, shiftC = 36; //1888.7793316841125, 21652.011834144592
 //    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //478.7903299331665, 3286.795153617859
 
-    // uses a xorshift by shiftC on fa + fb
+    // uses a xorshift by stateC (not shiftC) on fa + fb
 //    private static final int shiftA = 35, shiftB = 46, shiftC = 58; //2653.063545703888, 39629.37545967102
 //    private static final int shiftA = 26, shiftB = 15, shiftC = 54; //2623.6071248054504, 38092.00607776642
+//    private static final int shiftA = 41, shiftB = 55, shiftC = 33; //889.4648361206055, 9337.738212108612
 //    private static final int shiftA = 51, shiftB = 39, shiftC = 11; //441.1982617378235, 3610.378014087677
 //    private static final int shiftA = 48, shiftB = 61, shiftC = 21; //297.73691511154175, 2426.498821735382
 //    private static final int shiftA = 49, shiftB = 13, shiftC = 21; //261.5510506629944, 1977.7154269218445
 //    private static final int shiftA = 27, shiftB = 41, shiftC = 11; //250.93736696243286, 1598.0102729797363
 //    private static final int shiftA = 48, shiftB = 33, shiftC = 21; //217.55797004699707, 1501.3805575370789
 //    private static final int shiftA = 50, shiftB = 15, shiftC = 9; //135.1098837852478, 873.8072996139526
-    private static final int shiftA = 34, shiftB = 52, shiftC = 11; //83.50280618667603, 613.0883617401123
+//    private static final int shiftA = 17, shiftB = 43, shiftC = 9; //131.5948634147644, 876.6185884475708
+//    private static final int shiftA = 34, shiftB = 52, shiftC = 11; //83.50280618667603, 613.0883617401123
 
     // uses (0xC6BC279692B5C323L * shiftC | 1L); for the increment
 //    private static final int shiftA = 35, shiftB = 46, shiftC = 58; //4560.8842606544495, 75829.18932628632
@@ -226,7 +228,37 @@ public class AvalancheEvaluator {
 //    private static final int shiftA = 49, shiftB = 13, shiftC = 21; //4565.860271930695, 76767.28993225098
 //    private static final int shiftA = 38, shiftB = 55, shiftC = 54; //4709.632997512817, 77462.94840621948
 
-    private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
+    // uses three rotations
+//    private static final int shiftA = 48, shiftB = 61, shiftC = 21; //5380.808502674103, 85902.72891759872
+//    private static final int shiftA = 41, shiftB = 34, shiftC = 9; //4833.024730682373, 80877.52810287476
+//    private static final int shiftA = 18, shiftB = 57, shiftC = 26; //4472.422231197357, 74673.06864023209
+//    private static final int shiftA = 54, shiftB = 29, shiftC = 61; //4468.296925067902, 74011.22927713394
+
+    // uses two rotations and a xorshift on fa
+//    private static final int shiftA = 25, shiftB = 28, shiftC = 6; //2448.0621132850647, 38512.7782664299
+//    private static final int shiftA = 40, shiftB = 34, shiftC = 6; //2441.77822637558, 38680.46908569336
+
+    // uses two rotations and a xorshift on fa xored with fb
+//    private static final int shiftA = 40, shiftB = 34, shiftC = 6; //3015.966280937195, 43838.31883382797
+//    private static final int shiftA = 25, shiftB = 28, shiftC = 6; //1494.4292368888855, 20432.62754869461
+//    private static final int shiftA = 50, shiftB = 28, shiftC = 6; //637.3507990837097, 5952.376519203186
+
+    // uses fb + fa ^ fd
+//    private static final int shiftA = 57, shiftB = 11, shiftC = 26; //3316.846664428711, 52582.95613670349
+
+//    // uses fb ^ fa + fd
+//    private static final int shiftA = 55, shiftB = 10, shiftC = 44; //3503.1398515701294, 54842.517048835754
+
+//    // uses fb + fa + fd
+//    private static final int shiftA = 56, shiftB = 31, shiftC = 3; //3572.523464202881, 56615.87005329132
+
+    // uses fc + fb ^ fa
+//    private static final int shiftA = 18, shiftB = 38, shiftC = 21; //169.10442113876343, 887.2168755531311
+//    private static final int shiftA = 25, shiftB = 19, shiftC = 21; //162.84991025924683, 814.8368101119995
+    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
+
+    private static final long constant = 0xC6BC279692B5C323L;
+//    private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
 //    private static final long constant = Hasher.determine(shiftC) | 1L;
 
     public static long mix(final long v, final int iterations) {
@@ -271,16 +303,16 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(stateB, shiftB);
 //            stateC = zp - yp;
 //            stateC = Long.rotateLeft(stateC, shiftC);
-
-            final long fa = stateA;
-            final long fb = stateB;
-            final long fc = stateC;
-            final long fd = stateD;
-            final long ab = fa + fb;
-            stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = ab ^ ab >>> shiftC;
-            stateD = fd + 0xC6BC279692B5C323L;
+//
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long ab = fa + fb;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = ab ^ ab >>> shiftC;
+//            stateD = fd + 0xC6BC279692B5C323L;
 
 //            final long fa = stateA;
 //            final long fb = stateB;
@@ -300,6 +332,51 @@ public class AvalancheEvaluator {
 //            stateB = Long.rotateLeft(fc ^ fd, shiftB);
 //            stateC = (ab ^ ab >>> shiftC);
 //            stateD = fd + 0xC6BC279692B5C323L;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = Long.rotateLeft(fa + fb, shiftC);
+//            stateD = fd + 0xC6BC279692B5C323L;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa ^ fa >>> shiftC;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb ^ fa ^ fa >>> shiftC;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb + fa ^ fd;
+//            stateD = fd + constant;
+
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            stateA = Long.rotateLeft(fb + fc, shiftA);
+            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+            stateC = fc + fb ^ fa;
+            stateD = fd + constant;
         }
         return stateC;
     }

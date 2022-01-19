@@ -243,7 +243,7 @@ public class Avalanche {
 //    private static final int lower = 8, upper = 41, inc = 4;
     private static final int lower = 10, upper = 20, inc = 1;
 
-    public static long mix(final long v, final int shiftA, final int shiftB, final long shiftC, final int iterations) {
+    public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
         long stateB = 0L;
         long stateC = 0L;
@@ -329,14 +329,51 @@ public class Avalanche {
 //            stateC = fa + fb;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long ab = fa + fb;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = ab ^ ab >>> shiftC;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb ^ fa ^ fa >>> shiftC;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb ^ fa + fd;
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb + fa + fd;
+//            stateD = fd + constant;
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
             stateA = Long.rotateLeft(fb + fc, shiftA);
             stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fa + fb;
-            stateD = fd + shiftC;
+            stateC = fc + fb ^ fa;
+            stateD = fd + constant;
         }
         return stateC;
     }
@@ -358,10 +395,9 @@ public class Avalanche {
                         ArrayTools.fill(A, 0L);
                         for (long n = 0; n < N; n++) {
                             long v = rng.nextLong();
-                            long c = Hasher.determine(sc)|1L;
-                            long w = mix(v, sa, sb, c, iterations);
+                            long w = mix(v, sa, sb, sc, iterations);
                             for (int i = 0; i < 64; i++) {
-                                long x = w ^ mix(v ^ (1L << i), sa, sb, c, iterations);
+                                long x = w ^ mix(v ^ (1L << i), sa, sb, sc, iterations);
                                 for (int j = 0; j < 64; j++) {
                                     A[i][j] += ((x >>> j) & 1L);
                                 }
@@ -460,11 +496,10 @@ public class Avalanche {
                     ArrayTools.fill(A, 0L);
                     for (long n = 0; n < N; n++) {
                         long v = rng.nextLong();
-                        long c = Hasher.determine(sc)|1L;
-                        long w = mix(v, sa, sb, c, iterations);
+                        long w = mix(v, sa, sb, sc, iterations);
                         for (int i = 0, p = 0; i < 64; i++) {
                             for (int h = i + 1; h < 64; h++) {
-                                long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sa, sb, c, iterations);
+                                long x = w ^ mix(v ^ (1L << i) ^ (1L << h), sa, sb, sc, iterations);
                                 for (int j = 0; j < 64; j++) {
                                     A[p][j] += ((x >>> j) & 1L);
                                 }
