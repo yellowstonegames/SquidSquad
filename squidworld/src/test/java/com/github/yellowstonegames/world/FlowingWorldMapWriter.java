@@ -13,13 +13,10 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
-import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.core.TrigTools;
-import com.github.yellowstonegames.grid.IPointHash;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -64,12 +61,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
-        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
+//        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -96,8 +93,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
-        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         Noise terrainNoise = new Noise(fn) {
@@ -219,8 +216,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         try {
             for (int i = 0; i < pm.length; i++) {
                 float angle = i * MathUtils.PI2 / (float) pm.length;
-                mutationA = MathUtils.cos(angle) * 0.25f;
-                mutationB = MathUtils.sin(angle) * 0.25f;
+                mutationA = MathUtils.cos(angle) * 0.3125f;
+                mutationB = MathUtils.sin(angle) * 0.3125f;
                 world.setCenterLongitude(angle);
                 generate(hash);
                 wmv.getBiomeMapper().makeBiomes(world);
@@ -238,9 +235,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                     System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
-            writer.palette = new PaletteReducer(pms);
-            writer.palette.setDitherStrength(1f);
+//            writer.palette = new PaletteReducer(pms);
+            writer.setDitherStrength(0.75f);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
+//            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
         } catch (IOException e) {
             e.printStackTrace();
         }
