@@ -40,12 +40,12 @@ public class GlyphMap {
      * @param description a color description, as a lower-case String matching the format covered in {@link DescriptiveColor#describe(CharSequence)}
      * @return an Integer that either contains an RGBA8888 color (if description was valid) or null otherwise
      */
-    public static Integer getRgba(final String description){
-        if(description == null || description.length() == 0) return null;
+    public static int getRgba(final String description){
+        if(description == null || description.length() == 0) return 256;
         int oklab = DescriptiveColor.describeOklab(description);
         if(oklab == 0) {
             Color c = Colors.get(description);
-            if(c == null) return null;
+            if(c == null) return 256;
             return Color.rgba8888(c);
         }
         return DescriptiveColor.toRGBA8888(oklab);
