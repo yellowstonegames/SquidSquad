@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -24,19 +25,13 @@ import java.util.Arrays;
 /**
  * A different approach to the same task as a probability table, though this only looks up an appropriate index
  * instead of also storing items it can choose; allows positive doubles for weights but does not allow nested tables for
- * simplicity. This doesn't store an RNG (or RandomnessSource) in this class, and instead expects a long to be given for
- * each random draw from the table (these long parameters can be random, sequential, or in some other way different
- * every time). Uses <a href="http://www.keithschwarz.com/darts-dice-coins/">Vose's Alias Method</a>, and is based
- * fairly-closely on the code given by Keith Schwarz at that link. Because Vose's Alias Method is remarkably fast (O(1)
- * generation time in use, and O(n) time to construct a WeightedTable instance), this may be useful to consider if you
+ * simplicity. This doesn't store an RNG (or RandomnessSource) in this class, and instead expects either an
+ * EnhancedRandom as a parameter, or a long to be given for each random draw from the table (these long parameters can
+ * be random, sequential, or in some other way different every time). Uses
+ * <a href="http://www.keithschwarz.com/darts-dice-coins/">Vose's Alias Method</a>, and is based fairly-closely on the
+ * code given by Keith Schwarz at that link. Because Vose's Alias Method is remarkably fast (it takes O(1) time to get
+ * a random index, and takes O(n) time to construct a WeightedTable instance), this may be useful to consider if you
  * don't need all the features of ProbabilityTable or if you want deeper control over the random aspects of it.
- * <br>
- * Internally, this uses a unary hash (a function that converts one number to a random-seeming but deterministic other
- * number) to generate two ints, one used for probability and treated as a 31-bit integer and the other used to
- * determine the chosen column, which is bounded to an arbitrary positive int. It does this with just one randomized
- * 64-bit value, allowing the state given to {@link #random(long)} to be just one long.
- * <br>
- * Created by Tommy Ettinger on 1/5/2018.
  */
 public class WeightedTable {
     protected final int[] mixed;
@@ -153,6 +148,14 @@ public class WeightedTable {
      * WeightedTable every time, so you should give different state values when you want random-seeming results. You may
      * want to call this like {@code weightedTable.random(++state)}, where state is a long, to ensure the inputs change.
      * This will always return an int between 0 (inclusive) and {@link #size} (exclusive).
+     * <br>
+     * Internally, this uses a unary hash (a function that converts one number to a random-seeming but deterministic
+     * other number) to generate two ints, one used for probability and treated as a 31-bit integer and the other used
+     * to determine the chosen column, which is bounded to an arbitrary positive int. It does this with just one
+     * randomized 64-bit value, allowing the state parameter to be just one long.
+     * <br>
+     * You can also use {@link #random(EnhancedRandom)} to avoid handling state directly; this can be faster if using
+     * a particularly fast EnhancedRandom implementation.
      * @param state a long that should be different every time; consider calling with {@code ++state}
      * @return a random-seeming index from 0 to {@link #size} - 1, determined by weights and the given state
      */
@@ -167,7 +170,24 @@ public class WeightedTable {
         // current column or the alias for that column based on that probability
         return ((state >>> 33) <= mixed[column << 1]) ? column : mixed[column << 1 | 1];
     }
-    
+    /**
+     * Gets an index of one of the weights in this WeightedTable, with the choice determined by the given random number
+     * generator, but higher weights will be returned more frequently than lower weights. The rng parameter can
+     * be any implementation of EnhancedRandom, and some implementations are likely to be faster than the unary hash
+     * used by {@link #random(long)}. This will return an int between 0 (inclusive) and {@link #size} (exclusive).
+     * @param rng an EnhancedRandom; its {@link EnhancedRandom#nextLong()} method will be called once
+     * @return a random index from 0 to {@link #size} - 1, determined by weights and the given rng
+     */
+    public int random(final EnhancedRandom rng)
+    {
+        final long state = rng.nextLong();
+        // get a random int (using half the bits of our previously-calculated state) that is less than size
+        int column = (int)((size * (state & 0xFFFFFFFFL)) >> 32);
+        // use the other half of the bits of state to get a 31-bit int, compare to probability and choose either the
+        // current column or the alias for that column based on that probability
+        return ((state >>> 33) <= mixed[column << 1]) ? column : mixed[column << 1 | 1];
+    }
+
     public String serializeToString()
     {
         return StringTools.join(",", mixed);
