@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -16,7 +17,6 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -24,9 +24,6 @@ import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
 import com.github.yellowstonegames.smooth.VectorSequenceGlider;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
@@ -50,7 +47,7 @@ public class DungeonMapTest extends ApplicationAdapter {
     private Coord cursor = Coord.get(-1, -1);
     private final Vector2 pos = new Vector2();
 
-    private static final int GRID_WIDTH = 60;
+    private static final int GRID_WIDTH = 100;
     private static final int GRID_HEIGHT = 32;
 
     private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
@@ -62,8 +59,8 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("Font test");
-        config.setWindowedMode(GRID_WIDTH * 20, GRID_HEIGHT * 20);
+        config.setTitle("Dungeon Map ('r' rebuilds!)");
+        config.setWindowedMode(GRID_WIDTH * 7, GRID_HEIGHT * 13);
         config.disableAudio(true);
         config.setForegroundFPS(120);
         config.useVsync(true);
@@ -72,16 +69,19 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        EnhancedRandom random = new FourWheelRandom(Hasher.decarabia.hash64(DateFormat.getDateInstance().format(new Date())));
+        Gdx.app.setLogLevel(Application.LOG_INFO);
+        long seed = TimeUtils.millis() >>> 21;
+        Gdx.app.log("SEED", "Initial seed is " + seed);
+        EnhancedRandom random = new FourWheelRandom(seed);
         batch = new SpriteBatch();
-        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
+//        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
-//        Font font = KnownFonts.getCozette();
+        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
-        gm = new GlyphMap(font, 60, 32);
+        gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT);
         GlidingGlyph playerGlyph = new GlidingGlyph('@', describe("red orange"), Coord.get(1, 1));
         playerGlyph.getLocation().setCompleteRunner(() -> {
             seen.or(inView.refill(FOV.reuseFOV(res, light, playerGlyph.getLocation().getEnd().x, playerGlyph.getLocation().getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
@@ -93,7 +93,7 @@ public class DungeonMapTest extends ApplicationAdapter {
 
         director = new Director<>(GlidingGlyph::getLocation, glyphs, 150L);
         directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 300L);
-        dungeonProcessor = new DungeonProcessor(60, 32, random);
+        dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 40);
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
@@ -270,13 +270,13 @@ public class DungeonMapTest extends ApplicationAdapter {
      * Supports WASD, vi-keys (hjklyubn), arrow keys, and numpad for movement, plus '.' or numpad 5 to stay still.
      */
     public void handleHeldKeys() {
-        if(input.isKeyPressed(A)  || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
+        if(input.isKeyPressed(A) || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
             move(Direction.LEFT);
-        else if(input.isKeyPressed(S)  || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
+        else if(input.isKeyPressed(S) || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
             move(Direction.DOWN);
-        else if(input.isKeyPressed(W)  || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
+        else if(input.isKeyPressed(W) || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
             move(Direction.UP);
-        else if(input.isKeyPressed(D)  || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
+        else if(input.isKeyPressed(D) || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
             move(Direction.RIGHT);
         else if(input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
             move(Direction.UP_LEFT);
