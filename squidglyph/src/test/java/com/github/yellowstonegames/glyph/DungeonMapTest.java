@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.TrigTools;
@@ -23,7 +23,6 @@ import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
-import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 
 import java.text.DateFormat;
@@ -339,7 +338,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         gm.draw(batch, 0, 0);
-        glyphs.first().draw(batch, gm.font);
+        glyphs.first().draw(batch, gm.getFont());
         batch.end();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

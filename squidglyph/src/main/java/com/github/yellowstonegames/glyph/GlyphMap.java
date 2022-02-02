@@ -24,16 +24,29 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.textra.ColorLookup;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.tommyettinger.textra.Font;
 
+/**
+ * Stores a sparse map of (unmoving) glyphs by their positions, as well as a dense grid of background colors, and allows
+ * this group of chars and colors to be drawn easily.
+ * Glyphs are represented by long values, and are handled by a {@link Font} (which this also stores) to get a char,
+ * foreground color, and a variety of possible styles for each glyph. A GlyphMap also stores a {@link Viewport}, which
+ * defaults to a {@link StretchViewport} but can be changed easily; this viewport affects what region of the GlyphMap is
+ * drawn. You typically call one of the {@link #draw(Batch, float, float)} methods in your rendering code every frame,
+ * some time after clearing the screen. There are draw() overloads that only render a subregion of the GlyphMap; one
+ * uses a {@link Frustum} (almost always from {@link com.badlogic.gdx.graphics.Camera#frustum}) to draw only visible
+ * glyphs and backgrounds, while another takes a specific rectangular area of cells. You should call
+ * {@link #resize(int, int)} in your application's or screen's resize code, because it keeps the viewport accurate.
+ */
 public class GlyphMap {
     protected int gridWidth;
     protected int gridHeight;
     public IntLongOrderedMap map;
     public int[][] backgrounds = null;
-    public Font font;
+    protected Font font;
     public Viewport viewport;
     /**
      * This is mostly here to help ColorLookup get RGBA8888 colors from valid descriptions, or null from invalid ones.
@@ -52,27 +65,72 @@ public class GlyphMap {
     }
 
     /**
-     * Does not set {@link #font}, you will have to set it later.
+     * Constructs a bare-bones GlyphMap with size 64x64. Does not set {@link #font}, you will have to set it later.
      */
     public GlyphMap(){
-        map = new IntLongOrderedMap(4096);
-        viewport = new StretchViewport(64, 64);
+        this(null, 64, 64);
     }
+
+    /**
+     * Constructs a 64x64 GlyphMap with the specified Font. You probably want {@link #GlyphMap(Font, int, int)} unless
+     * your maps are always 64x64.
+     * @param font a Font that will be copied and used for the new GlyphMap
+     */
     public GlyphMap(Font font){
         this(font, 64, 64);
     }
-    public GlyphMap(Font font, int gridWidth, int gridHeight){
-        this.font = new Font(font);
-        this.font.setColorLookup(GlyphMap::getRgba);
-        if(this.font.distanceField != Font.DistanceFieldType.STANDARD)
-            this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
+
+    /**
+     * Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+     * Font (which will be copied).
+     * @param font a Font that will be copied and used for the new GlyphMap
+     * @param gridWidth how many cells wide the grid should be
+     * @param gridHeight how many cells tall the grid should be
+     */
+    public GlyphMap(Font font, int gridWidth, int gridHeight) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         map = new IntLongOrderedMap(gridWidth * gridHeight);
         viewport = new StretchViewport(gridWidth, gridHeight);
+        if (font != null) {
+            setFont(new Font(font));
+        }
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    /**
+     * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
+     * to size 1x1 (this makes some calculations much easier inside GlyphMap).
+     * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
+     */
+    public void setFont(Font font) {
+        if(font == null) return;
+        this.font = font;
+        this.font.setColorLookup(GlyphMap::getRgba);
+        if (this.font.distanceField != Font.DistanceFieldType.STANDARD)
+            this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
         viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
         viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
         this.font.scaleTo(1f, 1f);
+    }
+
+    /**
+     * Gets how wide the grid is, measured in discrete cells.
+     * @return how many cells wide the grid is
+     */
+    public int getGridWidth() {
+        return gridWidth;
+    }
+
+    /**
+     * Gets how high the grid is, measured in discrete cells.
+     * @return how many cells high the grid is
+     */
+    public int getGridHeight() {
+        return gridHeight;
     }
 
     /**
@@ -132,18 +190,43 @@ public class GlyphMap {
         return Coord.get(fused & 0x7FFF, fused >>> 16 & 0x7FFF);
     }
 
+    /**
+     * Places a character (optionally with style information) at the specified cell, using white foreground color.
+     * @param x x position of the cell, measured in cells on the grid
+     * @param y y position of the cell, measured in cells on the grid
+     * @param codepoint the character, with or without style information, to place
+     */
     public void put(int x, int y, int codepoint) {
         map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
     }
 
+    /**
+     * Places a character (optionally with style information) at the specified cell, using the given foreground color.
+     * @param x x position of the cell, measured in cells on the grid
+     * @param y y position of the cell, measured in cells on the grid
+     * @param codepoint the character, with or without style information, to place
+     * @param color the RGBA8888 color to use for the character
+     */
     public void put(int x, int y, int codepoint, int color) {
         map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
     }
 
+    /**
+     * Places a glyph (optionally with style information and/or color) at the specified cell.
+     * @param x x position of the cell, measured in cells on the grid
+     * @param y y position of the cell, measured in cells on the grid
+     * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
+     */
     public void put(int x, int y, long glyph) {
         map.put(fuse(x, y), glyph);
     }
 
+    /**
+     * Places a glyph (optionally with style information and/or color) at the specified cell (given as a fused value).
+     * This put() method has the least overhead if you already have a fused int key and long glyph.
+     * @param fused a fused x,y position, as produced by {@link #fuse(int, int)}
+     * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
+     */
     public void put(int fused, long glyph){
         map.put(fused, glyph);
     }
@@ -223,6 +306,13 @@ public class GlyphMap {
         }
     }
 
+    /**
+     * This should generally be called in the {@link com.badlogic.gdx.ApplicationListener#resize(int, int)} or
+     * {@link com.badlogic.gdx.Screen#resize(int, int)} method when the screen size changes. This affects the viewport
+     * only.
+     * @param screenWidth the new screen width in pixels
+     * @param screenHeight the new screen height in pixels
+     */
     public void resize(int screenWidth, int screenHeight) {
         viewport.update(screenWidth, screenHeight, false);
     }
