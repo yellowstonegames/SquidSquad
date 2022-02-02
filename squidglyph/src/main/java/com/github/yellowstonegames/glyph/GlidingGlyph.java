@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * smoothly change as a {@link CoordGlider}. May optionally have an unchanging or a changing rotation as an
  * {@link AngleGlider}, and can adjust its position between-grid-cells using a {@link VectorSequenceGlider}.
  * This allows constructing a GlidingGlyph with an existing {@code long} as Font uses them, as a char and a String of
- * Font markup (see {@link Font#markupGlyph(char, String, ColorLookup)}, or as a char and several optional parameters.
+ * Font markup (see {@link Font#markupGlyph(char, String, ColorLookup)}), or as a char and several optional parameters.
  */
 public class GlidingGlyph {
     @Nonnull
@@ -40,9 +40,18 @@ public class GlidingGlyph {
     @Nonnull
     public VectorSequenceGlider smallMotion;
 
+    /**
+     * A glyph as produced by {@link Font#markupGlyph(char, String, ColorLookup)}, storing a char, color, and styles.
+     */
     public long glyph;
 
-    protected final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
+    /**
+     * A VectorSequenceGlider that is empty (has no motions) and belongs to this GlidingGlyph.
+     * This is public so external code can use it, but should never be modified.
+     * It is here so {@link #smallMotion} can be easily set to an empty sequence.
+     */
+    @Nonnull
+    public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private GlidingGlyph() {
         this(' ');
