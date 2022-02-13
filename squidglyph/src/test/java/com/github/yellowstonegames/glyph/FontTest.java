@@ -12,6 +12,9 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.LineTools;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
+
+import static com.github.tommyettinger.textra.Font.DistanceFieldType.MSDF;
+
 public class FontTest extends ApplicationAdapter {
 
     Font font;
@@ -39,13 +42,14 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
+        font = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, -2, 6, 16, -7).scaleTo(20, 20);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
 //        font = KnownFonts.getAStarry();
 //        font = KnownFonts.getGentium().scaleTo(48, 48);
 //        font = KnownFonts.getLibertinusSerif();
-        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 60);
+//        font = KnownFonts.getKingthingsFoundation().scaleTo(45, 60);
 //        font = KnownFonts.getOxanium().scaleTo(40, 50);
 //        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);

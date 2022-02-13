@@ -51,19 +51,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLightRNG(@Nonnull Json json) {
-        json.addClassTag("#LigR", LightRNG.class);
+        json.addClassTag("LigR", LightRNG.class);
         json.setSerializer(LightRNG.class, new Json.Serializer<LightRNG>() {
             @Override
             public void write(Json json, LightRNG object, Class knownType) {
-                json.writeValue("#LigR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
+                json.writeValue("LigR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public LightRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new LightRNG(state);
             }
         });
@@ -75,19 +75,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerDiverRNG(@Nonnull Json json) {
-        json.addClassTag("#DivR", DiverRNG.class);
+        json.addClassTag("DivR", DiverRNG.class);
         json.setSerializer(DiverRNG.class, new Json.Serializer<DiverRNG>() {
             @Override
             public void write(Json json, DiverRNG object, Class knownType) {
-                json.writeValue("#DivR`" + Long.toString(object.getState(), 36) + "`");
+                json.writeValue("DivR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public DiverRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new DiverRNG(state);
             }
         });
@@ -99,19 +99,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerGWTRNG(@Nonnull Json json) {
-        json.addClassTag("#GWTR", GWTRNG.class);
+        json.addClassTag("GWTR", GWTRNG.class);
         json.setSerializer(GWTRNG.class, new Json.Serializer<GWTRNG>() {
             @Override
             public void write(Json json, GWTRNG object, Class knownType) {
-                json.writeValue("#GWTR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
+                json.writeValue("GWTR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public GWTRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new GWTRNG(state);
             }
         });
@@ -123,19 +123,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLinnormRNG(@Nonnull Json json) {
-        json.addClassTag("#LinR", LinnormRNG.class);
+        json.addClassTag("LinR", LinnormRNG.class);
         json.setSerializer(LinnormRNG.class, new Json.Serializer<LinnormRNG>() {
             @Override
             public void write(Json json, LinnormRNG object, Class knownType) {
-                json.writeValue("#LinR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
+                json.writeValue("LinR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public LinnormRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new LinnormRNG(state);
             }
         });
@@ -147,19 +147,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerSilkRNG(@Nonnull Json json) {
-        json.addClassTag("#SilR", SilkRNG.class);
+        json.addClassTag("SilR", SilkRNG.class);
         json.setSerializer(SilkRNG.class, new Json.Serializer<SilkRNG>() {
             @Override
             public void write(Json json, SilkRNG object, Class knownType) {
-                json.writeValue("#SilR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
+                json.writeValue("SilR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public SilkRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new SilkRNG(state);
             }
         });
@@ -171,19 +171,19 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerThrustAltRNG(@Nonnull Json json) {
-        json.addClassTag("#ThAR", ThrustAltRNG.class);
+        json.addClassTag("ThAR", ThrustAltRNG.class);
         json.setSerializer(ThrustAltRNG.class, new Json.Serializer<ThrustAltRNG>() {
             @Override
             public void write(Json json, ThrustAltRNG object, Class knownType) {
-                json.writeValue("#ThAR`" + JsonSupport.getNumeralBase().signed(object.getState()) + "`");
+                json.writeValue("ThAR`" + JsonSupport.getNumeralBase().unsigned(object.getState()) + "`");
             }
 
             @Override
             public ThrustAltRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 8) return null;
-                final int tick = s.indexOf('`', 6);
-                final long state = JsonSupport.getNumeralBase().readLong(s, 6, tick);
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long state = JsonSupport.getNumeralBase().readLong(s, 5, tick);
                 return new ThrustAltRNG(state);
             }
         });
@@ -195,24 +195,24 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLongPeriodRNG(@Nonnull Json json) {
-        json.addClassTag("#LPeR", LongPeriodRNG.class);
+        json.addClassTag("LPeR", LongPeriodRNG.class);
         json.setSerializer(LongPeriodRNG.class, new Json.Serializer<LongPeriodRNG>() {
             @Override
             public void write(Json json, LongPeriodRNG object, Class knownType) {
-                StringBuilder sb = new StringBuilder(31);
-                JsonSupport.getNumeralBase().appendSigned(sb, object.choice);
+                StringBuilder sb = new StringBuilder(280);
+                JsonSupport.getNumeralBase().appendUnsigned(sb, object.choice);
                 for (int i = 0; i < 16; i++) {
                     sb.append('~');
-                    JsonSupport.getNumeralBase().appendSigned(sb, object.state[i]);
+                    JsonSupport.getNumeralBase().appendUnsigned(sb, object.state[i]);
                 }
-                json.writeValue("#LPeR`" + sb + "`");
+                json.writeValue("LPeR`" + sb + "`");
             }
 
             @Override
             public LongPeriodRNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 40) return null;
-                int delim = 6;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 39) return null;
+                int delim = 5;
                 LongPeriodRNG rng = new LongPeriodRNG(1L);
                 rng.choice = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
                 for (int i = 0; i < 16; i++) {
@@ -229,26 +229,26 @@ public final class JsonOld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerXoshiroStarPhi32RNG(@Nonnull Json json) {
-        json.addClassTag("#XSPR", XoshiroStarPhi32RNG.class);
+        json.addClassTag("XSPR", XoshiroStarPhi32RNG.class);
         json.setSerializer(XoshiroStarPhi32RNG.class, new Json.Serializer<XoshiroStarPhi32RNG>() {
             @Override
             public void write(Json json, XoshiroStarPhi32RNG object, Class knownType) {
-                StringBuilder sb = new StringBuilder(31);
-                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateA());
+                StringBuilder sb = new StringBuilder(67);
+                JsonSupport.getNumeralBase().appendUnsigned(sb, object.getStateA());
                 sb.append('~');
-                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateB());
+                JsonSupport.getNumeralBase().appendUnsigned(sb, object.getStateB());
                 sb.append('~');
-                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateC());
+                JsonSupport.getNumeralBase().appendUnsigned(sb, object.getStateC());
                 sb.append('~');
-                JsonSupport.getNumeralBase().appendSigned(sb, object.getStateD());
-                json.writeValue("#XSPR`" + sb + "`");
+                JsonSupport.getNumeralBase().appendUnsigned(sb, object.getStateD());
+                json.writeValue("XSPR`" + sb + "`");
             }
 
             @Override
             public XoshiroStarPhi32RNG read(Json json, JsonValue jsonData, Class type) {
                 String s;
-                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 14) return null;
-                int delim = 6;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 13) return null;
+                int delim = 5;
                 int stateA = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
                 int stateB = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
                 int stateC = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
