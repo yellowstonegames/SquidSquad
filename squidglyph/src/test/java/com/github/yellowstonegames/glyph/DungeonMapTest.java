@@ -53,9 +53,9 @@ public class DungeonMapTest extends ApplicationAdapter {
     private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
     private static final int SHALLOW_OKLAB = describeOklab("dull denim");
     private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
-    private static final long deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
-    private static final long shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
-    private static final long stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
+    private static final int deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
+    private static final int shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
+    private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -222,42 +222,42 @@ public class DungeonMapTest extends ApplicationAdapter {
                 if (inView.contains(x, y)) {
                     if(toCursor.contains(Coord.get(x, y))){
                         gm.backgrounds[x][y] = rainbow;
-                        gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
+                        gm.put(x, y, prunedDungeon[x][y], stoneText);
                     }
                     else {
                         switch (prunedDungeon[x][y]) {
                             case '~':
                                 gm.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                                gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
+                                gm.put(x, y, prunedDungeon[x][y], deepText);
                                 break;
                             case ',':
                                 gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                                gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
+                                gm.put(x, y, prunedDungeon[x][y], shallowText);
                                 break;
                             case ' ':
                                 gm.backgrounds[x][y] = 0;
                                 break;
                             default:
                                 gm.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
-                                gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
+                                gm.put(x, y, prunedDungeon[x][y], stoneText);
                         }
                     }
                 } else if (seen.contains(x, y)) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
                             gm.backgrounds[x][y] = toRGBA8888(edit(DEEP_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, deepText << 32 | prunedDungeon[x][y]);
+                            gm.put(x, y, prunedDungeon[x][y], deepText);
                             break;
                         case ',':
                             gm.backgrounds[x][y] = toRGBA8888(edit(SHALLOW_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, shallowText << 32 | prunedDungeon[x][y]);
+                            gm.put(x, y, prunedDungeon[x][y], shallowText);
                             break;
                         case ' ':
                             gm.backgrounds[x][y] = 0;
                             break;
                         default:
                             gm.backgrounds[x][y] = toRGBA8888(edit(STONE_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gm.put(x, y, stoneText << 32 | prunedDungeon[x][y]);
+                            gm.put(x, y, prunedDungeon[x][y], stoneText);
                     }
                 } else {
                     gm.backgrounds[x][y] = 0;

@@ -197,7 +197,7 @@ public class GlyphMap {
      * @param codepoint the character, with or without style information, to place
      */
     public void put(int x, int y, int codepoint) {
-        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
+        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00030000L);
     }
 
     /**
@@ -209,6 +209,17 @@ public class GlyphMap {
      */
     public void put(int x, int y, int codepoint, int color) {
         map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
+    }
+
+    /**
+     * Places a character (optionally with style information) at the specified cell, using the given foreground color.
+     * @param x x position of the cell, measured in cells on the grid
+     * @param y y position of the cell, measured in cells on the grid
+     * @param simpleChar the character, without style information, to place
+     * @param color the RGBA8888 color to use for the character
+     */
+    public void put(int x, int y, char simpleChar, int color) {
+        map.put(fuse(x, y), (simpleChar | 0x300000L) | (long) color << 32);
     }
 
     /**

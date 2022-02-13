@@ -111,14 +111,14 @@ public class FontTest extends ApplicationAdapter {
     public void render() {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = font.cellHeight * (layout.lines() - 0.5f);
+        float x = 0, y = layout.getHeight();
         batch.begin();
         font.enableShader(batch);
 
         font.drawBlocks(batch, backgrounds, 0f, 0f);
         for (int xx = 0; xx < 4; xx++) {
             for (int yy = 0; yy < 4; yy++) {
-                font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
+                font.drawGlyph(batch, 0xFFFFFFFE00800000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
             }
         }
 //        long color = (long) DescriptiveColor.lerpColors(
