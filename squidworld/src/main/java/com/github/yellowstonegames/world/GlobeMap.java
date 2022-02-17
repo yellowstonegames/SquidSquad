@@ -34,7 +34,7 @@ import java.util.Arrays;
  */
 public class GlobeMap extends WorldMapGenerator {
 
-    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
+    protected static final float terrainFreq = 3.25f, terrainLayeredFreq = 1.2f, heatFreq = 3.7f, moistureFreq = 3.825f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
@@ -158,19 +158,19 @@ public class GlobeMap extends WorldMapGenerator {
         terrain.setFractalType(Noise.RIDGED_MULTI);
 
         terrainLayered = new Noise(noiseGenerator);
-        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
+        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq);
         terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
-        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
+        terrainLayered.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 8));
 
         heat = new Noise(noiseGenerator);
         heat.setFrequency(heat.getFrequency() * heatFreq);
         heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+        heat.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 3));
 
         moisture = new Noise(noiseGenerator);
         moisture.setFrequency(moisture.getFrequency() * moistureFreq);
         moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
+        moisture.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 4));
 
         otherRidged = new Noise(noiseGenerator);
         otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
@@ -220,19 +220,19 @@ public class GlobeMap extends WorldMapGenerator {
         terrain.setFractalType(Noise.RIDGED_MULTI);
 
         terrainLayered = terrainLayeredNoise;
-        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
+        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq);
         terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
-        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
+        terrainLayered.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 8));
 
         heat = heatNoise;
         heat.setFrequency(heat.getFrequency() * heatFreq);
         heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+        heat.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 3));
 
         moisture = moistureNoise;
         moisture.setFrequency(moisture.getFrequency() * moistureFreq);
         moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
+        moisture.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 4));
 
         otherRidged = otherRidgedNoise;
         otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);

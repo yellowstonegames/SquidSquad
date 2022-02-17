@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
+import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Hasher;
@@ -21,9 +22,10 @@ import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
+
+import static com.github.tommyettinger.ds.support.BitConversion.longBitsToDouble;
 
 /**
  * Writes one or more spinning globes to the out/ folder.
@@ -31,6 +33,7 @@ import java.util.Date;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 300, height = 300;
 
+    private static int FRAMES = 180;
     private static final int LIMIT = 5;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
@@ -61,8 +64,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+//        path = "out/worldsAnimated/" + date + "/Foam/";
+//        path = "out/worldsAnimated/" + date + "/Classic/";
+        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
@@ -71,8 +76,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
-        pm = new Pixmap[180];
-        for (int i = 0; i < pm.length; i++) {
+        pm = new Pixmap[FRAMES];
+        for (int i = 0; i < FRAMES; i++) {
             pm[i] = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
             pm[i].setBlending(Pixmap.Blending.None);
         }
@@ -90,12 +95,14 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
+
+        fn.setInterpolation(Noise.QUINTIC);
 
         Noise terrainNoise = new Noise(fn) {
             @Override
@@ -160,7 +167,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 1f);
+//        world = new GlobeMap(seed, width, height, terrainNoise, 1f);
+        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.5f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -179,6 +187,21 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
         Gdx.app.exit();
     }
+    /**
+     * A different kind of determine-like method that expects to be given a random long and produces a random double
+     * with a curved distribution that centers on 0 (where it has a bias) and can (rarely) approach -1f and 1f.
+     * The distribution for the values is similar to Irwin-Hall, and is frequently near 0 but not too-rarely near -1.0
+     * or 1.0. It cannot produce 1.0, -1.0, or any values further from 0 than those bounds.
+     * @param start a long, usually random, such as one produced by any RandomnessSource; all bits will be used
+     * @return a deterministic double between -1.0 (exclusive) and 1.0 (exclusive); very likely to be close to 0.0
+     */
+    public static double formCurvedDouble(long start) {
+        return    longBitsToDouble((start >>> 12) | 0x3fe0000000000000L)
+                + longBitsToDouble(((start *= 0x2545F4914F6CDD1DL) >>> 12) | 0x3fe0000000000000L)
+                - longBitsToDouble(((start *= 0x2545F4914F6CDD1DL) >>> 12) | 0x3fe0000000000000L)
+                - longBitsToDouble(((start *  0x2545F4914F6CDD1DL) >>> 12) | 0x3fe0000000000000L)
+                ;
+    }
 
     public void generate(final long seed)
     {
@@ -195,7 +218,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world.rng.setSeed(seed);
         world.seedA = world.rng.getStateA();
         world.seedB = world.rng.getStateB();
-        wmv.generate(0.9f, wmv.world.heatModifier);
+//        wmv.generate(0.9f, wmv.world.heatModifier);
+        wmv.generate(
+                (float) (1.0 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
+                (float) (1.0625 + Hasher.determineDouble(world.seedB * 0x123456789ABL ^ world.seedA) * 0.375));
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -212,15 +238,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if (ALIEN_COLORS) {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
-        wmv.world.heatModifier = world.rng.nextFloat(1.15f, 1.5f);
-        try {
-            for (int i = 0; i < pm.length; i++) {
-                float angle = i * MathUtils.PI2 / (float) pm.length;
+//        wmv.world.heatModifier = world.rng.nextFloat(1.15f, 1.5f);
+//        try {
+            for (int i = 0; i < FRAMES; i++) {
+                float angle = i * MathUtils.PI2 / (float) FRAMES;
                 mutationA = MathUtils.cos(angle) * 0.3125f;
                 mutationB = MathUtils.sin(angle) * 0.3125f;
                 world.setCenterLongitude(angle);
                 generate(hash);
-                wmv.getBiomeMapper().makeBiomes(world);
+//                wmv.getBiomeMapper().makeBiomes(world);
                 int[][] cm = wmv.show();
                 pm[i].setColor(INK);
                 pm[i].fill();
@@ -230,18 +256,21 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                         pm[i].drawPixel(x, y, cm[x][y]);
                     }
                 }
-                pngWriter.write(Gdx.files.local(path + name + "_frames/frame_" + i + ".png"), pm[i]);
-                if (i % 18 == 17)
-                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
+//                pngWriter.write(Gdx.files.local(path + name + "_frames/frame_" + i + ".png"), pm[i]);
+                if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
+
+//                if (i % 18 == 17)
+//                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
 //            writer.palette = new PaletteReducer(pms);
             writer.setDitherStrength(0.75f);
+            writer.palette = new PaletteReducer(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
@@ -259,7 +288,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: Animated World Map Writer");
+        config.setTitle("SquidSquad Demo: Flowing World Map Writer");
         config.setWindowedMode(width * cellWidth, height * cellHeight);
         config.setResizable(false);
         config.useVsync(true);

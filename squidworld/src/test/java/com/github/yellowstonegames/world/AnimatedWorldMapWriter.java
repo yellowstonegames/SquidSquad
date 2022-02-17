@@ -138,6 +138,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
+        fn.setInterpolation(Noise.QUINTIC);
+
         if(SEEDY) {
             fn.setPointHash(new IPointHash.IntImpl() {
                 @Override
