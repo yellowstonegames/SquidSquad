@@ -118,7 +118,7 @@ public class FontTest extends ApplicationAdapter {
         font.drawBlocks(batch, backgrounds, 0f, 0f);
         for (int xx = 0; xx < 4; xx++) {
             for (int yy = 0; yy < 4; yy++) {
-                font.drawGlyph(batch, 0xFFFFFFFE00800000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
+                font.drawGlyph(batch, 0xFFFFFFFE00500000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
             }
         }
 //        long color = (long) DescriptiveColor.lerpColors(
