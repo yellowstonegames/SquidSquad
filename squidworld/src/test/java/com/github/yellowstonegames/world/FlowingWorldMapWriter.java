@@ -67,7 +67,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/Foam/";
 //        path = "out/worldsAnimated/" + date + "/Classic/";
-        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
@@ -104,17 +104,16 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         fn.setInterpolation(Noise.QUINTIC);
 
-        Noise terrainNoise = new Noise(fn) {
+        Noise terrainRidgedNoise = new Noise(fn) {
             @Override
             public float getNoise(float x, float y, float z) {
-                return getNoise(x, y, z, mutationA, mutationB);
+                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
             }
-
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
             }
-        }, terrainLayeredNoise = new Noise(fn) {
+        }, terrainBasicNoise = new Noise(fn) {
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -147,12 +146,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }, otherRidgedNoise = new Noise(fn) {
             @Override
             public float getNoise(float x, float y, float z) {
-                return getNoise(x, y, z, mutationA, mutationB);
+                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
             }
-
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
             }
         };
 //        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
@@ -167,8 +165,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-//        world = new GlobeMap(seed, width, height, terrainNoise, 1f);
-        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.5f);
+//        world = new GlobeMap(seed, width, height, terrainBasicNoise, 1f);
+        world = new GlobeMap(seed, width, height, terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.5f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
