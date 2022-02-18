@@ -1,11 +1,12 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
+import com.github.yellowstonegames.old.v300.CrossHash;
 import regexodus.Category;
 
 import java.io.Serializable;
 
 import static regexodus.Category.caseFold;
-import static com.github.yellowstonegames.old.v300.squidmath.CrossHash.Water.*;
+import static com.github.yellowstonegames.old.v300.CrossHash.Water.*;
 
 /**
  * Additional implementations of the {@link CrossHash.IHasher} interface for more specialized uses, like for use in a

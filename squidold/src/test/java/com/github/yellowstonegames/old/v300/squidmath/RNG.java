@@ -2,6 +2,7 @@ package com.github.yellowstonegames.old.v300.squidmath;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.yellowstonegames.core.MathTools;
+import com.github.yellowstonegames.old.v300.CrossHash;
 
 import java.io.Serializable;
 import java.util.*;

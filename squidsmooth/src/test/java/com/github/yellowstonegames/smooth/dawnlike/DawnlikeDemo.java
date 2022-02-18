@@ -143,12 +143,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // Starting time for the game; other times are measured relative to this so they aren't huge numbers.
         startTime = TimeUtils.millis();
         // Gotta have a random number generator.
-        // We can seed a GWTRNG, which is optimized for the HTML target, with any int or long
-        // we want. You can also hash a String with CrossHash.hash64("Some seed") to get a
-        // random-seeming long to use for a seed. CrossHash is preferred over String.hashCode()
-        // because it can produce 64-bit seeds and String.hashCode() will only produce 32-bit
-        // seeds; having more possible seeds means more maps and other procedural content
-        // become possible. Here we don't seed the GWTRNG, so its seed will be random.
+        // We can seed a LaserRandom or other EnhancedRandom generator, so it produces
+        // the same results reliably across runs. You can also omit the seed to use
+        // a different seed each time.
         rng = new LaserRandom(123456);
         //Some classes in SquidLib need access to a batch to render certain things, so it's a good idea to have one.
         batch = new SpriteBatch();

@@ -33,7 +33,7 @@ import static com.github.tommyettinger.ds.support.BitConversion.longBitsToDouble
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 300, height = 300;
 
-    private static int FRAMES = 180;
+    private static final int FRAMES = 240;
     private static final int LIMIT = 5;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
