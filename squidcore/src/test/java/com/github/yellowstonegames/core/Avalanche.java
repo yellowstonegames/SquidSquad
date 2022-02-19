@@ -248,8 +248,8 @@ public class Avalanche {
         long stateB = 0L;
         long stateC = 0L;
         long stateD = 0L;
-//        final long constant = 0xC6BC279692B5C323L * shiftC | 1L;
-        final long constant = 0xC6BC279692B5C323L;
+        final long constant = 0xC6BC279692B5C323L * shiftC | 1L;
+//        final long constant = 0xC6BC279692B5C323L;
         for (int i = 0; i < iterations; i++) {
 //            final long a0 = stateA;
 //            final long b0 = stateB;
@@ -366,16 +366,25 @@ public class Avalanche {
 //            stateC = fb + fa + fd;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fc + fb ^ fa;
+//            stateD = fd + constant;
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
             stateA = Long.rotateLeft(fb + fc, shiftA);
             stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fc + fb ^ fa;
+            stateC = fa + fb;
             stateD = fd + constant;
         }
-        return stateC;
+        return stateA;
     }
 
     public static void main(String[] args) {
