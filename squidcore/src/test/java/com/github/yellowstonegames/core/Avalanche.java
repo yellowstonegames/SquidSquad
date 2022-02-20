@@ -374,14 +374,23 @@ public class Avalanche {
 //            stateB = Long.rotateLeft(fc ^ fd, shiftB);
 //            stateC = fc + fb ^ fa;
 //            stateD = fd + constant;
+//
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constant;
 
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
             stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fa + fb;
+            stateB = Long.rotateLeft(fc + fd, shiftB);
+            stateC = fb ^ fa;
             stateD = fd + constant;
         }
         return stateA;

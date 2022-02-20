@@ -13,10 +13,13 @@ public class MassAvalancheEvaluator {
 
 //    private static final int shiftA = 35, shiftB = 46;
 //    private static final int shiftA = 34, shiftB = 26;
-    private static final int shiftA = 39, shiftB = 30;
+//    private static final int shiftA = 35, shiftB = 10, shiftC = 23;
+    private static final int shiftA = 46, shiftB = 19, shiftC = 16;
 
+//
 //    private static long constant = 0x06A0F81D3D2E35EFL;
-    private static long constant = 0xC6BC279692B5C323L * 22L | 1L;
+//    private static long constant = 0xC6BC279692B5C323L * 22L | 1L;
+    private static long constant = 0xC6BC279692B5C323L * shiftC | 1L;
 
     public static long mix(final long v, final int iterations) {
         long stateA = v;
@@ -73,13 +76,48 @@ public class MassAvalancheEvaluator {
 0xBC1DB84C03B717C3L : 3762.530029
 0xA3CE3B73C9BC2527L : 3763.171387
 */
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constant;
+//        }
+//        return stateA;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fc + fb ^ fa;
+//            stateD = fd + constant;
+//        }
+//        return stateC;
+/*
+// 46 19
+0xE3955173459932CDL : 2444.460693
+0xB64F7AACD92A95ABL : 2444.786133
+0xE6D6B8990D712A5BL : 2445.183350
+0xCA6372CE89CA5B13L : 2445.824463
+0xA697335663D548B5L : 2449.871094
+0x9C275EB96C88D2A3L : 2453.057861
+0xEE6DAE32C9C7314DL : 2458.408203
+0x9A8BDD51D696DE37L : 2459.970459
+0xB7AD9446AE16AAD9L : 2460.747070
+0xBB3A8B2DC9A9C6D7L : 2461.905273
+
+ */
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
             stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fa + fb;
+            stateB = Long.rotateLeft(fc + fd, shiftB);
+            stateC = fb ^ fa;
             stateD = fd + constant;
         }
         return stateA;
@@ -378,6 +416,7 @@ public class MassAvalancheEvaluator {
         DistinctRandom rng = new DistinctRandom(123456789L);
         LongFloatOrderedMap rankings1 = new LongFloatOrderedMap(goldenLong.length);
         LongFloatOrderedMap rankings2 = new LongFloatOrderedMap(goldenLong.length);
+        int idx = 0;
         for (long gold : goldenLong) {
             rng.setSeed(123456789L);
             constant = gold;
@@ -408,7 +447,7 @@ public class MassAvalancheEvaluator {
                     System.out.println("With " + iterations + " iterations: " + result);
                     total += result;
                 }
-                System.out.println("Order 1: " + shiftA + "," + shiftB + ",0x" + Base.BASE16.unsigned(constant) + "L with value " + total);
+                System.out.println((++idx) + "/" + goldenLong.length + ": Order 1: " + shiftA + "," + shiftB + ",0x" + Base.BASE16.unsigned(constant) + "L with value " + total);
                 rankings1.put(constant, (float) total);
             }
             // Order 2
@@ -442,7 +481,7 @@ public class MassAvalancheEvaluator {
                     System.out.println("With " + iterations + " iterations: " + result);
                     total += result;
                 }
-                System.out.println("Order 2: " + shiftA + "," + shiftB + ",0x" + Base.BASE16.unsigned(constant) + "L with value " + total);
+                System.out.println((idx++) + "/" + goldenLong.length + ": Order 2: " + shiftA + "," + shiftB + ",0x" + Base.BASE16.unsigned(constant) + "L with value " + total);
             }
         }
         rankings1.sortByValue(FloatComparators.NATURAL_COMPARATOR);

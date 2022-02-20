@@ -255,10 +255,18 @@ public class AvalancheEvaluator {
     // uses fc + fb ^ fa
 //    private static final int shiftA = 18, shiftB = 38, shiftC = 21; //169.10442113876343, 887.2168755531311
 //    private static final int shiftA = 25, shiftB = 19, shiftC = 21; //162.84991025924683, 814.8368101119995
-    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
+//    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
 
-    private static final long constant = 0xC6BC279692B5C323L;
-//    private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
+    // uses fb + fc, fc + fd, fa ^ fb, return fa
+//    private static final int shiftA = 46, shiftB = 19, shiftC = 16; //2491.0482816696167, 31176.99477672577
+    // with constant 0xE3955173459932CDL and above shifts: 2444.460814476013, 30105.145670890808
+    private static final int shiftA = 56, shiftB = 32, shiftC = 16; //2528.6353096961975, 31876.023625850677
+
+//
+//    private static final long constant = 0xC6BC279692B5C323L;
+    private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
+//    private static final long constant = 0xE3B1B6599529F247L;
+//    private static final long constant = 0xE3955173459932CDL;
 //    private static final long constant = Hasher.determine(shiftC) | 1L;
 
     public static long mix(final long v, final int iterations) {
@@ -374,11 +382,11 @@ public class AvalancheEvaluator {
             final long fc = stateC;
             final long fd = stateD;
             stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fc + fb ^ fa;
+            stateB = Long.rotateLeft(fc + fd, shiftB);
+            stateC = fb ^ fa;
             stateD = fd + constant;
         }
-        return stateC;
+        return stateA;
     }
 
     public static void main(String[] args) {
