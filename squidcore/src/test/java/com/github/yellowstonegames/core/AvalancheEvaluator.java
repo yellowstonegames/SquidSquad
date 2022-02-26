@@ -252,15 +252,21 @@ public class AvalancheEvaluator {
 //    // uses fb + fa + fd
 //    private static final int shiftA = 56, shiftB = 31, shiftC = 3; //3572.523464202881, 56615.87005329132
 
-    // uses fc + fb ^ fa
+    // uses fb + fc, fc ^ fd, fa ^ fb + fc, return fc
 //    private static final int shiftA = 18, shiftB = 38, shiftC = 21; //169.10442113876343, 887.2168755531311
 //    private static final int shiftA = 25, shiftB = 19, shiftC = 21; //162.84991025924683, 814.8368101119995
 //    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
 
+    // uses fb + fc, fc + fd, fa ^ fb + fc, return fc
+//    private static final int shiftA = 18, shiftB = 38, shiftC = 21; //169.10442113876343, 887.2168755531311
+//    private static final int shiftA = 25, shiftB = 19, shiftC = 21; //162.84991025924683, 814.8368101119995
+    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
+    // with constant 0x97C7894D00D8F3A3L and above shifts: 125.68258333206177, 643.3451714515686
+
     // uses fb + fc, fc + fd, fa ^ fb, return fa
 //    private static final int shiftA = 46, shiftB = 19, shiftC = 16; //2491.0482816696167, 31176.99477672577
     // with constant 0xE3955173459932CDL and above shifts: 2444.460814476013, 30105.145670890808
-    private static final int shiftA = 56, shiftB = 32, shiftC = 16; //2528.6353096961975, 31876.023625850677
+//    private static final int shiftA = 56, shiftB = 32, shiftC = 16; //2528.6353096961975, 31876.023625850677
 
 //
 //    private static final long constant = 0xC6BC279692B5C323L;
@@ -363,9 +369,9 @@ public class AvalancheEvaluator {
 //            final long fb = stateB;
 //            final long fc = stateC;
 //            final long fd = stateD;
-//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
 //            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-//            stateC = fb ^ fa ^ fa >>> shiftC;
+//            stateC = fb + fa;
 //            stateD = fd + constant;
 
 //            final long fa = stateA;
@@ -373,20 +379,63 @@ public class AvalancheEvaluator {
 //            final long fc = stateC;
 //            final long fd = stateD;
 //            stateA = Long.rotateLeft(fb + fc, shiftA);
-//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-//            stateC = fb + fa ^ fd;
+//            stateB = Long.rotateLeft(fc + fd, shiftB);
+//            stateC = fa ^ fb + fc;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc + fd, shiftB);
+//            stateC = fb ^ fa;
+//            stateD = fd + constant;
+
+            //4560.8842606544495, 75829.18932628632
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc + fd, shiftB);
-            stateC = fb ^ fa;
-            stateD = fd + constant;
+            stateA = Long.rotateLeft(fb + fc, 35);
+            stateB = Long.rotateLeft(fc ^ fd, 46);
+            stateC = fa + fb;
+            stateD = fd + 0x06A0F81D3D2E35EFL;
+//            return fc;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, 46);
+//            stateB = Long.rotateLeft(fc + fd, 19);
+//            stateC = fb ^ fa;
+//            stateD = fd + 0xE3955173459932CDL;
+//            return fa;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, 17);
+//            stateB = Long.rotateLeft(fc + fd, 58);
+//            stateC = fa ^ fb + fc;
+//            stateD = fd + 0x97C7894D00D8F3A3L;
+//            return fc;
+
+//            //3140.449239730835, 48716.98849582672
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, 57);
+//            stateB = Long.rotateLeft(fc ^ fd, 11);
+//            stateC = fa + fb;
+//            stateD = fd + 0xADB5B12149E93C39L;
+////            return fc;
+
         }
-        return stateA;
+        return stateC;
     }
 
     public static void main(String[] args) {

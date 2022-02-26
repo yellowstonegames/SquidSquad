@@ -14,7 +14,9 @@ public class MassAvalancheEvaluator {
 //    private static final int shiftA = 35, shiftB = 46;
 //    private static final int shiftA = 34, shiftB = 26;
 //    private static final int shiftA = 35, shiftB = 10, shiftC = 23;
-    private static final int shiftA = 46, shiftB = 19, shiftC = 16;
+//    private static final int shiftA = 46, shiftB = 19, shiftC = 16;
+//    private static final int shiftA = 17, shiftB = 58, shiftC = 58;
+    private static final int shiftA = 57, shiftB = 11, shiftC = 26;
 
 //
 //    private static long constant = 0x06A0F81D3D2E35EFL;
@@ -111,16 +113,41 @@ public class MassAvalancheEvaluator {
 0xBB3A8B2DC9A9C6D7L : 2461.905273
 
  */
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, shiftA);
+//            stateB = Long.rotateLeft(fc + fd, shiftB);
+////            stateC = fb ^ fa;
+//            stateC = fa ^ fb + fc;
+//            stateD = fd + constant;
+
+            /*
+0xADB5B12149E93C39L : 3140.449219
+0xC862B36DAF790DD5L : 3147.621826
+0x8A3BAA22EB5B1E49L : 3155.210693
+0xB13599CC82969B59L : 3156.564453
+0xAE6185B4A5EA78B3L : 3158.448730
+0xAF65B7356A17BA2BL : 3160.266357
+0xE39F0C66B318DD27L : 3161.458740
+0xE60E2B722B53AEEBL : 3161.915771
+0xA7189211CF3A2D29L : 3162.182129
+0x9ED6877A0DCB1ABDL : 3165.674561
+
+             */
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            stateA = Long.rotateLeft(fb + fc, shiftA);
-            stateB = Long.rotateLeft(fc + fd, shiftB);
-            stateC = fb ^ fa;
+            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+            stateC = fb + fa;
             stateD = fd + constant;
+
         }
-        return stateA;
+//        return stateA;
+        return stateC;
     }
     public static final long[] goldenLong = {
             constant,
