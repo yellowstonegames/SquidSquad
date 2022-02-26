@@ -374,6 +374,24 @@ public class AvalancheEvaluator {
 //            stateC = fb + fa;
 //            stateD = fd + constant;
 
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+            stateC = fa * MassAvalancheEvaluator.goldenLong[shiftA];;
+            stateD = fd + constant;
+//
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC ^= fb + fa;
+//            stateD = fd + constant;
+
 //            final long fa = stateA;
 //            final long fb = stateB;
 //            final long fc = stateC;
@@ -392,16 +410,16 @@ public class AvalancheEvaluator {
 //            stateC = fb ^ fa;
 //            stateD = fd + constant;
 
-            //4560.8842606544495, 75829.18932628632
-            final long fa = stateA;
-            final long fb = stateB;
-            final long fc = stateC;
-            final long fd = stateD;
-            stateA = Long.rotateLeft(fb + fc, 35);
-            stateB = Long.rotateLeft(fc ^ fd, 46);
-            stateC = fa + fb;
-            stateD = fd + 0x06A0F81D3D2E35EFL;
-//            return fc;
+//            //4560.8842606544495, 75829.18932628632
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb + fc, 35);
+//            stateB = Long.rotateLeft(fc ^ fd, 46);
+//            stateC = fa + fb;
+//            stateD = fd + 0x06A0F81D3D2E35EFL;
+////            return fc;
 
 //            final long fa = stateA;
 //            final long fb = stateB;

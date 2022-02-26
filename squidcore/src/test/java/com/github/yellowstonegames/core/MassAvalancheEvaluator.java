@@ -3,7 +3,6 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.LongFloatOrderedMap;
 import com.github.tommyettinger.ds.support.Base;
 import com.github.tommyettinger.ds.support.DistinctRandom;
-import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 
 public class MassAvalancheEvaluator {
@@ -16,7 +15,10 @@ public class MassAvalancheEvaluator {
 //    private static final int shiftA = 35, shiftB = 10, shiftC = 23;
 //    private static final int shiftA = 46, shiftB = 19, shiftC = 16;
 //    private static final int shiftA = 17, shiftB = 58, shiftC = 58;
-    private static final int shiftA = 57, shiftB = 11, shiftC = 26;
+//    private static final int shiftA = 57, shiftB = 11, shiftC = 26;
+//    private static final int shiftA = 37, shiftB = 57, shiftC = 21;
+//    private static final int shiftA = 6, shiftB = 6, shiftC = 59;
+    private static final int shiftA = 4, shiftB = 9, shiftC = 26;
 
 //
 //    private static long constant = 0x06A0F81D3D2E35EFL;
@@ -134,17 +136,95 @@ public class MassAvalancheEvaluator {
 0xE60E2B722B53AEEBL : 3161.915771
 0xA7189211CF3A2D29L : 3162.182129
 0x9ED6877A0DCB1ABDL : 3165.674561
-
              */
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constant;
+/*
+0xA6766DC536E4D933L : 214.072525
+0x89E18C8053FAA5B1L : 214.614502
+0xABB0ED29A2485B47L : 214.615814
+0xFB0C904DEDC71EABL : 214.795181
+0x81AC9396D4769C31L : 214.834991
+0xDE916ABCC965815BL : 214.837341
+0xF60E40931CDDA7E5L : 214.864380
+0x8349706F500D7573L : 214.959732
+0xE8B920F29261309BL : 214.969299
+0xD8CC727ACCADE12FL : 215.022232
+ */
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb ^ fc;
+//            stateD = fd + constant;
+
+/*
+0xD9501E54E3CE92E1L : 10.750057
+0x8A35060EDCF5BD75L : 10.762035
+0xA5A3CC74836D14E7L : 10.780661
+0xA8C103212C99FE8FL : 10.788849
+0x8C42C5C9000F11A1L : 10.812569
+0x810E73D8B83A55FDL : 10.818157
+0xEDA0B1C0E0ABFC8DL : 10.819639
+0xBF31F86E5BEA2525L : 10.821819
+0xC9C7ED90B7DC8245L : 10.822968
+0x843A0802F95827ADL : 10.825546
+*/
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa * 0xD1342543DE82EF95L;
+//            stateD = fd + constant;
+
+/*
+0xB16D1031B9120BFDL : 10.775454
+0x931AF84C032207B3L : 10.782055
+0x9589FADAD9A07791L : 10.805657
+0xB93DDED17D45DFA9L : 10.815386
+0x97C92339B9FC9B9FL : 10.820576
+0xA98368C8F1D0B4A7L : 10.824108
+0xC525EB170F87E511L : 10.824926
+0x9447F81CF70A38ADL : 10.828150
+0xF369D04BE1B34389L : 10.833638
+0x9E3EE498A8DF438DL : 10.839291
+
+*/
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = fc ^ fd;
+//            stateC = fa * (0xD1342543DE82EF95L * shiftB | 1L);
+//            stateD = fd + constant;
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            stateA = Long.rotateLeft(fb ^ fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fb + fa;
-            stateD = fd + constant;
+            stateA = Long.rotateLeft(fb ^ fc, 4);
+            stateB = fc ^ fd;
+            stateC = fa * 0x397EAD00E4621995L;
+            stateD = fd + 0xB16D1031B9120BFDL;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, 6);
+//            stateB = Long.rotateLeft(fc ^ fd, 6);
+//            stateC = fa * 0xD1342543DE82EF95L;
+//            stateD = fd + 0xD9501E54E3CE92E1L;
         }
 //        return stateA;
         return stateC;

@@ -241,7 +241,9 @@ public class Avalanche {
     private static final long N = 1L << 6;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 10, upper = 20, inc = 1;
+    private static final int lower = 1, upper = 15, inc = 1;
+    // this is the one most of the tests use.
+//    private static final int lower = 10, upper = 20, inc = 1;
 
     public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
@@ -384,17 +386,42 @@ public class Avalanche {
 //            stateC = fa + fb;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//
+////            stateA = Long.rotateLeft(fb + fc, shiftA);
+////            stateB = Long.rotateLeft(fc + fd, shiftB);
+////            stateC = fb ^ fa;
+////            stateD = fd + constant;
+//
+////            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+////            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+////            stateC = fb + fa;
+////            stateD = fd + constant;
+//
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fb + fa ^ fc;
+//            stateD = fd + constant;
+//
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa * 0xD1342543DE82EF95L;
+//            stateD = fd + constant;
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-//            stateA = Long.rotateLeft(fb + fc, shiftA);
-//            stateB = Long.rotateLeft(fc + fd, shiftB);
-//            stateC = fb ^ fa;
-//            stateD = fd + constant;
             stateA = Long.rotateLeft(fb ^ fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fb + fa;
+            stateB = fc ^ fd;
+            stateC = fa * (0xD1342543DE82EF95L * shiftB | 1L);
             stateD = fd + constant;
         }
         return stateC;
