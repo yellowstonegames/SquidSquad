@@ -28,9 +28,9 @@ public class ScriptGenerator extends ApplicationAdapter {
 
     @Override
     public void create() {
-        font = new Font("Cozette.fnt");
+        font = new Font("Cozette-standard.fnt");
         random = new TricycleRandom(1234567890L);
-        Pixmap pix = new Pixmap(Gdx.files.classpath("Cozette.png"));
+        Pixmap pix = new Pixmap(Gdx.files.classpath("Cozette-standard.png"));
         final int w = pix.getWidth(), h = pix.getHeight();
         source = new int[w][h];
         for (int x = 0; x < w; x++) {

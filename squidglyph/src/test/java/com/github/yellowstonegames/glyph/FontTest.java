@@ -60,6 +60,7 @@ public class FontTest extends ApplicationAdapter {
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
         layout = new Layout(font).setTargetWidth(Gdx.graphics.getWidth());
+        font.resizeDistanceField(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgrounds = new int[(int) Math.ceil(800 / font.cellWidth)][(int) Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
                 nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown");

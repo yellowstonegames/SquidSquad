@@ -55,22 +55,20 @@ public class KnownFonts implements LifecycleListener {
             instance = new KnownFonts();
     }
 
-
     private Font cozette;
     /**
      * Returns a Font configured to use a cozy fixed-width bitmap font,
      * <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
      * including Greek, Cyrillic, Braille, and tech-related icons. This does not scale except to integer
      * multiples, but it should look very crisp at its default size of 7x13 pixels.
-     * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
      *
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.fnt">Cozette-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.png">Cozette-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-license.txt">Cozette-license.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-license.txt</li>
      * </ul>
      * @return the Font object that represents the 7x13px font Cozette
      */
@@ -93,18 +91,16 @@ public class KnownFonts implements LifecycleListener {
 
     private Font openSans;
     /**
-     * Returns a Font configured to use a clean variable-width font, Open Sans. It has good extended-Latin coverage, but
-     * does not support Greek, Cyrillic, or other scripts. This makes an especially large font by default, but can be
-     * scaled down nicely.
-     * This may work well in a font family with other fonts that do not use a distance field effect.
+     * Returns a Font configured to use a clean variable-width font, Open Sans. This makes an especially large
+     * font by default, but can be scaled down nicely.
      * <br>
      *
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-standard.fnt">OpenSans-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-standard.png">OpenSans-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-License.txt">OpenSans-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-License.txt</li>
      * </ul>
      * @return the Font object that represents the variable-width font OpenSans
      */
@@ -114,7 +110,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.openSans == null)
         {
             try {
-                instance.openSans = new Font("OpenSans-standard.fnt", "OpenSans-standard.png", STANDARD, 2, 0, 0, 0).setTextureFilter();
+                instance.openSans = new Font("OpenSans.fnt", "OpenSans.png", STANDARD, 2, 0, 0, 0);
+                instance.openSans.setTextureFilter();
                 instance.openSans.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -131,17 +128,15 @@ public class KnownFonts implements LifecycleListener {
      * typeface used on the Atari ST console, that should scale cleanly to many sizes. This font only supports ASCII,
      * but it supports all of it. Caches the result for later calls. The font is "a-starry", based on "Atari ST
      * (low-res)" by Damien Guard; it is available under a CC-BY-SA-3.0 license, which requires attribution to Damien
-     * Guard (and technically Tommy Ettinger, because he made changes in a-starry) if you use it. This uses the
-     * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
-     * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
+     * Guard (and technically Tommy Ettinger, because he made changes in a-starry) if you use it.
      * <br>
      *
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.fnt">AStarry-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.png">AStarry-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-license.txt">AStarry-license.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-license.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font A Starry using MSDF
      */
@@ -151,8 +146,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.astarry == null)
         {
             try {
-                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(10, 10);
-                instance.astarry.distanceFieldCrispness = 2.5f;
+                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(18, 18);
+                instance.astarry.distanceFieldCrispness = 3f;
                 instance.astarry.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -169,7 +164,8 @@ public class KnownFonts implements LifecycleListener {
      * and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).
      * Caches the result for later calls. The font used is Cascadia Code Mono, an open-source (SIL Open Font
      * License) typeface by Microsoft (see https://github.com/microsoft/cascadia-code ). It supports a lot of glyphs,
-     * including most extended Latin, Greek, Braille, and Cyrillic. This uses the Multi-channel Signed Distance
+     * including most extended Latin (though it doesn't support a handful of chars used by FakeLanguageGen), Greek,
+     * Braille, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
@@ -177,9 +173,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.fnt">CascadiaMono-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.png">CascadiaMono-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cascadia-license.txt">Cascadia-license.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cascadia-license.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Cascadia Code Mono using MSDF
      */
@@ -208,17 +204,15 @@ public class KnownFonts implements LifecycleListener {
      * Greek (including Extended), Cyrillic (including some optional glyphs), IPA, Armenian (maybe the only font here to
      * do so), Georgian (which won't be treated correctly by some case-insensitive code, so it should only be used if
      * case doesn't matter), and Lao. It has full box drawing and Braille support, handles a wide variety of math
-     * symbols, technical marks, and dingbats, etc. This uses the Multi-channel Signed Distance
-     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
-     * sharper edges and precise corners instead of rounded tips on strokes.
+     * symbols, technical marks, and dingbats, etc.
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.fnt">DejaVuSansMono-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.png">DejaVuSansMono-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-License.txt">DejaVuSansMono-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-License.txt</li>
      * </ul>
-     * @return the Font object that can represent many sizes of the font DejaVu Sans Mono using MSDF
+     * @return the Font object that can represent many sizes of the font Inconsolata LGC using MSDF
      */
     public static Font getDejaVuSansMono()
     {
@@ -237,70 +231,36 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getDejaVuSansMono() not found.");
     }
 
-    private Font inconsolata;
-    /**
-     * A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
-     * Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
-     * Inconsolata is by Raph Levien, and various other contributors added support for other languages. This does not
-     * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}. You may want to stick using just fonts
-     * that avoid distance fields if you have a family of fonts.
-     * <br>
-     * Needs files:
-     * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-standard.fnt">Inconsolata-LGC-Custom-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-standard.png">Inconsolata-LGC-Custom-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
-     * </ul>
-     * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom
-     */
-    public static Font getInconsolata()
-    {
-        initialize();
-        if(instance.inconsolata == null)
-        {
-            try {
-                instance.inconsolata = new Font("Inconsolata-LGC-Custom-standard.fnt", "Inconsolata-LGC-Custom-standard.png", STANDARD, 0f, 0f, -6f, 0f);
-                instance.inconsolata.setColorLookup(GlyphMap::getRgba);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if(instance.inconsolata != null)
-            return new Font(instance.inconsolata);
-        throw new RuntimeException("Assets for getInconsolata() not found.");
-    }
 
-    private Font inconsolataMSDF;
+    private Font inconsolataLGC;
     /**
      * A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
      * Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
-     * Inconsolata is by Raph Levien, and various other contributors added support for other languages. This uses the
-     * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
-     * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
+     * Inconsolata is by Raph Levien, and various other contributors added support for other languages.
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.fnt">Inconsolata-LGC-Custom-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.png">Inconsolata-LGC-Custom-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-License.txt</li>
      * </ul>
-     * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom using MSDF
+     * @return the Font object that can represent many sizes of the font Inconsolata LGC using MSDF
      */
-    public static Font getInconsolataMSDF()
+    public static Font getInconsolataLGC()
     {
         initialize();
-        if(instance.inconsolataMSDF == null)
+        if(instance.inconsolataLGC == null)
         {
             try {
-                instance.inconsolataMSDF = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f);
-                instance.inconsolataMSDF.setColorLookup(GlyphMap::getRgba);
+                instance.inconsolataLGC = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f);
+                instance.inconsolataLGC.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(instance.inconsolataMSDF != null)
-            return new Font(instance.inconsolataMSDF);
-        throw new RuntimeException("Assets for getInconsolataMSDF() not found.");
+        if(instance.inconsolataLGC != null)
+            return new Font(instance.inconsolataLGC);
+        throw new RuntimeException("Assets for getInconsolataLGC() not found.");
     }
 
     private Font iosevka;
@@ -318,9 +278,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.fnt">Iosevka-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.png">Iosevka-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
      */
@@ -356,9 +316,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.fnt">Iosevka-Slab-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.png">Iosevka-Slab-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
      */
@@ -380,50 +340,10 @@ public class KnownFonts implements LifecycleListener {
     }
 
     private Font gentium;
-
     /**
      * Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
-     * scale well from a height of about 132 down to a height of 34. You usually will want to reduce the line height
-     * of this Font after you scale it; using {@code KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)}
-     * usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
-     * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
-     * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
-     * does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want to stick using just
-     * fonts that avoid distance fields if you have a family of fonts.
-     * <br>
-     * Preview: <a href="https://i.imgur.com/JXGbHVf.png">Image link (of the SDF version)</a>
-     * <br>
-     * Needs files:
-     * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-standard.fnt">Gentium-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-standard.png">Gentium-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt">Gentium-license.txt</a></li>
-     * </ul>
-     * @return the Font object that can represent many sizes of the font Gentium.ttf
-     */
-    public static Font getGentium()
-    {
-        initialize();
-        if(instance.gentium == null)
-        {
-            try {
-                instance.gentium = new Font("Gentium-standard.fnt", Font.DistanceFieldType.STANDARD, -1f, 0f, -2f, 0f).setTextureFilter();
-                instance.gentium.setColorLookup(GlyphMap::getRgba);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if(instance.gentium != null)
-            return new Font(instance.gentium);
-        throw new RuntimeException("Assets for getGentium() not found.");
-    }
-
-    private Font gentiumSDF;
-    /**
-     * Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
-     * scale cleanly to even very large sizes (using an SDF technique). You usually will want to reduce the line height
-     * of this Font after you scale it; using {@code KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)}
-     * usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
+     * scale cleanly to even very large sizes (using an SDF technique).
+     * Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
      * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
      * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
      * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
@@ -433,27 +353,27 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.fnt">Gentium-sdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.png">Gentium-sdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt">Gentium-license.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Gentium.ttf using SDF
      */
-    public static Font getGentiumSDF()
+    public static Font getGentium()
     {
         initialize();
-        if(instance.gentiumSDF == null)
+        if(instance.gentium == null)
         {
             try {
-                instance.gentiumSDF = new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f);
-                instance.gentiumSDF.setColorLookup(GlyphMap::getRgba);
+                instance.gentium = new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f);
+                instance.gentium.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(instance.gentiumSDF != null)
-            return new Font(instance.gentiumSDF);
-        throw new RuntimeException("Assets for getGentiumSDF() not found.");
+        if(instance.gentium != null)
+            return new Font(instance.gentium);
+        throw new RuntimeException("Assets for getGentium() not found.");
     }
 
     private Font libertinusSerif;
@@ -469,9 +389,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.fnt">LibertinusSerif-Regular-msdf.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.png">LibertinusSerif-Regular-msdf.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-License.txt">LibertinusSerif-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using MSDF
      */
@@ -481,7 +401,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.libertinusSerif == null)
         {
             try {
-                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 5, 2, -2, -2).scaleTo(150, 32);
+                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 6f, 0f, -2f, 0f).scaleTo(150, 32);
                 instance.libertinusSerif.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -505,15 +425,15 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.fnt">KingthingsFoundation-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png">KingthingsFoundation-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt">Kingthings-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-bold.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-bold.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
      * </ul>
      * You may instead want the non-bold version, but this doesn't have a pre-made instance in KnownFonts:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-Light-standard.fnt">KingthingsFoundation-Light-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-Light-standard.png">KingthingsFoundation-Light-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt">Kingthings-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf
      */
@@ -523,7 +443,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kingthingsFoundation == null)
         {
             try {
-                instance.kingthingsFoundation = new Font("KingthingsFoundation-standard.fnt", STANDARD, 2, 0, -2.5f, 0).setTextureFilter();
+                instance.kingthingsFoundation = new Font("KingthingsFoundation-bold.fnt", STANDARD, 2, 0, -2.5f, 0).setTextureFilter();
                 instance.kingthingsFoundation.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -546,9 +466,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.fnt">Oxanium-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.png">Oxanium-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-License.txt">Oxanium-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Oxanium.ttf
      */
@@ -581,9 +501,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.fnt">YanoneKaffeesatz-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.png">YanoneKaffeesatz-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-License.txt">YanoneKaffeesatz-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf
      */
@@ -618,9 +538,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.fnt">Canada1500-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.png">Canada1500-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-License.txt">Canada1500-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font Canada1500.ttf
      */
@@ -641,7 +561,7 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getCanada() not found.");
     }
 
-    private Font robotoCondensed;
+   private Font robotoCondensed;
     /**
      * Returns a Font already configured to use a very-legible condensed variable-width font with excellent Unicode
      * support, that should scale pretty well from a height of about 62 down to a height of maybe 20.
@@ -654,9 +574,9 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.fnt">RobotoCondensed-standard.fnt</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.png">RobotoCondensed-standard.png</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-License.txt">RobotoCondensed-License.txt</a></li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.fnt</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.png</li>
+     *     <li>https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-License.txt</li>
      * </ul>
      * @return the Font object that can represent many sizes of the font RobotoCondensed.ttf
      */
@@ -677,44 +597,6 @@ public class KnownFonts implements LifecycleListener {
         throw new RuntimeException("Assets for getRobotoCondensed() not found.");
     }
 
-    private Font ibm8x16;
-    /**
-     * Returns a Font configured to use a classic, nostalgic fixed-width bitmap font,
-     * IBM 8x16 from the early, oft-beloved computer line. This font is notably loaded
-     * from a SadConsole format file, which shouldn't affect how it looks (but in reality,
-     * it might). This does not scale except to integer multiples, but it should look very
-     * crisp at its default size of 8x16 pixels. This supports some extra characters, but
-     * not at the typical Unicode codepoints.
-     * <br>
-     * This does not include a license because the source, <a href="https://github.com/Thraka/SadConsole/tree/master/Fonts">SadConsole's fonts</a>,
-     * did not include one. It is doubtful that IBM would have any issues with respectful use
-     * of their signature font throughout the 1980s, but if the legality is concerning, you
-     * can use {@link #getCozette()} for a different bitmap font.
-     * <br>
-     * Needs files:
-     * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM.font">IBM.font</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM8x16.png">IBM8x16.png</a></li>
-     * </ul>
-     * @return the Font object that represents an 8x16 font included with early IBM computers
-     */
-    public static Font getIBM8x16()
-    {
-        initialize();
-        if(instance.ibm8x16 == null)
-        {
-            try {
-                instance.ibm8x16 = new Font("IBM.font", true);
-                instance.ibm8x16.setColorLookup(GlyphMap::getRgba);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if(instance.ibm8x16 != null)
-            return new Font(instance.ibm8x16);
-        throw new RuntimeException("Assets for getIBM8x16() not found.");
-    }
-
 
     @Override
     public void pause() {
@@ -729,69 +611,57 @@ public class KnownFonts implements LifecycleListener {
     @Override
     public void dispose() {
 
-        if (cozette != null) {
+        if(cozette != null){
             cozette.dispose();
             cozette = null;
         }
-        if (openSans != null) {
+        if(openSans != null){
             openSans.dispose();
             openSans = null;
         }
-        if (astarry != null) {
+        if(astarry != null){
             astarry.dispose();
             astarry = null;
         }
-        if (cascadiaMono != null) {
+        if(cascadiaMono != null){
             cascadiaMono.dispose();
             cascadiaMono = null;
         }
-        if (dejaVuSansMono != null) {
+        if(dejaVuSansMono != null){
             dejaVuSansMono.dispose();
             dejaVuSansMono = null;
         }
-        if (inconsolata != null) {
-            inconsolata.dispose();
-            inconsolata = null;
+        if(inconsolataLGC != null){
+            inconsolataLGC.dispose();
+            inconsolataLGC = null;
         }
-        if (inconsolataMSDF != null) {
-            inconsolataMSDF.dispose();
-            inconsolataMSDF = null;
-        }
-        if (iosevka != null) {
+        if(iosevka != null){
             iosevka.dispose();
             iosevka = null;
         }
-        if (iosevkaSlab != null) {
+        if(iosevkaSlab != null){
             iosevkaSlab.dispose();
             iosevkaSlab = null;
         }
-        if (gentium != null) {
+        if(gentium != null){
             gentium.dispose();
             gentium = null;
         }
-        if (gentiumSDF != null) {
-            gentiumSDF.dispose();
-            gentiumSDF = null;
-        }
-        if (libertinusSerif != null) {
+        if(libertinusSerif != null){
             libertinusSerif.dispose();
             libertinusSerif = null;
         }
-        if (kingthingsFoundation != null) {
+        if(kingthingsFoundation != null){
             kingthingsFoundation.dispose();
             kingthingsFoundation = null;
         }
-        if (oxanium != null) {
+        if(oxanium != null){
             oxanium.dispose();
             oxanium = null;
         }
-        if (kaffeesatz != null) {
+        if(kaffeesatz != null){
             kaffeesatz.dispose();
             kaffeesatz = null;
-        }
-        if (ibm8x16 != null) {
-            ibm8x16.dispose();
-            ibm8x16 = null;
         }
     }
 }

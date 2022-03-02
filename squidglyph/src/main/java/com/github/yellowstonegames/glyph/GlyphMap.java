@@ -326,5 +326,6 @@ public class GlyphMap {
      */
     public void resize(int screenWidth, int screenHeight) {
         viewport.update(screenWidth, screenHeight, false);
+        font.resizeDistanceField(screenWidth, screenHeight);
     }
 }
