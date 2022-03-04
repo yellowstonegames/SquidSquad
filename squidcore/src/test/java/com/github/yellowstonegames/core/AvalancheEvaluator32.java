@@ -1,0 +1,100 @@
+package com.github.yellowstonegames.core;
+
+import com.github.tommyettinger.ds.support.DistinctRandom;
+
+public class AvalancheEvaluator32 {
+    private static final long N = 1L << 11;
+    private static final int lower = 8, upper = 19, inc = 1;
+
+    // fb ^ fc, rotate; fc ^ fd, rotate; fa + fb; increment fd
+//    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //1178.2487239837646, 7197.45912361145
+
+    // fb ^ fc, rotate; fc ^ fd, rotate; fa ^ fb + fc; increment fd
+    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //26.931787490844727, 178.46607971191406
+
+    private static final int constantAdd = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 32) | 1;
+    private static final int constantMul = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 44) | 1;
+
+    public static int mix(final int v, final int iterations) {
+        int stateA = v;
+        int stateB = 0;
+        int stateC = 0;
+        int stateD = 0;
+        for (int i = 0; i < iterations; i++) {
+            final int fa = stateA;
+            final int fb = stateB;
+            final int fc = stateC;
+            final int fd = stateD;
+            stateA = Integer.rotateLeft(fb ^ fc, shiftA);
+            stateB = Integer.rotateLeft(fc ^ fd, shiftB);
+            stateC = fa ^ fb + fc;
+            stateD = fd + constantAdd;
+        }
+        return stateC;
+    }
+
+    public static void main(String[] args) {
+        DistinctRandom rng = new DistinctRandom(123456789L);
+        // Order 1
+        {
+            final long[][] A = new long[32][32];
+            double total = 0.0;
+            for (int iterations = lower; iterations < upper; iterations += inc) {
+                ArrayTools.fill(A, 0L);
+                for (long n = 0; n < N; n++) {
+                    int v = rng.nextInt();
+                    int w = mix(v, iterations);
+                    for (int i = 0; i < 32; i++) {
+                        int x = w ^ mix(v ^ (1 << i), iterations);
+                        for (int j = 0; j < 32; j++) {
+                            A[i][j] += ((x >>> j) & 1);
+                        }
+                    }
+                }
+                double sumsq = 0.0;
+                for (int i = 0; i < 32; i++) {
+                    for (int j = 0; j < 32; j++) {
+                        double v = A[i][j] - N * 0.5;
+                        sumsq += v * v;
+                    }
+                }
+                double result = sumsq * 0x1p-8 / N;
+                System.out.println("With " + iterations + " iterations: " + result);
+                total += result;
+            }
+            System.out.println("Order 1: " + shiftA + "," + shiftB + "," + shiftC + " with value " + total);
+        }
+        // Order 2
+        {
+            final long[][] A = new long[496][32];
+            double total = 0.0;
+            for (int iterations = lower; iterations < upper; iterations += inc) {
+                ArrayTools.fill(A, 0L);
+                for (long n = 0; n < N; n++) {
+                    int v = rng.nextInt();
+                    int w = mix(v, iterations);
+                    for (int i = 0, p = 0; i < 32; i++) {
+                        for (int h = i + 1; h < 32; h++) {
+                            int x = w ^ mix(v ^ (1 << i) ^ (1 << h), iterations);
+                            for (int j = 0; j < 32; j++) {
+                                A[p][j] += ((x >>> j) & 1);
+                            }
+                            p++;
+                        }
+                    }
+                }
+                double sumsq = 0.0;
+                for (int i = 0; i < 496; i++) {
+                    for (int j = 0; j < 32; j++) {
+                        double v = A[i][j] - N * 0.5;
+                        sumsq += v * v;
+                    }
+                }
+                double result = sumsq * 0x1p-8 / N;
+                System.out.println("With " + iterations + " iterations: " + result);
+                total += result;
+            }
+            System.out.println("Order 2: " + shiftA + "," + shiftB + "," + shiftC + " with value " + total);
+        }
+    }
+}

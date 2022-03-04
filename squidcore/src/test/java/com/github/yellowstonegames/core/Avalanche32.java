@@ -162,8 +162,7 @@ Order 2, Best Ten with total:
         // Order 2
         if(true)
         {
-            final long[][] A = new long[2016][32];
-            int maxP = 0;
+            final long[][] A = new long[496][32];
             final IntObjectOrderedMap<Double> res = new IntObjectOrderedMap<>(4096),
                     totals = new IntObjectOrderedMap<>(4096);
             for (int iterations = lower; iterations < upper; iterations += inc) {
@@ -182,12 +181,12 @@ Order 2, Best Ten with total:
                                 for (int j = 0; j < 32; j++) {
                                     A[p][j] += ((x >>> j) & 1);
                                 }
-                                maxP = Math.max(maxP, ++p);
+                                ++p;
                             }
                         }
                     }
                     double sumsq = 0.0;
-                    for (int i = 0; i < maxP; i++) {
+                    for (int i = 0; i < 496; i++) {
                         for (int j = 0; j < 32; j++) {
                             double v = A[i][j] - N * 0.5;
                             sumsq += v * v;
