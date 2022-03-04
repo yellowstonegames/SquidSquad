@@ -8,8 +8,10 @@ public class Avalanche32 {
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
 //    private static final int lower = 1, upper = 15, inc = 1;
-    // this is the one most of the tests use.
-    private static final int lower = 10, upper = 20, inc = 1;
+    // this is the one most of the worse-avalanche tests use.
+//    private static final int lower = 10, upper = 20, inc = 1;
+    // this is the one most of the better-avalanche tests use.
+    private static final int lower = 8, upper = 19, inc = 1;
 
     public static int mix(final int v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         int stateA = v;
@@ -25,6 +27,8 @@ public class Avalanche32 {
             final int fc = stateC;
             final int fd = stateD;
 /*
+Using lower = 10:
+
 Order 1, Best Ten with total:
 #0: 28,9,30 with value 0.86126708984375
 #1: 13,20,16 with value 0.8681640625
@@ -48,9 +52,41 @@ Order 2, Best Ten with total:
 #8: 8,27,29 with value 15.0306396484375
 #9: 28,9,2 with value 15.03155517578125
 */
+//            stateA = Integer.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Integer.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa + fb;
+//            stateD = fd + constantAdd;
+
+/*
+Using lower = 8 (for better avalanche versions):
+
+Order 1, Best Ten with total:
+#0: 19,24,14 with value 0.83648681640625
+#1: 4,11,11 with value 0.88922119140625
+#2: 8,18,5 with value 0.89337158203125
+#3: 13,4,7 with value 0.8935546875
+#4: 15,11,20 with value 0.89434814453125
+#5: 13,8,11 with value 0.900146484375
+#6: 27,12,11 with value 0.9034423828125
+#7: 4,10,8 with value 0.90545654296875
+#8: 26,11,24 with value 0.90802001953125
+#9: 11,24,21 with value 0.9097900390625
+Order 2, Best Ten with total:
+#0: 18,28,26 with value 14.81103515625
+#1: 23,18,13 with value 14.94769287109375
+#2: 19,24,23 with value 14.95556640625
+#3: 26,8,21 with value 14.96832275390625
+#4: 15,6,11 with value 14.97503662109375
+#5: 22,18,19 with value 14.9775390625
+#6: 14,21,29 with value 14.9959716796875
+#7: 21,15,11 with value 15.008056640625
+#8: 26,11,16 with value 15.0106201171875
+#9: 19,24,27 with value 15.02093505859375
+
+ */
             stateA = Integer.rotateLeft(fb ^ fc, shiftA);
             stateB = Integer.rotateLeft(fc ^ fd, shiftB);
-            stateC = fa + fb;
+            stateC = fa ^ fb + fc;
             stateD = fd + constantAdd;
         }
         return stateC;

@@ -10,7 +10,10 @@ public class AvalancheEvaluator32 {
 //    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //1178.2487239837646, 7197.45912361145
 
     // fb ^ fc, rotate; fc ^ fd, rotate; fa ^ fb + fc; increment fd
-    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //26.931787490844727, 178.46607971191406
+//    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //26.931787490844727, 178.46607971191406
+//    private static final int shiftA = 19, shiftB = 24, shiftC = 14; //15.269414901733398, 172.5810317993164
+    // using shiftC as the constant, but otherwise the same as above
+    private static final int shiftA = 19, shiftB = 24, shiftC = 0x30ECB8CB; //15.500167846679688, 171.91223335266113
 
     private static final int constantAdd = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 32) | 1;
     private static final int constantMul = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 44) | 1;
@@ -28,7 +31,7 @@ public class AvalancheEvaluator32 {
             stateA = Integer.rotateLeft(fb ^ fc, shiftA);
             stateB = Integer.rotateLeft(fc ^ fd, shiftB);
             stateC = fa ^ fb + fc;
-            stateD = fd + constantAdd;
+            stateD = fd + shiftC;
         }
         return stateC;
     }
