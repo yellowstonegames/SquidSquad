@@ -54,8 +54,6 @@ public class KnownFonts implements LifecycleListener {
         if(instance == null)
             instance = new KnownFonts();
     }
-
-
     private Font cozette;
     /**
      * Returns a Font configured to use a cozy fixed-width bitmap font,
@@ -80,8 +78,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cozette == null)
         {
             try {
-                instance.cozette = new Font("Cozette-standard.fnt", "Cozette-standard.png", STANDARD, 1, 1, 0, -1);
-                instance.cozette.setColorLookup(GlyphMap::getRgba);
+                instance.cozette= new Font("Cozette-standard.fnt", "Cozette-standard.png", STANDARD, 1, 1, 0, -1).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -114,8 +111,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.openSans == null)
         {
             try {
-                instance.openSans = new Font("OpenSans-standard.fnt", "OpenSans-standard.png", STANDARD, 2, 0, 0, 0).setTextureFilter();
-                instance.openSans.setColorLookup(GlyphMap::getRgba);
+                instance.openSans= new Font("OpenSans-standard.fnt", "OpenSans-standard.png", STANDARD, 2, 0, 0, 0).setColorLookup(GlyphMap::getRgba);
+                instance.openSans.setTextureFilter();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -151,9 +148,8 @@ public class KnownFonts implements LifecycleListener {
         if(instance.astarry == null)
         {
             try {
-                instance.astarry = new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(10, 10);
+                instance.astarry= new Font("AStarry-msdf.fnt", "AStarry-msdf.png", MSDF, 0, 1, 0, 0).scaleTo(10, 10).setColorLookup(GlyphMap::getRgba);
                 instance.astarry.distanceFieldCrispness = 2.5f;
-                instance.astarry.setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -189,8 +185,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.cascadiaMono == null)
         {
             try {
-                instance.cascadiaMono = new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", MSDF, 2f, 1f, -5.5f, -1.5f);
-                instance.cascadiaMono.setColorLookup(GlyphMap::getRgba);
+                instance.cascadiaMono= new Font("CascadiaMono-msdf.fnt", "CascadiaMono-msdf.png", MSDF, 2f, 1f, -5.5f, -1.5f).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,8 +221,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.dejaVuSansMono == null)
         {
             try {
-                instance.dejaVuSansMono = new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", MSDF, 1f, 4f, -1.5f, -4.5f);
-                instance.dejaVuSansMono.setColorLookup(GlyphMap::getRgba);
+                instance.dejaVuSansMono= new Font("DejaVuSansMono-msdf.fnt", "DejaVuSansMono-msdf.png", MSDF, 1f, 4f, -1.5f, -4.5f).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -259,8 +253,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.inconsolata == null)
         {
             try {
-                instance.inconsolata = new Font("Inconsolata-LGC-Custom-standard.fnt", "Inconsolata-LGC-Custom-standard.png", STANDARD, 0f, 0f, -6f, 0f);
-                instance.inconsolata.setColorLookup(GlyphMap::getRgba);
+                instance.inconsolata= new Font("Inconsolata-LGC-Custom-standard.fnt", "Inconsolata-LGC-Custom-standard.png", STANDARD, 0f, 0f, -6f, 0f).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -292,8 +285,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.inconsolataMSDF == null)
         {
             try {
-                instance.inconsolataMSDF = new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f);
-                instance.inconsolataMSDF.setColorLookup(GlyphMap::getRgba);
+                instance.inconsolataMSDF= new Font("Inconsolata-LGC-Custom-msdf.fnt", "Inconsolata-LGC-Custom-msdf.png", MSDF, 5f, 1f, -10f, -8f).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -304,6 +296,80 @@ public class KnownFonts implements LifecycleListener {
     }
 
     private Font iosevka;
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a sans-serif geometric style. Does not use a distance field effect, and is sized best at 10x30 pixels.
+     * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. You may want to call
+     * {@link Font#setTextureFilter()} on this if you expect to scale it, but be advised that it can have visual
+     * artifacts with bold or some other effects.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-standard.fnt">Iosevka-standard.fnt</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-standard.png">Iosevka-standard.png</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka.ttf
+     */
+    public static Font getIosevka()
+    {
+        initialize();
+        if(instance.iosevka == null)
+        {
+            try {
+                instance.iosevka= new Font("Iosevka-standard.fnt", "Iosevka-standard.png", STANDARD, 1f, 0f, 0f, 0f).setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevka != null)
+            return new Font(instance.iosevka);
+        throw new RuntimeException("Assets for getIosevka() not found.");
+    }
+
+    private Font iosevkaSDF;
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a sans-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
+     * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Signed Distance Field (SDF)
+     * technique as opposed to the Multi-channel Signed Distance Field technique that {@link #getIosevkaMSDF()} uses,
+     * which isn't as sharp at large sizes but can look a little better at small sizes.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-sdf.fnt">Iosevka-sdf.fnt</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-sdf.png">Iosevka-sdf.png</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka.ttf using SDF
+     */
+    public static Font getIosevkaSDF()
+    {
+        initialize();
+        if(instance.iosevkaSDF == null)
+        {
+            try {
+                instance.iosevkaSDF= new Font("Iosevka-sdf.fnt", "Iosevka-sdf.png", SDF, 0f, 0f, 0f, 0f).setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevkaSDF != null)
+            return new Font(instance.iosevkaSDF);
+        throw new RuntimeException("Assets for getIosevkaSDF() not found.");
+    }
+
+    private Font iosevkaMSDF;
     /**
      * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
      * and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
@@ -324,24 +390,97 @@ public class KnownFonts implements LifecycleListener {
      * </ul>
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
      */
-    public static Font getIosevka()
+    public static Font getIosevkaMSDF()
     {
         initialize();
-        if(instance.iosevka == null)
+        if(instance.iosevkaMSDF == null)
         {
             try {
-                instance.iosevka = new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", MSDF, 3f, 6, -4f, -7);
-                instance.iosevka.setColorLookup(GlyphMap::getRgba);
+                instance.iosevkaMSDF= new Font("Iosevka-msdf.fnt", "Iosevka-msdf.png", MSDF, 3f, 6, -4f, -7).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(instance.iosevka != null)
-            return new Font(instance.iosevka);
-        throw new RuntimeException("Assets for getIosevka() not found.");
+        if(instance.iosevkaMSDF != null)
+            return new Font(instance.iosevkaMSDF);
+        throw new RuntimeException("Assets for getIosevkaMSDF() not found.");
     }
 
     private Font iosevkaSlab;
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a slab-serif geometric style. Does not use a distance field effect, and is sized best at 10x30 pixels.
+     * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. You may want to call
+     * {@link Font#setTextureFilter()} on this if you expect to scale it, but be advised that it can have visual
+     * artifacts with bold or some other effects.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-standard.fnt">Iosevka-Slab-standard.fnt</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-standard.png">Iosevka-Slab-standard.png</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf
+     */
+    public static Font getIosevkaSlab()
+    {
+        initialize();
+        if(instance.iosevkaSlab == null)
+        {
+            try {
+                instance.iosevkaSlab= new Font("Iosevka-Slab-standard.fnt", "Iosevka-Slab-standard.png", STANDARD, 0f, 0f, 0f, 0f).setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevkaSlab != null)
+            return new Font(instance.iosevkaSlab);
+        throw new RuntimeException("Assets for getIosevkaSlab() not found.");
+    }
+
+    private Font iosevkaSlabSDF;
+    /**
+     * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+     * and a slab-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
+     * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
+     * License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+     * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
+     * Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Signed Distance Field (SDF)
+     * technique as opposed to the Multi-channel Signed Distance Field technique that {@link #getIosevkaMSDF()} uses,
+     * which isn't as sharp at large sizes but can look a little better at small sizes.
+     * <br>
+     *
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-sdf.fnt">Iosevka-Slab-sdf.fnt</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-sdf.png">Iosevka-Slab-sdf.png</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using SDF
+     */
+    public static Font getIosevkaSlabSDF()
+    {
+        initialize();
+        if(instance.iosevkaSlabSDF == null)
+        {
+            try {
+                instance.iosevkaSlabSDF= new Font("Iosevka-Slab-sdf.fnt", "Iosevka-Slab-sdf.png", SDF, 0f, 0f, 0f, 0f).setColorLookup(GlyphMap::getRgba);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(instance.iosevkaSlabSDF != null)
+            return new Font(instance.iosevkaSlabSDF);
+        throw new RuntimeException("Assets for getIosevkaSlabSDF() not found.");
+    }
+
+    private Font iosevkaSlabMSDF;
     /**
      * Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
      * and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
@@ -362,21 +501,20 @@ public class KnownFonts implements LifecycleListener {
      * </ul>
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
      */
-    public static Font getIosevkaSlab()
+    public static Font getIosevkaSlabMSDF()
     {
         initialize();
-        if(instance.iosevkaSlab == null)
+        if(instance.iosevkaSlabMSDF == null)
         {
             try {
-                instance.iosevkaSlab = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, 3f, 6, -4f, -7);
-                instance.iosevkaSlab.setColorLookup(GlyphMap::getRgba);
+                instance.iosevkaSlabMSDF= new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, 3f, 6, -4f, -7).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(instance.iosevkaSlab != null)
-            return new Font(instance.iosevkaSlab);
-        throw new RuntimeException("Assets for getIosevkaSlab() not found.");
+        if(instance.iosevkaSlabMSDF != null)
+            return new Font(instance.iosevkaSlabMSDF);
+        throw new RuntimeException("Assets for getIosevkaSlabMSDF() not found.");
     }
 
     private Font gentium;
@@ -407,8 +545,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.gentium == null)
         {
             try {
-                instance.gentium = new Font("Gentium-standard.fnt", Font.DistanceFieldType.STANDARD, -1f, 0f, -2f, 0f).setTextureFilter();
-                instance.gentium.setColorLookup(GlyphMap::getRgba);
+                instance.gentium= new Font("Gentium-standard.fnt", Font.DistanceFieldType.STANDARD, -1f, 0f, -2f, 0f).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -445,8 +582,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.gentiumSDF == null)
         {
             try {
-                instance.gentiumSDF = new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f);
-                instance.gentiumSDF.setColorLookup(GlyphMap::getRgba);
+                instance.gentiumSDF= new Font("Gentium-sdf.fnt", "Gentium-sdf.png", SDF, 0f, 5f, 0f, -5f).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -481,8 +617,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.libertinusSerif == null)
         {
             try {
-                instance.libertinusSerif = new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 5, 2, -2, -2).scaleTo(150, 32);
-                instance.libertinusSerif.setColorLookup(GlyphMap::getRgba);
+                instance.libertinusSerif= new Font("LibertinusSerif-Regular-msdf.fnt", "LibertinusSerif-Regular-msdf.png", MSDF, 5, 2, -2, -2).scaleTo(150, 32).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -523,8 +658,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kingthingsFoundation == null)
         {
             try {
-                instance.kingthingsFoundation = new Font("KingthingsFoundation-standard.fnt", STANDARD, 2, 0, -2.5f, 0).setTextureFilter();
-                instance.kingthingsFoundation.setColorLookup(GlyphMap::getRgba);
+                instance.kingthingsFoundation= new Font("KingthingsFoundation-standard.fnt", STANDARD, 2, 0, -2.5f, 0).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -558,8 +692,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.oxanium == null)
         {
             try {
-                instance.oxanium = new Font("Oxanium-standard.fnt", STANDARD, 3, 0, -3, 0).setTextureFilter();
-                instance.oxanium.setColorLookup(GlyphMap::getRgba);
+                instance.oxanium= new Font("Oxanium-standard.fnt", STANDARD, 3, 0, -3, 0).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -593,8 +726,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.kaffeesatz == null)
         {
             try {
-                instance.kaffeesatz = new Font("YanoneKaffeesatz-standard.fnt", STANDARD, 2f, 0, -2f, 0).setTextureFilter();
-                instance.kaffeesatz.setColorLookup(GlyphMap::getRgba);
+                instance.kaffeesatz= new Font("YanoneKaffeesatz-standard.fnt", STANDARD, 2f, 0, -2f, 0).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -630,8 +762,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.canada == null)
         {
             try {
-                instance.canada = new Font("Canada1500-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
-                instance.canada.setColorLookup(GlyphMap::getRgba);
+                instance.canada= new Font("Canada1500-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -666,8 +797,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.robotoCondensed == null)
         {
             try {
-                instance.robotoCondensed = new Font("RobotoCondensed-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter();
-                instance.robotoCondensed.setColorLookup(GlyphMap::getRgba);
+                instance.robotoCondensed= new Font("RobotoCondensed-standard.fnt", STANDARD, 0, 0, 0, 0).setTextureFilter().setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -693,8 +823,8 @@ public class KnownFonts implements LifecycleListener {
      * <br>
      * Needs files:
      * <ul>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM.font">IBM.font</a></li>
-     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM8x16.png">IBM8x16.png</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM-8x16-standard.font">IBM-8x16-standard.font</a></li>
+     *     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM-8x16-standard.png">IBM-8x16-standard.png</a></li>
      * </ul>
      * @return the Font object that represents an 8x16 font included with early IBM computers
      */
@@ -704,8 +834,7 @@ public class KnownFonts implements LifecycleListener {
         if(instance.ibm8x16 == null)
         {
             try {
-                instance.ibm8x16 = new Font("IBM.font", true);
-                instance.ibm8x16.setColorLookup(GlyphMap::getRgba);
+                instance.ibm8x16= new Font("IBM-8x16-standard.font", true).setColorLookup(GlyphMap::getRgba);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -761,9 +890,25 @@ public class KnownFonts implements LifecycleListener {
             iosevka.dispose();
             iosevka = null;
         }
+        if (iosevkaSDF != null) {
+            iosevkaSDF.dispose();
+            iosevkaSDF = null;
+        }
+        if (iosevkaMSDF != null) {
+            iosevkaMSDF.dispose();
+            iosevkaMSDF = null;
+        }
         if (iosevkaSlab != null) {
             iosevkaSlab.dispose();
             iosevkaSlab = null;
+        }
+        if (iosevkaSlabSDF != null) {
+            iosevkaSlabSDF.dispose();
+            iosevkaSlabSDF = null;
+        }
+        if (iosevkaSlabMSDF != null) {
+            iosevkaSlabMSDF.dispose();
+            iosevkaSlabMSDF = null;
         }
         if (gentium != null) {
             gentium.dispose();
@@ -784,6 +929,10 @@ public class KnownFonts implements LifecycleListener {
         if (oxanium != null) {
             oxanium.dispose();
             oxanium = null;
+        }
+        if (robotoCondensed != null) {
+            robotoCondensed.dispose();
+            robotoCondensed = null;
         }
         if (kaffeesatz != null) {
             kaffeesatz.dispose();

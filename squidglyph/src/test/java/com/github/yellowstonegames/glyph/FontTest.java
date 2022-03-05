@@ -13,8 +13,6 @@ import com.github.yellowstonegames.grid.LineTools;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
 
-import static com.github.tommyettinger.textra.Font.DistanceFieldType.MSDF;
-
 public class FontTest extends ApplicationAdapter {
 
     Font font;
@@ -42,7 +40,7 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
-        font = new Font("Iosevka-Slab-msdf.fnt", "Iosevka-Slab-msdf.png", MSDF, -2, 6, 16, -7).scaleTo(20, 20);
+        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(20, 20);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
@@ -54,8 +52,6 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);
 //        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
-
-        font.setColorLookup(GlyphMap::getRgba);
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);

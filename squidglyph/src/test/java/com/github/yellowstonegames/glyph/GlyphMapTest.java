@@ -32,7 +32,7 @@ public class GlyphMapTest extends ApplicationAdapter {
     public void create() {
         random = new LaserRandom();
         batch = new SpriteBatch();
-        font = KnownFonts.getIosevkaSlab().scaleTo(12f, 20f);
+        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(12f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
