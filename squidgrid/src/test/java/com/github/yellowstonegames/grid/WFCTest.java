@@ -1,6 +1,9 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.TrimRandom;
+import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.place.DungeonTools;
 
 /**
  * Created by Tommy Ettinger on 3/28/2018.
@@ -8,10 +11,8 @@ import com.github.tommyettinger.ds.support.TricycleRandom;
 public class WFCTest {
     public static void main(String[] args)
     {
-        TricycleRandom random = new TricycleRandom(12345678);
+        EnhancedRandom random = new TrimRandom(12345678);
         int[][] grid = new int[32][32];
-//        DungeonGenerator dg = new DungeonGenerator(32, 32, srng);
-//        char[][] dungeon = DungeonUtility.hashesToLines(dg.generate());
         char[][] dungeon = new char[][]{
                 "  ┌───────┐ ┌─────┐ ┌────────┐  ".toCharArray(),
                 "┌─┤.......│ │.....└─┤........│  ".toCharArray(),
@@ -56,15 +57,31 @@ public class WFCTest {
 //            System.out.println("\".toCharArray(),");
         }
 //        System.out.println("};");
-        WaveFunctionCollapse wfc = new WaveFunctionCollapse(grid, 2, 64, 64, false, true, 1, 0);
+        WaveFunctionCollapse wfc = new WaveFunctionCollapse(grid, 3, 64, 64, true, true, 1, 0);
         while (!wfc.run(random.nextLong(), 0));
         int[][] grid2 = wfc.result();
-        for (int y = 0; y < 128; y++) { 
+        char[][] map = new char[128][128];
+        int[][] env = new int[128][128];
+        for (int y = 0; y < 128; y++) {
             for (int x = 0; x < 128; x++) {
                 System.out.print((char) grid2[x & 63][y & 63]);
+                switch (map[x][y] = (char) grid2[x & 63][y & 63])
+                {
+                    case ' ': env[x][y] = DungeonTools.UNTOUCHED;
+                    break;
+                    case '.': env[x][y] = DungeonTools.ROOM_FLOOR;
+                    break;
+                    default: env[x][y] = DungeonTools.ROOM_WALL;
+                }
+
             }
             System.out.println();
         }
+        System.out.println();
+        DungeonProcessor proc = new DungeonProcessor(128, 128);
+        map = LineTools.hashesToLines(proc.generate(map, env));
+        proc.setPlaceGrid(map);
+        System.out.println(proc);
         System.out.println();
         while (!wfc.run(random.nextLong(), 0));
         grid2 = wfc.result();

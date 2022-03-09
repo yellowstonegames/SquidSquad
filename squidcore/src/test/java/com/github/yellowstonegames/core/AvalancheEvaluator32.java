@@ -8,12 +8,17 @@ public class AvalancheEvaluator32 {
 
     // fb ^ fc, rotate; fc ^ fd, rotate; fa + fb; increment fd
 //    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //1178.2487239837646, 7197.45912361145
+    // using shiftC as the constant, but otherwise the same as above
+//    private static final int shiftA = 26, shiftB = 11, shiftC = 0xADB5B165; //1991.191421508789, 11950.504871368408
 
     // fb ^ fc, rotate; fc ^ fd, rotate; fa ^ fb + fc; increment fd
 //    private static final int shiftA = 8, shiftB = 27, shiftC = 4; //26.931787490844727, 178.46607971191406
 //    private static final int shiftA = 19, shiftB = 24, shiftC = 14; //15.269414901733398, 172.5810317993164
     // using shiftC as the constant, but otherwise the same as above
-    private static final int shiftA = 19, shiftB = 24, shiftC = 0x30ECB8CB; //15.500167846679688, 171.91223335266113
+//    private static final int shiftA = 19, shiftB = 24, shiftC = 0x30ECB8CB; //15.500167846679688, 171.91223335266113
+// Above constants appear fine until a sudden BRank failure in PractRand. Right shift by 8 could be an issue?
+    private static final int shiftA = 26, shiftB = 11, shiftC = 0xADB5B165; //16.027650833129883, 172.77030181884766
+// These constants above are fine to at least 16TB without anomalies.
 
     private static final int constantAdd = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 32) | 1;
     private static final int constantMul = (int)(0xF1357AEA2E62A9C5L * shiftC >>> 44) | 1;
@@ -28,8 +33,11 @@ public class AvalancheEvaluator32 {
             final int fb = stateB;
             final int fc = stateC;
             final int fd = stateD;
-            stateA = Integer.rotateLeft(fb ^ fc, shiftA);
-            stateB = Integer.rotateLeft(fc ^ fd, shiftB);
+            final int bc = fb ^ fc;
+            final int cd = fc ^ fd;
+            stateA = (bc << shiftA | bc >>> -shiftA);
+            stateB = (cd << shiftB | cd >>> -shiftB);
+//            stateC = fa + fb;
             stateC = fa ^ fb + fc;
             stateD = fd + shiftC;
         }

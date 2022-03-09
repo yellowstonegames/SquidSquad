@@ -824,7 +824,7 @@ public class DungeonProcessor implements PlaceGenerator{
             reuse.empty().insert(stairsUp);
             flooder.dijkstraScan(scan, reuse);
             frustrated++;
-        }while (reuse.size() < width * height * 0.25f && frustrated < 15);
+        }while (reuse.size() < flooder.size() * 0.125f && frustrated < 15);
         int maxDijkstra = 0;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -903,7 +903,7 @@ public class DungeonProcessor implements PlaceGenerator{
             stairsUp = flooder.singleRandom(rng);
             reuse.insert(stairsUp);
             flooder.dijkstraScan(scan, reuse);
-            if(reuse.size() < width * height * 0.25f) flooder.clear();
+            if(reuse.size() < flooder.size() * 0.125f) flooder.clear();
         }
         if(flooder.size() == 0) {
             do {
@@ -913,7 +913,7 @@ public class DungeonProcessor implements PlaceGenerator{
                 reuse.insert(stairsUp);
                 flooder.dijkstraScan(scan, reuse);
                 frustrated++;
-            } while (reuse.size() < width * height * 0.25f && frustrated < 8);
+            } while (reuse.size() < flooder.size() * 0.125f && frustrated < 8);
         }
         if(frustrated >= 8)
         {
