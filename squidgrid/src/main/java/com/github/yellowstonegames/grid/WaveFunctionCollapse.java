@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.yellowstonegames.core.Hasher;
 
 import javax.annotation.Nonnull;
@@ -46,7 +45,7 @@ public class WaveFunctionCollapse {
     private int[] stack;
     private int stacksize;
 
-    public EnhancedRandom random;
+    @Nonnull public EnhancedRandom random;
     private int targetWidth, targetHeight, totalOptions;
     private boolean periodic;
 
@@ -63,13 +62,55 @@ public class WaveFunctionCollapse {
     private IntIntOrderedMap choices;
     private int ground;
 
-    public WaveFunctionCollapse(int[][] itemGrid, int order, int width, int height, boolean periodicInput, boolean periodicOutput, int symmetry, int ground)
+    /**
+     * Creates a WaveFunctionCollapse that will imitate the given {@code itemGrid}. This will be able to produce 2D int
+     * arrays of size {@code width} by {@code height}, using the same content as present in itemGrid. The {@code order}
+     * should usually be 2 (low-quality), 3 (normal quality), or sometimes 4 (possibly-too-high quality); it determines
+     * how far away from a given cell in itemGrid to consider when placing that cell's value in a result. This acts as
+     * if {@code periodicInput} is true, making the top row to be considered adjacent to the bottom, and likewise for
+     * the left column and right column. This will not produce tiling output; to do that, use the larger constructor and
+     * pass true to {@code periodicOutput}. The {@code symmetry} value will be treated as 1, and {@code ground} as 0.
+     * @param itemGrid the initial data to imitate; this must not be empty
+     * @param order how far away from a cell to look when determining what value it should have; usually 2, 3, or 4
+     * @param width the width of the output 2D array to produce
+     * @param height the height of the output 2D array to produce
+     */
+    public WaveFunctionCollapse(@Nonnull int[][] itemGrid, int order, int width, int height, EnhancedRandom random){
+        this(itemGrid, order, width, height, random, true, false, 1, 0);
+    }
+    /**
+     * Creates a WaveFunctionCollapse that will imitate the given {@code itemGrid}. This will be able to produce 2D int
+     * arrays of size {@code width} by {@code height}, using the same content as present in itemGrid. The {@code order}
+     * should usually be 2 (low-quality), 3 (normal quality), or sometimes 4 (possibly-too-high quality); it determines
+     * how far away from a given cell in itemGrid to consider when placing that cell's value in a result. You will
+     * probably want to try different values for {@code periodicInput} and {@code periodicOutput}. If periodicInput is
+     * true, then the top row is considered adjacent to the bottom, and likewise for the left column and right column.
+     * If periodicOutput is true, this will spend much more time trying to make all the edges match up so the result can
+     * tile seamlessly. The {@code symmetry} value will be clamped between 1 and 8, inclusive; if 1, only the tiles in
+     * their current state will be considered, but if it is greater, more and more reflections and rotations of areas in
+     * itemGrid will be considered. I don't really know what {@code ground} does, and it should probably be 0.
+     * @param itemGrid the initial data to imitate; this must not be empty
+     * @param order how far away from a cell to look when determining what value it should have; usually 2, 3, or 4
+     * @param width the width of the output 2D array to produce
+     * @param height the height of the output 2D array to produce
+     * @param random the EnhancedRandom number generator to use; will be referenced directly, not copied.
+     * @param periodicInput if true, {@code itemGrid} is treated as wrapping from edge to opposite edge
+     * @param periodicOutput if true, the output will tile if repeated; may make generation much more difficult
+     * @param symmetry the level of symmetry to consider when imitating areas; between 1 and 8, inclusive, but usually 1
+     * @param ground not sure what this does, to be honest; should usually be 0
+     */
+    public WaveFunctionCollapse(@Nonnull int[][] itemGrid, int order, int width, int height, EnhancedRandom random,
+                                boolean periodicInput, boolean periodicOutput, int symmetry, int ground)
     {
         targetWidth = width;
         targetHeight = height;
 
         this.order = order;
         periodic = periodicOutput;
+
+        this.random = random;
+
+        symmetry = Math.min(Math.max(symmetry, 1), 8);
 
         int sampleWidth = itemGrid.length, sampleHeight = itemGrid[0].length;
         choices = new IntIntOrderedMap(sampleWidth * sampleHeight);
@@ -84,8 +125,6 @@ public class WaveFunctionCollapse {
                 sample[x][y] = i;
             }
         }
-
-        int C = choices.size();
 
         ObjectIntOrderedMap<int[]> weights = new ObjectIntOrderedMap<int[]>(){
             @Override
@@ -229,7 +268,7 @@ public class WaveFunctionCollapse {
         stacksize = 0;
     }
 
-    private Boolean observe()
+    private int observe()
     {
         double min = 1E+3;
         int argmin = -1;
@@ -239,7 +278,7 @@ public class WaveFunctionCollapse {
             if (onBoundary(i % targetWidth, i / targetWidth)) continue;
 
             int amount = sumsOfOnes[i];
-            if (amount == 0) return false;
+            if (amount == 0) return 0;
 
             double entropy = entropies[i];
             if (amount > 1 && entropy <= min)
@@ -264,7 +303,7 @@ public class WaveFunctionCollapse {
                     }
                 }
             }
-            return true;
+            return 1;
         }
 
         double[] distribution = new double[totalOptions];
@@ -286,7 +325,7 @@ public class WaveFunctionCollapse {
                 ban(argmin, t);
         }
 
-        return null;
+        return -1;
     }
 
     private void propagate()
@@ -323,35 +362,59 @@ public class WaveFunctionCollapse {
             }
         }
     }
-
+    /**
+     * Try to actually generate a result, taking {@code limit} tries at most (0 or less for unlimited). Returns true if
+     * a result was found successfully. The limit should usually be either 0 or a fairly high number (at least 100) if
+     * you want a result from this, though you can call this many times before it gets a successful result. This takes
+     * a {@code seed} as a long, but you are likely to get comparable results with {@link #run(int)} if the state of
+     * {@link #random} is deterministic before this is called.
+     * @param seed used with {@link #random}, passed to {@link EnhancedRandom#setSeed(long)} before this starts attempts
+     * @param limit how many attempts to allow; may be 0 or less for unlimited attempts. A common idiom is:
+     * <code>
+     *         long seed = 1L; // can be any initial seed
+     *         while (!wfc.run(seed++, 0)); // This tries until there is a success, which may never happen.
+     *         int[][] resultGrid = wfc.result();
+     * </code>
+     * @return true if this found a result successfully, or false if it did not
+     */
     public boolean run(long seed, int limit)
     {
         if (wave == null) init();
 
         clear();
-        random = new TricycleRandom(seed);
+        random.setSeed(seed);
 
         for (int l = 0; l < limit || limit == 0; l++)
         {
-            Boolean result = observe();
-            if (result != null) return result;
+            int result = observe();
+            if (result >= 0) return result == 1;
             propagate();
         }
 
         return false;
     }
 
-    public boolean run(EnhancedRandom rng, int limit)
+    /**
+     * Try to actually generate a result, taking {@code limit} tries at most (0 or less for unlimited). Returns true if
+     * a result was found successfully. The limit should usually be either 0 or a fairly high number (at least 100) if
+     * you want a result from this, though you can call this many times before it gets a successful result.
+     * @param limit how many attempts to allow; may be 0 or less for unlimited attempts. A common idiom is:
+     * <code>
+     *         while (!wfc.run(0)); // This tries until there is a success, which may never happen.
+     *         int[][] resultGrid = wfc.result();
+     * </code>
+     * @return true if this found a result successfully, or false if it did not
+     */
+    public boolean run(int limit)
     {
         if (wave == null) init();
 
         clear();
-        random = rng;
 
-        for (int l = 0; l < limit || limit == 0; l++)
+        for (int l = 0; l < limit || limit <= 0; l++)
         {
-            Boolean result = observe();
-            if (result != null) return result;
+            int result = observe();
+            if (result >= 0) return result == 1;
             propagate();
         }
 
