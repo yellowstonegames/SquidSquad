@@ -18,11 +18,9 @@ package com.github.yellowstonegames.grid;
 
 /**
  * A group of similar methods for getting hashes of points based on int coordinates in 2, 3, 4, or 6 dimensions and
- * an int for state; the code is similar to {@link LongPointHash} but will be much faster on GWT. This
- * implementation has high enough quality to be useful as a source of random numbers based on positions, but would
- * likely not be a good option in a hash table (or at least not as good as the tailored implementation of
- * {@link Coord#hashCode()}; it is still better than {@link java.util.Objects#hash(Object...)}). Even on a desktop
- * JVM, this class is faster than {@link LongPointHash}. The technique used here owes credit to Pelle Evensen for
+ * an int for state; the code is similar to {@link LongPointHash} but will be much faster on GWT. This hash has high
+ * enough quality to be useful as a source of random numbers based on positions. Even on a desktop JVM, this class is
+ * faster than {@link LongPointHash}. The technique used here owes credit to Pelle Evensen for
  * finding the significant quality increase from using multiple bitwise rotations XORed together, and Martin Roberts for
  * discovering the connection between higher dimensional ranks and the appropriate numbers to gain similar qualities to
  * adding the golden ratio mod 1 in 1D, using what had already been named "harmonious numbers." The only case where this
