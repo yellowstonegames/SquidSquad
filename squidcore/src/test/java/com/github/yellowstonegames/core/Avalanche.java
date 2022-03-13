@@ -241,9 +241,9 @@ public class Avalanche {
     private static final long N = 1L << 6;
     //    private static final int lower = 9, upper = 19, inc = 1;
 //    private static final int lower = 8, upper = 41, inc = 4;
-    private static final int lower = 1, upper = 15, inc = 1;
+//    private static final int lower = 1, upper = 15, inc = 1;
     // this is the one most of the tests use.
-//    private static final int lower = 10, upper = 20, inc = 1;
+    private static final int lower = 10, upper = 20, inc = 1;
 
     public static long mix(final long v, final int shiftA, final int shiftB, final int shiftC, final int iterations) {
         long stateA = v;
@@ -415,13 +415,80 @@ public class Avalanche {
 //            stateC = fa * 0xD1342543DE82EF95L;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = fc ^ fd;
+//            stateC = fa * (0xD1342543DE82EF95L * shiftB | 1L);
+//            stateD = fd + constant;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb ^ fc;
+//            final long ad = fa ^ fd;
+//            stateA = Long.rotateLeft(bc, shiftA);
+//            stateB = Long.rotateLeft(ad, shiftB);
+//            stateC = ad + fb;
+//            stateD = fd + constant;
+
+            // returning stateA:
+//Order 1, Best Ten with total:
+//#0: 35,10,23 with value 0.92730712890625
+//#1: 58,14,33 with value 0.9279022216796875
+//#2: 57,41,63 with value 0.9326171875
+//#3: 56,14,26 with value 0.933013916015625
+//#4: 59,15,58 with value 0.9342498779296875
+//#5: 44,35,36 with value 0.9376068115234375
+//#6: 17,38,55 with value 0.94024658203125
+//#7: 20,8,24 with value 0.9407958984375
+//#8: 35,21,26 with value 0.9410400390625
+//#9: 27,42,48 with value 0.9411163330078125
+//Order 2, Best Ten with total:
+//#0: 43,36,41 with value 31.115707397460938
+//#1: 59,48,33 with value 31.121994018554688
+//#2: 25,9,44 with value 31.125213623046875
+//#3: 19,6,11 with value 31.146881103515625
+//#4: 56,11,61 with value 31.149017333984375
+//#5: 18,58,55 with value 31.149673461914062
+//#6: 15,19,48 with value 31.167098999023438
+//#7: 25,18,1 with value 31.171463012695312
+//#8: 24,53,63 with value 31.173187255859375
+//#9: 59,15,58 with value 31.174072265625
+            //returning stateC:
+//#0: 6,23,21 with value 0.9275665283203125
+//#1: 27,42,48 with value 0.9281158447265625
+//#2: 23,59,61 with value 0.9303131103515625
+//#3: 42,49,21 with value 0.9332275390625
+//#4: 52,44,26 with value 0.9333648681640625
+//#5: 20,5,33 with value 0.9366302490234375
+//#6: 14,23,16 with value 0.9368896484375
+//#7: 58,19,63 with value 0.9385223388671875
+//#8: 35,40,21 with value 0.940277099609375
+//#9: 41,50,45 with value 0.9408416748046875
+//Order 2, Best Ten with total:
+//#0: 49,5,54 with value 31.050888061523438
+//#1: 7,33,61 with value 31.08087158203125
+//#2: 11,18,63 with value 31.087722778320312
+//#3: 24,29,16 with value 31.1005859375
+//#4: 25,17,38 with value 31.102676391601562
+//#5: 51,7,57 with value 31.111785888671875
+//#6: 9,30,58 with value 31.1458740234375
+//#7: 48,6,1 with value 31.1522216796875
+//#8: 6,49,24 with value 31.153335571289062
+//#9: 52,44,26 with value 31.15582275390625
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            stateA = Long.rotateLeft(fb ^ fc, shiftA);
-            stateB = fc ^ fd;
-            stateC = fa * (0xD1342543DE82EF95L * shiftB | 1L);
+            final long bc = fb + fc;
+            final long cd = fc ^ fd;
+            stateA = (bc << shiftA | bc >>> -shiftA);
+            stateB = (cd << shiftB | cd >>> -shiftB);
+            stateC = fa ^ bc;
             stateD = fd + constant;
         }
         return stateC;

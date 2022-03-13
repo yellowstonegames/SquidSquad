@@ -260,8 +260,25 @@ public class AvalancheEvaluator {
     // uses fb + fc, fc + fd, fa ^ fb + fc, return fc
 //    private static final int shiftA = 18, shiftB = 38, shiftC = 21; //169.10442113876343, 887.2168755531311
 //    private static final int shiftA = 25, shiftB = 19, shiftC = 21; //162.84991025924683, 814.8368101119995
-    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
+//    private static final int shiftA = 17, shiftB = 58, shiftC = 58; //131.76441717147827, 658.4919333457947
+    // uses  b ^ c, a ^ d, b + (a ^ d), return a
+//    private static final int shiftA = 38, shiftB = 10, shiftC = 47; //2963.597212791443, 39302.08335542679
+    // uses fb ^ fc, fc ^ fd, fa + fb, return fc
+//    private static final int shiftA = 57, shiftB = 11, shiftC = 47; //3574.329375267029, 47901.35697364807
     // with constant 0x97C7894D00D8F3A3L and above shifts: 125.68258333206177, 643.3451714515686
+
+    // uses b + c, c ^ d, a ^ b + c
+//    private static final int shiftA = 35, shiftB = 10, shiftC = 23; //130.53586387634277, 740.2652406692505
+// with constant 0xD5D1BDE118FDADE3L
+    //127.29248857498169, 739.1366038322449
+//    private static final int shiftA = 58, shiftB = 14, shiftC = 33; //156.01983261108398, 834.2125835418701
+//    private static final int shiftA = 57, shiftB = 41, shiftC = 63; //165.92603731155396, 918.2142691612244
+//    private static final int shiftA = 43, shiftB = 36, shiftC = 41; //159.943865776062, 905.73122215271
+    // returning c
+    private static final int shiftA = 6, shiftB = 23, shiftC = 21; //83.90083456039429, 514.3165535926819
+// with constant 0xEB2A65F78A5C978BL
+    //82.26387596130371, 511.67639112472534
+//    private static final int shiftA = 52, shiftB = 44, shiftC = 26; //117.96543455123901, 623.2754197120667
 
     // uses fb + fc, fc + fd, fa ^ fb, return fa
 //    private static final int shiftA = 46, shiftB = 19, shiftC = 16; //2491.0482816696167, 31176.99477672577
@@ -270,9 +287,12 @@ public class AvalancheEvaluator {
 
 //
 //    private static final long constant = 0xC6BC279692B5C323L;
+//    private static final long constant = 0xCA762D55332BD5AFL;//0xA697335663D548B5L
     private static final long constant = (0xC6BC279692B5C323L * shiftC | 1L);
 //    private static final long constant = 0xE3B1B6599529F247L;
-//    private static final long constant = 0xE3955173459932CDL;
+//    private static final long constant = 0xEB2A65F78A5C978BL;//0xBC723139968EE63BL
+//    private static final long constant = 0xADB5B12149E93C39L;
+//    private static final long constant = 0xD5D1BDE118FDADE3L; //0xCA4BCD2E220F1B75L
 //    private static final long constant = Hasher.determine(shiftC) | 1L;
 
     public static long mix(final long v, final int iterations) {
@@ -374,14 +394,14 @@ public class AvalancheEvaluator {
 //            stateC = fb + fa;
 //            stateD = fd + constant;
 
-            final long fa = stateA;
-            final long fb = stateB;
-            final long fc = stateC;
-            final long fd = stateD;
-            stateA = Long.rotateLeft(fb ^ fc, shiftA);
-            stateB = Long.rotateLeft(fc ^ fd, shiftB);
-            stateC = fa * MassAvalancheEvaluator.goldenLong[shiftA];;
-            stateD = fd + constant;
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, shiftA);
+//            stateB = Long.rotateLeft(fc ^ fd, shiftB);
+//            stateC = fa * MassAvalancheEvaluator.goldenLong[shiftA];;
+//            stateD = fd + constant;
 //
 //            final long fa = stateA;
 //            final long fb = stateB;
@@ -451,7 +471,27 @@ public class AvalancheEvaluator {
 //            stateC = fa + fb;
 //            stateD = fd + 0xADB5B12149E93C39L;
 ////            return fc;
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb ^ fc;
+//            final long ad = fa ^ fd;
+//            stateA = Long.rotateLeft(bc, shiftA);
+//            stateB = Long.rotateLeft(ad, shiftB);
+//            stateC = ad + fb;
+//            stateD = fd + constant;
 
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            final long bc = fb + fc;
+            final long cd = fc ^ fd;
+            stateA = (bc << shiftA | bc >>> -shiftA);
+            stateB = (cd << shiftB | cd >>> -shiftB);
+            stateC = fa ^ bc;
+            stateD = fd + constant;
         }
         return stateC;
     }

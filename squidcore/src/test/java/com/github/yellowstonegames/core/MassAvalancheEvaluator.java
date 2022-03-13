@@ -18,7 +18,11 @@ public class MassAvalancheEvaluator {
 //    private static final int shiftA = 57, shiftB = 11, shiftC = 26;
 //    private static final int shiftA = 37, shiftB = 57, shiftC = 21;
 //    private static final int shiftA = 6, shiftB = 6, shiftC = 59;
-    private static final int shiftA = 4, shiftB = 9, shiftC = 26;
+//    private static final int shiftA = 4, shiftB = 9, shiftC = 26;
+
+// uses b + c, c ^ d, a ^ b + c
+//    private static final int shiftA = 35, shiftB = 10, shiftC = 23;
+    private static final int shiftA = 6, shiftB = 23, shiftC = 21;
 
 //
 //    private static long constant = 0x06A0F81D3D2E35EFL;
@@ -208,14 +212,15 @@ public class MassAvalancheEvaluator {
 //            stateB = fc ^ fd;
 //            stateC = fa * (0xD1342543DE82EF95L * shiftB | 1L);
 //            stateD = fd + constant;
-            final long fa = stateA;
-            final long fb = stateB;
-            final long fc = stateC;
-            final long fd = stateD;
-            stateA = Long.rotateLeft(fb ^ fc, 4);
-            stateB = fc ^ fd;
-            stateC = fa * 0x397EAD00E4621995L;
-            stateD = fd + 0xB16D1031B9120BFDL;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            stateA = Long.rotateLeft(fb ^ fc, 4);
+//            stateB = fc ^ fd;
+//            stateC = fa * 0x397EAD00E4621995L;
+//            stateD = fd + 0xB16D1031B9120BFDL;
 
 //            final long fa = stateA;
 //            final long fb = stateB;
@@ -225,6 +230,28 @@ public class MassAvalancheEvaluator {
 //            stateB = Long.rotateLeft(fc ^ fd, 6);
 //            stateC = fa * 0xD1342543DE82EF95L;
 //            stateD = fd + 0xD9501E54E3CE92E1L;
+
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb ^ fc;
+//            final long ad = fa ^ fd;
+//            stateA = Long.rotateLeft(bc, 38);
+//            stateB = Long.rotateLeft(ad, 10);
+//            stateC = ad + fb;
+//            stateD = fd + constant;
+
+            final long fa = stateA;
+            final long fb = stateB;
+            final long fc = stateC;
+            final long fd = stateD;
+            final long bc = fb + fc;
+            final long cd = fc ^ fd;
+            stateA = (bc << shiftA | bc >>> -shiftA);
+            stateB = (cd << shiftB | cd >>> -shiftB);
+            stateC = fa ^ bc;
+            stateD = fd + constant;
         }
 //        return stateA;
         return stateC;
