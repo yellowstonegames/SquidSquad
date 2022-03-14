@@ -480,15 +480,132 @@ public class Avalanche {
 //#7: 48,6,1 with value 31.1522216796875
 //#8: 6,49,24 with value 31.153335571289062
 //#9: 52,44,26 with value 31.15582275390625
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb + fc;
+//            final long cd = fc ^ fd;
+//            stateA = (bc << shiftA | bc >>> -shiftA);
+//            stateB = (cd << shiftB | cd >>> -shiftB);
+//            stateC = fa ^ bc;
+//            stateD = fd + constant;
+
+            // +, +, ^, return c
+//Order 1, Best Ten with total:
+//#0: 58,33,1 with value 0.9268646240234375
+//#1: 56,10,23 with value 0.9282684326171875
+//#2: 10,56,6 with value 0.9307403564453125
+//#3: 34,58,36 with value 0.93084716796875
+//#4: 46,19,16 with value 0.93328857421875
+//#5: 20,47,16 with value 0.933349609375
+//#6: 57,11,26 with value 0.9339752197265625
+//#7: 57,32,3 with value 0.9380035400390625
+//#8: 18,45,16 with value 0.9398345947265625
+//#9: 19,57,16 with value 0.940582275390625
+            // -, +, ^, return c
+//Order 1, Best Ten with total:
+//#0: 58,33,1 with value 0.928070068359375
+//#1: 57,11,26 with value 0.9337921142578125
+//#2: 46,19,16 with value 0.9358367919921875
+//#3: 56,10,23 with value 0.9406280517578125
+//#4: 20,47,16 with value 0.9412384033203125
+//#5: 19,57,16 with value 0.943511962890625
+//#6: 19,46,3 with value 0.94378662109375
+//#7: 34,58,36 with value 0.946319580078125
+//#8: 10,56,6 with value 0.9465484619140625
+//#9: 33,45,3 with value 0.9467010498046875
+            // +, +, ^, return a
+//Order 1, Best Ten with total:
+//#0: 46,19,16 with value 0.926025390625
+//#1: 56,32,16 with value 0.930206298828125
+//#2: 10,56,6 with value 0.93359375
+//#3: 26,36,13 with value 0.9371337890625
+//#4: 18,45,16 with value 0.9378662109375
+//#5: 39,30,22 with value 0.9383544921875
+//#6: 19,47,1 with value 0.9385223388671875
+//#7: 38,28,9 with value 0.938690185546875
+//#8: 45,18,13 with value 0.9429779052734375
+//#9: 38,30,45 with value 0.945465087890625
+            // -, +, ^, return a
+//Order 1, Best Ten with total:
+//#0: 10,56,6 with value 0.92449951171875
+//#1: 46,19,16 with value 0.935577392578125
+//#2: 56,32,16 with value 0.9356231689453125
+//#3: 26,36,13 with value 0.9380340576171875
+//#4: 39,30,22 with value 0.9395751953125
+//#5: 45,18,13 with value 0.9408721923828125
+//#6: 57,33,14 with value 0.941314697265625
+//#7: 25,35,16 with value 0.9418487548828125
+//#8: 19,47,1 with value 0.942413330078125
+//#9: 35,25,8 with value 0.9427490234375
+            // b + c, d - c, a ^ b, return a
+//Order 1, Best Ten with total:
+//#0: 56,32,16 with value 0.9224853515625
+//#1: 46,19,16 with value 0.9303741455078125
+//#2: 10,56,6 with value 0.931884765625
+//#3: 26,36,13 with value 0.9321136474609375
+//#4: 39,30,22 with value 0.93603515625
+//#5: 25,35,16 with value 0.9367218017578125
+//#6: 19,47,1 with value 0.9394989013671875
+//#7: 26,35,3 with value 0.9400634765625
+//#8: 18,45,16 with value 0.9414215087890625
+//#9: 35,25,8 with value 0.943023681640625
+            // b + c, c + d, a ^ b + c, return a
+//Order 1, Best Ten with total:
+//#0: 57,18,22 with value 0.9314117431640625
+//#1: 22,16,3 with value 0.933319091796875
+//#2: 44,35,36 with value 0.9342193603515625
+//#3: 35,41,52 with value 0.935638427734375
+//#4: 55,20,61 with value 0.9368896484375
+//#5: 36,47,3 with value 0.9379425048828125
+//#6: 21,6,30 with value 0.9386444091796875
+//#7: 58,16,36 with value 0.94012451171875
+//#8: 18,57,26 with value 0.94012451171875
+//#9: 47,53,21 with value 0.940826416015625
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb + fc;
+//            final long cd = fd + fc;
+//            stateA = (bc << shiftA | bc >>> -shiftA);
+//            stateB = (cd << shiftB | cd >>> -shiftB);
+//            stateC = fa ^ bc;
+//            stateD = fd + constant;
+            //return a
+//Order 1, Best Ten with total:
+//#0: 58,16,36 with value 0.92620849609375
+//#1: 11,45,11 with value 0.9319915771484375
+//#2: 57,18,22 with value 0.93206787109375
+//#3: 42,51,52 with value 0.9333953857421875
+//#4: 53,45,11 with value 0.9354095458984375
+//#5: 23,57,21 with value 0.9383697509765625
+//#6: 28,23,21 with value 0.9388580322265625
+//#7: 30,40,61 with value 0.938995361328125
+//#8: 25,6,30 with value 0.9390411376953125
+//#9: 35,11,16 with value 0.9402923583984375
+            //return c
+//Order 1, Best Ten with total:
+//#0: 50,9,57 with value 0.9289093017578125
+//#1: 43,6,36 with value 0.93212890625
+//#2: 16,26,21 with value 0.9378204345703125
+//#3: 58,47,61 with value 0.938201904296875
+//#4: 55,20,61 with value 0.938751220703125
+//#5: 17,52,3 with value 0.9394683837890625
+//#6: 16,58,26 with value 0.9407501220703125
+//#7: 29,45,3 with value 0.9414825439453125
+//#8: 7,47,3 with value 0.943572998046875
+//#9: 6,20,63 with value 0.94390869140625
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            final long bc = fb + fc;
+            final long bc = fb ^ fc;
             final long cd = fc ^ fd;
             stateA = (bc << shiftA | bc >>> -shiftA);
             stateB = (cd << shiftB | cd >>> -shiftB);
-            stateC = fa ^ bc;
+            stateC = fa + bc;
             stateD = fd + constant;
         }
         return stateC;

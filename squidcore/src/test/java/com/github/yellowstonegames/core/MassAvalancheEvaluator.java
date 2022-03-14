@@ -22,9 +22,32 @@ public class MassAvalancheEvaluator {
 
 // uses b + c, c ^ d, a ^ b + c
 //    private static final int shiftA = 35, shiftB = 10, shiftC = 23;
-    private static final int shiftA = 6, shiftB = 23, shiftC = 21;
+//    private static final int shiftA = 6, shiftB = 23, shiftC = 21;
+//    private static final int shiftA = 46, shiftB = 19, shiftC = 16;
+//    private static final int shiftA = 57, shiftB = 18, shiftC = 22; //return a: 0xED43566A0A91EB2DL, 0x8B2D4CBD9324C81FL
+    private static final int shiftA = 57, shiftB = 18, shiftC = 22; //return c: 0xDE916ABCC965815BL, 0xED43566A0A91EB2DL, 0xA9628B9FF0A1A8E9L, 0xD295A81B326269ABL
+//    private static final int shiftA = 22, shiftB = 47, shiftC = 1;
+//    private static final int shiftA = 11, shiftB = 45, shiftC = 11;
 
-//
+//    private static final int shiftA = 50, shiftB = 9, shiftC = 57;
+//    private static final int shiftA = 43, shiftB = 6, shiftC = 57;
+//    private static final int shiftA = 58, shiftB = 47, shiftC = 57;
+//    private static final int shiftA = 55, shiftB = 20, shiftC = 57;
+//    private static final int shiftA = 29, shiftB = 45, shiftC = 57;
+//    private static final int shiftA = 17, shiftB = 52, shiftC = 57;
+
+//Order 1, Best Ten with total:
+//#0: 50,9,57 with value 0.9289093017578125
+//#1: 43,6,36 with value 0.93212890625
+//#2: 16,26,21 with value 0.9378204345703125
+//#3: 58,47,61 with value 0.938201904296875
+//#4: 55,20,61 with value 0.938751220703125
+//#5: 17,52,3 with value 0.9394683837890625
+//#6: 16,58,26 with value 0.9407501220703125
+//#7: 29,45,3 with value 0.9414825439453125
+//#8: 7,47,3 with value 0.943572998046875
+//#9: 6,20,63 with value 0.94390869140625
+
 //    private static long constant = 0x06A0F81D3D2E35EFL;
 //    private static long constant = 0xC6BC279692B5C323L * 22L | 1L;
     private static long constant = 0xC6BC279692B5C323L * shiftC | 1L;
@@ -242,15 +265,28 @@ public class MassAvalancheEvaluator {
 //            stateC = ad + fb;
 //            stateD = fd + constant;
 
+//            final long fa = stateA;
+//            final long fb = stateB;
+//            final long fc = stateC;
+//            final long fd = stateD;
+//            final long bc = fb + fc;
+//            final long cd = fc ^ fd;
+//            stateA = (bc << shiftA | bc >>> -shiftA);
+//            stateB = (cd << shiftB | cd >>> -shiftB);
+//            stateC = fa ^ bc;
+//            stateD = fd + constant;
+
             final long fa = stateA;
             final long fb = stateB;
             final long fc = stateC;
             final long fd = stateD;
-            final long bc = fb + fc;
+            final long bc = fb ^ fc;
             final long cd = fc ^ fd;
             stateA = (bc << shiftA | bc >>> -shiftA);
             stateB = (cd << shiftB | cd >>> -shiftB);
-            stateC = fa ^ bc;
+            stateC = fa + bc;
+//            stateC = fa ^ fb; //0xE3955173459932CDL 0xB64F7AACD92A95ABL 0xE6D6B8990D712A5BL 0xCA6372CE89CA5B13L
+//            stateC = fa ^ bc; //0xD8CD1E09F7B51BF1L 0x8D50D2C3F1EC6CD1L 0x91A6594C9E8D459BL 0xC92651AD1416562FL
             stateD = fd + constant;
         }
 //        return stateA;
