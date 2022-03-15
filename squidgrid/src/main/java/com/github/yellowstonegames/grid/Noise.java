@@ -4212,7 +4212,306 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
 
-    // Simplex Noise
+    // 2D Simplex
+
+    public float getSimplexFractal(float x, float y) {
+        x *= frequency;
+        y *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleSimplexFractalFBM(x, y);
+            case BILLOW:
+                return singleSimplexFractalBillow(x, y);
+            case RIDGED_MULTI:
+                return singleSimplexFractalRidgedMulti(x, y);
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * (2) and gain (0.5) in 2D.
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float layered2D(float x, float y, int seed, int octaves)
+    {
+        x *= 0.03125f;
+        y *= 0.03125f;
+
+        float sum = 1 - Math.abs(singleSimplex(seed, x, y));
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= 2f;
+            y *= 2f;
+
+            amp *= 0.5f;
+            sum -= (1 - Math.abs(singleSimplex(seed + i, x, y))) * amp;
+        }
+        amp = 0.5f;
+        float ampFractal = 1;
+        for (int i = 1; i < octaves; i++) {
+            ampFractal += amp;
+            amp *= 0.5f;
+        }
+        return sum / ampFractal;
+    }
+    /**
+     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
+     * (2) and default gain (0.5) in 2D.
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float layered2D(float x, float y, int seed, int octaves, float frequency)
+    {
+        x *= frequency;
+        y *= frequency;
+
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= 2f;
+            y *= 2f;
+
+            amp *= 0.5f;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+        amp = 0.5f;
+        float ampFractal = 1;
+        for (int i = 1; i < octaves; i++) {
+            ampFractal += amp;
+            amp *= 0.5f;
+        }
+        return sum / ampFractal;
+    }
+    /**
+     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
+     * frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 2D.
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float layered2D(float x, float y, int seed, int octaves, float frequency, float lacunarity)
+    {
+        x *= frequency;
+        y *= frequency;
+
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+        float gain = 1.0f / lacunarity;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= 0.5f;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+        amp = gain;
+        float ampFractal = 1;
+        for (int i = 1; i < octaves; i++) {
+            ampFractal += amp;
+            amp *= gain;
+        }
+        return sum / ampFractal;
+    }
+
+    /**
+     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
+     * frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 2D.
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float layered2D(float x, float y, int seed, int octaves, float frequency, float lacunarity, float gain)
+    {
+        x *= frequency;
+        y *= frequency;
+
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+        amp = gain;
+        float ampFractal = 1;
+        for (int i = 1; i < octaves; i++) {
+            ampFractal += amp;
+            amp *= gain;
+        }
+        return sum / ampFractal;
+    }
+
+    private float singleSimplexFractalFBM(float x, float y) {
+        int seed = this.seed;
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleSimplexFractalBillow(float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    /**
+     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * (2) and gain (0.5).
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float ridged2D(float x, float y, int seed, int octaves)
+    {
+        return ridged2D(x, y, seed, octaves, 0.03125f, 2f);
+    }
+    /**
+     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * (2) and gain (0.5).
+     * @param x
+     * @param y
+     * @param seed
+     * @param octaves
+     * @return noise as a float between -1f and 1f
+     */
+    public float ridged2D(float x, float y, int seed, int octaves, float frequency)
+    {
+        return ridged2D(x, y, seed, octaves, frequency, 2f);
+    }
+    /**
+     * Generates ridged-multi simplex noise with the given amount of octaves and specified lacunarity (the amount of
+     * frequency change between octaves); gain is not used.
+     * @param x
+     * @param y
+     * @param seed any int
+     * @param octaves how many "layers of detail" to generate; at least 1, but note this slows down with many octaves
+     * @param frequency often about {@code 1f / 32f}, but generally adjusted for the use case
+     * @param lacunarity when {@code octaves} is 2 or more, this affects the change between layers
+     * @return noise as a float between -1f and 1f
+     */
+    public float ridged2D(float x, float y, int seed, int octaves, float frequency, float lacunarity)
+    {
+        x *= frequency;
+        y *= frequency;
+
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    private float singleSimplexFractalRidgedMulti(float x, float y) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getSimplex(float x, float y) {
+        return singleSimplex(seed, x * frequency, y * frequency);
+    }
+
+    public float singleSimplex(int seed, float x, float y) {
+        float t = (x + y) * F2f;
+        int i = fastFloor(x + t);
+        int j = fastFloor(y + t);
+
+        t = (i + j) * G2f;
+        float X0 = i - t;
+        float Y0 = j - t;
+
+        float x0 = x - X0;
+        float y0 = y - Y0;
+
+        int i1, j1;
+        if (x0 > y0) {
+            i1 = 1;
+            j1 = 0;
+        } else {
+            i1 = 0;
+            j1 = 1;
+        }
+
+        float x1 = x0 - i1 + G2f;
+        float y1 = y0 - j1 + G2f;
+        float x2 = x0 - 1 + H2f;
+        float y2 = y0 - 1 + H2f;
+
+        float n = 0f;
+
+        t = 0.5f - x0 * x0 - y0 * y0;
+        if (t >= 0) {
+            t *= t;
+            n += t * t * gradCoord2D(seed, i, j, x0, y0);
+        }
+
+        t = 0.5f - x1 * x1 - y1 * y1;
+        if (t > 0) {
+            t *= t;
+            n += t * t * gradCoord2D(seed, i + i1, j + j1, x1, y1);
+        }
+
+        t = 0.5f - x2 * x2 - y2 * y2;
+        if (t > 0)  {
+            t *= t;
+            n += t * t * gradCoord2D(seed, i + 1, j + 1, x2, y2);
+        }
+        return n * 99.20689070704672f; // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
+    }
+
+    // 3D Simplex
     public float getSimplexFractal(float x, float y, float z) {
         x *= frequency;
         y *= frequency;
@@ -4592,391 +4891,112 @@ public class Noise {
         return 31.5f * n;
     }
 
-    public float getSimplexFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
-     * (2) and gain (0.5) in 2D.
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float layered2D(float x, float y, int seed, int octaves)
-    {
-        x *= 0.03125f;
-        y *= 0.03125f;
-
-        float sum = 1 - Math.abs(singleSimplex(seed, x, y));
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
-
-            amp *= 0.5f;
-            sum -= (1 - Math.abs(singleSimplex(seed + i, x, y))) * amp;
-        }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
-        return sum / ampFractal;
-    }
-    /**
-     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
-     * (2) and default gain (0.5) in 2D.
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float layered2D(float x, float y, int seed, int octaves, float frequency)
-    {
-        x *= frequency;
-        y *= frequency;
-
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
-
-            amp *= 0.5f;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
-        return sum / ampFractal;
-    }
-    /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 2D.
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float layered2D(float x, float y, int seed, int octaves, float frequency, float lacunarity)
-    {
-        x *= frequency;
-        y *= frequency;
-
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-        float gain = 1.0f / lacunarity;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= 0.5f;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-        amp = gain;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= gain;
-        }
-        return sum / ampFractal;
-    }
-
-    /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 2D.
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float layered2D(float x, float y, int seed, int octaves, float frequency, float lacunarity, float gain)
-    {
-        x *= frequency;
-        y *= frequency;
-
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-        amp = gain;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= gain;
-        }
-        return sum / ampFractal;
-    }
-
-    private float singleSimplexFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleSimplexFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
-     * (2) and gain (0.5).
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float ridged2D(float x, float y, int seed, int octaves)
-    {
-        return ridged2D(x, y, seed, octaves, 0.03125f, 2f);
-    }
-    /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
-     * (2) and gain (0.5).
-     * @param x
-     * @param y
-     * @param seed
-     * @param octaves
-     * @return noise as a float between -1f and 1f
-     */
-    public float ridged2D(float x, float y, int seed, int octaves, float frequency)
-    {
-        return ridged2D(x, y, seed, octaves, frequency, 2f);
-    }
-    /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and specified lacunarity (the amount of
-     * frequency change between octaves); gain is not used.
-     * @param x
-     * @param y
-     * @param seed any int
-     * @param octaves how many "layers of detail" to generate; at least 1, but note this slows down with many octaves
-     * @param frequency often about {@code 1f / 32f}, but generally adjusted for the use case
-     * @param lacunarity when {@code octaves} is 2 or more, this affects the change between layers
-     * @return noise as a float between -1f and 1f
-     */
-    public float ridged2D(float x, float y, int seed, int octaves, float frequency, float lacunarity)
-    {
-        x *= frequency;
-        y *= frequency;
-
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    private float singleSimplexFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getSimplex(float x, float y) {
-        return singleSimplex(seed, x * frequency, y * frequency);
-    }
-
-    public float singleSimplex(int seed, float x, float y) {
-        float t = (x + y) * F2f;
-        int i = fastFloor(x + t);
-        int j = fastFloor(y + t);
-
-        t = (i + j) * G2f;
-        float X0 = i - t;
-        float Y0 = j - t;
-
-        float x0 = x - X0;
-        float y0 = y - Y0;
-
-        int i1, j1;
-        if (x0 > y0) {
-            i1 = 1;
-            j1 = 0;
-        } else {
-            i1 = 0;
-            j1 = 1;
-        }
-
-        float x1 = x0 - i1 + G2f;
-        float y1 = y0 - j1 + G2f;
-        float x2 = x0 - 1 + H2f;
-        float y2 = y0 - 1 + H2f;
-
-        float n = 0f;
-
-        t = 0.5f - x0 * x0 - y0 * y0;
-        if (t >= 0) {
-            t *= t;
-            n += t * t * gradCoord2D(seed, i, j, x0, y0);
-        }
-
-        t = 0.5f - x1 * x1 - y1 * y1;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord2D(seed, i + i1, j + j1, x1, y1);
-        }
-
-        t = 0.5f - x2 * x2 - y2 * y2;
-        if (t > 0)  {
-            t *= t;
-            n += t * t * gradCoord2D(seed, i + 1, j + 1, x2, y2);
-        }
-        return n * 99.20689070704672f; // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
-    }
+    // 4D Simplex
 
     public float getSimplex(float x, float y, float z, float w) {
         return singleSimplex(seed, x * frequency, y * frequency, z * frequency, w * frequency);
     }
 
     public float singleSimplex(int seed, float x, float y, float z, float w) {
-        float n = 0f;
-        float t = (x + y + z + w) * F4f;
-        int i = fastFloor(x + t);
-        int j = fastFloor(y + t);
-        int k = fastFloor(z + t);
-        int l = fastFloor(w + t);
-        t = (i + j + k + l) * G4f;
-        final float X0 = i - t;
-        final float Y0 = j - t;
-        final float Z0 = k - t;
-        final float W0 = l - t;
-        final float x0 = x - X0;
-        final float y0 = y - Y0;
-        final float z0 = z - Z0;
-        final float w0 = w - W0;
+        float skew = (x + y + z + w) * F4f;
+        int i = fastFloor(x + skew);
+        int j = fastFloor(y + skew);
+        int k = fastFloor(z + skew);
+        int l = fastFloor(w + skew);
+        float unskew = (i + j + k + l) * G4f;
+        float X0 = i - unskew;
+        float Y0 = j - unskew;
+        float Z0 = k - unskew;
+        float W0 = l - unskew;
+        float x0 = x - X0;
+        float y0 = y - Y0;
+        float z0 = z - Z0;
+        float w0 = w - W0;
 
-        final int[] SIMPLEX_4D = Noise.SIMPLEX_4D;
-        final int c = (x0 > y0 ? 128 : 0) | (x0 > z0 ? 64 : 0) | (y0 > z0 ? 32 : 0) | (x0 > w0 ? 16 : 0) | (y0 > w0 ? 8 : 0) | (z0 > w0 ? 4 : 0);
-        final int ip = SIMPLEX_4D[c];
-        final int jp = SIMPLEX_4D[c + 1];
-        final int kp = SIMPLEX_4D[c + 2];
-        final int lp = SIMPLEX_4D[c + 3];
+        int rankx = 0;
+        int ranky = 0;
+        int rankz = 0;
+        int rankw = 0;
 
-        final int i1 = ip >> 2;
-        final int i2 = ip >> 1 & 1;
-        final int i3 = ip & 1;
-        final int j1 = jp >> 2;
-        final int j2 = jp >> 1 & 1;
-        final int j3 = jp & 1;
-        final int k1 = kp >> 2;
-        final int k2 = kp >> 1 & 1;
-        final int k3 = kp & 1;
-        final int l1 = lp >> 2;
-        final int l2 = lp >> 1 & 1;
-        final int l3 = lp & 1;
+        if (x0 > y0) rankx++; else ranky++;
+        if (x0 > z0) rankx++; else rankz++;
+        if (x0 > w0) rankx++; else rankw++;
 
-        final float x1 = x0 - i1 + G4f;
-        final float y1 = y0 - j1 + G4f;
-        final float z1 = z0 - k1 + G4f;
-        final float w1 = w0 - l1 + G4f;
-        final float x2 = x0 - i2 + 2 * G4f;
-        final float y2 = y0 - j2 + 2 * G4f;
-        final float z2 = z0 - k2 + 2 * G4f;
-        final float w2 = w0 - l2 + 2 * G4f;
-        final float x3 = x0 - i3 + 3 * G4f;
-        final float y3 = y0 - j3 + 3 * G4f;
-        final float z3 = z0 - k3 + 3 * G4f;
-        final float w3 = w0 - l3 + 3 * G4f;
-        final float x4 = x0 - 1 + 4 * G4f;
-        final float y4 = y0 - 1 + 4 * G4f;
-        final float z4 = z0 - 1 + 4 * G4f;
-        final float w4 = w0 - 1 + 4 * G4f;
+        if (y0 > z0) ranky++; else rankz++;
+        if (y0 > w0) ranky++; else rankw++;
 
-        t = 0.75f - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
-        if (t > 0) {
-            t *= t;
-            n = t * t * gradCoord4D(seed, i, j, k, l, x0, y0, z0, w0);
-        }
-        t = 0.75f - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord4D(seed, i + i1, j + j1, k + k1, l + l1, x1, y1, z1, w1);
-        }
-        t = 0.75f - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord4D(seed, i + i2, j + j2, k + k2, l + l2, x2, y2, z2, w2);
-        }
-        t = 0.75f - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord4D(seed, i + i3, j + j3, k + k3, l + l3, x3, y3, z3, w3);
-        }
-        t = 0.75f - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord4D(seed, i + 1, j + 1, k + 1, l + 1, x4, y4, z4, w4);
-        }
+        if (z0 > w0) rankz++; else rankw++;
 
-        return 4.9f * n;
+        int i1 = 2 - rankx >>> 31;
+        int j1 = 2 - ranky >>> 31;
+        int k1 = 2 - rankz >>> 31;
+        int l1 = 2 - rankw >>> 31;
+
+        int i2 = 1 - rankx >>> 31;
+        int j2 = 1 - ranky >>> 31;
+        int k2 = 1 - rankz >>> 31;
+        int l2 = 1 - rankw >>> 31;
+
+        int i3 = -rankx >>> 31;
+        int j3 = -ranky >>> 31;
+        int k3 = -rankz >>> 31;
+        int l3 = -rankw >>> 31;
+
+        float x1 = x0 - i1 + G4f;
+        float y1 = y0 - j1 + G4f;
+        float z1 = z0 - k1 + G4f;
+        float w1 = w0 - l1 + G4f;
+
+        float x2 = x0 - i2 + 2 * G4f;
+        float y2 = y0 - j2 + 2 * G4f;
+        float z2 = z0 - k2 + 2 * G4f;
+        float w2 = w0 - l2 + 2 * G4f;
+
+        float x3 = x0 - i3 + 3 * G4f;
+        float y3 = y0 - j3 + 3 * G4f;
+        float z3 = z0 - k3 + 3 * G4f;
+        float w3 = w0 - l3 + 3 * G4f;
+
+        float x4 = x0 - 1 + 4 * G4f;
+        float y4 = y0 - 1 + 4 * G4f;
+        float z4 = z0 - 1 + 4 * G4f;
+        float w4 = w0 - 1 + 4 * G4f;
+
+        float t0 = LIMIT4 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
+        if(t0 > 0) {
+            t0 *= t0;
+            t0 *= t0 * gradCoord4D(seed, i, j, k, l, x0, y0, z0, w0);
+        }
+        else t0 = 0;
+        float t1 = LIMIT4 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
+        if (t1 > 0) {
+            t1 *= t1;
+            t1 *= t1 * gradCoord4D(seed, i + i1, j + j1, k + k1, l + l1, x1, y1, z1, w1);
+        }
+        else t1 = 0;
+        float t2 = LIMIT4 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
+        if (t2 > 0) {
+            t2 *= t2;
+            t2 *= t2 * gradCoord4D(seed, i + i2, j + j2, k + k2, l + l2, x2, y2, z2, w2);
+        }
+        else t2 = 0;
+        float t3 = LIMIT4 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
+        if (t3 > 0) {
+            t3 *= t3;
+            t3 *= t3 * gradCoord4D(seed, i + i3, j + j3, k + k3, l + l3, x3, y3, z3, w3);
+        }
+        else t3 = 0;
+        float t4 = LIMIT4 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
+        if (t4 > 0) {
+            t4 *= t4;
+            t4 *= t4 * gradCoord4D(seed, i + 1, j + 1, k + 1, l + 1, x4, y4, z4, w4);
+        }
+        else t4 = 0;
+
+        return (t0 + t1 + t2 + t3 + t4) * 14.7279f;
     }
 
-    // Simplex Noise
+    // 4D Simplex
     public float getSimplexFractal(float x, float y, float z, float w) {
         x *= frequency;
         y *= frequency;
@@ -6793,11 +6813,13 @@ public class Noise {
     public static final float F2f = 0.3660254f;
     public static final float G2f = 0.21132487f;
     public static final float H2f = 0.42264974f;
+
     public static final float F3f = 0.33333334f;
     public static final float G3f = 0.16666667f;
 
     public static final float F4f = (float) ((2.23606797 - 1.0) / 4.0);
     public static final float G4f = (float) ((5.0 - 2.23606797) / 20.0);
+    public static final float LIMIT4 = 0.62f;
 
     /**
      * Simple container class that holds 2 floats.
