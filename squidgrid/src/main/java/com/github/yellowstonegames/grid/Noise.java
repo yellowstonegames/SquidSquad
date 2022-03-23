@@ -5290,7 +5290,6 @@ public class Noise {
 
     // 6D Simplex
 
-
     public float singleSimplex(int seed, float x, float y, float z, float w, float u, float v) {
         float n0, n1, n2, n3, n4, n5, n6;
         float t = (x + y + z + w + u + v) * F6;
@@ -5474,7 +5473,7 @@ public class Noise {
             n6 *= n6 * gradCoord6D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, g + 1, x6, y6, z6, w6, u6, v6);
         }
 
-        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.5f;
+        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
     }
 
     public float getSimplex(float x, float y, float z, float w, float u, float v) {
