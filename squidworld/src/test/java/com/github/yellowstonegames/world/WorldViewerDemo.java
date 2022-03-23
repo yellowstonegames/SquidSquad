@@ -110,12 +110,16 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
 //        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
 
-        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
+        //// Using higher lacunarity (than 2) and lower gain (than 0.5) produces more tattered/realistic coastlines.
+//        terrainNoise = new Noise(rng.nextInt(), 1f, Noise.HONEY_FRACTAL, 3, 3.2f, 0.3125f);
+        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+//        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         heatNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
+//        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
+        world = new RotatingGlobeMap(seed, width, height, terrainNoise, 0.625f);
 
 //        world = new MimicWorldMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
 //        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
@@ -264,7 +268,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
         moistureNoise.setMutation(change);
         otherNoise.setMutation(change);
         //// maybe comment in next line if using something other than RotatingSpaceView
-        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+//        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
         //// comment out next line if using something other than RotatingSpaceView
         wmv.getBiomeMapper().makeBiomes(world);
         wmv.show();

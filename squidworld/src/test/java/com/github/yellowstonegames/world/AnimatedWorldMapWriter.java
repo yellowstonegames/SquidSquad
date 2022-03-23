@@ -35,9 +35,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-//    private static final int width = 256, height = 256; // space view
+    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
-    private static final int width = 300, height = 300;
+//    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
@@ -83,12 +83,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
+        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-        path = "out/worldsAnimated/" + date + "/SpaceViewFoam/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -115,6 +115,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
+        writer.setDitherStrength(0.75f);
+        writer.fastAnalysis = false;
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
@@ -135,7 +137,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 2f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
         fn.setInterpolation(Noise.QUINTIC);
@@ -263,7 +266,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette = new PaletteReducer(pms);
         writer.palette.setDitherStrength(1f);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 30);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
