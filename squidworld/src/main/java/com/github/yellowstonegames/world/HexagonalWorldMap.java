@@ -253,8 +253,8 @@ public class HexagonalWorldMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, thb, thx, thy, lon, lat,
-                rx = width * (0.25f), irx = 1.5f / rx, hw = width * 0.5f,
-                ry = height * (0.5f), iry = 1f / ry;
+                rx = width * (0.25f) - 0.5f, irx = 1.5f / rx, hw = width * 0.5f,
+                ry = height * (0.5f) - 0.5f, iry = 1f / ry;
 
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {

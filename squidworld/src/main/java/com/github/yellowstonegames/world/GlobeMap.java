@@ -315,8 +315,8 @@ public class GlobeMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
-                rx = width * 0.5f, irx = i_uw / rx,
-                ry = height * 0.5f, iry = i_uh / ry;
+                rx = width * 0.5f - 0.5f, irx = i_uw / rx,
+                ry = height * 0.5f - 0.5f, iry = i_uh / ry;
 
         yPos = startY - ry;
         iyPos = yPos / ry;

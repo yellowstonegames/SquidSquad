@@ -334,7 +334,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon,
-                rx = width * 0.5f, irx = TrigTools.PI / rx, hw = width * 0.5f,
+                rx = width * 0.5f - 0.5f, irx = TrigTools.PI / rx,
                 ry = height * 0.5f, iry = 1f / ry;
 
         yPos = startY - ry;
@@ -344,7 +344,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
             qc = TrigTools.cos(lon);
 
             boolean inSpace = true;
-            xPos = startX - hw;
+            xPos = startX - rx;
             for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
                 th = xPos * irx / Math.abs(alpha + (1 - alpha) * ProjectionTools.hyperellipse(yPos * iry, kappa));
                 if (th < -3.141592653589793f || th > 3.141592653589793f) {

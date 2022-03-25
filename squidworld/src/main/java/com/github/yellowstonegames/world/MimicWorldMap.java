@@ -187,7 +187,7 @@ public class MimicWorldMap extends EllipticalWorldMap {
         Region t = new Region(width, height);
         float yPos, xPos,
                 th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
-                rx = width * 0.25f, irx = 1f / rx, hw = width * 0.5f,
+                rx = width * 0.25f - 0.5f, irx = 1f / rx, hw = width * 0.5f,
                 ry = height * 0.5f, iry = 1f / ry;
 
         yPos = -ry;

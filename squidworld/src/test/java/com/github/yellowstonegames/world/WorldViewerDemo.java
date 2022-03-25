@@ -26,12 +26,13 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
     //private static final int width = 314 * 3, height = 300;
 //    private static final int width = 1024, height = 512;
+//    private static final int width = 256, height = 128; // mimic with AA=1
 //    private static final int width = 512, height = 256; // mimic
-    private static final int width = 256, height = 256; // localMimic
+//    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400; // fast rotations
 //    private static final int width = 300, height = 300;
 //    private static final int width = 200, height = 100; // tiny maps, meant for hex ratio
-//    private static final int width = 800, height = 400; // meant for hex ratio
+    private static final int width = 800, height = 400; // meant for hex ratio or other double-wide maps
 //    private static final int width = 1600, height = 800;
 //    private static final int width = 900, height = 900;
 //    private static final int width = 700, height = 700;
@@ -102,12 +103,6 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //                return super.getSimplexFractal(x, y, z, w, u, v);
 //            }
 //        };
-//        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.25);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.6);
-        //world = new WorldMapGenerator.EllipticalHammerMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.75);
-//        world = new WorldMapGenerator.MimicMap(seed, new FastNoise(rng.nextInt(), 1f, FastNoise.SIMPLEX_FRACTAL, 2), 0.7);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.7);
-//        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.6f);
 
 //        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
 
@@ -120,7 +115,12 @@ public class WorldViewerDemo extends ApplicationAdapter {
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
 //        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
-        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+//        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+//        world = new RoundSideWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+//        world = new MimicWorldMap(seed, terrainNoise, 0.625f);
+//        world = new EllipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+//        world = new HexagonalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 
 //        world = new MimicWorldMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
 //        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);

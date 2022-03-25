@@ -251,7 +251,7 @@ public class EllipticalWorldMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
-                rx = width * 0.25f, irx = 1f / rx, hw = width * 0.5f,
+                rx = width * 0.25f - 0.5f, irx = 1f / rx, hw = width * 0.5f,
                 ry = height * 0.5f, iry = 1f / ry;
 
         yPos = startY - ry;
