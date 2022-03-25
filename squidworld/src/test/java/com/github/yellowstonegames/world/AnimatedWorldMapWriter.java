@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
+import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.ds.support.DistinctRandom;
@@ -42,10 +43,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 5;
+    private static final int FRAMES = 240;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
     private static final boolean SEEDY = false;
     private int baseSeed = 1234567890;
+    private int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -64,6 +67,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
+    private AnimatedPNG apng;
     
     private String date, path;
     private Noise noise;
@@ -84,6 +88,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
         path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
@@ -106,7 +111,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
-        pm = new Pixmap[360];
+        pm = new Pixmap[FRAMES];
         for (int i = 0; i < pm.length; i++) {
             pm[i] = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
             pm[i].setBlending(Pixmap.Blending.None);
@@ -116,8 +121,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
         writer.setDitherStrength(0.75f);
-        writer.fastAnalysis = false;
         writer.setFlipY(false);
+        apng = new AnimatedPNG();
+        apng.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
         //rng = new StatefulRNG(0L);
@@ -137,7 +143,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 2f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
@@ -187,7 +194,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-        world = new RotatingGlobeMap(seed, width, height, noise, 0.95f);
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -243,6 +250,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(SEEDY) hash = baseSeed;
         else hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
+        Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+        temp.setFilter(Pixmap.Filter.BiLinear);
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
 //            if(FLOWING_LAND) {
@@ -253,20 +262,24 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             generate(hash);
             wmv.getBiomeMapper().makeBiomes(world);
             int[][] cm = wmv.show();
-            pm[i].setColor(INK);
-            pm[i].fill();
+            temp.setColor(INK);
+            temp.fill();
 
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    pm[i].drawPixel(x, y, cm[x][y]);
+            final int bw = width << AA, bh = height << AA;
+            for (int x = 0; x < bw; x++) {
+                for (int y = 0; y < bh; y++) {
+                    temp.drawPixel(x, y, cm[x][y]);
                 }
             }
-            if(i % 36 == 35) System.out.print(((i + 1) * 10 / 36) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
+            pm[i].setFilter(Pixmap.Filter.BiLinear);
+            pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
+            if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette = new PaletteReducer(pms);
-        writer.palette.setDitherStrength(1f);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
+        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+        temp.dispose();
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");

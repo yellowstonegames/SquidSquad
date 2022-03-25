@@ -47,7 +47,7 @@ subprojects {
     compileJava.exclude("emu")
     compileTestJava.exclude("emu")
     javadoc.exclude("emu")
-    javadoc.options.source("16")
+    javadoc.options.source("17")
     javadoc.destinationDir = file("../docs/$name/apidocs")
 
 }

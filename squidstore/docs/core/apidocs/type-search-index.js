@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"com.github.yellowstonegames.store.core","l":"JsonCore"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.github.yellowstonegames.store.core","l":"JsonCore"}];updateSearchResults();

@@ -112,7 +112,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
         //// Using higher lacunarity (than 2) and lower gain (than 0.5) produces more tattered/realistic coastlines.
 //        terrainNoise = new Noise(rng.nextInt(), 1f, Noise.HONEY_FRACTAL, 3, 3.2f, 0.3125f);
-        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1, 3f, 1f/3f);
 //        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         heatNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
@@ -267,9 +267,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
         heatNoise.setMutation(change);
         moistureNoise.setMutation(change);
         otherNoise.setMutation(change);
-        //// maybe comment in next line if using something other than RotatingSpaceView
+        //// maybe comment in next line if using something other than RotatingGlobeMap
 //        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
-        //// comment out next line if using something other than RotatingSpaceView
+        //// comment out next line if using something other than RotatingGlobeMap
         wmv.getBiomeMapper().makeBiomes(world);
         wmv.show();
         ttg = System.currentTimeMillis() - startTime;

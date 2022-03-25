@@ -31,9 +31,9 @@ import static com.github.tommyettinger.ds.support.BitConversion.longBitsToDouble
  * Writes one or more spinning globes to the out/ folder.
  */
 public class FlowingWorldMapWriter extends ApplicationAdapter {
-    private static final int width = 300, height = 300;
+    private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 240;
+    private static final int FRAMES = 180;
     private static final int LIMIT = 5;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
@@ -67,10 +67,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/Foam/";
 //        path = "out/worldsAnimated/" + date + "/Classic/";
-        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
-//        path = "out/worldsAnimated/" + date + "/FlowingValue/";
+//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         if(!Gdx.files.local(path).exists())
@@ -85,9 +86,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
+        writer.setDitherStrength(0.75f);
+        writer.fastAnalysis = false;
         writer.setFlipY(false);
-        pngWriter = new PixmapIO.PNG();
-        pngWriter.setFlipY(false);
+//        pngWriter = new PixmapIO.PNG();
+//        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
@@ -95,11 +98,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
+//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
         fn.setInterpolation(Noise.QUINTIC);
@@ -107,11 +111,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         Noise terrainRidgedNoise = new Noise(fn) {
             @Override
             public float getNoise(float x, float y, float z) {
-                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
+                return getNoise(x, y, z, mutationA, mutationB);
             }
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         }, terrainBasicNoise = new Noise(fn) {
             @Override
@@ -146,13 +150,64 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }, otherRidgedNoise = new Noise(fn) {
             @Override
             public float getNoise(float x, float y, float z) {
-                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
+                return getNoise(x, y, z, mutationA, mutationB);
             }
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         };
+        //// Maelstrom
+//        Noise terrainRidgedNoise = new Noise(fn) {
+//            @Override
+//            public float getNoise(float x, float y, float z) {
+//                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
+//            }
+//            @Override
+//            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+//                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
+//            }
+//        }, terrainBasicNoise = new Noise(fn) {
+//            @Override
+//            public float getNoise(float x, float y, float z) {
+//                return getNoise(x, y, z, mutationA, mutationB);
+//            }
+//
+//            @Override
+//            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+//                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+//            }
+//        }, heatNoise = new Noise(fn) {
+//            @Override
+//            public float getNoise(float x, float y, float z) {
+//                return getNoise(x, y, z, mutationA, mutationB);
+//            }
+//
+//            @Override
+//            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+//                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+//            }
+//        }, moistureNoise = new Noise(fn) {
+//            @Override
+//            public float getNoise(float x, float y, float z) {
+//                return getNoise(x, y, z, mutationA, mutationB);
+//            }
+//
+//            @Override
+//            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+//                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+//            }
+//        }, otherRidgedNoise = new Noise(fn) {
+//            @Override
+//            public float getNoise(float x, float y, float z) {
+//                return (float) (Math.exp(getNoise(x, y, z, mutationA, mutationB)) * 0.850918 - 1.31303495);
+//            }
+//            @Override
+//            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+//                return (float) (Math.exp(getNoiseWithSeed(x, y, z, mutationA, mutationB, seed)) * 0.850918 - 1.31303495);
+//            }
+//        };
+
 //        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);

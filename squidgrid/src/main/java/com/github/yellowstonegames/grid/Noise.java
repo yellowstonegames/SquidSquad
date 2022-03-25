@@ -435,7 +435,8 @@ public class Noise {
      * A publicly available Noise object with seed 1337, frequency 1.0f/32.0f, 1 octave of Simplex noise using
      * SIMPLEX_FRACTAL noiseType, 2f lacunarity and 0.5f gain. It's encouraged to use methods that temporarily configure
      * this variable, like {@link #getNoiseWithSeed(float, float, int)} rather than changing its settings and using a
-     * method that needs that lasting configuration, like {@link #getConfiguredNoise(float, float)}.
+     * method that needs that lasting configuration, like {@link #getConfiguredNoise(float, float)}. If you want to use
+     * lasting settings, you should create your own new Noise object.
      */
     public static final Noise instance = new Noise();
     /**
@@ -769,6 +770,7 @@ public class Noise {
     {
         return fractalType;
     }
+
     /**
      * Sets the distance function used in cellular noise calculations, allowing an int argument corresponding to one of
      * the following constants from this class: {@link #EUCLIDEAN} (0), {@link #MANHATTAN} (1), or {@link #NATURAL} (2).
@@ -1752,7 +1754,8 @@ public class Noise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >> 22;
     }
 
-    //x should be premultiplied by 0xEBEDF 0xD96EB 0xC862B 0xB8ACD 0xAA323 0x9CDA5 0x908E3
+    //0xEBEDF 0xD96EB 0xC862B 0xB8ACD 0xAA323 0x9CDA5 0x908E3
+    //x should be premultiplied by 0xEBEDF
     //y should be premultiplied by 0xD96EB
     //z should be premultiplied by 0xC862B
     //w should be premultiplied by 0xB8ACD
