@@ -37,6 +37,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //    private static final int width = 700, height = 700;
 //    private static final int width = 512, height = 512;
 //    private static final int width = 128, height = 128;
+    private static final int AA = 1;
     
     private ImmediateModeRenderer20 batch;
     private InputProcessor input;
@@ -62,8 +63,8 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
         //// you will probably want to change batch to use whatever rendering system is appropriate
         //// for your game; here it always renders pixels
-        batch = new ImmediateModeRenderer20(width * height, false, true, 0);
-        view = new StretchViewport(width, height);
+        batch = new ImmediateModeRenderer20(width * height << AA + AA, false, true, 0);
+        view = new StretchViewport(width << AA, height << AA);
         seed = 42;
         rng = new DistinctRandom(seed);
         //// NOTE: this FastNoise has a different frequency (1f) than the default (1/32f), and that
@@ -112,14 +113,14 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
         //// Using higher lacunarity (than 2) and lower gain (than 0.5) produces more tattered/realistic coastlines.
 //        terrainNoise = new Noise(rng.nextInt(), 1f, Noise.HONEY_FRACTAL, 3, 3.2f, 0.3125f);
-        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1, 3f, 1f/3f);
+        terrainNoise = new Noise(rng.nextInt(), 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         heatNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
 //        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
-        world = new RotatingGlobeMap(seed, width, height, terrainNoise, 0.625f);
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 
 //        world = new MimicWorldMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
 //        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
@@ -130,7 +131,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.6);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.65);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
-        inner = new LocalMap(seed, width, height, new Noise(rng.nextInt(), 1f, Noise.FOAM_FRACTAL, 2), 0.8f);
+        inner = new LocalMap(seed, width << AA, height << AA, new Noise(rng.nextInt(), 1f, Noise.FOAM_FRACTAL, 2), 0.8f);
         wmv = new WorldMapView(world);
 //        wmv.initialize(SColor.CW_FADED_RED, SColor.AURORA_BRICK, SColor.DEEP_SCARLET, SColor.DARK_CORAL,
 //                SColor.LONG_SPRING, SColor.WATER_PERSIMMON, SColor.AURORA_HOT_SAUCE, SColor.PALE_CARMINE,
@@ -173,11 +174,11 @@ public class WorldViewerDemo extends ApplicationAdapter {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if(button == Input.Buttons.RIGHT)
                 {
-                    zoomOut(screenX, height - 1 - screenY);
+                    zoomOut(screenX << AA, height - 1 - screenY << AA);
                 }
                 else
                 {
-                    zoomIn(screenX, height - 1 - screenY);
+                    zoomIn(screenX << AA, height - 1 - screenY << AA);
                 }
                 return true;
             }
@@ -282,8 +283,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
         batch.begin(view.getCamera().combined, GL20.GL_POINTS);
 //        pixels = 0;                              // for debugging how many pixels are drawn
         int c;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        final int bw = width << AA, bh = height << AA;
+        for (int x = 0; x < bw; x++) {
+            for (int y = 0; y < bh; y++) {
                 c = cm[x][y];
 //                if(c != WorldMapView.emptyColor) // more debug
 //                    pixels++;                    // more debug
@@ -325,6 +327,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
         config.useVsync(false);
         config.setResizable(false);
         config.setWindowedMode(width, height);
+        config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 2);
         new Lwjgl3Application(new WorldViewerDemo(), config);
     }
 }
