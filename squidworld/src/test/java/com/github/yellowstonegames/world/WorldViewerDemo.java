@@ -15,6 +15,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.place.Biome;
 
 /**
  * Port of Zachary Carter's world generation technique, https://github.com/zacharycarter/mapgen
@@ -28,11 +29,11 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //    private static final int width = 1024, height = 512;
 //    private static final int width = 256, height = 128; // mimic with AA=1
 //    private static final int width = 512, height = 256; // mimic
-//    private static final int width = 256, height = 256; // localMimic
+    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400; // fast rotations
 //    private static final int width = 300, height = 300;
 //    private static final int width = 200, height = 100; // tiny maps, meant for hex ratio
-    private static final int width = 800, height = 400; // meant for hex ratio or other double-wide maps
+//    private static final int width = 800, height = 400; // meant for hex ratio or other double-wide maps
 //    private static final int width = 1600, height = 800;
 //    private static final int width = 900, height = 900;
 //    private static final int width = 700, height = 700;
@@ -55,7 +56,8 @@ public class WorldViewerDemo extends ApplicationAdapter {
     private long ttg; // time to generate
     
 //    public int noiseCalls = 0, pixels = 0;  // debug
-    private final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
+    private static final int emptyColor = 0x2d2232ff;//DescriptiveColor.describe(Biome.TABLE[60].colorDescription);
+    private final Color INK = new Color(emptyColor);
     @Override
     public void create() {
         // matching the new ocean colors
@@ -115,9 +117,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
         otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
 //        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
-//        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
+//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new MimicWorldMap(seed, terrainNoise, 0.625f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
@@ -289,7 +291,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
                 c = cm[x][y];
 //                if(c != WorldMapView.emptyColor) // more debug
 //                    pixels++;                    // more debug
-//                if(c != WorldMapView.emptyColor) {
+//                if(c != emptyColor) {
                     batch.color(DescriptiveColor.rgbaIntToFloat(c));
                     batch.vertex(x, y, 0f);
 //                }
@@ -306,8 +308,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
         Gdx.gl.glClearColor(INK.r, INK.g, INK.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-        if(spinning) 
+        if(spinning)
             rotate();
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
@@ -327,7 +328,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
         config.useVsync(false);
         config.setResizable(false);
         config.setWindowedMode(width, height);
-        config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 2);
+        config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 4);
         new Lwjgl3Application(new WorldViewerDemo(), config);
     }
 }

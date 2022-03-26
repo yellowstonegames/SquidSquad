@@ -203,8 +203,8 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
                 i_pi = 1f / TrigTools.PI,
-                rx = width * 0.5f - 0.5f, irx = i_uw / rx,
-                ry = height * 0.5f - 0.5f, iry = i_uh / ry;
+                rx = width * 0.5f, irx = i_uw / rx,
+                ry = height * 0.5f, iry = i_uh / ry;
 
         yPos = startY - ry;
         iyPos = yPos / ry;
