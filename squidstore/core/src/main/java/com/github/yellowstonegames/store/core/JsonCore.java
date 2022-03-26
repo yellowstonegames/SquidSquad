@@ -35,9 +35,10 @@ public final class JsonCore {
     }
 
     /**
-     * Registers JDKGDXDS' classes with the given Json object, allowing it to read and write JDKGDXDS types.
+     * Registers the classes from jdkgdxds and from SquidSquad with the given Json object, allowing it to read and write
+     * types from both libraries.
      *
-     * @param json a libGDX Json object that will have serializers registered for all JDKGDXDS types.
+     * @param json a libGDX Json object that will have serializers registered for all jdkgdxds and SquidSquad types this is aware of
      */
     public static void registerAll(@Nonnull Json json) {
         registerChar2D(json);
@@ -45,7 +46,7 @@ public final class JsonCore {
         registerLong2D(json);
         registerFloat2D(json);
 
-        JsonSupport.registerEnhancedRandom(json);
+        JsonSupport.registerAll(json);
 
         registerDiceRule(json);
         registerGapShuffler(json);
