@@ -3,9 +3,7 @@ package com.github.yellowstonegames.smooth.dawnlike;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -162,6 +160,16 @@ public class DawnlikeDemo extends ApplicationAdapter {
         font.getData().setScale(1f/cellWidth, 1f/cellHeight);
         font.getData().markupEnabled = true;
         bgColors = ArrayTools.fill(INT_BLACK, bigWidth, bigHeight);
+
+
+        Pixmap pcur = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+        Pixmap bigAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
+        TextureAtlas.AtlasRegion broadsword = atlas.findRegion("broadsword");
+        pcur.drawPixmap(bigAtlas, 0, 0, broadsword.getRegionX(), broadsword.getRegionY(), 16, 16);
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pcur, 0, 0));
+        bigAtlas.dispose();
+        pcur.dispose();
+
         solid = atlas.findRegion("pixel");
         charMapping = new IntObjectMap<>(64);
 
