@@ -4,10 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -164,9 +161,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
         Pixmap pcur = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
         Pixmap bigAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
-        TextureAtlas.AtlasRegion broadsword = atlas.findRegion("broadsword");
-        pcur.drawPixmap(bigAtlas, 0, 0, broadsword.getRegionX(), broadsword.getRegionY(), 16, 16);
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pcur, 0, 0));
+        String[] cursorNames = {"broadsword", "dwarvish spear", "javelin", "vulgar polearm", "pole cleaver", "quarterstaff"};
+        TextureAtlas.AtlasRegion pointer = atlas.findRegion(cursorNames[(int) (TimeUtils.millis() & 0x7FFFFFFF) % cursorNames.length]);
+        pcur.drawPixmap(bigAtlas, 0, 0, pointer.getRegionX(), pointer.getRegionY(), 16, 16);
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pcur, 1, 1));
         bigAtlas.dispose();
         pcur.dispose();
 
@@ -639,7 +637,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // standard clear the background routine for libGDX
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // center the camera on the player's position
         camera.position.x = playerSprite.getX();
         camera.position.y =  playerSprite.getY();
