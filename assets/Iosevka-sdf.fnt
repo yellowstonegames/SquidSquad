@@ -2,7 +2,7 @@ info face="Iosevka" size=-24 bold=0 italic=0 charset="" unicode=1 stretchH=100 s
 common lineHeight=57 base=57 scaleW=1024 scaleH=1024 pages=1 packed=0 alphaChnl=0 redChnl=4 greenChnl=4 blueChnl=4
 page id=0 file="Iosevka-sdf.png"
 chars count=2473
-char id=0 x=2046 y=2046 width=1 height=1 xoffset=0 yoffset=0 xadvance=1 page=0 chnl=15
+char id=0 x=2046 y=2046 width=1 height=1 xoffset=0 yoffset=0 xadvance=24 page=0 chnl=15
 char id=32 x=26 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=33 x=52 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=34 x=78 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
@@ -66,7 +66,7 @@ char id=91 x=1560 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=
 char id=92 x=1586 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=93 x=1612 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=94 x=1638 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
-char id=95 x=1664 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
+char id=95 x=1664 y=0 width=24 height=57 xoffset=-1 yoffset=4 xadvance=24 page=0 chnl=15
 char id=96 x=1690 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=97 x=1716 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
 char id=98 x=1742 y=0 width=24 height=57 xoffset=-1 yoffset=-1 xadvance=24 page=0 chnl=15
