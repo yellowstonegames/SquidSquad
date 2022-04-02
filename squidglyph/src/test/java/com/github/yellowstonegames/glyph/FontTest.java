@@ -7,17 +7,15 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.grid.LineTools;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
+import com.github.yellowstonegames.core.DescriptiveColor;
 
 public class FontTest extends ApplicationAdapter {
 
     Font font;
     SpriteBatch batch;
-    LaserRandom random;
+//    LaserRandom random;
     int[][] backgrounds;
     char[][] lines;
     Layout layout;
@@ -32,15 +30,31 @@ public class FontTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        random = new LaserRandom(1L);
-        lines = LineTools.decode4x4(random.nextLong() | LineTools.exteriorSquare, LineTools.light);
+//        random = new LaserRandom(1L);
+//        long seed = random.nextLong();
+//        char[][] lines0 = LineTools.decode4x4(seed | LineTools.exteriorSquare, LineTools.light);
+
+        lines = new char[][]
+                {
+                "┼┤┤├".toCharArray(),
+                "┴││┴".toCharArray(),
+                "─└├┼".toCharArray(),
+                "┤├│┐".toCharArray()};
+
+//        for (int x = 0; x < 4; x++) {
+//            for (int y = 0; y < 4; y++) {
+//                lines[y][3 - x] = lines0[x][y];
+//            }
+//        }
+//        DungeonTools.debugPrint(lines0);
+//        DungeonTools.debugPrint(LineTools.decode4x4(seed | LineTools.exteriorSquare, LineTools.light));
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
-//        font = KnownFonts.getInconsolataLGC().scaleTo(16, 32);
+        font = KnownFonts.getInconsolataMSDF().scaleTo(16, 32);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
-        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(20, 20);
+//        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(20, 20);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getOpenSans().scale(0.75f, 0.75f);
@@ -85,19 +99,19 @@ public class FontTest extends ApplicationAdapter {
 //        font.markup("\n[*]Водяной[] — в славянской мифологии дух, обитающий в воде, хозяин вод[^][BLUE][[2][]."
 //                + "\nВоплощение стихии воды как отрицательного и опасного начала[^][BLUE][[3][[citation needed][].", layout);
 //
-//        font.markup("\nThe [dark rich red]MAW[] of the [/][lighter dull sky]wendigo[/] (wendigo)[] [*]appears[*]!"
-//                        + "\nThe [_][dark gray]BLADE[] of [*][/][rich light yellow]DYNAST-KINGS[] strikes!"
-//                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?"
-//                        + "\n[dark dull bronze yellow]φ[] = (1 + 5[^]0.5[^]) * 0.5"
-//                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![]"
-//                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
-//                , layout);
+        font.markup("\nThe [dark rich red]MAW[] of the [/][lighter dull sky]wendigo[/] (wendigo)[] [*]appears[*]!"
+                        + "\nThe [_][dark gray]BLADE[] of [*][/][rich light yellow]DYNAST-KINGS[] strikes!"
+                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?"
+                        + "\n[dark dull bronze yellow]φ[] = (1 + 5[^]0.5[^]) * 0.5"
+                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![]"
+                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
+                , layout);
 
-        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
-                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your heads[] by morning. But alas, I am stricken with" +
-                " unreasonable mercy for your [~]wretched[~] souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
-                " a [darkest bronze]stout brew[].\"", layout);
-//
+//        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
+//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your heads[] by morning. But alas, I am stricken with" +
+//                " unreasonable mercy for your [~]wretched[~] souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
+//                " a [darkest bronze]stout brew[].\"", layout);
+
 //        font.markup("\"[/][~]HOSTILE ACTION DETECTED[].\" The computerized voice was barely audible over the klaxons blaring throughout [darker rich purple][_]Starship Andromalius[]."
 //                +" \"[!]Would somebody shut that thing off[!]? We're quite aware by now!\" [orange]Captain Luiz Tigre[] shouted at no one in particular, while frantically flipping the remaining" +
 //                " switches on the capacitor controls. \"Sir, we need to get the [silver]teleprojector[] online. Send a party aboard, say they're negotiators.\" [light sky]First Admiral Zototh[] said with urgency." +
@@ -115,7 +129,7 @@ public class FontTest extends ApplicationAdapter {
         font.drawBlocks(batch, backgrounds, 0f, 0f);
         for (int xx = 0; xx < 4; xx++) {
             for (int yy = 0; yy < 4; yy++) {
-                font.drawGlyph(batch, 0xFFFFFFFE00500000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
+                font.drawGlyph(batch, 0xFFFFFFFE00000000L | lines[xx][yy], font.cellWidth * xx, y + font.cellHeight * (1 + yy));
             }
         }
 //        long color = (long) DescriptiveColor.lerpColors(

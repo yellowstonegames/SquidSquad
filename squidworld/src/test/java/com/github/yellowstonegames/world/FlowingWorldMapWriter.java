@@ -71,8 +71,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-        path = "out/worldsAnimated/" + date + "/FlowingValue/";
-//        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
+//        path = "out/worldsAnimated/" + date + "/FlowingValue/";
+        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -103,10 +103,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1f, Noise.VALUE_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);
 
-        fn.setInterpolation(Noise.QUINTIC);
+        fn.setInterpolation(Noise.HERMITE);
 
         Noise terrainRidgedNoise = new Noise(fn) {
             @Override
@@ -319,7 +319,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //            writer.palette = new PaletteReducer(pms);
             writer.setDitherStrength(0.75f);
             writer.palette = new PaletteReducer(pms);
-            writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
+            writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
 //        } catch (IOException e) {
 //            e.printStackTrace();
