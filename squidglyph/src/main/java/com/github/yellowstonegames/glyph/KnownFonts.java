@@ -63,7 +63,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/J411L6i.png">Image link</a> (uses width=9, height=9)
+     * Preview: <a href="https://i.imgur.com/V4Z9vZT.png">Image link</a> (uses width=9, height=9)
      * <br>
      * Needs files:
      * <ul>
@@ -71,7 +71,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-msdf.png">AStarry-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-license.txt">AStarry-license.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font A Starry using MSDF
      */
     public static Font getAStarry() {
@@ -86,8 +85,9 @@ public final class KnownFonts {
      * many dingbats, and more. This font can look good at its natural size, which uses width roughly equal to height,
      * or narrowed down so width is smaller.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/PtiY6wy.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/i77ogHe.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -95,7 +95,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-standard.png">Canada1500-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-License.txt">Canada1500-License.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Canada1500.ttf
      */
     public static Font getCanada() {
@@ -106,12 +105,13 @@ public final class KnownFonts {
      * Returns a Font already configured to use a quirky fixed-width font with good Unicode support
      * and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).
      * Caches the result for later calls. The font used is Cascadia Code Mono, an open-source (SIL Open Font
-     * License) typeface by Microsoft (see https://github.com/microsoft/cascadia-code ). It supports a lot of glyphs,
+     * License) typeface by Microsoft (see <a href="https://github.com/microsoft/cascadia-code">Microsoft's page</a>).
+     * It supports a lot of glyphs,
      * including most extended Latin, Greek, Braille, and Cyrillic. This uses the Multi-channel Signed Distance
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/iGtq0Sh.png">Image link</a> (uses width=10, height=20)
+     * Preview: <a href="https://i.imgur.com/SSmmfdA.png">Image link</a> (uses width=10, height=20)
      * <br>
      * Needs files:
      * <ul>
@@ -119,7 +119,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/CascadiaMono-msdf.png">CascadiaMono-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cascadia-license.txt">Cascadia-license.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Cascadia Code Mono using MSDF
      */
     public static Font getCascadiaMono() {
@@ -133,7 +132,7 @@ public final class KnownFonts {
      * multiples, but it should look very crisp at its default size of 7x13 pixels.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/thZP5CD.png">Image link</a> (uses width=7, height=13; this is small enough
+     * Preview: <a href="https://i.imgur.com/6lE56Fb.png">Image link</a> (uses width=7, height=13; this is small enough
      * to make the scaled text look bad in some places)
      * <br>
      * Needs files:
@@ -142,7 +141,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-standard.png">Cozette-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-license.txt">Cozette-license.txt</a></li>
      * </ul>
-     *
      * @return the Font object that represents the 7x13px font Cozette
      */
     public static Font getCozette() {
@@ -160,7 +158,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/vf170gC.png">Image link</a> (uses width=10, height=20)
+     * Preview: <a href="https://i.imgur.com/J7ppp82.png">Image link</a> (uses width=10, height=20)
      * <br>
      * Needs files:
      * <ul>
@@ -168,7 +166,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-msdf.png">DejaVuSansMono-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-License.txt">DejaVuSansMono-License.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font DejaVu Sans Mono using MSDF
      */
     public static Font getDejaVuSansMono() {
@@ -180,12 +177,13 @@ public final class KnownFonts {
      * scale well from a height of about 132 down to a height of 34. You usually will want to reduce the line height
      * of this Font after you scale it; using {@code KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)}
      * usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
-     * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
+     * License) typeface by SIL (see <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It
+     * supports a lot of glyphs, including quite a
      * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
      * does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want to stick using just
      * fonts that avoid distance fields if you have a family of fonts.
      * <br>
-     * Preview: <a href="https://i.imgur.com/tMY5qhR.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/PWGVxIK.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -193,7 +191,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-standard.png">Gentium-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Gentium.ttf
      */
     public static Font getGentium() {
@@ -205,12 +202,13 @@ public final class KnownFonts {
      * scale cleanly to even very large sizes (using an SDF technique). You usually will want to reduce the line height
      * of this Font after you scale it; using {@code KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)}
      * usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
-     * License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
+     * License) typeface by SIL (see <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It
+     * supports a lot of glyphs, including quite a
      * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
      * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
      * crisp enough when zoomed out.
      * <br>
-     * Preview: <a href="https://i.imgur.com/voKEzv0.png">Image link</a> (uses width=60, height=45, adjustLineHeight(0.8f))
+     * Preview: <a href="https://i.imgur.com/Ixe9e69.png">Image link</a> (uses width=60, height=45, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -218,7 +216,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-sdf.png">Gentium-sdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Gentium.ttf using SDF
      */
     public static Font getGentiumSDF() {
@@ -232,20 +229,20 @@ public final class KnownFonts {
      * it might). This does not scale except to integer multiples, but it should look very
      * crisp at its default size of 8x16 pixels. This supports some extra characters, but
      * not at the typical Unicode codepoints.
+     * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
      * This does not include a license because the source, <a href="https://github.com/Thraka/SadConsole/tree/master/Fonts">SadConsole's fonts</a>,
      * did not include one. It is doubtful that IBM would have any issues with respectful use
      * of their signature font throughout the 1980s, but if the legality is concerning, you
      * can use {@link #getCozette()} for a different bitmap font.
      * <br>
-     * Preview: <a href="https://i.imgur.com/bvMagBS.png">Image link</a> (uses width=8, height=16)
+     * Preview: <a href="https://i.imgur.com/dNwh5qu.png">Image link</a> (uses width=8, height=16)
      * <br>
      * Needs files:
      * <ul>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.font">IBM-8x16-standard.font</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.png">IBM-8x16-standard.png</a></li>
      * </ul>
-     *
      * @return the Font object that represents an 8x16 font included with early IBM computers
      */
     public static Font getIBM8x16() {
@@ -259,7 +256,7 @@ public final class KnownFonts {
      * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}. You may want to stick using just fonts
      * that avoid distance fields if you have a family of fonts.
      * <br>
-     * Preview: <a href="https://i.imgur.com/VMD9bRw.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/rew6udn.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -267,7 +264,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-standard.png">Inconsolata-LGC-Custom-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom
      */
     public static Font getInconsolata() {
@@ -281,7 +277,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/pQRnZRz.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/KDSSHrI.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -289,7 +285,6 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-msdf.png">Inconsolata-LGC-Custom-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
      * </ul>
-     *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom using MSDF
      */
     public static Font getInconsolataMSDF() {
