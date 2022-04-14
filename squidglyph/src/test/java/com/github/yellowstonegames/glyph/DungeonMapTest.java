@@ -47,10 +47,10 @@ public class DungeonMapTest extends ApplicationAdapter {
     private Coord cursor = Coord.get(-1, -1);
     private final Vector2 pos = new Vector2();
 
-    private static final int GRID_WIDTH = 64;
-    private static final int GRID_HEIGHT = 32;
-    private static final int CELL_WIDTH = 25;
-    private static final int CELL_HEIGHT = 25;
+    private static final int GRID_WIDTH = 50;
+    private static final int GRID_HEIGHT = 25;
+    private static final int CELL_WIDTH = 32;
+    private static final int CELL_HEIGHT = 32;
 
     private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
     private static final int SHALLOW_OKLAB = describeOklab("dull denim");
@@ -79,12 +79,15 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
-        Font font = KnownFonts.getInconsolata();
+        Font font = KnownFonts.getIosevkaMSDF();
+//        Font font = KnownFonts.getInconsolata();
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
-        font.scaleTo(font.cellWidth * CELL_HEIGHT / font.cellWidth, CELL_HEIGHT).fitCell(CELL_WIDTH, CELL_HEIGHT, false);
+        font.scaleTo(font.cellWidth * CELL_HEIGHT / font.cellHeight, CELL_HEIGHT);
+//        fitCell(font, CELL_WIDTH, CELL_HEIGHT, true);
         gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT);
+        //use Ă to test glyph height
         GlidingGlyph playerGlyph = new GlidingGlyph('@', describe("red orange"), Coord.get(1, 1));
         playerGlyph.getLocation().setCompleteRunner(() -> {
             seen.or(inView.refill(FOV.reuseFOV(res, light, playerGlyph.getLocation().getEnd().x, playerGlyph.getLocation().getEnd().y, 6.5f, Radius.CIRCLE), 0.001f, 2f));

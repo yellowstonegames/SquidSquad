@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntList;
@@ -68,32 +69,47 @@ public class GlyphMap {
      * Constructs a bare-bones GlyphMap with size 64x64. Does not set {@link #font}, you will have to set it later.
      */
     public GlyphMap(){
-        this(null, 64, 64);
+        this(null, 64, 64, false);
     }
 
     /**
      * Constructs a 64x64 GlyphMap with the specified Font. You probably want {@link #GlyphMap(Font, int, int)} unless
-     * your maps are always 64x64.
+     * your maps are always 64x64. This calls {@link #GlyphMap(Font, int, int, boolean)} with
+     * squareCenteredCells=false.
      * @param font a Font that will be copied and used for the new GlyphMap
      */
     public GlyphMap(Font font){
-        this(font, 64, 64);
+        this(font, 64, 64, false);
     }
 
     /**
      * Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
-     * Font (which will be copied).
+     * Font (which will be copied). This calls {@link #GlyphMap(Font, int, int, boolean)} with
+     * squareCenteredCells=false.
      * @param font a Font that will be copied and used for the new GlyphMap
      * @param gridWidth how many cells wide the grid should be
      * @param gridHeight how many cells tall the grid should be
      */
     public GlyphMap(Font font, int gridWidth, int gridHeight) {
+        this(font, gridWidth, gridHeight, false);
+    }
+    /**
+     * Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+     * Font (which will be copied). If squareCenteredGlyphs is true, the Font copy this uses will be modified to have
+     * extra space around glyphs so that they fit in square cells. For fonts that use gridGlyphs (the default behavior),
+     * any box drawing characters will still take up the full cell, and will connect seamlessly.
+     * @param font a Font that will be copied and used for the new GlyphMap
+     * @param gridWidth how many cells wide the grid should be
+     * @param gridHeight how many cells tall the grid should be
+     * @param squareCenteredCells if true, space will be added to make glyphs fit in square cells
+     */
+    public GlyphMap(Font font, int gridWidth, int gridHeight, boolean squareCenteredCells) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         map = new IntLongOrderedMap(gridWidth * gridHeight);
         viewport = new StretchViewport(gridWidth, gridHeight);
         if (font != null) {
-            setFont(new Font(font));
+            setFont(new Font(font), squareCenteredCells);
         }
     }
 
@@ -107,14 +123,50 @@ public class GlyphMap {
      * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
      */
     public void setFont(Font font) {
-        if(font == null) return;
+        setFont(font, false);
+    }
+    /**
+     * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
+     * to size 1x1 (this makes some calculations much easier inside GlyphMap). This can add spacing to cells so that
+     * they are always square, while keeping the aspect ratio of {@code font} as it was passed in. Use squareCenter=true
+     * to enable this; note that it modifies the Font more deeply than normally.
+     * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
+     * @param squareCenter if true, spacing will be added to the sides of each glyph so that they fit in square cells
+     */
+    public void setFont(Font font, boolean squareCenter) {
+        if (font == null) return;
         this.font = font;
         this.font.setColorLookup(GlyphMap::getRgba);
-        if (this.font.distanceField != Font.DistanceFieldType.STANDARD)
-            this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
-        viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
-        viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
-        this.font.scaleTo(1f, 1f);
+        if (squareCenter) {
+            if (this.font.distanceField == Font.DistanceFieldType.MSDF)
+                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
+            viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
+            viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
+            float wsx = 1f / font.scaleX;
+            IntMap.Values<Font.GlyphRegion> vs = font.mapping.values();
+            while (vs.hasNext) {
+                Font.GlyphRegion g = vs.next();
+                g.offsetX += (this.font.originalCellWidth) * 0.5f;
+                g.xAdvance = wsx;
+            }
+            this.font.isMono = true;
+            this.font.kerning = null;
+
+            this.font.scaleX = 1f / Math.max(this.font.originalCellWidth, this.font.originalCellHeight);
+            this.font.scaleY = 1f / Math.max(this.font.originalCellWidth, this.font.originalCellHeight);
+            this.font.cellWidth = 1f;
+            this.font.cellHeight = 1f;
+        }
+        else {
+            if (this.font.distanceField == Font.DistanceFieldType.MSDF)
+                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
+// not sure if we want this code or the above.
+//            if (this.font.distanceField != Font.DistanceFieldType.STANDARD)
+//                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
+            viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
+            viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
+            this.font.scaleTo(1f, 1f);
+        }
     }
 
     /**
@@ -257,7 +309,7 @@ public class GlyphMap {
         IntList order = map.order();
         for(int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            font.drawGlyph(batch, map.getAt(i), x + extractX(pos) * font.cellWidth, y + extractY(pos) * font.cellHeight);
+            font.drawGlyph(batch, map.getAt(i), x + extractX(pos), y + extractY(pos));
         }
     }
 
@@ -275,13 +327,13 @@ public class GlyphMap {
         if(backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
-        float xPos, yPos, cellWidth = font.cellWidth * 2f, cellHeight = font.cellHeight * 2f;
+        float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
         IntList order = map.order();
         for(int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            xPos = x + extractX(pos) * font.cellWidth;
-            yPos = y + extractY(pos) * font.cellHeight;
-            if(limit.boundsInFrustum(xPos, yPos, 0, cellWidth, cellHeight, 1f))
+            xPos = x + extractX(pos);
+            yPos = y + extractY(pos);
+            if(limit.boundsInFrustum(xPos, yPos, 0, boundsWidth, boundsHeight, 1f))
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
     }
