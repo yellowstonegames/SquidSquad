@@ -16,13 +16,23 @@
 
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.yellowstonegames.core.ArrayTools;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordOrderedSet;
+import com.github.yellowstonegames.grid.CoordSet;
+import com.github.yellowstonegames.grid.Direction;
+import com.github.yellowstonegames.grid.LineDrawer;
+import com.github.yellowstonegames.grid.Measurement;
+import com.github.yellowstonegames.grid.Region;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more
@@ -118,9 +128,9 @@ public class DijkstraMap {
      */
     public ObjectList<Coord> path;
 
-    private ObjectOrderedSet<Coord> impassable2;
+    private CoordOrderedSet impassable2;
 
-    private ObjectSet<Coord> tempSet;
+    private CoordOrderedSet tempSet;
     
     public boolean cutShort;
 
@@ -261,8 +271,8 @@ public class DijkstraMap {
             Arrays.fill(costMap[x], 1f);
         }
         standardCosts = true;
-        impassable2 = new ObjectOrderedSet<>(32);
-        tempSet = new ObjectSet<>(32);
+        impassable2 = new CoordOrderedSet(32);
+        tempSet = new CoordOrderedSet(32);
         initialized = true;
         return this;
     }
@@ -291,8 +301,8 @@ public class DijkstraMap {
             }
         }
         standardCosts = true;
-        impassable2 = new ObjectOrderedSet<>(32);
-        tempSet = new ObjectSet<>(32);
+        impassable2 = new CoordOrderedSet(32);
+        tempSet = new CoordOrderedSet(32);
         initialized = true;
         return this;
     }
@@ -323,8 +333,8 @@ public class DijkstraMap {
             }
         }
         standardCosts = true;
-        impassable2 = new ObjectOrderedSet<>(32);
-        tempSet = new ObjectSet<>(32);
+        impassable2 = new CoordOrderedSet(32);
+        tempSet = new CoordOrderedSet(32);
         initialized = true;
         return this;
     }
@@ -1137,7 +1147,7 @@ public class DijkstraMap {
      * @return the Coord that it found first.
      */
     public Coord findNearest(Coord start, Coord... targets) {
-        return findNearest(start, ObjectSet.with(targets));
+        return findNearest(start, CoordSet.with(targets));
     }
 
     /**
@@ -2390,7 +2400,7 @@ public class DijkstraMap {
 
 
     private float cachedLongerPaths = 1.2f;
-    private ObjectSet<Coord> cachedImpassable = new ObjectSet<>(32);
+    private CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
     private Coord[] cachedFearSources;
     private float[][] cachedFleeMap;
     private int cachedSize = 1;
