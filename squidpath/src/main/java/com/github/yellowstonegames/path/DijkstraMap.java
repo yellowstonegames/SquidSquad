@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.MizuchiRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
@@ -158,11 +158,11 @@ public class DijkstraMap {
     protected IntList goals = new IntList(256), fresh = new IntList(256);
 
     /**
-     * The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+     * The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
      * deterministically before any usage. There will only be one path produced for a given set of parameters, and it
      * will be returned again and again if the same parameters are requested.
      */
-    protected LaserRandom rng = new LaserRandom(0L, 0x9E3779B97F4A7C15L);
+    protected MizuchiRandom rng = new MizuchiRandom(0L, 0x9E3779B97F4A7C15L);
     private int frustration;
     public Coord[][] targetMap;
 
@@ -1080,7 +1080,7 @@ public class DijkstraMap {
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.size());
+        rng.setState(start.hashCode(), (long) targets.size() << 1);
         int frustration = 0;
         while (physicalMap[start2.x][start2.y] >= WALL && frustration++ < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
@@ -1166,7 +1166,7 @@ public class DijkstraMap {
             return new ObjectList<>(path);
         }
         Coord currentPos = findNearest(start, targets);
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             float best = gradientMap[currentPos.x][currentPos.y];
             appendDirToShuffle(rng);
@@ -1218,7 +1218,7 @@ public class DijkstraMap {
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.size());
+        rng.setState(start.hashCode(), (long) targets.size() << 1);
         while (physicalMap[start2.x][start2.y] >= WALL && frustration < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
                     Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
@@ -1763,7 +1763,7 @@ public class DijkstraMap {
             partialScan(start, scanLimit, impassable2);
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2022,7 +2022,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2591,7 +2591,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * fearSources.length);
+        rng.setState(start.hashCode(), (long) fearSources.length << 1);
 
         while (true) {
             if (frustration > 500) {
@@ -2719,7 +2719,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2865,7 +2865,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3012,7 +3012,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * targets.length);
+        rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3138,7 +3138,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), 0x9E3779B97F4A7C15L * fearSources.length);
+        rng.setState(start.hashCode(), (long) fearSources.length << 1);
         while (true) {
             if (frustration > 500) {
                 path.clear();
