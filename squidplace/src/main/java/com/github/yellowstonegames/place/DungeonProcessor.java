@@ -662,15 +662,14 @@ public class DungeonProcessor implements PlaceGenerator{
     }
     protected CoordOrderedSet removeAdjacent(CoordOrderedSet coll, Coord pt1, Coord pt2)
     {
-
-        for(Coord temp : new Coord[]{Coord.get(pt1.x + 1, pt1.y), Coord.get(pt1.x - 1, pt1.y),
-                Coord.get(pt1.x, pt1.y + 1), Coord.get(pt1.x, pt1.y - 1),
-                Coord.get(pt2.x + 1, pt2.y), Coord.get(pt2.x - 1, pt2.y),
-                Coord.get(pt2.x, pt2.y + 1), Coord.get(pt2.x, pt2.y - 1),})
-        {
-            if(!(temp.x == pt1.x && temp.y == pt1.y) && !(temp.x == pt2.x && temp.y == pt2.y))
-                coll.remove(temp);
-        }
+        if(!(pt1.x == pt2.x && pt1.y + 1 == pt2.y)) coll.remove(Coord.get(pt1.x, pt1.y + 1));
+        if(!(pt1.x == pt2.x && pt1.y - 1 == pt2.y)) coll.remove(Coord.get(pt1.x, pt1.y - 1));
+        if(!(pt2.x == pt1.x && pt2.y + 1 == pt1.y)) coll.remove(Coord.get(pt2.x, pt2.y + 1));
+        if(!(pt2.x == pt1.x && pt2.y - 1 == pt1.y)) coll.remove(Coord.get(pt2.x, pt2.y - 1));
+        if(!(pt1.x + 1 == pt2.x && pt1.y == pt2.y)) coll.remove(Coord.get(pt1.x + 1, pt1.y));
+        if(!(pt1.x - 1 == pt2.x && pt1.y == pt2.y)) coll.remove(Coord.get(pt1.x - 1, pt1.y));
+        if(!(pt2.x + 1 == pt1.x && pt2.y == pt1.y)) coll.remove(Coord.get(pt2.x + 1, pt2.y));
+        if(!(pt2.x - 1 == pt1.x && pt2.y == pt1.y)) coll.remove(Coord.get(pt2.x - 1, pt2.y));
 
         return coll;
     }
