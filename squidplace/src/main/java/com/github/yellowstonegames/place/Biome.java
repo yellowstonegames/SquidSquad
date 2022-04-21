@@ -19,7 +19,22 @@ package com.github.yellowstonegames.place;
 import static com.github.yellowstonegames.place.Biome.Heat.*;
 import static com.github.yellowstonegames.place.Biome.Moisture.*;
 
+/**
+ * A data class that represents a particular kind of ecosystem that appears at a given combination of average moisture,
+ * average temperature, and elevation. This stores a name for each biome (always as one word in the constants this
+ * provides), a char to represent the biome (typically in char arrays, and not necessarily displayed), and a String
+ * color description to be used by {@link com.github.yellowstonegames.core.DescriptiveColor#describe(CharSequence)} or
+ * describeOklab(), which is probably preferable. Using the Oklab color allows randomly or gradually changing the color
+ * as one biome approaches another, which looks more natural in many cases.
+ * <br>
+ * Heat and moisture determine many biomes based on a biome mapper (one such mapper is present in squidworld). The
+ * presence of an ocean generally overrides the heat/moisture effects, unless the ocean is cold enough to freeze.
+ * A lot of usage will depend on {@link #TABLE}, and its ordering; see its docs for more.
+ */
 public class Biome {
+    /**
+     * Represents 6 average temperature levels that can determine a biome.
+     */
     public enum Heat {
         COLDEST("coldest"), COLDER("colder"), COLD("cold"), HOT("hot"), HOTTER("hotter"), HOTTEST("hottest");
         public final String name;
@@ -32,6 +47,10 @@ public class Biome {
             return name;
         }
     }
+
+    /**
+     * Represents 6 average precipitation/moisture levels that can determine a biome.
+     */
     public enum Moisture {
         DRIEST("driest"), DRIER("drier"), DRY("dry"), WET("wet"), WETTER("wetter"), WETTEST("wettest"),
         COAST("coast"), RIVER("river"), LAKE("lake"), OCEAN("ocean"), STRANGE("strange");
@@ -48,7 +67,17 @@ public class Biome {
 
     public final Heat heat;
     public final Moisture moisture;
-    public final String name, colorDescription;
+    /**
+     * Should always be one word in the constants here; recommended to be one word in any user-defined Biomes.
+     */
+    public final String name;
+    /**
+     * Meant to be used with {@link com.github.yellowstonegames.core.DescriptiveColor}.
+     */
+    public final String colorDescription;
+    /**
+     * How to represent the Biome in a char format, such as a 2D char array for a map.
+     */
     public final char representation;
 
     private Biome(){

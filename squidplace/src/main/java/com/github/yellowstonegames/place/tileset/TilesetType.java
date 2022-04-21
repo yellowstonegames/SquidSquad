@@ -1382,7 +1382,7 @@ public enum TilesetType {
 	}
 
     /**
-     * Returns MixedGenerator.CAVE_FLOOR (which is 3) or MixedGenerator.ROOM_FLOOR (which is 1) based on whether this
+     * Returns DungeonTools.NATURAL_FLOOR (which is 3) or DungeonTools.ROOM_FLOOR (which is 1) based on whether this
      * TilesetType predominantly generates caves or rooms. This is relevant for certain feature placement.
      * @return 3 if this produces mostly caves, or 1 if it produces mostly rooms
      */

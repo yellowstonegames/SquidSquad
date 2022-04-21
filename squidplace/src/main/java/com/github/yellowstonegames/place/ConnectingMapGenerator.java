@@ -385,8 +385,8 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * <li>DungeonTools.UNTOUCHED, equal to 0, is used for any cells that aren't near a floor.</li>
      * <li>DungeonTools.ROOM_FLOOR, equal to 1, is used for floor cells inside wide room areas.</li>
      * <li>DungeonTools.ROOM_WALL, equal to 2, is used for wall cells around wide room areas.</li>
-     * <li>DungeonTools.CAVE_FLOOR, equal to 3, is used for floor cells inside rough cave areas.</li>
-     * <li>DungeonTools.CAVE_WALL, equal to 4, is used for wall cells around rough cave areas.</li>
+     * <li>DungeonTools.NATURAL_FLOOR, equal to 3, is used for floor cells inside rough natural/cave areas.</li>
+     * <li>DungeonTools.NATURAL_WALL, equal to 4, is used for wall cells around rough natural/cave areas.</li>
      * <li>DungeonTools.CORRIDOR_FLOOR, equal to 5, is used for floor cells inside narrow corridor areas.</li>
      * <li>DungeonTools.CORRIDOR_WALL, equal to 6, is used for wall cells around narrow corridor areas.</li>
      * </ul>
