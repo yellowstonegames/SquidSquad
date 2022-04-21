@@ -19,10 +19,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.Direction;
-import com.github.yellowstonegames.grid.Radius;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 
 import java.util.Collection;
 
@@ -142,7 +139,7 @@ public class ZoneOfInfluence {
         return groups;
     }
     protected Region increasing(float[][] dm, Coord[] inf) {
-        ObjectOrderedSet<Coord> open = new ObjectOrderedSet<>(inf), fresh = new ObjectOrderedSet<>(64);
+        CoordOrderedSet open = new CoordOrderedSet(inf), fresh = new CoordOrderedSet(64);
         Direction[] dirs = (radius == Radius.DIAMOND) ? Direction.CARDINALS : Direction.OUTWARDS;
         Region influenced = new Region(dijkstra.width, dijkstra.height);
         final int width = dm.length;

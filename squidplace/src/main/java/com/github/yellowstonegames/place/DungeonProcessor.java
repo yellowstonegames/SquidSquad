@@ -650,7 +650,7 @@ public class DungeonProcessor implements PlaceGenerator{
         return this;
     }
 
-    protected ObjectOrderedSet<Coord> removeAdjacent(ObjectOrderedSet<Coord> coll, Coord pt)
+    protected CoordOrderedSet removeAdjacent(CoordOrderedSet coll, Coord pt)
     {
         for(Coord temp : new Coord[]{Coord.get(pt.x + 1, pt.y), Coord.get(pt.x - 1, pt.y),
                 Coord.get(pt.x, pt.y + 1), Coord.get(pt.x, pt.y - 1)})
@@ -660,7 +660,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
         return coll;
     }
-    protected ObjectOrderedSet<Coord> removeAdjacent(ObjectOrderedSet<Coord> coll, Coord pt1, Coord pt2)
+    protected CoordOrderedSet removeAdjacent(CoordOrderedSet coll, Coord pt1, Coord pt2)
     {
 
         for(Coord temp : new Coord[]{Coord.get(pt1.x + 1, pt1.y), Coord.get(pt1.x - 1, pt1.y),
@@ -674,11 +674,11 @@ public class DungeonProcessor implements PlaceGenerator{
 
         return coll;
     }
-    protected ObjectOrderedSet<Coord> removeNearby(ObjectOrderedSet<Coord> coll, char[][] disallowed)
+    protected CoordOrderedSet removeNearby(CoordOrderedSet coll, char[][] disallowed)
     {
         if(coll == null || disallowed == null || disallowed.length == 0 || disallowed[0].length == 0)
-            return new ObjectOrderedSet<>();
-        ObjectOrderedSet<Coord> next = new ObjectOrderedSet<>(coll.size());
+            return new CoordOrderedSet();
+        CoordOrderedSet next = new CoordOrderedSet(coll.size());
         int width = disallowed.length, height = disallowed[0].length;
         COORD_WISE:
         for(Coord c : coll)
@@ -697,11 +697,11 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
 
-    protected ObjectOrderedSet<Coord> viableDoorways(boolean doubleDoors, char[][] map, char[][] allCaves,
+    protected CoordOrderedSet viableDoorways(boolean doubleDoors, char[][] map, char[][] allCaves,
                                                   char[][] allCorridors)
     {
-        ObjectOrderedSet<Coord> doors = new ObjectOrderedSet<>();
-        ObjectOrderedSet<Coord> blocked = new ObjectOrderedSet<>(4);
+        CoordOrderedSet doors = new CoordOrderedSet();
+        CoordOrderedSet blocked = new CoordOrderedSet(4);
         Region bounds = new Region(width, height), reuse = new Region(width, height);
         int[][] scan = new int[width][height];
         for(int x = 1; x < map.length - 1; x++) {

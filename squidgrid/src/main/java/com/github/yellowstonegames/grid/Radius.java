@@ -139,9 +139,9 @@ public enum Radius {
         return Math.min(Math.max(min, n), max - 1);
     }
 
-    public ObjectOrderedSet<Coord> perimeter(Coord center, int radiusLength, boolean surpassEdges, int width, int height)
+    public CoordOrderedSet perimeter(Coord center, int radiusLength, boolean surpassEdges, int width, int height)
     {
-        ObjectOrderedSet<Coord> rim = new ObjectOrderedSet<>(4 * radiusLength);
+        CoordOrderedSet rim = new CoordOrderedSet(4 * radiusLength);
         if(!surpassEdges && (center.x < 0 || center.x >= width || center.y < 0 || center.y > height))
             return rim;
         if(radiusLength < 1) {
@@ -518,10 +518,10 @@ public enum Radius {
      * @param points an Iterable (such as a List or Set) of Coord that this will make a "thickened" version of
      * @return a Set of Coord that covers a wider area than what points covers; each Coord will be unique (it's a Set)
      */
-    public ObjectOrderedSet<Coord> expand(int distance, int width, int height, Iterable<Coord> points)
+    public CoordOrderedSet expand(int distance, int width, int height, Iterable<Coord> points)
     {
         List<Coord> around = pointsInside(Coord.get(distance, distance), distance, false, width, height);
-        ObjectOrderedSet<Coord> expanded = new ObjectOrderedSet<>(around.size() * 16, 0.25f);
+        CoordOrderedSet expanded = new CoordOrderedSet(around.size() * 16, 0.25f);
         int tx, ty;
         for(Coord pt : points)
         {
