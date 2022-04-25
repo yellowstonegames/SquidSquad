@@ -78,6 +78,29 @@ public final class KnownFonts {
     }
 
     /**
+     * Returns a Font already configured to use a variable-width slab serif font with good Latin and Cyrillic script
+     * support, that should scale pretty well from a height of about 160 down to a height of maybe 30.
+     * Caches the result for later calls. The font used is Bitter, a free (OFL) typeface by <a href="https://github.com/solmatas/BitterPro">The Bitter Project</a>.
+     * It supports quite a lot of Latin-based scripts and Cyrillic, but does not really cover Greek or any other
+     * scripts. This font can look good at its natural size, which uses width roughly equal to height,
+     * or squashed so height is slightly smaller.
+     * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+     * This may work well in a font family with other fonts that do not use a distance field effect.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/mX4RSqh.png">Image link</a> (uses width=33, height=29)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-standard.fnt">Bitter-standard.fnt</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-standard.png">Bitter-standard.png</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-License.txt">Bitter-License.txt</a></li>
+     * </ul>
+     * @return the Font object that can represent many sizes of the font Bitter-Regular.ttf
+     */
+    public static Font getBitter() {
+        return com.github.tommyettinger.textra.KnownFonts.getBitter().setColorLookup(GlyphMap::getRgba);
+    }
+    /**
      * Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
      * Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
      * Caches the result for later calls. The font used is Canada1500, a free (public domain, via CC0) typeface by Ray
