@@ -610,7 +610,7 @@ public class StringTools {
         if(source == null || source.isEmpty()) return "";
         if(beginIndex < 0) beginIndex = 0;
         if(endIndex < 0 || endIndex > source.length()) endIndex = source.length();
-        if(beginIndex > endIndex) return "";
+        if(beginIndex >= endIndex) return "";
         return source.substring(beginIndex, endIndex);
     }
 
