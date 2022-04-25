@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.TrimRandom;
 import com.github.yellowstonegames.core.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
@@ -63,16 +64,16 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 9;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
@@ -81,7 +82,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sector = size >>> sectorShift;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
-    private static final int wrapMask = sector * 13 >>> 4;
+    private static final int wrapMask = sector >>> 1;
+//    private static final int wrapMask = sector * 13 >>> 4;
     private static final float fraction = 1f / totalSectors;
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
@@ -106,7 +108,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private LaserRandom rng;
+    private TrimRandom rng;
     private PixmapIO.PNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
@@ -125,7 +127,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new LaserRandom(Hasher.hash64(1L, date));
+        rng = new TrimRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -192,7 +194,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             rng.shuffle(positions, i, totalSectors);
         }
         Coord[] initial = new Coord[limit];
-        final int xOff = rng.next(sector), yOff = rng.next(sector);
+        final int xOff = rng.next(shift - sectorShift), yOff = rng.next(shift - sectorShift);
         for (int i = 1; i <= limit; i++) {
             int sz = positions[i - 1];
             final Coord pt = Coord.get((vdc(5, i) + xOff & sectorMask) + ((sz & sectors - 1) << shift - sectorShift),
@@ -229,12 +231,15 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 Arrays.fill(lightCounts, 0);
                 System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
             }
+//            energy.shuffle(rng);
             energy.sort(
-                    (o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)));
+                    (o1, o2) -> Float.floatToIntBits(energy.getOrDefault(o1, 0f) - energy.getOrDefault(o2, 0f)));
             int k = 1;
             Coord low = energy.keyAt(0);
+//            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
             while(lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)] >= lightOccurrence){
                 low = energy.keyAt(k++);
+//                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
             }
             lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)]++;
             energize(low);
