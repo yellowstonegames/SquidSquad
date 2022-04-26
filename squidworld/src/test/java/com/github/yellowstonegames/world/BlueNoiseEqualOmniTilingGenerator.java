@@ -69,11 +69,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 9;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 2;
+    private static final int sectorShift = 3;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
@@ -85,7 +85,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //    private static final int wrapMask = sector >>> 3;
     private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 4;
-    private static final float fraction = 1f / totalSectors;
+    private static final float fraction = 1f / (totalSectors * 2f);
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
@@ -163,6 +163,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + sectorMask - y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                         }
                     }
