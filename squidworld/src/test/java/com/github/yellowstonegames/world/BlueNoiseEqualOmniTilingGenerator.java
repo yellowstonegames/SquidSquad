@@ -82,7 +82,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sector = size >>> sectorShift;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
-    private static final int wrapMask = sector >>> 1;
+//    private static final int wrapMask = sector >>> 3;
+    private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 4;
     private static final float fraction = 1f / totalSectors;
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
@@ -157,7 +158,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                     energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
                             0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
                 }
-                else {
+                else
+                {
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
