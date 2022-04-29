@@ -83,8 +83,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
 //    private static final int wrapMask = sector >>> 3;
-    private static final int wrapMask = sector * 5 >>> 5;
-//    private static final int wrapMask = sector * 13 >>> 4;
+//    private static final int wrapMask = sector * 5 >>> 5;
+    private static final int wrapMask = sector * 13 >>> 5;
     private static final float fraction = 1f / (totalSectors * 2f);
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
