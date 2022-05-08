@@ -150,10 +150,10 @@ public class IntShuffler {
     public void restart(long seed)
     {
         index = 0;
-        key0 = randomize(seed + b3);
-        key1 = randomize(seed ^ b4);
-        key2 = randomize(seed - b1);
-        key3 = randomize(seed ^ b2);
+        key0 = randomize2(seed + b3);
+        key1 = randomize2(seed ^ b4);
+        key2 = randomize2(seed - b1);
+        key3 = randomize2(seed ^ b2);
     }
     public static int round(long data, long seed)
     {

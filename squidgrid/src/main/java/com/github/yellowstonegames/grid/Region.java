@@ -5960,10 +5960,10 @@ public class Region implements Collection<Coord> {
 
     @Override
     public int hashCode() {
-        return Hasher.gremory.hash(data) ^ (int)Hasher.randomize(Hasher.randomize(height) + width);
+        return Hasher.gremory.hash(data) ^ (int)Hasher.randomize2(Hasher.randomize2(height) + width);
     }
     public long hash64() {
-        return Hasher.gremory.hash64(data) ^ Hasher.randomize(Hasher.randomize(height) + width);
+        return Hasher.gremory.hash64(data) ^ Hasher.randomize2(Hasher.randomize2(height) + width);
     }
 
     /**
@@ -5976,7 +5976,7 @@ public class Region implements Collection<Coord> {
      */
     public long hash64(long seed)
     {
-        return Hasher.hash64(seed, data) ^ Hasher.randomize(Hasher.randomize(height) + width);
+        return Hasher.hash64(seed, data) ^ Hasher.randomize2(Hasher.randomize2(height) + width);
     }
 
     public String serializeToString()

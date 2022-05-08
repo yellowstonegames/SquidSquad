@@ -43,13 +43,19 @@ import static com.github.tommyettinger.ds.support.BitConversion.floatToRawIntBit
  * the web as it does on desktop or on a phone. Since Hasher is supposed to be stable
  * cross-platform, this is the way we need to go, despite it being slightly slower.
  * <br>
- * This class also provides static {@link #determine(long)} and {@link #randomize(long)}
+ * This class also provides static {@link #randomize1(long)} and {@link #randomize2(long)}
  * methods, which are unary hashes (hashes of one item, a number) with variants such as
- * {@link #determineBounded(long, int)} and {@link #randomizeFloat(long)}. The determine()
+ * {@link #randomize1Bounded(long, int)} and {@link #randomize2Float(long)}. The randomize1()
  * methods are faster but more sensitive to patterns in their input; they are meant to
- * work well on sequential inputs, like 1, 2, 3, etc. The randomize() methods are
- * more-involved, but should be able to handle any kind of input pattern while returning
- * random results. There are also 192 predefined instances of Hasher that you can either
+ * work well on sequential inputs, like 1, 2, 3, etc. with relatively-short sequences
+ * (ideally under a million, but if statistical quality isn't a concern, they can handle any
+ * length). The randomize2() methods are more-involved, but should be able to handle most
+ * kinds of input pattern across even rather-large sequences (billions) while returning
+ * random results. The randomize3() methods are likely complete overkill for many cases, but
+ * provide extremely strong randomization for any possible input pattern, using the MX3 unary
+ * hash with an extra XOR at the beginning to prevent a fixed point at 0.
+ * <br>
+ * There are also 192 predefined instances of Hasher that you can either
  * select from the array {@link #predefined} or select by hand, such as {@link #omega}.
  * The predefined instances are named after the 24 greek letters, then the same letters
  * with a trailing underscore, then 72 names of demons from the Ars Goetia, then the
@@ -77,7 +83,7 @@ public class Hasher {
     }
 
     /**
-     * Initializes this Hasher with the given seed, verbatim; it is recommended to use {@link #randomize(long)} on the
+     * Initializes this Hasher with the given seed, verbatim; it is recommended to use {@link #randomize2(long)} on the
      * seed if you don't know if it is adequately-random.
      * @param seed a long that will be used to change the output of hash() and hash64() methods on the new Hasher
      */
@@ -87,52 +93,56 @@ public class Hasher {
 
     /**
      * Fast static randomizing method that takes its state as a parameter; state is expected to change between calls to
-     * this. It is recommended that you use {@code DiverRNG.determine(++state)} or {@code DiverRNG.determine(--state)}
+     * this. It is recommended that you use {@code randomize1(++state)} or {@code randomize1(--state)}
      * to produce a sequence of different numbers, and you may have slightly worse quality with increments or decrements
      * other than 1. All longs are accepted by this method, and all longs can be produced. Passing 0 here does not
      * cause this to return 0.
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @return any long
      */
-    public static long determine(long state) {
+    public static long randomize1(long state) {
         return (state = ((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25;
     }
 
     /**
-     * High-quality static randomizing method that takes its state as a parameter; state is expected to change between
+     * Mid-quality static randomizing method that takes its state as a parameter; state is expected to change between
      * calls to this. It is suggested that you use {@code DiverRNG.randomize(++state)} or
      * {@code DiverRNG.randomize(--state)} to produce a sequence of different numbers, but any increments are allowed
      * (even-number increments won't be able to produce all outputs, but their quality will be fine for the numbers they
      * can produce). All longs are accepted by this method, and all longs can be produced. Passing 0 here does not
      * cause this to return 0.
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @return any long
      */
-    public static long randomize(long state) {
+    public static long randomize2(long state) {
         state ^= 0xD1B54A32D192ED03L;
         return (state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23 ^ state >>> 51;
         // older Pelican mixer
@@ -140,174 +150,331 @@ public class Hasher {
     }
 
     /**
+     * Very thorough static randomizing method that takes its state as a parameter; state is expected to change between
+     * calls to this. It is suggested that you use {@code randomize3(++state)} or {@code randomize3(--state)}
+     * to produce a sequence of different numbers, but any odd-number increment should work well, as could another
+     * source of different longs, such as a flawed random number generator. All longs are accepted by this method, and
+     * all longs can be produced. Passing 0 here does not cause this to return 0.
+     * <br>
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
+     *
+     * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
+     * @return any long
+     */
+    public static long randomize3(long state) {
+        state ^= 0xABC98388FB8FAC03L;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 29;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        return state ^ state >>> 29;
+    }
+
+    /**
      * Fast static randomizing method that takes its state as a parameter and limits output to an int between 0
      * (inclusive) and bound (exclusive); state is expected to change between calls to this. It is recommended that you
-     * use {@code DiverRNG.determineBounded(++state, bound)} or {@code DiverRNG.determineBounded(--state, bound)} to
+     * use {@code randomize1Bounded(++state, bound)} or {@code randomize1Bounded(--state, bound)} to
      * produce a sequence of different numbers. All longs are accepted
      * by this method, but not all ints between 0 and bound are guaranteed to be produced with equal likelihood (for any
      * odd-number values for bound, this isn't possible for most generators). The bound can be negative.
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@code determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @param bound the outer exclusive bound, as an int
      * @return an int between 0 (inclusive) and bound (exclusive)
      */
-    public static int determineBounded(long state, int bound) {
+    public static int randomize1Bounded(long state, int bound) {
         return (bound = (int) ((bound * (((state = ((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25) & 0xFFFFFFFFL)) >> 32)) + (bound >>> 31);
     }
 
     /**
-     * High-quality static randomizing method that takes its state as a parameter and limits output to an int between 0
+     * Mid-quality static randomizing method that takes its state as a parameter and limits output to an int between 0
      * (inclusive) and bound (exclusive); state is expected to change between calls to this. It is suggested that you
-     * use {@code DiverRNG.randomizeBounded(++state)} or {@code DiverRNG.randomize(--state)} to produce a sequence of
+     * use {@code randomize2Bounded(++state)} or {@code randomize2Bounded(--state)} to produce a sequence of
      * different numbers, but any increments are allowed (even-number increments won't be able to produce all outputs,
      * but their quality will be fine for the numbers they can produce). All longs are accepted by this method, but not
      * all ints between 0 and bound are guaranteed to be produced with equal likelihood (for any odd-number values for
      * bound, this isn't possible for most generators). The bound can be negative.
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
      * @param bound the outer exclusive bound, as an int
      * @return an int between 0 (inclusive) and bound (exclusive)
      */
 
-    public static int randomizeBounded(long state, int bound) {
+    public static int randomize2Bounded(long state, int bound) {
         state ^= 0xD1B54A32D192ED03L;
         return (bound = (int) ((bound * (((state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23 ^ state >>> 51) & 0xFFFFFFFFL)) >> 32)) + (bound >>> 31);
     }
 
     /**
+     * Very thorough static randomizing method that takes its state as a parameter and limits output to an int between 0
+     * (inclusive) and bound (exclusive); state is expected to change between calls to this. It is suggested that you
+     * use {@code randomize3Bounded(++state)} or {@code randomize3(--state)} to produce a sequence of
+     * different numbers, but any increments are allowed (even-number increments won't be able to produce all outputs,
+     * but their quality will be fine for the numbers they can produce). All longs are accepted by this method, but not
+     * all ints between 0 and bound are guaranteed to be produced with equal likelihood (for any odd-number values for
+     * bound, this isn't possible for most generators). The bound can be negative.
+     * <br>
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
+     *
+     * @param state any long; subsequent calls should change by an odd number, such as with {@code ++state}
+     * @param bound the outer exclusive bound, as an int
+     * @return an int between 0 (inclusive) and bound (exclusive)
+     */
+
+    public static int randomize3Bounded(long state, int bound) {
+        state ^= 0xABC98388FB8FAC03L;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 29;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        return (bound = (int) ((bound * ((state ^ state >>> 29) & 0xFFFFFFFFL)) >> 32)) + (bound >>> 31);
+    }
+
+    /**
      * Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
      * return the same float. This is expected to be called with a changing variable, e.g.
-     * {@code determineFloat(++state)}, where the increment for state should generally be 1. The period is 2 to the 64
+     * {@code randomize1Float(++state)}, where the increment for state should generally be 1. The period is 2 to the 64
      * if you increment or decrement by 1, but there are only 2 to the 30 possible floats between 0 and 1, and this can
      * only return 2 to the 24 of them (a requirement for the returned values to be uniform).
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
-     *              using {@code determineFloat(++state)} is recommended to go forwards or
-     *              {@code determineFloat(--state)} to generate numbers in reverse order
+     *              using {@code randomize1Float(++state)} is recommended to go forwards or
+     *              {@code randomize1Float(--state)} to generate numbers in reverse order
      * @return a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by {@code state}
      */
-    public static float determineFloat(long state) {
+    public static float randomize1Float(long state) {
         return ((((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) >>> 40) * 0x1p-24f;
     }
 
     /**
      * Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
      * return the same float. This is expected to be called with a changing variable, e.g.
-     * {@code randomizeFloat(++state)}, where the increment for state can be any value and should usually be odd
+     * {@code randomize2Float(++state)}, where the increment for state can be any value and should usually be odd
      * (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by any odd
      * number, but there are only 2 to the 30 possible floats between 0 and 1, and this can only return 2 to the 24 of
      * them (a requirement for the returned values to be uniform).
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
-     *              using {@code randomizeFloat(++state)} is recommended to go forwards or
-     *              {@code randomizeFloat(--state)} to generate numbers in reverse order
+     *              using {@code randomize2Float(++state)} is recommended to go forwards or
+     *              {@code randomize2Float(--state)} to generate numbers in reverse order
      * @return a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by {@code state}
      */
-    public static float randomizeFloat(long state) {
+    public static float randomize2Float(long state) {
         state ^= 0xD1B54A32D192ED03L;
         return ((((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) >>> 40) * 0x1p-24f;
     }
 
     /**
-     * Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
-     * will return the same float. This is expected to be called with a changing variable, e.g.
-     * {@code determineDouble(++state)}, where the increment for state should generally be 1. The period is 2 to the 64
-     * if you increment or decrement by 1, but there are only 2 to the 62 possible doubles between 0 and 1.
+     * Returns a random float that is deterministic based on state; if state is the same on two calls to this, this will
+     * return the same float. This is expected to be called with a changing variable, e.g.
+     * {@code randomize3Float(++state)}, where the increment for state can be any value and should usually be odd
+     * (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by any odd
+     * number, but there are only 2 to the 30 possible floats between 0 and 1, and this can only return 2 to the 24 of
+     * them (a requirement for the returned values to be uniform).
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@link #randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
-     *              using {@code determineDouble(++state)} is recommended to go forwards or
-     *              {@code determineDouble(--state)} to generate numbers in reverse order
+     *              using {@code randomize3Float(++state)} is recommended to go forwards or
+     *              {@code randomize3Float(--state)} to generate numbers in reverse order
+     * @return a pseudo-random float between 0f (inclusive) and 1f (exclusive), determined by {@code state}
+     */
+    public static float randomize3Float(long state) {
+        state ^= 0xABC98388FB8FAC03L;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 29;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        return (state >>> 40) * 0x1p-24f;
+    }
+
+    /**
+     * Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+     * will return the same float. This is expected to be called with a changing variable, e.g.
+     * {@code randomize1Double(++state)}, where the increment for state should generally be 1. The period is 2 to the 64
+     * if you increment or decrement by 1, but there are only 2 to the 62 possible doubles between 0 and 1.
+     * <br>
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
+     *
+     * @param state a variable that should be different every time you want a different random result;
+     *              using {@code randomize1Double(++state)} is recommended to go forwards or
+     *              {@code randomize1Double(--state)} to generate numbers in reverse order
      * @return a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by {@code state}
      */
-    public static double determineDouble(long state) {
+    public static double randomize1Double(long state) {
         return (((state = ((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25) & 0x1FFFFFFFFFFFFFL) * 0x1p-53;
     }
 
     /**
      * Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
      * will return the same float. This is expected to be called with a changing variable, e.g.
-     * {@code randomizeDouble(++state)}, where the increment for state can be any number but should usually be odd
+     * {@code randomize2Double(++state)}, where the increment for state can be any number but should usually be odd
      * (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by 1, but
      * there are only 2 to the 62 possible doubles between 0 and 1.
      * <br>
-     * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
-     * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
      * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
-     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
-     * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
-     * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
-     * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
-     * harder to reverse the xor-rotate-xor-rotate stage used in randomize(), and the methods that produce any output
-     * other than a full-range long are not reversible (such as {@link #determineBounded(long, int)} and
-     * {@code randomizeDouble(long)}).
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
      *
      * @param state a variable that should be different every time you want a different random result;
      *              using {@code randomizeDouble(++state)} is recommended to go forwards or
      *              {@code randomizeDouble(--state)} to generate numbers in reverse order
      * @return a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by {@code state}
      */
-    public static double randomizeDouble(long state) {
+    public static double randomize2Double(long state) {
         state ^= 0xD1B54A32D192ED03L;
         return (((state = ((state = (state ^ (state << 39 | state >>> 25) ^ (state << 17 | state >>> 47)) * 0x9E6C63D0676A9A99L) ^ state >>> 23 ^ state >>> 51) * 0x9E6D62D06F6A9A9BL) ^ state >>> 23) >>> 11) * 0x1p-53;
     }
 
+    /**
+     * Returns a random double that is deterministic based on state; if state is the same on two calls to this, this
+     * will return the same float. This is expected to be called with a changing variable, e.g.
+     * {@code randomize3Double(++state)}, where the increment for state can be any number but should usually be odd
+     * (even-number increments reduce the period). The period is 2 to the 64 if you increment or decrement by 1, but
+     * there are only 2 to the 62 possible doubles between 0 and 1.
+     * <br>
+     * You have a choice between different randomize strengths in this class. {@code randomize1()} is simpler, and will
+     * behave well when the inputs are sequential, while {@code randomize2()} is a completely different algorithm, Pelle
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality for most patterns in input but will be about 30% slower than
+     * {@code randomize1()}, though this is rarely detectable. {@code randomize3()} is the slowest and most robust; it
+     * uses MX3 by Jon Maiga, which the aforementioned author of xNASAM now recommends for any unary hashing. All
+     * randomizeN methods will produce all long outputs if given all possible longs as input. Technically-speaking,
+     * {@code randomize1(long)}, {@code randomize2(long)}, and {@code randomize3(long)} are bijective functions, which
+     * means they are reversible; it is, however, somewhat harder to reverse the xor-rotate-xor-rotate stage used in
+     * randomize2() (reversing randomize3() is easy, but takes more steps), and the methods that produce any output
+     * other than a full-range long are not reversible (such as {@link #randomize1Bounded(long, int)} and
+     * {@link #randomize2Double(long)}).
+     *
+     * @param state a variable that should be different every time you want a different random result;
+     *              using {@code randomize3Double(++state)} is recommended to go forwards or
+     *              {@code randomize3Double(--state)} to generate numbers in reverse order
+     * @return a pseudo-random double between 0.0 (inclusive) and 1.0 (exclusive), determined by {@code state}
+     */
+    public static double randomize3Double(long state) {
+        state ^= 0xABC98388FB8FAC03L;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 29;
+        state *= 0xBEA225F9EB34556DL;
+        state ^= state >>> 32;
+        state *= 0xBEA225F9EB34556DL;
+        return (state >>> 11 ^ state >>> 40) * 0x1p-53;
+    }
+
     public Hasher(final CharSequence seed) {
-        this(randomize(hash64(1L, seed)));
+        this(randomize2(hash64(1L, seed)));
     }
 
     /**

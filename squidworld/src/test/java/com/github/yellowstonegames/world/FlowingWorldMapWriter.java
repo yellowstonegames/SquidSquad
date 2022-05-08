@@ -274,7 +274,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        wmv.generate(0.9f, wmv.world.heatModifier);
         wmv.generate(
                 (float) (1.0 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
-                (float) (1.0625 + Hasher.determineDouble(world.seedB * 0x123456789ABL ^ world.seedA) * 0.375));
+                (float) (1.0625 + Hasher.randomize1Double(world.seedB * 0x123456789ABL ^ world.seedA) * 0.375));
         ttg = System.currentTimeMillis() - startTime;
     }
 
