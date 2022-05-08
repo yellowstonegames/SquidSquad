@@ -79,7 +79,7 @@ public class Coord {
 	 * @return The degree from {@code from} to {@code to}; 0 is up
 	 */
 	public static double degrees(final Coord from, final Coord to) {
-		return TrigTools.atan2Degrees360(to.y - from.y, to.x - from.x);
+		return TrigTools.atan2Deg360(to.y - from.y, to.x - from.x);
 	}
 
     /**

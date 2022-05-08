@@ -18,7 +18,7 @@ package com.github.yellowstonegames.core;
 
 /**
  * Various fast trigonometric approximations that don't use a lookup table. Some of these are uncommon and useful, like
- * {@link #sin_(float)}, which takes an argument in turns instead of radians (1 turn equals 2PI radians).
+ * {@link #sinTurns(float)}, which takes an argument in turns instead of radians (1 turn equals 2PI radians).
  */
 public final class TrigTools {
 
@@ -196,7 +196,7 @@ public final class TrigTools {
      * @param degrees an angle in degrees as a float, often from 0 to 360, though not required to be.
      * @return the sine of the given angle, as a float between -1f and 1f (both inclusive)
      */
-    public static double sinDegrees(double degrees)
+    public static double sinDeg(double degrees)
     {
         degrees = degrees * 0.011111111111111112;
         final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
@@ -232,7 +232,7 @@ public final class TrigTools {
      * @param degrees an angle in degrees as a float, often from 0 to pi * 2, though not required to be.
      * @return the cosine of the given angle, as a float between -1f and 1f (both inclusive)
      */
-    public static double cosDegrees(double degrees)
+    public static double cosDeg(double degrees)
     {
         degrees = degrees * 0.011111111111111112 + 1.0;
         final int floor = (degrees >= 0.0 ? (int) degrees : (int) degrees - 1) & -2;
@@ -268,7 +268,7 @@ public final class TrigTools {
      * @param degrees an angle in degrees as a float, often from 0 to 360, though not required to be.
      * @return the sine of the given angle, as a float between -1f and 1f (both inclusive)
      */
-    public static float sinDegrees(float degrees)
+    public static float sinDeg(float degrees)
     {
         degrees = degrees * 0.011111111111111112f;
         final int floor = (degrees >= 0f ? (int) degrees : (int) degrees - 1) & -2;
@@ -304,7 +304,7 @@ public final class TrigTools {
      * @param degrees an angle in degrees as a float, often from 0 to pi * 2, though not required to be.
      * @return the cosine of the given angle, as a float between -1f and 1f (both inclusive)
      */
-    public static float cosDegrees(float degrees)
+    public static float cosDeg(float degrees)
     {
         degrees = degrees * 0.011111111111111112f + 1f;
         final int floor = (degrees >= 0f ? (int) degrees : (int) degrees - 1) & -2;
@@ -323,7 +323,7 @@ public final class TrigTools {
      * adding up those brad values will wrap correctly (256 brad goes back to 0) while keeping perfect precision for the
      * results (you still divide by 256.0 when you pass the brad value to this method).
      * <br>
-     * The error for this double version is extremely close to the float version, {@link #sin_(float)}, so you should
+     * The error for this double version is extremely close to the float version, {@link #sinTurns(float)}, so you should
      * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
      * between float and double takes about as long as this method normally takes to run (or longer), so if you have
      * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
@@ -335,7 +335,7 @@ public final class TrigTools {
      * @param turns an angle as a fraction of a turn as a double, with 0.5 here equivalent to PI radians in {@link #cos(double)}
      * @return the sine of the given angle, as a double between -1.0 and 1.0 (both inclusive)
      */
-    public static double sin_(double turns)
+    public static double sinTurns(double turns)
     {
         turns *= 4.0;
         final long floor = (turns >= 0.0 ? (long) turns : (long) turns - 1L) & -2L;
@@ -354,7 +354,7 @@ public final class TrigTools {
      * adding up those brad values will wrap correctly (256 brad goes back to 0) while keeping perfect precision for the
      * results (you still divide by 256.0 when you pass the brad value to this method).
      * <br>
-     * The error for this double version is extremely close to the float version, {@link #cos_(float)}, so you should
+     * The error for this double version is extremely close to the float version, {@link #cosTurns(float)}, so you should
      * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
      * between float and double takes about as long as this method normally takes to run (or longer), so if you have
      * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
@@ -366,7 +366,7 @@ public final class TrigTools {
      * @param turns an angle as a fraction of a turn as a double, with 0.5 here equivalent to PI radians in {@link #cos(double)}
      * @return the cosine of the given angle, as a double between -1.0 and 1.0 (both inclusive)
      */
-    public static double cos_(double turns)
+    public static double cosTurns(double turns)
     {
         turns = turns * 4.0 + 1.0;
         final long floor = (turns >= 0.0 ? (long) turns : (long) turns - 1L) & -2L;
@@ -386,7 +386,7 @@ public final class TrigTools {
      * while keeping perfect precision for the results (you still divide by 256.0 when you pass the brad value to this
      * method).
      * <br>
-     * The error for this float version is extremely close to the double version, {@link #sin_(double)}, so you should
+     * The error for this float version is extremely close to the double version, {@link #sinTurns(double)}, so you should
      * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
      * between float and double takes about as long as this method normally takes to run (or longer), so if you have
      * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
@@ -398,7 +398,7 @@ public final class TrigTools {
      * @param turns an angle as a fraction of a turn as a float, with 0.5 here equivalent to PI radians in {@link #cos(double)}
      * @return the sine of the given angle, as a float between -1.0 and 1.0 (both inclusive)
      */
-    public static float sin_(float turns)
+    public static float sinTurns(float turns)
     {
         turns *= 4f;
         final long floor = (turns >= 0.0 ? (long) turns : (long) turns - 1L) & -2L;
@@ -418,7 +418,7 @@ public final class TrigTools {
      * while keeping perfect precision for the results (you still divide by 256.0 when you pass the brad value to this
      * method).
      * <br>
-     * The error for this float version is extremely close to the float version, {@link #cos_(double)}, so you should
+     * The error for this float version is extremely close to the float version, {@link #cosTurns(double)}, so you should
      * choose based on what type you have as input and/or want to return rather than on quality concerns. Coercion
      * between float and double takes about as long as this method normally takes to run (or longer), so if you have
      * floats you should usually use methods that take floats (or return floats, if assigning the result to a float),
@@ -430,7 +430,7 @@ public final class TrigTools {
      * @param turns an angle as a fraction of a turn as a float, with 0.5 here equivalent to PI radians in {@link #cos(double)}
      * @return the cosine of the given angle, as a float between -1.0 and 1.0 (both inclusive)
      */
-    public static float cos_(float turns)
+    public static float cosTurns(float turns)
     {
         turns = turns * 4f + 1f;
         final long floor = (turns >= 0.0 ? (long) turns : (long) turns - 1L) & -2L;
@@ -483,7 +483,7 @@ public final class TrigTools {
      * @param i any finite double
      * @return an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive
      */
-    private static double atn(final double i) {
+    private static double atanUnchecked(final double i) {
         final double n = Math.abs(i);
         final double c = (n - 1.0) / (n + 1.0);
         final double c2 = c * c;
@@ -498,7 +498,7 @@ public final class TrigTools {
      * @param i any finite float
      * @return an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive
      */
-    private static float atn(final float i) {
+    private static float atanUnchecked(final float i) {
         final float n = Math.abs(i);
         final float c = (n - 1f) / (n + 1f);
         final float c2 = c * c;
@@ -523,9 +523,9 @@ public final class TrigTools {
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(double)}
      * method, and the small code to make that work as atan2() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(double, double)} if you don't want a mess converting to degrees or some other
+     * See also {@link #atan2Turns(double, double)} if you don't want a mess converting to degrees or some other
      * measurement, since that method returns an angle from 0f (equal to 0 degrees) to 1f (equal to 360 degrees). You
-     * can also use {@link #atan2Degrees(double, double)} or {@link #atan2Degrees360(double, double)} to produce a
+     * can also use {@link #atan2Deg(double, double)} or {@link #atan2Deg360(double, double)} to produce a
      * result in degrees, either from -180 to 180 or 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
@@ -536,12 +536,12 @@ public final class TrigTools {
         if(n != n) n = (y == x ? 1.0 : -1.0); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0.0; // if n is infinite, y is infinitely larger than x.
         if(x > 0)
-            return atn(n);
+            return atanUnchecked(n);
         else if(x < 0) {
             if(y >= 0)
-                return atn(n) + 3.14159265358979323846;
+                return atanUnchecked(n) + 3.14159265358979323846;
             else
-                return atn(n) - 3.14159265358979323846;
+                return atanUnchecked(n) - 3.14159265358979323846;
         }
         else if(y > 0) return x + 1.5707963267948966;
         else if(y < 0) return x - 1.5707963267948966;
@@ -561,9 +561,9 @@ public final class TrigTools {
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(float)}
      * method, and the small code to make that work as atan2() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(float, float)} if you don't want a mess converting to degrees or some other measurement,
+     * See also {@link #atan2Turns(float, float)} if you don't want a mess converting to degrees or some other measurement,
      * since that method returns an angle from 0f (equal to 0 degrees) to 1f (equal to 360 degrees). You can also use
-     * {@link #atan2Degrees(float, float)} or {@link #atan2Degrees360(float, float)} to produce a result in degrees,
+     * {@link #atan2Deg(float, float)} or {@link #atan2Deg360(float, float)} to produce a result in degrees,
      * either from -180 to 180 or 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
@@ -574,12 +574,12 @@ public final class TrigTools {
         if(n != n) n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.
         if(x > 0)
-            return atn(n);
+            return atanUnchecked(n);
         else if(x < 0) {
             if(y >= 0)
-                return atn(n) + 3.14159265358979323846f;
+                return atanUnchecked(n) + 3.14159265358979323846f;
             else
-                return atn(n) - 3.14159265358979323846f;
+                return atanUnchecked(n) - 3.14159265358979323846f;
         }
         else if(y > 0) return x + 1.5707963267948966f;
         else if(y < 0) return x - 1.5707963267948966f;
@@ -587,11 +587,11 @@ public final class TrigTools {
     }
 
     /**
-     * This one's weird; unlike {@link #atan2_(double, double)}, it can return negative results.
+     * This one's weird; unlike {@link #atan2Turns(double, double)}, it can return negative results.
      * @param v any finite double
      * @return between -0.25 and 0.25
      */
-    private static double atn_(final double v) {
+    private static double atanUncheckedTurns(final double v) {
         final double n = Math.abs(v);
         final double c = (n - 1.0) / (n + 1.0);
         final double c2 = c * c;
@@ -603,11 +603,11 @@ public final class TrigTools {
     }
 
     /**
-     * This one's weird; unlike {@link #atan2_(float, float)}, it can return negative results.
+     * This one's weird; unlike {@link #atan2Turns(float, float)}, it can return negative results.
      * @param v any finite float
      * @return between -0.25 and 0.25
      */
-    private static float atn_(final float v) {
+    private static float atanUncheckedTurns(final float v) {
         final float n = Math.abs(v);
         final float c = (n - 1f) / (n + 1f);
         final float c2 = c * c;
@@ -627,28 +627,28 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(float)}
-     * method, and the small code to make that work as atan2_() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Turns() was worked out from Wikipedia.
      * <br>
      * Note that {@link #atan2(double, double)} returns an angle in radians and can return negative results, which may
      * be fine for many tasks; these two methods are extremely close in implementation and speed. There are also
-     * {@link #atan2Degrees(double, double)} and {@link #atan2Degrees360(double, double)}, which provide an angle in
+     * {@link #atan2Deg(double, double)} and {@link #atan2Deg360(double, double)}, which provide an angle in
      * degrees, either from -180 to 180 or 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, as a double from 0.0 to 1.0, inclusive
      */
-    public static double atan2_(final double y, double x) {
+    public static double atan2Turns(final double y, double x) {
         double n = y / x;
         if(n != n) n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0.0; // if n is infinite, y is infinitely larger than x.
         if(x > 0) {
             if(y >= 0)
-                return atn_(n);
+                return atanUncheckedTurns(n);
             else
-                return atn_(n) + 1.0;
+                return atanUncheckedTurns(n) + 1.0;
         }
         else if(x < 0) {
-            return atn_(n) + 0.5;
+            return atanUncheckedTurns(n) + 0.5;
         }
         else if(y > 0) return x + 0.25;
         else if(y < 0) return x + 0.75;
@@ -665,28 +665,28 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(float)}
-     * method, and the small code to make that work as atan2_() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Turns() was worked out from Wikipedia.
      * <br>
      * Note that {@link #atan2(float, float)} returns an angle in radians and can return negative results, which may
      * be fine for many tasks; these two methods are extremely close in implementation and speed. There are also
-     * {@link #atan2Degrees(float, float)} and {@link #atan2Degrees360(float, float)}, which provide an angle in
+     * {@link #atan2Deg(float, float)} and {@link #atan2Deg360(float, float)}, which provide an angle in
      * degrees, either from -180 to 180 or 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, as a float from 0.0f to 1.0f, inclusive
      */
-    public static float atan2_(final float y, float x) {
+    public static float atan2Turns(final float y, float x) {
         float n = y / x;
         if(n != n) n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.
         if(x > 0) {
             if(y >= 0)
-                return atn_(n);
+                return atanUncheckedTurns(n);
             else
-                return atn_(n) + 1f;
+                return atanUncheckedTurns(n) + 1f;
         }
         else if(x < 0) {
-            return atn_(n) + 0.5f;
+            return atanUncheckedTurns(n) + 0.5f;
         }
         else if(y > 0) return x + 0.25f;
         else if(y < 0) return x + 0.75f;
@@ -702,7 +702,7 @@ public final class TrigTools {
      * @param i an input to the inverse tangent function; any double is accepted
      * @return an output from the inverse tangent function in degrees, from -90 to 90 inclusive
      */
-    public static double atanDegrees(final double i) {
+    public static double atanDeg(final double i) {
         final double n = Math.min(Math.abs(i), Double.MAX_VALUE);
         final double c = (n - 1.0) / (n + 1.0);
         final double c2 = c * c;
@@ -722,7 +722,7 @@ public final class TrigTools {
      * @param i an input to the inverse tangent function; any float is accepted
      * @return an output from the inverse tangent function, from -90 to 90 inclusive
      */
-    public static float atanDegrees(final float i) {
+    public static float atanDeg(final float i) {
         final float n = Math.min(Math.abs(i), Float.MAX_VALUE);
         final float c = (n - 1f) / (n + 1f);
         final float c2 = c * c;
@@ -733,11 +733,11 @@ public final class TrigTools {
                 (57.25080271739779f * c - 18.402366944901082f * c3 + 8.381031432388337f * c5 - 2.2341286239715488f * c7), i);
     }
     /**
-     * A variant on {@link #atanDegrees(double)} that does not tolerate infinite inputs, and is slightly faster.
+     * A variant on {@link #atanDeg(double)} that does not tolerate infinite inputs, and is slightly faster.
      * @param i any finite double
      * @return an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive
      */
-    private static double atnDegrees(final double i) {
+    private static double atanUncheckedDeg(final double i) {
         final double n = Math.abs(i);
         final double c = (n - 1.0) / (n + 1.0);
         final double c2 = c * c;
@@ -752,7 +752,7 @@ public final class TrigTools {
      * @param i any finite float
      * @return an output from the inverse tangent function, from PI/-2.0 to PI/2.0 inclusive
      */
-    private static float atnDegrees(final float i) {
+    private static float atanUncheckedDeg(final float i) {
         final float n = Math.abs(i);
         final float c = (n - 1f) / (n + 1f);
         final float c2 = c * c;
@@ -774,26 +774,26 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(double)}
-     * method, and the small code to make that work as atan2Degrees() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Deg() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(double, double)} for a version that returns a measurement as a fraction of a turn, or
+     * See also {@link #atan2Turns(double, double)} for a version that returns a measurement as a fraction of a turn, or
      * {@link #atan2(double, double)} for the typical radians. You
-     * can also use {@link #atan2Degrees360(double, double)} to produce a result in degrees from 0 to 360.
+     * can also use {@link #atan2Deg360(double, double)} to produce a result in degrees from 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, in radians as a double; ranges from -180 to 180
      */
-    public static double atan2Degrees(final double y, double x) {
+    public static double atan2Deg(final double y, double x) {
         double n = y / x;
         if(n != n) n = (y == x ? 1.0 : -1.0); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0.0; // if n is infinite, y is infinitely larger than x.
         if(x > 0)
-            return atnDegrees(n);
+            return atanUncheckedDeg(n);
         else if(x < 0) {
             if(y >= 0)
-                return atnDegrees(n) + 180.0;
+                return atanUncheckedDeg(n) + 180.0;
             else
-                return atnDegrees(n) - 180.0;
+                return atanUncheckedDeg(n) - 180.0;
         }
         else if(y > 0) return x + 90.0;
         else if(y < 0) return x - 90.0;
@@ -811,63 +811,32 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(float)}
-     * method, and the small code to make that work as atan2Degrees() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Deg() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(float, float)} for a version that returns a measurement as a fraction of a turn, or
+     * See also {@link #atan2Turns(float, float)} for a version that returns a measurement as a fraction of a turn, or
      * {@link #atan2(float, float)} for the typical radians. You
-     * can also use {@link #atan2Degrees360(float, float)} to produce a result in degrees from 0 to 360.
+     * can also use {@link #atan2Deg360(float, float)} to produce a result in degrees from 0 to 360.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, in radians as a float; ranges from -180 to 180
      */
-    public static float atan2Degrees(final float y, float x) {
+    public static float atan2Deg(final float y, float x) {
         float n = y / x;
         if(n != n) n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.
         if(x > 0)
-            return atnDegrees(n);
+            return atanUncheckedDeg(n);
         else if(x < 0) {
             if(y >= 0)
-                return atnDegrees(n) + 180f;
+                return atanUncheckedDeg(n) + 180f;
             else
-                return atnDegrees(n) - 180f;
+                return atanUncheckedDeg(n) - 180f;
         }
         else if(y > 0) return x + 90f;
         else if(y < 0) return x - 90f;
         else return x + y; // returns 0 for 0,0 or NaN if either y or x is NaN
     }
 
-    /**
-     * This one's weird; unlike {@link #atan2Degrees360(double, double)}, it can return negative results.
-     * @param v any finite double
-     * @return between -90 and 90
-     */
-    private static double atnDegrees360(final double v) {
-        final double n = Math.abs(v);
-        final double c = (n - 1.0) / (n + 1.0);
-        final double c2 = c * c;
-        final double c3 = c * c2;
-        final double c5 = c3 * c2;
-        final double c7 = c5 * c2;
-        return Math.copySign(45.0 + 57.25080232616455 * c - 18.402367325992856 * c3
-                + 8.381031821523338 * c5 - 2.2341286009756676 * c7, v);
-    }
-
-    /**
-     * This one's weird; unlike {@link #atan2Degrees360(float, float)}, it can return negative results.
-     * @param v any finite float
-     * @return between -90 and 90
-     */
-    private static float atnDegrees360(final float v) {
-        final float n = Math.abs(v);
-        final float c = (n - 1f) / (n + 1f);
-        final float c2 = c * c;
-        final float c3 = c * c2;
-        final float c5 = c3 * c2;
-        final float c7 = c5 * c2;
-        return Math.copySign(45f + 57.25080232616455f * c - 18.402367325992856f * c3
-                + 8.381031821523338f * c5 - 2.2341286009756676f * c7, v);
-    }
     /**
      * Altered-range approximation of the frequently-used trigonometric method atan2, taking y and x positions as
      * doubles and returning an angle measured in turns from 0.0 to 360.0 (inclusive), with one cycle over the range
@@ -877,27 +846,27 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(double)}
-     * method, and the small code to make that work as atan2Degrees360() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Deg360() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(double, double)} for a version that returns a measurement as a fraction of a turn, or
+     * See also {@link #atan2Turns(double, double)} for a version that returns a measurement as a fraction of a turn, or
      * {@link #atan2(double, double)} for the typical radians. You
-     * can also use {@link #atan2Degrees(double, double)} to produce a result in degrees from -180 to 180.
+     * can also use {@link #atan2Deg(double, double)} to produce a result in degrees from -180 to 180.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, as a double from 0.0 to 360.0, inclusive
      */
-    public static double atan2Degrees360(final double y, double x) {
+    public static double atan2Deg360(final double y, double x) {
         double n = y / x;
         if(n != n) n = (y == x ? 1.0 : -1.0); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0.0; // if n is infinite, y is infinitely larger than x.
         if(x > 0) {
             if(y >= 0)
-                return atnDegrees360(n);
+                return atanUncheckedDeg(n);
             else
-                return atnDegrees360(n) + 360.0;
+                return atanUncheckedDeg(n) + 360.0;
         }
         else if(x < 0) {
-            return atnDegrees360(n) + 180.0;
+            return atanUncheckedDeg(n) + 180.0;
         }
         else if(y > 0) return x + 90.0;
         else if(y < 0) return x + 270.0;
@@ -913,27 +882,27 @@ public final class TrigTools {
      * Credit for this goes to the 1955 research study "Approximations for Digital Computers," by RAND Corporation. This
      * is sheet 9's algorithm, which is the second-fastest and second-least precise. The algorithm on sheet 8 is faster,
      * but only by a very small degree, and is considerably less precise. That study provides an {@link #atan(float)}
-     * method, and the small code to make that work as atan2Degrees360() was worked out from Wikipedia.
+     * method, and the small code to make that work as atan2Deg360() was worked out from Wikipedia.
      * <br>
-     * See also {@link #atan2_(float, float)} for a version that returns a measurement as a fraction of a turn, or
+     * See also {@link #atan2Turns(float, float)} for a version that returns a measurement as a fraction of a turn, or
      * {@link #atan2(float, float)} for the typical radians. You
-     * can also use {@link #atan2Degrees(float, float)} to produce a result in degrees from -180 to 180.
+     * can also use {@link #atan2Deg(float, float)} to produce a result in degrees from -180 to 180.
      * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
      * @return the angle to the given point, as a float from 0.0 to 360.0, inclusive
      */
-    public static float atan2Degrees360(final float y, float x) {
+    public static float atan2Deg360(final float y, float x) {
         float n = y / x;
         if(n != n) n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN
         else if(n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.
         if(x > 0) {
             if(y >= 0)
-                return atnDegrees360(n);
+                return atanUncheckedDeg(n);
             else
-                return atnDegrees360(n) + 360f;
+                return atanUncheckedDeg(n) + 360f;
         }
         else if(x < 0) {
-            return atnDegrees360(n) + 180f;
+            return atanUncheckedDeg(n) + 180f;
         }
         else if(y > 0) return x + 90f;
         else if(y < 0) return x + 270f;
@@ -1031,10 +1000,10 @@ public final class TrigTools {
      * range from 0.75 (inclusive) to 1.0 (exclusive), and continuing past that to 0.0 (inclusive) to 0.25 (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation, but it never returns a negative result.
-     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
-     * @return one of the values that would produce {@code n} if it were passed to {@link #sin_(double)}
+     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sinTurns() or cosTurns()
+     * @return one of the values that would produce {@code n} if it were passed to {@link #sinTurns(double)}
      */
-    public static double asin_(final double x)
+    public static double asinTurns(final double x)
     {
         final double x2 = x * x;
         final double x3 = x * x2;
@@ -1052,10 +1021,10 @@ public final class TrigTools {
      * range from 0.0 (inclusive) to 0.5 (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sin_() or cos_()
-     * @return one of the values that would produce {@code n} if it were passed to {@link #cos_(double)}
+     * @param x a double from -1.0 to 1.0 (both inclusive), usually the output of sinTurns() or cosTurns()
+     * @return one of the values that would produce {@code n} if it were passed to {@link #cosTurns(double)}
      */
-    public static double acos_(final double x)
+    public static double acosTurns(final double x)
     {
         final double x2 = x * x;
         final double x3 = x * x2;
@@ -1074,10 +1043,10 @@ public final class TrigTools {
      * (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation, but it never returns a negative result.
-     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
-     * @return one of the values that would produce {@code n} if it were passed to {@link #sin_(float)}
+     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sinTurns() or cosTurns()
+     * @return one of the values that would produce {@code n} if it were passed to {@link #sinTurns(float)}
      */
-    public static float asin_(final float x)
+    public static float asinTurns(final float x)
     {
         final float x2 = x * x;
         final float x3 = x * x2;
@@ -1091,14 +1060,14 @@ public final class TrigTools {
         }
     }
     /**
-     * Inverse cosine function (arccos) but with output measured in turns instead of radians. Possible results for this
+     * Inverse cosine function (arccosine) but with output measured in turns instead of radians. Possible results for this
      * range from 0.0f (inclusive) to 0.5f (inclusive).
      * <br>
      * This method is extremely similar to the non-turn approximation.
-     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sin_() or cos_()
-     * @return one of the values that would produce {@code n} if it were passed to {@link #cos_(float)}
+     * @param x a float from -1.0f to 1.0f (both inclusive), usually the output of sinTurns() or cosTurns()
+     * @return one of the values that would produce {@code n} if it were passed to {@link #cosTurns(float)}
      */
-    public static float acos_(final float x)
+    public static float acosTurns(final float x)
     {
         final float x2 = x * x;
         final float x3 = x * x2;

@@ -600,7 +600,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //display.clear();
         int rainbow = DescriptiveColor.toRGBA8888(
                 DescriptiveColor.maximizeSaturation(200,
-                        (int) (TrigTools.sin_(time * 0.5f) * 30f) + 128, (int) (TrigTools.cos_(time * 0.5f) * 30f) + 128, 255));
+                        (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255));
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if(visible[i][j] > 0.0) {

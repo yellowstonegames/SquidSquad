@@ -221,7 +221,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         int rainbow = toRGBA8888(
                 limitToGamut(100,
-                        (int) (TrigTools.sin_(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cos_(modifiedTime * 0.2f) * 40f) + 128, 255));
+                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
         FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {

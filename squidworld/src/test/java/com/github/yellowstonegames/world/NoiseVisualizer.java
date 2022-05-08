@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -200,7 +199,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         break;
                     case COMMA: // foam sharpness
-                        noise.setFoamSharpness(TrigTools.sinDegrees((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.25f);
+                        noise.setFoamSharpness(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.25f);
                         System.out.println(noise.getFoamSharpness());
                         break;
                     case I: // inverse mode

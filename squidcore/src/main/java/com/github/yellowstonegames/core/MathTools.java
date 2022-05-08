@@ -524,7 +524,7 @@ public final class MathTools
     }
 
     /**
-     * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * Very similar to {@link TrigTools#sinTurns(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
      * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
      * {@code QUINTIC} interpolation. This interpolation is slightly flatter at peaks and valleys than a sine wave is.
@@ -545,7 +545,7 @@ public final class MathTools
     }
 
     /**
-     * Very similar to {@link TrigTools#sin_(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * Very similar to {@link TrigTools#sinTurns(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
      * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
      * {@code QUINTIC} interpolation. This interpolation is slightly flatter at peaks and valleys than a sine wave is.
@@ -566,7 +566,7 @@ public final class MathTools
     }
 
     /**
-     * Very similar to {@link TrigTools#sin_(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * Very similar to {@link TrigTools#sinTurns(double)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
      * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
      * {@code HERMITE} interpolation. This interpolation is rounder at peaks and valleys than a sine wave is; it is
@@ -588,7 +588,7 @@ public final class MathTools
     }
 
     /**
-     * Very similar to {@link TrigTools#sin_(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
+     * Very similar to {@link TrigTools#sinTurns(float)} with half frequency, or {@link Math#sin(double)} with {@link Math#PI}
      * frequency, but optimized (and shaped) a little differently. This looks like a squished sine wave when graphed,
      * and is essentially just interpolating between each pair of odd and even inputs using what FastNoise calls
      * {@code HERMITE} interpolation. This interpolation is rounder at peaks and valleys than a sine wave is; it is

@@ -6509,7 +6509,7 @@ public class Noise {
 //        final float a = singleSimplex(seed, x, y);
 //        seed += 0x9E377;
 //        final float b = singleSimplex(seed, x + a * 0.25f, y);
-//        return TrigTools.sin_((a + b) * 0.25f);
+//        return TrigTools.sinTurns((a + b) * 0.25f);
     }
 
     public float getHoneyFractal(float x, float y) {

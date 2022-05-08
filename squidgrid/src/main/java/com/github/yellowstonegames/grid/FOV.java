@@ -527,8 +527,8 @@ public class FOV {
         float decay = 1.0f / rad;
         ArrayTools.fill(light, 0);
         light[startX][startY] = 1;//make the starting space full power
-        float s = TrigTools.sinDegrees(angle),
-                c = TrigTools.cosDegrees(angle);
+        float s = TrigTools.sinDeg(angle),
+                c = TrigTools.cosDeg(angle);
         float deteriorate = 1.0f;
         int dx, dy, width = resistanceMap.length, height = resistanceMap[0].length;
         for (int d = 1; d <= rad; ) {
@@ -613,7 +613,7 @@ public class FOV {
                         || radiusStrategy.radius(x, y, x2, y2) >= radius + 1) {//+1 to cover starting tile
                     continue;
                 }
-                float newAngle = TrigTools.atan2_(y2 - y, x2 - x) - angle;
+                float newAngle = TrigTools.atan2Turns(y2 - y, x2 - x) - angle;
                 newAngle -= MathTools.fastFloor(newAngle);
                 if (newAngle > span * 0.5f && newAngle < 1.0f - span * 0.5f) 
                     continue;
@@ -854,7 +854,7 @@ public class FOV {
                     break;
                 }
                 float deltaRadius = radiusStrategy.radius(deltaX, deltaY),
-                        at2 = Math.abs(angle - TrigTools.atan2_(currentY - starty, currentX - startx));// + 1.0f) % 1.0f;
+                        at2 = Math.abs(angle - TrigTools.atan2Turns(currentY - starty, currentX - startx));// + 1.0f) % 1.0f;
                 //check if it's within the lightable area and light if needed
                 if (deltaRadius <= radius
                         && (at2 <= span * 0.5f
@@ -964,7 +964,7 @@ public class FOV {
                 } else if (end > leftSlope) {
                     break;
                 }
-                float at2 = Math.abs(angle - TrigTools.atan2_(currentY - starty, currentX - startx)) * 8.0f,
+                float at2 = Math.abs(angle - TrigTools.atan2Turns(currentY - starty, currentX - startx)) * 8.0f,
                         deltaRadius = radiusStrategy.radius(deltaX, deltaY);
                 int ia = (int)(at2), low = ia & 7, high = ia + 1 & 7;
                 float a = at2 - ia, adjRadius = (1.0f - a) * directionRanges[low] + a * directionRanges[high];

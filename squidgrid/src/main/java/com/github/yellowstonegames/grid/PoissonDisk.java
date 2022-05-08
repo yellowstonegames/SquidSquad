@@ -177,15 +177,15 @@ public class PoissonDisk {
                 float radius = minimumDistance + minimumDistance * d;
                 float angle = rng.nextFloat();;
 
-                float newX = radius * TrigTools.sin_(angle);
-                float newY = radius * TrigTools.cos_(angle);
+                float newX = radius * TrigTools.sinTurns(angle);
+                float newY = radius * TrigTools.cosTurns(angle);
                 Coord q = point.translateCapped(Math.round(newX), Math.round(newY), width, height);
                 int frustration = 0;
                 while(restricted && !valid.contains(q) && frustration < 8)
                 {
                     angle = rng.nextFloat();
-                    newX = radius * TrigTools.sin_(angle);
-                    newY = radius * TrigTools.cos_(angle);
+                    newX = radius * TrigTools.sinTurns(angle);
+                    newY = radius * TrigTools.cosTurns(angle);
                     q = point.translateCapped(Math.round(newX), Math.round(newY), width, height);
                     frustration++;
                 }
@@ -252,8 +252,8 @@ public class PoissonDisk {
             float seed = random.nextFloat();
             // Make a new candidate.
             for (int j = 0; j < pointsPerTry; j++) {
-                final float x = px + radius * TrigTools.cos_(seed);
-                final float y = py + radius * TrigTools.sin_(seed);
+                final float x = px + radius * TrigTools.cosTurns(seed);
+                final float y = py + radius * TrigTools.sinTurns(seed);
                 seed += ik;
 
                 // Accept candidates that are inside the allowed extent

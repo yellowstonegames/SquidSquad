@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
@@ -115,8 +114,8 @@ public enum Radius {
             default: // CIRCLE
                 float radius = distance * (float) Math.sqrt(rng.nextFloat());
                 float theta = rng.nextFloat();
-                x = Math.round(TrigTools.cos_(theta) * radius);
-                y = Math.round(TrigTools.sin_(theta) * radius);
+                x = Math.round(TrigTools.cosTurns(theta) * radius);
+                y = Math.round(TrigTools.sinTurns(theta) * radius);
         }
 
         return Coord.get(x, y);
@@ -202,8 +201,8 @@ public enum Radius {
                     for (int i = 1; i <= denom; i+=2)
                     {
                         theta = i / denom;
-                        x = (int) (TrigTools.cos_(theta) * (radiusLength + 0.25)) + center.x;
-                        y = (int) (TrigTools.sin_(theta) * (radiusLength + 0.25)) + center.y;
+                        x = (int) (TrigTools.cosTurns(theta) * (radiusLength + 0.25)) + center.x;
+                        y = (int) (TrigTools.sinTurns(theta) * (radiusLength + 0.25)) + center.y;
                         
                         if (!surpassEdges) {
                             x = clamp(x, 0, width);
@@ -232,8 +231,8 @@ public enum Radius {
         if(radiusLength < 1) {
             return center;
         }
-        float theta = TrigTools.atan2_(middle.y - center.y, middle.x - center.x),
-                cosTheta = TrigTools.cos_(theta), sinTheta = TrigTools.sin_(theta);
+        float theta = TrigTools.atan2Turns(middle.y - center.y, middle.x - center.x),
+                cosTheta = TrigTools.cosTurns(theta), sinTheta = TrigTools.sinTurns(theta);
 
         Coord end = Coord.get(middle.x, middle.y);
         switch (this) {

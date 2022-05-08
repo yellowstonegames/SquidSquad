@@ -1163,7 +1163,7 @@ public final class DescriptiveColor {
     public static float saturation(final int packed) {
         final float A = ((packed >>> 8 & 0xff) - 127.5f);
         final float B = ((packed >>> 16 & 0xff) - 127.5f);
-        final float hue = TrigTools.atan2_(B, A);
+        final float hue = TrigTools.atan2Turns(B, A);
         final int idx = (packed & 0xff) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] + 1.5f;
         return dist == 3.5f ? 0f : (A * A + B * B) * 4f / (dist * dist);
@@ -1180,7 +1180,7 @@ public final class DescriptiveColor {
     public static float hue(final int oklab) {
         final float a = ((oklab >>> 7 & 0x1FE) - 255);
         final float b = ((oklab >>> 15 & 0x1FE) - 255);
-        return TrigTools.atan2_(a, b);
+        return TrigTools.atan2Turns(a, b);
     }
 
     /**
@@ -1398,7 +1398,7 @@ public final class DescriptiveColor {
         A = Math.min(Math.max(A * mulA + addA * 2f, -1f), 1f) * 0.5f;
         B = Math.min(Math.max(B * mulB + addB * 2f, -1f), 1f) * 0.5f;
         alpha = Math.min(Math.max(alpha * mulAlpha + addAlpha, 0f), 1f);
-        final float hue = TrigTools.atan2_(B, A);
+        final float hue = TrigTools.atan2Turns(B, A);
         final int idx = (int) (L * 255.999f) << 8 | (int)(256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         if(dist * dist * 0x1p-16f + 0x1p-14f >= (A * A + B * B))
@@ -1407,8 +1407,8 @@ public final class DescriptiveColor {
                     (int) ((A + 0.5f) * 255.999f) << 8 |
                     (int) (L * 255.999f);
         return (int) (alpha * 255.999f) << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         (int) (L * 255.999f);
     }
 
@@ -1426,7 +1426,7 @@ public final class DescriptiveColor {
      * the index. This is measured in a space from -1 to 1 for both A and B, with the 0 in the center meaning grayscale,
      * and multiplied by 256 to get a meaningful byte value. To return to the A and B values Oklab uses here, you would
      * need to use some trigonometry on the hue (if it's in the 0 to 1 range, you can call
-     * {@link TrigTools#cos_(float)} on the hue to almost get A, and {@link TrigTools#sin_(float)} to almost get B),
+     * {@link TrigTools#cosTurns(float)} on the hue to almost get A, and {@link TrigTools#sinTurns(float)} to almost get B),
      * then multiply each of those by the distance, divide each by 256.0, and add 0.5.
      * <br>
      * Only intended for the narrow cases where external code needs read-only access to the internal Oklab gamut data.
@@ -1449,7 +1449,7 @@ public final class DescriptiveColor {
     {
         final float A = ((packed >>> 8 & 0xff) - 127f) / 255f;
         final float B = ((packed >>> 16 & 0xff) - 127f) / 255f;
-        final float g = GAMUT_DATA[(packed & 0xff) << 8 | (int)(256f * TrigTools.atan2_(B, A))];
+        final float g = GAMUT_DATA[(packed & 0xff) << 8 | (int)(256f * TrigTools.atan2Turns(B, A))];
         return g * g * 0x1p-18 + 0x1p-14 >= (A * A + B * B);
     }
 
@@ -1464,7 +1464,7 @@ public final class DescriptiveColor {
     {
         float A2 = (A - 127f) / 255f;
         float B2 = (B - 127f) / 255f;
-        final float g = GAMUT_DATA[(L & 0xFF) << 8 | (int)(256f * TrigTools.atan2_(B2, A2))];
+        final float g = GAMUT_DATA[(L & 0xFF) << 8 | (int)(256f * TrigTools.atan2Turns(B2, A2))];
         return g * g * 0x1p-18 + 0x1p-14 >= (A2 * A2 + B2 * B2);
     }
 
@@ -1479,7 +1479,7 @@ public final class DescriptiveColor {
     {
         A = (A - 0.5f);
         B = (B - 0.5f);
-        final byte g = GAMUT_DATA[((int)(L * 255.999f) << 8 & 0xFF00) | (int)(256f * TrigTools.atan2_(B, A))];
+        final byte g = GAMUT_DATA[((int)(L * 255.999f) << 8 & 0xFF00) | (int)(256f * TrigTools.atan2Turns(B, A))];
         return g * g * 0x1p-18 + 0x1p-14 >= (A * A + B * B);
     }
 
@@ -1494,12 +1494,12 @@ public final class DescriptiveColor {
     public static int maximizeSaturation(final int packed) {
         final float A = ((packed >>> 8 & 0xff) - 127.5f);
         final float B = ((packed >>> 16 & 0xff) - 127.5f);
-        final float hue = TrigTools.atan2_(B, A);
+        final float hue = TrigTools.atan2Turns(B, A);
         final int idx = (packed & 0xff) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         return ((packed & 0xFF0000FF) |
-                (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
-                (int) (TrigTools.sin_(hue) * dist + 128f) << 16);
+                (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
+                (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16);
     }
 
     /**
@@ -1520,13 +1520,13 @@ public final class DescriptiveColor {
         alpha = Math.min(Math.max(alpha, 0), 255);
         final float A2 = (A - 127.5f);
         final float B2 = (B - 127.5f);
-        final float hue = TrigTools.atan2_(B2, A2);
+        final float hue = TrigTools.atan2Turns(B2, A2);
         final int idx = L << 8 | (int)(256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         return (
                 alpha << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         L);
     }
 
@@ -1548,13 +1548,13 @@ public final class DescriptiveColor {
         alpha = Math.min(Math.max(alpha, 0f), 1f);
         final float A2 = (A - 0.5f);
         final float B2 = (B - 0.5f);
-        final float hue = TrigTools.atan2_(B2, A2);
+        final float hue = TrigTools.atan2Turns(B2, A2);
         final int idx = (int) (L * 255.999f) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         return BitConversion.intBitsToFloat(
                 (int) (alpha * 255.999f) << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         (int) (L * 255.999f));
     }
 
@@ -1568,15 +1568,15 @@ public final class DescriptiveColor {
     public static int limitToGamut(final int packed) {
         final float A = ((packed >>> 8 & 0xff) - 127.5f);
         final float B = ((packed >>> 16 & 0xff) - 127.5f);
-        final float hue = TrigTools.atan2_(B, A);
+        final float hue = TrigTools.atan2Turns(B, A);
         final int idx = (packed & 0xff) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         if (dist * dist >= (A * A + B * B))
             return packed;
         return (
                 (packed & 0xFF0000FF) |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16);
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16);
     }
 
     /**
@@ -1610,15 +1610,15 @@ public final class DescriptiveColor {
         alpha = Math.min(Math.max(alpha, 0), 255);
         final float A2 = (A - 127.5f) / 255f;
         final float B2 = (B - 127.5f) / 255f;
-        final float hue = TrigTools.atan2_(B2, A2);
+        final float hue = TrigTools.atan2Turns(B2, A2);
         final int idx = L << 8 | (int)(256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         if(dist * dist * 0x1p-16f + 0x1p-14f >= (A2 * A2 + B2 * B2))
             return L | A << 8 | B << 16 | alpha << 24;
         return (
                 alpha << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         L);
     }
 
@@ -1650,8 +1650,8 @@ public final class DescriptiveColor {
         final float dist = GAMUT_DATA[idx] * saturation * 0.5f;
         return (
                 (int) (alpha * 255.999f) << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         (int) (lightness * 255.999f));
     }
 
@@ -1682,8 +1682,8 @@ public final class DescriptiveColor {
         final float dist = Math.min(chroma * 127.5f, GAMUT_DATA[idx] * 0.5f);
         return (
                 (int) (alpha * 255.999f) << 24 |
-                        (int) (TrigTools.sin_(hue) * dist + 128f) << 16 |
-                        (int) (TrigTools.cos_(hue) * dist + 128f) << 8 |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         (int) (lightness * 255.999f));
     }
 

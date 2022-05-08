@@ -255,8 +255,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
 //            if(FLOWING_LAND) {
-//                ((Noise.Adapted3DFrom5D)noise).w = TrigTools.cos_(angle) * 0.3125f;
-//                ((Noise.Adapted3DFrom5D)noise).u = TrigTools.sin_(angle) * 0.3125f;
+//                ((Noise.Adapted3DFrom5D)noise).w = TrigTools.cosTurns(angle) * 0.3125f;
+//                ((Noise.Adapted3DFrom5D)noise).u = TrigTools.sinTurns(angle) * 0.3125f;
 //            }
             world.setCenterLongitude(angle * MathUtils.PI2);
             generate(hash);
