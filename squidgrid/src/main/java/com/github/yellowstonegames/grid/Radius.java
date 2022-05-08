@@ -129,7 +129,7 @@ public enum Radius {
             case DIAMOND:
                 return radiusLength * (radiusLength + 1) * 2 + 1;
             default:
-                return MathTools.PI * radiusLength * radiusLength + 1;
+                return TrigTools.PI * radiusLength * radiusLength + 1;
         }
     }
 

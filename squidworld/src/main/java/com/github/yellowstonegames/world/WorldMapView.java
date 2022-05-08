@@ -21,7 +21,6 @@ import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.place.Biome;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
-import static com.github.yellowstonegames.core.MathTools.PI;
 import static com.github.yellowstonegames.core.MathTools.zigzag;
 
 /**

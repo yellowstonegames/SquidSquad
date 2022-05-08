@@ -6504,7 +6504,7 @@ public class Noise {
 
         //return singleSimplex(seed, x, y, 0.5f * singleSimplex(seed * 0xDAB ^ 0x9E3779BD, x, y));
 //        return singleSimplex(seed, x, y + 0.25f * singleSimplex(seed * 0xDAB ^ 0x9E3779BD, y, x));
-//        return singleSimplex(seed, x + BitConversion.swayRandomized(seed, y) * 0.25f, y + BitConversion.swayRandomized(seed, x) * 0.25f);
+//        return singleSimplex(seed, x + MathTools.wobble(seed, y) * 0.25f, y + MathTools.wobble(seed, x) * 0.25f);
         
 //        final float a = singleSimplex(seed, x, y);
 //        seed += 0x9E377;

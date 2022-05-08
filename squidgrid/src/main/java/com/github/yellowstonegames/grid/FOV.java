@@ -436,7 +436,7 @@ public class FOV {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
         lightWorkspace.clear();
-        doRippleFOV(light, MathTools.clamp(rippleLooseness, 1, 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
+        doRippleFOV(light, Math.min(Math.max(rippleLooseness, 1), 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
         return light;
     }
 
@@ -500,7 +500,7 @@ public class FOV {
         angle *= 0.002777777777777778f;
         angle -= MathTools.fastFloor(angle);
         span *= 0.002777777777777778f;
-        doRippleFOV(light, MathTools.clamp(rippleLooseness, 1, 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique, angle, span);
+        doRippleFOV(light, Math.min(Math.max(rippleLooseness, 1), 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique, angle, span);
         return light;
     }
 

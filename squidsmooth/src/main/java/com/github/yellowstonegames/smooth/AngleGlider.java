@@ -60,7 +60,7 @@ public class AngleGlider implements IGlider {
     }
 
     public float getAngle() {
-        return MathTools.lerpAngle_(start, end, interpolation.apply(change));
+        return MathTools.lerpAngleTurns(start, end, interpolation.apply(change));
     }
 
     @Override

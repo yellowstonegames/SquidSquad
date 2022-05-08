@@ -230,7 +230,7 @@ public class Radiance {
         final float time = (System.currentTimeMillis() & 0x3ffffL) * 0x1.9p-9f;
         float current = range;
         if(flicker != 0f) 
-            current *= MathTools.swayRandomized(seed, time * flicker + delay) * 0.375f + 0.625f;
+            current *= MathTools.wobble(seed, time * flicker + delay) * 0.375f + 0.625f;
         if(strobe != 0f)
             current *= MathTools.swayTight(time * strobe + delay) * 0.5f + 0.5f;
         return Math.max(current, range * flare);

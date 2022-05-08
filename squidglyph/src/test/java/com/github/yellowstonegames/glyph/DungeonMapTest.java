@@ -17,6 +17,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.core.ArrayTools;
+import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.core.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -28,7 +29,6 @@ import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
-import static com.github.yellowstonegames.core.MathTools.swayRandomized;
 
 public class DungeonMapTest extends ApplicationAdapter {
 
@@ -222,7 +222,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         int rainbow = toRGBA8888(
                 limitToGamut(100,
                         (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
-        FOV.reuseFOV(res, light, player.x, player.y, swayRandomized(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
+        FOV.reuseFOV(res, light, player.x, player.y, MathTools.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 if (inView.contains(x, y)) {

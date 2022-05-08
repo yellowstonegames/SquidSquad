@@ -16,7 +16,6 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.support.BitConversion;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 /**
@@ -24,13 +23,13 @@ import com.github.yellowstonegames.core.annotations.GwtIncompatible;
  * <br>
  * Includes code that was originally part of the
  * <a href="http://maths.uncommons.org/">Uncommon Maths software package</a> as Maths.
- * Also includes code adapted from libGDX as their MathUtils class, and {@link #probit(double)}
- * formulated by Peter John Acklam and implemented by Sherali Karimov. There's also
- * {@link #cbrt(float)} by Marc B. Reynolds, building on the legendary fast inverse square root.
+ * Also includes code adapted from libGDX as their MathUtils class. There's also
+ * {@link #cbrt(float)} by Marc B. Reynolds, building on the legendary fast inverse square root,
+ * and a generalized bias/gain function, {@link #barronSpline(float, float, float)}, popularized by Jon Barron.
  * @author Daniel Dyer
  * @author Tommy Ettinger
- * @author Sherali Karimov
  * @author Marc B. Reynolds
+ * @author Jon Barron
  */
 public final class MathTools
 {
@@ -38,18 +37,12 @@ public final class MathTools
     {
         // Prevent instantiation.
     }
+
     /**
      * The {@code float} value that is closer than any other to
      * <i>e</i>, the base of the natural logarithms.
      */
     public static final float E = 2.7182818284590452354f;
-
-    /**
-     * The {@code float} value that is closer than any other to
-     * <i>pi</i>, the ratio of the circumference of a circle to its
-     * diameter.
-     */
-    public static final float PI = 3.14159265358979323846f;
 
     /**
      * Calculate the first argument raised to the power of the second.
@@ -113,7 +106,7 @@ public final class MathTools
      * @return true if a and b are equal or extremely close to equal, or false otherwise.
      */
     public static boolean isEqual (float a, float b) {
-        return Math.abs(a - b) <= 0.000001f;
+        return Math.abs(a - b) <= FLOAT_ROUNDING_ERROR;
     }
     /**
      * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows the given
@@ -131,6 +124,9 @@ public final class MathTools
     /**
      * If the specified value is not greater than or equal to the specified minimum and
      * less than or equal to the specified maximum, adjust it so that it is.
+     * <br>
+     * Note that it can often be just as easy to directly call the same code this calls, while being slightly friendlier
+     * to inlining in large method: {@code Math.min(Math.max(value, min), max)}.
      * @param value The value to check.
      * @param min The minimum permitted value.
      * @param max The maximum permitted value.
@@ -142,10 +138,12 @@ public final class MathTools
         return Math.min(Math.max(value, min), max);
     }
 
-
     /**
      * If the specified value is not greater than or equal to the specified minimum and
      * less than or equal to the specified maximum, adjust it so that it is.
+     * <br>
+     * Note that it can often be just as easy to directly call the same code this calls, while being slightly friendlier
+     * to inlining in large method: {@code Math.min(Math.max(value, min), max)}.
      * @param value The value to check.
      * @param min The minimum permitted value.
      * @param max The maximum permitted value.
@@ -161,6 +159,9 @@ public final class MathTools
     /**
      * If the specified value is not greater than or equal to the specified minimum and
      * less than or equal to the specified maximum, adjust it so that it is.
+     * <br>
+     * Note that it can often be just as easy to directly call the same code this calls, while being slightly friendlier
+     * to inlining in large method: {@code Math.min(Math.max(value, min), max)}.
      * @param value The value to check.
      * @param min The minimum permitted value.
      * @param max The maximum permitted value.
@@ -175,6 +176,9 @@ public final class MathTools
     /**
      * If the specified value is not greater than or equal to the specified minimum and
      * less than or equal to the specified maximum, adjust it so that it is.
+     * <br>
+     * Note that it can often be just as easy to directly call the same code this calls, while being slightly friendlier
+     * to inlining in large method: {@code Math.min(Math.max(value, min), max)}.
      * @param value The value to check.
      * @param min The minimum permitted value.
      * @param max The maximum permitted value.
@@ -229,10 +233,10 @@ public final class MathTools
     @GwtIncompatible
     public static int modularMultiplicativeInverse(final int a)
     {
-        int x = 2 ^ a * 3;     //  5 bits
-        x *= 2 - a * x;        // 10
-        x *= 2 - a * x;        // 20
-        x *= 2 - a * x;        // 40 -- 32 low bits
+        int x = 2 ^ a * 3;
+        x *= 2 - a * x;
+        x *= 2 - a * x;
+        x *= 2 - a * x;
         return x;
     }
 
@@ -249,64 +253,6 @@ public final class MathTools
         x *= 2 - a * x;
         x *= 2 - a * x;
         return x;
-    }
-
-    /**
-     * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
-     * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
-     * deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
-     * or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
-     * given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
-     * largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
-     * given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
-     * {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
-     * implemented by Sherali Karimov.
-     * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
-     * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
-     * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
-     * is more likely to just be confusing.
-     * <br>
-     * Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
-     * Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
-     * as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
-     * a typical uniform random {@code double} that's exclusive on 1.0, it won't produce a result higher than
-     * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
-     * excluded from the inputs (if 0.0 is an input, the result is {@code 38.5}). A chief advantage of using this with
-     * a random number generator is that it only requires one random double to obtain one Gaussian value;
-     * {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but may rarely
-     * require much more random generation.
-     * <br>
-     * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
-     * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
-     * as the input).
-     *
-     * This implementation delegates to jdkgdxds' {@link EnhancedRandom#probit(double)}.
-     * @param d should be between 0 and 1, exclusive, but other values are tolerated
-     * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
-     */
-    public static double probit(final double d) {
-        return EnhancedRandom.probit(d);
-        /*
-        if (d <= 0 || d >= 1) {
-            return Math.copySign(38.5, d - 0.5);
-        }
-        else if (d < 0.02425) {
-            final double q = Math.sqrt(-2.0 * Math.log(d));
-            return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
-                    / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-        }
-        else if (0.97575 < d) {
-            final double q = Math.sqrt(-2.0 * Math.log(1 - d));
-            return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00)
-                    / ((((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-        }
-        else {
-            final double q = d - 0.5;
-            final double r = q * q;
-            return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q
-                    / (((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
-        }
-         */
     }
 
     /**
@@ -338,15 +284,15 @@ public final class MathTools
      * distributed between -512 and 512, and absolute mean error of less than
      * 1E-6 in the same scenario. Uses a bit-twiddling method similar to one
      * presented in Hacker's Delight and also used in early 3D graphics (see
-     * https://en.wikipedia.org/wiki/Fast_inverse_square_root for more, but
+     * <a href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Wikipedia</a> for more, but
      * this code approximates cbrt(x) and not 1/sqrt(x)). This specific code
-     * was originally by Marc B. Reynolds, posted in his "Stand-alone-junk"
-     * repo: https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197 .
+     * was originally by Marc B. Reynolds, posted in his
+     * <a href="https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197">"Stand-alone-junk" repo</a> .
      * @param x any finite float to find the cube root of
      * @return the cube root of x, approximated
      */
     public static float cbrt(float x) {
-        int ix = BitConversion.floatToRawIntBits(x);
+        int ix = BitConversion.floatToIntBits(x);
         final int sign = ix & 0x80000000;
         ix &= 0x7FFFFFFF;
         final float x0 = x;
@@ -377,7 +323,7 @@ public final class MathTools
      */
     public static float barronSpline(final float x, final float shape, final float turning) {
         final float d = turning - x;
-        final int f = BitConversion.floatToRawIntBits(d) >> 31, n = f | 1;
+        final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
         return ((turning * n - f) * (x + f)) / (Float.MIN_NORMAL - f + (x + shape * d) * n) - f;
     }
 
@@ -464,6 +410,40 @@ public final class MathTools
     }
 
     /**
+     * Returns the next higher power of two relative to {@code n}, or n if it is already a power of two. This returns 2
+     * if n is any value less than 2 (including negative numbers, but also 1, which is a power of two).
+     * @param n the lower bound for the result
+     * @return the next higher power of two that is greater than or equal to n
+     */
+    public static int nextPowerOfTwo(final int n) {
+        return 1 << -Integer.numberOfLeadingZeros(Math.max(2, n) - 1);
+    }
+
+    /**
+     * Forces precision loss on the given float so very small fluctuations away from an integer will be erased.
+     * This is meant primarily for cleaning up floats, so they can be presented without needing scientific notation.
+     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
+     * @param n any float, but typically a fairly small one (between -8 and 8, as a guideline)
+     * @return {@code n} with its 13 least significant bits effectively removed
+     */
+    public static float truncate(final float n){
+        long i = (long) (n * 0x1p13f); // 0x1p13f is 2 raised to the 13 as a float, or 8192.0f
+        return i * 0x1p-13f;           // 0x1p-13f is 1 divided by (2 raised to the 13) as a float, or 1.0f/8192.0f
+    }
+
+    /**
+     * Forces precision loss on the given double so very small fluctuations away from an integer will be erased.
+     * This is meant primarily for cleaning up doubles, so they can be presented without needing scientific notation.
+     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
+     * @param n any double, but typically a fairly small one (between -8 and 8, as a guideline)
+     * @return {@code n} with its 42 least significant bits effectively removed
+     */
+    public static double truncate(final double n){
+        long i = (long)(n * 0x1p42); // 0x1p42 is 2 raised to the 42 as a double
+        return i * 0x1p-42;          // 0x1p-42 is 1 divided by (2 raised to the 42) as a double
+    }
+
+    /**
      *  Linearly interpolates between fromValue to toValue on progress position.
      * @param fromValue starting float value; can be any finite float
      * @param toValue ending float value; can be any finite float
@@ -480,7 +460,7 @@ public final class MathTools
      * @param toTurns target angle in turns
      * @param progress interpolation value in the range [0, 1]
      * @return the interpolated angle in the range [0, 1) */
-    public static float lerpAngle_ (float fromTurns, float toTurns, float progress) {
+    public static float lerpAngleTurns(float fromTurns, float toTurns, float progress) {
         float d = toTurns - fromTurns + 0.5f;
         d = fromTurns + progress * (d - fastFloor(d) - 0.5f);
         return d - fastFloor(d);
@@ -660,17 +640,17 @@ public final class MathTools
      * 1.0 (both exclusive). The pattern this will produces will be completely different if the seed changes, and it is
      * suitable for 1D noise. Uses a simple method of cubic interpolation between random values, where a random value is
      * used without modification when given an integer for {@code value}. Note that this uses a different type of
-     * interpolation than {@link #sway(double)}, which uses quintic (this causes swayRandomized() to produce more
+     * interpolation than {@link #sway(double)}, which uses quintic (this causes wobble() to produce more
      * outputs in the mid-range and less at extremes; it is also slightly faster and simpler).
      * <br>
-     * Performance note: HotSpot seems to be much more able to optimize swayRandomized(long, float) than
-     * swayRandomized(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
+     * Performance note: HotSpot seems to be much more able to optimize wobble(long, float) than
+     * wobble(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
      * reverse should be expected because floats must be emulated there.
      * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
      * @param value a double that typically changes slowly, by less than 1.0, with direction changes at integer inputs
      * @return a pseudo-random double between -1.0 and 1.0 (both exclusive), smoothly changing with value
      */
-    public static double swayRandomized(long seed, double value)
+    public static double wobble(long seed, double value)
     {
         final long floor = value >= 0.0 ? (long) value : (long) value - 1L; // the closest long that is less than value
         // gets a random start and endpoint. there's a sequence of start and end values for each seed, and changing the
@@ -690,17 +670,17 @@ public final class MathTools
      * 1f (both exclusive). The pattern this will produces will be completely different if the seed changes, and it is
      * suitable for 1D noise. Uses a simple method of cubic interpolation between random values, where a random value is
      * used without modification when given an integer for {@code value}. Note that this uses a different type of
-     * interpolation than {@link #sway(float)}, which uses quintic (this causes swayRandomized() to produce more
+     * interpolation than {@link #sway(float)}, which uses quintic (this causes wobble() to produce more
      * outputs in the mid-range and less at extremes; it is also slightly faster and simpler).
      * <br>
-     * Performance note: HotSpot seems to be much more able to optimize swayRandomized(long, float) than
-     * swayRandomized(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
+     * Performance note: HotSpot seems to be much more able to optimize wobble(long, float) than
+     * wobble(long, double), with the float version almost twice as fast after JIT warms up. On GWT, the
      * reverse should be expected because floats must be emulated there.
      * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
      * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
      * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
      */
-    public static float swayRandomized(long seed, float value)
+    public static float wobble(long seed, float value)
     {
         final long floor = value >= 0f ? (long) value : (long) value - 1L;
         final float start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L)) * 0x0.ffffffp-63f,
@@ -711,14 +691,14 @@ public final class MathTools
     }
 
     /**
-     * A variant on {@link #swayRandomized(long, double)} that takes an int seed instead of a long, and is optimized for
+     * A variant on {@link #wobble(long, double)} that takes an int seed instead of a long, and is optimized for
      * usage on GWT. Like the version with a long seed, this uses cubic interpolation between random peak or valley
      * points; only the method of generating those random peaks and valleys has changed.
      * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
      * @param value a double that typically changes slowly, by less than 2.0, with direction changes at integer inputs
      * @return a pseudo-random double between -1.0 and 1.0 (both exclusive), smoothly changing with value
      */
-    public static double swayRandomized(final int seed, double value)
+    public static double wobble(final int seed, double value)
     {
         final int floor = value >= 0.0 ? (int) value : (int) value - 1;
         int z = seed + floor;
@@ -730,14 +710,14 @@ public final class MathTools
     }
 
     /**
-     * A variant on {@link #swayRandomized(long, float)} that takes an int seed instead of a long, and is optimized for
+     * A variant on {@link #wobble(long, float)} that takes an int seed instead of a long, and is optimized for
      * usage on GWT. Like the version with a long seed, this uses cubic interpolation between random peak or valley
      * points; only the method of generating those random peaks and valleys has changed.
      * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
      * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
      * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
      */
-    public static float swayRandomized(final int seed, float value)
+    public static float wobble(final int seed, float value)
     {
         final int floor = value >= 0f ? (int) value : (int) value - 1;
         int z = seed + floor;
@@ -747,20 +727,21 @@ public final class MathTools
         value *= value * (3 - 2 * value);
         return (1 - value) * start + value * end;
     }
+
     /**
      * A 1D "noise" method that produces smooth transitions like {@link #sway(float)}, but also wrapping around at pi *
      * 2 so this can be used to get smoothly-changing random angles. Has (seeded) random peaks and valleys where it
      * slows its range of change, but can return any value from 0 to 6.283185307179586f, or pi * 2. The pattern this
-     * will produces will be completely different if the seed changes, and the value is expected to be something other
+     * will produce will be completely different if the seed changes, and the value is expected to be something other
      * than an angle, like time. Uses a simple method of cubic interpolation between random values, where a random value
      * is used without modification when given an integer for {@code value}. Note that this uses a different type of
-     * interpolation than {@link #sway(float)}, which uses quintic (this causes swayAngleRandomized() to be slightly
+     * interpolation than {@link #sway(float)}, which uses quintic (this causes wobbleAngle() to be slightly
      * faster and simpler).
      * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
      * @param value a float that typically changes slowly, by less than 1.0, with possible direction changes at integer inputs
-     * @return a pseudo-random float between 0f and 283185307179586f (both inclusive), smoothly changing with value and wrapping
+     * @return a pseudo-random float between 0f and 6.283185307179586f (both inclusive), smoothly changing with value and wrapping
      */
-    public static float swayAngleRandomized(long seed, float value)
+    public static float wobbleAngle(long seed, float value)
     {
         final long floor = value >= 0f ? (long) value : (long) value - 1L;
         float start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L) >>> 1) * 0x0.ffffffp-62f,
@@ -774,37 +755,28 @@ public final class MathTools
     }
 
     /**
-     * Returns the next higher power of two relative to {@code n}, or n if it is already a power of two. This returns 2
-     * if n is any value less than 2 (including negative numbers, but also 1, which is a power of two).
-     * @param n the lower bound for the result
-     * @return the next higher power of two that is greater than or equal to n
+     * A 1D "noise" method that produces smooth transitions like {@link #sway(float)}, but also wrapping around at 1.0
+     * so this can be used to get smoothly-changing random angles in turns. Has (seeded) random peaks and valleys where
+     * it slows its range of change, but can return any value from 0 to 1.0. The pattern this
+     * will produce will be completely different if the seed changes, and the value is expected to be something other
+     * than an angle, like time. Uses a simple method of cubic interpolation between random values, where a random value
+     * is used without modification when given an integer for {@code value}. Note that this uses a different type of
+     * interpolation than {@link #sway(float)}, which uses quintic (this causes wobbleAngleTurns() to be slightly
+     * faster and simpler).
+     * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 1.0, with possible direction changes at integer inputs
+     * @return a pseudo-random float between 0.0f and 1.0f (both inclusive), smoothly changing with value and wrapping
      */
-    public static int nextPowerOfTwo(final int n) {
-        return 1 << -Integer.numberOfLeadingZeros(Math.max(2, n) - 1);
+    public static float wobbleAngleTurns(long seed, float value)
+    {
+        final long floor = value >= 0f ? (long) value : (long) value - 1L;
+        float start = (((seed += floor * 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L) >>> 1) * 0x0.ffffffp-62f,
+                end = (((seed += 0x6C8E9CF570932BD5L) ^ (seed >>> 25)) * (seed | 0xA529L) >>> 1) * 0x0.ffffffp-62f;
+        value -= floor;
+        value *= value * (3f - 2f * value);
+        end = end - start + 1.5f;
+        end -= (long)end + 0.5f;
+        start += end * value + 1;
+        return (start - (long)start);
     }
-
-    /**
-     * Forces precision loss on the given float so very small fluctuations away from an integer will be erased.
-     * This is meant primarily for cleaning up floats so they can be presented without needing scientific notation.
-     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
-     * @param n any float, but typically a fairly small one (between -8 and 8, as a guideline)
-     * @return {@code n} with its 13 least significant bits effectively removed
-     */
-    public static float truncate(final float n){
-        long i = (long) (n * 0x1p13f); // 0x1p13f is 2 raised to the 13 as a float, or 8192.0f
-        return i * 0x1p-13f;           // 0x1p-13f is 1 divided by (2 raised to the 13) as a float, or 1.0f/8192.0f
-    }
-
-    /**
-     * Forces precision loss on the given double so very small fluctuations away from an integer will be erased.
-     * This is meant primarily for cleaning up doubles so they can be presented without needing scientific notation.
-     * It leaves about 3 decimal digits after the point intact, and should make any digits after that simply 0.
-     * @param n any double, but typically a fairly small one (between -8 and 8, as a guideline)
-     * @return {@code n} with its 42 least significant bits effectively removed
-     */
-    public static double truncate(final double n){
-        long i = (long)(n * 0x1p42); // 0x1p42 is 2 raised to the 42 as a double
-        return i * 0x1p-42;          // 0x1p-42 is 1 divided by (2 raised to the 42) as a double
-    }
-
 }

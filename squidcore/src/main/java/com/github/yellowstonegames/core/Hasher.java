@@ -94,8 +94,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -120,8 +120,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -149,8 +149,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -177,8 +177,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -205,8 +205,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -233,8 +233,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -260,8 +260,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
@@ -287,8 +287,8 @@ public class Hasher {
      * <br>
      * You have a choice between determine() and randomize() in this class. {@code determine()} is simpler, and will
      * behave well when the inputs are sequential, while {@code randomize()} is a completely different algorithm, Pelle
-     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">
-     * xNASAM</a>; it will have excellent quality regardless of patterns in input but will be about 30% slower than
+     * Evensen's <a href="https://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html">xNASAM</a>;
+     * it will have excellent quality regardless of patterns in input but will be about 30% slower than
      * {@code determine()}, though this is rarely detectable. Both determine() and randomize() will produce all
      * long outputs if given all possible longs as input. Technically-speaking, {@code determine(long)} and
      * {@code randomize(long)} are bijective functions, which means they are reversible; it is, however, somewhat
