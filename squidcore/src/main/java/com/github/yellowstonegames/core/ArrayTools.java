@@ -31,6 +31,10 @@ import java.util.Arrays;
  */
 public class ArrayTools {
 
+    /**
+     * 256 Latin and Greek letters, in upper and lower case, chosen so none should look identical. Useful when randomly
+     * assigning identifying characters to values when you only have one char to display, and it should look unique.
+     */
     private static final char[] letters = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a',
             'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'À', 'Á',
@@ -42,8 +46,15 @@ public class ArrayTools {
             'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ',
             'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'Ǿ', 'ǿ', 'Ș', 'ș', 'Ț', 'ț',
             'Γ', 'Δ', 'Θ', 'Λ', 'Ξ', 'Π', 'Σ', 'Φ', 'Ψ', 'Ω', 'α', 'β', 'γ'};
+
     private static final char[] emptyChars = new char[0];
-    
+    private static final int[] emptyInts = new int[0];
+    private static final char[][] emptyChars2D = new char[0][0];
+    private static final boolean[][] emptyBooleans2D = new boolean[0][0];
+    private static final int[][] emptyInts2D = new int[0][0];
+    private static final float[][] emptyFloats2D = new float[0][0];
+    private static final double[][] emptyDoubles2D = new double[0][0];
+
     /**
      * Stupidly simple convenience method that produces a range from 0 to end, not including end, as an int array.
      *
@@ -52,7 +63,7 @@ public class ArrayTools {
      */
     public static int[] range(int end) {
         if (end <= 0)
-            return new int[0];
+            return emptyInts;
         int[] r = new int[end];
         for (int i = 0; i < end; i++) {
             r[i] = i;
@@ -82,7 +93,7 @@ public class ArrayTools {
      */
     public static int[] range(int start, int end) {
         if (end - start <= 0)
-            return new int[0];
+            return emptyInts;
         int[] r = new int[end - start];
         for (int i = 0, n = start; n < end; i++, n++) {
             r[i] = n;
@@ -158,7 +169,7 @@ public class ArrayTools {
         if (source == null)
             return null;
         if (source.length < 1)
-            return new char[0][0];
+            return emptyChars2D;
         char[][] target = new char[source.length][];
         for (int i = 0; i < source.length; i++) {
             target[i] = new char[source[i].length];
@@ -177,7 +188,7 @@ public class ArrayTools {
         if (source == null)
             return null;
         if (source.length < 1)
-            return new double[0][0];
+            return emptyDoubles2D;
         double[][] target = new double[source.length][];
         for (int i = 0; i < source.length; i++) {
             target[i] = new double[source[i].length];
@@ -197,7 +208,7 @@ public class ArrayTools {
         if (source == null)
             return null;
         if (source.length < 1)
-            return new float[0][0];
+            return emptyFloats2D;
         float[][] target = new float[source.length][];
         for (int i = 0; i < source.length; i++) {
             target[i] = new float[source[i].length];
@@ -216,7 +227,7 @@ public class ArrayTools {
         if (source == null)
             return null;
         if (source.length < 1)
-            return new int[0][0];
+            return emptyInts2D;
         int[][] target = new int[source.length][];
         for (int i = 0; i < source.length; i++) {
             target[i] = new int[source[i].length];
@@ -235,7 +246,7 @@ public class ArrayTools {
         if (source == null)
             return null;
         if (source.length < 1)
-            return new boolean[0][0];
+            return emptyBooleans2D;
         boolean[][] target = new boolean[source.length][];
         for (int i = 0; i < source.length; i++) {
             target[i] = new boolean[source[i].length];
@@ -772,52 +783,7 @@ public class ArrayTools {
             }
         }
     }
-
-    /**
-     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
-     * @param items an int array; must be non-null
-     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
-     */
-    public static void shuffle(int[] items, EnhancedRandom random) {
-        random.shuffle(items);
-    }
-
-    /**
-     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
-     * @param items a long array; must be non-null
-     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
-     */
-    public static void shuffle(long[] items, EnhancedRandom random) {
-        random.shuffle(items);
-    }
-
-    /**
-     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
-     * @param items a char array; must be non-null
-     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
-     */
-    public static void shuffle(char[] items, EnhancedRandom random) {
-        random.shuffle(items);
-    }
-
-    /**
-     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
-     * @param items a float array; must be non-null
-     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
-     */
-    public static void shuffle(float[] items, EnhancedRandom random) {
-        random.shuffle(items);
-    }
-
-    /**
-     * Shuffles the given array in-place pseudo-randomly, using {@code random} to determine how to shuffle.
-     * @param items an array of some reference type; must be non-null but may contain null items
-     * @param random an EnhancedRandom implementation, like {@link LaserRandom} or {@link TricycleRandom}
-     */
-    public static <T> void shuffle(T[] items, EnhancedRandom random) {
-        random.shuffle(items);
-    }
-
+    
     /**
      * Reverses the array given as a parameter, in-place, and returns the modified original.
      * @param data an array that will be reversed in-place

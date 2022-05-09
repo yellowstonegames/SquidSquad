@@ -78,13 +78,18 @@ public class Hasher {
      */
     public final long seed;
 
+    /**
+     * Creates a new Hasher seeded, arbitrarily, with the constant 0xC4CEB9FE1A85EC53L, or -4265267296055464877L .
+     */
     public Hasher() {
         this.seed = 0xC4CEB9FE1A85EC53L;
     }
 
     /**
-     * Initializes this Hasher with the given seed, verbatim; it is recommended to use {@link #randomize2(long)} on the
-     * seed if you don't know if it is adequately-random.
+     * Initializes this Hasher with the given seed, verbatim; it is recommended to use {@link #randomize3(long)} on the
+     * seed if you don't know if it is adequately-random. If the seed is the same for two different Hasher instances and
+     * they are given the same inputs, they will produce the same results. If the seed is even slightly different, the
+     * results of the two Hashers given the same input should be significantly different.
      * @param seed a long that will be used to change the output of hash() and hash64() methods on the new Hasher
      */
     public Hasher(long seed) {
@@ -473,6 +478,12 @@ public class Hasher {
         return (state >>> 11 ^ state >>> 40) * 0x1p-53;
     }
 
+    /**
+     * Constructs a Hasher by hashing {@code seed} with {@link #hash64(long, CharSequence)}, and then running the result
+     * through {@link #randomize2(long)}. This is the same as calling the constructor {@link #Hasher(long)} and passing
+     * it {@code randomize2(hash64(1L, seed))} .
+     * @param seed a CharSequence, such as a String, that will be used to seed the Hasher.
+     */
     public Hasher(final CharSequence seed) {
         this(randomize2(hash64(1L, seed)));
     }

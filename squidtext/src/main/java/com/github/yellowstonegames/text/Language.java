@@ -3619,8 +3619,8 @@ public class Language {
         double vowelHeavy = rng.nextDouble(0.3) + 0.2, removalRate = rng.nextDouble(0.5) + 0.15;
         int sz = openCons.size();
         int[] reordering = ArrayTools.range(sz), vOrd = ArrayTools.range(openVowels.size());
-        ArrayTools.shuffle(reordering, rng);
-        ArrayTools.shuffle(vOrd, rng);
+        rng.shuffle(reordering);
+        rng.shuffle(vOrd);
         ObjectObjectOrderedMap<String, String>
                 parts0 = new ObjectObjectOrderedMap<>(openVowels),
                 parts1 = new ObjectObjectOrderedMap<>(openCons),

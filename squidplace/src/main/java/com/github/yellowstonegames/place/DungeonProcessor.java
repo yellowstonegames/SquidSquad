@@ -1296,7 +1296,7 @@ public class DungeonProcessor implements PlaceGenerator{
         int remainingWater = targetWater, remainingGrass = targetGrass;
         if(targetWater > 0) {
             scatter = floors.separatedBlue(1f / 7f);
-            ArrayTools.shuffle(scatter, rng);
+            rng.shuffle(scatter);
             Region allWater = new Region(width, height);
             for (int i = 0; i < scatter.length; i++) {
                 if (remainingWater > 5)
@@ -1328,7 +1328,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
         if(targetGrass > 0) {
             scatter = floors.separatedBlue(1.03f/6.7f);
-            ArrayTools.shuffle(scatter, rng);
+            rng.shuffle(scatter);
             for (int i = 0; i < scatter.length; i++) {
                 if (remainingGrass > 5) //remainingGrass >= targetGrass * 0.02 &&
                 {

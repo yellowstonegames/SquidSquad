@@ -130,8 +130,8 @@ public class WildernessGenerator implements PlaceGenerator {
             ctr = 0;
             ArrayTools.range(ox);
             ArrayTools.range(oy);
-            ArrayTools.shuffle(ox, rng);
-            ArrayTools.shuffle(oy, rng);
+            rng.shuffle(ox);
+            rng.shuffle(oy);
             for (int x = 0; x < width; x++) {
                 rx = ox[x];
                 for (int y = 0; y < height; y++) {
@@ -165,8 +165,8 @@ public class WildernessGenerator implements PlaceGenerator {
             ctr = 0;
             ArrayTools.range(ox);
             ArrayTools.range(oy);
-            ArrayTools.shuffle(ox, rng);
-            ArrayTools.shuffle(oy, rng);
+            rng.shuffle(ox);
+            rng.shuffle(oy);
             for (int x = 0; x < width; x++) {
                 rx = ox[x];
                 for (int y = 0; y < height; y++) {
@@ -692,8 +692,8 @@ public class WildernessGenerator implements PlaceGenerator {
             boolean anySuccesses = false;
             do {
                 ctr = 0;
-                ArrayTools.shuffle(ox, rng);
-                ArrayTools.shuffle(oy, rng);
+                rng.shuffle(ox);
+                rng.shuffle(oy);
                 for (int x = 0; x < width; x++) {
                     rx = ox[x];
                     for (int y = 0; y < height; y++) {
@@ -725,8 +725,8 @@ public class WildernessGenerator implements PlaceGenerator {
             } while (ctr > 0);
             do {
                 ctr = 0;
-                ArrayTools.shuffle(ox, rng);
-                ArrayTools.shuffle(oy, rng);
+                rng.shuffle(ox);
+                rng.shuffle(oy);
                 for (int x = 0; x < width; x++) {
                     rx = ox[x];
                     for (int y = 0; y < height; y++) {
