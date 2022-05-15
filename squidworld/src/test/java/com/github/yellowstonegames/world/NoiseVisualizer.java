@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
 
 import static com.badlogic.gdx.Input.Keys.*;

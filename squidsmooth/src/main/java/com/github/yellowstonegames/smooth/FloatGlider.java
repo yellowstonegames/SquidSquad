@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

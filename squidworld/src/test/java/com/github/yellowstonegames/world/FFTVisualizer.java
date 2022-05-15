@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.TrimRandom;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Comparator;

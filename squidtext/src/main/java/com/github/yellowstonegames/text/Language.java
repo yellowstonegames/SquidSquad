@@ -16,12 +16,15 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.BitConversion;
-import com.github.tommyettinger.ds.support.DistinctRandom;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.*;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
 
 import java.util.*;
@@ -5046,11 +5049,11 @@ public class Language {
             if (poundIndex >= 0 && poundIndex < snailIndex) // random case
             {
                 pairs.add(randomLanguage(Long.parseLong(data.substring(poundIndex + 1, snailIndex))));
-                pairs.add(DigitTools.intFromDec(data, snailIndex + 1, tildeIndex));
+                pairs.add(Base.BASE10.readInt(data, snailIndex + 1, tildeIndex));
                 poundIndex = -1;
             } else {
                 pairs.add(registry.get(registry.keyAt(Integer.parseInt(data.substring(prevTildeIndex + 1, snailIndex)))));
-                pairs.add(DigitTools.intFromDec(data, snailIndex + 1, tildeIndex));
+                pairs.add(Base.BASE10.readInt(data, snailIndex + 1, tildeIndex));
             }
             snailIndex = data.indexOf('@', snailIndex + 1);
             if (snailIndex > breakIndex)

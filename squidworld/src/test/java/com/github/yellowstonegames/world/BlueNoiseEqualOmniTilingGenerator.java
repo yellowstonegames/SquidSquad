@@ -11,7 +11,7 @@ import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.TrimRandom;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 

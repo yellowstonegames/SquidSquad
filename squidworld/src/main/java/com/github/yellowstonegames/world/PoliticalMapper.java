@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.Biome;

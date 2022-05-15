@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;

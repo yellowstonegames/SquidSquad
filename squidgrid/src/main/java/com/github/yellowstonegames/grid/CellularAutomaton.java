@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 
 /**
  * Various simple cellular-automata rules and the data they operate on. This has Conway's Game of Life, when you can run

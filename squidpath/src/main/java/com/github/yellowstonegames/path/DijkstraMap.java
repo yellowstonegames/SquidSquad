@@ -21,7 +21,7 @@ import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.MizuchiRandom;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.CoordSet;

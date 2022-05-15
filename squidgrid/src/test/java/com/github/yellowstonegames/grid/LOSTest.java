@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import org.junit.Test;
 
 public class LOSTest {

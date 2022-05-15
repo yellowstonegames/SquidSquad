@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Noise;
 
 /**

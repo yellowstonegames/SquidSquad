@@ -1,6 +1,6 @@
 package com.github.yellowstonegames.old.v300.squidmath;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.MathTools;
 import com.github.yellowstonegames.old.v300.CrossHash;
 

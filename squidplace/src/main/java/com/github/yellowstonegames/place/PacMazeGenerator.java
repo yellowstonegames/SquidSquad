@@ -18,7 +18,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 
 /**
  * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.

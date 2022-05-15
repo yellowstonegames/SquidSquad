@@ -18,7 +18,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.BinaryHeap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 
 import java.util.ArrayDeque;
 import java.util.Collections;

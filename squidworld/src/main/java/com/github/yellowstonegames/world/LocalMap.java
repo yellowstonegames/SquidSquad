@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Noise;
 
 /**

@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.core.ArrayTools;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import java.util.Arrays;

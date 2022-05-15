@@ -16,11 +16,11 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.Hasher;
 import com.github.yellowstonegames.core.MathTools;
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 
 /**
  * Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly

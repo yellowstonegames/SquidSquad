@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 
 public class PoissonDisk {
     private static final float inverseRootTwo = 1f / (float)Math.sqrt(2f);

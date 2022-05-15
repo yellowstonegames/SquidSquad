@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 
 import javax.annotation.Nonnull;
 

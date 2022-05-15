@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.github.yellowstonegames.core.TrigTools;
+import com.github.tommyettinger.digital.TrigTools;
 
 import static com.github.yellowstonegames.core.MathTools.truncate;
 
