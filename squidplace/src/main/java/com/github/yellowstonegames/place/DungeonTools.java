@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.*;

@@ -18,8 +18,8 @@ package com.github.yellowstonegames.grid;
 
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
 
 /**
  * A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.

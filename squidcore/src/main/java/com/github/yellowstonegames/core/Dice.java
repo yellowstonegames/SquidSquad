@@ -17,10 +17,11 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import regexodus.Matcher;
 import regexodus.Pattern;
+import com.github.tommyettinger.digital.Hasher;
 
 import javax.annotation.Nonnull;
 

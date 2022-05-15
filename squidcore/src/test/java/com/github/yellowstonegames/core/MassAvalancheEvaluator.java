@@ -2,8 +2,9 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.LongFloatOrderedMap;
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
+import com.github.tommyettinger.digital.ArrayTools;
 
 public class MassAvalancheEvaluator {
     private static final long N = 1L << 11;

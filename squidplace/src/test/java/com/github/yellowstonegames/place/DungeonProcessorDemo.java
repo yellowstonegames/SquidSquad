@@ -1,6 +1,6 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class DungeonProcessorDemo {

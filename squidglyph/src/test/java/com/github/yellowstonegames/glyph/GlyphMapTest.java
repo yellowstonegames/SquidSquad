@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
 import com.github.tommyettinger.textra.Font;

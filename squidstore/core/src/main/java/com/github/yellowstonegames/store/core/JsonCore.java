@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.*;
 import regexodus.Pattern;
 

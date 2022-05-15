@@ -20,11 +20,11 @@ import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
 import com.github.yellowstonegames.core.StringTools;
 

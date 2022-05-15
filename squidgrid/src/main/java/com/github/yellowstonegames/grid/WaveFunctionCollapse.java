@@ -19,8 +19,8 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.digital.Hasher;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

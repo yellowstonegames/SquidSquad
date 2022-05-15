@@ -21,7 +21,8 @@ import com.github.tommyettinger.digital.Base;
 
 import javax.annotation.Nonnull;
 
-import static com.github.yellowstonegames.core.Hasher.*;
+import com.github.tommyettinger.digital.Hasher;
+import static com.github.tommyettinger.digital.Hasher.*;
 
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all

@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;

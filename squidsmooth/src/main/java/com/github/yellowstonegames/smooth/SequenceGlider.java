@@ -18,7 +18,7 @@ package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import javax.annotation.Nonnull;

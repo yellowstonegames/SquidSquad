@@ -18,7 +18,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import regexodus.*;
 
 import java.util.Map;

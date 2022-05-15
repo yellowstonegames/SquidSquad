@@ -16,8 +16,8 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
 
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.place.Biome;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;

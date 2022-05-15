@@ -1,8 +1,9 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
-import com.github.tommyettinger.ds.support.DistinctRandom;
-import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.digital.ArrayTools;
+
 /*
 lower=9, upper=19, inc=1, N=1L<<10
 

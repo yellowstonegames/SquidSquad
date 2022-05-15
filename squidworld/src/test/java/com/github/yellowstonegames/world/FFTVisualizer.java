@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.TrimRandom;
+import com.github.tommyettinger.random.TrimRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.*;
 

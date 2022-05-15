@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.github.tommyettinger.ds.support.BitConversion.*;
+import static com.github.tommyettinger.digital.BitConversion.*;
 import static com.github.yellowstonegames.old.v300.CrossHash.Water.*;
 
 /**
@@ -32,8 +32,8 @@ import static com.github.yellowstonegames.old.v300.CrossHash.Water.*;
  * out-of-date! In particular, the SMHasher test battery has been updated and now finds
  * several failures for Curlup (it already had found failures in Wisp; Hive and Mist
  * weren't tested but can be reasonably assumed to have some failures). Water and Yolk are
- * at least less-failing than the others; Yolk is used in squidcore's
- * {@link com.github.yellowstonegames.core.Hasher} class, and it only needed small changes
+ * at least less-failing than the others; Yolk is used in digital's
+ * {@link com.github.tommyettinger.digital.Hasher} class, and it only needed small changes
  * to pass SMHasher.
  * <br>
  * The hashes this returns are always 0 when given null to hash. Arrays with

@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.*;

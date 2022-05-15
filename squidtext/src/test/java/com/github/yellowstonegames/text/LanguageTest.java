@@ -1,8 +1,8 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
 

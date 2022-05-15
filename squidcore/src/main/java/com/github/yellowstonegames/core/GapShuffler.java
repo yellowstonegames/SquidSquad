@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.digital.Hasher;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

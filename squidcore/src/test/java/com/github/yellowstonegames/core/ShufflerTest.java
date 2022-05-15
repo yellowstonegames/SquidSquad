@@ -1,11 +1,12 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 
 public class ShufflerTest {
     @Test

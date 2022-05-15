@@ -18,11 +18,11 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.GapShuffler;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
 

@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.old.v300;
 
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 /**
  * An alternate version of {@link EnhancedRandom} that intentionally implements certain methods incorrectly, for

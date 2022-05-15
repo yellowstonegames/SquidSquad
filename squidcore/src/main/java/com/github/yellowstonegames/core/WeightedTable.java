@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

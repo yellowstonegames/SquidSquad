@@ -1,6 +1,6 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 
 public class WildernessGeneratorDemo {
 

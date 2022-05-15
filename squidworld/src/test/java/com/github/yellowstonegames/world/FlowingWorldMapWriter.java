@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
-import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Hasher;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.text.Language;
@@ -25,7 +25,7 @@ import com.github.yellowstonegames.text.Thesaurus;
 import java.text.DateFormat;
 import java.util.Date;
 
-import static com.github.tommyettinger.ds.support.BitConversion.longBitsToDouble;
+import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 
 /**
  * Writes one or more spinning globes to the out/ folder.

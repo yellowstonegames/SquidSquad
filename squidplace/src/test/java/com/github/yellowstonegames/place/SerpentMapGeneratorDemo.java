@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.ds.support.FourWheelRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.grid.LineTools;
 
 public class SerpentMapGeneratorDemo {

@@ -17,8 +17,8 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.grid.CellularAutomaton;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;

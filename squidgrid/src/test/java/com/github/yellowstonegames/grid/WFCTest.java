@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.support.ChopRandom;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.ChopRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.place.DungeonTools;
 

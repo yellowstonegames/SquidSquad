@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 /**
  * A way to take an {@link EnhancedRandom} and get one or more random numbers from it to produce a float in some statistical

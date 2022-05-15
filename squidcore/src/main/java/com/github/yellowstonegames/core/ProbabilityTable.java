@@ -16,9 +16,15 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.NumberedSet;
+import com.github.tommyettinger.ds.ObjectIntMap;
+import com.github.tommyettinger.ds.ObjectIntOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.digital.Hasher;
 
 /**
  * A generic method of holding a probability table to determine weighted random

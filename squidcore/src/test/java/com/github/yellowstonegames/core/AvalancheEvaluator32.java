@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.digital.ArrayTools;
 
 public class AvalancheEvaluator32 {
     private static final long N = 1L << 11;

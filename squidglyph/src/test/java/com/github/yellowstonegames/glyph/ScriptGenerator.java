@@ -6,7 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.textra.Font;
 public class ScriptGenerator extends ApplicationAdapter {

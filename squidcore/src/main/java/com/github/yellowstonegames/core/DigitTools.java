@@ -18,6 +18,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 
 /**
  * Utility class for converting to and from numbers and their String representations; this is mostly wrappers around

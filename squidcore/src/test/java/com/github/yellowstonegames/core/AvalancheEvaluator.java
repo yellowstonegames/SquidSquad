@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.digital.ArrayTools;
 
 /*
 lower=10, upper=43, inc=1, N=1L<<10

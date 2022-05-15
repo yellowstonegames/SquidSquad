@@ -16,8 +16,10 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectIntOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import regexodus.MatchResult;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -29,7 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
-import static com.github.yellowstonegames.core.MathTools.fastFloor;
+import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
 /**
  * A palette of predefined colors as packed Oklab ints, and tools for obtaining Oklab int colors from a description.
