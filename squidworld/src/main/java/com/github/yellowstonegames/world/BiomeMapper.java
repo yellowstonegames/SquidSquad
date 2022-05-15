@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.yellowstonegames.core.MathTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.place.Biome;
 
 /**

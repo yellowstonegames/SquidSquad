@@ -50,7 +50,6 @@ public final class JsonCore {
 
         registerDiceRule(json);
         registerGapShuffler(json);
-        registerHasher(json);
         registerWeightedTable(json);
         registerIntShuffler(json);
 
@@ -330,26 +329,12 @@ public final class JsonCore {
     }
 
     /**
-     * Registers Hasher with the given Json object, so Hasher can be written to and read from JSON.
-     * This just stores the seed (which is a single {@code long}) as a String in the current Base used by JsonSupport.
+     * Registers IntShuffler with the given Json object, so IntShuffler can be written to and read from JSON.
+     * This is a simple wrapper around IntShuffler's built-in {@link IntShuffler#serializeToString()} and
+     * {@link IntShuffler#deserializeFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerHasher(@Nonnull Json json) {
-        json.setSerializer(Hasher.class, new Json.Serializer<Hasher>() {
-            @Override
-            public void write(Json json, Hasher object, Class knownType) {
-                json.writeValue(JsonSupport.getNumeralBase().signed(object.seed));
-            }
-
-            @Override
-            public Hasher read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return new Hasher(JsonSupport.getNumeralBase().readLong(jsonData.asString()));
-            }
-        });
-    }
-    
     public static void registerIntShuffler(@Nonnull Json json) {
         json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
             @Override

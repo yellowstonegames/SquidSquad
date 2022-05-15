@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.MathTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.grid.Noise;
 

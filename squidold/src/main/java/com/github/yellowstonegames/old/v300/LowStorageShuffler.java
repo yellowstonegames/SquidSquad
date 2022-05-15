@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.old.v300;
 
-import com.github.yellowstonegames.core.MathTools;
+import com.github.tommyettinger.digital.MathTools;
 
 import java.io.Serializable;
 

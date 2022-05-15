@@ -19,7 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.yellowstonegames.core.MathTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 
 /**
