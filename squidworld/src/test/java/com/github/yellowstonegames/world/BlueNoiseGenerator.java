@@ -125,7 +125,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         for (int i = 1; i <= limit; i++) {
             initial.add(Coord.get(vdc(5, i), vdc(3, i)));
         }
-        rng.shuffle(initial);
+        initial.shuffle(rng);
         energy.clear();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {

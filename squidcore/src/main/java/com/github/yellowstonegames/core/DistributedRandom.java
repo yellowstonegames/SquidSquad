@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FourWheelRandom;
 
@@ -27,7 +28,12 @@ import javax.annotation.Nonnull;
  * Generating random long values is trickier because a distribution works on doubles, and doubles only provide 52 bits
  * of usable random data, while a long can need as many as 64.
  */
-public class DistributedRandom implements EnhancedRandom {
+public class DistributedRandom extends EnhancedRandom {
+
+    @Override
+    public String getTag() {
+        return "DsrR";
+    }
 
     protected IDistribution.SimpleDistribution distribution;
     protected FourWheelRandom random;
@@ -211,5 +217,26 @@ public class DistributedRandom implements EnhancedRandom {
 
     public void setRandom(FourWheelRandom random) {
         this.random = random;
+    }
+
+    /**
+     * Serializes the four states this uses, but not the distribution used here; you must somehow store it yourself.
+     * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
+     * @return this, for chaining
+     */
+    @Override
+    public String stringSerialize(Base base) {
+        return super.stringSerialize(base);
+    }
+
+    /**
+     * This deserialization method does not assign the distribution this class uses; you must set it yourself.
+     * @param data a String probably produced by {@link #stringSerialize(Base)}
+     * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
+     * @return this, for chaining
+     */
+    @Override
+    public EnhancedRandom stringDeserialize(String data, Base base) {
+        return super.stringDeserialize(data, base);
     }
 }

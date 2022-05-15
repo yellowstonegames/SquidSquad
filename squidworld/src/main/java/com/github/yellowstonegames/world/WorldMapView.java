@@ -21,7 +21,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.place.Biome;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
-import static com.github.yellowstonegames.core.MathTools.zigzag;
+import static com.github.tommyettinger.digital.MathTools.zigzag;
 
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
@@ -132,7 +132,7 @@ public class WorldMapView {
 
     /**
      * Uses the current colors in {@link #BIOME_COLOR_TABLE} to partly-randomize themselves, and also incorporates three
-     * random floats from the {@link com.github.tommyettinger.ds.support.LaserRandom} stored in {@link #getWorld()}.
+     * random floats from the {@link com.github.tommyettinger.random.LaserRandom} stored in {@link #getWorld()}.
      * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
      * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
      * ice will still map to white, and different shades of ocean blue will become different shades of some color (which

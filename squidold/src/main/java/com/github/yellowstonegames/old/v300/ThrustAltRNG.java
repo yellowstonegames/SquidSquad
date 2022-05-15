@@ -18,7 +18,12 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-public class ThrustAltRNG implements LegacyRandom, StatefulRandomness {
+public class ThrustAltRNG extends LegacyRandom implements StatefulRandomness {
+    @Override
+    public String getTag() {
+        return "ThAL";
+    }
+
     /**
      * Can be any long value.
      */

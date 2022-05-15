@@ -7,7 +7,7 @@ import com.github.yellowstonegames.old.v300.CrossHash;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.github.tommyettinger.ds.support.BitConversion.intBitsToFloat;
+import static com.github.tommyettinger.digital.BitConversion.intBitsToFloat;
 
 
 public class RNG implements Serializable, IRNG {

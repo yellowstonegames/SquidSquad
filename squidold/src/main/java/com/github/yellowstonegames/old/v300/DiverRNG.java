@@ -20,7 +20,11 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public class DiverRNG implements LegacyRandom, StatefulRandomness {
+public class DiverRNG extends LegacyRandom implements StatefulRandomness {
+    @Override
+    public String getTag() {
+        return "DivL";
+    }
 
     private long state; /* The state can be seeded with any value. */
 

@@ -21,8 +21,13 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public class GWTRNG implements LegacyRandom, StatefulRandomness {
+public class GWTRNG extends LegacyRandom implements StatefulRandomness {
     public int stateA, stateB;
+
+    @Override
+    public String getTag() {
+        return "GWTL";
+    }
 
     /**
      * Creates a new generator seeded using two calls to Math.random().

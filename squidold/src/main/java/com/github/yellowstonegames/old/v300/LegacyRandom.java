@@ -24,7 +24,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
  * incorrectly implemented for compatibility, and that makes {@link #nextSignedInt(int, int)} incorrect too. Other
  * methods here are implemented as {@link EnhancedRandom} does in its default implementations.
  */
-public interface LegacyRandom extends EnhancedRandom {
+public abstract class LegacyRandom extends EnhancedRandom {
 
     /**
      * This is slightly different from how EnhancedRandom implements this method, and this version may have some bias
@@ -34,7 +34,7 @@ public interface LegacyRandom extends EnhancedRandom {
      * @return a random int between 0 (inclusive) and bound (exclusive); never negative
      */
     @Override
-    default int nextInt(final int bound) {
+    public int nextInt(final int bound) {
         return (int) ((bound * (long) next(31)) >>> 31) & ~(bound >> 31);
     }
 
@@ -46,7 +46,7 @@ public interface LegacyRandom extends EnhancedRandom {
      * @return an int between 0 (inclusive, but very rarely) and outerBound (exclusive)
      */
     @Override
-    default int nextSignedInt(int outerBound) {
+    public int nextSignedInt(int outerBound) {
         return (int) ((outerBound * (long) next(31)) >> 31);
     }
 
@@ -57,7 +57,7 @@ public interface LegacyRandom extends EnhancedRandom {
      * @return honestly, this could return anything -- a whale and a potted plant are possibilities
      */
     @Override
-    default long nextSignedLong(long outerBound) {
+    public long nextSignedLong(long outerBound) {
         long rand = nextLong();
         final long randLow = rand & 0xFFFFFFFFL;
         final long boundLow = outerBound & 0xFFFFFFFFL;
@@ -73,7 +73,7 @@ public interface LegacyRandom extends EnhancedRandom {
      * @return a random double between 0 (inclusive) and 1 (exclusive)
      */
     @Override
-    default double nextDouble() {
+    public double nextDouble() {
         return (nextLong() & 0x1fffffffffffffL) * 0x1p-53;
     }
 
@@ -82,7 +82,7 @@ public interface LegacyRandom extends EnhancedRandom {
      * This one isn't incorrectly implemented, it's just different from how EnhancedRandom does it.
      * @return a random float between 0 (inclusive) and 1 (exclusive)
      */
-    default float nextFloat() {
+    public float nextFloat() {
         return next(24) * 0x1p-24f;
     }
 

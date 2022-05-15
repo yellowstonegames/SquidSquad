@@ -20,7 +20,12 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public class SilkRNG implements LegacyRandom, StatefulRandomness {
+public class SilkRNG extends LegacyRandom implements StatefulRandomness {
+
+    @Override
+    public String getTag() {
+        return "SilL";
+    }
 
     public int stateA, stateB;
 

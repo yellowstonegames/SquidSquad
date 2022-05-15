@@ -20,7 +20,12 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public class LinnormRNG implements LegacyRandom, StatefulRandomness {
+public class LinnormRNG extends LegacyRandom implements StatefulRandomness {
+    @Override
+    public String getTag() {
+        return "LinL";
+    }
+
     private long state; /* The state can be seeded with any value. */
 
     /**

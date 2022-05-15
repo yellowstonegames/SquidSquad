@@ -20,7 +20,12 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import javax.annotation.Nonnull;
 
-public class XoshiroStarPhi32RNG implements LegacyRandom {
+public class XoshiroStarPhi32RNG extends LegacyRandom {
+    @Override
+    public String getTag() {
+        return "XSPL";
+    }
+
     protected int stateA, stateB, stateC, stateD;
 
     /**

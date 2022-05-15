@@ -62,7 +62,12 @@ public class Translator{
      * having the random outputs retain that similarity means the outputs when feeding this through a {@link Language}
      * should be more similar than otherwise.
      */
-    public static class SemiRandom implements EnhancedRandom {
+    public static class SemiRandom extends EnhancedRandom {
+        @Override
+        public String getTag() {
+            return "SmiR";
+        }
+
         public long state;
         public SemiRandom()
         {

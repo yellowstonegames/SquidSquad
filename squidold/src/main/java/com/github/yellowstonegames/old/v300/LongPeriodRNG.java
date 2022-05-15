@@ -56,9 +56,13 @@ import java.util.Arrays;
  * Ported from CC0-licensed C code by Sebastiano Vigna, at http://xorshift.di.unimi.it/xorshift1024star.c
  * @author Tommy Ettinger
  */
-public class LongPeriodRNG implements LegacyRandom {
+public class LongPeriodRNG extends LegacyRandom {
+    @Override
+    public String getTag() {
+        return "LnPL";
+    }
 
-    public final long[] state = new long[16];
+    public long[] state;
     public int choice;
     private static final long[] jumpTable = {0x84242f96eca9c41dL,
             0xa3c65b8776f96855L, 0x5b34a39f070b5837L, 0x4489affce4f31a1eL,
@@ -74,6 +78,7 @@ public class LongPeriodRNG implements LegacyRandom {
      * numbers, which is a recommended technique to generate seeds.
      */
     public LongPeriodRNG() {
+        state = new long[16];
         reseed();
     }
 
@@ -83,6 +88,7 @@ public class LongPeriodRNG implements LegacyRandom {
      * @param seed a 64-bit seed; can be any value.
      */
     public LongPeriodRNG(long seed) {
+        state = new long[16];
         reseed(seed);
     }
 
@@ -126,6 +132,7 @@ public class LongPeriodRNG implements LegacyRandom {
      * @param seed a String (or other CharSequence) seed; can be any value, but produces the best results if it at least 16 characters long
      */
     public LongPeriodRNG(CharSequence seed) {
+        state = new long[16];
         reseed(seed);
     }
 
@@ -170,6 +177,7 @@ public class LongPeriodRNG implements LegacyRandom {
      * @param seed a long array seed; can have any number of elements, though 16 is ideal
      */
     public LongPeriodRNG(long[] seed) {
+        state = new long[16];
         reseed(seed);
     }
 
@@ -224,6 +232,7 @@ public class LongPeriodRNG implements LegacyRandom {
 
     public LongPeriodRNG(LongPeriodRNG other) {
         choice = other.choice;
+        state = new long[16];
         System.arraycopy(other.state, 0, state, 0, 16);
     }
 
@@ -427,6 +436,8 @@ public class LongPeriodRNG implements LegacyRandom {
 
     @Override
     public void setSeed(long seed) {
+        if(state == null)
+            state = new long[16];
         init(seed);
     }
 

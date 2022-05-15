@@ -154,7 +154,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
         for (int i = 1; i <= limit; i++) {
             initial.add(Coord.get((int) (0xC13FA9A902A6328FL * i >>> 64 - shift), (int)(0x91E10DA5C79E7B1DL * i >>> 64 - shift)));
         }
-        rng.shuffle(initial);
+        initial.shuffle(rng);
         energy.clear();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
