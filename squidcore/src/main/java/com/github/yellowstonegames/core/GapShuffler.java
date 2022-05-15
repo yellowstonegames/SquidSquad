@@ -17,9 +17,9 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -112,7 +112,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     {
         this.random = shareRNG ? random : random.copy();
         elements = new ObjectList<>(items);
-        this.random.shuffle(elements);
+        elements.shuffle(this.random);
         index = 0;
     }
 
@@ -137,7 +137,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     {
         this.random = shareRNG ? random : random.copy();
         elements = new ObjectList<>(items);
-        this.random.shuffle(elements);
+        elements.shuffle(this.random);
         this.index = (index & 0x7FFFFFFF) % elements.size();
     }
 
@@ -165,7 +165,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
         this.random = shareRNG ? random : random.copy();
         elements = new ObjectList<>(items);
         if(initialShuffle)
-            this.random.shuffle(elements);
+            elements.shuffle(this.random);
         this.index = (index & 0x7FFFFFFF) % elements.size();
     }
 
@@ -218,7 +218,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     {
         this.random = random.copy();
         elements = ObjectList.with(items);
-        this.random.shuffle(elements);
+        elements.shuffle(this.random);
         index = 0;
     }
 
@@ -239,7 +239,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     {
         this.random = shareRNG ? random : random.copy();
         elements = ObjectList.with(items);
-        this.random.shuffle(elements);
+        elements.shuffle(this.random);
         index = 0;
     }
 
@@ -322,7 +322,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public void setRNG(EnhancedRandom random, boolean shareRNG) {
         this.random = shareRNG ? random : random.copy();
-        this.random.shuffle(elements);
+        elements.shuffle(this.random);
     }
 
     /**

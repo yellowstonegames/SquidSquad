@@ -15,7 +15,7 @@
  */
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 /**

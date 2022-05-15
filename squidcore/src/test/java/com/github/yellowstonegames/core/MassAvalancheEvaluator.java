@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.LongFloatOrderedMap;
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 

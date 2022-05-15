@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 public class ShufflerTest {
     @Test

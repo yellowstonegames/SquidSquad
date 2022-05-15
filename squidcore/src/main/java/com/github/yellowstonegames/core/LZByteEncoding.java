@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ByteList;
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 import java.util.ArrayList;
 import java.util.HashMap;

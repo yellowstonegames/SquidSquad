@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import regexodus.MatchResult;
 import regexodus.Matcher;
 import regexodus.Pattern;

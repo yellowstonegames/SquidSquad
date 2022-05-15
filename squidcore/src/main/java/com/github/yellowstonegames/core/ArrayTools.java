@@ -16,11 +16,6 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.ds.Arrangeable;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
-import com.github.tommyettinger.ds.support.TricycleRandom;
-
 import java.util.Arrays;
 
 /**
@@ -711,79 +706,6 @@ public class ArrayTools {
         }
     }
 
-    /**
-     * Rearranges an Arrangeable using the given {@link LaserRandom} to shuffle it, then returns the LaserRandom to its
-     * prior state so it can be used to reorder other Arrangeables. This rearrangement is done in-place.
-     *
-     * @param sequence an {@link Arrangeable}, such as an {@link com.github.tommyettinger.ds.ObjectList}, {@link com.github.tommyettinger.ds.FloatList},
-     *                 or {@link com.github.tommyettinger.ds.IntFloatOrderedMap}, that will be rearranged in-place
-     * @param random a non-null LaserRandom, specifically; its state will not change
-     */
-    public static void rearrange(Arrangeable sequence, LaserRandom random) {
-        long a = random.getStateA(), b = random.getStateB();
-        sequence.shuffle(random);
-        random.setState(a, b);
-    }
-
-    /**
-     * Rearranged an Arrangeable using the given {@link EnhancedRandom} to shuffle it, then tries to restore the prior
-     * state of the EnhancedRandom so it can be used to reorder other Arrangeables. The attempt to restore state can
-     * fail if {@link EnhancedRandom#getStateCount()} returns 0, meaning the state is not accessible for that
-     * EnhancedRandom implementation, so this just shuffles without restoring the state afterwards in that case. If
-     * {@link EnhancedRandom#getStateCount()} is 4 or less, this will not allocate, but if it is 5 or more, then this
-     * has to allocate a temporary array. The rearrangement is done in-place.
-     * @param arrangeable an {@link Arrangeable}, such as an {@link com.github.tommyettinger.ds.ObjectList}, {@link com.github.tommyettinger.ds.FloatList},
-     *                 or {@link com.github.tommyettinger.ds.IntFloatOrderedMap}, that will be rearranged in-place
-     * @param random a non-null EnhancedRandom, ideally one where {@link EnhancedRandom#getStateCount()} is between 1 and 4, inclusive
-     */
-    public static void rearrange(Arrangeable arrangeable, EnhancedRandom random) {
-        final int c = random.getStateCount();
-        switch (c) {
-            case 0: {
-                random.shuffle(arrangeable);
-                break;
-            }
-            case 1: {
-                long s0 = random.getSelectedState(0);
-                random.shuffle(arrangeable);
-                random.setState(s0);
-                break;
-            }
-            case 2: {
-                long s0 = random.getSelectedState(0),
-                        s1 = random.getSelectedState(1);
-                random.shuffle(arrangeable);
-                random.setState(s0, s1);
-                break;
-            }
-            case 3: {
-                long s0 = random.getSelectedState(0),
-                        s1 = random.getSelectedState(1),
-                        s2 = random.getSelectedState(2);
-                random.shuffle(arrangeable);
-                random.setState(s0, s1, s2);
-                break;
-            }
-           case 4: {
-                long s0 = random.getSelectedState(0),
-                        s1 = random.getSelectedState(1),
-                        s2 = random.getSelectedState(2),
-                        s3 = random.getSelectedState(3);
-                random.shuffle(arrangeable);
-                random.setState(s0, s1, s2, s3);
-                break;
-            }
-            default: {
-                final long[] states = new long[c];
-                for (int i = 0; i < c; i++) {
-                    states[i] = random.getSelectedState(i);
-                }
-                random.shuffle(arrangeable);
-                random.setState(states);
-            }
-        }
-    }
-    
     /**
      * Reverses the array given as a parameter, in-place, and returns the modified original.
      * @param data an array that will be reversed in-place
