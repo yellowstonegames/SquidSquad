@@ -79,14 +79,12 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
-        Font font = KnownFonts.getIosevkaMSDF();
+        Font font = KnownFonts.getCascadiaMono();
 //        Font font = KnownFonts.getInconsolata();
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
-        font.scaleTo(font.cellWidth * CELL_HEIGHT / font.cellHeight, CELL_HEIGHT);
-//        fitCell(font, CELL_WIDTH, CELL_HEIGHT, true);
-        gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT);
+        gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         GlidingGlyph playerGlyph = new GlidingGlyph('@', describe("red orange"), Coord.get(1, 1));
         playerGlyph.getLocation().setCompleteRunner(() -> {
@@ -100,7 +98,9 @@ public class DungeonMapTest extends ApplicationAdapter {
         director = new Director<>(GlidingGlyph::getLocation, glyphs, 150L);
         directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 300L);
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
-        dungeonProcessor.addWater(DungeonProcessor.ALL, 40);
+        dungeonProcessor.addWater(DungeonProcessor.ALL, 30);
+        // TODO: Bring over more coloring and flow effects from SquidLib, such as for grass.
+//        dungeonProcessor.addGrass(DungeonProcessor.ALL, 10);
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
