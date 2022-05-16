@@ -17,17 +17,30 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.random.Deserializer;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
-import regexodus.*;
+import regexodus.MatchResult;
+import regexodus.Matcher;
+import regexodus.Pattern;
+import regexodus.REFlags;
+import regexodus.Replacer;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A text generator for producing sentences and/or words in nonsense languages that fit a theme. This does not use an
@@ -47,7 +60,6 @@ import java.util.*;
  * @see Translator Translator uses a Language to reversibly translate English text to nonsense.
  * @author Tommy Ettinger
  */
-
 public class Language {
     public final String[] openingVowels, midVowels, openingConsonants, midConsonants, closingConsonants,
             vowelSplitters, closingSyllables;
@@ -62,9 +74,9 @@ public class Language {
     private static final CaseInsensitiveOrderedMap<Language> registry = new CaseInsensitiveOrderedMap<>(64);
     protected String summary;
     protected String name = "Nameless Language";
-    private static final transient StringBuilder sb = new StringBuilder(20);
-    private static final transient StringBuilder ender = new StringBuilder(12);
-    private static final transient StringBuilder ssb = new StringBuilder(80);
+    private static final StringBuilder sb = new StringBuilder(20);
+    private static final StringBuilder ender = new StringBuilder(12);
+    private static final StringBuilder ssb = new StringBuilder(80);
     /**
      * A pattern String that will match any vowel Language can produce out-of-the-box, including Latin, Greek,
      * and Cyrillic; for use when a String will be interpreted as a regex (as in {@link Language.Alteration}).
@@ -5079,7 +5091,7 @@ public class Language {
 
     public static class Modifier {
 
-        private transient static final StringBuilder modSB = new StringBuilder(32);
+        private static final StringBuilder modSB = new StringBuilder(32);
         public final Alteration[] alterations;
 
         public Modifier() {
@@ -5519,8 +5531,9 @@ public class Language {
     /**
      * A simple way to bundle a Language with the arguments that would be passed to it when calling
      * {@link Language#sentence(EnhancedRandom, int, int, String[], String[], double, int)} or one of its overloads.
-     * You can call {@link #sentence()} on this to produce another String sentence with the parameters it was given
-     * at construction. The parameters to
+     * A common use for this is to allow repeated generation of similar sentences, such as those said by the same
+     * character or similar characters in the same circumstances. You can call {@link #sentence()} on this to produce
+     * another String sentence with the parameters it was given at construction. The parameters to
      * {@link #SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)} are stored in fields of
      * the same name, and all fields in this class are public and modifiable.
      */
@@ -5595,9 +5608,9 @@ public class Language {
 
         /**
          * Builds a SentenceForm with all fields specified; each value is referenced directly except for {@code rng},
-         * which will not change or be directly referenced (a new GWTRNG will be used with the same state value).
+         * which will be copied to get the EnhancedRandom used internally.
          * @param language A Language to use to generate words
-         * @param rng a StatefulRNG that will not be directly referenced; the state will be copied into a new StatefulRNG
+         * @param rng an EnhancedRandom that will be copied to get the random number generator this will use
          * @param minWords minimum words per sentence
          * @param maxWords maximum words per sentence
          * @param midPunctuation an array of Strings that can be used immediately after words in the middle of sentences, like "," or ";"
@@ -5618,40 +5631,43 @@ public class Language {
             this.midPunctuationFrequency = midPunctuationFrequency;
             this.maxChars = maxChars;
         }
+
+        /**
+         * Generates a pseudo-random sentence using the configured Language, punctuation, min/max word length, and
+         * maximum char length.
+         * @return a new String of a random sentence using the configuration this knows
+         */
         public String sentence()
         {
             return language.sentence(rng, minWords, maxWords, midPunctuation, endPunctuation,
                     midPunctuationFrequency, maxChars);
         }
-//
-//        public String serializeToString() {
-//            return language.serializeToString() + '℘' +
-//                    DigitTools.hex(rng.getStateA()) + DigitTools.hex(rng.getStateB()) + '℘' +
-//                    minWords + '℘' +
-//                    maxWords + '℘' +
-//                    StringTools.join("ℙ", midPunctuation) + '℘' +
-//                    StringTools.join("ℙ", endPunctuation) + '℘' +
-//                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
-//                    maxChars;
-//        }
-//        public static SentenceForm deserializeFromString(String ser)
-//        {
-//            int gap = ser.indexOf('℘');
-//            Language lang = Language.deserializeFromString(ser.substring(0, gap));
-//            LaserRandom rng = new LaserRandom(
-//                    DigitTools.longFromHex(ser,gap + 1, gap + 17),
-//                    DigitTools.longFromHex(ser, gap + 17, gap + 33));
-//            gap = ser.indexOf('℘', gap + 1);
-//            int minWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
-//            int maxWords = DigitTools.intFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1));
-//            String[] midPunctuation =
-//                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
-//            String[] endPunctuation =
-//                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
-//            double midFreq = BitConversion.longBitsToDouble(DigitTools.longFromDec(ser,gap + 1, gap = ser.indexOf('℘', gap + 1)));
-//            int maxChars = DigitTools.intFromDec(ser,gap + 1, ser.length());
-//            return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);
-//        }
+
+        public String serializeToString() {
+            return language.serializeToString() + '℘' +
+                    rng.stringSerialize(Base.BASE16) + '℘' +
+                    minWords + '℘' +
+                    maxWords + '℘' +
+                    StringTools.join("ℙ", midPunctuation) + '℘' +
+                    StringTools.join("ℙ", endPunctuation) + '℘' +
+                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
+                    maxChars;
+        }
+        public static SentenceForm deserializeFromString(String ser)
+        {
+            int gap = ser.indexOf('℘');
+            Language lang = Language.deserializeFromString(ser.substring(0, gap));
+            EnhancedRandom rng = Deserializer.deserialize(ser.substring(gap+1, gap = ser.indexOf('℘', gap + 1)));
+            int minWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));
+            int maxWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));
+            String[] midPunctuation =
+                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+            String[] endPunctuation =
+                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+            double midFreq = BitConversion.longBitsToDouble(Base.BASE10.readLong(ser, gap + 1, gap = ser.indexOf('℘', gap + 1)));
+            int maxChars = Base.BASE10.readInt(ser, gap + 1, ser.length());
+            return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);
+        }
 
         @Override
         public boolean equals(Object o) {
