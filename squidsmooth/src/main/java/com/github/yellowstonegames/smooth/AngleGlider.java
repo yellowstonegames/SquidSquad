@@ -33,8 +33,8 @@ import javax.annotation.Nullable;
  * optionally use an {@link Interpolation} to make the rate of change different.
  * <br>
  * Note that because this measures angles in turns, it is meant to either be used with code that already expects turns,
- * like {@link com.github.yellowstonegames.core.TrigTools#sinTurns(float)}, or to have the angle in turns converted to
- * radians (by multiplying an angle in turns by {@link com.github.yellowstonegames.core.TrigTools#PI2}) or to degrees
+ * like {@link com.github.tommyettinger.digital.TrigTools#sinTurns(float)}, or to have the angle in turns converted to
+ * radians (by multiplying an angle in turns by {@link com.github.tommyettinger.digital.TrigTools#PI2}) or to degrees
  * (by multiplying an angle in turns by {@code 360)}).
  */
 public class AngleGlider implements IGlider {
