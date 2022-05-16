@@ -84,38 +84,13 @@ public final class JsonText {
         json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
             @Override
             public void write(Json json, Language.SentenceForm object, Class knownType) {
-                json.writeArrayStart();
-                json.writeValue(object.language, Language.class);
-                json.writeValue(object.rng, EnhancedRandom.class);
-                json.writeValue(object.minWords);
-                json.writeValue(object.maxWords);
-                json.writeValue(object.midPunctuation);
-                json.writeValue(object.endPunctuation);
-                json.writeValue(object.midPunctuationFrequency);
-                json.writeValue(object.maxChars);
-                json.writeArrayEnd();
+                json.writeValue(object.serializeToString());
             }
 
             @Override
             public Language.SentenceForm read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                JsonValue current = jsonData.child;
-                Language language = json.readValue(Language.class, current);
-                current = current.next;
-                EnhancedRandom rng = json.readValue(EnhancedRandom.class, current);
-                current = current.next;
-                int minWords = current.asInt();
-                current = current.next;
-                int maxWords = current.asInt();
-                current = current.next;
-                String[] midPunctuation = current.asStringArray();
-                current = current.next;
-                String[] endPunctuation = current.asStringArray();
-                current = current.next;
-                double midPunctuationFrequency = current.asDouble();
-                current = current.next;
-                int maxChars = current.asInt();
-                return new Language.SentenceForm(language, rng, minWords, maxWords, midPunctuation, endPunctuation, midPunctuationFrequency, maxChars);
+                return Language.SentenceForm.deserializeFromString(jsonData.asString());
             }
         });
     }

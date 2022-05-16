@@ -38,8 +38,8 @@ import com.github.tommyettinger.random.FourWheelRandom;
  * Based on <a href="https://github.com/mpatraw/butterfly">Michael Patraw's C code, used for cave carving in his map
  * generator.</a>
  */
-public class WobblyLine {
-    private WobblyLine(){}
+public class DrunkenWalk {
+    private DrunkenWalk(){}
     /**
      * Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm. Returns a List of Coord
      * in order.

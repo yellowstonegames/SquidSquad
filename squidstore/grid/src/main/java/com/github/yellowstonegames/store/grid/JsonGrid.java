@@ -45,7 +45,9 @@ public final class JsonGrid {
         registerCoordOrderedSet(json);
         registerCoordObjectMap(json);
         registerCoordObjectOrderedMap(json);
+        registerSpatialMap(json);
         registerRadiance(json);
+        registerLightingManager(json);
         registerNoise(json);
         registerPhantomNoise(json);
     }

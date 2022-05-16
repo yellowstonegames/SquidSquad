@@ -253,7 +253,7 @@ public class JsonGridTest {
         points.add(new IGI(Coord.get(2, 3)));
         String data = json.toJson(points);
         System.out.println(data);
-        SpatialMap<IGI> points2 = json.fromJson(SpatialMap.class, data);
+        SpatialMap<IGI> points2 = json.fromJson(SpatialMap.class, IGI.class, data);
 //        if(!points.equals(points2)){
 //            System.out.println(json.toJson(points2));
 //        }

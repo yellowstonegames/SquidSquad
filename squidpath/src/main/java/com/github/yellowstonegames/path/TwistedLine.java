@@ -22,13 +22,13 @@ import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
-import com.github.yellowstonegames.grid.WobblyLine;
+import com.github.yellowstonegames.grid.DrunkenWalk;
 
 import javax.annotation.Nonnull;
 
 /**
- * Like {@link WobblyLine}, this generates orthogonally-connected paths of {@link Coord} that meander through an area;
- * unlike WobblyLine, this won't ever generate paths that cross themselves.
+ * Like {@link DrunkenWalk}, this generates orthogonally-connected paths of {@link Coord} that meander through an area;
+ * unlike DrunkenWalk, this won't ever generate paths that cross themselves.
  * <br>
  * This generates a fully-connected graph for a given rectangular area, then solves it with
  * {@link DefaultGraph#findShortestPath(Coord, Coord, ObjectList, Heuristic)}.
