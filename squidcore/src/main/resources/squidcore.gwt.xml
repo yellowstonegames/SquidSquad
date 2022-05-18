@@ -8,6 +8,8 @@
     <inherits name="squidcore" />
   -->
 <module>
+    <inherits name="digital" />
+    <inherits name="juniper" />
     <inherits name="jdkgdxds" />
     <inherits name="regexodus"/>
     <super-source path="emu"/>
