@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;
@@ -5648,7 +5647,9 @@ public class Noise {
         float xs = x - (float) x1;
         float ys = y - (float) y1;
 
-        return cubicLerp(
+        float e = (float)Math.pow(4.0f,
+//        return
+                cubicLerp(
                 cubicLerp(phCoord2D(seed, x0, y0), phCoord2D(seed, x1, y0), phCoord2D(seed, x2, y0), phCoord2D(seed, x3, y0),
                         xs),
                 cubicLerp(phCoord2D(seed, x0, y1), phCoord2D(seed, x1, y1), phCoord2D(seed, x2, y1), phCoord2D(seed, x3, y1),
@@ -5657,7 +5658,10 @@ public class Noise {
                         xs),
                 cubicLerp(phCoord2D(seed, x0, y3), phCoord2D(seed, x1, y3), phCoord2D(seed, x2, y3), phCoord2D(seed, x3, y3),
                         xs),
-                ys) * CUBIC_2D_BOUNDING;
+                ys)
+        );
+        return (e - 1.0f) / (e + 1.0f);
+//                * CUBIC_2D_BOUNDING;
     }
 
     public float getCubicFractal(float x, float y, float z) {
@@ -5752,7 +5756,9 @@ public class Noise {
         float ys = y - (float) y1;
         float zs = z - (float) z1;
 
-        return cubicLerp(
+        float e = (float)Math.pow(4.0f,
+//        return
+                cubicLerp(
                 cubicLerp(
                         cubicLerp(phCoord3D(seed, x0, y0, z0), phCoord3D(seed, x1, y0, z0), phCoord3D(seed, x2, y0, z0), phCoord3D(seed, x3, y0, z0), xs),
                         cubicLerp(phCoord3D(seed, x0, y1, z0), phCoord3D(seed, x1, y1, z0), phCoord3D(seed, x2, y1, z0), phCoord3D(seed, x3, y1, z0), xs),
@@ -5777,7 +5783,10 @@ public class Noise {
                         cubicLerp(phCoord3D(seed, x0, y2, z3), phCoord3D(seed, x1, y2, z3), phCoord3D(seed, x2, y2, z3), phCoord3D(seed, x3, y2, z3), xs),
                         cubicLerp(phCoord3D(seed, x0, y3, z3), phCoord3D(seed, x1, y3, z3), phCoord3D(seed, x2, y3, z3), phCoord3D(seed, x3, y3, z3), xs),
                         ys),
-                zs) * CUBIC_3D_BOUNDING;
+                zs)        );
+        return (e - 1.0f) / (e + 1.0f);
+//                * CUBIC_2D_BOUNDING;
+
     }
 
     public float getCubicFractal(float x, float y, float z, float w) {
@@ -5880,7 +5889,9 @@ public class Noise {
         float zs = z - (float) z1;
         float ws = w - (float) w1;
 
-        return cubicLerp(
+        float e = (float)Math.pow(4.0f,
+//        return
+                cubicLerp(
                 cubicLerp(
                         cubicLerp(
                                 cubicLerp(phCoord4D(seed, x0, y0, z0, w0), phCoord4D(seed, x1, y0, z0, w0), phCoord4D(seed, x2, y0, z0, w0), phCoord4D(seed, x3, y0, z0, w0), xs),
@@ -5985,7 +5996,10 @@ public class Noise {
                                 cubicLerp(phCoord4D(seed, x0, y3, z3, w3), phCoord4D(seed, x1, y3, z3, w3), phCoord4D(seed, x2, y3, z3, w3), phCoord4D(seed, x3, y3, z3, w3), xs),
                                 ys),
                         zs),
-                ws) * CUBIC_4D_BOUNDING;
+                ws)        );
+        return (e - 1.0f) / (e + 1.0f);
+//                * CUBIC_2D_BOUNDING;
+
     }
 
     // Cellular Noise
