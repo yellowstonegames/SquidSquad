@@ -65,7 +65,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         noise.setPointHash(pointHashes[hashIndex]);
         noise.setFractalType(Noise.RIDGED_MULTI);
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
         gif.palette = new PaletteReducer(new int[] {
                 0x00000000, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
                 0x080808FF, 0x090909FF, 0x0A0A0AFF, 0x0B0B0BFF, 0x0C0C0CFF, 0x0D0D0DFF, 0x0E0E0EFF, 0x0F0F0FFF,

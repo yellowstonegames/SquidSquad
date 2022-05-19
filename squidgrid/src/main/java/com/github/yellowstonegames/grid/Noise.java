@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;
@@ -5631,8 +5632,7 @@ public class Noise {
         return singleCubic(0, x, y);
     }
 
-    // TODO: This could probably be calculated better. It was 1f / 1.5f, which went out-of-range fairly often.
-    private final static float CUBIC_2D_BOUNDING = 0.5f;
+    private final static float CUBIC_2D_BOUNDING = 1f / 1.5f / 1.5f;
 
     private float singleCubic(int seed, float x, float y) {
         int x1 = fastFloor(x);
@@ -5731,8 +5731,7 @@ public class Noise {
         return singleCubic(seed, x * frequency, y * frequency, z * frequency);
     }
 
-    //TODO: This needs to be checked with a worst-case point hash
-    private final static float CUBIC_3D_BOUNDING = 1f / (1.125f * 1.5f * 1.5f);
+    private final static float CUBIC_3D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f);
 
     private float singleCubic(int seed, float x, float y, float z) {
         int x1 = fastFloor(x);
@@ -5855,7 +5854,7 @@ public class Noise {
         return singleCubic(seed, x * frequency, y * frequency, z * frequency, w * frequency);
     }
 
-    private final static float CUBIC_4D_BOUNDING = 1.0625f / (1.5f * 1.5f * 1.5f);
+    private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f * 1.5f);
 
     private float singleCubic(int seed, float x, float y, float z, float w) {
         int x1 = fastFloor(x);
