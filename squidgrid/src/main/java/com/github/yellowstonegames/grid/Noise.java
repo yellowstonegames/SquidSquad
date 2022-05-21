@@ -5996,10 +5996,10 @@ public class Noise {
                                 cubicLerp(phCoord4D(seed, x0, y3, z3, w3), phCoord4D(seed, x1, y3, z3, w3), phCoord4D(seed, x2, y3, z3, w3), phCoord4D(seed, x3, y3, z3, w3), xs),
                                 ys),
                         zs),
-                ws)        );
+                ws)
+        );
         return (e - 1.0f) / (e + 1.0f);
-//                * CUBIC_2D_BOUNDING;
-
+//                * CUBIC_4D_BOUNDING;
     }
 
     // Cellular Noise

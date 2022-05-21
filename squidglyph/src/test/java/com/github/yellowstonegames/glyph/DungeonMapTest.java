@@ -19,6 +19,7 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -54,9 +55,12 @@ public class DungeonMapTest extends ApplicationAdapter {
 
     private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
     private static final int SHALLOW_OKLAB = describeOklab("dull denim");
+    private static final int GRASS_OKLAB = describeOklab("duller dark green");
+    private static final int DRY_OKLAB = describeOklab("dull light apricot sage");
     private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
     private static final int deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
     private static final int shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
+    private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
     private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
 
     public static void main(String[] args){
@@ -99,8 +103,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         directorSmall = new Director<>(GlidingGlyph::getSmallMotion, glyphs, 300L);
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addWater(DungeonProcessor.ALL, 30);
-        // TODO: Bring over more coloring and flow effects from SquidLib, such as for grass.
-//        dungeonProcessor.addGrass(DungeonProcessor.ALL, 10);
+        dungeonProcessor.addGrass(DungeonProcessor.ALL, 10);
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
@@ -239,6 +242,10 @@ public class DungeonMapTest extends ApplicationAdapter {
                             case ',':
                                 gm.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
                                 gm.put(x, y, prunedDungeon[x][y], shallowText);
+                                break;
+                            case '"':
+                                gm.backgrounds[x][y] = toRGBA8888(darken(lerpColors(GRASS_OKLAB, DRY_OKLAB, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))));
+                                gm.put(x, y, prunedDungeon[x][y], grassText);
                                 break;
                             case ' ':
                                 gm.backgrounds[x][y] = 0;
