@@ -56,7 +56,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
     private long ttg; // time to generate
     
 //    public int noiseCalls = 0, pixels = 0;  // debug
-    private static final int emptyColor = 0x2d2232ff;//DescriptiveColor.describe(Biome.TABLE[60].colorDescription);
+    private static final int emptyColor = Biome.TABLE[60].colorOklab;
     private final Color INK = new Color(emptyColor);
     @Override
     public void create() {

@@ -100,7 +100,7 @@ public class WorldMapView {
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            BIOME_COLOR_TABLE[i] = b = describeOklab(Biome.TABLE[i].colorDescription);
+            BIOME_COLOR_TABLE[i] = b = Biome.TABLE[i].colorOklab;
             BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
             if(i == 60)
                 BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i];
@@ -119,7 +119,7 @@ public class WorldMapView {
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            b = describeOklab(Biome.TABLE[i].colorDescription);
+            b = (Biome.TABLE[i].colorOklab);
             if (i == 60)
                 BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = b;
             else {
@@ -170,11 +170,10 @@ public class WorldMapView {
         int b;
         for (int i = 0; i < 66; i++) {
             BIOME_COLOR_TABLE[i] = b = (similarColors[(Hasher.gremory.hash(Biome.TABLE[i].name) >>> 1) % similarColors.length]
-            //, DescriptiveColor.describeOklab(Biome.TABLE[i].colorDescription)
             );
             BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
             if(i == 60)
-                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = darken(describeOklab(Biome.TABLE[60].colorDescription), 0.08f);
+                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = darken(Biome.TABLE[60].colorOklab, 0.08f);
         }
     }
 
