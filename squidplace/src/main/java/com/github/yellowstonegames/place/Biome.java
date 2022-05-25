@@ -194,7 +194,7 @@ public class Biome {
      * empty space, moonscape, cavern, "exotic" (a catch-all for supernatural biomes), and volcano biomes.
      */
     public static final Biome[] TABLE = new Biome[]{
-            new Biome(COLDEST, DRIEST, "Ice", 0xFF7E7EF3),            //0
+            new Biome(COLDEST, DRIEST, "Ice", 0xFF7E7EF3),                        //0
             new Biome(COLDER, DRIEST, "Ice", 0xFF7E7EF2),
             new Biome(COLD, DRIEST, "Grassland", 0xFF8979A8),
             new Biome(HOT, DRIEST, "Desert", 0xFF877FE3),
@@ -204,7 +204,7 @@ public class Biome {
             new Biome(COLDER, DRIER, "Tundra", 0xFF817BB3),
             new Biome(COLD, DRIER, "Grassland", 0xFF8979A1),
             new Biome(HOT, DRIER, "Grassland", 0xFF897996),
-            new Biome(HOTTER, DRIER, "Desert", 0xFF877FE2),             //10
+            new Biome(HOTTER, DRIER, "Desert", 0xFF877FE2),                         //10
             new Biome(HOTTEST, DRIER, "Desert", 0xFF877FE2),
             new Biome(COLDEST, DRY, "Ice", 0xFF7E7EF2),
             new Biome(COLDER, DRY, "Tundra", 0xFF817BAF),
@@ -214,7 +214,7 @@ public class Biome {
             new Biome(HOTTEST, DRY, "Desert", 0xFF877FE1),
             new Biome(COLDEST, WET, "Ice", 0xFF7E7EEC),
             new Biome(COLDER, WET, "Tundra", 0xFF817BAA),
-            new Biome(COLD, WET, "SeasonalForest", 0xFF8B7364),             //20
+            new Biome(COLD, WET, "SeasonalForest", 0xFF8B7364),                         //20
             new Biome(HOT, WET, "SeasonalForest", 0xFF8B736A),
             new Biome(HOTTER, WET, "Savanna", 0xFF8C7ABE),
             new Biome(HOTTEST, WET, "Savanna", 0xFF8C7AB7),
@@ -224,7 +224,7 @@ public class Biome {
             new Biome(HOT, WETTER, "TemperateRainforest", 0xFF877460),
             new Biome(HOTTER, WETTER, "TropicalRainforest", 0xFF8B715A),
             new Biome(HOTTEST, WETTER, "Savanna", 0xFF8C7AAD),
-            new Biome(COLDEST, WETTEST, "Ice", 0xFF7E7ED2),            //30
+            new Biome(COLDEST, WETTEST, "Ice", 0xFF7E7ED2),                        //30
             new Biome(COLDER, WETTEST, "BorealForest", 0xFF897753),
             new Biome(COLD, WETTEST, "BorealForest", 0xFF897757),
             new Biome(HOT, WETTEST, "TemperateRainforest", 0xFF87745B),
@@ -234,27 +234,27 @@ public class Biome {
             new Biome(COLDER, COAST, "Rocky", 0xFF847DAF),
             new Biome(COLD, COAST, "Beach", 0xFF887FE1),
             new Biome(HOT, COAST, "Beach", 0xFF887FE6),
-            new Biome(HOTTER, COAST, "Beach", 0xFF887FE7),             //40
+            new Biome(HOTTER, COAST, "Beach", 0xFF887FE7),                         //40
             new Biome(HOTTEST, COAST, "Beach", 0xFF887FE8),
             new Biome(COLDEST, RIVER, "Ice", 0xFF7E7EE6),
-            new Biome(COLDER, RIVER, "River", 0xFF737594),
-            new Biome(COLD, RIVER, "River", 0xFF73758F),
-            new Biome(HOT, RIVER, "River", 0xFF73758A),
-            new Biome(HOTTER, RIVER, "River", 0xFF737587),
-            new Biome(HOTTEST, RIVER, "River", 0xFF737584),
+            new Biome(COLDER, RIVER, "River", 0xFF7B757C),
+            new Biome(COLD, RIVER, "River", 0xFF7B7576),
+            new Biome(HOT, RIVER, "River", 0xFF7B7570),
+            new Biome(HOTTER, RIVER, "River", 0xFF7B756C),
+            new Biome(HOTTEST, RIVER, "River", 0xFF7B7569),
             new Biome(COLDEST, LAKE, "Ice", 0xFF7E7EDF),
-            new Biome(COLDER, LAKE, "Lake", 0xFF737594),
-            new Biome(COLD, LAKE, "Lake", 0xFF73758C),            //50
-            new Biome(HOT, LAKE, "Lake", 0xFF737587),
-            new Biome(HOTTER, LAKE, "Lake", 0xFF737584),
-            new Biome(HOTTEST, LAKE, "Lake", 0xFF737580),
-            new Biome(COLDEST, OCEAN, "Ocean", 0xFF727C41),
-            new Biome(COLDER, OCEAN, "Ocean", 0xFF727C38),
-            new Biome(COLD, OCEAN, "Ocean", 0xFF727C2F),
-            new Biome(HOT, OCEAN, "Ocean", 0xFF727C28),
-            new Biome(HOTTER, OCEAN, "Ocean", 0xFF727C27),
-            new Biome(HOTTEST, OCEAN, "Ocean", 0xFF727C25),
-            new Biome(COLDEST, STRANGE, "Space", 0xFF7A8121),            //60
+            new Biome(COLDER, LAKE, "Lake", 0xFF7B757C),
+            new Biome(COLD, LAKE, "Lake", 0xFF7B7572),                        //50
+            new Biome(HOT, LAKE, "Lake", 0xFF7B756C),
+            new Biome(HOTTER, LAKE, "Lake", 0xFF7B7569),
+            new Biome(HOTTEST, LAKE, "Lake", 0xFF7B7566),
+            new Biome(COLDEST, OCEAN, "Ocean", 0xFF7A784E),
+            new Biome(COLDER, OCEAN, "Ocean", 0xFF7A7846),
+            new Biome(COLD, OCEAN, "Ocean", 0xFF7A783E),
+            new Biome(HOT, OCEAN, "Ocean", 0xFF7A7837),
+            new Biome(HOTTER, OCEAN, "Ocean", 0xFF7A7835),
+            new Biome(HOTTEST, OCEAN, "Ocean", 0xFF7A7833),
+            new Biome(COLDEST, STRANGE, "Space", 0xFF7A8121),                        //60
             new Biome(COLDER, STRANGE, "Moon", 0xFF7F7FCA),
             new Biome(COLD, STRANGE, "Cavern", 0xFF82822D),
             new Biome(HOT, STRANGE, "Cavern", 0xFF828230),
