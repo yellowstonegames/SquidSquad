@@ -16,21 +16,23 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * A different approach to the same task as a probability table, though this only looks up an appropriate index
- * instead of also storing items it can choose; allows positive doubles for weights but does not allow nested tables for
- * simplicity. This doesn't store an RNG (or RandomnessSource) in this class, and instead expects either an
- * EnhancedRandom as a parameter, or a long to be given for each random draw from the table (these long parameters can
- * be random, sequential, or in some other way different every time). Uses
- * <a href="http://www.keithschwarz.com/darts-dice-coins/">Vose's Alias Method</a>, and is based fairly-closely on the
- * code given by Keith Schwarz at that link. Because Vose's Alias Method is remarkably fast (it takes O(1) time to get
- * a random index, and takes O(n) time to construct a WeightedTable instance), this may be useful to consider if you
+ * instead of also storing items it can choose; allows positive floats for weights but does not allow nested tables for
+ * simplicity. This doesn't store a Random in this class, and instead expects either a Random as a parameter, or a long
+ * to be given for each random draw from the table (these long parameters can be random, sequential, or in some other
+ * way different every time).
+ * <br>
+ * Uses <a href="http://www.keithschwarz.com/darts-dice-coins/">Vose's Alias Method</a>, and is based fairly-closely on
+ * the code given by Keith Schwarz at that link. Because Vose's Alias Method is remarkably fast (it takes O(1) time to
+ * get a random index, and takes O(n) time to construct a WeightedTable instance), this may be useful to consider if you
  * don't need all the features of ProbabilityTable or if you want deeper control over the random aspects of it.
  */
 public class WeightedTable {
@@ -47,31 +49,31 @@ public class WeightedTable {
 
     /**
      * Constructs a WeightedTable with the given array of weights for each index. The array can also be a varargs for
-     * convenience. The weights can be any positive non-zero doubles, but should usually not be so large or small that
+     * convenience. The weights can be any positive non-zero floats, but should usually not be so large or small that
      * precision loss is risked. Each weight will be used to determine the likelihood of that weight's index being
      * returned by {@link #random(long)}.
-     * @param probabilities an array or varargs of positive doubles representing the weights for their own indices
+     * @param probabilities an array or varargs of positive floats representing the weights for their own indices
      */
-    public WeightedTable(@Nonnull double... probabilities) {
+    public WeightedTable(@Nonnull float... probabilities) {
         /* Begin by doing basic structural checks on the inputs. */
         if ((size = probabilities.length) == 0)
             throw new IllegalArgumentException("Array 'probabilities' given to WeightedTable must be nonempty.");
 
         mixed = new int[size<<1];
 
-        double sum = 0.0;
+        float sum = 0.0f;
 
         /* Make a copy of the probabilities array, since we will be making
          * changes to it.
          */
-        double[] probs = new double[size];
+        float[] probs = new float[size];
         for (int i = 0; i < size; ++i) {
             if(probabilities[i] <= 0) continue;
             sum += (probs[i] = probabilities[i]);
         }
         if(sum <= 0)
             throw new IllegalArgumentException("At least one probability must be positive");
-        final double average = sum / size, invAverage = 1.0 / average;
+        final float average = sum / size, invAverage = 1.0f / average;
 
         /* Create two stacks to act as worklists as we populate the tables. */
         IntList small = new IntList(size);
@@ -154,8 +156,8 @@ public class WeightedTable {
      * to determine the chosen column, which is bounded to an arbitrary positive int. It does this with just one
      * randomized 64-bit value, allowing the state parameter to be just one long.
      * <br>
-     * You can also use {@link #random(EnhancedRandom)} to avoid handling state directly; this can be faster if using
-     * a particularly fast EnhancedRandom implementation.
+     * You can also use {@link #random(Random)} to avoid handling state directly; this can be faster if using
+     * a particularly fast Random implementation such as one from juniper.
      * @param state a long that should be different every time; consider calling with {@code ++state}
      * @return a random-seeming index from 0 to {@link #size} - 1, determined by weights and the given state
      */
@@ -173,12 +175,12 @@ public class WeightedTable {
     /**
      * Gets an index of one of the weights in this WeightedTable, with the choice determined by the given random number
      * generator, but higher weights will be returned more frequently than lower weights. The rng parameter can
-     * be any implementation of EnhancedRandom, and some implementations are likely to be faster than the unary hash
+     * be any implementation of Random, and some implementations are likely to be faster than the unary hash
      * used by {@link #random(long)}. This will return an int between 0 (inclusive) and {@link #size} (exclusive).
-     * @param rng an EnhancedRandom; its {@link EnhancedRandom#nextLong()} method will be called once
+     * @param rng an Random; its {@link Random#nextLong()} method will be called once
      * @return a random index from 0 to {@link #size} - 1, determined by weights and the given rng
      */
-    public int random(final EnhancedRandom rng)
+    public int random(final Random rng)
     {
         final long state = rng.nextLong();
         // get a random int (using half the bits of our previously-calculated state) that is less than size
@@ -200,9 +202,8 @@ public class WeightedTable {
         int count = StringTools.count(data, ',') + 1;
         int[] mixed = new int[count];
         for (int i = 0; i < count; i++) {
-            mixed[i] = DigitTools.intFromDec(data, pos+1, pos = data.indexOf(',', pos+1));
+            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = data.indexOf(',', pos+1));
         }
         return new WeightedTable(mixed, true);
     }
-
 }

@@ -236,7 +236,7 @@ public class JsonCoreTest {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerWeightedTable(json);
         String[] items = {"earth", "air", "water", "fire", "aether"};
-        WeightedTable table = new WeightedTable(1.0, 2.0, 3.5, 4.1, 0.6);
+        WeightedTable table = new WeightedTable(1.0f, 2.0f, 3.5f, 4.1f, 0.6f);
         WeightedTable copy = table.copy();
         int index = table.random(123);
         Assert.assertTrue(index >= 0 && index < items.length);

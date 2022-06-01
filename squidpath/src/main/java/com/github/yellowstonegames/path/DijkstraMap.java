@@ -965,9 +965,6 @@ public class DijkstraMap {
         fresh.clear();
         fresh.addAll(goals);
         for (int i = 0; i < goals.size(); i++) {
-            //if (closed.containsKey(entry.getIntKey()))
-            //    continue;
-            //    closed.remove(entry.getIntKey());
             dec = goals.get(i);
             gradientMap[decodeX(dec)][decodeY(dec)] = GOAL;
         }

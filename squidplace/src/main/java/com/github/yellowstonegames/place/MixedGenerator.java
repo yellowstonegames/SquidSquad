@@ -35,12 +35,12 @@ import java.util.*;
  * the getEnvironment() method, which can be used in conjunction with RoomFinder to find where separate room, corridor,
  * and cave areas have been placed.
  * <br>
- * Based on Michael Patraw's excellent Drunkard's Walk dungeon generator.
- * http://mpatraw.github.io/libdrunkard/
+ * Based on <a href="http://mpatraw.github.io/libdrunkard/"></a>Michael Patraw's excellent Drunkard's Walk dungeon generator</a>.
+ *
  * Created by Tommy Ettinger on 10/22/2015.
+ * @see SerpentMapGenerator SerpentMapGenerator is a normal use for MixedGenerator that makes winding dungeons
+ * @see SerpentDeepMapGenerator SerpentDeepMapGenerator uses MixedGenerator as it makes a multi-level dungeon
  */
-// * @see SerpentMapGenerator a normal use for MixedGenerator that makes winding dungeons
-// * @see SerpentDeepMapGenerator uses MixedGenerator as it makes a multi-level dungeon
 public class MixedGenerator implements PlaceGenerator {
     public static final int CAVE = 0,
         BOX = 1,
@@ -48,7 +48,7 @@ public class MixedGenerator implements PlaceGenerator {
         BOX_WALLED = 3,
         ROUND_WALLED = 4;
 
-    protected double[] carvers;
+    protected float[] carvers;
     protected WeightedTable carverTable;
     protected int width, height;
     protected float roomWidth, roomHeight;
@@ -130,7 +130,7 @@ public class MixedGenerator implements PlaceGenerator {
             Coord c1 = sequence.get(i), c2 = sequence.get(i + 1);
             points.add(((c1.x & 0xff) << 24) | ((c1.y & 0xff) << 16) | ((c2.x & 0xff) << 8) | (c2.y & 0xff));
         }
-        carvers = new double[5];
+        carvers = new float[5];
     }
     /**
      * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
@@ -193,7 +193,7 @@ public class MixedGenerator implements PlaceGenerator {
                 points.add(((c1.x & 0xff) << 24) | ((c1.y & 0xff) << 16) | ((c2.x & 0xff) << 8) | (c2.y & 0xff));
             }
         }
-        carvers = new double[5];
+        carvers = new float[5];
     }
     
     /**
