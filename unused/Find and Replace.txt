@@ -1,0 +1,7 @@
+To change KnownFonts from TextraTypist's layout to SquidSquad's, paste in TT's body and find/replace:
+
+Find:
+(/\*\*[\s\S]+?\*/\n)(.+ Font (\w+\(\)))[\s\S]+?private Font \w+;
+
+Replace:
+$1$2\n\{\nreturn com.github.tommyettinger.textra.KnownFonts.$3.setColorLookup(GlyphMap::getRgba);\n\}

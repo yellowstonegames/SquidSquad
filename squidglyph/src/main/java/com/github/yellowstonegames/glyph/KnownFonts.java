@@ -19,6 +19,9 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.Gdx;
 import com.github.tommyettinger.textra.Font;
 
+/*
+*/
+
 /**
  * Preconfigured static {@link Font} instances, with any important metric adjustments already applied. This uses the
  * {@link com.github.tommyettinger.textra.KnownFonts} class from textratypist, which is also the dependency that
@@ -63,7 +66,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/V4Z9vZT.png">Image link</a> (uses width=9, height=9)
+     * Preview: <a href="https://i.imgur.com/sOvax8i.png">Image link</a> (uses width=10, height=10)
      * <br>
      * Needs files:
      * <ul>
@@ -71,6 +74,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-msdf.png">AStarry-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-license.txt">AStarry-license.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font A Starry using MSDF
      */
     public static Font getAStarry() {
@@ -78,16 +82,20 @@ public final class KnownFonts {
     }
 
     /**
-     * Returns a Font already configured to use a variable-width slab serif font with good Latin and Cyrillic script
-     * support, that should scale pretty well from a height of about 160 down to a height of maybe 30.
+     * Returns a Font already configured to use a light-weight variable-width slab serif font with good Latin and
+     * Cyrillic script support, that should scale pretty well from a height of about 160 down to a height of maybe 30.
      * Caches the result for later calls. The font used is Bitter, a free (OFL) typeface by <a href="https://github.com/solmatas/BitterPro">The Bitter Project</a>.
      * It supports quite a lot of Latin-based scripts and Cyrillic, but does not really cover Greek or any other
      * scripts. This font can look good at its natural size, which uses width roughly equal to height,
-     * or squashed so height is slightly smaller.
+     * or squashed so height is slightly smaller. Bitter looks very similar to {@link #getGentium()}, except that Bitter
+     * is quite a bit lighter, with thinner strokes and stylistic flourishes on some glyphs.
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
-     * This may work well in a font family with other fonts that do not use a distance field effect.
+     * This may work well in a font family with other fonts that do not use a distance field effect. Unlike most other
+     * fonts here, this does not use makeGridGlyphs, because it would make underline and strikethrough much thicker than
+     * other strokes in the font. This does mean that strikethrough starts too far to the left, and extends too far to
+     * the right, unfortunately, but its weight matches.
      * <br>
-     * Preview: <a href="https://i.imgur.com/mX4RSqh.png">Image link</a> (uses width=33, height=29)
+     * Preview: <a href="https://i.imgur.com/F5YJPCE.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
      * <br>
      * Needs files:
      * <ul>
@@ -95,11 +103,13 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-standard.png">Bitter-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-License.txt">Bitter-License.txt</a></li>
      * </ul>
-     * @return the Font object that can represent many sizes of the font Bitter-Regular.ttf
+     *
+     * @return the Font object that can represent many sizes of the font Bitter-Light.ttf
      */
     public static Font getBitter() {
         return com.github.tommyettinger.textra.KnownFonts.getBitter().setColorLookup(GlyphMap::getRgba);
     }
+
     /**
      * Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
      * Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
@@ -110,7 +120,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/i77ogHe.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/tEVafWO.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -118,6 +128,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-standard.png">Canada1500-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-License.txt">Canada1500-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Canada1500.ttf
      */
     public static Font getCanada() {
@@ -134,7 +145,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/SSmmfdA.png">Image link</a> (uses width=10, height=20)
+     * Preview: <a href="https://i.imgur.com/rp6pgSa.png">Image link</a> (uses width=9, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -142,6 +153,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/CascadiaMono-msdf.png">CascadiaMono-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cascadia-license.txt">Cascadia-license.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Cascadia Code Mono using MSDF
      */
     public static Font getCascadiaMono() {
@@ -152,10 +164,12 @@ public final class KnownFonts {
      * Returns a Font configured to use a cozy fixed-width bitmap font,
      * <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
      * including Greek, Cyrillic, Braille, and tech-related icons. This does not scale well except to integer
-     * multiples, but it should look very crisp at its default size of 7x13 pixels.
+     * multiples, but it should look very crisp at its default size of 7x13 pixels. This defaults to having
+     * {@link Font#integerPosition} set to true, which helps keep it pixel-perfect if 1 world unit is 1 pixel, but can
+     * cause major visual issues if 1 world unit corresponds to much more than 1 pixel.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/6lE56Fb.png">Image link</a> (uses width=7, height=13; this is small enough
+     * Preview: <a href="https://i.imgur.com/1wBVayl.png">Image link</a> (uses width=7, height=13; this is small enough
      * to make the scaled text look bad in some places)
      * <br>
      * Needs files:
@@ -164,6 +178,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-standard.png">Cozette-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-license.txt">Cozette-license.txt</a></li>
      * </ul>
+     *
      * @return the Font object that represents the 7x13px font Cozette
      */
     public static Font getCozette() {
@@ -181,7 +196,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/J7ppp82.png">Image link</a> (uses width=10, height=20)
+     * Preview: <a href="https://i.imgur.com/fmRBfsp.png">Image link</a> (uses width=9, height=20)
      * <br>
      * Needs files:
      * <ul>
@@ -189,6 +204,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-msdf.png">DejaVuSansMono-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-License.txt">DejaVuSansMono-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font DejaVu Sans Mono using MSDF
      */
     public static Font getDejaVuSansMono() {
@@ -197,16 +213,14 @@ public final class KnownFonts {
 
     /**
      * Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
-     * scale well from a height of about 132 down to a height of 34. You usually will want to reduce the line height
-     * of this Font after you scale it; using {@code KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)}
-     * usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
-     * License) typeface by SIL (see <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It
-     * supports a lot of glyphs, including quite a
-     * bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
-     * does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want to stick using just
-     * fonts that avoid distance fields if you have a family of fonts.
+     * scale well from a height of about 132 down to a height of 34. Caches the result for later calls. The font used is
+     * Gentium, an open-source (SIL Open Font License) typeface by SIL (see
+     * <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It supports a lot of glyphs,
+     * including quite a bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various
+     * real languages. This does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want
+     * to stick using just fonts that avoid distance fields if you have a family of fonts.
      * <br>
-     * Preview: <a href="https://i.imgur.com/PWGVxIK.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/wZ9NhJ2.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -214,6 +228,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-standard.png">Gentium-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Gentium.ttf
      */
     public static Font getGentium() {
@@ -231,7 +246,7 @@ public final class KnownFonts {
      * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
      * crisp enough when zoomed out.
      * <br>
-     * Preview: <a href="https://i.imgur.com/Ixe9e69.png">Image link</a> (uses width=60, height=45, adjustLineHeight(0.8f))
+     * Preview: <a href="https://i.imgur.com/e0cIBe3.png">Image link</a> (uses width=60, height=45, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -239,6 +254,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-sdf.png">Gentium-sdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Gentium.ttf using SDF
      */
     public static Font getGentiumSDF() {
@@ -259,13 +275,14 @@ public final class KnownFonts {
      * of their signature font throughout the 1980s, but if the legality is concerning, you
      * can use {@link #getCozette()} for a different bitmap font.
      * <br>
-     * Preview: <a href="https://i.imgur.com/dNwh5qu.png">Image link</a> (uses width=8, height=16)
+     * Preview: <a href="https://i.imgur.com/SQLGfWt.png">Image link</a> (uses width=8, height=16)
      * <br>
      * Needs files:
      * <ul>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.font">IBM-8x16-standard.font</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.png">IBM-8x16-standard.png</a></li>
      * </ul>
+     *
      * @return the Font object that represents an 8x16 font included with early IBM computers
      */
     public static Font getIBM8x16() {
@@ -276,10 +293,10 @@ public final class KnownFonts {
      * A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
      * Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
      * Inconsolata is by Raph Levien, and various other contributors added support for other languages. This does not
-     * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}. You may want to stick using just fonts
-     * that avoid distance fields if you have a family of fonts.
+     * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}.
+     * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/rew6udn.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/a7M3HB9.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -287,6 +304,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-standard.png">Inconsolata-LGC-Custom-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom
      */
     public static Font getInconsolata() {
@@ -300,7 +318,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/KDSSHrI.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/MUzaRxR.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -308,6 +326,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-msdf.png">Inconsolata-LGC-Custom-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom using MSDF
      */
     public static Font getInconsolataMSDF() {
@@ -321,9 +340,11 @@ public final class KnownFonts {
      * <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
      * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
      * Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/b7PsfDS.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/R5Ztqym.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -331,6 +352,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-standard.png">Iosevka-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf
      */
     public static Font getIosevka() {
@@ -343,11 +365,15 @@ public final class KnownFonts {
      * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font License) typeface by
      * <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
      * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
-     * Greek, and Cyrillic. This uses the Multi-channel Signed Distance
-     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
-     * sharper edges and precise corners instead of rounded tips on strokes.
+     * Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+     * This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
+     * technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
+     * However, using a distance field makes it effectively impossible to mix fonts using a FontFamily (any variation in
+     * distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/Pl19IiH.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/3mH04Nn.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -355,6 +381,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-msdf.png">Iosevka-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
      */
     public static Font getIosevkaMSDF() {
@@ -367,11 +394,15 @@ public final class KnownFonts {
      * Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font License) typeface by
      * <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
      * thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
-     * Greek, and Cyrillic. This uses the Signed Distance Field (SDF)
-     * technique as opposed to the Multi-channel Signed Distance Field technique that {@link #getIosevkaMSDF()} uses,
-     * which isn't as sharp at large sizes but can look a little better at small sizes.
+     * Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+     * This uses the Signed Distance Field (SDF) technique as opposed to the Multi-channel Signed Distance Field
+     * technique that {@link #getIosevkaMSDF()} uses, which isn't as sharp at large sizes but can look a little better
+     * at small sizes. However, using a distance field makes it effectively impossible to mix fonts using a FontFamily
+     * (any variation in distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/tG4YcFA.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/ZTWOnOg.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -379,6 +410,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-sdf.png">Iosevka-sdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using SDF
      */
     public static Font getIosevkaSDF() {
@@ -392,9 +424,11 @@ public final class KnownFonts {
      * License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
      * customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
      * extended Latin, Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/mODOHAC.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/vtlq3J7.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -402,6 +436,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-standard.png">Iosevka-Slab-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf
      */
     public static Font getIosevkaSlab() {
@@ -414,11 +449,13 @@ public final class KnownFonts {
      * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
      * License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
      * customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
-     * extended Latin, Greek, and Cyrillic. This uses the Multi-channel Signed Distance
-     * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
-     * sharper edges and precise corners instead of rounded tips on strokes.
+     * extended Latin, Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+     * This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
+     * technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/Uunaj6Y.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/vJJ62uA.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -426,6 +463,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-msdf.png">Iosevka-Slab-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
      */
     public static Font getIosevkaSlabMSDF() {
@@ -438,11 +476,14 @@ public final class KnownFonts {
      * Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
      * License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
      * customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
-     * extended Latin, Greek, and Cyrillic. This uses the Signed Distance Field (SDF)
-     * technique as opposed to the Multi-channel Signed Distance Field technique that {@link #getIosevkaMSDF()} uses,
-     * which isn't as sharp at large sizes but can look a little better at small sizes.
+     * extended Latin, Greek, and Cyrillic.
+     * This Font is already configured with {@link Font#fitCell(float, float, boolean)}, and repeated calls to fitCell()
+     * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+     * This uses the Signed Distance Field (SDF) technique as opposed to the Multi-channel Signed Distance Field
+     * technique that {@link #getIosevkaSlabMSDF()} uses, which isn't as sharp at large sizes but can look a little
+     * better at small sizes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/6GjwoK5.png">Image link</a> (uses width=9, height=25)
+     * Preview: <a href="https://i.imgur.com/cl1OBdz.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -450,6 +491,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-sdf.png">Iosevka-Slab-sdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using SDF
      */
     public static Font getIosevkaSlabSDF() {
@@ -465,7 +507,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/cj5UiPu.png">Image link</a> (uses width=25, height=30)
+     * Preview: <a href="https://i.imgur.com/HvvPiHN.png">Image link</a> (uses width=25, height=30)
      * <br>
      * Needs files:
      * <ul>
@@ -479,6 +521,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/KingthingsFoundation-Light-standard.png">KingthingsFoundation-Light-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Kingthings-License.txt">Kingthings-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf
      */
     public static Font getKingthingsFoundation() {
@@ -493,7 +536,7 @@ public final class KnownFonts {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
      * needs to be scaled so that it has much larger width than height; the default is 150x32.
      * <br>
-     * Preview: <a href="https://i.imgur.com/h1CoKlW.png">Image link</a> (uses width=150, height=132)
+     * Preview: <a href="https://i.imgur.com/Se6iRvR.png">Image link</a> (uses width=132, height=28)
      * <br>
      * Needs files:
      * <ul>
@@ -501,6 +544,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/LibertinusSerif-Regular-msdf.png">LibertinusSerif-Regular-msdf.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/LibertinusSerif-License.txt">LibertinusSerif-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using MSDF
      */
     public static Font getLibertinusSerif() {
@@ -513,7 +557,7 @@ public final class KnownFonts {
      * scaled down nicely.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/8hU1lEB.png">Image link</a> (uses width=25, height=35)
+     * Preview: <a href="https://i.imgur.com/nhSyfaD.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.65f))
      * <br>
      * Needs files:
      * <ul>
@@ -521,6 +565,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/OpenSans-standard.png">OpenSans-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/OpenSans-License.txt">OpenSans-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that represents the variable-width font OpenSans
      */
     public static Font getOpenSans() {
@@ -535,7 +580,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/6qYfNCK.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/9jdAurl.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -543,6 +588,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Oxanium-standard.png">Oxanium-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Oxanium-License.txt">Oxanium-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font Oxanium.ttf
      */
     public static Font getOxanium() {
@@ -558,7 +604,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/c8IEVMe.png">Image link</a> (uses width=25, height=35)
+     * Preview: <a href="https://i.imgur.com/Kh0eMdT.png">Image link</a> (uses width=25, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -566,6 +612,7 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/RobotoCondensed-standard.png">RobotoCondensed-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/RobotoCondensed-License.txt">RobotoCondensed-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font RobotoCondensed.ttf
      */
     public static Font getRobotoCondensed() {
@@ -580,7 +627,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/ZZhXZmK.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/E3rCelE.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -588,9 +635,80 @@ public final class KnownFonts {
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/YanoneKaffeesatz-standard.png">YanoneKaffeesatz-standard.png</a></li>
      *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/YanoneKaffeesatz-License.txt">YanoneKaffeesatz-License.txt</a></li>
      * </ul>
+     *
      * @return the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf
      */
     public static Font getYanoneKaffeesatz() {
         return com.github.tommyettinger.textra.KnownFonts.getYanoneKaffeesatz().setColorLookup(GlyphMap::getRgba);
+    }
+
+    /**
+     * Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.
+     * This will only function at all if all the assets (for every known Font) are present and load-able.
+     *
+     * @return a new array containing all Font instances this knows
+     */
+    public static Font[] getAll() {
+        return new Font[]{getAStarry(), getBitter(), getCanada(), getCascadiaMono(), getCozette(), getDejaVuSansMono(), getGentium(), getGentiumSDF(), getIBM8x16(), getInconsolata(), getInconsolataMSDF(), getIosevka(), getIosevkaMSDF(), getIosevkaSDF(), getIosevkaSlab(), getIosevkaSlabMSDF(), getIosevkaSlabSDF(), getKingthingsFoundation(), getLibertinusSerif(), getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()};
+    }
+
+    /**
+     * Returns a new array of Font instances, calling each getXyz() method in this class that returns any
+     * non-distance-field Font.
+     * This will only function at all if all the assets (for every known standard Font) are present and load-able.
+     *
+     * @return a new array containing all non-distance-field Font instances this knows
+     */
+    public static Font[] getAllStandard() {
+        return new Font[]{getBitter(), getCanada(), getCozette(), getGentium(), getIBM8x16(), getInconsolata(), getIosevka(), getIosevkaSlab(), getKingthingsFoundation(), getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()};
+    }
+
+    /**
+     * Returns a Font ({@link #getGentium()}) with a FontFamily configured so that all non-distance-field Fonts can be
+     * used with syntax like {@code [@Sans]}. The names this supports can be accessed with code using
+     * {@code getStandardFamily().family.fontAliases.keys()}. These names so far are:
+     * <ul>
+     *     <li>Serif</li>
+     *     <li>Sans</li>
+     *     <li>Mono</li>
+     *     <li>Condensed</li>
+     *     <li>Humanist</li>
+     *     <li>Retro</li>
+     *     <li>Slab</li>
+     *     <li>Bitter</li>
+     *     <li>Canada</li>
+     *     <li>Cozette</li>
+     *     <li>Iosevka</li>
+     *     <li>Medieval</li>
+     *     <li>Future</li>
+     * </ul>
+     * You can also always use the full name of one of these fonts, which can be obtained using {@link Font#getName()}.
+     * This will only function at all if all the assets (for every known standard Font) are present and load-able.
+     *
+     * @return a Font that can switch between 13 different Fonts in its FontFamily, to any non-distance-field Font this knows
+     */
+    public static Font getStandardFamily() {
+        Font.FontFamily family = new Font.FontFamily(new String[]{"Serif", "Sans", "Mono", "Condensed", "Humanist", "Retro", "Slab", "Bitter", "Canada", "Cozette", "Iosevka", "Medieval", "Future"}, new Font[]{getGentium(), getOpenSans(), getInconsolata(), getRobotoCondensed(), getYanoneKaffeesatz(), getIBM8x16(), getIosevkaSlab(), getBitter(), getCanada(), getCozette(), getIosevka(), getKingthingsFoundation(), getOxanium()});
+        return family.connected[0].setFamily(family);
+    }
+
+    /**
+     * Returns a new array of Font instances, calling each getXyz() method in this class that returns any SDF Font.
+     * This will only function at all if all the assets (for every known SDF Font) are present and load-able.
+     *
+     * @return a new array containing all SDF Font instances this knows
+     */
+    public static Font[] getAllSDF() {
+        return new Font[]{getGentiumSDF(), getIosevkaSDF(), getIosevkaSlabSDF()};
+    }
+
+    /**
+     * Returns a new array of Font instances, calling each getXyz() method in this class that returns any MSDF Font.
+     * This will only function at all if all the assets (for every known MSDF Font) are present and load-able.
+     *
+     * @return a new array containing all MSDF Font instances this knows
+     */
+    public static Font[] getAllMSDF() {
+        return new Font[]{getAStarry(), getCascadiaMono(), getDejaVuSansMono(), getInconsolataMSDF(), getIosevkaMSDF(), getIosevkaSlabMSDF(), getLibertinusSerif()};
     }
 }
