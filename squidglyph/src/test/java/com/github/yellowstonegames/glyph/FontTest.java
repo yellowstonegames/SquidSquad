@@ -14,6 +14,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 public class FontTest extends ApplicationAdapter {
 
     Font font;
+    Font[] fonts;
     SpriteBatch batch;
 //    LaserRandom random;
     int[][] backgrounds;
@@ -50,8 +51,8 @@ public class FontTest extends ApplicationAdapter {
 //        DungeonTools.debugPrint(LineTools.decode4x4(seed | LineTools.exteriorSquare, LineTools.light));
 //        lines = LineTools.decode4x4(random.nextLong() & LineTools.interiorSquare, LineTools.lightAlt);
         batch = new SpriteBatch();
-        font = KnownFonts.getInconsolataMSDF().scaleTo(16, 32);
-//        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
+//        font = KnownFonts.getInconsolataMSDF().scaleTo(16, 32);
+//        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(16, 32);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(20, 20);
@@ -66,6 +67,10 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);
 //        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
+        fonts = KnownFonts.getAll();
+        for(Font f : fonts)
+            f.scaleTo(32f * f.cellWidth / f.cellHeight, 32).fitCell(16, 32, true);
+        font = fonts[0];
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
@@ -123,6 +128,7 @@ public class FontTest extends ApplicationAdapter {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float x = 0, y = layout.getHeight();
+        font = fonts[(int) (System.currentTimeMillis() >>> 10 & 0x7FFFFFFF) % fonts.length];
         batch.begin();
         font.enableShader(batch);
 
