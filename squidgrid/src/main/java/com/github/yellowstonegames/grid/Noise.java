@@ -17,6 +17,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;
@@ -419,7 +421,7 @@ public class Noise {
     /**
      * @see #getFoamSharpness()
      */
-    protected float foamSharpness = 1f;
+    protected float sharpness = 1f;
 
     /**
      * @see #getMutation()
@@ -543,7 +545,7 @@ public class Noise {
         this.gradientPerturbAmp = other.gradientPerturbAmp;
         this.cellularReturnType = other.cellularReturnType;
         this.cellularDistanceFunction = other.cellularDistanceFunction;
-        this.foamSharpness = other.foamSharpness;
+        this.sharpness = other.sharpness;
         this.mutation = other.mutation;
     }
 
@@ -561,7 +563,7 @@ public class Noise {
                 BitConversion.floatToReversedIntBits(lacunarity) + '~' +
                 BitConversion.floatToReversedIntBits(gain) + '~' +
                 BitConversion.floatToReversedIntBits(gradientPerturbAmp) + '~' +
-                BitConversion.floatToReversedIntBits(foamSharpness) + '~' +
+                BitConversion.floatToReversedIntBits(sharpness) + '~' +
                 BitConversion.floatToReversedIntBits(mutation) + "`";
     }
 
@@ -588,7 +590,7 @@ public class Noise {
         float lacunarity =         BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
         float gain =               BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
         float gradientPerturbAmp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
-        float foamSharpness =      BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
+        float sharpness =      BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
         float mutation =           BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('`', pos+1)));
 
         Noise next = new Noise(seed, frequency, noiseType, octaves, lacunarity, gain);
@@ -597,7 +599,7 @@ public class Noise {
         next.gradientPerturbAmp = gradientPerturbAmp;
         next.cellularReturnType = cellularReturnType;
         next.cellularDistanceFunction = cellularDistanceFunction;
-        next.foamSharpness = foamSharpness;
+        next.sharpness = sharpness;
         next.mutation = mutation;
         return next;
     }
@@ -841,25 +843,51 @@ public class Noise {
     }
 
     /**
-     * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, and {@link #MUTANT_FRACTAL}
-     * noise types, which is usually around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results
-     * more often, and low values produce mid-range values more often.
-     * @return the current "sharpness" {@link #FOAM} and {@link #FOAM_FRACTAL} noise types
+     * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL},
+     * {@link #CUBIC}, and {@link #CUBIC_FRACTAL} noise types, which is usually around 0.25f to 2.0f, and defaults to
+     * 1.0f. High values produce extreme results more often, and low values produce mid-range values more often.
+     * <br>
+     * This is equivalent to {@link #getSharpness()}.
+     * @return the current "sharpness" for some noise types (Foam, Mutant, Cubic)
      */
     public float getFoamSharpness() {
-        return foamSharpness;
+        return sharpness;
     }
 
     /**
-     * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, and {@link #MUTANT_FRACTAL} noise types,
-     * this affects how often the noise will produce very high and very low results (more often with high values of
-     * foamSharpness), as opposed to mid-range (more often with low values of foamSharpness).
+     * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #CUBIC},
+     * and {@link #CUBIC_FRACTAL} noise types, this affects how often the noise will produce very high and very low
+     * results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).
      * <br>
-     * This defaults to 1.0f if not set.
-     * @param foamSharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
+     * This defaults to 1.0f if not set. It is equivalent to {@link #setSharpness(float)}.
+     * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
      */
-    public void setFoamSharpness(float foamSharpness) {
-        this.foamSharpness = foamSharpness;
+    public void setFoamSharpness(float sharpness) {
+        this.sharpness = sharpness;
+    }
+
+    /**
+     * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL},
+     * {@link #CUBIC}, and {@link #CUBIC_FRACTAL} noise types, which is usually around 0.25f to 2.0f, and defaults to
+     * 1.0f. High values produce extreme results more often, and low values produce mid-range values more often.
+     * <br>
+     * This is equivalent to {@link #getFoamSharpness()}.
+     * @return the current "sharpness" for some noise types (Foam, Mutant, Cubic)
+     */
+    public float getSharpness() {
+        return sharpness;
+    }
+
+    /**
+     * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #CUBIC},
+     * and {@link #CUBIC_FRACTAL} noise types, this affects how often the noise will produce very high and very low
+     * results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).
+     * <br>
+     * This defaults to 1.0f if not set. It is equivalent to {@link #setFoamSharpness(float)}.
+     * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
+     */
+    public void setSharpness(float sharpness) {
+        this.sharpness = sharpness;
     }
 
     /**
@@ -2825,7 +2853,7 @@ public class Noise {
         yin = p1;
         final float c = valueNoise(seed, xin + b, yin);
         final float result = (a + b + c) * F3f;
-        final float sharp = foamSharpness * 2.2f;
+        final float sharp = sharpness * 2.2f;
 
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
@@ -2994,7 +3022,7 @@ public class Noise {
         final float d = valueNoise(seed, xin + c, yin, zin);
 
         final float result = (a + b + c + d) * 0.25f;
-        final float sharp = foamSharpness * 3.3f;
+        final float sharp = sharpness * 3.3f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -3095,7 +3123,7 @@ public class Noise {
         final float e = valueNoise(seed, xin + d, yin, zin, win);
 
         final float result = (a + b + c + d + e) * 0.2f;
-        final float sharp = foamSharpness * 4.4f;
+        final float sharp = sharpness * 4.4f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -3233,7 +3261,7 @@ public class Noise {
         final float f = valueNoise(seed, xin + e, yin, zin, win, uin);
 
         final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
-        final float sharp = foamSharpness * 5.5f;
+        final float sharp = sharpness * 5.5f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -3384,7 +3412,7 @@ public class Noise {
         vin = p0;
         final float g = valueNoise(seed, xin + f, yin, zin, win, uin, vin);
         final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
-        final float sharp = foamSharpness * 6.6f;
+        final float sharp = sharpness * 6.6f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -3531,7 +3559,7 @@ public class Noise {
         min = p4;
         final float h = valueNoise(seed, xin + g, yin, zin, win, uin, vin, min);
         final float result = (a + b + c + d + e + f + g + h) * 0.125f;
-        final float sharp = foamSharpness * 7.7f;
+        final float sharp = sharpness * 7.7f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -5647,7 +5675,7 @@ public class Noise {
         float xs = x - (float) x1;
         float ys = y - (float) y1;
 
-        float e = (float)Math.pow(4.0f,
+        float e = (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(phCoord2D(seed, x0, y0), phCoord2D(seed, x1, y0), phCoord2D(seed, x2, y0), phCoord2D(seed, x3, y0),
@@ -5756,7 +5784,8 @@ public class Noise {
         float ys = y - (float) y1;
         float zs = z - (float) z1;
 
-        float e = (float)Math.pow(4.0f,
+        float e =
+                (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(
@@ -5783,9 +5812,14 @@ public class Noise {
                         cubicLerp(phCoord3D(seed, x0, y2, z3), phCoord3D(seed, x1, y2, z3), phCoord3D(seed, x2, y2, z3), phCoord3D(seed, x3, y2, z3), xs),
                         cubicLerp(phCoord3D(seed, x0, y3, z3), phCoord3D(seed, x1, y3, z3), phCoord3D(seed, x2, y3, z3), phCoord3D(seed, x3, y3, z3), xs),
                         ys),
-                zs)        );
+                zs)
+        );
         return (e - 1.0f) / (e + 1.0f);
-//                * CUBIC_2D_BOUNDING;
+
+//        ;
+//        return TrigTools.sinTurns(e);
+
+//        return e * CUBIC_3D_BOUNDING;
 
     }
 
@@ -5889,7 +5923,7 @@ public class Noise {
         float zs = z - (float) z1;
         float ws = w - (float) w1;
 
-        float e = (float)Math.pow(4.0f,
+        float e = (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(
@@ -6910,7 +6944,7 @@ public class Noise {
         if (cellularDistanceFunction != noise.cellularDistanceFunction) return false;
         if (cellularReturnType != noise.cellularReturnType) return false;
         if (Float.compare(noise.gradientPerturbAmp, gradientPerturbAmp) != 0) return false;
-        if (Float.compare(noise.foamSharpness, foamSharpness) != 0) return false;
+        if (Float.compare(noise.sharpness, sharpness) != 0) return false;
         return Float.compare(noise.mutation, mutation) == 0;
     }
 
@@ -6928,7 +6962,7 @@ public class Noise {
                 ", cellularDistanceFunction=" + cellularDistanceFunction +
                 ", cellularReturnType=" + cellularReturnType +
                 ", gradientPerturbAmp=" + gradientPerturbAmp +
-                ", foamSharpness=" + foamSharpness +
+                ", sharpness=" + sharpness +
                 ", mutation=" + mutation +
                 '}';
     }

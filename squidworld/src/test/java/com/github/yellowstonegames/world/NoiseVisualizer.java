@@ -198,9 +198,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         break;
-                    case COMMA: // foam sharpness
-                        noise.setFoamSharpness(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.25f);
-                        System.out.println(noise.getFoamSharpness());
+                    case COMMA: // sharpness
+                        noise.setSharpness((float)Math.pow(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.5f, 3f));
+                        System.out.println(noise.getSharpness());
                         break;
                     case I: // inverse mode
                         if (inverse = !inverse) {
