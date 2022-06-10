@@ -44,27 +44,55 @@ public class QuasiRandomTools {
         }
         return res;
     }
+
     /**
      * Gets a 2D point from the Halton sequence with the bases 3 (for x) and 5 (for y).
-     * @param width the exclusive upper bound on the possible values for x
+     *
+     * @param width  the exclusive upper bound on the possible values for x
      * @param height the exclusive upper bound on the possible values for y
-     * @param index the index in the Halton sequence with the given bases, as a positive int
+     * @param index  the index in the Halton sequence with the given bases, as a positive int
      * @return a Coord with x between 0 (inclusive) and width (exclusive), and y between 0 (inclusive) and height (exclusive)
      */
     public static Coord halton2D(final int width, final int height, final int index) {
-        return halton2D(3, 5, width, height, index);
+        return halton2D(3, 5, width, height, 0, 0, index);
     }
 
     /**
      * Gets a 2D point from the Halton sequence with the specified bases, which must be different primes.
-     * @param baseX should be prime and different from baseY
-     * @param baseY should be prime and different from baseX
-     * @param width the exclusive upper bound on the possible values for x
-     * @param height the exclusive upper bound on the possible values for y
-     * @param index the index in the Halton sequence with the given bases, as a positive int
-     * @return a Coord with x between 0 (inclusive) and width (exclusive), and y between 0 (inclusive) and height (exclusive)
+     *
+     * @param baseX   should be prime and different from baseY
+     * @param baseY   should be prime and different from baseX
+     * @param width   the x-size of the space this can place a Coord
+     * @param height  the y-size of the space this can place a Coord
+     * @param offsetX the minimum x-position of a Coord
+     * @param offsetY the minimum y-position of a Coord
+     * @param index   the index in the Halton sequence with the given bases, as a positive int
+     * @return a Coord with x between offsetX (inclusive) and offsetX + width (exclusive), and y between offsetY
+     * (inclusive) and offsetY + height (exclusive)
      */
-    public static Coord halton2D(final int baseX, final int baseY, final int width, final int height, final int index) {
-        return Coord.get((int)(vanDerCorput(baseX, index) * width), (int)(vanDerCorput(baseY, index) * height));
+    public static Coord halton2D(final int baseX, final int baseY, final int width, final int height, final int offsetX, final int offsetY, final int index) {
+        return Coord.get((int) (vanDerCorput(baseX, index) * width) + offsetX, (int) (vanDerCorput(baseY, index) * height) + offsetY);
     }
+
+    /**
+     * Martin Roberts' "unreasonably effective" quasi-random point sequence based on a 2D analogue to the golden ratio.
+     * See <a href="http://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/">his blog</a> for
+     * more detailed info, but this can be summarized as being excellent at separating points at the expense of
+     * seeming less random. Produces a Coord with x between offsetX (inclusive) and offsetX + width (exclusive), and y
+     * between offsetY (inclusive) and offsetY + height (exclusive), with the Coord at each {@code index} likely to be
+     * different for at least {@code width * height / 4} indices (very low sizes may offer less of a guarantee).
+     * <br>
+     * This is also called the R2 sequence.
+     *
+     * @param width   the x-size of the space this can place a Coord
+     * @param height  the y-size of the space this can place a Coord
+     * @param offsetX the minimum x-position of a Coord
+     * @param offsetY the minimum y-position of a Coord
+     * @param index   the index of the Coord in the 2D Roberts sequence; should be greater than 0, but not required to be
+     * @return a Coord with x,y between offsetX,offsetY inclusive and offsetX+width,offsetY+height exclusive
+     */
+    public static Coord roberts2D(int width, int height, int offsetX, int offsetY, int index) {
+        return Coord.get((int) ((index * 0xC13FA9A9L & 0xFFFFFFFFL) * width >>> 32) + offsetX, (int) ((index * 0x91E10DA5L & 0xFFFFFFFFL) * height >>> 32) + offsetY);
+    }
+
 }
