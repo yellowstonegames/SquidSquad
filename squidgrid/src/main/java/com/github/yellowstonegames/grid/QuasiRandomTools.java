@@ -44,5 +44,27 @@ public class QuasiRandomTools {
         }
         return res;
     }
+    /**
+     * Gets a 2D point from the Halton sequence with the bases 3 (for x) and 5 (for y).
+     * @param width the exclusive upper bound on the possible values for x
+     * @param height the exclusive upper bound on the possible values for y
+     * @param index the index in the Halton sequence with the given bases, as a positive int
+     * @return a Coord with x between 0 (inclusive) and width (exclusive), and y between 0 (inclusive) and height (exclusive)
+     */
+    public static Coord halton2D(final int width, final int height, final int index) {
+        return halton2D(3, 5, width, height, index);
+    }
 
+    /**
+     * Gets a 2D point from the Halton sequence with the specified bases, which must be different primes.
+     * @param baseX should be prime and different from baseY
+     * @param baseY should be prime and different from baseX
+     * @param width the exclusive upper bound on the possible values for x
+     * @param height the exclusive upper bound on the possible values for y
+     * @param index the index in the Halton sequence with the given bases, as a positive int
+     * @return a Coord with x between 0 (inclusive) and width (exclusive), and y between 0 (inclusive) and height (exclusive)
+     */
+    public static Coord halton2D(final int baseX, final int baseY, final int width, final int height, final int index) {
+        return Coord.get((int)(vanDerCorput(baseX, index) * width), (int)(vanDerCorput(baseY, index) * height));
+    }
 }
