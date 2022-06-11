@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.github.tommyettinger.textra.Font;
 
 /*
-*/
+ */
 
 /**
  * Preconfigured static {@link Font} instances, with any important metric adjustments already applied. This uses the
@@ -57,6 +57,9 @@ public final class KnownFonts {
             throw new IllegalStateException("Gdx.app cannot be null; initialize KnownFonts in create() or later.");
     }
 
+
+    private Font astarry;
+
     /**
      * Returns a Font already configured to use a square font with 45-degree angled sections, based on the
      * typeface used on the Atari ST console, that should scale cleanly to many sizes. This font only supports ASCII,
@@ -66,7 +69,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/sOvax8i.png">Image link</a> (uses width=10, height=10)
+     * Preview: <a href="https://i.imgur.com/T8MgsRY.png">Image link</a> (uses width=10, height=10)
      * <br>
      * Needs files:
      * <ul>
@@ -95,7 +98,7 @@ public final class KnownFonts {
      * other strokes in the font. This does mean that strikethrough starts too far to the left, and extends too far to
      * the right, unfortunately, but its weight matches.
      * <br>
-     * Preview: <a href="https://i.imgur.com/F5YJPCE.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
+     * Preview: <a href="https://i.imgur.com/1c3ymlL.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
      * <br>
      * Needs files:
      * <ul>
@@ -120,7 +123,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/tEVafWO.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/av2WJha.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -145,7 +148,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/rp6pgSa.png">Image link</a> (uses width=9, height=16)
+     * Preview: <a href="https://i.imgur.com/5lFkTXJ.png">Image link</a> (uses width=9, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -169,7 +172,7 @@ public final class KnownFonts {
      * cause major visual issues if 1 world unit corresponds to much more than 1 pixel.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/1wBVayl.png">Image link</a> (uses width=7, height=13; this is small enough
+     * Preview: <a href="https://i.imgur.com/gIS7ysd.png">Image link</a> (uses width=7, height=13; this is small enough
      * to make the scaled text look bad in some places)
      * <br>
      * Needs files:
@@ -196,7 +199,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/fmRBfsp.png">Image link</a> (uses width=9, height=20)
+     * Preview: <a href="https://i.imgur.com/ngqXFG2.png">Image link</a> (uses width=9, height=20)
      * <br>
      * Needs files:
      * <ul>
@@ -220,7 +223,7 @@ public final class KnownFonts {
      * real languages. This does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want
      * to stick using just fonts that avoid distance fields if you have a family of fonts.
      * <br>
-     * Preview: <a href="https://i.imgur.com/wZ9NhJ2.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/nnRMpxQ.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -246,7 +249,7 @@ public final class KnownFonts {
      * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
      * crisp enough when zoomed out.
      * <br>
-     * Preview: <a href="https://i.imgur.com/e0cIBe3.png">Image link</a> (uses width=60, height=45, adjustLineHeight(0.8f))
+     * Preview: <a href="https://i.imgur.com/lnQTIRM.png">Image link</a> (uses width=50, height=45, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -275,7 +278,7 @@ public final class KnownFonts {
      * of their signature font throughout the 1980s, but if the legality is concerning, you
      * can use {@link #getCozette()} for a different bitmap font.
      * <br>
-     * Preview: <a href="https://i.imgur.com/SQLGfWt.png">Image link</a> (uses width=8, height=16)
+     * Preview: <a href="https://i.imgur.com/HSPyGOZ.png">Image link</a> (uses width=8, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -296,7 +299,7 @@ public final class KnownFonts {
      * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/a7M3HB9.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/O2Sf7WO.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -318,7 +321,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/MUzaRxR.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/UHl77sB.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -344,7 +347,7 @@ public final class KnownFonts {
      * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/R5Ztqym.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
+     * Preview: <a href="https://i.imgur.com/k1m58Jg.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -373,7 +376,7 @@ public final class KnownFonts {
      * However, using a distance field makes it effectively impossible to mix fonts using a FontFamily (any variation in
      * distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/3mH04Nn.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
+     * Preview: <a href="https://i.imgur.com/CzQKPPS.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -402,7 +405,7 @@ public final class KnownFonts {
      * at small sizes. However, using a distance field makes it effectively impossible to mix fonts using a FontFamily
      * (any variation in distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/ZTWOnOg.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
+     * Preview: <a href="https://i.imgur.com/xo9Pe2Z.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -428,7 +431,7 @@ public final class KnownFonts {
      * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/vtlq3J7.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
+     * Preview: <a href="https://i.imgur.com/iq9NBRn.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -455,7 +458,7 @@ public final class KnownFonts {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
      * technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/vJJ62uA.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
+     * Preview: <a href="https://i.imgur.com/MlXRUkC.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -483,7 +486,7 @@ public final class KnownFonts {
      * technique that {@link #getIosevkaSlabMSDF()} uses, which isn't as sharp at large sizes but can look a little
      * better at small sizes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/cl1OBdz.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
+     * Preview: <a href="https://i.imgur.com/J3Drrnh.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -507,7 +510,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/HvvPiHN.png">Image link</a> (uses width=25, height=30)
+     * Preview: <a href="https://i.imgur.com/O3rWqnq.png">Image link</a> (uses width=23, height=30)
      * <br>
      * Needs files:
      * <ul>
@@ -536,7 +539,7 @@ public final class KnownFonts {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
      * needs to be scaled so that it has much larger width than height; the default is 150x32.
      * <br>
-     * Preview: <a href="https://i.imgur.com/Se6iRvR.png">Image link</a> (uses width=132, height=28)
+     * Preview: <a href="https://i.imgur.com/YuvHki8.png">Image link</a> (uses width=132, height=28)
      * <br>
      * Needs files:
      * <ul>
@@ -557,7 +560,7 @@ public final class KnownFonts {
      * scaled down nicely.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/nhSyfaD.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.65f))
+     * Preview: <a href="https://i.imgur.com/wHCTmIU.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -580,7 +583,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/9jdAurl.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/MFo2J4j.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -604,7 +607,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/Kh0eMdT.png">Image link</a> (uses width=25, height=35)
+     * Preview: <a href="https://i.imgur.com/xi2VbDD.png">Image link</a> (uses width=25, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -627,7 +630,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/E3rCelE.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/qJ5g2tG.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
