@@ -17,8 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.IntPointHash.*;
@@ -419,7 +417,7 @@ public class Noise {
     protected float gradientPerturbAmp = 1f / 0.45f;
 
     /**
-     * @see #getFoamSharpness()
+     * @see #getSharpness()
      */
     protected float sharpness = 1f;
 

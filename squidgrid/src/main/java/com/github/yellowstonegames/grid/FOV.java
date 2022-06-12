@@ -95,11 +95,14 @@ import java.util.Iterator;
  */
 public class FOV {
     private static final Direction[] ccw = new Direction[]
-            {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT},
-            ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP, Direction.UP_LEFT,
-            Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
+            {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT};
+    private static final Direction[] ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP,
+            Direction.UP_LEFT, Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
     private static final ArrayDeque<Coord> dq = new ArrayDeque<>();
-    private static final CoordSet lightWorkspace = new CoordSet(256);
+    private static final Region lightWorkspace = new Region(256, 256);
+    private static final ObjectList<Coord> neighbors = new ObjectList<>(8);
+    private static final float[] directionRanges = new float[8];
+
 
     /**
      * Static usage only.
@@ -435,7 +438,7 @@ public class FOV {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.clear();
+        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
         doRippleFOV(light, Math.min(Math.max(rippleLooseness, 1), 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
         return light;
     }
@@ -496,7 +499,7 @@ public class FOV {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique, float angle, float span) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.clear();
+        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
         angle *= 0.002777777777777778f;
         angle -= MathTools.fastFloor(angle);
         span *= 0.002777777777777778f;
@@ -563,7 +566,8 @@ public class FOV {
         return light;
     }
 
-    private static void doRippleFOV(float[][] lightMap, int ripple, int x, int y, float decay, float radius, float[][] map, Radius radiusStrategy) {
+    private static void doRippleFOV(float[][] lightMap, int ripple, int x, int y, float decay, float radius,
+                                    float[][] map, Radius radiusStrategy) {
         dq.clear();
         int width = lightMap.length;
         int height = lightMap[0].length;
@@ -595,7 +599,8 @@ public class FOV {
 
 
 
-    private static void doRippleFOV(float[][] lightMap, int ripple, int x, int y, float decay, float radius, float[][] map, Radius radiusStrategy, float angle, float span) {
+    private static void doRippleFOV(float[][] lightMap, int ripple, int x, int y, float decay, float radius,
+                                    float[][] map, Radius radiusStrategy, float angle, float span) {
 	    dq.clear();
         int width = lightMap.length;
         int height = lightMap[0].length;
@@ -628,8 +633,6 @@ public class FOV {
             }
         }
     }
-
-    private static final ObjectList<Coord> neighbors = new ObjectList<>(8);
 
     private static float nearRippleLight(int x, int y, int rippleNeighbors, int startx, int starty, float decay, float[][] lightMap, float[][] map, Radius radiusStrategy) {
         if (x == startx && y == starty) {
@@ -678,7 +681,7 @@ public class FOV {
         }
 
         if (map[x][y] >= 1 || indirects >= lit) {
-            FOV.lightWorkspace.add(Coord.get(x, y));
+            FOV.lightWorkspace.insert(x, y);
         }
         return light;
     }
@@ -882,7 +885,6 @@ public class FOV {
         return lightMap;
     }
 
-    private static final float[] directionRanges = new float[8];
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates, lighting with the view "pointed at" the given {@code angle} in degrees,
