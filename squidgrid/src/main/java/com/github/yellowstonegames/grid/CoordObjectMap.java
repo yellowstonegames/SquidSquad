@@ -61,7 +61,7 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     @Override
     protected int place(Object item) {
         final int x = ((Coord)item).x, y = ((Coord)item).y;
-        return y + ((x + y) * (x + y + 1) >> 1) & mask;
+        return y + ((x + y) * (x + y + 1) >> 1) & mask; // Cantor pairing function
     }
 
     @Override
