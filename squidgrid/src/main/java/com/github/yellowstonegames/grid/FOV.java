@@ -16,12 +16,12 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.ds.ObjectList;
 
-import java.util.ArrayDeque;
 import java.util.Iterator;
 
 /**
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * The input resistanceMap is considered the percent of opacity. This resistance
  * is on top of the resistance applied from the light spreading out. You can
  * obtain a resistance map easily with the {@link #generateResistances(char[][])}
- * method, which uses defaults for common chars used in SquidLib, but you may
+ * method, which uses defaults for common chars used in SquidSquad, but you may
  * also want to create a resistance map manually if a given char means something
  * very different in your game. This is easy enough to do by looping over all the
  * x,y positions in your char[][] map and running a switch statement on each char,
@@ -88,7 +88,7 @@ import java.util.Iterator;
  * same every time you create a Region with the same FOV map (or the same
  * visible Coords).
  * <br>
- * This class is not thread-safe. This is generally true for most of SquidLib.
+ * This class is not thread-safe. This is generally true for most of SquidSquad.
  *
  * @author Eben Howard - http://squidpony.com - howard@squidpony.com
  * @author Tommy Ettinger
@@ -98,7 +98,7 @@ public class FOV {
             {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT};
     private static final Direction[] ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP,
             Direction.UP_LEFT, Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
-    private static final ArrayDeque<Coord> dq = new ArrayDeque<>();
+    private static final ObjectDeque<Coord> dq = new ObjectDeque<>(256);
     private static final Region lightWorkspace = new Region(256, 256);
     private static final ObjectList<Coord> neighbors = new ObjectList<>(8);
     private static final float[] directionRanges = new float[8];
@@ -571,7 +571,7 @@ public class FOV {
         dq.clear();
         int width = lightMap.length;
         int height = lightMap[0].length;
-        dq.offer(Coord.get(x, y));
+        dq.addLast(Coord.get(x, y));
         while (!dq.isEmpty()) {
             Coord p = dq.removeFirst();
             if (lightMap[p.x][p.y] <= 0 || FOV.lightWorkspace.contains(p)) {
@@ -590,7 +590,7 @@ public class FOV {
                 if (lightMap[x2][y2] < surroundingLight) {
                     lightMap[x2][y2] = surroundingLight;
                     if (map[x2][y2] < 1) {//make sure it's not a wall
-                        dq.offer(Coord.get(x2, y2));//redo neighbors since this one's light changed
+                        dq.addLast(Coord.get(x2, y2));//redo neighbors since this one's light changed
                     }
                 }
             }
@@ -604,7 +604,7 @@ public class FOV {
 	    dq.clear();
         int width = lightMap.length;
         int height = lightMap[0].length;
-        dq.offer(Coord.get(x, y));
+        dq.addLast(Coord.get(x, y));
         while (!dq.isEmpty()) {
             Coord p = dq.removeFirst();
             if (lightMap[p.x][p.y] <= 0 || FOV.lightWorkspace.contains(p)) {
@@ -627,7 +627,7 @@ public class FOV {
                 if (lightMap[x2][y2] < surroundingLight) {
                     lightMap[x2][y2] = surroundingLight;
                     if (map[x2][y2] < 1) {//make sure it's not a wall
-                        dq.offer(Coord.get(x2, y2));//redo neighbors since this one's light changed
+                        dq.addLast(Coord.get(x2, y2));//redo neighbors since this one's light changed
                     }
                 }
             }
