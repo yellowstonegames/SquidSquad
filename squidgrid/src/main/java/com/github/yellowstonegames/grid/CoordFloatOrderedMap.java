@@ -17,41 +17,57 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectFloatMap;
+import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.annotations.NotNullDefault;
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * A variant on jdkgdxds' {@link ObjectFloatMap} class that only uses Coord keys, and can do so more efficiently.
+ * A variant on jdkgdxds' {@link ObjectFloatOrderedMap} class that only uses Coord keys, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y.
+ * <br>
+ * A potential use for this class is to sort Coord positions by float values, such as the {@code float[][]} maps
+ * produced by {@link FOV}. Since those have a logical start point for iteration wherever a light source is, and a light
+ * source has the highest value, you could fill a CoordFloatOrderedMap with all Coords you wanted to iterate through,
+ * associated with their values in the {@code float[][]}, and call {@link #sortByValue(FloatComparator)} to change the
+ * keys' iteration order.
  */
 @NotNullDefault
-public class CoordFloatMap extends ObjectFloatMap<Coord> {
-    public CoordFloatMap() {
+public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
+    public CoordFloatOrderedMap() {
         super();
     }
 
-    public CoordFloatMap(int initialCapacity) {
+    public CoordFloatOrderedMap(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public CoordFloatMap(int initialCapacity, float loadFactor) {
+    public CoordFloatOrderedMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public CoordFloatMap(ObjectFloatMap<? extends Coord> map) {
+    public CoordFloatOrderedMap(ObjectFloatOrderedMap<? extends Coord> map) {
         super(map);
     }
 
-    public CoordFloatMap(Coord[] keys, float[] values) {
+    public CoordFloatOrderedMap(ObjectFloatMap<? extends Coord> map) {
+        super(map);
+    }
+
+    public CoordFloatOrderedMap(Coord[] keys, float[] values) {
         super(keys, values);
     }
 
-    public CoordFloatMap(Collection<? extends Coord> keys, PrimitiveCollection.OfFloat values) {
+    public CoordFloatOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfFloat values) {
         super(keys, values);
+    }
+
+    public CoordFloatOrderedMap(ObjectFloatOrderedMap<? extends Coord> other, int offset, int count) {
+        super(other, offset, count);
     }
 
     @Override
@@ -75,8 +91,8 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
      * @param value0 the first and only value; will be converted to primitive float
      * @return a new map containing just the entry mapping key0 to value0
      */
-    public static CoordFloatMap with (Coord key0, Number value0) {
-        CoordFloatMap map = new CoordFloatMap(1);
+    public static CoordFloatOrderedMap with (Coord key0, Number value0) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(1);
         map.put(key0, value0.floatValue());
         return map;
     }
@@ -85,7 +101,7 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
      * Constructs a map given alternating keys and values.
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
-     * {@link #CoordFloatMap(Coord[], float[])}, which takes all keys and then all values.
+     * {@link #CoordFloatOrderedMap(Coord[], float[])}, which takes all keys and then all values.
      * This needs all keys to have the same type, because it gets a generic type from the
      * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
      * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
@@ -96,8 +112,8 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
      * @param rest   an array or varargs of alternating Coord, Number, Coord, Number... elements
      * @return a new map containing the given keys and values
      */
-    public static CoordFloatMap with (Coord key0, Number value0, Object... rest) {
-        CoordFloatMap map = new CoordFloatMap(1 + (rest.length >>> 1));
+    public static CoordFloatOrderedMap with (Coord key0, Number value0, Object... rest) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(1 + (rest.length >>> 1));
         map.put(key0, value0.floatValue());
         for (int i = 1; i < rest.length; i += 2) {
             try {
