@@ -34,7 +34,7 @@ import java.util.Collection;
  * produced by {@link FOV}. Since those have a logical start point for iteration wherever a light source is, and a light
  * source has the highest value, you could fill a CoordFloatOrderedMap with all Coords you wanted to iterate through,
  * associated with their values in the {@code float[][]}, and call {@link #sortByValue(FloatComparator)} to change the
- * keys' iteration order.
+ * keys' iteration order. There is code for this in {@link #fromArray2D(float[][], float, float)}.
  */
 @NotNullDefault
 public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
@@ -119,6 +119,30 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
             try {
                 map.put((Coord) rest[i - 1], ((Number)rest[i]).floatValue());
             } catch (ClassCastException ignored) {
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Given a 2D float array (which should usually be rectangular), this finds the positions with values between min
+     * (inclusive) and max (also inclusive), and places them in a newly-allocated CoordFloatOrderedMap. You may want to
+     * sort this by value, using {@link #sortByValue(FloatComparator)}, so the highest or lowest float values belong to
+     * the first or last items in the order.
+     * @param array a usually-rectangular 2D float array
+     * @param min the inclusive minimum value
+     * @param max the inclusive maximum value
+     * @return a new CoordFloatOrderedMap containing all positions with in-range values, mapped to those values.
+     */
+    public static CoordFloatOrderedMap fromArray2D(float[][] array, float min, float max) {
+        final int width = array.length;
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(width * array[0].length);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < array[x].length; y++) {
+                final float f = array[x][y];
+                if (f >= min && f <= max) {
+                    map.put(Coord.get(x, y), f);
+                }
             }
         }
         return map;
