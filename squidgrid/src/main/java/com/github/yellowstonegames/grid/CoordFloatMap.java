@@ -27,6 +27,9 @@ import java.util.Collection;
  * A variant on jdkgdxds' {@link ObjectFloatMap} class that only uses Coord keys, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y.
+ * <br>
+ * You can create a CoordFloatMap with {@link #fromArray2D(float[][], float, float)} if you have a 2D float array and
+ * want to get the positions within some range.
  */
 @NotNullDefault
 public class CoordFloatMap extends ObjectFloatMap<Coord> {
@@ -107,4 +110,28 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
         }
         return map;
     }
+
+    /**
+     * Given a 2D float array (which should usually be rectangular), this finds the positions with values between min
+     * (inclusive) and max (also inclusive), and places them in a newly-allocated CoordFloatMap. If you need to
+     * get a sorted ordering, use {@link CoordFloatOrderedMap#fromArray2D(float[][], float, float)} and sort the result.
+     * @param array a usually-rectangular 2D float array
+     * @param min the inclusive minimum value
+     * @param max the inclusive maximum value
+     * @return a new CoordFloatMap containing all positions with in-range values, mapped to those values.
+     */
+    public static CoordFloatMap fromArray2D(float[][] array, float min, float max) {
+        final int width = array.length;
+        CoordFloatMap map = new CoordFloatMap(width * array[0].length);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < array[x].length; y++) {
+                final float f = array[x][y];
+                if (f >= min && f <= max) {
+                    map.put(Coord.get(x, y), f);
+                }
+            }
+        }
+        return map;
+    }
+
 }
