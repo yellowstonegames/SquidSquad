@@ -30,7 +30,9 @@ import java.util.HashSet;
  * version on GWT that is faster, this cannot. It makes up for it by producing less garbage on all platforms and
  * compressing with very little waste in terms of storage.
  */
-public class LZByteEncoding {
+public final class LZByteEncoding {
+    private LZByteEncoding() {
+    }
     /**
      * Compresses a String using a type of LZ-compression and returns it as a byte array. If you are transmitting data
      * over the network or writing it directly to a binary file, this wastes fewer bits than using

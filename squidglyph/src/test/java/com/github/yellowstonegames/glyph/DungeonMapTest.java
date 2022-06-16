@@ -83,11 +83,12 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
-        Font font = KnownFonts.getCascadiaMono();
+//        Font font = KnownFonts.getCascadiaMono();
 //        Font font = KnownFonts.getInconsolata();
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
+        Font font = KnownFonts.getInconsolataMSDF().fitCell(24, 24, false);
         gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         GlidingGlyph playerGlyph = new GlidingGlyph('@', describe("red orange"), Coord.get(1, 1));
