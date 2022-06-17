@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.yellowstonegames.grid.BlueNoise;
+import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.TrimRandom;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -23,7 +23,7 @@ import java.util.Comparator;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
-import static com.github.yellowstonegames.grid.BlueNoise.TILE_NOISE;
+import static com.github.tommyettinger.bluegrass.BlueNoise.TILE_NOISE;
 
 /**
  */
