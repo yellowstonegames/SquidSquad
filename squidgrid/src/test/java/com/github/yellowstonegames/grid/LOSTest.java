@@ -41,13 +41,13 @@ public class LOSTest {
         ArrayTools.fill(res, 1f);
         ArrayTools.fill(floors, 0f);
         ArrayTools.insert(floors, res, 1, 1);
-        ObjectList<Coord> buffer = new ObjectList<>(40);
+//        ObjectList<Coord> buffer = new ObjectList<>(40);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
             ArrayTools.insert(interior, grid, 1, 1);
             for (int x = 1; x < 20; x++) {
                 for (int y = 1; y < 20; y++) {
-                    grid[x][y] = (BresenhamLine.reachableEuclidean(10, 10, x, y, length, res, buffer)) ? '*' : '0';
+                    grid[x][y] = (BresenhamLine.reachableEuclidean(10, 10, x, y, length, res, null)) ? '*' : '0';
                 }
             }
             for (int y = 0; y < 21; y++) {

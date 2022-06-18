@@ -9,12 +9,10 @@ import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.Biome;
 
 /**
@@ -110,12 +108,12 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
         //// Using higher lacunarity (than 2) and lower gain (than 0.5) produces more tattered/realistic coastlines.
 //        terrainNoise = new Noise(rng.nextInt(), 1f, Noise.HONEY_FRACTAL, 3, 3.2f, 0.3125f);
-        terrainNoise = new Noise(rng.nextInt(), 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+        terrainNoise = new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 1, 3f, 1f/3f);
 //        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        terrainLayeredNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        heatNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        moistureNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
-        otherNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
+        terrainLayeredNoise = new Noise(rng.nextInt(), 1.6f, Noise.FOAM_FRACTAL, 1);
+        heatNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
+        moistureNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
+        otherNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
 //        world = new GlobeMap(seed, width, height, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise, 0.625f);
         world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);

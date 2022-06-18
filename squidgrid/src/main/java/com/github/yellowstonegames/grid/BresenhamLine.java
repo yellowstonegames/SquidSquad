@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides a means to generate Bresenham lines in 2D.
@@ -489,8 +490,8 @@ public class BresenhamLine implements LineDrawer {
      * considered about 1.4 times as distant as orthogonally-adjacent cells; this is the natural way in the real world.
      * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
-     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+     * be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
      * @param startX the x-coordinate of the starting point
@@ -499,11 +500,11 @@ public class BresenhamLine implements LineDrawer {
      * @param targetY  the y-coordinate of the target point
      * @param maxLength the maximum permitted length of a line of sight
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
-                                             @Nonnull float[][] resistanceMap, ObjectList<Coord> buffer) {
+                                             @Nonnull float[][] resistanceMap, @Nullable ObjectList<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -512,16 +513,13 @@ public class BresenhamLine implements LineDrawer {
 
         float dist = Math.min((float) Math.sqrt(dx * dx + dy * dy), maxLength);
 
-        if(buffer == null) {
-            buffer = new ObjectList<>(Math.min((int) dist + 1, maxLength));
-        }
-        else {
+        if(buffer != null) {
             buffer.clear();
         }
         if(maxLength <= 0) return false;
 
         if(startX == targetX && startY == targetY) {
-            buffer.add(Coord.get(startX, startY));
+            if(buffer != null) buffer.add(Coord.get(startX, startY));
             return true; // already at the point; we can see our own feet just fine!
         }
         float currentBlockage = 1f;
@@ -538,10 +536,15 @@ public class BresenhamLine implements LineDrawer {
         int changeX = 0, changeY = 0;
 
         int deltaX, deltaY;
+
+        int bufferSize = 0;
         if (ax >= ay) /* x dominant */ {
             deltaY = ay - (ax >> 1);
-            while (buffer.size() < maxLength) {
-                buffer.add(Coord.get(x, y));
+            while (bufferSize < maxLength) {
+                if(buffer != null) {
+                    buffer.add(Coord.get(x, y));
+                }
+                bufferSize++;
                 if (x == targetX) {
                     return true;
                 }
@@ -566,8 +569,12 @@ public class BresenhamLine implements LineDrawer {
             }
         } else /* y dominant */ {
             deltaX = ax - (ay >> 1);
-            while (buffer.size() < maxLength) {
-                buffer.add(Coord.get(x, y));
+            while (bufferSize < maxLength) {
+                if(buffer != null) {
+                    buffer.add(Coord.get(x, y));
+                }
+                bufferSize++;
+
                 if (y == targetY) {
                     return true;
                 }
