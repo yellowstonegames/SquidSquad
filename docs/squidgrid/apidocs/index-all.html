@@ -128,7 +128,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Tries to look up the position x,y in each Region in packed; each Region that contains that x,y
  point is appended into the Collection <code>into</code>.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#approximateBits(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">approximateBits(EnhancedRandom, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#approximateBits(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">approximateBits(EnhancedRandom, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.</div>
 </dd>
@@ -317,6 +317,42 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/grid/Coord.html#%3Cinit%3E()" class="member-name-link">Coord()</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Coord.html#%3Cinit%3E(int,int)" class="member-name-link">Coord(int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">A variant on jdkgdxds' <code>ObjectFloatMap</code> class that only uses Coord keys, and can do so more efficiently.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E()" class="member-name-link">CoordFloatMap()</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E(int)" class="member-name-link">CoordFloatMap(int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E(int,float)" class="member-name-link">CoordFloatMap(int, float)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectFloatMap)" class="member-name-link">CoordFloatMap(ObjectFloatMap&lt;? extends Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E(com.github.yellowstonegames.grid.Coord%5B%5D,float%5B%5D)" class="member-name-link">CoordFloatMap(Coord[], float[])</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)" class="member-name-link">CoordFloatMap(Collection&lt;? extends Coord&gt;, PrimitiveCollection.OfFloat)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">A variant on jdkgdxds' <code>ObjectFloatOrderedMap</code> class that only uses Coord keys, and can do so more efficiently.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E()" class="member-name-link">CoordFloatOrderedMap()</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(int)" class="member-name-link">CoordFloatOrderedMap(int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(int,float)" class="member-name-link">CoordFloatOrderedMap(int, float)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectFloatMap)" class="member-name-link">CoordFloatOrderedMap(ObjectFloatMap&lt;? extends Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectFloatOrderedMap)" class="member-name-link">CoordFloatOrderedMap(ObjectFloatOrderedMap&lt;? extends Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectFloatOrderedMap,int,int)" class="member-name-link">CoordFloatOrderedMap(ObjectFloatOrderedMap&lt;? extends Coord&gt;, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(com.github.yellowstonegames.grid.Coord%5B%5D,float%5B%5D)" class="member-name-link">CoordFloatOrderedMap(Coord[], float[])</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#%3Cinit%3E(java.util.Collection,com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)" class="member-name-link">CoordFloatOrderedMap(Collection&lt;? extends Coord&gt;, PrimitiveCollection.OfFloat)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectMap.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">CoordObjectMap</a>&lt;<a href="com/github/yellowstonegames/grid/CoordObjectMap.html" title="type parameter in CoordObjectMap">V</a>&gt; - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
@@ -511,12 +547,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.html#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString(String)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)" class="member-name-link">deteriorate(EnhancedRandom, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)" class="member-name-link">deteriorate(EnhancedRandom, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Randomly removes points from a Region, with preservation as a fraction between 1.0 (keep all) and 0.0
  (remove all).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">deteriorate(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#deteriorate(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">deteriorate(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Randomly removes points from a Region, with larger values for preservation keeping more of the existing
  shape intact.</div>
@@ -572,7 +608,7 @@ loadScripts(document, 'script');</script>
  its x component is stored in the bottom 16 bits (use <code>(n &amp; 0xffff)</code> to obtain) and its y component is
  stored in the upper 16 bits (use <code>(n &gt;&gt;&gt; 16)</code> to obtain).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#disperseRandom(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">disperseRandom(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#disperseRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">disperseRandom(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Removes "on" cells that are nearby other "on" cells, with a random factor to which bits are actually turned off
  that still ensures exactly half of the bits are kept as-is (the one exception is when height is an odd number,
@@ -785,6 +821,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates a 2D Bresenham line between two points.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/grid/DrunkenWalk.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
@@ -814,6 +854,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/grid/Region.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/SpatialMap.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/SpatialMap.html" title="class in com.github.yellowstonegames.grid">SpatialMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#equate(java.lang.Object,java.lang.Object)" class="member-name-link">equate(Object, Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#equate(java.lang.Object,java.lang.Object)" class="member-name-link">equate(Object, Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectMap.html#equate(java.lang.Object,java.lang.Object)" class="member-name-link">equate(Object, Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordObjectMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1040,8 +1084,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
  edges somewhat.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Noise.html#foamSharpness" class="member-name-link">foamSharpness</a> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/FOV.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">FOV</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
 <dd>
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
@@ -1058,7 +1100,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, quasi-randomly selecting them.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#fray(com.github.tommyettinger.ds.support.EnhancedRandom,float)" class="member-name-link">fray(EnhancedRandom, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#fray(com.github.tommyettinger.random.EnhancedRandom,float)" class="member-name-link">fray(EnhancedRandom, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Like <a href="com/github/yellowstonegames/grid/Region.html#retract()"><code>Region.retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, randomly selecting them.</div>
@@ -1093,6 +1135,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.html#fringeSeriesToLimit8way()" class="member-name-link">fringeSeriesToLimit8way()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#fromArray2D(float%5B%5D%5B%5D,float,float)" class="member-name-link">fromArray2D(float[][], float, float)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>
+<div class="block">Given a 2D float array (which should usually be rectangular), this finds the positions with values between min
+ (inclusive) and max (also inclusive), and places them in a newly-allocated CoordFloatMap.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#fromArray2D(float%5B%5D%5B%5D,float,float)" class="member-name-link">fromArray2D(float[][], float, float)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>
+<div class="block">Given a 2D float array (which should usually be rectangular), this finds the positions with values between min
+ (inclusive) and max (also inclusive), and places them in a newly-allocated CoordFloatOrderedMap.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -1248,8 +1300,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#getFoamSharpness()" class="member-name-link">getFoamSharpness()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
-<div class="block">Gets the "sharpness" for the <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, and <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a>
- noise types, which is usually around 0.25f to 2.0f, and defaults to 1.0f.</div>
+<div class="block">Gets the "sharpness" for the <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a>,
+ <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC"><code>Noise.CUBIC</code></a>, and <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC_FRACTAL"><code>Noise.CUBIC_FRACTAL</code></a> noise types, which is usually around 0.25f to 2.0f, and defaults to
+ 1.0f.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#getFractalGain()" class="member-name-link">getFractalGain()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
@@ -1409,6 +1462,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#getSeed()" class="member-name-link">getSeed()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/Noise.html#getSharpness()" class="member-name-link">getSharpness()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>
+<div class="block">Gets the "sharpness" for the <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a>,
+ <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC"><code>Noise.CUBIC</code></a>, and <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC_FRACTAL"><code>Noise.CUBIC_FRACTAL</code></a> noise types, which is usually around 0.25f to 2.0f, and defaults to
+ 1.0f.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#getSimplex(float,float)" class="member-name-link">getSimplex(float, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#getSimplex(float,float,float)" class="member-name-link">getSimplex(float, float, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
@@ -1493,9 +1552,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the z coordinate for a given index into the 16x16x(8*n) Moore curve.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/PhantomNoise.html#goldenDouble" class="member-name-link">goldenDouble</a> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#goldenFloat" class="member-name-link">goldenFloat</a> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/PhantomNoise.html#goldenLong" class="member-name-link">goldenLong</a> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#goldenLong" class="member-name-link">goldenLong</a> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#gradCoord2D(int,int,int,float,float)" class="member-name-link">gradCoord2D(int, int, int, float, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
@@ -1544,6 +1603,14 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#H2f" class="member-name-link">H2f</a> - Static variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#halton2D(int,int,int)" class="member-name-link">halton2D(int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>
+<div class="block">Gets a 2D point from the Halton sequence with the bases 3 (for x) and 5 (for y).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#halton2D(int,int,int,int,int,int,int)" class="member-name-link">halton2D(int, int, int, int, int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>
+<div class="block">Gets a 2D point from the Halton sequence with the specified bases, which must be different primes.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/Direction.html#hasDown()" class="member-name-link">hasDown()</a> - Method in enum class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/IPointHash.html#hash(int,int)" class="member-name-link">hash(int, int)</a> - Method in interface com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a></dt>
@@ -2432,15 +2499,15 @@ loadScripts(document, 'script');</script>
  Chebyshev distance, where diagonally adjacent cells are considered
  exactly as distant as orthogonally-adjacent cells).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WobblyLine.html#line(int,int,int,int,int,int)" class="member-name-link">line(int, int, int, int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WobblyLine.html" title="class in com.github.yellowstonegames.grid">WobblyLine</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/DrunkenWalk.html#line(int,int,int,int,int,int)" class="member-name-link">line(int, int, int, int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></dt>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WobblyLine.html#line(int,int,int,int,int,int,float,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">line(int, int, int, int, int, int, float, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WobblyLine.html" title="class in com.github.yellowstonegames.grid">WobblyLine</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/DrunkenWalk.html#line(int,int,int,int,int,int,float,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">line(int, int, int, int, int, int, float, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></dt>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WobblyLine.html#line(int,int,int,int,int,int,float,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">line(int, int, int, int, int, int, float, EnhancedRandom, ObjectList&lt;Coord&gt;)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WobblyLine.html" title="class in com.github.yellowstonegames.grid">WobblyLine</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/DrunkenWalk.html#line(int,int,int,int,int,int,float,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">line(int, int, int, int, int, int, float, EnhancedRandom, ObjectList&lt;Coord&gt;)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></dt>
 <dd>
 <div class="block">Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm.</div>
 </dd>
@@ -2471,7 +2538,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draws a line from start to end using only N/S/E/W movement.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WobblyLine.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,int,int)" class="member-name-link">line(Coord, Coord, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WobblyLine.html" title="class in com.github.yellowstonegames.grid">WobblyLine</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/DrunkenWalk.html#line(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,int,int)" class="member-name-link">line(Coord, Coord, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></dt>
 <dd>
 <div class="block">Draws a line from start to end using the Drunkard's Walk algorithm.</div>
 </dd>
@@ -2829,7 +2896,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a Region using a vararg for data.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Radius.html#onUnitShape(float,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">onUnitShape(float, EnhancedRandom)</a> - Method in enum class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Radius.html#onUnitShape(float,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">onUnitShape(float, EnhancedRandom)</a> - Method in enum class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Direction.html#opposite()" class="member-name-link">opposite()</a> - Method in enum class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>
@@ -2883,6 +2950,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/PhantomNoise.html#%3Cinit%3E(long,int,float)" class="member-name-link">PhantomNoise(long, int, float)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#place(java.lang.Object)" class="member-name-link">place(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#place(java.lang.Object)" class="member-name-link">place(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectMap.html#place(java.lang.Object)" class="member-name-link">place(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordObjectMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectOrderedMap.html#place(java.lang.Object)" class="member-name-link">place(Object)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a></dt>
@@ -2935,6 +3006,13 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:Q">Q</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
+<dd>
+<div class="block">Static methods to produce numbers and points from quasi-random sequences (which seem like random sequences, but have
+ lower "discrepancy" between results).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#%3Cinit%3E()" class="member-name-link">QuasiRandomTools()</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html#%3Cinit%3E()" class="member-name-link">QuiltHash()</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html#%3Cinit%3E(long)" class="member-name-link">QuiltHash(long)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></dt>
@@ -3018,22 +3096,22 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html#random" class="member-name-link">random</a> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#randomInterleave(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">randomInterleave(EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#randomInterleave(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">randomInterleave(EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
  2 and bit 3, up to bit 62 and bit 3, one bit will be 1 and one bit will be 0 in each pair.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#randomPortion(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomPortion(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#randomPortion(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomPortion(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomRegion(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomRegion(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomScatter(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomScatter(EnhancedRandom, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
  were "on" in this originally.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">randomScatter(EnhancedRandom, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#randomScatter(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">randomScatter(EnhancedRandom, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
@@ -3183,12 +3261,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Reassigns this Region with the given rectangular short array, reusing the current data storage (without
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)" class="member-name-link">refill(EnhancedRandom, float, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.random.EnhancedRandom,float,int,int)" class="member-name-link">refill(EnhancedRandom, float, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Reassigns this Region randomly, reusing the current data storage (without extra allocations) if this.width
  == width and this.height == height, while trying to set the given fraction of cells to on.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">refill(EnhancedRandom, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#refill(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">refill(EnhancedRandom, int, int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Reassigns this Region by filling it with random values from random, reusing the current data storage
  (without extra allocations) if this.width == width and this.height == height, and typically assigning
@@ -3290,12 +3368,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs this Region using a short[][], treating cells as on if they are greater than or equal to lower
  and less than upper, or off otherwise.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)" class="member-name-link">Region(EnhancedRandom, float, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom,float,int,int)" class="member-name-link">Region(EnhancedRandom, float, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Constructor for a random Region of the given width and height, trying to set the given fraction of cells
  to on.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">Region(EnhancedRandom, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">Region(EnhancedRandom, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Constructor for a random Region of the given width and height, typically assigning approximately half of
  the cells in this to "on" and the rest to off.</div>
@@ -3512,6 +3590,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Direction.html#RIGHT" class="member-name-link">RIGHT</a> - Enum constant in enum class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#roberts2D(int,int,int,int,int)" class="member-name-link">roberts2D(int, int, int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>
+<div class="block">Martin Roberts' "unreasonably effective" quasi-random point sequence based on a 2D analogue to the golden ratio.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#robertsND(float%5B%5D,int,int,int)" class="member-name-link">robertsND(float[], int, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>
+<div class="block">Fills a buffer (or creates one) with quasi-random floats between 0 (inclusive) and 1 (exclusive).</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/Coord.html#rosenbergStrongHashCode(int,int)" class="member-name-link">rosenbergStrongHashCode(int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></dt>
 <dd>
 <div class="block">A static version of the current <a href="com/github/yellowstonegames/grid/Coord.html#hashCode()"><code>Coord.hashCode()</code></a> method of this class, taking x and y as parameters instead of
@@ -3566,33 +3652,33 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sample(Coord, Coord, float, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sample(Coord, Coord, float, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int)" class="member-name-link">sampleCircle(Coord, float, float, int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleCircle(Coord, float, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleCircle(Coord, float, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)" class="member-name-link">sampleMap(char[][], float, EnhancedRandom, char...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(char%5B%5D%5B%5D,float,com.github.tommyettinger.random.EnhancedRandom,char...)" class="member-name-link">sampleMap(char[][], float, EnhancedRandom, char...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)" class="member-name-link">sampleMap(Coord, Coord, char[][], float, EnhancedRandom, char...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,com.github.tommyettinger.random.EnhancedRandom,char...)" class="member-name-link">sampleMap(Coord, Coord, char[][], float, EnhancedRandom, char...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float)" class="member-name-link">sampleRectangle(Coord, Coord, float)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleRectangle(Coord, Coord, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleRectangle(Coord, Coord, float, int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleRectangle(Coord, Coord, float, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/PoissonDisk.html#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleRectangle(Coord, Coord, float, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></dt>
 <dd>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
@@ -3664,9 +3750,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#setFoamSharpness(float)" class="member-name-link">setFoamSharpness(float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
-<div class="block">Only used with <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, and <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a> noise types,
- this affects how often the noise will produce very high and very low results (more often with high values of
- foamSharpness), as opposed to mid-range (more often with low values of foamSharpness).</div>
+<div class="block">Only used with <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC"><code>Noise.CUBIC</code></a>,
+ and <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC_FRACTAL"><code>Noise.CUBIC_FRACTAL</code></a> noise types, this affects how often the noise will produce very high and very low
+ results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#setFractalGain(float)" class="member-name-link">setFractalGain(float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>
@@ -3722,6 +3808,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the seed used for all noise types, as a long.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/grid/Noise.html#setSharpness(float)" class="member-name-link">setSharpness(float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>
+<div class="block">Only used with <a href="com/github/yellowstonegames/grid/Noise.html#FOAM"><code>Noise.FOAM</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#FOAM_FRACTAL"><code>Noise.FOAM_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT"><code>Noise.MUTANT</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#MUTANT_FRACTAL"><code>Noise.MUTANT_FRACTAL</code></a>, <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC"><code>Noise.CUBIC</code></a>,
+ and <a href="com/github/yellowstonegames/grid/Noise.html#CUBIC_FRACTAL"><code>Noise.CUBIC_FRACTAL</code></a> noise types, this affects how often the noise will produce very high and very low
+ results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/FlawedPointHash.CubeHash.html#setSize(int)" class="member-name-link">setSize(int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html#setSize(int)" class="member-name-link">setSize(int)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></dt>
@@ -3758,6 +3850,8 @@ loadScripts(document, 'script');</script>
 <div class="block">A constant that represents the encoded pattern for a 4x4 square with all lines possible except those that
  would extend to touch cells adjacent to the 4x4 area.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/grid/Noise.html#sharpness" class="member-name-link">sharpness</a> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/PhantomNoise.html#sharpness" class="member-name-link">sharpness</a> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.html#show(char,char)" class="member-name-link">show(char, char)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
@@ -3797,11 +3891,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#singleHoney(int,float,float,float,float,float,float)" class="member-name-link">singleHoney(int, float, float, float, float, float, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#singleRandom(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">singleRandom(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#singleRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">singleRandom(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">Gets a single random Coord from the "on" positions in this Region, or the Coord (-1,-1) if this is empty.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#singleRandomTight(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">singleRandomTight(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#singleRandomTight(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">singleRandomTight(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/Noise.html#singleSimplex(int,float,float)" class="member-name-link">singleSimplex(int, float, float)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></dt>
 <dd>&nbsp;</dd>
@@ -3839,13 +3933,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/SpatialMap.html#%3Cinit%3E(com.github.yellowstonegames.grid.SpatialMap)" class="member-name-link">SpatialMap(SpatialMap&lt;? extends V&gt;)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/SpatialMap.html" title="class in com.github.yellowstonegames.grid">SpatialMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">spill(Region, int, EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">spill(Region, int, EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
  the "on" cells of <code>bounds</code>, until <a href="com/github/yellowstonegames/grid/Region.html#size()"><code>Region.size()</code></a> is equal to <code>volume</code> or there are no more cells
  this can expand into.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/Region.html#splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">splash(Region, EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/Region.html#splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">splash(Region, EnhancedRandom)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
  inside the "on" cells of <code>bounds</code>.</div>
@@ -4149,6 +4243,10 @@ the order they are declared.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/SpatialMap.html#values()" class="member-name-link">values()</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/SpatialMap.html" title="class in com.github.yellowstonegames.grid">SpatialMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/QuasiRandomTools.html#vanDerCorput(int,int)" class="member-name-link">vanDerCorput(int, int)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></dt>
+<dd>
+<div class="block">Gets the <code>index</code>-th element from the base-<code>base</code> van der Corput sequence.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/LightingManager.html#viewerRange" class="member-name-link">viewerRange</a> - Variable in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></dt>
 <dd>
 <div class="block">How far the viewer can see without light; defaults to 4.0f cells, and you are encouraged to change this member
@@ -4162,11 +4260,11 @@ the order they are declared.</div>
 <div class="block">A port of WaveFunctionCollapse by ExUtumno/mxgmn; takes a single sample of a grid to imitate and produces one or more
  grids of requested sizes that have a similar layout of cells to the sample.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html#%3Cinit%3E(int%5B%5D%5B%5D,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">WaveFunctionCollapse(int[][], int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html#%3Cinit%3E(int%5B%5D%5B%5D,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">WaveFunctionCollapse(int[][], int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></dt>
 <dd>
 <div class="block">Creates a WaveFunctionCollapse that will imitate the given <code>itemGrid</code>.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html#%3Cinit%3E(int%5B%5D%5B%5D,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean,boolean,int,int)" class="member-name-link">WaveFunctionCollapse(int[][], int, int, int, EnhancedRandom, boolean, boolean, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></dt>
+<dt><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html#%3Cinit%3E(int%5B%5D%5B%5D,int,int,int,com.github.tommyettinger.random.EnhancedRandom,boolean,boolean,int,int)" class="member-name-link">WaveFunctionCollapse(int[][], int, int, int, EnhancedRandom, boolean, boolean, int, int)</a> - Constructor for class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></dt>
 <dd>
 <div class="block">Creates a WaveFunctionCollapse that will imitate the given <code>itemGrid</code>.</div>
 </dd>
@@ -4195,6 +4293,22 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordSet.html#with(com.github.yellowstonegames.grid.Coord...)" class="member-name-link">with(Coord...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordSet.html" title="class in com.github.yellowstonegames.grid">CoordSet</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#with(com.github.yellowstonegames.grid.Coord,java.lang.Number)" class="member-name-link">with(Coord, Number)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#with(com.github.yellowstonegames.grid.Coord,java.lang.Number)" class="member-name-link">with(Coord, Number)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatMap.html#with(com.github.yellowstonegames.grid.Coord,java.lang.Number,java.lang.Object...)" class="member-name-link">with(Coord, Number, Object...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></dt>
+<dd>
+<div class="block">Constructs a map given alternating keys and values.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html#with(com.github.yellowstonegames.grid.Coord,java.lang.Number,java.lang.Object...)" class="member-name-link">with(Coord, Number, Object...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></dt>
+<dd>
+<div class="block">Constructs a map given alternating keys and values.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectMap.html#with(com.github.yellowstonegames.grid.Coord,V)" class="member-name-link">with(Coord, V)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordObjectMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectMap</a></dt>
 <dd>
 <div class="block">Constructs a single-entry map given one key and one value.</div>
@@ -4210,10 +4324,6 @@ the order they are declared.</div>
 <dt><a href="com/github/yellowstonegames/grid/CoordObjectOrderedMap.html#with(com.github.yellowstonegames.grid.Coord,V,java.lang.Object...)" class="member-name-link">with(Coord, V, Object...)</a> - Static method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a></dt>
 <dd>
 <div class="block">Constructs a map given alternating keys and values.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/grid/WobblyLine.html" class="type-name-link" title="class in com.github.yellowstonegames.grid">WobblyLine</a> - Class in <a href="com/github/yellowstonegames/grid/package-summary.html">com.github.yellowstonegames.grid</a></dt>
-<dd>
-<div class="block">A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/grid/Region.html#writeChars(char%5B%5D%5B%5D,char)" class="member-name-link">writeChars(char[][], char)</a> - Method in class com.github.yellowstonegames.grid.<a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid">Region</a></dt>
 <dd>

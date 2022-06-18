@@ -106,29 +106,29 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,boolean)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  boolean&nbsp;symmetrical)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,double)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  double&nbsp;branchingChance)</code></div>
 <div class="col-last even-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double,boolean)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,double,boolean)" class="member-name-link">SerpentMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  double&nbsp;branchingChance,
  boolean&nbsp;symmetrical)</code></div>
 <div class="col-last odd-row-color">
@@ -158,7 +158,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnvironment()" class="member-name-link">getEnvironment</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets a 2D array of int constants, each representing a type of environment corresponding to a static field of
- MixedGenerator.</div>
+ DungeonTools.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlaceGrid()" class="member-name-link">getPlaceGrid</a>()</code></div>
@@ -215,11 +215,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>SerpentMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
  The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
  the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
@@ -240,11 +240,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom,boolean)">
 <h3>SerpentMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  boolean&nbsp;symmetrical)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
  The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
@@ -267,11 +267,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom,double)">
 <h3>SerpentMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  double&nbsp;branchingChance)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
  The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
@@ -294,11 +294,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double,boolean)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom,double,boolean)">
 <h3>SerpentMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  double&nbsp;branchingChance,
  boolean&nbsp;symmetrical)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
@@ -477,16 +477,16 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <h3>getEnvironment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">getEnvironment</span>()</div>
 <div class="block">Gets a 2D array of int constants, each representing a type of environment corresponding to a static field of
- MixedGenerator. This array will have the same size as the last char 2D array produced by generate(); the value
+ DungeonTools. This array will have the same size as the last char 2D array produced by generate(); the value
  of this method if called before generate() is undefined, but probably will be a 2D array of all 0 (UNTOUCHED).
  <ul>
- <li>MixedGenerator.UNTOUCHED, equal to 0, is used for any cells that aren't near a floor.</li>
- <li>MixedGenerator.ROOM_FLOOR, equal to 1, is used for floor cells inside wide room areas.</li>
- <li>MixedGenerator.ROOM_WALL, equal to 2, is used for wall cells around wide room areas.</li>
- <li>MixedGenerator.CAVE_FLOOR, equal to 3, is used for floor cells inside rough cave areas.</li>
- <li>MixedGenerator.CAVE_WALL, equal to 4, is used for wall cells around rough cave areas.</li>
- <li>MixedGenerator.CORRIDOR_FLOOR, equal to 5, is used for floor cells inside narrow corridor areas.</li>
- <li>MixedGenerator.CORRIDOR_WALL, equal to 6, is used for wall cells around narrow corridor areas.</li>
+ <li>DungeonTools.UNTOUCHED, equal to 0, is used for any cells that aren't near a floor.</li>
+ <li>DungeonTools.ROOM_FLOOR, equal to 1, is used for floor cells inside wide room areas.</li>
+ <li>DungeonTools.ROOM_WALL, equal to 2, is used for wall cells around wide room areas.</li>
+ <li>DungeonTools.NATURAL_FLOOR, equal to 3, is used for floor cells inside rough natural/cave areas.</li>
+ <li>DungeonTools.NATURAL_WALL, equal to 4, is used for wall cells around rough natural/cave areas.</li>
+ <li>DungeonTools.CORRIDOR_FLOOR, equal to 5, is used for floor cells inside narrow corridor areas.</li>
+ <li>DungeonTools.CORRIDOR_WALL, equal to 6, is used for wall cells around narrow corridor areas.</li>
  </ul></div>
 <dl class="notes">
 <dt>Specified by:</dt>

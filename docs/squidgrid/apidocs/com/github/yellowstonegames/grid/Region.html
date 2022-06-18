@@ -128,14 +128,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
      <a href="#flood(com.github.yellowstonegames.grid.Region,int)"><code>flood(Region, int)</code></a>, which may be most useful with a very large <code>amount</code> parameter to fill
      up the bounds completely with whatever the original Region could reach. <a href="#flood8way(com.github.yellowstonegames.grid.Region)"><code>flood8way(Region)</code></a>,
      <a href="#floodSeries(com.github.yellowstonegames.grid.Region,int)"><code>floodSeries(Region, int)</code></a>, and <a href="#floodSeriesToLimit(com.github.yellowstonegames.grid.Region)"><code>floodSeriesToLimit(Region)</code></a> are all here, too.</li>
-     <li><a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a> is like calling <a href="#flood(com.github.yellowstonegames.grid.Region)"><code>flood(Region)</code></a> many times, but only
+     <li><a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a> is like calling <a href="#flood(com.github.yellowstonegames.grid.Region)"><code>flood(Region)</code></a> many times, but only
      expanding one cell on the edge each time, randomly choosing it. As long as <code>volume</code> is not enough to fully
      fill the reachable part of <code>bounds</code>, the filled area will be random but always connected.</li>
-     <li>Various random modifications: <a href="#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a> simply chooses "on" points from this
-     Region until it reaches <code>size</code>, <a href="#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> randomly removes
+     <li>Various random modifications: <a href="#randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a> simply chooses "on" points from this
+     Region until it reaches <code>size</code>, <a href="#deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> randomly removes
      points but stops when the fraction of cells remaining is equal to <code>preservation</code>, <a href="#fray(float)"><code>fray(float)</code></a>
-     acts like <a href="#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> but only affects the surface (what <a href="#surface()"><code>surface()</code></a>
-     would return), and <a href="#disperseRandom(com.github.tommyettinger.ds.support.EnhancedRandom)"><code>disperseRandom(EnhancedRandom)</code></a> randomly removes one of each pair of "on" cells.
+     acts like <a href="#deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> but only affects the surface (what <a href="#surface()"><code>surface()</code></a>
+     would return), and <a href="#disperseRandom(com.github.tommyettinger.random.EnhancedRandom)"><code>disperseRandom(EnhancedRandom)</code></a> randomly removes one of each pair of "on" cells.
      </li>
      <li>Various quasi-random modifications: Mostly you should use <a href="#separatedRegionBlue(float)"><code>separatedRegionBlue(float)</code></a> if you want
      to get an approximate fraction of well-separated "on" cells from a Region. <a href="#fray(float)"><code>fray(float)</code></a> also has a quasi-random version that
@@ -144,10 +144,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  <br>
  Once you have a Region, you may want to:
  <ul>
-     <li>get a single random point from it (use <a href="#singleRandom(com.github.tommyettinger.ds.support.EnhancedRandom)"><code>singleRandom(EnhancedRandom)</code></a>),</li>
-     <li>get several random points from it with random sampling (use <a href="#randomPortion(com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>randomPortion(EnhancedRandom, int)</code></a>),</li>
-     <li>mutate the current Region to keep random points from it with random sampling (use <a href="#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a>),</li>
-     <li>get random points that are likely to be separated (use <a href="#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>randomScatter(EnhancedRandom, int)</code></a> on a copy, or
+     <li>get a single random point from it (use <a href="#singleRandom(com.github.tommyettinger.random.EnhancedRandom)"><code>singleRandom(EnhancedRandom)</code></a>),</li>
+     <li>get several random points from it with random sampling (use <a href="#randomPortion(com.github.tommyettinger.random.EnhancedRandom,int)"><code>randomPortion(EnhancedRandom, int)</code></a>),</li>
+     <li>mutate the current Region to keep random points from it with random sampling (use <a href="#randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a>),</li>
+     <li>get random points that are likely to be separated (use <a href="#randomScatter(com.github.tommyettinger.random.EnhancedRandom,int)"><code>randomScatter(EnhancedRandom, int)</code></a> on a copy, or
      <a href="#separatedBlue(float)"><code>separatedBlue(float)</code></a> if you don't want a random aspect),</li>
      <li>do what any of the above "separated" methods can do, but mutate the current Region (use
      <a href="#separatedRegionBlue(float)"><code>separatedRegionBlue(float)</code></a> ),</li>
@@ -161,8 +161,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  You may also want to produce some 2D data from one or more Regions, as with <a href="#sum(com.github.yellowstonegames.grid.Region...)"><code>sum(Region...)</code></a> or
  <a href="#toChars()"><code>toChars()</code></a>. The most effective techniques regarding Region involve multiple methods, like getting a
  few random points from an existing Region representing floor tiles in a dungeon with
- <a href="#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a>, then finding a random expansion of those initial points with
- <a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a>, giving the original Region of floor tiles as the first argument.
+ <a href="#randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)"><code>randomRegion(EnhancedRandom, int)</code></a>, then finding a random expansion of those initial points with
+ <a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a>, giving the original Region of floor tiles as the first argument.
  This could be used to position puddles of water or toxic waste in a dungeon level, while still keeping the starting
  points and finished points within the boundaries of valid (floor) cells. If you wanted to place something like mold
  that can be on floors or on cells immediately adjacent to floors (like walls), you could call <a href="#expand()"><code>expand()</code></a> on
@@ -344,7 +344,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Constructs this Region using a short[][], treating cells as on if they are greater than or equal to lower
  and less than upper, or off otherwise.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)" class="member-name-link">Region</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom,float,int,int)" class="member-name-link">Region</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fraction,
  int&nbsp;width,
  int&nbsp;height)</code></div>
@@ -352,7 +352,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Constructor for a random Region of the given width and height, trying to set the given fraction of cells
  to on.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">Region</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">Region</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last even-row-color">
@@ -443,7 +443,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  point is appended into the Collection <code>into</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#approximateBits(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">approximateBits</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#approximateBits(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">approximateBits</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;bitCount)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.</div>
@@ -535,14 +535,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)" class="member-name-link">deteriorate</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)" class="member-name-link">deteriorate</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;preservation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Randomly removes points from a Region, with preservation as a fraction between 1.0 (keep all) and 0.0
  (remove all).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">deteriorate</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deteriorate(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">deteriorate</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;preservation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Randomly removes points from a Region, with larger values for preservation keeping more of the existing
@@ -596,7 +596,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  stored in the upper 16 bits (use <code>(n &gt;&gt;&gt; 16)</code> to obtain).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disperseRandom(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">disperseRandom</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disperseRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">disperseRandom</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes "on" cells that are nearby other "on" cells, with a random factor to which bits are actually turned off
  that still ensures exactly half of the bits are kept as-is (the one exception is when height is an odd number,
@@ -726,7 +726,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  method it keeps a fraction of those surface cells, quasi-randomly selecting them.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fray(com.github.tommyettinger.ds.support.EnhancedRandom,float)" class="member-name-link">fray</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fray(com.github.tommyettinger.random.EnhancedRandom,float)" class="member-name-link">fray</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fractionKept)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Like <a href="#retract()"><code>retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
@@ -966,21 +966,21 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  Region; it writes a result to into, and uses working as a temporary buffer.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#randomInterleave(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">randomInterleave</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#randomInterleave(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">randomInterleave</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
  2 and bit 3, up to bit 62 and bit 3, one bit will be 1 and one bit will be 0 in each pair.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomPortion(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomPortion</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomPortion(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomPortion</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;size)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomRegion</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomRegion</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;size)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">randomScatter</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomScatter(com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">randomScatter</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minimumDistance)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
@@ -988,7 +988,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  were "on" in this originally.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">randomScatter</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#randomScatter(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">randomScatter</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minimumDistance,
  int&nbsp;limit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -1100,7 +1100,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  extra allocations) if this.width == map.length and this.height == map[0].length.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refill(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)" class="member-name-link">refill</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refill(com.github.tommyettinger.random.EnhancedRandom,float,int,int)" class="member-name-link">refill</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fraction,
  int&nbsp;width,
  int&nbsp;height)</code></div>
@@ -1109,7 +1109,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  == width and this.height == height, while trying to set the given fraction of cells to on.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refill(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)" class="member-name-link">refill</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refill(com.github.tommyettinger.random.EnhancedRandom,int,int)" class="member-name-link">refill</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -1278,28 +1278,28 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  the parameter off for "off" cells, separated by newlines, with no trailing newline at the end.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singleRandom(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">singleRandom</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singleRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">singleRandom</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets a single random Coord from the "on" positions in this Region, or the Coord (-1,-1) if this is empty.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singleRandomTight(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">singleRandomTight</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singleRandomTight(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">singleRandomTight</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">spill</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">spill</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
  int&nbsp;volume,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
  the "on" cells of <code>bounds</code>, until <a href="#size()"><code>size()</code></a> is equal to <code>volume</code> or there are no more cells
  this can expand into.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">splash</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">splash</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
  inside the "on" cells of <code>bounds</code>.</div>
@@ -1881,9 +1881,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.random.EnhancedRandom,int,int)">
 <h3>Region</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Region</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Region</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;width,
  int&nbsp;height)</span></div>
 <div class="block">Constructor for a random Region of the given width and height, typically assigning approximately half of
@@ -1897,9 +1897,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)">
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.random.EnhancedRandom,float,int,int)">
 <h3>Region</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Region</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Region</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fraction,
  int&nbsp;width,
  int&nbsp;height)</span></div>
@@ -2236,9 +2236,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="refill(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">
+<section class="detail" id="refill(com.github.tommyettinger.random.EnhancedRandom,int,int)">
 <h3>refill</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">refill</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">refill</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;width,
  int&nbsp;height)</span></div>
 <div class="block">Reassigns this Region by filling it with random values from random, reusing the current data storage
@@ -2255,9 +2255,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="refill(com.github.tommyettinger.ds.support.EnhancedRandom,float,int,int)">
+<section class="detail" id="refill(com.github.tommyettinger.random.EnhancedRandom,float,int,int)">
 <h3>refill</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">refill</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">refill</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fraction,
  int&nbsp;width,
  int&nbsp;height)</span></div>
@@ -3184,9 +3184,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="disperseRandom(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="disperseRandom(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>disperseRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">disperseRandom</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">disperseRandom</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
 <div class="block">Removes "on" cells that are nearby other "on" cells, with a random factor to which bits are actually turned off
  that still ensures exactly half of the bits are kept as-is (the one exception is when height is an odd number,
  which makes the bottom row slightly random).</div>
@@ -3199,9 +3199,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="approximateBits(com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="approximateBits(com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>approximateBits</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">approximateBits</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">approximateBits</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;bitCount)</span></div>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.
  For example, calling this with a parameter of 32 will be equivalent to calling nextLong() on the given
@@ -3222,9 +3222,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="randomInterleave(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="randomInterleave(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>randomInterleave</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">randomInterleave</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">randomInterleave</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
 <div class="block">Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
  2 and bit 3, up to bit 62 and bit 3, one bit will be 1 and one bit will be 0 in each pair.
  <br>
@@ -3660,14 +3660,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="splash(com.github.yellowstonegames.grid.Region,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>splash</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">splash</span><wbr><span class="parameters">(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
  inside the "on" cells of <code>bounds</code>. This Region acts as the initial state, and often contains just one cell
  before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
- boundaries, stepping one-cell-at-a-time instead of how <a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a> fills a whole volume.</div>
+ boundaries, stepping one-cell-at-a-time instead of how <a href="#spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)"><code>spill(Region, int, EnhancedRandom)</code></a> fills a whole volume.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>bounds</code> - this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this</dd>
@@ -3678,11 +3678,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="spill(com.github.yellowstonegames.grid.Region,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>spill</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">spill</span><wbr><span class="parameters">(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;bounds,
  int&nbsp;volume,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
  the "on" cells of <code>bounds</code>, until <a href="#size()"><code>size()</code></a> is equal to <code>volume</code> or there are no more cells
  this can expand into. This Region acts as the initial state, and often contains just one cell before this
@@ -4033,13 +4033,13 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="fray(com.github.tommyettinger.ds.support.EnhancedRandom,float)">
+<section class="detail" id="fray(com.github.tommyettinger.random.EnhancedRandom,float)">
 <h3>fray</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">fray</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">fray</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;fractionKept)</span></div>
 <div class="block">Like <a href="#retract()"><code>retract()</code></a>, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
  method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running 
- <a href="#surface()"><code>surface()</code></a> on a copy of this Region, running <a href="#deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> on
+ <a href="#surface()"><code>surface()</code></a> on a copy of this Region, running <a href="#deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)"><code>deteriorate(EnhancedRandom, float)</code></a> on
  that surface with the given fractionKept, taking the original Region and removing its whole surface with
  <a href="#retract()"><code>retract()</code></a>, then inserting the randomly-removed surface into this Region to replace its surface
  with a randomly "damaged" one.</div>
@@ -4053,9 +4053,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="randomScatter(com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>randomScatter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomScatter</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomScatter</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minimumDistance)</span></div>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
  distance between any two "on" cells is at least <code>minimumDistance</code>, with at least one cell as "on" if any
@@ -4070,9 +4070,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="randomScatter(com.github.tommyettinger.ds.support.EnhancedRandom,int,int)">
+<section class="detail" id="randomScatter(com.github.tommyettinger.random.EnhancedRandom,int,int)">
 <h3>randomScatter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomScatter</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomScatter</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minimumDistance,
  int&nbsp;limit)</span></div>
 <div class="block">Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
@@ -4200,9 +4200,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="singleRandom(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="singleRandom(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>singleRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></span>&nbsp;<span class="element-name">singleRandom</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></span>&nbsp;<span class="element-name">singleRandom</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Gets a single random Coord from the "on" positions in this Region, or the Coord (-1,-1) if this is empty.
  Uses the given EnhancedRandom to generate one random int, which is used as an index. The technique this uses to iterate
  over bits can be credited to Erling Ellingsen and Daniel Lemire, found
@@ -4221,9 +4221,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="singleRandomTight(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="singleRandomTight(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>singleRandomTight</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">singleRandomTight</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">singleRandomTight</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
@@ -4344,16 +4344,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="randomPortion(com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="randomPortion(com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>randomPortion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</span>&nbsp;<span class="element-name">randomPortion</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>[]</span>&nbsp;<span class="element-name">randomPortion</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;size)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="randomRegion(com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="randomRegion(com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>randomRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomRegion</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">randomRegion</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;size)</span></div>
 </section>
 </li>
@@ -4847,9 +4847,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="deteriorate(com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>deteriorate</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">deteriorate</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">deteriorate</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;preservation)</span></div>
 <div class="block">Randomly removes points from a Region, with larger values for preservation keeping more of the existing
  shape intact. If preservation is 1, roughly 1/2 of all points will be removed; if 2, roughly 1/4, if 3, roughly
@@ -4864,9 +4864,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="deteriorate(com.github.tommyettinger.ds.support.EnhancedRandom,float)">
+<section class="detail" id="deteriorate(com.github.tommyettinger.random.EnhancedRandom,float)">
 <h3>deteriorate</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">deteriorate</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">deteriorate</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  float&nbsp;preservation)</span></div>
 <div class="block">Randomly removes points from a Region, with preservation as a fraction between 1.0 (keep all) and 0.0
  (remove all). If preservation is 0.5, roughly 1/2 of all points will be removed; if 0.25, roughly 3/4 will be

@@ -221,10 +221,10 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  to place a straight-line object." You can use this as-needed; it does only a small amount of work at the start,
  and does the calculations for what areas have certain properties on request.</div>
 </div>
-<div class="col-first odd-row-color"><code>protected com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first odd-row-color"><code>protected com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second odd-row-color"><code><a href="#rebuildRNG" class="member-name-link">rebuildRNG</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
@@ -275,9 +275,9 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
  adding features will be a LaserRandom using a random seed.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">DungeonProcessor</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">DungeonProcessor</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Make a DungeonProcessor with the given height, width, and EnhancedRandom.</div>
 </div>
@@ -421,7 +421,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the most recently generated char[][] dungeon out of this class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRebuildRNG()" class="member-name-link">getRebuildRNG</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the seed EnhancedRandom that can be used to rebuild an identical dungeon to the latest one generated (or the
@@ -449,17 +449,17 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#makeLake(com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">makeLake</a><wbr>(com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;rooms,
  com.github.tommyettinger.ds.ObjectList&lt;char[][]&gt;&nbsp;caves)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent</a><wbr>(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.yellowstonegames.grid.CoordOrderedSet</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent</a><wbr>(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  com.github.yellowstonegames.grid.Coord&nbsp;pt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent</a><wbr>(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.yellowstonegames.grid.CoordOrderedSet</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent</a><wbr>(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  com.github.yellowstonegames.grid.Coord&nbsp;pt1,
  com.github.yellowstonegames.grid.Coord&nbsp;pt2)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeNearby(com.github.tommyettinger.ds.ObjectOrderedSet,char%5B%5D%5B%5D)" class="member-name-link">removeNearby</a><wbr>(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.yellowstonegames.grid.CoordOrderedSet</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeNearby(com.github.yellowstonegames.grid.CoordOrderedSet,char%5B%5D%5B%5D)" class="member-name-link">removeNearby</a><wbr>(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  char[][]&nbsp;disallowed)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
@@ -478,7 +478,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Provides a string representation of the latest generated dungeon.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.yellowstonegames.grid.CoordOrderedSet</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#viableDoorways(boolean,char%5B%5D%5B%5D,char%5B%5D%5B%5D,char%5B%5D%5B%5D)" class="member-name-link">viableDoorways</a><wbr>(boolean&nbsp;doubleDoors,
  char[][]&nbsp;map,
  char[][]&nbsp;allCaves,
@@ -651,13 +651,13 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="rebuildRNG">
 <h3>rebuildRNG</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rebuildRNG</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rebuildRNG</span></div>
 </section>
 </li>
 <li>
@@ -734,11 +734,11 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>DungeonProcessor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonProcessor</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Make a DungeonProcessor with the given height, width, and EnhancedRandom. Use this if you want to seed the random
  number generator. If width or height is greater than 256, then this will expand the Coord pool from its 256x256
  default, so it stores a reference to each Coord that might be used in the creation of the dungeon (if width and
@@ -1045,31 +1045,31 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord)">
+<section class="detail" id="removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord)">
 <h3>removeAdjacent</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">removeAdjacent</span><wbr><span class="parameters">(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.CoordOrderedSet</span>&nbsp;<span class="element-name">removeAdjacent</span><wbr><span class="parameters">(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  com.github.yellowstonegames.grid.Coord&nbsp;pt)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">
+<section class="detail" id="removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)">
 <h3>removeAdjacent</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">removeAdjacent</span><wbr><span class="parameters">(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.CoordOrderedSet</span>&nbsp;<span class="element-name">removeAdjacent</span><wbr><span class="parameters">(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  com.github.yellowstonegames.grid.Coord&nbsp;pt1,
  com.github.yellowstonegames.grid.Coord&nbsp;pt2)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="removeNearby(com.github.tommyettinger.ds.ObjectOrderedSet,char[][])">
+<section class="detail" id="removeNearby(com.github.yellowstonegames.grid.CoordOrderedSet,char[][])">
 <h3>removeNearby</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">removeNearby</span><wbr><span class="parameters">(com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;coll,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.CoordOrderedSet</span>&nbsp;<span class="element-name">removeNearby</span><wbr><span class="parameters">(com.github.yellowstonegames.grid.CoordOrderedSet&nbsp;coll,
  char[][]&nbsp;disallowed)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="viableDoorways(boolean,char[][],char[][],char[][])">
 <h3>viableDoorways</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">viableDoorways</span><wbr><span class="parameters">(boolean&nbsp;doubleDoors,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.CoordOrderedSet</span>&nbsp;<span class="element-name">viableDoorways</span><wbr><span class="parameters">(boolean&nbsp;doubleDoors,
  char[][]&nbsp;map,
  char[][]&nbsp;allCaves,
  char[][]&nbsp;allCorridors)</span></div>
@@ -1208,7 +1208,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <li>
 <section class="detail" id="getRebuildRNG()">
 <h3>getRebuildRNG</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">getRebuildRNG</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">getRebuildRNG</span>()</div>
 <div class="block">Gets the seed EnhancedRandom that can be used to rebuild an identical dungeon to the latest one generated (or the
  seed that will be used to generate the first dungeon if none has been made yet). You can pass the EnhancedRandom
  this returns to <code>EnhancedRandom.setWith(EnhancedRandom)</code> to fill an existing EnhancedRandom of the same

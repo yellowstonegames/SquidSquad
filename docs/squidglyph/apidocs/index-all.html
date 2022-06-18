@@ -61,8 +61,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float,float)" class="member-name-link">draw(Batch, float, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>
 <div class="block">Draws the entire GlyphMap at the given x,y for its lower-left corner.</div>
@@ -112,10 +110,32 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAll()" class="member-name-link">getAll()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllMSDF()" class="member-name-link">getAllMSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any MSDF Font.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllSDF()" class="member-name-link">getAllSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any SDF Font.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllStandard()" class="member-name-link">getAllStandard()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any
+ non-distance-field Font.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAStarry()" class="member-name-link">getAStarry()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
 <dd>
 <div class="block">Returns a Font already configured to use a square font with 45-degree angled sections, based on the
  typeface used on the Atari ST console, that should scale cleanly to many sizes.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getBitter()" class="member-name-link">getBitter()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a Font already configured to use a light-weight variable-width slab serif font with good Latin and
+ Cyrillic script support, that should scale pretty well from a height of about 160 down to a height of maybe 30.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getCanada()" class="member-name-link">getCanada()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
 <dd>
@@ -238,6 +258,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getSmallMotion()" class="member-name-link">getSmallMotion()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getStandardFamily()" class="member-name-link">getStandardFamily()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dd>
+<div class="block">Returns a Font (<a href="com/github/yellowstonegames/glyph/KnownFonts.html#getGentium()"><code>getGentium()</code></a>) with a FontFamily configured so that all non-distance-field Fonts can be
+ used with syntax like <code>[@Sans]</code>.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getX()" class="member-name-link">getX()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getY()" class="member-name-link">getY()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
@@ -302,6 +327,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
  Font (which will be copied).</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)" class="member-name-link">GlyphMap(Font, int, int, boolean)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dd>
+<div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+ Font (which will be copied).</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#gridHeight" class="member-name-link">gridHeight</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#gridWidth" class="member-name-link">gridWidth</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
@@ -333,8 +363,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#pause()" class="member-name-link">pause()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,int,char,int)" class="member-name-link">put(int, int, char, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>
 <div class="block">Places a character (optionally with style information) at the specified cell, using the given foreground color.</div>
@@ -363,14 +391,17 @@ loadScripts(document, 'script');</script>
 <div class="block">This should generally be called in the <code>ApplicationListener.resize(int, int)</code> or
  <code>Screen.resize(int, int)</code> method when the screen size changes.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#resume()" class="member-name-link">resume()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#rotation" class="member-name-link">rotation</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
 <dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#setFont(com.github.tommyettinger.textra.Font)" class="member-name-link">setFont(Font)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dd>
+<div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
+ to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#setFont(com.github.tommyettinger.textra.Font,boolean)" class="member-name-link">setFont(Font, boolean)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
 <dd>
 <div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
  to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>

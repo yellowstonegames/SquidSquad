@@ -192,10 +192,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Stores which parts of the map are accessible and which are not.</div>
 </div>
-<div class="col-first even-row-color"><code>protected com.github.tommyettinger.ds.support.LaserRandom</code></div>
+<div class="col-first even-row-color"><code>protected com.github.tommyettinger.random.MizuchiRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+<div class="block">The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
  deterministically before any usage.</div>
 </div>
 <div class="col-first odd-row-color"><code>boolean</code></div>
@@ -918,8 +918,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.LaserRandom</span>&nbsp;<span class="element-name">rng</span></div>
-<div class="block">The LaserRandom used to decide which one of multiple equally-short paths to take; this has its state set
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.MizuchiRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="block">The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
  deterministically before any usage. There will only be one path produced for a given set of parameters, and it
  will be returned again and again if the same parameters are requested.</div>
 </section>

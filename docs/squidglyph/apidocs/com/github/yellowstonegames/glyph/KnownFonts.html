@@ -73,18 +73,17 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.glyph.KnownFonts</div>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code>com.badlogic.gdx.LifecycleListener</code></dd>
-</dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">KnownFonts</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements com.badlogic.gdx.LifecycleListener</span></div>
-<div class="block">Preconfigured static <code>Font</code> instances, with any important metric adjustments already applied. This uses a
- singleton to ensure each font exists at most once, and implements <code>LifecycleListener</code> to ensure that when the
- disposal stage of the lifecycle is called, then all Font instances here will be disposed and assigned null. This may
- do more regarding its LifecycleListener code in the future, if Android turns out to need more work.
+<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">KnownFonts</span>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Preconfigured static <code>Font</code> instances, with any important metric adjustments already applied. This uses the
+ <code>KnownFonts</code> class from textratypist, which is also the dependency that
+ provides Font here. All of the <code>getXyz()</code> methods that return some Font <code>Xyz</code> here are very simple; they
+ call the method of the same name in textratypist to get a Font (which is cached inside textratypist and copied to get
+ the returned value), set a <code>ColorLookup</code> on that Font so the syntax from
+ <code>DescriptiveColor.describe(CharSequence)</code> can be used, and return the modified
+ Font. If you use the KnownFonts class from textratypist, each Font will still work, but you have to use colors known
+ by <code>Colors</code> if you look them up by name, and can't modify lightness or saturation.
  <br>
  Typical usage involves calling one of the static methods like <a href="#getCozette()"><code>getCozette()</code></a> or <a href="#getGentium()"><code>getGentium()</code></a> to get a
  particular Font. This knows a fair amount of fonts, but it doesn't require the image assets for all of those to be
@@ -92,11 +91,18 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  method. It's likely that many games would only use one font file, and so would generally only need a .fnt file, a
  .png file, and some kind of license file. They could ignore all other assets required by other fonts.
  <br>
- This KnownFonts class is mostly the same as the KnownFonts class in textratypist (the dependency that provides Font),
- except each Font this returns automatically sets the ColorLookup of each Font so the description options in
- <code>DescriptiveColor.describe(CharSequence)</code> can be used. If you use the
- KnownFonts class from textratypist, each Font will still work, but you have to use colors known by
- <code>Colors</code> if you look them up by name, and can't modify lightness or saturation.</div>
+ There's some documentation for every known Font, including a link to a preview image and a listing of all
+ required files to use a Font. The required files include any license you need to abide by; this doesn't necessarily
+ belong in the <code>assets</code> folder like the rest of the files! Most of these fonts are either licensed under the OFL
+ or some Creative Commons license; the CC ones typically require attribution, but none of the fonts restrict usage to
+ noncommercial projects.
+ <br>
+ The links to required font files (.fnt, .png, in at least one case .font, and various forms of license documents) go
+ to the <a href="https://github.com/tommyettinger/textratypist">textratypist repo</a> and its assets, rather than the
+ copies here. Because this class just wraps textratypist now, if there's a problem with some asset or its
+ configuration, you can update the textratypist dependency in your project and use the most recent (and hopefully
+ fixed) font files from that repo. This may be more reliable than using duplicate font files from SquidSquad's repo,
+ since those might not be as up-to-date.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,20 +111,44 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAStarry()" class="member-name-link">getAStarry</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAll()" class="member-name-link">getAll</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAllMSDF()" class="member-name-link">getAllMSDF</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any MSDF Font.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAllSDF()" class="member-name-link">getAllSDF</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any SDF Font.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAllStandard()" class="member-name-link">getAllStandard</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any
+ non-distance-field Font.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAStarry()" class="member-name-link">getAStarry</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a Font already configured to use a square font with 45-degree angled sections, based on the
  typeface used on the Atari ST console, that should scale cleanly to many sizes.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBitter()" class="member-name-link">getBitter</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a Font already configured to use a light-weight variable-width slab serif font with good Latin and
+ Cyrillic script support, that should scale pretty well from a height of about 160 down to a height of maybe 30.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCanada()" class="member-name-link">getCanada</a>()</code></div>
@@ -240,17 +270,17 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  support, that should scale pretty well from a height of about 62 down to a height of maybe 20.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getYanoneKaffeesatz()" class="member-name-link">getYanoneKaffeesatz</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStandardFamily()" class="member-name-link">getStandardFamily</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a Font (<a href="#getGentium()"><code>getGentium()</code></a>) with a FontFamily configured so that all non-distance-field Fonts can be
+ used with syntax like <code>[@Sans]</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.textra.Font</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getYanoneKaffeesatz()" class="member-name-link">getYanoneKaffeesatz</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a Font already configured to use a variable-width, narrow, humanist font, that should
  scale pretty well down, but not up.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pause()" class="member-name-link">pause</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resume()" class="member-name-link">resume</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -269,53 +299,6 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getCozette()">
-<h3>getCozette</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getCozette</span>()</div>
-<div class="block">Returns a Font configured to use a cozy fixed-width bitmap font,
- <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
- including Greek, Cyrillic, Braille, and tech-related icons. This does not scale except to integer
- multiples, but it should look very crisp at its default size of 7x13 pixels.
- This may work well in a font family with other fonts that do not use a distance field effect.
- <br>
-
- <br>
- Needs files:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.fnt">Cozette-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-standard.png">Cozette-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cozette-license.txt">Cozette-license.txt</a></li>
- </ul></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the Font object that represents the 7x13px font Cozette</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getOpenSans()">
-<h3>getOpenSans</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getOpenSans</span>()</div>
-<div class="block">Returns a Font configured to use a clean variable-width font, Open Sans. It has good extended-Latin coverage, but
- does not support Greek, Cyrillic, or other scripts. This makes an especially large font by default, but can be
- scaled down nicely.
- This may work well in a font family with other fonts that do not use a distance field effect.
- <br>
-
- <br>
- Needs files:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-standard.fnt">OpenSans-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-standard.png">OpenSans-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/OpenSans-License.txt">OpenSans-License.txt</a></li>
- </ul></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the Font object that represents the variable-width font OpenSans</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getAStarry()">
 <h3>getAStarry</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getAStarry</span>()</div>
@@ -327,17 +310,75 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
  which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
  <br>
-
+ Preview: <a href="https://i.imgur.com/T8MgsRY.png">Image link</a> (uses width=10, height=10)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.fnt">AStarry-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-msdf.png">AStarry-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/AStarry-license.txt">AStarry-license.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-msdf.fnt">AStarry-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-msdf.png">AStarry-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-license.txt">AStarry-license.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that can represent many sizes of the font A Starry using MSDF</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBitter()">
+<h3>getBitter</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getBitter</span>()</div>
+<div class="block">Returns a Font already configured to use a light-weight variable-width slab serif font with good Latin and
+ Cyrillic script support, that should scale pretty well from a height of about 160 down to a height of maybe 30.
+ Caches the result for later calls. The font used is Bitter, a free (OFL) typeface by <a href="https://github.com/solmatas/BitterPro">The Bitter Project</a>.
+ It supports quite a lot of Latin-based scripts and Cyrillic, but does not really cover Greek or any other
+ scripts. This font can look good at its natural size, which uses width roughly equal to height,
+ or squashed so height is slightly smaller. Bitter looks very similar to <a href="#getGentium()"><code>getGentium()</code></a>, except that Bitter
+ is quite a bit lighter, with thinner strokes and stylistic flourishes on some glyphs.
+ This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect. Unlike most other
+ fonts here, this does not use makeGridGlyphs, because it would make underline and strikethrough much thicker than
+ other strokes in the font. This does mean that strikethrough starts too far to the left, and extends too far to
+ the right, unfortunately, but its weight matches.
+ <br>
+ Preview: <a href="https://i.imgur.com/1c3ymlL.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-standard.fnt">Bitter-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-standard.png">Bitter-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Bitter-License.txt">Bitter-License.txt</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that can represent many sizes of the font Bitter-Light.ttf</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCanada()">
+<h3>getCanada</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getCanada</span>()</div>
+<div class="block">Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
+ Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
+ Caches the result for later calls. The font used is Canada1500, a free (public domain, via CC0) typeface by Ray
+ Larabie. It supports quite a lot of Latin-based scripts, Greek, Cyrillic, Canadian Aboriginal Syllabic, arrows,
+ many dingbats, and more. This font can look good at its natural size, which uses width roughly equal to height,
+ or narrowed down so width is smaller.
+ This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect.
+ <br>
+ Preview: <a href="https://i.imgur.com/av2WJha.png">Image link</a> (uses width=30, height=35)
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-standard.fnt">Canada1500-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-standard.png">Canada1500-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Canada1500-License.txt">Canada1500-License.txt</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that can represent many sizes of the font Canada1500.ttf</dd>
 </dl>
 </section>
 </li>
@@ -348,22 +389,50 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <div class="block">Returns a Font already configured to use a quirky fixed-width font with good Unicode support
  and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).
  Caches the result for later calls. The font used is Cascadia Code Mono, an open-source (SIL Open Font
- License) typeface by Microsoft (see https://github.com/microsoft/cascadia-code ). It supports a lot of glyphs,
+ License) typeface by Microsoft (see <a href="https://github.com/microsoft/cascadia-code">Microsoft's page</a>).
+ It supports a lot of glyphs,
  including most extended Latin, Greek, Braille, and Cyrillic. This uses the Multi-channel Signed Distance
  Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
  sharper edges and precise corners instead of rounded tips on strokes.
  <br>
-
+ Preview: <a href="https://i.imgur.com/5lFkTXJ.png">Image link</a> (uses width=9, height=16)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.fnt">CascadiaMono-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/CascadiaMono-msdf.png">CascadiaMono-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Cascadia-license.txt">Cascadia-license.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/CascadiaMono-msdf.fnt">CascadiaMono-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/CascadiaMono-msdf.png">CascadiaMono-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cascadia-license.txt">Cascadia-license.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that can represent many sizes of the font Cascadia Code Mono using MSDF</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCozette()">
+<h3>getCozette</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getCozette</span>()</div>
+<div class="block">Returns a Font configured to use a cozy fixed-width bitmap font,
+ <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>. Cozette has broad coverage of Unicode,
+ including Greek, Cyrillic, Braille, and tech-related icons. This does not scale well except to integer
+ multiples, but it should look very crisp at its default size of 7x13 pixels. This defaults to having
+ <code>Font.integerPosition</code> set to true, which helps keep it pixel-perfect if 1 world unit is 1 pixel, but can
+ cause major visual issues if 1 world unit corresponds to much more than 1 pixel.
+ This may work well in a font family with other fonts that do not use a distance field effect.
+ <br>
+ Preview: <a href="https://i.imgur.com/gIS7ysd.png">Image link</a> (uses width=7, height=13; this is small enough
+ to make the scaled text look bad in some places)
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-standard.fnt">Cozette-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-standard.png">Cozette-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Cozette-license.txt">Cozette-license.txt</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that represents the 7x13px font Cozette</dd>
 </dl>
 </section>
 </li>
@@ -381,15 +450,101 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
  sharper edges and precise corners instead of rounded tips on strokes.
  <br>
+ Preview: <a href="https://i.imgur.com/ngqXFG2.png">Image link</a> (uses width=9, height=20)
+ <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.fnt">DejaVuSansMono-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-msdf.png">DejaVuSansMono-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/DejaVuSansMono-License.txt">DejaVuSansMono-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-msdf.fnt">DejaVuSansMono-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-msdf.png">DejaVuSansMono-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/DejaVuSansMono-License.txt">DejaVuSansMono-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that can represent many sizes of the font DejaVu Sans Mono using MSDF</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getGentium()">
+<h3>getGentium</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getGentium</span>()</div>
+<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
+ scale well from a height of about 132 down to a height of 34. Caches the result for later calls. The font used is
+ Gentium, an open-source (SIL Open Font License) typeface by SIL (see
+ <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It supports a lot of glyphs,
+ including quite a bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various
+ real languages. This does not use a distance field effect, as opposed to <a href="#getGentiumSDF()"><code>getGentiumSDF()</code></a>. You may want
+ to stick using just fonts that avoid distance fields if you have a family of fonts.
+ <br>
+ Preview: <a href="https://i.imgur.com/nnRMpxQ.png">Image link</a> (uses width=31, height=35)
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-standard.fnt">Gentium-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-standard.png">Gentium-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that can represent many sizes of the font Gentium.ttf</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getGentiumSDF()">
+<h3>getGentiumSDF</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getGentiumSDF</span>()</div>
+<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
+ scale cleanly to even very large sizes (using an SDF technique). You usually will want to reduce the line height
+ of this Font after you scale it; using <code>KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)</code>
+ usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
+ License) typeface by SIL (see <a href="https://software.sil.org/gentium/">SIL's page on Gentium here</a>). It
+ supports a lot of glyphs, including quite a
+ bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
+ uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
+ crisp enough when zoomed out.
+ <br>
+ Preview: <a href="https://i.imgur.com/lnQTIRM.png">Image link</a> (uses width=50, height=45, adjustLineHeight(0.8f))
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-sdf.fnt">Gentium-sdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-sdf.png">Gentium-sdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Gentium-license.txt">Gentium-license.txt</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that can represent many sizes of the font Gentium.ttf using SDF</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getIBM8x16()">
+<h3>getIBM8x16</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIBM8x16</span>()</div>
+<div class="block">Returns a Font configured to use a classic, nostalgic fixed-width bitmap font,
+ IBM 8x16 from the early, oft-beloved computer line. This font is notably loaded
+ from a SadConsole format file, which shouldn't affect how it looks (but in reality,
+ it might). This does not scale except to integer multiples, but it should look very
+ crisp at its default size of 8x16 pixels. This supports some extra characters, but
+ not at the typical Unicode codepoints.
+ This may work well in a font family with other fonts that do not use a distance field effect.
+ <br>
+ This does not include a license because the source, <a href="https://github.com/Thraka/SadConsole/tree/master/Fonts">SadConsole's fonts</a>,
+ did not include one. It is doubtful that IBM would have any issues with respectful use
+ of their signature font throughout the 1980s, but if the legality is concerning, you
+ can use <a href="#getCozette()"><code>getCozette()</code></a> for a different bitmap font.
+ <br>
+ Preview: <a href="https://i.imgur.com/HSPyGOZ.png">Image link</a> (uses width=8, height=16)
+ <br>
+ Needs files:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.font">IBM-8x16-standard.font</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/IBM-8x16-standard.png">IBM-8x16-standard.png</a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the Font object that represents an 8x16 font included with early IBM computers</dd>
 </dl>
 </section>
 </li>
@@ -400,14 +555,16 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <div class="block">A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
  Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs). The original font
  Inconsolata is by Raph Levien, and various other contributors added support for other languages. This does not
- use a distance field effect, as opposed to <a href="#getInconsolataMSDF()"><code>getInconsolataMSDF()</code></a>. You may want to stick using just fonts
- that avoid distance fields if you have a family of fonts.
+ use a distance field effect, as opposed to <a href="#getInconsolataMSDF()"><code>getInconsolataMSDF()</code></a>.
+ This may work well in a font family with other fonts that do not use a distance field effect.
+ <br>
+ Preview: <a href="https://i.imgur.com/O2Sf7WO.png">Image link</a> (uses width=10, height=26)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-standard.fnt">Inconsolata-LGC-Custom-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-standard.png">Inconsolata-LGC-Custom-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-standard.fnt">Inconsolata-LGC-Custom-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-standard.png">Inconsolata-LGC-Custom-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -425,11 +582,13 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
  which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
  <br>
+ Preview: <a href="https://i.imgur.com/UHl77sB.png">Image link</a> (uses width=10, height=26)
+ <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.fnt">Inconsolata-LGC-Custom-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-Custom-msdf.png">Inconsolata-LGC-Custom-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-msdf.fnt">Inconsolata-LGC-Custom-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-Custom-msdf.png">Inconsolata-LGC-Custom-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Inconsolata-LGC-License.txt">Inconsolata-LGC-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -442,52 +601,26 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <h3>getIosevka</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevka</span>()</div>
 <div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a sans-serif geometric style. Does not use a distance field effect, and is sized best at 10x30 pixels.
- Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+ and a sans-serif geometric style. Does not use a distance field effect, and is sized best at 9x25 pixels.
+ Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font License) typeface by
+ <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
  thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. You may want to call
- <code>Font.setTextureFilter()</code> on this if you expect to scale it, but be advised that it can have visual
- artifacts with bold or some other effects.
+ Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
-
+ Preview: <a href="https://i.imgur.com/k1m58Jg.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-standard.fnt">Iosevka-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-standard.png">Iosevka-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-standard.fnt">Iosevka-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-standard.png">Iosevka-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that can represent many sizes of the font Iosevka.ttf</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getIosevkaSDF()">
-<h3>getIosevkaSDF</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSDF</span>()</div>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a sans-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
- Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
- thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Signed Distance Field (SDF)
- technique as opposed to the Multi-channel Signed Distance Field technique that <a href="#getIosevkaMSDF()"><code>getIosevkaMSDF()</code></a> uses,
- which isn't as sharp at large sizes but can look a little better at small sizes.
- <br>
-
- <br>
- Needs files:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-sdf.fnt">Iosevka-sdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-sdf.png">Iosevka-sdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
- </ul></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Iosevka.ttf using SDF</dd>
 </dl>
 </section>
 </li>
@@ -497,20 +630,24 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaMSDF</span>()</div>
 <div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
  and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
- Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+ Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font License) typeface by
+ <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
  thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
- Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
- sharper edges and precise corners instead of rounded tips on strokes.
+ Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
+ technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
+ However, using a distance field makes it effectively impossible to mix fonts using a FontFamily (any variation in
+ distance field settings would make some fonts in the family blurry and others too sharp).
  <br>
- Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
+ Preview: <a href="https://i.imgur.com/CzQKPPS.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.fnt">Iosevka-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-msdf.png">Iosevka-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-msdf.fnt">Iosevka-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-msdf.png">Iosevka-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -519,56 +656,61 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getIosevkaSlab()">
-<h3>getIosevkaSlab</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSlab</span>()</div>
+<section class="detail" id="getIosevkaSDF()">
+<h3>getIosevkaSDF</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSDF</span>()</div>
 <div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a slab-serif geometric style. Does not use a distance field effect, and is sized best at 10x30 pixels.
- Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
+ and a sans-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
+ Caches the result for later calls. The font used is Iosevka, an open-source (SIL Open Font License) typeface by
+ <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several customizations
  thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. You may want to call
- <code>Font.setTextureFilter()</code> on this if you expect to scale it, but be advised that it can have visual
- artifacts with bold or some other effects.
+ Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This uses the Signed Distance Field (SDF) technique as opposed to the Multi-channel Signed Distance Field
+ technique that <a href="#getIosevkaMSDF()"><code>getIosevkaMSDF()</code></a> uses, which isn't as sharp at large sizes but can look a little better
+ at small sizes. However, using a distance field makes it effectively impossible to mix fonts using a FontFamily
+ (any variation in distance field settings would make some fonts in the family blurry and others too sharp).
  <br>
-
+ Preview: <a href="https://i.imgur.com/xo9Pe2Z.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-standard.fnt">Iosevka-Slab-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-standard.png">Iosevka-Slab-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-sdf.fnt">Iosevka-sdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-sdf.png">Iosevka-sdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Iosevka-Slab.ttf</dd>
+<dd>the Font object that can represent many sizes of the font Iosevka.ttf using SDF</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getIosevkaSlabSDF()">
-<h3>getIosevkaSlabSDF</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSlabSDF</span>()</div>
+<section class="detail" id="getIosevkaSlab()">
+<h3>getIosevkaSlab</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSlab</span>()</div>
 <div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a slab-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
+ and a slab-serif geometric style. Does not use a distance field effect, and is sized best at 9x25 pixels.
  Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
- thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Signed Distance Field (SDF)
- technique as opposed to the Multi-channel Signed Distance Field technique that <a href="#getIosevkaMSDF()"><code>getIosevkaMSDF()</code></a> uses,
- which isn't as sharp at large sizes but can look a little better at small sizes.
+ License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
+ customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
+ extended Latin, Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
-
+ Preview: <a href="https://i.imgur.com/iq9NBRn.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-sdf.fnt">Iosevka-Slab-sdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-sdf.png">Iosevka-Slab-sdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-standard.fnt">Iosevka-Slab-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-standard.png">Iosevka-Slab-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Iosevka-Slab.ttf using SDF</dd>
+<dd>the Font object that can represent many sizes of the font Iosevka-Slab.ttf</dd>
 </dl>
 </section>
 </li>
@@ -579,19 +721,21 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 <div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
  and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).
  Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
- License) typeface by Belleve Invis (see https://be5invis.github.io/Iosevka/ ), and it uses several customizations
- thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of extended Latin,
- Greek, and Cyrillic, but also the necessary box drawing characters. This uses the Multi-channel Signed Distance
- Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
- sharper edges and precise corners instead of rounded tips on strokes.
+ License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
+ customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
+ extended Latin, Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
+ technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
  <br>
- Preview: <a href="https://i.imgur.com/YlzFEVX.png">Image link</a>
+ Preview: <a href="https://i.imgur.com/MlXRUkC.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.fnt">Iosevka-Slab-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-Slab-msdf.png">Iosevka-Slab-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Iosevka-License.md">Iosevka-License.md</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-msdf.fnt">Iosevka-Slab-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-msdf.png">Iosevka-Slab-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -600,56 +744,64 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getGentium()">
-<h3>getGentium</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getGentium</span>()</div>
-<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
- scale well from a height of about 132 down to a height of 34. You usually will want to reduce the line height
- of this Font after you scale it; using <code>KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)</code>
- usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
- License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
- bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
- does not use a distance field effect, as opposed to <a href="#getGentiumSDF()"><code>getGentiumSDF()</code></a>. You may want to stick using just
- fonts that avoid distance fields if you have a family of fonts.
+<section class="detail" id="getIosevkaSlabSDF()">
+<h3>getIosevkaSlabSDF</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIosevkaSlabSDF</span>()</div>
+<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
+ and a slab-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).
+ Caches the result for later calls. The font used is Iosevka with Slab style, an open-source (SIL Open Font
+ License) typeface by <a href="https://be5invis.github.io/Iosevka/">Belleve Invis</a>, and it uses several
+ customizations thanks to Iosevka's special build process. It supports a lot of glyphs, including quite a bit of
+ extended Latin, Greek, and Cyrillic.
+ This Font is already configured with <code>Font.fitCell(float, float, boolean)</code>, and repeated calls to fitCell()
+ have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
+ This uses the Signed Distance Field (SDF) technique as opposed to the Multi-channel Signed Distance Field
+ technique that <a href="#getIosevkaSlabMSDF()"><code>getIosevkaSlabMSDF()</code></a> uses, which isn't as sharp at large sizes but can look a little
+ better at small sizes.
  <br>
- Preview: <a href="https://i.imgur.com/JXGbHVf.png">Image link (of the SDF version)</a>
+ Preview: <a href="https://i.imgur.com/J3Drrnh.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-standard.fnt">Gentium-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-standard.png">Gentium-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt">Gentium-license.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-sdf.fnt">Iosevka-Slab-sdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-Slab-sdf.png">Iosevka-Slab-sdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Iosevka-License.md">Iosevka-License.md</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Gentium.ttf</dd>
+<dd>the Font object that can represent many sizes of the font Iosevka-Slab.ttf using SDF</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getGentiumSDF()">
-<h3>getGentiumSDF</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getGentiumSDF</span>()</div>
-<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
- scale cleanly to even very large sizes (using an SDF technique). You usually will want to reduce the line height
- of this Font after you scale it; using <code>KnownFonts.getGentium().scaleTo(55, 45).adjustLineHeight(0.8f)</code>
- usually works. Caches the result for later calls. The font used is Gentium, an open-source (SIL Open Font
- License) typeface by SIL (see https://software.sil.org/gentium/ ). It supports a lot of glyphs, including quite a
- bit of extended Latin, Greek, and Cyrillic, as well as some less-common glyphs from various real languages. This
- uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
- crisp enough when zoomed out.
+<section class="detail" id="getKingthingsFoundation()">
+<h3>getKingthingsFoundation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getKingthingsFoundation</span>()</div>
+<div class="block">Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
+ scale pretty well from a height of about 90 down to a height of maybe 30.
+ Caches the result for later calls. The font used is Kingthings Foundation, a free (custom permissive license)
+ typeface; this has faux-bold applied already in order to make some ornamental curls visible at more sizes. You
+ can still apply bold again using markup. It supports only ASCII.
+ This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
- Preview: <a href="https://i.imgur.com/JXGbHVf.png">Image link</a>
+ Preview: <a href="https://i.imgur.com/O3rWqnq.png">Image link</a> (uses width=23, height=30)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.fnt">Gentium-sdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-sdf.png">Gentium-sdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Gentium-license.txt">Gentium-license.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/KingthingsFoundation-standard.fnt">KingthingsFoundation-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/KingthingsFoundation-standard.png">KingthingsFoundation-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Kingthings-License.txt">Kingthings-License.txt</a></li>
+ </ul>
+ You may instead want the non-bold version, but this doesn't have a pre-made instance in KnownFonts:
+ <ul>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/KingthingsFoundation-Light-standard.fnt">KingthingsFoundation-Light-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/KingthingsFoundation-Light-standard.png">KingthingsFoundation-Light-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Kingthings-License.txt">Kingthings-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Gentium.ttf using SDF</dd>
+<dd>the Font object that can represent many sizes of the font KingthingsFoundation.ttf</dd>
 </dl>
 </section>
 </li>
@@ -664,13 +816,13 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
  needs to be scaled so that it has much larger width than height; the default is 150x32.
  <br>
- Preview: <a href="https://i.imgur.com/nESDlFJ.png">Image link</a>
+ Preview: <a href="https://i.imgur.com/YuvHki8.png">Image link</a> (uses width=132, height=28)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.fnt">LibertinusSerif-Regular-msdf.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-Regular-msdf.png">LibertinusSerif-Regular-msdf.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/LibertinusSerif-License.txt">LibertinusSerif-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/LibertinusSerif-Regular-msdf.fnt">LibertinusSerif-Regular-msdf.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/LibertinusSerif-Regular-msdf.png">LibertinusSerif-Regular-msdf.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/LibertinusSerif-License.txt">LibertinusSerif-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -679,33 +831,25 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getKingthingsFoundation()">
-<h3>getKingthingsFoundation</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getKingthingsFoundation</span>()</div>
-<div class="block">Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
- scale pretty well from a height of about 90 down to a height of maybe 30.
- Caches the result for later calls. The font used is Kingthings Foundation, a free (custom permissive license)
- typeface; this has faux-bold applied already in order to make some ornamental curls visible at more sizes. You
- can still apply bold again using markup. It supports only ASCII.
- This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+<section class="detail" id="getOpenSans()">
+<h3>getOpenSans</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getOpenSans</span>()</div>
+<div class="block">Returns a Font configured to use a clean variable-width font, Open Sans. It has good extended-Latin coverage, but
+ does not support Greek, Cyrillic, or other scripts. This makes an especially large font by default, but can be
+ scaled down nicely.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
- Preview: <a href="https://i.imgur.com/DwXRXd3.png">Image link</a> (uses width=45, height=60)
+ Preview: <a href="https://i.imgur.com/wHCTmIU.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.8f))
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.fnt">KingthingsFoundation-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-standard.png">KingthingsFoundation-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt">Kingthings-License.txt</a></li>
- </ul>
- You may instead want the non-bold version, but this doesn't have a pre-made instance in KnownFonts:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-Light-standard.fnt">KingthingsFoundation-Light-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/KingthingsFoundation-Light-standard.png">KingthingsFoundation-Light-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Kingthings-License.txt">Kingthings-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/OpenSans-standard.fnt">OpenSans-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/OpenSans-standard.png">OpenSans-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/OpenSans-License.txt">OpenSans-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font KingthingsFoundation.ttf</dd>
+<dd>the Font object that represents the variable-width font OpenSans</dd>
 </dl>
 </section>
 </li>
@@ -718,68 +862,19 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  Caches the result for later calls. The font used is Oxanium, a free (OFL) typeface. It supports a lot of Latin
  and extended Latin, but not Greek or Cyrillic.
  This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
- Preview: <a href="https://i.imgur.com/uQzCEo9.png">Image link</a> (uses width=40, height=50)
+ Preview: <a href="https://i.imgur.com/MFo2J4j.png">Image link</a> (uses width=31, height=35)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.fnt">Oxanium-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-standard.png">Oxanium-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Oxanium-License.txt">Oxanium-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Oxanium-standard.fnt">Oxanium-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Oxanium-standard.png">Oxanium-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Oxanium-License.txt">Oxanium-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the Font object that can represent many sizes of the font Oxanium.ttf</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getYanoneKaffeesatz()">
-<h3>getYanoneKaffeesatz</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getYanoneKaffeesatz</span>()</div>
-<div class="block">Returns a Font already configured to use a variable-width, narrow, humanist font, that should
- scale pretty well down, but not up.
- Caches the result for later calls. The font used is Yanone Kaffeesatz, a free (OFL) typeface. It supports a lot
- of Latin, Cyrillic, and some extended Latin, but not Greek.
- This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
- <br>
- Preview: <a href="https://i.imgur.com/qSdhTsw.png">Image link</a> (uses width=45, height=60)
- <br>
- Needs files:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.fnt">YanoneKaffeesatz-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-standard.png">YanoneKaffeesatz-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/YanoneKaffeesatz-License.txt">YanoneKaffeesatz-License.txt</a></li>
- </ul></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getCanada()">
-<h3>getCanada</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getCanada</span>()</div>
-<div class="block">Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
- Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.
- Caches the result for later calls. The font used is Canada1500, a free (public domain, via CC0) typeface by Ray
- Larabie. It supports quite a lot of Latin-based scripts, Greek, Cyrillic, Canadian Aboriginal Syllabic, arrows,
- many dingbats, and more. This font can look good at its natural size, which uses width roughly equal to height,
- or narrowed down so width is smaller.
- This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
- <br>
- Preview: <a href="https://i.imgur.com/KFUOFSz.png">Image link</a> (uses width=40, height=58)
- <br>
- Needs files:
- <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.fnt">Canada1500-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-standard.png">Canada1500-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/Canada1500-License.txt">Canada1500-License.txt</a></li>
- </ul></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the Font object that can represent many sizes of the font Canada1500.ttf</dd>
 </dl>
 </section>
 </li>
@@ -793,14 +888,15 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
  Robertson. It supports Latin-based scripts almost entirely, plus Greek, (extended) Cyrillic, and more.
  This font is meant to be condensed in its natural appearance, but can be scaled to be wider if desired.
  This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
- Preview: <a href="https://i.imgur.com/ytyx61F.png">Image link</a> (uses width=40, height=58)
+ Preview: <a href="https://i.imgur.com/xi2VbDD.png">Image link</a> (uses width=25, height=35)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.fnt">RobotoCondensed-standard.fnt</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-standard.png">RobotoCondensed-standard.png</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/RobotoCondensed-License.txt">RobotoCondensed-License.txt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/RobotoCondensed-standard.fnt">RobotoCondensed-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/RobotoCondensed-standard.png">RobotoCondensed-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/RobotoCondensed-License.txt">RobotoCondensed-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -809,59 +905,106 @@ implements com.badlogic.gdx.LifecycleListener</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getIBM8x16()">
-<h3>getIBM8x16</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getIBM8x16</span>()</div>
-<div class="block">Returns a Font configured to use a classic, nostalgic fixed-width bitmap font,
- IBM 8x16 from the early, oft-beloved computer line. This font is notably loaded
- from a SadConsole format file, which shouldn't affect how it looks (but in reality,
- it might). This does not scale except to integer multiples, but it should look very
- crisp at its default size of 8x16 pixels. This supports some extra characters, but
- not at the typical Unicode codepoints.
+<section class="detail" id="getYanoneKaffeesatz()">
+<h3>getYanoneKaffeesatz</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getYanoneKaffeesatz</span>()</div>
+<div class="block">Returns a Font already configured to use a variable-width, narrow, humanist font, that should
+ scale pretty well down, but not up.
+ Caches the result for later calls. The font used is Yanone Kaffeesatz, a free (OFL) typeface. It supports a lot
+ of Latin, Cyrillic, and some extended Latin, but not Greek.
+ This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
+ This may work well in a font family with other fonts that do not use a distance field effect.
  <br>
- This does not include a license because the source, <a href="https://github.com/Thraka/SadConsole/tree/master/Fonts">SadConsole's fonts</a>,
- did not include one. It is doubtful that IBM would have any issues with respectful use
- of their signature font throughout the 1980s, but if the legality is concerning, you
- can use <a href="#getCozette()"><code>getCozette()</code></a> for a different bitmap font.
+ Preview: <a href="https://i.imgur.com/qJ5g2tG.png">Image link</a> (uses width=30, height=35)
  <br>
  Needs files:
  <ul>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM-8x16-standard.font">IBM-8x16-standard.font</a></li>
-     <li><a href="https://github.com/yellowstonegames/SquidSquad/blob/master/assets/IBM-8x16-standard.png">IBM-8x16-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/YanoneKaffeesatz-standard.fnt">YanoneKaffeesatz-standard.fnt</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/YanoneKaffeesatz-standard.png">YanoneKaffeesatz-standard.png</a></li>
+     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/YanoneKaffeesatz-License.txt">YanoneKaffeesatz-License.txt</a></li>
  </ul></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the Font object that represents an 8x16 font included with early IBM computers</dd>
+<dd>the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="pause()">
-<h3>pause</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">pause</span>()</div>
+<section class="detail" id="getAll()">
+<h3>getAll</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font[]</span>&nbsp;<span class="element-name">getAll</span>()</div>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.
+ This will only function at all if all the assets (for every known Font) are present and load-able.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>pause</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.LifecycleListener</code></dd>
+<dt>Returns:</dt>
+<dd>a new array containing all Font instances this knows</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="resume()">
-<h3>resume</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resume</span>()</div>
+<section class="detail" id="getAllStandard()">
+<h3>getAllStandard</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font[]</span>&nbsp;<span class="element-name">getAllStandard</span>()</div>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any
+ non-distance-field Font.
+ This will only function at all if all the assets (for every known standard Font) are present and load-able.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>resume</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.LifecycleListener</code></dd>
+<dt>Returns:</dt>
+<dd>a new array containing all non-distance-field Font instances this knows</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="dispose()">
-<h3>dispose</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<section class="detail" id="getStandardFamily()">
+<h3>getStandardFamily</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font</span>&nbsp;<span class="element-name">getStandardFamily</span>()</div>
+<div class="block">Returns a Font (<a href="#getGentium()"><code>getGentium()</code></a>) with a FontFamily configured so that all non-distance-field Fonts can be
+ used with syntax like <code>[@Sans]</code>. The names this supports can be accessed with code using
+ <code>getStandardFamily().family.fontAliases.keys()</code>. These names so far are:
+ <ul>
+     <li>Serif</li>
+     <li>Sans</li>
+     <li>Mono</li>
+     <li>Condensed</li>
+     <li>Humanist</li>
+     <li>Retro</li>
+     <li>Slab</li>
+     <li>Bitter</li>
+     <li>Canada</li>
+     <li>Cozette</li>
+     <li>Iosevka</li>
+     <li>Medieval</li>
+     <li>Future</li>
+ </ul>
+ You can also always use the full name of one of these fonts, which can be obtained using <code>Font.getName()</code>.
+ This will only function at all if all the assets (for every known standard Font) are present and load-able.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.LifecycleListener</code></dd>
+<dt>Returns:</dt>
+<dd>a Font that can switch between 13 different Fonts in its FontFamily, to any non-distance-field Font this knows</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAllSDF()">
+<h3>getAllSDF</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font[]</span>&nbsp;<span class="element-name">getAllSDF</span>()</div>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any SDF Font.
+ This will only function at all if all the assets (for every known SDF Font) are present and load-able.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new array containing all SDF Font instances this knows</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAllMSDF()">
+<h3>getAllMSDF</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.textra.Font[]</span>&nbsp;<span class="element-name">getAllMSDF</span>()</div>
+<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any MSDF Font.
+ This will only function at all if all the assets (for every known MSDF Font) are present and load-able.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new array containing all MSDF Font instances this knows</dd>
 </dl>
 </section>
 </li>

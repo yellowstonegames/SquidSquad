@@ -2,6 +2,7 @@
 ext.projectName = 'SquidStoreText'
 eclipse.project.name = ext.projectName
 sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
+javadoc.destinationDir = file("../../docs/squidstore/$name/apidocs")
 
 dependencies {
     api project(':squidcore')

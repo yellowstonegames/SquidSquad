@@ -216,7 +216,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-first even-row-color"><code>com.github.yellowstonegames.grid.Region</code></div>
 <div class="col-second even-row-color"><code><a href="#region" class="member-name-link">region</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second odd-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>int</code></div>
@@ -244,35 +244,35 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ConnectingMapGenerator</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Calls <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
+<div class="block">Calls <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
  roomHeight 8, a new <code>LaserRandom</code> for random, and wallThickness 2.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Exactly like <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
+<div class="block">Exactly like <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;wallThickness)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int,double)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int,double)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;wallThickness,
  double&nbsp;divideRooms)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Determines room width and room height by dividing width or height by 10; wallThickness is 2.</div>
 </div>
@@ -381,7 +381,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 </ul>
@@ -396,16 +396,16 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <section class="detail" id="&lt;init&gt;()">
 <h3>ConnectingMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConnectingMapGenerator</span>()</div>
-<div class="block">Calls <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
+<div class="block">Calls <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
  roomHeight 8, a new <code>LaserRandom</code> for random, and wallThickness 2.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>ConnectingMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConnectingMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
 <div class="block">Determines room width and room height by dividing width or height by 10; wallThickness is 2.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -416,14 +416,14 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>ConnectingMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConnectingMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
-<div class="block">Exactly like <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
+<div class="block">Exactly like <a href="#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>width</code> - total width of the map, in cells</dd>
@@ -435,13 +435,13 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)">
+<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)">
 <h3>ConnectingMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConnectingMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;wallThickness)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -456,13 +456,13 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int,double)">
+<section class="detail" id="&lt;init&gt;(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int,double)">
 <h3>ConnectingMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConnectingMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;roomWidth,
  int&nbsp;roomHeight,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random,
  int&nbsp;wallThickness,
  double&nbsp;divideRooms)</span></div>
 <dl class="notes">
@@ -526,8 +526,8 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  <li>DungeonTools.UNTOUCHED, equal to 0, is used for any cells that aren't near a floor.</li>
  <li>DungeonTools.ROOM_FLOOR, equal to 1, is used for floor cells inside wide room areas.</li>
  <li>DungeonTools.ROOM_WALL, equal to 2, is used for wall cells around wide room areas.</li>
- <li>DungeonTools.CAVE_FLOOR, equal to 3, is used for floor cells inside rough cave areas.</li>
- <li>DungeonTools.CAVE_WALL, equal to 4, is used for wall cells around rough cave areas.</li>
+ <li>DungeonTools.NATURAL_FLOOR, equal to 3, is used for floor cells inside rough natural/cave areas.</li>
+ <li>DungeonTools.NATURAL_WALL, equal to 4, is used for wall cells around rough natural/cave areas.</li>
  <li>DungeonTools.CORRIDOR_FLOOR, equal to 5, is used for floor cells inside narrow corridor areas.</li>
  <li>DungeonTools.CORRIDOR_WALL, equal to 6, is used for wall cells around narrow corridor areas.</li>
  </ul></div>

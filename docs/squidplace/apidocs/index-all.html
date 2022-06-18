@@ -126,9 +126,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A copy of the dungeon map, however it was passed to the constructor.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#basicPoints(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">basicPoints(int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#basicPoints(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">basicPoints(int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
-<div class="block">Mainly for internal use; this is used by <a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>MixedGenerator(int, int, EnhancedRandom)</code></a> to get its room positions.</div>
+<div class="block">Mainly for internal use; this is used by <a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)"><code>MixedGenerator(int, int, EnhancedRandom)</code></a> to get its room positions.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.html#BEACH_BIOME" class="member-name-link">BEACH_BIOME</a> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
 <dd>
@@ -137,24 +137,31 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#biome" class="member-name-link">biome</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.html" class="type-name-link" title="class in com.github.yellowstonegames.place">Biome</a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A data class that represents a particular kind of ecosystem that appears at a given combination of average moisture,
+ average temperature, and elevation.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.Heat.html" class="type-name-link" title="enum class in com.github.yellowstonegames.place">Biome.Heat</a> - Enum Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Represents 6 average temperature levels that can determine a biome.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.Moisture.html" class="type-name-link" title="enum class in com.github.yellowstonegames.place">Biome.Moisture</a> - Enum Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">blueSpill(int[][], int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dd>
+<div class="block">Represents 6 average precipitation/moisture levels that can determine a biome.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">blueSpill(int[][], int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)" class="member-name-link">blueSpill(int[][], int, EnhancedRandom, boolean)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int%5B%5D%5B%5D,int,com.github.tommyettinger.random.EnhancedRandom,boolean)" class="member-name-link">blueSpill(int[][], int, EnhancedRandom, boolean)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
 <div class="block">Modifies <code>toFill</code> in-place by filling it with the (seeded variant) blue noise of this class, finding any
  points with values less than <code>spillerLimit</code> when brought into a 0-255 range, and then expanding those
  points pseudo-randomly while keeping the same value for any expanded range as its original point.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">blueSpill(int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#blueSpill(int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">blueSpill(int, int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
 <div class="block">Generates a 2D int array (as with <code>new int[width][height]</code>) and fills it with the (seeded variant) blue
  noise of this class, finding any points with values less than <code>spillerLimit</code> when brought into a 0-255
@@ -241,7 +248,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.Heat.html#COLDEST" class="member-name-link">COLDEST</a> - Enum constant in enum class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.Heat.html" title="enum class in com.github.yellowstonegames.place">Biome.Heat</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/Biome.html#colorDescription" class="member-name-link">colorDescription</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
+<dt><a href="com/github/yellowstonegames/place/Biome.html#colorOklab" class="member-name-link">colorOklab</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#colors" class="member-name-link">colors</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
@@ -268,18 +275,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E()" class="member-name-link">ConnectingMapGenerator()</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>
-<div class="block">Calls <a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
+<div class="block">Calls <a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with width 80, height 80, roomWidth 8,
  roomHeight 8, a new <code>LaserRandom</code> for random, and wallThickness 2.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>
-<div class="block">Exactly like <a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
+<div class="block">Exactly like <a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)"><code>ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</code></a> with wallThickness 2.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,int,double)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,int,int,com.github.tommyettinger.random.EnhancedRandom,int,double)" class="member-name-link">ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">ConnectingMapGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
 <dd>
 <div class="block">Determines room width and room height by dividing width or height by 10; wallThickness is 2.</div>
 </dd>
@@ -289,7 +296,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#content" class="member-name-link">content</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">contentByBiome(Biome, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#contentByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">contentByBiome(Biome, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
 <div class="block">Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.</div>
 </dd>
@@ -400,7 +407,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a DungeonBoneGen that uses a default LaserRandom, randomly seeded.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">DungeonBoneGen(EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
+<dt><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">DungeonBoneGen(EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
 <div class="block">Constructs a DungeonBoneGen that uses the given EnhancedRandom.</div>
 </dd>
@@ -418,7 +425,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
  adding features will be a LaserRandom using a random seed.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">DungeonProcessor(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">DungeonProcessor(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
 <dd>
 <div class="block">Make a DungeonProcessor with the given height, width, and EnhancedRandom.</div>
 </dd>
@@ -439,10 +446,10 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/github/yellowstonegames/place/tileset/Tile.html#e_constraint" class="member-name-link">e_constraint</a> - Variable in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/Tile.html" title="class in com.github.yellowstonegames.place.tileset">Tile</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonTools.html#ensurePath(char%5B%5D%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,char,char...)" class="member-name-link">ensurePath(char[][], EnhancedRandom, char, char...)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonTools.html#ensurePath(char%5B%5D%5B%5D,com.github.tommyettinger.random.EnhancedRandom,char,char...)" class="member-name-link">ensurePath(char[][], EnhancedRandom, char, char...)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>
 <div class="block">Ensures a path exists in a rough ring around the map by first creating the path (using
- <a href="com/github/yellowstonegames/place/DungeonTools.html#pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>DungeonTools.pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
+ <a href="com/github/yellowstonegames/place/DungeonTools.html#pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)"><code>DungeonTools.pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
  that path and replacing them with replacement.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html#environment" class="member-name-link">environment</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/ConnectingMapGenerator.html" title="class in com.github.yellowstonegames.place">ConnectingMapGenerator</a></dt>
@@ -459,7 +466,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/tileset/TilesetType.html#environment()" class="member-name-link">environment()</a> - Method in enum class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/TilesetType.html" title="enum class in com.github.yellowstonegames.place.tileset">TilesetType</a></dt>
 <dd>
-<div class="block">Returns MixedGenerator.CAVE_FLOOR (which is 3) or MixedGenerator.ROOM_FLOOR (which is 1) based on whether this
+<div class="block">Returns DungeonTools.NATURAL_FLOOR (which is 3) or DungeonTools.ROOM_FLOOR (which is 1) based on whether this
  TilesetType predominantly generates caves or rooms.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#environmentType" class="member-name-link">environmentType</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
@@ -508,7 +515,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#floors" class="member-name-link">floors</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">floorsByBiome(Biome, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#floorsByBiome(com.github.yellowstonegames.place.Biome,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">floorsByBiome(Biome, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
 <div class="block">Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.</div>
 </dd>
@@ -526,7 +533,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Makes a cave map with the specified dimensions and a random seed.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/FlowingCaveGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.tileset.TilesetType,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">FlowingCaveGenerator(int, int, TilesetType, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FlowingCaveGenerator.html" title="class in com.github.yellowstonegames.place">FlowingCaveGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/FlowingCaveGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.tileset.TilesetType,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">FlowingCaveGenerator(int, int, TilesetType, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/FlowingCaveGenerator.html" title="class in com.github.yellowstonegames.place">FlowingCaveGenerator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -668,7 +675,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#getEnvironment()" class="member-name-link">getEnvironment()</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">Gets a 2D array of int constants, each representing a type of environment corresponding to a static field of
- MixedGenerator.</div>
+ DungeonTools.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#getEnvironment()" class="member-name-link">getEnvironment()</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
@@ -927,7 +934,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Meant for generating large ObjectLists of Strings where an individual String may occur quite a few times.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#makeShuffledRepeats(com.github.tommyettinger.ds.support.EnhancedRandom,java.lang.Object...)" class="member-name-link">makeShuffledRepeats(EnhancedRandom, Object...)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#makeShuffledRepeats(com.github.tommyettinger.random.EnhancedRandom,java.lang.Object...)" class="member-name-link">makeShuffledRepeats(EnhancedRandom, Object...)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/RoomFinder.html#map" class="member-name-link">map</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
 <dd>
@@ -1028,25 +1035,25 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A dungeon generator that can use a mix of techniques to have part-cave, part-room dungeons.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.List)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, List&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,java.util.List)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, List&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, Map&lt;Coord, ? extends List&lt;Coord&gt;&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,java.util.Map)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, Map&lt;Coord, ? extends List&lt;Coord&gt;&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,java.util.Map,float)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, Map&lt;Coord, ? extends List&lt;Coord&gt;&gt;, float)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,java.util.Map,float)" class="member-name-link">MixedGenerator(int, int, EnhancedRandom, Map&lt;Coord, ? extends List&lt;Coord&gt;&gt;, float)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html#%3Cinit%3E()" class="member-name-link">MixedWildernessGenerator()</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator.MixedWildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html#%3Cinit%3E(com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">MixedWildernessGenerator(WildernessGenerator, WildernessGenerator, WildernessGenerator, WildernessGenerator, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator.MixedWildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html#%3Cinit%3E(com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.yellowstonegames.place.WildernessGenerator,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">MixedWildernessGenerator(WildernessGenerator, WildernessGenerator, WildernessGenerator, WildernessGenerator, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator.MixedWildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.html#moisture" class="member-name-link">moisture</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
 <dd>&nbsp;</dd>
@@ -1066,7 +1073,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/place/Biome.Moisture.html#name" class="member-name-link">name</a> - Variable in enum class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.Moisture.html" title="enum class in com.github.yellowstonegames.place">Biome.Moisture</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.html#name" class="member-name-link">name</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Should always be one word in the constants here; recommended to be one word in any user-defined Biomes.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/DungeonTools.html#NATURAL_FLOOR" class="member-name-link">NATURAL_FLOOR</a> - Static variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>
 <div class="block">Constant for environment tiles that are floors for a cave or other natural part of a map.</div>
@@ -1110,7 +1119,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E(int,int)" class="member-name-link">PacMazeGenerator(int, int)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">PacMazeGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/PacMazeGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">PacMazeGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/PacMazeGenerator.html" title="class in com.github.yellowstonegames.place">PacMazeGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#pathsByBiome(com.github.yellowstonegames.place.Biome)" class="member-name-link">pathsByBiome(Biome)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>
@@ -1139,7 +1148,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a Placement using the given RoomFinder, which will have collections of rooms, corridors, and caves.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonTools.html#pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">pointPath(int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonTools.html#pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">pointPath(int, int, EnhancedRandom)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonTools.html" title="class in com.github.yellowstonegames.place">DungeonTools</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/MixedGenerator.html#points" class="member-name-link">points</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place">MixedGenerator</a></dt>
 <dd>&nbsp;</dd>
@@ -1264,18 +1273,20 @@ loadScripts(document, 'script');</script>
 <div class="block">Takes an x, y position and finds the room or corridor at that position and the rooms, corridors or caves that it
  directly connects to, and returns the group as one merged 2D char array.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent(ObjectOrderedSet&lt;Coord&gt;, Coord)</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent(CoordOrderedSet, Coord)</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeAdjacent(com.github.tommyettinger.ds.ObjectOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent(ObjectOrderedSet&lt;Coord&gt;, Coord, Coord)</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeAdjacent(com.github.yellowstonegames.grid.CoordOrderedSet,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">removeAdjacent(CoordOrderedSet, Coord, Coord)</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeNearby(com.github.tommyettinger.ds.ObjectOrderedSet,char%5B%5D%5B%5D)" class="member-name-link">removeNearby(ObjectOrderedSet&lt;Coord&gt;, char[][])</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
+<dt><a href="com/github/yellowstonegames/place/DungeonProcessor.html#removeNearby(com.github.yellowstonegames.grid.CoordOrderedSet,char%5B%5D%5B%5D)" class="member-name-link">removeNearby(CoordOrderedSet, char[][])</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#removeSomeOverlap(int,int,com.github.tommyettinger.ds.ObjectObjectOrderedMap)" class="member-name-link">removeSomeOverlap(int, int, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#removeSomeOverlap(int,int,java.util.Collection)" class="member-name-link">removeSomeOverlap(int, int, Collection&lt;Coord&gt;)</a> - Static method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/Biome.html#representation" class="member-name-link">representation</a> - Variable in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/Biome.html" title="class in com.github.yellowstonegames.place">Biome</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">How to represent the Biome in a char format, such as a 2D char array for a map.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/place/RoomFinder.html#reset(char%5B%5D%5B%5D)" class="member-name-link">reset(char[][])</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/RoomFinder.html#reset(char%5B%5D%5B%5D,int)" class="member-name-link">reset(char[][], int)</a> - Method in class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/RoomFinder.html" title="class in com.github.yellowstonegames.place">RoomFinder</a></dt>
@@ -1411,12 +1422,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Generate dungeons based on a random, winding, looping path through 3D space, requiring a character to move up and
  down as well as north/south/east/west to get through the dungeon.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">SerpentDeepMapGenerator(int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentDeepMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html#%3Cinit%3E(int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">SerpentDeepMapGenerator(int, int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentDeepMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
  IRNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)" class="member-name-link">SerpentDeepMapGenerator(int, int, int, EnhancedRandom, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentDeepMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html#%3Cinit%3E(int,int,int,com.github.tommyettinger.random.EnhancedRandom,double)" class="member-name-link">SerpentDeepMapGenerator(int, int, int, EnhancedRandom, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentDeepMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentDeepMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
  IRNG, and will branch out to other nearby rooms that (probably) do not have staircases between layers.</div>
@@ -1425,19 +1436,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generate dungeons based on a random, winding, looping path through 2D space.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,boolean)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, boolean)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,boolean)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, boolean)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,double)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, double)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double,boolean)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, double, boolean)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SerpentMapGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,double,boolean)" class="member-name-link">SerpentMapGenerator(int, int, EnhancedRandom, double, boolean)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SerpentMapGenerator.html" title="class in com.github.yellowstonegames.place">SerpentMapGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.</div>
 </dd>
@@ -1455,7 +1466,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Change the underlying char[][]; only affects toString(), getPlaceGrid(), and getBarePlaceGrid().</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#setRng(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">setRng(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
+<dt><a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html#setRng(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRng(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.place.tileset.<a href="com/github/yellowstonegames/place/tileset/DungeonBoneGen.html" title="class in com.github.yellowstonegames.place.tileset">DungeonBoneGen</a></dt>
 <dd>
 <div class="block">Sets the current RNG.</div>
 </dd>
@@ -1506,23 +1517,23 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A variant on <a href="com/github/yellowstonegames/place/MixedGenerator.html" title="class in com.github.yellowstonegames.place"><code>MixedGenerator</code></a> that creates bi-radially symmetric maps (basically a yin-yang shape).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectList&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectList&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap,float)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;, float)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectObjectOrderedMap,float)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, ObjectObjectOrderedMap&lt;Coord, ObjectList&lt;Coord&gt;&gt;, float)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.Ordered)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, Ordered&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.Ordered)" class="member-name-link">SymmetryDungeonGenerator(int, int, EnhancedRandom, Ordered&lt;Coord&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/SymmetryDungeonGenerator.html" title="class in com.github.yellowstonegames.place">SymmetryDungeonGenerator</a></dt>
 <dd>
 <div class="block">This prepares a map generator that will generate a map with the given width and height, using the given RNG.</div>
 </dd>
@@ -1716,11 +1727,11 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,long,long)" class="member-name-link">WildernessGenerator(int, int, Biome, long, long)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom, ObjectList&lt;String&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom, ObjectList&lt;String&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom, ObjectList&lt;String&gt;, ObjectList&lt;String&gt;, ObjectLongMap&lt;String&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
+<dt><a href="com/github/yellowstonegames/place/WildernessGenerator.html#%3Cinit%3E(int,int,com.github.yellowstonegames.place.Biome,com.github.tommyettinger.random.EnhancedRandom,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectList,com.github.tommyettinger.ds.ObjectLongMap)" class="member-name-link">WildernessGenerator(int, int, Biome, EnhancedRandom, ObjectList&lt;String&gt;, ObjectList&lt;String&gt;, ObjectLongMap&lt;String&gt;)</a> - Constructor for class com.github.yellowstonegames.place.<a href="com/github/yellowstonegames/place/WildernessGenerator.html" title="class in com.github.yellowstonegames.place">WildernessGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/place/WildernessGenerator.MixedWildernessGenerator.html" class="type-name-link" title="class in com.github.yellowstonegames.place">WildernessGenerator.MixedWildernessGenerator</a> - Class in <a href="com/github/yellowstonegames/place/package-summary.html">com.github.yellowstonegames.place</a></dt>
 <dd>

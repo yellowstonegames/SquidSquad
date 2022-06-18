@@ -76,8 +76,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TwistedLine</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Like <code>WobblyLine</code>, this generates orthogonally-connected paths of <code>Coord</code> that meander through an area;
- unlike WobblyLine, this won't ever generate paths that cross themselves.
+<div class="block">Like <code>DrunkenWalk</code>, this generates orthogonally-connected paths of <code>Coord</code> that meander through an area;
+ unlike DrunkenWalk, this won't ever generate paths that cross themselves.
  <br>
  This generates a fully-connected graph for a given rectangular area, then solves it with
  <a href="DefaultGraph.html#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,com.github.tommyettinger.ds.ObjectList,com.github.yellowstonegames.path.Heuristic)"><code>DefaultGraph.findShortestPath(Coord, Coord, ObjectList, Heuristic)</code></a>.
@@ -101,7 +101,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>final com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#lastPath" class="member-name-link">lastPath</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -120,9 +120,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int)" class="member-name-link">TwistedLine</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">TwistedLine</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">TwistedLine</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -146,7 +146,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the last path this found, which may be empty.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRng()" class="member-name-link">getRng</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
@@ -169,7 +169,7 @@ loadScripts(document, 'script');</script>
  found.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRng(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">setRng</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRng(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRng</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -192,7 +192,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="rng">
 <h3>rng</h3>
 <div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -231,11 +231,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>TwistedLine</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TwistedLine</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 </ul>
@@ -286,13 +286,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getRng()">
 <h3>getRng</h3>
 <div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setRng(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="setRng(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>setRng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRng</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRng</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>

@@ -83,6 +83,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A 2D coordinate with (constant) x and y fields.</div>
 </div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CoordFloatMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatMap</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A variant on jdkgdxds' <code>ObjectFloatMap</code> class that only uses Coord keys, and can do so more efficiently.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordFloatOrderedMap</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A variant on jdkgdxds' <code>ObjectFloatOrderedMap</code> class that only uses Coord keys, and can do so more efficiently.</div>
+</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CoordObjectMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectMap</a>&lt;V&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A variant on jdkgdxds' <code>ObjectObjectMap</code> class that only uses Coord keys, and can do so more efficiently.</div>
@@ -104,120 +112,129 @@ loadScripts(document, 'script');</script>
 <div class="block">Represents the eight grid directions and the deltaX, deltaY values associated
  with those directions.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid">FlawedPointHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid">FlawedPointHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">An interface for point hashes that are statistically biased, as well as a holder for inner classes that implement
  this.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.CubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.CubeHash</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Very similar to <a href="FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid"><code>FlawedPointHash.QuiltHash</code></a>, but this doesn't change the pattern in different large squares, and instead
  repeats a square or cube of symmetric and patterned results over and over (so it can be tiled).</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.FNVHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.FNVHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.FNVHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.FNVHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">FNV32a is OK as a hash for bytes when used in some hash tables, but it has major issues on its low-order bits
  when used as a point hash (the high bits aren't much better).</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.LowLeaningHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.LowLeaningHash</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.LowLeaningHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.LowLeaningHash</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Makes smaller results on average, with a biased average at about 25% of the range instead of 50% of the range for
  most non-biased hashes.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.QuiltHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.QuiltHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Extremely flawed if you're using this as a point hash, but meant to be aesthetically interesting, this produces
  different symmetrical patterns in squares, as if on a quilt.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.RugHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.RugHash</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FlawedPointHash.RugHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.RugHash</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Produces hashes that show strong bias on one axis (usually the later axes matter more) and have nice-looking
  patterns of dots.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Calculates and stores 2D and optionally 3D Hilbert Curves up to a reasonable size.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Combines IGridPositioned and IIdentified for objects that have a Coord position and an int identifier.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IGridPositioned.html" title="interface in com.github.yellowstonegames.grid">IGridPositioned</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IGridPositioned.html" title="interface in com.github.yellowstonegames.grid">IGridPositioned</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Allows getting and setting the position of an object, as a Coord.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A group of similar methods for getting hashes of points based on int coordinates in 2, 3, 4, or 6 dimensions and
  an int for state; the code is similar to <a href="LongPointHash.html" title="class in com.github.yellowstonegames.grid"><code>LongPointHash</code></a> but will be much faster on GWT.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IPointHash.html" title="interface in com.github.yellowstonegames.grid">IPointHash</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">An interface for "point hashes", that is, functions that produce usually-unique integer results given multiple
  integer inputs.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IPointHash.IntImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.IntImpl</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IPointHash.IntImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.IntImpl</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A convenience abstract class to implement IPointHash when you have an int for state.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IPointHash.LongImpl.html" title="class in com.github.yellowstonegames.grid">IPointHash.LongImpl</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A convenience abstract class to implement IPointHash when you have a long for state.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="KnownSizePointHash.html" title="class in com.github.yellowstonegames.grid">KnownSizePointHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="KnownSizePointHash.html" title="class in com.github.yellowstonegames.grid">KnownSizePointHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A very simple point hash meant only for fixed-size grids, and only for when the hash must be unique but does
  not need to be randomized.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LightingManager.html" title="class in com.github.yellowstonegames.grid">LightingManager</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A convenience class that makes dealing with multiple colored light sources easier.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="LineDrawer.html" title="interface in com.github.yellowstonegames.grid">LineDrawer</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">A shared interface for line-drawing classes, so instances can be interchanged.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LineTools.html" title="class in com.github.yellowstonegames.grid">LineTools</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Tools for constructing patterns using box-drawing characters in grids.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LongPointHash.html" title="class in com.github.yellowstonegames.grid">LongPointHash</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A group of similar methods for getting hashes of points based on long coordinates in 2, 3, 4, 5, or 6 dimensions and
  a long for state.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="Measurement.html" title="enum class in com.github.yellowstonegames.grid">Measurement</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="Measurement.html" title="enum class in com.github.yellowstonegames.grid">Measurement</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
 <div class="block">A way of measuring what cells are adjacent and how much further any adjacent cells are from other adjacent cells.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Noise.html" title="class in com.github.yellowstonegames.grid">Noise</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A wide range of noise functions that can all be called from one configurable object.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Noise.Float2.html" title="class in com.github.yellowstonegames.grid">Noise.Float2</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Noise.Float2.html" title="class in com.github.yellowstonegames.grid">Noise.Float2</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Simple container class that holds 2 floats.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Noise.Float3.html" title="class in com.github.yellowstonegames.grid">Noise.Float3</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Noise.Float3.html" title="class in com.github.yellowstonegames.grid">Noise.Float3</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Simple container class that holds 3 floats.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  distances for measurements.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly
  high.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PoissonDisk.html" title="class in com.github.yellowstonegames.grid">PoissonDisk</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="QuasiRandomTools.html" title="class in com.github.yellowstonegames.grid">QuasiRandomTools</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Static methods to produce numbers and points from quasi-random sequences (which seem like random sequences, but have
+ lower "discrepancy" between results).</div>
+</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Grouping of qualities related to glow and light emission.</div>
@@ -238,10 +255,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A port of WaveFunctionCollapse by ExUtumno/mxgmn; takes a single sample of a grid to imitate and produces one or more
  grids of requested sizes that have a similar layout of cells to the sample.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="WobblyLine.html" title="class in com.github.yellowstonegames.grid">WobblyLine</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.</div>
 </div>
 </div>
 </div>

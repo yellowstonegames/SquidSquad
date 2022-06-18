@@ -122,7 +122,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>protected int</code></div>
 <div class="col-second odd-row-color"><code><a href="#normalTotal" class="member-name-link">normalTotal</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>final com.github.tommyettinger.ds.NumberedSet&lt;<a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;</code></div>
@@ -155,7 +155,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Creates a new probability table with the provided long seed used.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">ProbabilityTable</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">ProbabilityTable</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a new probability table with the provided source of randomness
  used.</div>
@@ -216,7 +216,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRandom()" class="member-name-link">getRandom</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the random number generator (an EnhancedRandom) this uses.</div>
@@ -260,7 +260,7 @@ loadScripts(document, 'script');</script>
  in nested ProbabilityTables, and returns true if any probabilities were changed.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">setRandom</a><wbr>(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRandom</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the current random number generator to the given EnhancedRandom.</div>
 </div>
@@ -327,7 +327,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -358,9 +358,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>ProbabilityTable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProbabilityTable</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProbabilityTable</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Creates a new probability table with the provided source of randomness
  used.</div>
 <dl class="notes">
@@ -627,9 +627,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setRandom(com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="setRandom(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>setRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
 <div class="block">Sets the current random number generator to the given EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -640,7 +640,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getRandom()">
 <h3>getRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">getRandom</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">getRandom</span>()</div>
 <div class="block">Gets the random number generator (an EnhancedRandom) this uses.</div>
 <dl class="notes">
 <dt>Returns:</dt>

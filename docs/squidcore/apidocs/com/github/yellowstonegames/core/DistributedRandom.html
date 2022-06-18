@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -71,24 +71,44 @@ loadScripts(document, 'script');</script>
 <h1 title="Class DistributedRandom" class="title">Class DistributedRandom</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">java.util.Random</a>
+<div class="inheritance">com.github.tommyettinger.random.EnhancedRandom
 <div class="inheritance">com.github.yellowstonegames.core.DistributedRandom</div>
+</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DistributedRandom</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
+<span class="extends-implements">extends com.github.tommyettinger.random.EnhancedRandom</span></div>
 <div class="block">An EnhancedRandom that delegates to a <code>FourWheelRandom</code>, but runs it through a user-controlled
  <a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core"><code>IDistribution.SimpleDistribution</code></a> to distribute any floats, ints, or doubles as by that distribution.
  Generating random long values is trickier because a distribution works on doubles, and doubles only provide 52 bits
  of usable random data, while a long can need as many as 64.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../serialized-form.html#com.github.yellowstonegames.core.DistributedRandom">Serialized Form</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-java.util.random.RandomGenerator">Nested classes/interfaces inherited from interface&nbsp;java.util.random.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></h2>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.ArbitrarilyJumpableGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator.ArbitrarilyJumpableGenerator</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.JumpableGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator.JumpableGenerator</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.LeapableGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator.LeapableGenerator</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.SplittableGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator.SplittableGenerator</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.StreamableGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator.StreamableGenerator</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -101,7 +121,7 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="col-first even-row-color"><code>protected <a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleDistribution</a></code></div>
 <div class="col-second even-row-color"><code><a href="#distribution" class="member-name-link">distribution</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected com.github.tommyettinger.ds.support.FourWheelRandom</code></div>
+<div class="col-first odd-row-color"><code>protected com.github.tommyettinger.random.FourWheelRandom</code></div>
 <div class="col-second odd-row-color"><code><a href="#random" class="member-name-link">random</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -155,7 +175,7 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleDistribution</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDistribution()" class="member-name-link">getDistribution</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.support.FourWheelRandom</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.FourWheelRandom</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRandom()" class="member-name-link">getRandom</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
@@ -176,90 +196,110 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStateD()" class="member-name-link">getStateD</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#next(int)" class="member-name-link">next</a><wbr>(int&nbsp;bits)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextBoolean()" class="member-name-link">nextBoolean</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#next(int)" class="member-name-link">next</a><wbr>(int&nbsp;bits)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextBytes(byte%5B%5D)" class="member-name-link">nextBytes</a><wbr>(byte[]&nbsp;bytes)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextBoolean()" class="member-name-link">nextBoolean</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextDouble()" class="member-name-link">nextDouble</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextBytes(byte%5B%5D)" class="member-name-link">nextBytes</a><wbr>(byte[]&nbsp;bytes)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextExclusiveDouble()" class="member-name-link">nextExclusiveDouble</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextDouble()" class="member-name-link">nextDouble</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextExclusiveDouble()" class="member-name-link">nextExclusiveDouble</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">This acts the same as <code>EnhancedRandom.nextExclusiveDoubleEquidistant()</code>; it does not use the optimizations
  from <code>EnhancedRandom.nextExclusiveDouble()</code>, because those aren't reasonable when distributed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextExclusiveFloat()" class="member-name-link">nextExclusiveFloat</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextExclusiveFloat()" class="member-name-link">nextExclusiveFloat</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">This acts the same as <code>EnhancedRandom.nextExclusiveFloatEquidistant()</code>; it does not use the optimizations
  from <code>EnhancedRandom.nextExclusiveFloat()</code>, because those aren't reasonable when distributed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextFloat()" class="member-name-link">nextFloat</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextGaussian()" class="member-name-link">nextGaussian</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextFloat()" class="member-name-link">nextFloat</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextGaussian()" class="member-name-link">nextGaussian</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Because nextGaussian() already specifies a distribution, this uses <code>EnhancedRandom.nextGaussian()</code> as-is.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextInt()" class="member-name-link">nextInt</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextInt()" class="member-name-link">nextInt</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextInt(int)" class="member-name-link">nextInt</a><wbr>(int&nbsp;bound)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextInt(int)" class="member-name-link">nextInt</a><wbr>(int&nbsp;bound)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextLong()" class="member-name-link">nextLong</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextLong()" class="member-name-link">nextLong</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextSignedInt(int)" class="member-name-link">nextSignedInt</a><wbr>(int&nbsp;outerBound)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDistribution(com.github.yellowstonegames.core.IDistribution.SimpleDistribution)" class="member-name-link">setDistribution</a><wbr>(<a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleDistribution</a>&nbsp;distribution)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextSignedInt(int)" class="member-name-link">nextSignedInt</a><wbr>(int&nbsp;outerBound)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.ds.support.FourWheelRandom)" class="member-name-link">setRandom</a><wbr>(com.github.tommyettinger.ds.support.FourWheelRandom&nbsp;random)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDistribution(com.github.yellowstonegames.core.IDistribution.SimpleDistribution)" class="member-name-link">setDistribution</a><wbr>(<a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleDistribution</a>&nbsp;distribution)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSeed(long)" class="member-name-link">setSeed</a><wbr>(long&nbsp;seed)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.random.FourWheelRandom)" class="member-name-link">setRandom</a><wbr>(com.github.tommyettinger.random.FourWheelRandom&nbsp;random)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSelectedState(int,long)" class="member-name-link">setSelectedState</a><wbr>(int&nbsp;selection,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSeed(long)" class="member-name-link">setSeed</a><wbr>(long&nbsp;seed)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSelectedState(int,long)" class="member-name-link">setSelectedState</a><wbr>(int&nbsp;selection,
  long&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setState(long,long,long,long)" class="member-name-link">setState</a><wbr>(long&nbsp;stateA,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setState(long,long,long,long)" class="member-name-link">setState</a><wbr>(long&nbsp;stateA,
  long&nbsp;stateB,
  long&nbsp;stateC,
  long&nbsp;stateD)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateA(long)" class="member-name-link">setStateA</a><wbr>(long&nbsp;stateA)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateB(long)" class="member-name-link">setStateB</a><wbr>(long&nbsp;stateB)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateA(long)" class="member-name-link">setStateA</a><wbr>(long&nbsp;stateA)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateC(long)" class="member-name-link">setStateC</a><wbr>(long&nbsp;stateC)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateB(long)" class="member-name-link">setStateB</a><wbr>(long&nbsp;stateB)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateD(long)" class="member-name-link">setStateD</a><wbr>(long&nbsp;stateD)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateC(long)" class="member-name-link">setStateC</a><wbr>(long&nbsp;stateC)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStateD(long)" class="member-name-link">setStateD</a><wbr>(long&nbsp;stateD)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String,com.github.tommyettinger.digital.Base)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data,
+ com.github.tommyettinger.digital.Base&nbsp;base)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This deserialization method does not assign the distribution this class uses; you must set it yourself.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSerialize(com.github.tommyettinger.digital.Base)" class="member-name-link">stringSerialize</a><wbr>(com.github.tommyettinger.digital.Base&nbsp;base)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Serializes the four states this uses, but not the distribution used here; you must somehow store it yourself.</div>
 </div>
 </div>
 </div>
+</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.tommyettinger.random.EnhancedRandom">Methods inherited from class&nbsp;com.github.tommyettinger.random.EnhancedRandom</h3>
+<code>areEqual, maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextInt, nextLong, nextLong, nextSign, nextSignedInt, nextSignedLong, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, previousLong, probit, randomElement, randomElement, seedFromMath, setState, setState, setState, setState, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip, stringDeserialize, stringSerialize</code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-java.util.Random">Methods inherited from class&nbsp;java.util.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#doubles()" title="class or interface in java.util" class="external-link">doubles</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#doubles(double,double)" title="class or interface in java.util" class="external-link">doubles</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#doubles(long)" title="class or interface in java.util" class="external-link">doubles</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#doubles(long,double,double)" title="class or interface in java.util" class="external-link">doubles</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#ints()" title="class or interface in java.util" class="external-link">ints</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#ints(int,int)" title="class or interface in java.util" class="external-link">ints</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#ints(long)" title="class or interface in java.util" class="external-link">ints</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#ints(long,int,int)" title="class or interface in java.util" class="external-link">ints</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#longs()" title="class or interface in java.util" class="external-link">longs</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#longs(long)" title="class or interface in java.util" class="external-link">longs</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#longs(long,long)" title="class or interface in java.util" class="external-link">longs</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html#longs(long,long,long)" title="class or interface in java.util" class="external-link">longs</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.github.tommyettinger.ds.support.EnhancedRandom">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.support.EnhancedRandom</h3>
-<code>maxDoubleOf, maxFloatOf, maxIntOf, maxLongOf, minDoubleOf, minFloatOf, minIntOf, minLongOf, nextBoolean, nextDouble, nextDouble, nextExclusiveDouble, nextExclusiveDouble, nextExclusiveDoubleEquidistant, nextExclusiveFloat, nextExclusiveFloat, nextExclusiveFloatEquidistant, nextFloat, nextFloat, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveDouble, nextInclusiveFloat, nextInclusiveFloat, nextInclusiveFloat, nextInt, nextLong, nextLong, nextSign, nextSignedInt, nextSignedLong, nextSignedLong, nextTriangular, nextTriangular, nextTriangular, nextTriangular, previousLong, randomElement, randomElement, randomElement, randomElement, randomElement, setState, setState, setState, setState, setWith, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, shuffle, skip</code></div>
+<h3 id="methods-inherited-from-class-java.util.random.RandomGenerator">Methods inherited from interface&nbsp;java.util.random.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#isDeprecated()" title="class or interface in java.util.random" class="external-link">isDeprecated</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextExponential()" title="class or interface in java.util.random" class="external-link">nextExponential</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextGaussian(double,double)" title="class or interface in java.util.random" class="external-link">nextGaussian</a></code></div>
 </section>
 </li>
 </ul>
@@ -280,7 +320,7 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <li>
 <section class="detail" id="random">
 <h3>random</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.FourWheelRandom</span>&nbsp;<span class="element-name">random</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.FourWheelRandom</span>&nbsp;<span class="element-name">random</span></div>
 </section>
 </li>
 </ul>
@@ -344,12 +384,24 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getTag()">
+<h3>getTag</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTag</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>getTag</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="nextLong()">
 <h3>nextLong</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">nextLong</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextLong</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextLong()" title="class or interface in java.util.random" class="external-link">nextLong</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code>nextLong</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -358,8 +410,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <h3>next</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">next</span><wbr><span class="parameters">(int&nbsp;bits)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>next</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>next</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -369,7 +421,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">nextDouble</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextDouble</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextDouble()" title="class or interface in java.util.random" class="external-link">nextDouble</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextDouble</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -379,7 +433,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">nextFloat</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextFloat</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextFloat()" title="class or interface in java.util.random" class="external-link">nextFloat</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextFloat</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -390,7 +446,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
  byte[]&nbsp;bytes)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextBytes</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextBytes(byte%5B%5D)" title="class or interface in java.util.random" class="external-link">nextBytes</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextBytes</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -400,7 +458,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nextInt</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextInt</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextInt()" title="class or interface in java.util.random" class="external-link">nextInt</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextInt</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -410,7 +470,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nextInt</span><wbr><span class="parameters">(int&nbsp;bound)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextInt</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextInt(int)" title="class or interface in java.util.random" class="external-link">nextInt</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextInt</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -419,8 +481,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <h3>nextSignedInt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nextSignedInt</span><wbr><span class="parameters">(int&nbsp;outerBound)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>nextSignedInt</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextSignedInt</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -430,7 +492,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">nextBoolean</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextBoolean</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextBoolean()" title="class or interface in java.util.random" class="external-link">nextBoolean</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextBoolean</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -441,7 +505,9 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="block">Because nextGaussian() already specifies a distribution, this uses <code>EnhancedRandom.nextGaussian()</code> as-is.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>nextGaussian</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html#nextGaussian()" title="class or interface in java.util.random" class="external-link">nextGaussian</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/RandomGenerator.html" title="class or interface in java.util.random" class="external-link">RandomGenerator</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextGaussian</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 <dt>Returns:</dt>
 <dd>the next pseudorandom, approximately Gaussian ("normally") distributed double value with mean 0.0 and
          standard deviation 1.0 from this random number generator's sequence</dd>
@@ -455,8 +521,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="block">This acts the same as <code>EnhancedRandom.nextExclusiveDoubleEquidistant()</code>; it does not use the optimizations
  from <code>EnhancedRandom.nextExclusiveDouble()</code>, because those aren't reasonable when distributed.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>nextExclusiveDouble</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextExclusiveDouble</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 <dt>Returns:</dt>
 <dd>a pseudo-random double between 0.0, exclusive, and 1.0, exclusive</dd>
 </dl>
@@ -469,8 +535,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="block">This acts the same as <code>EnhancedRandom.nextExclusiveFloatEquidistant()</code>; it does not use the optimizations
  from <code>EnhancedRandom.nextExclusiveFloat()</code>, because those aren't reasonable when distributed.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>nextExclusiveFloat</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>nextExclusiveFloat</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 <dt>Returns:</dt>
 <dd>a pseudo-random float between 0.0, exclusive, and 1.0, exclusive</dd>
 </dl>
@@ -483,7 +549,7 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="DistributedRandom.html" title="class in com.github.yellowstonegames.core">DistributedRandom</a></span>&nbsp;<span class="element-name">copy</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>copy</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code>copy</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -543,8 +609,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
  long&nbsp;stateC,
  long&nbsp;stateD)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>setState</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>setState</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -553,8 +619,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <h3>getStateCount</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStateCount</span>()</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getStateCount</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>getStateCount</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -563,8 +629,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <h3>getSelectedState</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getSelectedState</span><wbr><span class="parameters">(int&nbsp;selection)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getSelectedState</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>getSelectedState</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -574,8 +640,8 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSelectedState</span><wbr><span class="parameters">(int&nbsp;selection,
  long&nbsp;value)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>setSelectedState</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dt>Overrides:</dt>
+<dd><code>setSelectedState</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -585,7 +651,7 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSeed</span><wbr><span class="parameters">(long&nbsp;seed)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>setSeed</code>&nbsp;in interface&nbsp;<code>com.github.tommyettinger.ds.support.EnhancedRandom</code></dd>
+<dd><code>setSeed</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
 </dl>
 </section>
 </li>
@@ -604,13 +670,45 @@ implements com.github.tommyettinger.ds.support.EnhancedRandom</span></div>
 <li>
 <section class="detail" id="getRandom()">
 <h3>getRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.FourWheelRandom</span>&nbsp;<span class="element-name">getRandom</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.FourWheelRandom</span>&nbsp;<span class="element-name">getRandom</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setRandom(com.github.tommyettinger.ds.support.FourWheelRandom)">
+<section class="detail" id="setRandom(com.github.tommyettinger.random.FourWheelRandom)">
 <h3>setRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(com.github.tommyettinger.ds.support.FourWheelRandom&nbsp;random)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(com.github.tommyettinger.random.FourWheelRandom&nbsp;random)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="stringSerialize(com.github.tommyettinger.digital.Base)">
+<h3>stringSerialize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">stringSerialize</span><wbr><span class="parameters">(com.github.tommyettinger.digital.Base&nbsp;base)</span></div>
+<div class="block">Serializes the four states this uses, but not the distribution used here; you must somehow store it yourself.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>stringSerialize</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
+<dt>Parameters:</dt>
+<dd><code>base</code> - which Base to use, from the "digital" library, such as <code>Base.BASE10</code></dd>
+<dt>Returns:</dt>
+<dd>this, for chaining</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="stringDeserialize(java.lang.String,com.github.tommyettinger.digital.Base)">
+<h3>stringDeserialize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">stringDeserialize</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data,
+ com.github.tommyettinger.digital.Base&nbsp;base)</span></div>
+<div class="block">This deserialization method does not assign the distribution this class uses; you must set it yourself.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>stringDeserialize</code>&nbsp;in class&nbsp;<code>com.github.tommyettinger.random.EnhancedRandom</code></dd>
+<dt>Parameters:</dt>
+<dd><code>data</code> - a String probably produced by <a href="#stringSerialize(com.github.tommyettinger.digital.Base)"><code>stringSerialize(Base)</code></a></dd>
+<dd><code>base</code> - which Base to use, from the "digital" library, such as <code>Base.BASE10</code></dd>
+<dt>Returns:</dt>
+<dd>this, for chaining</dd>
+</dl>
 </section>
 </li>
 </ul>

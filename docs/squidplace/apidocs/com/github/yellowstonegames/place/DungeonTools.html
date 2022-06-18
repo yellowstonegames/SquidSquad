@@ -180,13 +180,13 @@ loadScripts(document, 'script');</script>
  continue into an adjacent cell, or if a '#' wall needs another '#' wall next to it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ensurePath(char%5B%5D%5B%5D,com.github.tommyettinger.ds.support.EnhancedRandom,char,char...)" class="member-name-link">ensurePath</a><wbr>(char[][]&nbsp;map,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ensurePath(char%5B%5D%5B%5D,com.github.tommyettinger.random.EnhancedRandom,char,char...)" class="member-name-link">ensurePath</a><wbr>(char[][]&nbsp;map,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char&nbsp;replacement,
  char...&nbsp;blocking)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Ensures a path exists in a rough ring around the map by first creating the path (using
- <a href="#pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
+ <a href="#pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)"><code>pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
  that path and replacing them with replacement.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
@@ -223,9 +223,9 @@ loadScripts(document, 'script');</script>
  horizontal doors ('+' for vertical and '/' for horizontal).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">pointPath</a><wbr>(int&nbsp;width,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">pointPath</a><wbr>(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#simplifyDungeon(char%5B%5D%5B%5D)" class="member-name-link">simplifyDungeon</a><wbr>(char[][]&nbsp;map)</code></div>
@@ -592,22 +592,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>pointPath</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">pointPath</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="ensurePath(char[][],com.github.tommyettinger.ds.support.EnhancedRandom,char,char...)">
+<section class="detail" id="ensurePath(char[][],com.github.tommyettinger.random.EnhancedRandom,char,char...)">
 <h3>ensurePath</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">ensurePath</span><wbr><span class="parameters">(char[][]&nbsp;map,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char&nbsp;replacement,
  char...&nbsp;blocking)</span></div>
 <div class="block">Ensures a path exists in a rough ring around the map by first creating the path (using
- <a href="#pointPath(int,int,com.github.tommyettinger.ds.support.EnhancedRandom)"><code>pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
+ <a href="#pointPath(int,int,com.github.tommyettinger.random.EnhancedRandom)"><code>pointPath(int, int, EnhancedRandom)</code></a> with the given EnhancedRandom), then finding chars in blocking that are on
  that path and replacing them with replacement. Modifies map in-place and returns an ObjectList of Coord points
  that will always be on the path.</div>
 <dl class="notes">

@@ -96,18 +96,18 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">SerpentDeepMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">SerpentDeepMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;depth,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
  IRNG.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)" class="member-name-link">SerpentDeepMapGenerator</a><wbr>(int&nbsp;width,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,com.github.tommyettinger.random.EnhancedRandom,double)" class="member-name-link">SerpentDeepMapGenerator</a><wbr>(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;depth,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  double&nbsp;branchingChance)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
@@ -193,12 +193,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>SerpentDeepMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentDeepMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;depth,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
  IRNG. The intended purpose is to carve a long path that loops through the whole dungeon's 3D space, while
  hopefully maximizing the amount of rooms the player encounters. You call the different carver-adding methods to
@@ -221,12 +221,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom,double)">
+<section class="detail" id="&lt;init&gt;(int,int,int,com.github.tommyettinger.random.EnhancedRandom,double)">
 <h3>SerpentDeepMapGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SerpentDeepMapGenerator</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height,
  int&nbsp;depth,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  double&nbsp;branchingChance)</span></div>
 <div class="block">This prepares a map generator that will generate a map with the given width, height and depth, using the given
  IRNG, and will branch out to other nearby rooms that (probably) do not have staircases between layers.

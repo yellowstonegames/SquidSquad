@@ -142,6 +142,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
  Font (which will be copied).</div>
 </div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)" class="member-name-link">GlyphMap</a><wbr>(com.github.tommyettinger.textra.Font&nbsp;font,
+ int&nbsp;gridWidth,
+ int&nbsp;gridHeight,
+ boolean&nbsp;squareCenteredCells)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+ Font (which will be copied).</div>
+</div>
 </div>
 </section>
 </li>
@@ -279,6 +287,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
  to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFont(com.github.tommyettinger.textra.Font,boolean)" class="member-name-link">setFont</a><wbr>(com.github.tommyettinger.textra.Font&nbsp;font,
+ boolean&nbsp;squareCenter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
+ to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>
+</div>
 </div>
 </div>
 </div>
@@ -352,7 +367,8 @@ loadScripts(document, 'script');</script>
 <h3>GlyphMap</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlyphMap</span><wbr><span class="parameters">(com.github.tommyettinger.textra.Font&nbsp;font)</span></div>
 <div class="block">Constructs a 64x64 GlyphMap with the specified Font. You probably want <a href="#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int)"><code>GlyphMap(Font, int, int)</code></a> unless
- your maps are always 64x64.</div>
+ your maps are always 64x64. This calls <a href="#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)"><code>GlyphMap(Font, int, int, boolean)</code></a> with
+ squareCenteredCells=false.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>font</code> - a Font that will be copied and used for the new GlyphMap</dd>
@@ -366,12 +382,33 @@ loadScripts(document, 'script');</script>
  int&nbsp;gridWidth,
  int&nbsp;gridHeight)</span></div>
 <div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
- Font (which will be copied).</div>
+ Font (which will be copied). This calls <a href="#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)"><code>GlyphMap(Font, int, int, boolean)</code></a> with
+ squareCenteredCells=false.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>font</code> - a Font that will be copied and used for the new GlyphMap</dd>
 <dd><code>gridWidth</code> - how many cells wide the grid should be</dd>
 <dd><code>gridHeight</code> - how many cells tall the grid should be</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.tommyettinger.textra.Font,int,int,boolean)">
+<h3>GlyphMap</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GlyphMap</span><wbr><span class="parameters">(com.github.tommyettinger.textra.Font&nbsp;font,
+ int&nbsp;gridWidth,
+ int&nbsp;gridHeight,
+ boolean&nbsp;squareCenteredCells)</span></div>
+<div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+ Font (which will be copied). If squareCenteredGlyphs is true, the Font copy this uses will be modified to have
+ extra space around glyphs so that they fit in square cells. For fonts that use gridGlyphs (the default behavior),
+ any box drawing characters will still take up the full cell, and will connect seamlessly.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>font</code> - a Font that will be copied and used for the new GlyphMap</dd>
+<dd><code>gridWidth</code> - how many cells wide the grid should be</dd>
+<dd><code>gridHeight</code> - how many cells tall the grid should be</dd>
+<dd><code>squareCenteredCells</code> - if true, space will be added to make glyphs fit in square cells</dd>
 </dl>
 </section>
 </li>
@@ -411,6 +448,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>font</code> - a Font that will be used directly (not copied) and used to calculate the viewport dimensions</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setFont(com.github.tommyettinger.textra.Font,boolean)">
+<h3>setFont</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFont</span><wbr><span class="parameters">(com.github.tommyettinger.textra.Font&nbsp;font,
+ boolean&nbsp;squareCenter)</span></div>
+<div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
+ to size 1x1 (this makes some calculations much easier inside GlyphMap). This can add spacing to cells so that
+ they are always square, while keeping the aspect ratio of <code>font</code> as it was passed in. Use squareCenter=true
+ to enable this; note that it modifies the Font more deeply than normally.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>font</code> - a Font that will be used directly (not copied) and used to calculate the viewport dimensions</dd>
+<dd><code>squareCenter</code> - if true, spacing will be added to the sides of each glyph so that they fit in square cells</dd>
 </dl>
 </section>
 </li>

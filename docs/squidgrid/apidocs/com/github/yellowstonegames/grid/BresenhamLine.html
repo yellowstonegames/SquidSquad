@@ -697,13 +697,14 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
  @Nonnull
  float[][]&nbsp;resistanceMap,
+ @Nullable
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
  maps can with <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.
- <code>buffer</code> may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
- an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+ <code>buffer</code> may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+ be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
  target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
  returns false and buffer will only contain up to and including the point that blocked the line of sight.</div>
 <dl class="notes">
@@ -711,7 +712,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <dd><code>start</code> - the starting point</dd>
 <dd><code>target</code> - the target point</dd>
 <dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
-<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored</dd>
 <dt>Returns:</dt>
 <dd>true if the starting point can see the target point; false otherwise</dd>
 </dl>
@@ -726,13 +727,14 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetY,
  @Nonnull
  float[][]&nbsp;resistanceMap,
+ @Nullable
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
  maps can with <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.
- <code>buffer</code> may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
- an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+ <code>buffer</code> may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+ be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
  target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
  returns false and buffer will only contain up to and including the point that blocked the line of sight.</div>
 <dl class="notes">
@@ -742,7 +744,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <dd><code>targetX</code> - the x-coordinate of the target point</dd>
 <dd><code>targetY</code> - the y-coordinate of the target point</dd>
 <dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
-<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored</dd>
 <dt>Returns:</dt>
 <dd>true if the starting point can see the target point; false otherwise</dd>
 </dl>
@@ -758,6 +760,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;maxLength,
  @Nonnull
  float[][]&nbsp;resistanceMap,
+ @Nullable
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -765,8 +768,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  considered exactly as distant as orthogonally-adjacent cells.
  <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
  maps can with <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.
- <code>buffer</code> may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
- an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+ <code>buffer</code> may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+ be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
  target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
  returns false and buffer will only contain up to and including the point that blocked the line of sight.</div>
 <dl class="notes">
@@ -777,7 +780,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <dd><code>targetY</code> - the y-coordinate of the target point</dd>
 <dd><code>maxLength</code> - the maximum permitted length of a line of sight</dd>
 <dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
-<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored</dd>
 <dt>Returns:</dt>
 <dd>true if the starting point can see the target point; false otherwise</dd>
 </dl>
@@ -793,6 +796,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;maxLength,
  @Nonnull
  float[][]&nbsp;resistanceMap,
+ @Nullable
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -800,8 +804,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  considered about 1.4 times as distant as orthogonally-adjacent cells; this is the natural way in the real world.
  <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
  maps can with <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.
- <code>buffer</code> may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
- an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+ <code>buffer</code> may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+ be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
  target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
  returns false and buffer will only contain up to and including the point that blocked the line of sight.</div>
 <dl class="notes">
@@ -812,7 +816,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <dd><code>targetY</code> - the y-coordinate of the target point</dd>
 <dd><code>maxLength</code> - the maximum permitted length of a line of sight</dd>
 <dd><code>resistanceMap</code> - a resistance map as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>; 0 is visible and 1 is blocked</dd>
-<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; will be modified</dd>
+<dd><code>buffer</code> - an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored</dd>
 <dt>Returns:</dt>
 <dd>true if the starting point can see the target point; false otherwise</dd>
 </dl>

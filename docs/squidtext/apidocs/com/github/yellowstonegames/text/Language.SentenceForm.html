@@ -81,10 +81,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public static class </span><span class="element-name type-name-label">Language.SentenceForm</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A simple way to bundle a Language with the arguments that would be passed to it when calling
- <a href="Language.html#sentence(com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>Language.sentence(EnhancedRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.
- You can call <a href="#sentence()"><code>sentence()</code></a> on this to produce another String sentence with the parameters it was given
- at construction. The parameters to
- <a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)</code></a> are stored in fields of
+ <a href="Language.html#sentence(com.github.tommyettinger.random.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>Language.sentence(EnhancedRandom, int, int, String[], String[], double, int)</code></a> or one of its overloads.
+ A common use for this is to allow repeated generation of similar sentences, such as those said by the same
+ character or similar characters in the same circumstances. You can call <a href="#sentence()"><code>sentence()</code></a> on this to produce
+ another String sentence with the parameters it was given at construction. The parameters to
+ <a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.random.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)"><code>SentenceForm(Language, EnhancedRandom, int, int, String[], String[], double, int)</code></a> are stored in fields of
  the same name, and all fields in this class are public and modifiable.</div>
 </section>
 <section class="summary">
@@ -119,7 +120,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>int</code></div>
 <div class="col-second even-row-color"><code><a href="#minWords" class="member-name-link">minWords</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.support.EnhancedRandom</code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second odd-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -167,8 +168,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Builds a SentenceForm with all fields specified except for <a href="#rng"><code>rng</code></a>, which will be made based on
  Language's static <a href="Language.html#srng"><code>Language.srng</code></a> field.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)" class="member-name-link">SentenceForm</a><wbr>(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.text.Language,com.github.tommyettinger.random.EnhancedRandom,int,int,java.lang.String%5B%5D,java.lang.String%5B%5D,double,int)" class="member-name-link">SentenceForm</a><wbr>(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minWords,
  int&nbsp;maxWords,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;midPunctuation,
@@ -177,7 +178,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;maxChars)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Builds a SentenceForm with all fields specified; each value is referenced directly except for <code>rng</code>,
- which will not change or be directly referenced (a new GWTRNG will be used with the same state value).</div>
+ which will be copied to get the EnhancedRandom used internally.</div>
 </div>
 </div>
 </section>
@@ -187,17 +188,26 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ser)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sentence()" class="member-name-link">sentence</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Generates a pseudo-random sentence using the configured Language, punctuation, min/max word length, and
+ maximum char length.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sentence()" class="member-name-link">sentence</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeToString()" class="member-name-link">serializeToString</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -222,7 +232,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.support.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
@@ -352,10 +362,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.text.Language,com.github.tommyettinger.ds.support.EnhancedRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.text.Language,com.github.tommyettinger.random.EnhancedRandom,int,int,java.lang.String[],java.lang.String[],double,int)">
 <h3>SentenceForm</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SentenceForm</span><wbr><span class="parameters">(<a href="Language.html" title="class in com.github.yellowstonegames.text">Language</a>&nbsp;language,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  int&nbsp;minWords,
  int&nbsp;maxWords,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;midPunctuation,
@@ -363,11 +373,11 @@ loadScripts(document, 'script');</script>
  double&nbsp;midPunctuationFrequency,
  int&nbsp;maxChars)</span></div>
 <div class="block">Builds a SentenceForm with all fields specified; each value is referenced directly except for <code>rng</code>,
- which will not change or be directly referenced (a new GWTRNG will be used with the same state value).</div>
+ which will be copied to get the EnhancedRandom used internally.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>language</code> - A Language to use to generate words</dd>
-<dd><code>rng</code> - a StatefulRNG that will not be directly referenced; the state will be copied into a new StatefulRNG</dd>
+<dd><code>rng</code> - an EnhancedRandom that will be copied to get the random number generator this will use</dd>
 <dd><code>minWords</code> - minimum words per sentence</dd>
 <dd><code>maxWords</code> - maximum words per sentence</dd>
 <dd><code>midPunctuation</code> - an array of Strings that can be used immediately after words in the middle of sentences, like "," or ";"</dd>
@@ -389,6 +399,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sentence()">
 <h3>sentence</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">sentence</span>()</div>
+<div class="block">Generates a pseudo-random sentence using the configured Language, punctuation, min/max word length, and
+ maximum char length.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new String of a random sentence using the configuration this knows</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="serializeToString()">
+<h3>serializeToString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">serializeToString</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deserializeFromString(java.lang.String)">
+<h3>deserializeFromString</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></span>&nbsp;<span class="element-name">deserializeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ser)</span></div>
 </section>
 </li>
 <li>

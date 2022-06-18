@@ -91,14 +91,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sample</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPos,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sample</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPos,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPos,
  float&nbsp;maxSampleRadius,
  float&nbsp;radius,
  int&nbsp;xBound,
  int&nbsp;yBound,
  int&nbsp;pointsPerTry,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int)" class="member-name-link">sampleCircle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
@@ -111,29 +111,29 @@ loadScripts(document, 'script');</script>
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleCircle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleCircle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
  float&nbsp;radius,
  float&nbsp;minimumDistance,
  int&nbsp;maxX,
  int&nbsp;maxY,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleMap(char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)" class="member-name-link">sampleMap</a><wbr>(char[][]&nbsp;map,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleMap(char%5B%5D%5B%5D,float,com.github.tommyettinger.random.EnhancedRandom,char...)" class="member-name-link">sampleMap</a><wbr>(char[][]&nbsp;map,
  float&nbsp;minimumDistance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char...&nbsp;blocking)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)" class="member-name-link">sampleMap</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char%5B%5D%5B%5D,float,com.github.tommyettinger.random.EnhancedRandom,char...)" class="member-name-link">sampleMap</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
  char[][]&nbsp;map,
  float&nbsp;minimumDistance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char...&nbsp;blocking)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
@@ -145,23 +145,23 @@ loadScripts(document, 'script');</script>
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleRectangle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleRectangle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
  float&nbsp;minimumDistance,
  int&nbsp;maxX,
  int&nbsp;maxY,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">sampleRectangle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">sampleRectangle</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
  float&nbsp;minimumDistance,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.</div>
@@ -209,7 +209,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="sampleCircle(com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>sampleCircle</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</span>&nbsp;<span class="element-name">sampleCircle</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
  float&nbsp;radius,
@@ -217,7 +217,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;maxX,
  int&nbsp;maxY,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
  Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.
  The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
@@ -259,13 +259,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>sampleRectangle</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</span>&nbsp;<span class="element-name">sampleRectangle</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
  float&nbsp;minimumDistance,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.
  The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
@@ -284,7 +284,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="sampleRectangle(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>sampleRectangle</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</span>&nbsp;<span class="element-name">sampleRectangle</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
@@ -292,7 +292,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;maxX,
  int&nbsp;maxY,
  int&nbsp;pointsPerIteration,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
  maxPosition, but with the given minimum distance from any other Coord in the list.
  The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
@@ -313,27 +313,27 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="sampleMap(char[][],float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)">
+<section class="detail" id="sampleMap(char[][],float,com.github.tommyettinger.random.EnhancedRandom,char...)">
 <h3>sampleMap</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></span>&nbsp;<span class="element-name">sampleMap</span><wbr><span class="parameters">(char[][]&nbsp;map,
  float&nbsp;minimumDistance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char...&nbsp;blocking)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char[][],float,com.github.tommyettinger.ds.support.EnhancedRandom,char...)">
+<section class="detail" id="sampleMap(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,char[][],float,com.github.tommyettinger.random.EnhancedRandom,char...)">
 <h3>sampleMap</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></span>&nbsp;<span class="element-name">sampleMap</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPosition,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPosition,
  char[][]&nbsp;map,
  float&nbsp;minimumDistance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng,
  char...&nbsp;blocking)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="sample(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float,int,int,int,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>sample</h3>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type"><a href="CoordObjectOrderedMap.html" title="class in com.github.yellowstonegames.grid">CoordObjectOrderedMap</a>&lt;com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&gt;</span>&nbsp;<span class="element-name">sample</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;minPos,
  <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;maxPos,
@@ -342,7 +342,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;xBound,
  int&nbsp;yBound,
  int&nbsp;pointsPerTry,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;random)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;random)</span></div>
 </section>
 </li>
 </ul>

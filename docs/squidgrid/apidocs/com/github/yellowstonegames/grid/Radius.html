@@ -132,7 +132,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#area(float)" class="member-name-link">area</a><wbr>(float&nbsp;radiusLength)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#expand(int,int,int,java.lang.Iterable)" class="member-name-link">expand</a><wbr>(int&nbsp;distance,
  int&nbsp;width,
  int&nbsp;height,
@@ -233,10 +233,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the appropriate <a href="Measurement.html" title="enum class in com.github.yellowstonegames.grid"><code>Measurement</code></a> to pass to a constructor if you already have a Radius.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUnitShape(float,com.github.tommyettinger.ds.support.EnhancedRandom)" class="member-name-link">onUnitShape</a><wbr>(float&nbsp;distance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUnitShape(float,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">onUnitShape</a><wbr>(float&nbsp;distance,
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#perimeter(com.github.yellowstonegames.grid.Coord,int,boolean,int,int)" class="member-name-link">perimeter</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
  int&nbsp;radiusLength,
  boolean&nbsp;surpassEdges,
@@ -419,10 +419,10 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="onUnitShape(float,com.github.tommyettinger.ds.support.EnhancedRandom)">
+<section class="detail" id="onUnitShape(float,com.github.tommyettinger.random.EnhancedRandom)">
 <h3>onUnitShape</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></span>&nbsp;<span class="element-name">onUnitShape</span><wbr><span class="parameters">(float&nbsp;distance,
- com.github.tommyettinger.ds.support.EnhancedRandom&nbsp;rng)</span></div>
+ com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 </section>
 </li>
 <li>
@@ -434,7 +434,7 @@ not permitted.)</div>
 <li>
 <section class="detail" id="perimeter(com.github.yellowstonegames.grid.Coord,int,boolean,int,int)">
 <h3>perimeter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="element-name">perimeter</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></span>&nbsp;<span class="element-name">perimeter</span><wbr><span class="parameters">(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;center,
  int&nbsp;radiusLength,
  boolean&nbsp;surpassEdges,
  int&nbsp;width,
@@ -674,7 +674,7 @@ not permitted.)</div>
 <li>
 <section class="detail" id="expand(int,int,int,java.lang.Iterable)">
 <h3>expand</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;</span>&nbsp;<span class="element-name">expand</span><wbr><span class="parameters">(int&nbsp;distance,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CoordOrderedSet.html" title="class in com.github.yellowstonegames.grid">CoordOrderedSet</a></span>&nbsp;<span class="element-name">expand</span><wbr><span class="parameters">(int&nbsp;distance,
  int&nbsp;width,
  int&nbsp;height,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;points)</span></div>
