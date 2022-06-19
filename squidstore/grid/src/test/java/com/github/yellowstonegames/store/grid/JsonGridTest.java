@@ -2,6 +2,7 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -85,11 +86,12 @@ public class JsonGridTest {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordObjectMap(json);
         CoordObjectMap<String> points = new CoordObjectMap<>(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666)},
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
                 new String[]{"foo", "bar", "baz"});
         String data = json.toJson(points);
         System.out.println(data);
         CoordObjectMap<?> points2 = json.fromJson(CoordObjectMap.class, data);
+        Assert.assertEquals(points, points2);
         for(Map.Entry<Coord, ?> pair : points2) {
             System.out.print(pair.getKey());
             System.out.print("=");
@@ -103,12 +105,51 @@ public class JsonGridTest {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordObjectOrderedMap(json);
         CoordObjectOrderedMap<String> points = new CoordObjectOrderedMap<>(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666)},
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
                 new String[]{"foo", "bar", "baz"});
         String data = json.toJson(points);
         System.out.println(data);
         CoordObjectOrderedMap<?> points2 = json.fromJson(CoordObjectOrderedMap.class, data);
+        Assert.assertEquals(points, points2);
         for(Map.Entry<Coord, ?> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+    }
+
+    @Test
+    public void testCoordFloatMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordFloatMap(json);
+        CoordFloatMap points = new CoordFloatMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new float[]{42.42f, 23.23f, 66.66f});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordFloatMap points2 = json.fromJson(CoordFloatMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectFloatMap.Entry<Coord> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+    }
+
+    @Test
+    public void testCoordFloatOrderedMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordFloatOrderedMap(json);
+        CoordFloatOrderedMap points = new CoordFloatOrderedMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new float[]{42.42f, 23.23f, 66.66f});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordFloatOrderedMap points2 = json.fromJson(CoordFloatOrderedMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectFloatMap.Entry<Coord> pair : points2) {
             System.out.print(pair.getKey());
             System.out.print("=");
             System.out.print(pair.getValue());
@@ -120,10 +161,11 @@ public class JsonGridTest {
     public void testCoordSet() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordSet(json);
-        CoordSet points = CoordSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666));
+        CoordSet points = CoordSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66));
         String data = json.toJson(points);
         System.out.println(data);
         CoordSet points2 = json.fromJson(CoordSet.class, data);
+        Assert.assertEquals(points, points2);
         for(Object point : points2) {
             System.out.print(point);
             System.out.print(", ");
@@ -134,10 +176,11 @@ public class JsonGridTest {
     public void testCoordOrderedSet() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordOrderedSet(json);
-        CoordOrderedSet points = CoordOrderedSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(666, 666));
+        CoordOrderedSet points = CoordOrderedSet.with(Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66));
         String data = json.toJson(points);
         System.out.println(data);
         CoordOrderedSet points2 = json.fromJson(CoordOrderedSet.class, data);
+        Assert.assertEquals(points, points2);
         for(Object point : points2) {
             System.out.print(point);
             System.out.print(", ");
