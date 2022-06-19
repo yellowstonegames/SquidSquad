@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.store.core.JsonCore;
@@ -187,6 +188,102 @@ public final class JsonGrid {
                 CoordObjectOrderedMap<?> data = new CoordObjectOrderedMap<>(jsonData.size);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
+                }
+                return data;
+            }
+        });
+    }
+
+    /**
+     * Registers CoordFloatMap with the given Json object, so CoordFloatMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordFloatMap(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordFloatMap.class, new Json.Serializer<CoordFloatMap>() {
+            @Override
+            public void write(Json json, CoordFloatMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectFloatMap.Entry<Coord>> es = new ObjectFloatMap.Entries<Coord>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectFloatMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Float.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordFloatMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordFloatMap data = new CoordFloatMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Float.TYPE, value));
+                }
+                return data;
+            }
+        });
+    }
+
+    /**
+     * Registers CoordFloatOrderedMap with the given Json object, so CoordFloatOrderedMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordFloatOrderedMap(@Nonnull Json json) {
+        registerCoord(json);
+        json.setSerializer(CoordFloatOrderedMap.class, new Json.Serializer<CoordFloatOrderedMap>() {
+            @Override
+            public void write(Json json, CoordFloatOrderedMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectFloatMap.Entry<Coord>> es = new CoordFloatOrderedMap.OrderedMapEntries<>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectFloatMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Float.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordFloatOrderedMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordFloatOrderedMap data = new CoordFloatOrderedMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Float.TYPE, value));
                 }
                 return data;
             }
