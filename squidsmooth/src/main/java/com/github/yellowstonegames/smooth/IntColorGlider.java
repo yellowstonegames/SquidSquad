@@ -38,9 +38,51 @@ public class IntColorGlider implements IGlider {
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
     protected @Nullable Runnable completeRunner;
 
+    /**
+     * Constructs an empty IntColorGlider that needs to have its {@link #setStart(int)} and {@link #setEnd(int)} methods
+     * called before it can be meaningfully used.
+     */
     public IntColorGlider() {
     }
 
+    /**
+     * Creates an IntColorGlider that linear-interpolates the start color to fully transparent. Unlike a transition from
+     * start to {@link DescriptiveColor#TRANSPARENT}, this will only change the alpha channel, keeping the color intact
+     * except for its alpha.
+     * @param start the color that will fade to transparent
+     */
+    public IntColorGlider(int start) {
+        this.start = start;
+        this.end = start & 0xFFFFFF00;
+    }
+
+    /**
+     * Creates an IntColorGlider that linear-interpolates the start color to the end color.
+     * @param start the start color, as an int (this could be RGBA or Oklab)
+     * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
+     */
+    public IntColorGlider(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
+     * Creates an IntColorGlider that linear-interpolates the start color to the end color, and runs the given Runnable
+     * upon completion.
+     * @param start the start color, as an int (this could be RGBA or Oklab)
+     * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
+     * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
+     */
+    public IntColorGlider(int start, int end, @Nullable Runnable completeRunner) {
+        this.start = start;
+        this.end = end;
+        this.completeRunner = completeRunner;
+    }
+
+    /**
+     * Gets the current color value, which is different when {@link #getChange()} is.
+     * @return the current int color
+     */
     public int getColor()
     {
         return DescriptiveColor.lerpColors(start, end, interpolation.apply(change));
@@ -70,19 +112,35 @@ public class IntColorGlider implements IGlider {
         change = 0f;
     }
 
+    /**
+     *
+     * @return start color
+     */
     public int getStart() {
         return start;
     }
 
+    /**
+     *
+     * @param start start color
+     */
     public void setStart(int start) {
         this.start = start;
         change = 0f;
     }
 
+    /**
+     *
+     * @return end color
+     */
     public int getEnd() {
         return end;
     }
 
+    /**
+     *
+     * @param end end color
+     */
     public void setEnd(int end) {
         this.end = end;
         change = 0f;
