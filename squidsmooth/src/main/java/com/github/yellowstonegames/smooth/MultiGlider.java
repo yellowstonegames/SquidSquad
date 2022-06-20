@@ -27,14 +27,20 @@ import javax.annotation.Nullable;
  * interpolations (specifiable by {@link FloatInterpolator} and {@link IntInterpolator} functions).
  */
 public class MultiGlider implements IGlider {
+    /**
+     * A named variable that can change either (or both) a float and/or an int value between start and end values.
+     * Typical usage only will have reasonable results when using one type, either float or int, and will have the start
+     * and end values for that type used with the appropriate interpolator by {@link #getFloat(String)} or
+     * {@link #getInt(String)}. The name is important; you look up the current value for a Changer by its name.
+     */
     public static class Changer {
+        @Nonnull public final String name;
         public float startF;
         public float endF;
         public int startI;
         public int endI;
         @Nonnull public FloatInterpolator interpolatorF;
         @Nonnull public IntInterpolator interpolatorI;
-        @Nonnull public String name;
 
         public Changer(@Nonnull String name, float initialF){
             this(name, initialF, initialF, FloatInterpolator.LINEAR);
@@ -44,6 +50,7 @@ public class MultiGlider implements IGlider {
         }
 
         public Changer(@Nonnull String name, float startF, float endF, @Nonnull FloatInterpolator interpolatorF) {
+            this.name = name;
             this.startF = startF;
             this.endF = endF;
             this.interpolatorF = interpolatorF;
@@ -51,6 +58,7 @@ public class MultiGlider implements IGlider {
         }
 
         public Changer(@Nonnull String name, int startI, int endI, @Nonnull IntInterpolator interpolatorI) {
+            this.name = name;
             this.startI = startI;
             this.endI = endI;
             this.interpolatorI = interpolatorI;
@@ -66,6 +74,18 @@ public class MultiGlider implements IGlider {
     protected float change = 0f;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
     protected @Nullable Runnable completeRunner;
+
+    public float getFloat(@Nonnull String name){
+        Changer c = changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(change));
+    }
+
+    public int getInt(@Nonnull String name){
+        Changer c = changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(change));
+    }
 
     @Override
     public float getChange() {

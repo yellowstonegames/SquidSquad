@@ -23,7 +23,7 @@ import com.github.tommyettinger.digital.MathTools;
  */
 @FunctionalInterface
 public interface FloatInterpolator {
-    float interpolate(float start, float end, float change);
+    float apply(float start, float end, float change);
 
     /**
      * A method reference to {@link MathTools#lerp(float, float, float)}.

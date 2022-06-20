@@ -24,7 +24,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
  */
 @FunctionalInterface
 public interface IntInterpolator {
-    int interpolate(int start, int end, float change);
+    int apply(int start, int end, float change);
 
     /**
      * Interpolates between start and end by change using {@link MathUtils#lerp(float, float, float)}, then rounds the
