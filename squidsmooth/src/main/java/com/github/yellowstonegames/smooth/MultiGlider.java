@@ -75,12 +75,28 @@ public class MultiGlider implements IGlider {
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
     protected @Nullable Runnable completeRunner;
 
+    /**
+     * Gets the current float value for the Changer with the given {@code name} by interpolating between its start and
+     * end float values. The {@link #getInterpolation() interpolation} will be applied to {@link #getChange() change}
+     * before it is passed to the Changer's {@link Changer#interpolatorF}. If this cannot locate a Changer by the given
+     * name, this returns {@link Float#NaN}.
+     * @param name the name of the Changer to look up
+     * @return the current float value of the located Changer, or {@link Float#NaN} if lookup fails
+     */
     public float getFloat(@Nonnull String name){
         Changer c = changers.get(name);
         if(c == null) return Float.NaN;
         return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(change));
     }
 
+    /**
+     * Gets the current int value for the Changer with the given {@code name} by interpolating between its start and
+     * end int values. The {@link #getInterpolation() interpolation} will be applied to {@link #getChange() change}
+     * before it is passed to the Changer's {@link Changer#interpolatorI}. If this cannot locate a Changer by the given
+     * name, this returns {@link Integer#MIN_VALUE}.
+     * @param name the name of the Changer to look up
+     * @return the current int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
+     */
     public int getInt(@Nonnull String name){
         Changer c = changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
@@ -97,6 +113,110 @@ public class MultiGlider implements IGlider {
         if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
             onComplete();
         }
+    }
+
+    /**
+     * Looks up the {@link Changer#startF start float} value for the Changer with the given {@code name}.
+     * If this cannot locate a Changer by the given name, this returns {@link Float#NaN}.
+     * @param name the name of the Changer to look up
+     * @return the start float value of the located Changer, or {@link Float#NaN} if lookup fails
+     */
+    public float getStartFloat(@Nonnull String name) {
+        Changer c = changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.startF;
+    }
+
+    /**
+     * Sets the {@link Changer#startF start float} value for the Changer with the given {@code name} to {@code start}.
+     * If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's start float
+     * value and also sets {@link #change} to 0.
+     * @param name the name of the Changer to look up
+     * @param start value to use for the located Changer's start float
+     */
+    public void setStartFloat(@Nonnull String name, float start) {
+        Changer c = changers.get(name);
+        if(c == null) return;
+        c.startF = start;
+        change = 0f;
+    }
+    
+    /**
+     * Looks up the {@link Changer#endF end float} value for the Changer with the given {@code name}.
+     * If this cannot locate a Changer by the given name, this returns {@link Float#NaN}.
+     * @param name the name of the Changer to look up
+     * @return the end float value of the located Changer, or {@link Float#NaN} if lookup fails
+     */
+    public float getEndFloat(@Nonnull String name) {
+        Changer c = changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.endF;
+    }
+
+    /**
+     * Sets the {@link Changer#endF end float} value for the Changer with the given {@code name} to {@code end}.
+     * If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's end float
+     * value and also sets {@link #change} to 0.
+     * @param name the name of the Changer to look up
+     * @param end value to use for the located Changer's end float
+     */
+    public void setEndFloat(@Nonnull String name, float end) {
+        Changer c = changers.get(name);
+        if(c == null) return;
+        c.endF = end;
+        change = 0f;
+    }
+
+    /**
+     * Looks up the {@link Changer#startI start int} value for the Changer with the given {@code name}.
+     * If this cannot locate a Changer by the given name, this returns {@link Integer#MIN_VALUE}.
+     * @param name the name of the Changer to look up
+     * @return the start int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
+     */
+    public int getStartInt(@Nonnull String name) {
+        Changer c = changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.startI;
+    }
+
+    /**
+     * Sets the {@link Changer#startI start int} value for the Changer with the given {@code name} to {@code start}.
+     * If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's start int
+     * value and also sets {@link #change} to 0.
+     * @param name the name of the Changer to look up
+     * @param start value to use for the located Changer's start int
+     */
+    public void setStartInt(@Nonnull String name, int start) {
+        Changer c = changers.get(name);
+        if(c == null) return;
+        c.startI = start;
+        change = 0f;
+    }
+
+    /**
+     * Looks up the {@link Changer#endI end int} value for the Changer with the given {@code name}.
+     * If this cannot locate a Changer by the given name, this returns {@link Integer#MIN_VALUE}.
+     * @param name the name of the Changer to look up
+     * @return the end int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
+     */
+    public int getEndInt(@Nonnull String name) {
+        Changer c = changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.endI;
+    }
+
+    /**
+     * Sets the {@link Changer#endI end int} value for the Changer with the given {@code name} to {@code end}.
+     * If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's end int
+     * value and also sets {@link #change} to 0.
+     * @param name the name of the Changer to look up
+     * @param end value to use for the located Changer's end int
+     */
+    public void setEndInt(@Nonnull String name, int end) {
+        Changer c = changers.get(name);
+        if(c == null) return;
+        c.endI = end;
+        change = 0f;
     }
 
     @Override
