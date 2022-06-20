@@ -17,10 +17,12 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.HolderSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * A general-purpose IGlider that can interpolate multiple values, either float or int, using any rules for the
@@ -69,11 +71,95 @@ public class MultiGlider implements IGlider {
         public String getName() {
             return name;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Changer changer = (Changer) o;
+
+            if (Float.compare(changer.startF, startF) != 0) return false;
+            if (Float.compare(changer.endF, endF) != 0) return false;
+            if (startI != changer.startI) return false;
+            if (endI != changer.endI) return false;
+            return name.equals(changer.name);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + BitConversion.floatToIntBits(startF);
+            result = 31 * result + BitConversion.floatToIntBits(endF);
+            result = 31 * result + startI;
+            result = 31 * result + endI;
+            return result;
+        }
     }
+
     @Nonnull public final HolderSet<Changer, String> changers = new HolderSet<>(Changer::getName);
     protected float change = 0f;
-    protected @Nonnull Interpolation interpolation = Interpolation.linear;
+    protected @Nonnull Interpolation interpolation;
     protected @Nullable Runnable completeRunner;
+
+    public MultiGlider(Changer changer) {
+        this.interpolation = Interpolation.linear;
+        this.changers.add(changer);
+    }
+
+    public MultiGlider(Changer... changers) {
+        this.interpolation = Interpolation.linear;
+        this.changers.addAll(changers);
+    }
+
+    public MultiGlider(@Nonnull Interpolation interpolation, Changer changer) {
+        this.interpolation = interpolation;
+        this.changers.add(changer);
+    }
+
+    public MultiGlider(@Nonnull Interpolation interpolation, Changer... changers) {
+        this.interpolation = interpolation;
+        this.changers.addAll(changers);
+    }
+
+    public MultiGlider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
+        this.interpolation = interpolation;
+        this.completeRunner = completeRunner;
+        this.changers.add(changer);
+    }
+
+    public MultiGlider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
+        this.interpolation = interpolation;
+        this.completeRunner = completeRunner;
+        this.changers.addAll(changers);
+    }
+
+    public MultiGlider(@Nonnull MultiGlider other) {
+        this.change = other.change;
+        this.interpolation = other.interpolation;
+        this.completeRunner = other.completeRunner;
+        this.changers.addAll(other.changers);
+    }
+
+    public MultiGlider addChanger(Changer changer) {
+        this.changers.add(changer);
+        return this;
+    }
+
+    public MultiGlider addChangers(Changer... changers) {
+        this.changers.addAll(changers);
+        return this;
+    }
+    public MultiGlider addChangers(Collection<Changer> changers) {
+        this.changers.addAll(changers);
+        return this;
+    }
+
+    public MultiGlider removeChanger(String name) {
+        //noinspection SuspiciousMethodCalls
+        this.changers.remove(name);
+        return this;
+    }
 
     /**
      * Gets the current float value for the Changer with the given {@code name} by interpolating between its start and
@@ -230,6 +316,16 @@ public class MultiGlider implements IGlider {
         this.interpolation = interpolation;
         change = 0f;
     }
+
+    @Nullable
+    public Runnable getCompleteRunner() {
+        return completeRunner;
+    }
+
+    public void setCompleteRunner(@Nullable Runnable completeRunner) {
+        this.completeRunner = completeRunner;
+    }
+
     @Override
     public void onComplete() {
         for(Changer c : changers){
@@ -241,4 +337,21 @@ public class MultiGlider implements IGlider {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MultiGlider that = (MultiGlider) o;
+
+        if (Float.compare(that.change, change) != 0) return false;
+        return changers.equals(that.changers);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = changers.hashCode();
+        result = 31 * result + BitConversion.floatToIntBits(change);
+        return result;
+    }
 }

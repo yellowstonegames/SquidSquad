@@ -17,6 +17,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import java.util.Arrays;
@@ -660,16 +662,16 @@ public class LightingManager {
     @Override
     public int hashCode() {
         int result = radiusStrategy != null ? radiusStrategy.hashCode() : 0;
-        result = 31 * result + Arrays.deepHashCode(resistances);
-        result = 31 * result + Arrays.deepHashCode(fovResult);
-        result = 31 * result + Arrays.deepHashCode(losResult);
-        result = 31 * result + Arrays.deepHashCode(lightFromFOV);
-        result = 31 * result + Arrays.deepHashCode(lightingStrength);
-        result = 31 * result + Arrays.deepHashCode(colorLighting);
+        result = 31 * result + Hasher.eligos.hash(resistances);
+        result = 31 * result + Hasher.eligos.hash(fovResult);
+        result = 31 * result + Hasher.eligos.hash(losResult);
+        result = 31 * result + Hasher.eligos.hash(lightFromFOV);
+        result = 31 * result + Hasher.eligos.hash(lightingStrength);
+        result = 31 * result + Hasher.eligos.hash(colorLighting);
         result = 31 * result + width;
         result = 31 * result + height;
         result = 31 * result + backgroundColor;
-        result = 31 * result + (viewerRange != +0.0f ? Float.floatToIntBits(viewerRange) : 0);
+        result = 31 * result + BitConversion.floatToIntBits(viewerRange);
         result = 31 * result + (lights != null ? lights.hashCode() : 0);
         result = 31 * result + (noticeable != null ? noticeable.hashCode() : 0);
         return result;

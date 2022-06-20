@@ -35,7 +35,7 @@ public class FloatGlider implements IGlider {
     protected float start;
     protected float end;
     protected @Nonnull Interpolation interpolation = Interpolation.linear;
-    protected @Nullable Runnable completeRunner;
+    public @Nullable Runnable completeRunner;
 
     public FloatGlider() {
         start = 0f;
