@@ -368,9 +368,10 @@ public class FOV {
         
         return light;
     }
+
     /**
      * Calculates which cells have line of sight from the given x, y coordinates.
-     * Assigns to, and returns, a light Region where the false or "off" indicatees
+     * Assigns to, and returns, a light Region where the false or "off" indicates
      * "not in line of sight" and true or "on" indicated "in line of sight,"
      * though this doesn't mean a cell is actually visible if there's no light
      * in that cell. Always uses Shadow FOV, which allows this method to
@@ -395,7 +396,7 @@ public class FOV {
     }
     /**
      * Calculates which cells have line of sight from the given x, y coordinates.
-     * Assigns to, and returns, a light Region where the false or "off" indicatees
+     * Assigns to, and returns, a light Region where the false or "off" indicates
      * "not in line of sight" and true or "on" indicated "in line of sight,"
      * though this doesn't mean a cell is actually visible if there's no light
      * in that cell. Always uses Shadow FOV, which allows this method to
@@ -436,6 +437,7 @@ public class FOV {
 
         return light;
     }
+
     /**
      * Calculates the Field Of View for the provided map from the given x, y
      * coordinates, lighting at the given angle in  degrees and covering a span
@@ -817,11 +819,9 @@ public class FOV {
                                          float radius, int startx, int starty, Region lightMap,
                                          Region map,
                                          int minX, int minY, int maxX, int maxY) {
-        float newStart = 0;
-        if (start < end) {
+        if (start < end)
             return;
-        }
-
+        float newStart = 0;
         boolean blocked = false;
         for (int distance = row; distance <= radius && distance < maxX - minX + maxY - minY && !blocked; distance++) {
             int deltaY = -distance;
@@ -978,7 +978,7 @@ public class FOV {
                 }
                 float deltaRadius = radiusStrategy.radius(deltaX, deltaY),
                         at2 = Math.abs(angle - TrigTools.atan2Turns(currentY - starty, currentX - startx));// + 1.0f) % 1.0f;
-                //check if it's within the lightable area and light if needed
+                //check if it's within the light-able area and light if needed
                 if (deltaRadius <= radius
                         && (at2 <= span * 0.5f
                         || at2 >= 1.0f - span * 0.5f)) {
