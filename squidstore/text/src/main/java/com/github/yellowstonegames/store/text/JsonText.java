@@ -20,15 +20,11 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.*;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
 
 @SuppressWarnings("rawtypes")
 public final class JsonText {

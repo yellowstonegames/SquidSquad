@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.Interpolation;
 import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float position using an exact Coord for the start and the end, with a change
@@ -29,59 +28,50 @@ import javax.annotation.Nullable;
  * move is complete. The x and y positions are automatically calculated in {@link #getX()} and {@link #getY()}, and
  * their values will be different every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
+ * <br>
+ * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
  */
-public class CoordGlider implements IGlider {
-    protected float change = 0f;
+public class CoordGlider extends MultiGlider {
     protected @Nonnull Coord start;
     protected @Nonnull Coord end;
-    protected @Nonnull Interpolation interpolation = Interpolation.linear;
-    protected @Nullable Runnable completeRunner;
 
     public CoordGlider() {
-        start = Coord.get(0, 0);
-        end = Coord.get(0, 0);
+        super(new Changer("x", 0f, 0f), new Changer("y", 0f, 0f));
+        end = start = Coord.get(0, 0);
     }
     public CoordGlider(@Nonnull Coord start) {
+        super(new Changer("x", start.x, start.x), new Changer("y", start.y, start.y));
         this.start = start;
         this.end = start;
     }
     public CoordGlider(@Nonnull Coord start, @Nonnull Coord end) {
+        super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
+        this.start = start;
+        this.end = end;
+    }
+    public CoordGlider(@Nonnull Interpolation interpolation, Runnable completeRunner, @Nonnull Coord start, @Nonnull Coord end) {
+        super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
 
+    public CoordGlider(@Nonnull CoordGlider other) {
+        super(other);
+        this.start = other.start;
+        this.end = other.end;
+        this.change = other.change;
+        this.interpolation = other.interpolation;
+        this.completeRunner = other.completeRunner;
+    }
+
     public float getX()
     {
-        return interpolation.apply(start.x, end.x, change);
+        return getFloat("x");
     }
 
     public float getY()
     {
-        return interpolation.apply(start.y, end.y, change);
-    }
-
-    @Override
-    public float getChange() {
-        return change;
-    }
-
-    @Override
-    public void setChange(float change) {
-        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
-            onComplete();
-        }
-    }
-
-    @Override
-    @Nonnull
-    public Interpolation getInterpolation() {
-        return interpolation;
-    }
-
-    @Override
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
-        this.interpolation = interpolation;
-        change = 0f;
+        return getFloat("y");
     }
 
     @Nonnull
@@ -91,6 +81,8 @@ public class CoordGlider implements IGlider {
 
     public void setStart(@Nonnull Coord start) {
         this.start = start;
+        setStartFloat("x", start.x);
+        setStartFloat("y", start.y);
         change = 0f;
     }
 
@@ -101,42 +93,14 @@ public class CoordGlider implements IGlider {
 
     public void setEnd(@Nonnull Coord end) {
         this.end = end;
+        setEndFloat("x", end.x);
+        setEndFloat("y", end.y);
         change = 0f;
-    }
-
-    @Nullable
-    public Runnable getCompleteRunner() {
-        return completeRunner;
-    }
-
-    public void setCompleteRunner(@Nullable Runnable completeRunner) {
-        this.completeRunner = completeRunner;
     }
 
     @Override
     public void onComplete() {
         start = end;
-        if(completeRunner != null)
-            completeRunner.run();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CoordGlider that = (CoordGlider) o;
-
-        if (!start.equals(that.start)) return false;
-        if (!end.equals(that.end)) return false;
-        return interpolation.equals(that.interpolation);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = start.hashCode();
-        result = 31 * result + end.hashCode();
-        result = 31 * result + interpolation.hashCode();
-        return result;
+        super.onComplete();
     }
 }

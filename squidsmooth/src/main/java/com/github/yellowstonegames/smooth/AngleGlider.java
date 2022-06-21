@@ -17,11 +17,6 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Allows specifying a smoothly-changing float value that represents an angle, using floats measured in turns (between
