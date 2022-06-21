@@ -36,99 +36,41 @@ import javax.annotation.Nullable;
  * like {@link com.github.tommyettinger.digital.TrigTools#sinTurns(float)}, or to have the angle in turns converted to
  * radians (by multiplying an angle in turns by {@link com.github.tommyettinger.digital.TrigTools#PI2}) or to degrees
  * (by multiplying an angle in turns by {@code 360)}).
+ * <br>
+ * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
  */
-public class AngleGlider implements IGlider {
-    protected float change = 0f;
-    protected float start;
-    protected float end;
-    protected @Nonnull Interpolation interpolation = Interpolation.linear;
-    protected @Nullable Runnable completeRunner;
-
+public class AngleGlider extends MultiGlider {
     public AngleGlider() {
-        start = 0f;
-        end = 0f;
+        super(new Changer("angle", 0f, 0f, FloatInterpolator.ANGLE));
     }
 
     public AngleGlider(float start) {
-        this.start = start;
-        this.end = start;
+        super(new Changer("angle", start, start, FloatInterpolator.ANGLE));
     }
 
     public AngleGlider(float start, float end) {
-        this.start = start;
-        this.end = end;
+        super(new Changer("angle", start, end, FloatInterpolator.ANGLE));
     }
 
     public float getAngle() {
-        return MathTools.lerpAngleTurns(start, end, interpolation.apply(change));
-    }
-
-    @Override
-    public float getChange() {
-        return change;
-    }
-
-    @Override
-    public void setChange(float change) {
-        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
-            onComplete();
-        }
-    }
-
-    @Override
-    @Nonnull
-    public Interpolation getInterpolation() {
-        return interpolation;
-    }
-
-    @Override
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
-        this.interpolation = interpolation;
-        change = 0f;
+        return getFloat("angle");
     }
 
     public float getStart() {
-        return start;
+        return getStartFloat("angle");
     }
 
     public void setStart(float start) {
-        this.start = start;
+        setStartFloat("angle", start);
         change = 0f;
     }
 
     public float getEnd() {
-        return end;
+        return getEndFloat("angle");
     }
 
     public void setEnd(float end) {
-        this.end = end;
+        setEndFloat("angle", end);
         change = 0f;
-    }
-
-    @Override
-    public void onComplete() {
-        start = end;
-        if(completeRunner != null) {
-            completeRunner.run();
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AngleGlider that = (AngleGlider) o;
-
-        if (start != that.start) return false;
-        if (end != that.end) return false;
-        return interpolation.equals(that.interpolation);
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (BitConversion.floatToRawIntBits(start) * 0xD1B54A32D192ED03L
-                + BitConversion.floatToRawIntBits(end) * 0xABC98388FB8FAC03L
-                + interpolation.hashCode() * 0x8CB92BA72F3D8DD7L >>> 32);
     }
 }

@@ -55,7 +55,7 @@ public class FloatGlider extends MultiGlider {
     }
 
     public float getEnd() {
-        return getFloat("f");
+        return getEndFloat("f");
     }
 
     public void setEnd(float end) {
