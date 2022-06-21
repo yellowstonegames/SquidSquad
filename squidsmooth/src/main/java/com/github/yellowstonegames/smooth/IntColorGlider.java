@@ -30,13 +30,10 @@ import javax.annotation.Nullable;
  * move is complete. The current color is automatically calculated in {@link #getColor()}, and its
  * value will be different every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
+ * <br>
+ * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
  */
-public class IntColorGlider implements IGlider {
-    protected float change = 0f;
-    protected int start = 0;
-    protected int end = 0;
-    protected @Nonnull Interpolation interpolation = Interpolation.linear;
-    protected @Nullable Runnable completeRunner;
+public class IntColorGlider extends MultiGlider {
 
     /**
      * Constructs an empty IntColorGlider that needs to have its {@link #setStart(int)} and {@link #setEnd(int)} methods
@@ -52,8 +49,7 @@ public class IntColorGlider implements IGlider {
      * @param start the color that will fade to transparent
      */
     public IntColorGlider(int start) {
-        this.start = start;
-        this.end = start & 0xFFFFFF00;
+        super(new Changer("color", start, start & 0xFFFFFF00, IntInterpolator.COLOR));
     }
 
     /**
@@ -62,8 +58,7 @@ public class IntColorGlider implements IGlider {
      * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
      */
     public IntColorGlider(int start, int end) {
-        this.start = start;
-        this.end = end;
+        super(new Changer("color", start, end, IntInterpolator.COLOR));
     }
 
     /**
@@ -74,9 +69,19 @@ public class IntColorGlider implements IGlider {
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
     public IntColorGlider(int start, int end, @Nullable Runnable completeRunner) {
-        this.start = start;
-        this.end = end;
-        this.completeRunner = completeRunner;
+        super(Interpolation.linear, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
+    }
+
+    /**
+     * Creates an IntColorGlider that interpolates the start color to the end color using the given Interpolation, and
+     * runs the given Runnable upon completion.
+     * @param start the start color, as an int (this could be RGBA or Oklab)
+     * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
+     * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
+     * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
+     */
+    public IntColorGlider(int start, int end, @Nonnull Interpolation interpolation, @Nullable Runnable completeRunner) {
+        super(interpolation, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
     }
 
     /**
@@ -85,31 +90,7 @@ public class IntColorGlider implements IGlider {
      */
     public int getColor()
     {
-        return DescriptiveColor.lerpColors(start, end, interpolation.apply(change));
-    }
-
-    @Override
-    public float getChange() {
-        return change;
-    }
-
-    @Override
-    public void setChange(float change) {
-        if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
-            onComplete();
-        }
-    }
-
-    @Override
-    @Nonnull
-    public Interpolation getInterpolation() {
-        return interpolation;
-    }
-
-    @Override
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
-        this.interpolation = interpolation;
-        change = 0f;
+        return getInt("color");
     }
 
     /**
@@ -117,7 +98,7 @@ public class IntColorGlider implements IGlider {
      * @return start color
      */
     public int getStart() {
-        return start;
+        return getStartInt("color");
     }
 
     /**
@@ -125,8 +106,7 @@ public class IntColorGlider implements IGlider {
      * @param start start color
      */
     public void setStart(int start) {
-        this.start = start;
-        change = 0f;
+        setStartInt("color", start);
     }
 
     /**
@@ -134,7 +114,7 @@ public class IntColorGlider implements IGlider {
      * @return end color
      */
     public int getEnd() {
-        return end;
+        return getEndInt("color");
     }
 
     /**
@@ -142,35 +122,6 @@ public class IntColorGlider implements IGlider {
      * @param end end color
      */
     public void setEnd(int end) {
-        this.end = end;
-        change = 0f;
-    }
-
-    @Override
-    public void onComplete() {
-        start = end;
-        if(completeRunner != null) {
-            completeRunner.run();
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IntColorGlider that = (IntColorGlider) o;
-
-        if (start != that.start) return false;
-        if (end != that.end) return false;
-        return interpolation.equals(that.interpolation);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = interpolation.hashCode();
-        result = 31 * result + start;
-        result = 31 * result + end;
-        return result;
+        setEndInt("color", end);
     }
 }
