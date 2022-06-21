@@ -22,6 +22,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A convenience class that makes dealing with multiple colored light sources easier.
@@ -440,7 +441,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange());
+            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
@@ -476,7 +477,7 @@ public class LightingManager {
             pos = lights.keyAt(i);
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange());
+            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = 0; x < width; x++) {
@@ -513,7 +514,7 @@ public class LightingManager {
      */
     public void updateUI(int lightX, int lightY, Radiance radiance)
     {
-        FOV.reuseFOV(resistances, lightFromFOV, lightX, lightY, radiance.currentRange());
+        FOV.reuseFOVSymmetrical(resistances, lightFromFOV, lightX, lightY, radiance.currentRange(), radiusStrategy);
         mixColoredLighting(radiance.flare, radiance.color);
     }
 
@@ -601,7 +602,7 @@ public class LightingManager {
         maxX = Math.min(Math.max(maxX, 0), width);
         minY = Math.min(Math.max(minY, 0), height);
         maxY = Math.min(Math.max(maxY, 0), height);
-        FOV.reuseFOV(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
+        FOV.reuseFOVSymmetrical(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
@@ -624,7 +625,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOV(resistances, lightFromFOV, pos.x, pos.y, radiance.range);
+            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
@@ -655,8 +656,8 @@ public class LightingManager {
         if (!Arrays.deepEquals(lightFromFOV, that.lightFromFOV)) return false;
         if (!Arrays.deepEquals(lightingStrength, that.lightingStrength)) return false;
         if (!Arrays.deepEquals(colorLighting, that.colorLighting)) return false;
-        if (lights != null ? !lights.equals(that.lights) : that.lights != null) return false;
-        return noticeable != null ? noticeable.equals(that.noticeable) : that.noticeable == null;
+        if (!Objects.equals(lights, that.lights)) return false;
+        return Objects.equals(noticeable, that.noticeable);
     }
 
     @Override

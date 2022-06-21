@@ -489,6 +489,32 @@ public class FOV {
 
     /**
      * Like the {@link #reuseFOV(float[][], float[][], int, int, float, Radius)} method, but this uses Ripple FOV
+     * with a tightness/looseness of 2. Other parameters are similar; you
+     * can get a resistance map from {@link #generateResistances(char[][])}, {@code light} will be modified and returned
+     * (it will be overwritten, but its size should be the same as the resistance map), there's a starting x,y position,
+     * a radius in cells, and a {@link Radius} enum constant to choose the distance measurement.
+     * <br>
+     * This method should not be used from multiple threads; it uses internal static state. You can use the Shadow FOV
+     * methods instead if you need multi-threading.
+     * <br>
+     * Ripple is a significantly slower algorithm than Shadow, typically by more than an order of magnitude.
+     * Still, unless you are making many FOV calls per frame rendered, it's unlikely to be a severe bottleneck,
+     * although this is possible. {@link Radiance}, which typically makes an FOV call once per frame per Radiance,
+     * should always use Shadow, but if you only calculate FOV for the player, or only when they move, then either
+     * Shadow or Ripple can be suitable.
+     * @param resistanceMap probably calculated with {@link #generateResistances(char[][])}; 1.0f blocks light, 0.0f allows it
+     * @param light will be overwritten! Should be initialized with the same size as {@code resistanceMap}
+     * @param x starting x position to look from
+     * @param y starting y position to look from
+     * @param radius the distance to extend from the starting x,y position
+     * @param radiusTechnique how to measure distance; typically {@link Radius#CIRCLE}.
+     * @return {@code light}, after writing the FOV map into it; 1.0f is fully lit and 0.0f is unseen
+     */
+    public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int x, int y, float radius, Radius radiusTechnique) {
+        return reuseRippleFOV(resistanceMap, light, 2, x, y, radius, radiusTechnique);
+    }
+    /**
+     * Like the {@link #reuseFOV(float[][], float[][], int, int, float, Radius)} method, but this uses Ripple FOV
      * with a configurable tightness/looseness (between 1, tightest, and 6, loosest). Other parameters are similar; you
      * can get a resistance map from {@link #generateResistances(char[][])}, {@code light} will be modified and returned
      * (it will be overwritten, but its size should be the same as the resistance map), there's a starting x,y position,
