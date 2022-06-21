@@ -143,24 +143,45 @@ public class MultiGlider implements IGlider {
 
     public MultiGlider addChanger(Changer changer) {
         this.changers.add(changer);
+        change = 0f;
         return this;
     }
 
     public MultiGlider addChangers(Changer... changers) {
         this.changers.addAll(changers);
+        change = 0f;
         return this;
     }
     public MultiGlider addChangers(Collection<Changer> changers) {
         this.changers.addAll(changers);
+        change = 0f;
         return this;
     }
 
     public MultiGlider removeChanger(String name) {
         //noinspection SuspiciousMethodCalls
         this.changers.remove(name);
+        change = 0f;
         return this;
     }
 
+    /**
+     * Adds all Changers in {@code other} to this MultiGlider, and potentially changes the
+     * {@link #getCompleteRunner() runner} so that it performs other's runner, if non-null, after this MultiGlider's
+     * runner (or just run's other's if this has none).
+     * @param other another MultiGlider to merge into this one; will not be changed, but this may share references
+     * @return this, after modifications, for chaining
+     */
+    public MultiGlider merge(final @Nonnull MultiGlider other) {
+        this.changers.addAll(other.changers);
+        if(this.completeRunner == null) this.completeRunner = other.completeRunner;
+        else if(other.completeRunner != null) this.completeRunner = () -> {
+            this.completeRunner.run();
+            other.completeRunner.run();
+        };
+        change = 0f;
+        return this;
+    }
     /**
      * Gets the current float value for the Changer with the given {@code name} by interpolating between its start and
      * end float values. The {@link #getInterpolation() interpolation} will be applied to {@link #getChange() change}
