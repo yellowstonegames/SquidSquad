@@ -84,6 +84,9 @@ public class IntColorGlider extends MultiGlider {
         super(interpolation, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
     }
 
+    public IntColorGlider(IntColorGlider other) {
+        super(other);
+    }
     /**
      * Gets the current color value, which is different when {@link #getChange()} is.
      * @return the current int color
