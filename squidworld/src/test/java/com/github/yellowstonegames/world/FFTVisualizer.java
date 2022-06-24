@@ -931,6 +931,87 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
             }
 
+        } else if(mode == 14) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            float cx = (c+x)*fr;
+                            float cy = (c+y)*fr;
+                            bright = basicPrepare(taffies[dim].getNoise2D(cx, cy));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            points[dim][5] = yy - xx;
+                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
+
         }
 
         Fft.transform2D(real, imag);
