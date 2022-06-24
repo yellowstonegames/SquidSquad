@@ -57,13 +57,13 @@ import com.github.tommyettinger.digital.TrigTools;
  * density of information in higher-dimensional space.
  */
 public class PhantomNoise {
-    private final Hasher hasher;
+    protected final Hasher hasher;
     public final int dim;
     public final float sharpness;
-    private final float inverse;
-    private final float[] working, points;
-    private final float[][] vertices;
-    private final int[] floors, hashFloors;
+    protected final float inverse;
+    protected final float[] working, points;
+    protected final float[][] vertices;
+    protected final int[] floors, hashFloors;
 
     public PhantomNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -178,6 +178,7 @@ public class PhantomNoise {
                 points[v] += args[d] * vertices[v][d];
             }
         }
+        // working[dim] stores what is effectively a changing seed in the array of floats, so the Hasher uses it
         working[dim] = 0.6180339887498949f; // inverse golden ratio; irrational, so its bit representation nears random
         float result = 0f;
         double warp = 0.0;

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.TrimRandom;
 import com.github.yellowstonegames.grid.*;
 
@@ -23,6 +24,7 @@ import java.util.Comparator;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 import static com.github.tommyettinger.bluegrass.BlueNoise.TILE_NOISE;
+import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  */
@@ -834,30 +836,32 @@ public class FFTVisualizer extends ApplicationAdapter {
         } else if(mode == 13) {
             switch (dim) {
                 case 0:
-                    int sx = noise.getSeed(), sy = (int)Hasher.randomize1(sx);
-                    float rxs = Hasher.randomize2Float(sx+1L)-0.5f;
-                    float rxc = Hasher.randomize2Float(sx+2L)-0.5f;
-                    float rys = Hasher.randomize2Float(sy+1L)-0.5f;
-                    float ryc = Hasher.randomize2Float(sy+2L)-0.5f;
+                    long rs = Hasher.randomize1(noise.getSeed());
+                    int sx = (int)(rs >>> 32), sy = (int)rs;
+//                    float rxs = Hasher.randomize2Float(sx+1L)-0.5f;
+//                    float rxc = Hasher.randomize2Float(sx+2L)-0.5f;
+//                    float rys = Hasher.randomize2Float(sy+1L)-0.5f;
+//                    float ryc = Hasher.randomize2Float(sy+2L)-0.5f;
                     for (int x = 0; x < width; x++) {
-                        float cx = c+x*noise.getFrequency();
-                        int idx = (int) (sx + cx * 1357);
-                        float tx = (TrigTools.cos(cx)
-                                + TrigTools.SIN_TABLE[idx & TrigTools.TABLE_MASK]
-                                + TrigTools.SIN_TABLE[idx + 4096 & TrigTools.TABLE_MASK]
-                                + rxs*cx + TrigTools.sin(rxc*cx)
-                        );
                         for (int y = 0; y < height; y++) {
+                            float cx = c+x*noise.getFrequency();
                             float cy = c+y*noise.getFrequency();
-                            idx = (int) (sy - cy * 1357);
-                            float ty = (TrigTools.sin(cy)
-                                    + TrigTools.SIN_TABLE[idx & TrigTools.TABLE_MASK]
-                                    + TrigTools.SIN_TABLE[idx + 4096 & TrigTools.TABLE_MASK]
-                                    + rys*cy + TrigTools.cos(ryc*cy)
+                            int idx = (int) (sx + cx * 1357 + cy * 421);
+                            float tx = (cos(cx)
+                                    + SIN_TABLE[idx & TABLE_MASK]
+                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
+                                    + SIN_TABLE[sx & TABLE_MASK]*cy + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
+                            );
+                            idx = (int) (sy + cy * 1357 + cx * 421);
+                            float ty = (cos(cy)
+                                    + SIN_TABLE[idx & TABLE_MASK]
+                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
+                                    + SIN_TABLE[sy & TABLE_MASK]*cx + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
                             );
                             bright =
 //                                    MathTools.barronSpline(
-                                    0.5f+0.5f*TrigTools.sin(tx+ty)
+                                    MathTools.swayTight((tx+ty) * 0.25f)
+//                                    0.5f+0.5f* LineWobble.wobble(sx+sy, tx + ty + (tx*ty))
 //                                    , 2.2f, 0.5f)
                             ;
                             real[x][y] = bright;
