@@ -1,7 +1,6 @@
 package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -14,9 +13,10 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
-import com.github.tommyettinger.digital.*;
-import com.github.tommyettinger.random.LineWobble;
-import com.github.tommyettinger.random.TrimRandom;
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Comparator;
@@ -37,8 +37,11 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt};
+    private final PhantomNoise[] phantoms = new PhantomNoise[5];
+    private final TaffyNoise[] taffies = new TaffyNoise[5];
+    private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 14;
+    private static final int MODE_LIMIT = 15;
     private int mode = 13;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
@@ -60,8 +63,6 @@ public class FFTVisualizer extends ApplicationAdapter {
     private long ctr = -128, startTime;
     private float changeZ = 0f, changeW = 0f, changeU = 0f, changeV = 0f;
     
-    private CoordObjectOrderedMap<Double> norm;
-    private TrimRandom shuffler;
     private Pixmap pm;
     private static final Comparator<Double> doubleComparator = new Comparator<Double>(){
         @Override
@@ -82,9 +83,10 @@ public class FFTVisualizer extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Coord.expandPoolTo(width, height);
-        norm = new CoordObjectOrderedMap<>(width * height, 0.75f);
-        shuffler = new TrimRandom(0x1234567890ABCDEFL);
+        for (int i = 0; i < 5; i++) {
+            phantoms[i] = new PhantomNoise(1234567, 2+i);
+            taffies[i] = new TaffyNoise(1234567, 2+i);
+        }
         noise.setNoiseType(Noise.CUBIC_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
 //        Pixmap pm = new Pixmap(Gdx.files.internal("special/BlueNoise512x512.png"));
@@ -187,7 +189,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //// specific thresholds: 32, 96, 160, 224
 //        threshold = (TimeUtils.millis() >>> 10 & 3) * 0x40p-8f + 0x20p-8f;
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, nf = noise.getFrequency(), c = (paused ? startTime : TimeUtils.timeSinceMillis(startTime)) * 0x1p-10f / nf, xx, yy;
+        float bright, nf = noise.getFrequency(), c = (paused ? startTime : TimeUtils.timeSinceMillis(startTime)) * 0x1p-10f / nf, xx, yy, cc;
         double db;
         ArrayTools.fill(imag, 0.0);
         if(mode == 0) {
@@ -834,36 +836,29 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
             }
         } else if(mode == 13) {
+            float fr = noise.getFrequency();
             switch (dim) {
                 case 0:
-                    long rs = Hasher.randomize1(noise.getSeed());
-                    int sx = (int)(rs >>> 32), sy = (int)rs;
-//                    float rxs = Hasher.randomize2Float(sx+1L)-0.5f;
-//                    float rxc = Hasher.randomize2Float(sx+2L)-0.5f;
-//                    float rys = Hasher.randomize2Float(sy+1L)-0.5f;
-//                    float ryc = Hasher.randomize2Float(sy+2L)-0.5f;
+//                    long rs = Hasher.randomize1(noise.getSeed());
+//                    int sx = (int)(rs >>> 32), sy = (int)rs;
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            float cx = c+x*noise.getFrequency();
-                            float cy = c+y*noise.getFrequency();
-                            int idx = (int) (sx + cx * 1357 + cy * 421);
-                            float tx = (cos(cx)
-                                    + SIN_TABLE[idx & TABLE_MASK]
-                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
-                                    + SIN_TABLE[sx & TABLE_MASK]*cy + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
-                            );
-                            idx = (int) (sy + cy * 1357 + cx * 421);
-                            float ty = (cos(cy)
-                                    + SIN_TABLE[idx & TABLE_MASK]
-                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
-                                    + SIN_TABLE[sy & TABLE_MASK]*cx + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
-                            );
-                            bright =
-//                                    MathTools.barronSpline(
-                                    MathTools.swayTight((tx+ty) * 0.25f)
-//                                    0.5f+0.5f* LineWobble.wobble(sx+sy, tx + ty + (tx*ty))
-//                                    , 2.2f, 0.5f)
-                            ;
+                            float cx = (c+x)*fr;
+                            float cy = (c+y)*fr;
+//                            int idx = (int) (sx + cx * 1357 + cy * 421);
+//                            float tx = (cos(cx)
+//                                    + SIN_TABLE[idx & TABLE_MASK]
+//                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
+//                                    + SIN_TABLE[sx & TABLE_MASK]*cy + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
+//                            );
+//                            idx = (int) (sy + cy * 1357 + cx * 421);
+//                            float ty = (cos(cy)
+//                                    + SIN_TABLE[idx & TABLE_MASK]
+//                                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
+//                                    + SIN_TABLE[sy & TABLE_MASK]*cx + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
+//                            );
+//                            bright = MathTools.swayTight((tx+ty) * 0.25f);
+                            bright = basicPrepare(phantoms[dim].getNoise2D(cx, cy));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -871,9 +866,12 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 1:
+                    points[dim][2] = c * fr;
                     for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
                         for (int y = 0; y < height; y++) {
-                            bright = basicPrepare(noise.getConfiguredNoise(x, y, c));
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(phantoms[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -881,9 +879,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
+                    points[dim][2] = c * fr;
                     for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
                         for (int y = 0; y < height; y++) {
-                            bright = basicPrepare(noise.getConfiguredNoise(x, y, c, 0x1p-4f * (x + y - c)));
+                            points[dim][1] = y * fr;
+                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            bright = basicPrepare(phantoms[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -891,13 +893,17 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 3:
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f;
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f;
-                            bright = basicPrepare(noise.getConfiguredNoise(
-                                    c + xx, xx - c, yy - c,
-                                    c - yy, xx + yy));
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            bright = basicPrepare(phantoms[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -905,13 +911,18 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 4:
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f;
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f;
-                            bright = basicPrepare(noise.getConfiguredNoise(
-                                    c + xx, xx - c, yy - c,
-                                    c - yy, xx + yy, yy - xx));
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            points[dim][5] = yy - xx;
+                            bright = basicPrepare(phantoms[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
