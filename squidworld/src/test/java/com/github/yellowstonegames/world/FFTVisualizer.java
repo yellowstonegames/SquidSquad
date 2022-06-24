@@ -14,9 +14,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
-import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.random.TrimRandom;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Comparator;
@@ -37,9 +36,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 13;
-    private int mode = 12;
-    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private static final int MODE_LIMIT = 14;
+    private int mode = 13;
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -832,6 +831,91 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
             }
+        } else if(mode == 13) {
+            switch (dim) {
+                case 0:
+                    int sx = noise.getSeed(), sy = (int)Hasher.randomize1(sx);
+                    float rxs = Hasher.randomize2Float(sx+1L)-0.5f;
+                    float rxc = Hasher.randomize2Float(sx+2L)-0.5f;
+                    float rys = Hasher.randomize2Float(sy+1L)-0.5f;
+                    float ryc = Hasher.randomize2Float(sy+2L)-0.5f;
+                    for (int x = 0; x < width; x++) {
+                        float cx = c+x*noise.getFrequency();
+                        int idx = (int) (sx + cx * 1357);
+                        float tx = (TrigTools.cos(cx)
+                                + TrigTools.SIN_TABLE[idx & TrigTools.TABLE_MASK]
+                                + TrigTools.SIN_TABLE[idx + 4096 & TrigTools.TABLE_MASK]
+                                + rxs*cx + TrigTools.sin(rxc*cx)
+                        );
+                        for (int y = 0; y < height; y++) {
+                            float cy = c+y*noise.getFrequency();
+                            idx = (int) (sy - cy * 1357);
+                            float ty = (TrigTools.sin(cy)
+                                    + TrigTools.SIN_TABLE[idx & TrigTools.TABLE_MASK]
+                                    + TrigTools.SIN_TABLE[idx + 4096 & TrigTools.TABLE_MASK]
+                                    + rys*cy + TrigTools.cos(ryc*cy)
+                            );
+                            bright =
+//                                    MathTools.barronSpline(
+                                    0.5f+0.5f*TrigTools.sin(tx+ty)
+//                                    , 2.2f, 0.5f)
+                            ;
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = basicPrepare(noise.getConfiguredNoise(x, y, c));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = basicPrepare(noise.getConfiguredNoise(x, y, c, 0x1p-4f * (x + y - c)));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f;
+                            bright = basicPrepare(noise.getConfiguredNoise(
+                                    c + xx, xx - c, yy - c,
+                                    c - yy, xx + yy));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f;
+                            bright = basicPrepare(noise.getConfiguredNoise(
+                                    c + xx, xx - c, yy - c,
+                                    c - yy, xx + yy, yy - xx));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
+
         }
 
         Fft.transform2D(real, imag);
