@@ -45,12 +45,13 @@ public class TaffyNoise extends PhantomNoise {
             int idx = (int) (s + cx * 1357 + cy * 421);
             sum += (cos(cx)
                     + SIN_TABLE[idx & TABLE_MASK]
-                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
+//                    + SIN_TABLE[idx + 4096 & TABLE_MASK]
                     + SIN_TABLE[s & TABLE_MASK]*cy
                     + sin(SIN_TABLE[s + 4096 & TABLE_MASK]*cx)
             );
+            s ^= (s << 11 | s >>> 21) + 123456789;
         }
-        return MathTools.swayTight(sum * 0.12f);
+        return wobbleTight(s, sum * inverse);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class TaffyNoise extends PhantomNoise {
                 + SIN_TABLE[sy & TABLE_MASK]*cx
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
         );
-        return wobbleTight(sx + sy, sum);
+        return wobbleTight(sx + sy, sum * inverse);
     }
 
     /**
