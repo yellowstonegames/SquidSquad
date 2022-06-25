@@ -1280,15 +1280,15 @@ public class Noise {
                         return singleFoamFractalFBM(x, y, mutation);
                 }
             case TAFFY:
-                return singleTaffy(seed, x, y);
+                return singleTaffy(seed, x, y, mutation);
             case TAFFY_FRACTAL:
                 switch (fractalType) {
                     case BILLOW:
-                        return singleTaffyFractalBillow(x, y);
+                        return singleTaffyFractalBillow(x, y, mutation);
                     case RIDGED_MULTI:
-                        return singleTaffyFractalRidgedMulti(x, y);
+                        return singleTaffyFractalRidgedMulti(x, y, mutation);
                     default:
-                        return singleTaffyFractalFBM(x, y);
+                        return singleTaffyFractalFBM(x, y, mutation);
                 }
             case HONEY:
                 return singleHoney(seed, x, y);
@@ -8037,18 +8037,41 @@ public class Noise {
         int idx = (int) (sx + x * 1657 + y * 923);
         float sum = (cos(x)
                 + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK]*y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*x)
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
         idx = (int) (sy + y * 1657 + x * 923);
         sum += (cos(y)
                 + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK]*x
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*y)
+                + SIN_TABLE[sy & TABLE_MASK] * x
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
         return Noise.wobbleTight(sx + sy, sum * 0.333333f);
-
     }
+
+    protected float trillNoise(int seed, float x, float y, float z) {
+        int sx = seed, sy = (seed << 13 | seed >>> 19), sz = (seed << 26 | seed >>> 6);
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + x * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * x
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        return Noise.wobbleTight(sx + sy + sz, sum * 0.25f);
+    }
+
     public float singleTaffy(int seed, float x, float y) {
         final float p0 = x;
         final float p1 = x * -0.5f + y * 0.8660254037844386f;
@@ -8217,22 +8240,22 @@ public class Noise {
         float xin = p3;
         float yin = p2;
         float zin = p0;
-        final float a = valueNoise(seed, xin, yin, zin);
+        final float a = trillNoise(seed, xin, yin, zin);
         seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p3;
-        final float b = valueNoise(seed, xin + a, yin, zin);
+        final float b = trillNoise(seed, xin + a, yin, zin);
         seed += 0x9E377;
         xin = p1;
         yin = p2;
         zin = p3;
-        final float c = valueNoise(seed, xin + b, yin, zin);
+        final float c = trillNoise(seed, xin + b, yin, zin);
         seed += 0x9E377;
         xin = p0;
         yin = p1;
         zin = p2;
-        final float d = valueNoise(seed, xin + c, yin, zin);
+        final float d = trillNoise(seed, xin + c, yin, zin);
 
         final float result = (a + b + c + d) * 0.25f;
         final float sharp = sharpness * 3.3f;

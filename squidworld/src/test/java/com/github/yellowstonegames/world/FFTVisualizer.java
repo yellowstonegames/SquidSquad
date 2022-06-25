@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -136,11 +137,14 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case N: // noise type
                         if(mode == 0 || mode >= 12)
-                            noise.setNoiseType((noise.getNoiseType() + 1) % 18);
+                            noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 17 : 1)) % 18);
                         break;
                     case ENTER:
                     case D: //dimension
-                        dim = (dim + 1) % 5;
+                        dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
+                        break;
+                    case U: //mUtation
+                        noise.setMutation(noise.getMutation() + (UIUtils.shift() ? -0.1f : 0.1f));
                         break;
                     case F: // frequency
                         noise.setFrequency((float) Math.sin(freq += 0.125f) * 0.1f + 0.11f);
