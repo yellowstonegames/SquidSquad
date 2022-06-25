@@ -136,14 +136,14 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case N: // noise type
                         if(mode == 0 || mode >= 12)
-                            noise.setNoiseType((noise.getNoiseType() + 1) % 14);
+                            noise.setNoiseType((noise.getNoiseType() + 1) % 18);
                         break;
                     case ENTER:
                     case D: //dimension
                         dim = (dim + 1) % 5;
                         break;
                     case F: // frequency
-                        noise.setFrequency((float) Math.sin(freq += 0.125f) * 0.05f + 0.06f);
+                        noise.setFrequency((float) Math.sin(freq += 0.125f) * 0.1f + 0.11f);
                         break;
                     case R: // fRactal type
                         noise.setFractalType((noise.getFractalType() + 1) % 3);
