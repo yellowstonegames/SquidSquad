@@ -37,8 +37,8 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     occur over a given span of input values. It defaults to {@code 1f/32f}, though you should try setting this to
  *     {@code 1f} if results look strange.</li>
  *     <li>If your noise type is one of the fractal varieties ({@link #VALUE_FRACTAL}, {@link #PERLIN_FRACTAL},
- *     {@link #SIMPLEX_FRACTAL}, {@link #CUBIC_FRACTAL}, {@link #FOAM_FRACTAL}, {@link #HONEY_FRACTAL}, or
- *     {@link #MUTANT_FRACTAL}):
+ *     {@link #SIMPLEX_FRACTAL}, {@link #CUBIC_FRACTAL}, {@link #FOAM_FRACTAL}, {@link #HONEY_FRACTAL},
+ *     {@link #MUTANT_FRACTAL}, or {@link #TAFFY_FRACTAL}):
  *     <ul>
  *         <li>Fractal noise can set a fractal type with {@link #setFractalType(int)}, which defaults to {@link #FBM}
  *         (layering noise with different frequencies and strengths), and can also be set to {@link #RIDGED_MULTI}
@@ -67,19 +67,22 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     <li>The {@link #CELLULAR} noise type has lots of extra configuration, and not all of it is well-documented, but
  *     experimenting with settings like {@link #setCellularReturnType(int)} and
  *     {@link #setCellularDistanceFunction(int)} is a good way to see if it can do what you want.</li>
- *     <li>The {@link #setMutation(float)} method allows you to configure {@link #MUTANT} and {@link #MUTANT_FRACTAL}
- *     noise in a way that's more precise than changing a seed. Small changes to mutation cause small changes in the
- *     resulting noise, while large changes are similar to editing the seed. Mutation acts like any other positional
- *     component, like x or y, and as such is affected by the frequency. The two MUTANT types of noise are extremely
- *     similar to {@link #FOAM} and {@link #FOAM_FRACTAL}, just with an extra dimension added for mutation.</li>
- *     <li>If you are using {@link #FOAM}, {@link #MUTANT}, {@link #CUBIC}, or their _FRACTAL versions, you can adjust
- *     how sharply the noise transitions between light and dark values by using {@link #setSharpness(float)}. Higher
- *     sharpness may be especially useful with more octaves, because most types of noise slide toward producing mostly
- *     central values with more octaves, and higher sharpness helps counter that "graying out."</li>
+ *     <li>The {@link #setMutation(float)} method allows you to configure {@link #MUTANT}, {@link #MUTANT_FRACTAL},
+ *     {@link #TAFFY}, and {@link #TAFFY_FRACTAL} noise in a way that's more precise than changing a seed. Small changes
+ *     to mutation cause small changes in the resulting noise, while large changes are similar to editing the seed.
+ *     Mutation acts like any other positional component, like x or y, and as such is affected by the frequency. The two
+ *     MUTANT types of noise are extremely similar to {@link #FOAM} and {@link #FOAM_FRACTAL}, just with an extra
+ *     dimension added for mutation. The two TAFFY types of noise are considerably faster than FOAM in high dimensions,
+ *     but are visibly lower-quality in low dimensions.</li>
+ *     <li>If you are using {@link #FOAM}, {@link #MUTANT}, {@link #CUBIC}, {@link #TAFFY}, or their _FRACTAL versions,
+ *     you can adjust how sharply the noise transitions between light and dark values by using
+ *     {@link #setSharpness(float)}. Higher sharpness may be especially useful with more octaves, because most types of
+ *     noise slide toward producing mostly central values with more octaves, and higher sharpness helps counter that
+ *     "graying out."</li>
  *     <li>You will probably need to adjust the frequency for your particular use case. The default used by
  *     {@link #instance} is {@code 1.0f/32.0f} or {@code 0.03125f}, but world map generation often uses a frequency of 1
- *     or around 1, and some types of noise (especially {@link #FOAM}, {@link #MUTANT}, and their _FRACTAL versions)
- *     need higher frequencies to look comparable to other noise types.</li>
+ *     or around 1, and some types of noise (especially {@link #FOAM}, {@link #MUTANT}, {@link #TAFFY}, and their
+ *     _FRACTAL versions) need higher frequencies to look comparable to other noise types.</li>
  * </ul>
  */
 public class Noise {
@@ -259,23 +262,31 @@ public class Noise {
      */
     MUTANT_FRACTAL = 15,
     /**
-     * In-progress. AQllows extra configuration via {@link #setMutation(float)}, producing small changes when the
-     * mutation value is similar, or large changes if it is very different. This contrasts with changes to the seed,
-     * which almost always cause large changes for any difference in seed. This is very similar to {@link #MUTANT} but
-     * uses a variant on {@link #FOAM}, instead of the exact version Mutant uses.
+     * A smooth, flowing kind of noise that allows extra configuration via {@link #setMutation(float)}, producing small
+     * changes when the mutation value is similar, or large changes if it is very different. This contrasts with changes
+     * to the seed, which almost always cause large changes for any difference in seed.
+     * This is very similar to {@link #MUTANT} (which is just {@link #FOAM} with an extra dimension), but instead of how
+     * FOAM uses {@link #VALUE} with various rotations, this uses its own variety of basic building-block noise
+     * (internally called Trill noise). This Trill noise is extremely low-quality on its own, but stays quite fast even
+     * in very high dimensions. This means that this is potentially a good option if {@link #MUTANT} is too slow, and
+     * you need higher-dimensional (4D and up) noise.
      * <br>
-     * <a href="">Noise sample at left, FFT at right.</a>
+     * <a href="https://i.imgur.com/XaXho6P.png">Noise sample at left, FFT at right.</a> (This is 6D noise.)
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
     TAFFY = 16,
     /**
-     * A kind of noise that allows extra configuration via {@link #setMutation(float)}, producing small changes when the
-     * mutation value is similar, or large changes if it is very different. This contrasts with changes to the seed,
-     * which almost always cause large changes for any difference in seed. This is very similar to
-     * {@link #MUTANT_FRACTAL} but uses a variant on {@link #FOAM_FRACTAL}, instead of the exact version Mutant uses.
+     * A smooth, flowing kind of noise that allows extra configuration via {@link #setMutation(float)}, producing small
+     * changes when the mutation value is similar, or large changes if it is very different. This contrasts with changes
+     * to the seed, which almost always cause large changes for any difference in seed. This is very similar to
+     * {@link #MUTANT_FRACTAL} (which is just {@link #FOAM_FRACTAL} with an extra dimension), but instead of how
+     * FOAM uses {@link #VALUE} with various rotations, this uses its own variety of basic building-block noise
+     * (internally called Trill noise). This Trill noise is extremely low-quality on its own, but stays quite fast even
+     * in very high dimensions. This means that this is potentially a good option if {@link #MUTANT_FRACTAL} is too
+     * slow, and you need higher-dimensional (4D and up) noise.
      * <br>
-     * <a href="">Noise sample at left, FFT at right.</a>
+     * <a href="https://i.imgur.com/XaXho6P.png">Noise sample at left, FFT at right.</a> (This is 6D noise.)
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
@@ -572,24 +583,6 @@ public class Noise {
     }
 
     /**
-     * A smooth 1D noise function that produces results between 0.0 and 1.0, and is optimized for
-     * usage on GWT. This uses cubic interpolation between random peak or valley points.
-     * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
-     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
-     * @return a pseudo-random float between 0f and 1f (both inclusive), smoothly changing with value
-     */
-    public static float wobbleTight(final int seed, float value)
-    {
-        final int floor = value >= 0f ? (int) value : (int) value - 1;
-        int z = seed + floor, x = z++;
-        final float start = ((x = ((x = (x ^ x >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f,
-                end = ((x = ((x = (z ^ z >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f;
-        value -= floor;
-        value *= value * (3 - 2 * value);
-        return (1 - value) * start + value * end;
-    }
-
-    /**
      * Writes all fields of this Noise (except for the {@link #getPointHash()}, which must be stored separately) to a
      * String and returns it. The result of this method can be used by {@link #deserializeFromString(String)}, though if
      * you need a particular IPointHash value, you need to set it yourself on the result of that method.
@@ -708,7 +701,8 @@ public class Noise {
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
-     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
+     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), {@link #MUTANT_FRACTAL} (15), {@link #TAFFY} (16), or
+     * {@link #TAFFY_FRACTAL} (17).
      * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL. Note that if you have a fractal noise
      * type, you can get the corresponding non-fractal noise type by subtracting 1 from the constant this returns. The
      * reverse is not always true, because Cellular and White Noise have no fractal version.
@@ -724,7 +718,8 @@ public class Noise {
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
      * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
-     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), or {@link #MUTANT_FRACTAL} (15).
+     * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), {@link #MUTANT_FRACTAL} (15), {@link #TAFFY} (16), or
+     * {@link #TAFFY_FRACTAL} (17).
      * The default is SIMPLEX_FRACTAL. Note that if you have a fractal noise type, you can get the corresponding
      * non-fractal noise type by subtracting 1 from the constant this returns. The reverse is not always true, because
      * Cellular and White Noise have no fractal version.
@@ -884,8 +879,9 @@ public class Noise {
 
     /**
      * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL},
-     * {@link #CUBIC}, and {@link #CUBIC_FRACTAL} noise types, which is usually around 0.25f to 2.0f, and defaults to
-     * 1.0f. High values produce extreme results more often, and low values produce mid-range values more often.
+     * {@link #CUBIC}, {@link #CUBIC_FRACTAL}, {@link #TAFFY}, and {@link #TAFFY_FRACTAL} noise types, which is usually
+     * around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results more often, and low values
+     * produce mid-range values more often.
      * <br>
      * This is equivalent to {@link #getSharpness()}.
      * @return the current "sharpness" for some noise types (Foam, Mutant, Cubic)
@@ -896,8 +892,9 @@ public class Noise {
 
     /**
      * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #CUBIC},
-     * and {@link #CUBIC_FRACTAL} noise types, this affects how often the noise will produce very high and very low
-     * results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).
+     * {@link #CUBIC_FRACTAL}, {@link #TAFFY}, and {@link #TAFFY_FRACTAL} noise types, this affects how often the noise
+     * will produce very high and very low results (more often with high sharpness values), as opposed to mid-range
+     * (more often with low sharpness values).
      * <br>
      * This defaults to 1.0f if not set. It is equivalent to {@link #setSharpness(float)}.
      * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
@@ -908,8 +905,9 @@ public class Noise {
 
     /**
      * Gets the "sharpness" for the {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL},
-     * {@link #CUBIC}, and {@link #CUBIC_FRACTAL} noise types, which is usually around 0.25f to 2.0f, and defaults to
-     * 1.0f. High values produce extreme results more often, and low values produce mid-range values more often.
+     * {@link #CUBIC}, {@link #CUBIC_FRACTAL}, {@link #TAFFY}, and {@link #TAFFY_FRACTAL} noise types, which is usually
+     * around 0.25f to 2.0f, and defaults to 1.0f. High values produce extreme results more often, and low values
+     * produce mid-range values more often.
      * <br>
      * This is equivalent to {@link #getFoamSharpness()}.
      * @return the current "sharpness" for some noise types (Foam, Mutant, Cubic)
@@ -920,8 +918,9 @@ public class Noise {
 
     /**
      * Only used with {@link #FOAM}, {@link #FOAM_FRACTAL}, {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #CUBIC},
-     * and {@link #CUBIC_FRACTAL} noise types, this affects how often the noise will produce very high and very low
-     * results (more often with high sharpness values), as opposed to mid-range (more often with low sharpness values).
+     * {@link #CUBIC_FRACTAL}, {@link #TAFFY}, and {@link #TAFFY_FRACTAL} noise types, this affects how often the noise
+     * will produce very high and very low results (more often with high sharpness values), as opposed to mid-range
+     * (more often with low sharpness values).
      * <br>
      * This defaults to 1.0f if not set. It is equivalent to {@link #setFoamSharpness(float)}.
      * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
@@ -931,8 +930,9 @@ public class Noise {
     }
 
     /**
-     * Gets the mutation value used by {@link #MUTANT} and {@link #MUTANT_FRACTAL} noise types, which allows making
-     * small changes to the result when the mutation values are slightly different.
+     * Gets the mutation value used by {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #TAFFY}, and
+     * {@link #TAFFY_FRACTAL} noise types, which allows making small changes to the result when the mutation values are
+     * slightly different.
      * @return the current mutation value, which can be any finite float
      */
     public float getMutation() {
@@ -940,8 +940,9 @@ public class Noise {
     }
 
     /**
-     * Sets the mutation value used by {@link #MUTANT} and {@link #MUTANT_FRACTAL} noise types, which can be any finite
-     * float. Small changes to the mutation value cause small changes in the result, unlike changes to the seed.
+     * Sets the mutation value used by {@link #MUTANT}, {@link #MUTANT_FRACTAL}, {@link #TAFFY}, and
+     * {@link #TAFFY_FRACTAL} noise types, which can be any finite float. Small changes to the mutation value cause
+     * small changes in the result, unlike changes to the seed.
      * @param mutation the mutation value to use, which can be any finite float
      */
     public void setMutation(float mutation) {
@@ -1890,6 +1891,26 @@ public class Noise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >> 22;
     }
 
+
+    /**
+     * A smooth 1D noise function that produces results between 0.0 and 1.0, and is optimized for
+     * usage on GWT. This uses cubic interpolation between random peak or valley points.
+     * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
+     * @return a pseudo-random float between 0f and 1f (both inclusive), smoothly changing with value
+     */
+    public static float wobbleTight(final int seed, float value)
+    {
+        final int floor = value >= 0f ? (int) value : (int) value - 1;
+        int z = seed + floor, x = z++;
+        final float start = ((x = ((x = (x ^ x >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f,
+                end = ((x = ((x = (z ^ z >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f;
+        value -= floor;
+        value *= value * (3 - 2 * value);
+        return (1 - value) * start + value * end;
+    }
+
+    // Value noise.
 
     public float getValueFractal(float x, float y) {
         x *= frequency;
@@ -3655,6 +3676,959 @@ public class Noise {
         final float h = valueNoise(seed, xin + g, yin, zin, win, uin, vin, min);
         final float result = (a + b + c + d + e + f + g + h) * 0.125f;
         final float sharp = sharpness * 7.7f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    // Taffy Noise
+
+    public float getTaffy(float x, float y) {
+        return singleTaffy(seed, x * frequency, y * frequency);
+    }
+
+    protected float trillNoise(int seed, float x, float y) {
+        int sx = seed, sy = (seed << 11 | seed >>> 21);
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + x * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * x
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy,
+                sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567, sz = (sy << 13 | sy >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + x * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * x
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz,
+                sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z, float w) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + w * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = (int) (sw + w * 1657 + x * 923);
+        sum += (cos(w)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sw & TABLE_MASK] * x
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z, float w, float u) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567,
+                su = (sw << 13 | sw >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + w * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = (int) (sw + w * 1657 + u * 923);
+        sum += (cos(w)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sw & TABLE_MASK] * u
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        idx = (int) (su + u * 1657 + x * 923);
+        sum += (cos(u)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[su & TABLE_MASK] * x
+                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567,
+                su = (sw << 13 | sw >>> 19) + 1234567,
+                sv = (su << 13 | su >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + w * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = (int) (sw + w * 1657 + u * 923);
+        sum += (cos(w)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sw & TABLE_MASK] * u
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        idx = (int) (su + u * 1657 + v * 923);
+        sum += (cos(u)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[su & TABLE_MASK] * v
+                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        idx = (int) (sv + v * 1657 + x * 923);
+        sum += (cos(v)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sv & TABLE_MASK] * x
+                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v, float m) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567,
+                su = (sw << 13 | sw >>> 19) + 1234567,
+                sv = (su << 13 | su >>> 19) + 1234567,
+                sm = (sv << 13 | sv >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + w * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = (int) (sw + w * 1657 + u * 923);
+        sum += (cos(w)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sw & TABLE_MASK] * u
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        idx = (int) (su + u * 1657 + v * 923);
+        sum += (cos(u)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[su & TABLE_MASK] * v
+                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        idx = (int) (sv + v * 1657 + m * 923);
+        sum += (cos(v)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sv & TABLE_MASK] * m
+                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
+        );
+        idx = (int) (sm + m * 1657 + x * 923);
+        sum += (cos(m)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sm & TABLE_MASK] * x
+                + sin(SIN_TABLE[sm + 4096 & TABLE_MASK] * m)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                sum * 0.125f);
+    }
+
+    public float singleTaffy(int seed, float x, float y) {
+        final float p0 = x;
+        final float p1 = x * -0.5f + y * 0.8660254037844386f;
+        final float p2 = x * -0.5f + y * -0.8660254037844387f;
+
+        float xin = p2;
+        float yin = p0;
+        final float a = trillNoise(seed, xin, yin);
+        seed += 0x9E377;
+        xin = p1;
+        yin = p2;
+        final float b = trillNoise(seed, xin + a, yin);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        final float c = trillNoise(seed, xin + b, yin);
+        final float result = (a + b + c) * F3f;
+        final float sharp = sharpness * 1.2f;
+
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    public float getTaffyFractal(float x, float y) {
+        x *= frequency;
+        y *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleTaffyFractalFBM(x, y);
+            case BILLOW:
+                return singleTaffyFractalBillow(x, y);
+            case RIDGED_MULTI:
+                return singleTaffyFractalRidgedMulti(x, y);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleTaffyFractalFBM(float x, float y) {
+        int seed = this.seed;
+        float sum = singleTaffy(seed, x, y);
+        float amp = 1, t;
+
+        for (int i = 1; i < octaves; i++) {
+            t = x;
+            x = y * lacunarity;
+            y = t * lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(seed + i, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y)) * 2 - 1;
+        float amp = 1, t;
+
+        for (int i = 1; i < octaves; i++) {
+            t = x;
+            x = y * lacunarity;
+            y = t * lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y) {
+        int seed = this.seed;
+        float t;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            t = x;
+            x = y * lacunarity;
+            y = t * lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+
+    public float getTaffyFractal(float x, float y, float z) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleTaffyFractalFBM(x, y, z);
+            case BILLOW:
+                return singleTaffyFractalBillow(x, y, z);
+            case RIDGED_MULTI:
+                return singleTaffyFractalRidgedMulti(x, y, z);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleTaffyFractalFBM(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = singleTaffy(seed, x, y, z);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(++seed, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(++seed, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getTaffy(float x, float y, float z) {
+        return singleTaffy(seed, x * frequency, y * frequency, z * frequency);
+    }
+
+    public float singleTaffy(int seed, float x, float y, float z){
+        final float p0 = x;
+        final float p1 = x * -0.3333333333333333f + y * 0.9428090415820634f;
+        final float p2 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * 0.816496580927726f;
+        final float p3 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * -0.816496580927726f;
+
+        float xin = p3;
+        float yin = p2;
+        float zin = p0;
+        final float a = trillNoise(seed, xin, yin, zin);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        final float b = trillNoise(seed, xin + a, yin, zin);
+        seed += 0x9E377;
+        xin = p1;
+        yin = p2;
+        zin = p3;
+        final float c = trillNoise(seed, xin + b, yin, zin);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        final float d = trillNoise(seed, xin + c, yin, zin);
+
+        final float result = (a + b + c + d) * 0.25f;
+        final float sharp = sharpness * 1.3f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+
+    }
+
+
+    private float singleTaffyFractalFBM(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = singleTaffy(seed, x, y, z, w);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(++seed, x, y, z, w) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y, z, w)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(++seed, x, y, z, w)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y,  z, w));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getTaffy(float x, float y, float z, float w) {
+        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    }
+
+    public float singleTaffy(int seed, float x, float y, float z, float w) {
+        final float p0 = x;
+        final float p1 = x * -0.25f + y *  0.9682458365518543f;
+        final float p2 = x * -0.25f + y * -0.3227486121839514f + z *  0.91287092917527690f;
+        final float p3 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w *  0.7905694150420949f;
+        final float p4 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w * -0.7905694150420947f;
+
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        float win = p4;
+        final float a = trillNoise(seed, xin, yin, zin, win);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        final float b = trillNoise(seed, xin + a, yin, zin, win);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        win = p4;
+        final float c = trillNoise(seed, xin + b, yin, zin, win);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p4;
+        final float d = trillNoise(seed, xin + c, yin, zin, win);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        final float e = trillNoise(seed, xin + d, yin, zin, win);
+
+        final float result = (a + b + c + d + e) * 0.2f;
+        final float sharp = sharpness * 1.4f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+    public float getTaffyFractal(float x, float y, float z, float w, float u) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleTaffyFractalFBM(x, y, z, w, u);
+            case BILLOW:
+                return singleTaffyFractalBillow(x, y, z, w, u);
+            case RIDGED_MULTI:
+                return singleTaffyFractalRidgedMulti(x, y, z, w, u);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u) {
+        final int seed = this.seed;
+        float sum = singleTaffy(seed, x, y, z, w, u);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(seed + i, x, y, z, w, u) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u) {
+        final int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u) {
+        final int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getTaffy(float x, float y, float z, float w, float u) {
+        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
+    }
+
+    public float singleTaffy(int seed, float x, float y, float z, float w, float u) {
+        final float p0 = x *  0.8157559148337911f + y *  0.5797766823136037f;
+        final float p1 = x * -0.7314923478726791f + y *  0.6832997137249108f;
+        final float p2 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * 0.9486832980505138f;
+        final float p3 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w *   0.8944271909999159f;
+        final float p4 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u *  0.7745966692414833f;
+        final float p5 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u * -0.7745966692414836f;
+
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        float win = p4;
+        float uin = p5;
+        final float a = trillNoise(seed, xin, yin, zin, win, uin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float b = trillNoise(seed, xin + a, yin, zin, win, uin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float c = trillNoise(seed, xin + b, yin, zin, win, uin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p4;
+        uin = p5;
+        final float d = trillNoise(seed, xin + c, yin, zin, win, uin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p5;
+        final float e = trillNoise(seed, xin + d, yin, zin, win, uin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p4;
+        final float f = trillNoise(seed, xin + e, yin, zin, win, uin);
+
+        final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
+        final float sharp = sharpness * 1.5f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    public float getTaffyFractal(float x, float y, float z, float w, float u, float v) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+        v *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleTaffyFractalFBM(x, y, z, w, u, v);
+            case BILLOW:
+                return singleTaffyFractalBillow(x, y, z, w, u, v);
+            case RIDGED_MULTI:
+                return singleTaffyFractalRidgedMulti(x, y, z, w, u, v);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float sum = singleTaffy(seed, x, y, z, w, u, v);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(++seed, x, y, z, w, u, v) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getTaffy(float x, float y, float z, float w, float u, float v) {
+        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    }
+
+    public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v) {
+        final float p0 = x;
+        final float p1 = x * -0.16666666666666666f + y *  0.98601329718326940f;
+        final float p2 = x * -0.16666666666666666f + y * -0.19720265943665383f + z *  0.96609178307929590f;
+        final float p3 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w *  0.93541434669348530f;
+        final float p4 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u *  0.8819171036881969f;
+        final float p5 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v *  0.7637626158259734f;
+        final float p6 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v * -0.7637626158259732f;
+        float xin = p0;
+        float yin = p5;
+        float zin = p3;
+        float win = p6;
+        float uin = p1;
+        float vin = p4;
+        final float a = trillNoise(seed, xin, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p2;
+        yin = p6;
+        zin = p0;
+        win = p4;
+        uin = p5;
+        vin = p3;
+        final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p1;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        uin = p6;
+        vin = p5;
+        final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p6;
+        yin = p0;
+        zin = p2;
+        win = p5;
+        uin = p4;
+        vin = p1;
+        final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p2;
+        yin = p1;
+        zin = p5;
+        win = p0;
+        uin = p3;
+        vin = p6;
+        final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p0;
+        yin = p4;
+        zin = p6;
+        win = p3;
+        uin = p1;
+        vin = p2;
+        final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin);
+        seed += 0x9E377;
+        xin = p5;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p4;
+        vin = p0;
+        final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin);
+        final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
+        final float sharp = sharpness * 1.6f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = singleTaffy(seed, x, y, z, w, u, v, m);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += singleTaffy(++seed, x, y, z, w, u, v, m) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v, m)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v, m));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v, float m) {
+        final float p0 = x;
+        final float p1 = x * -0.14285714285714285f + y * +0.9897433186107870f;
+        final float p2 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * +0.97590007294853320f;
+        final float p3 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * +0.95618288746751490f;
+        final float p4 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * +0.92582009977255150f;
+        final float p5 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * +0.8728715609439696f;
+        final float p6 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * +0.7559289460184545f;
+        final float p7 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * -0.7559289460184544f;
+        float xin = p0;
+        float yin = p6;
+        float zin = p3;
+        float win = p7;
+        float uin = p1;
+        float vin = p4;
+        float min = p5;
+        final float a = trillNoise(seed, xin, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p2;
+        yin = p3;
+        zin = p0;
+        win = p4;
+        uin = p6;
+        vin = p5;
+        min = p7;
+        final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p1;
+        yin = p2;
+        zin = p4;
+        win = p3;
+        uin = p5;
+        vin = p7;
+        min = p6;
+        final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p7;
+        yin = p0;
+        zin = p2;
+        win = p5;
+        uin = p4;
+        vin = p6;
+        min = p1;
+        final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p3;
+        yin = p1;
+        zin = p5;
+        win = p6;
+        uin = p7;
+        vin = p0;
+        min = p2;
+        final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p4;
+        yin = p7;
+        zin = p6;
+        win = p2;
+        uin = p0;
+        vin = p1;
+        min = p3;
+        final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p5;
+        yin = p4;
+        zin = p7;
+        win = p1;
+        uin = p2;
+        vin = p3;
+        min = p0;
+        final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin, min);
+        seed += 0x9E377;
+        xin = p6;
+        yin = p5;
+        zin = p1;
+        win = p0;
+        uin = p3;
+        vin = p2;
+        min = p4;
+        final float h = trillNoise(seed, xin + g, yin, zin, win, uin, vin, min);
+        final float result = (a + b + c + d + e + f + g + h) * 0.125f;
+        final float sharp = sharpness * 1.7f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -8070,958 +9044,4 @@ public class Noise {
                     new Float3(0.2054835762f, -0.3252600376f, -0.2334146693f), new Float3(-0.3231994983f, 0.1564282844f, -0.2712420987f), new Float3(-0.2669545963f, 0.2599343665f, -0.2523278991f), new Float3(-0.05554372779f, 0.3170813944f, -0.3144428146f), new Float3(-0.2083935713f, -0.310922837f, -0.2497981362f), new Float3(0.06989323478f, -0.3156141536f, 0.3130537363f), new Float3(0.3847566193f, -0.1605309138f, -0.1693876312f), new Float3(-0.3026215288f, -0.3001537679f, -0.1443188342f),
                     new Float3(0.3450735512f, 0.08611519592f, 0.2756962409f), new Float3(0.1814473292f, -0.2788782453f, -0.3029914042f), new Float3(-0.03855010448f, 0.09795110726f, 0.4375151083f), new Float3(0.3533670318f, 0.2665752752f, 0.08105160988f), new Float3(-0.007945601311f, 0.140359426f, -0.4274764309f), new Float3(0.4063099273f, -0.1491768253f, -0.1231199324f), new Float3(-0.2016773589f, 0.008816271194f, -0.4021797064f), new Float3(-0.07527055435f, -0.425643481f, -0.1251477955f),
             };
-
-
-    // Taffy Noise
-
-    public float getTaffy(float x, float y) {
-        return singleTaffy(seed, x * frequency, y * frequency);
-    }
-
-    protected float trillNoise(int seed, float x, float y) {
-        int sx = seed, sy = (seed << 11 | seed >>> 21);
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + x * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * x
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy,
-                sum * 0.125f);
-    }
-
-    protected float trillNoise(int seed, float x, float y, float z) {
-        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567, sz = (sy << 13 | sy >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + z * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        idx = (int) (sz + z * 1657 + x * 923);
-        sum += (cos(z)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sz & TABLE_MASK] * x
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy + sz,
-                sum * 0.125f);
-    }
-
-    protected float trillNoise(int seed, float x, float y, float z, float w) {
-        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
-                sz = (sy << 13 | sy >>> 19) + 1234567,
-                sw = (sz << 13 | sz >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + z * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        idx = (int) (sz + z * 1657 + w * 923);
-        sum += (cos(z)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sz & TABLE_MASK] * w
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
-        );
-        idx = (int) (sw + w * 1657 + x * 923);
-        sum += (cos(w)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sw & TABLE_MASK] * x
-                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy + sz + sw,
-                 sum * 0.125f);
-    }
-
-    protected float trillNoise(int seed, float x, float y, float z, float w, float u) {
-        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
-                sz = (sy << 13 | sy >>> 19) + 1234567,
-                sw = (sz << 13 | sz >>> 19) + 1234567,
-                su = (sw << 13 | sw >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + z * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        idx = (int) (sz + z * 1657 + w * 923);
-        sum += (cos(z)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sz & TABLE_MASK] * w
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
-        );
-        idx = (int) (sw + w * 1657 + u * 923);
-        sum += (cos(w)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sw & TABLE_MASK] * u
-                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
-        );
-        idx = (int) (su + u * 1657 + x * 923);
-        sum += (cos(u)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[su & TABLE_MASK] * x
-                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy + sz + sw,
-                 sum * 0.125f);
-    }
-
-    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v) {
-        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
-                sz = (sy << 13 | sy >>> 19) + 1234567,
-                sw = (sz << 13 | sz >>> 19) + 1234567,
-                su = (sw << 13 | sw >>> 19) + 1234567,
-                sv = (su << 13 | su >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + z * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        idx = (int) (sz + z * 1657 + w * 923);
-        sum += (cos(z)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sz & TABLE_MASK] * w
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
-        );
-        idx = (int) (sw + w * 1657 + u * 923);
-        sum += (cos(w)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sw & TABLE_MASK] * u
-                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
-        );
-        idx = (int) (su + u * 1657 + v * 923);
-        sum += (cos(u)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[su & TABLE_MASK] * v
-                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
-        );
-        idx = (int) (sv + v * 1657 + x * 923);
-        sum += (cos(v)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sv & TABLE_MASK] * x
-                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy + sz + sw,
-                 sum * 0.125f);
-    }
-
-    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v, float m) {
-        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
-                sz = (sy << 13 | sy >>> 19) + 1234567,
-                sw = (sz << 13 | sz >>> 19) + 1234567,
-                su = (sw << 13 | sw >>> 19) + 1234567,
-                sv = (su << 13 | su >>> 19) + 1234567,
-                sm = (sv << 13 | sv >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1657 + y * 923);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
-        );
-        idx = (int) (sy + y * 1657 + z * 923);
-        sum += (cos(y)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
-        );
-        idx = (int) (sz + z * 1657 + w * 923);
-        sum += (cos(z)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sz & TABLE_MASK] * w
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
-        );
-        idx = (int) (sw + w * 1657 + u * 923);
-        sum += (cos(w)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sw & TABLE_MASK] * u
-                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
-        );
-        idx = (int) (su + u * 1657 + v * 923);
-        sum += (cos(u)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[su & TABLE_MASK] * v
-                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
-        );
-        idx = (int) (sv + v * 1657 + m * 923);
-        sum += (cos(v)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sv & TABLE_MASK] * m
-                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
-        );
-        idx = (int) (sm + m * 1657 + x * 923);
-        sum += (cos(m)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sm & TABLE_MASK] * x
-                + sin(SIN_TABLE[sm + 4096 & TABLE_MASK] * m)
-        );
-        return MathTools.swayTight(
-                //Noise.wobbleTight(sx + sy + sz + sw,
-                 sum * 0.125f);
-    }
-
-    public float singleTaffy(int seed, float x, float y) {
-        final float p0 = x;
-        final float p1 = x * -0.5f + y * 0.8660254037844386f;
-        final float p2 = x * -0.5f + y * -0.8660254037844387f;
-
-        float xin = p2;
-        float yin = p0;
-        final float a = trillNoise(seed, xin, yin);
-        seed += 0x9E377;
-        xin = p1;
-        yin = p2;
-        final float b = trillNoise(seed, xin + a, yin);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        final float c = trillNoise(seed, xin + b, yin);
-        final float result = (a + b + c) * F3f;
-        final float sharp = sharpness * 1.2f;
-
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-    }
-
-    public float getTaffyFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleTaffyFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y);
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y)) * 2 - 1;
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float t;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-
-    public float getTaffyFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleTaffyFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency);
-    }
-
-    public float singleTaffy(int seed, float x, float y, float z){
-        final float p0 = x;
-        final float p1 = x * -0.3333333333333333f + y * 0.9428090415820634f;
-        final float p2 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * 0.816496580927726f;
-        final float p3 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * -0.816496580927726f;
-
-        float xin = p3;
-        float yin = p2;
-        float zin = p0;
-        final float a = trillNoise(seed, xin, yin, zin);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p3;
-        final float b = trillNoise(seed, xin + a, yin, zin);
-        seed += 0x9E377;
-        xin = p1;
-        yin = p2;
-        zin = p3;
-        final float c = trillNoise(seed, xin + b, yin, zin);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        final float d = trillNoise(seed, xin + c, yin, zin);
-
-        final float result = (a + b + c + d) * 0.25f;
-        final float sharp = sharpness * 1.3f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-
-    }
-
-
-    private float singleTaffyFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z, float w) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency);
-    }
-
-    public float singleTaffy(int seed, float x, float y, float z, float w) {
-        final float p0 = x;
-        final float p1 = x * -0.25f + y *  0.9682458365518543f;
-        final float p2 = x * -0.25f + y * -0.3227486121839514f + z *  0.91287092917527690f;
-        final float p3 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w *  0.7905694150420949f;
-        final float p4 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w * -0.7905694150420947f;
-
-        float xin = p1;
-        float yin = p2;
-        float zin = p3;
-        float win = p4;
-        final float a = trillNoise(seed, xin, yin, zin, win);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p2;
-        zin = p3;
-        win = p4;
-        final float b = trillNoise(seed, xin + a, yin, zin, win);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p3;
-        win = p4;
-        final float c = trillNoise(seed, xin + b, yin, zin, win);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p4;
-        final float d = trillNoise(seed, xin + c, yin, zin, win);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p3;
-        final float e = trillNoise(seed, xin + d, yin, zin, win);
-
-        final float result = (a + b + c + d + e) * 0.2f;
-        final float sharp = sharpness * 1.4f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-    }
-    public float getTaffyFractal(float x, float y, float z, float w, float u) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z, w, u);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z, w, u);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z, w, u);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z, float w, float u) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
-    }
-
-    public float singleTaffy(int seed, float x, float y, float z, float w, float u) {
-        final float p0 = x *  0.8157559148337911f + y *  0.5797766823136037f;
-        final float p1 = x * -0.7314923478726791f + y *  0.6832997137249108f;
-        final float p2 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * 0.9486832980505138f;
-        final float p3 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w *   0.8944271909999159f;
-        final float p4 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u *  0.7745966692414833f;
-        final float p5 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u * -0.7745966692414836f;
-
-        float xin = p1;
-        float yin = p2;
-        float zin = p3;
-        float win = p4;
-        float uin = p5;
-        final float a = trillNoise(seed, xin, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
-        xin = p0;
-        yin = p2;
-        zin = p3;
-        win = p4;
-        uin = p5;
-        final float b = trillNoise(seed, xin + a, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
-        xin = p0;
-        yin = p1;
-        zin = p3;
-        win = p4;
-        uin = p5;
-        final float c = trillNoise(seed, xin + b, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p4;
-        uin = p5;
-        final float d = trillNoise(seed, xin + c, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p3;
-        uin = p5;
-        final float e = trillNoise(seed, xin + d, yin, zin, win, uin);
-        seed += 0x9E3779BD;
-        seed ^= seed >>> 14;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p3;
-        uin = p4;
-        final float f = trillNoise(seed, xin + e, yin, zin, win, uin);
-
-        final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
-        final float sharp = sharpness * 1.5f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-    }
-
-    public float getTaffyFractal(float x, float y, float z, float w, float u, float v) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-        v *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z, w, u, v);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z, w, u, v);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z, w, u, v);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u, v);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z, float w, float u, float v) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
-    }
-
-    public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v) {
-        final float p0 = x;
-        final float p1 = x * -0.16666666666666666f + y *  0.98601329718326940f;
-        final float p2 = x * -0.16666666666666666f + y * -0.19720265943665383f + z *  0.96609178307929590f;
-        final float p3 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w *  0.93541434669348530f;
-        final float p4 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u *  0.8819171036881969f;
-        final float p5 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v *  0.7637626158259734f;
-        final float p6 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v * -0.7637626158259732f;
-        float xin = p0;
-        float yin = p5;
-        float zin = p3;
-        float win = p6;
-        float uin = p1;
-        float vin = p4;
-        final float a = trillNoise(seed, xin, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p2;
-        yin = p6;
-        zin = p0;
-        win = p4;
-        uin = p5;
-        vin = p3;
-        final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p1;
-        yin = p2;
-        zin = p3;
-        win = p4;
-        uin = p6;
-        vin = p5;
-        final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p6;
-        yin = p0;
-        zin = p2;
-        win = p5;
-        uin = p4;
-        vin = p1;
-        final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p2;
-        yin = p1;
-        zin = p5;
-        win = p0;
-        uin = p3;
-        vin = p6;
-        final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p0;
-        yin = p4;
-        zin = p6;
-        win = p3;
-        uin = p1;
-        vin = p2;
-        final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin);
-        seed += 0x9E377;
-        xin = p5;
-        yin = p1;
-        zin = p2;
-        win = p3;
-        uin = p4;
-        vin = p0;
-        final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin);
-        final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
-        final float sharp = sharpness * 1.6f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-    }
-
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u, v, m);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w, u, v, m) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v, m)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v, m));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v, float m) {
-        final float p0 = x;
-        final float p1 = x * -0.14285714285714285f + y * +0.9897433186107870f;
-        final float p2 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * +0.97590007294853320f;
-        final float p3 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * +0.95618288746751490f;
-        final float p4 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * +0.92582009977255150f;
-        final float p5 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * +0.8728715609439696f;
-        final float p6 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * +0.7559289460184545f;
-        final float p7 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * -0.7559289460184544f;
-        float xin = p0;
-        float yin = p6;
-        float zin = p3;
-        float win = p7;
-        float uin = p1;
-        float vin = p4;
-        float min = p5;
-        final float a = trillNoise(seed, xin, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p2;
-        yin = p3;
-        zin = p0;
-        win = p4;
-        uin = p6;
-        vin = p5;
-        min = p7;
-        final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p1;
-        yin = p2;
-        zin = p4;
-        win = p3;
-        uin = p5;
-        vin = p7;
-        min = p6;
-        final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p7;
-        yin = p0;
-        zin = p2;
-        win = p5;
-        uin = p4;
-        vin = p6;
-        min = p1;
-        final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p3;
-        yin = p1;
-        zin = p5;
-        win = p6;
-        uin = p7;
-        vin = p0;
-        min = p2;
-        final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p4;
-        yin = p7;
-        zin = p6;
-        win = p2;
-        uin = p0;
-        vin = p1;
-        min = p3;
-        final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p5;
-        yin = p4;
-        zin = p7;
-        win = p1;
-        uin = p2;
-        vin = p3;
-        min = p0;
-        final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
-        xin = p6;
-        yin = p5;
-        zin = p1;
-        win = p0;
-        uin = p3;
-        vin = p2;
-        min = p4;
-        final float h = trillNoise(seed, xin + g, yin, zin, win, uin, vin, min);
-        final float result = (a + b + c + d + e + f + g + h) * 0.125f;
-        final float sharp = sharpness * 1.7f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-    }
 }

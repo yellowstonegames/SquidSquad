@@ -19,6 +19,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
@@ -59,7 +60,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     
     private String date, path;
     private float mutationA, mutationB;
-    private static final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
+    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
@@ -88,7 +89,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
         writer.setDitherStrength(0.75f);
-        writer.fastAnalysis = false;
+        writer.fastAnalysis = true;
         writer.setFlipY(false);
 //        pngWriter = new PixmapIO.PNG();
 //        pngWriter.setFlipY(false);
@@ -99,7 +100,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);

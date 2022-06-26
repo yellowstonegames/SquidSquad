@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -50,8 +51,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private ImmediateModeRenderer20 renderer;
     
 //    private static final int width = 400, height = 400;
-//    private static final int width = 512, height = 512;
-    private static final int width = 256, height = 256;
+    private static final int width = 512, height = 512;
+//    private static final int width = 256, height = 256;
     private final double[][] real = new double[width][height], imag = new double[width][height];
     private final double[][] realKnown = new double[width][height], imagKnown = new double[width][height];
     private final float[][] colors = new float[width][height];
@@ -1176,14 +1177,11 @@ public class FFTVisualizer extends ApplicationAdapter {
 
     @Override
     public void render() {
-        // not sure if this is always needed...
         Gdx.gl.glDisable(GL20.GL_BLEND);
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS on mode " + mode + ", dim " + dim);
-            // standard clear the background routine for libGDX
-            Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            ctr++;
-            putMap();
+        ScreenUtils.clear(0f, 0f, 0f, 1f);
+        ctr++;
+        putMap();
     }
 
     @Override
