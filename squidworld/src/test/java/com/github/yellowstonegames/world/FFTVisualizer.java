@@ -50,8 +50,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private ImmediateModeRenderer20 renderer;
     
 //    private static final int width = 400, height = 400;
-    private static final int width = 512, height = 512;
-//    private static final int width = 256, height = 256;
+//    private static final int width = 512, height = 512;
+    private static final int width = 256, height = 256;
     private final double[][] real = new double[width][height], imag = new double[width][height];
     private final double[][] realKnown = new double[width][height], imagKnown = new double[width][height];
     private final float[][] colors = new float[width][height];
@@ -1197,7 +1197,8 @@ public class FFTVisualizer extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidLib Test: FFT Visualization");
         config.setWindowedMode(width << 1, height);
-        config.useVsync(true);
+        config.useVsync(false);
+        config.setForegroundFPS(120);
         config.setResizable(false);
         new Lwjgl3Application(new FFTVisualizer(), config);
     }
