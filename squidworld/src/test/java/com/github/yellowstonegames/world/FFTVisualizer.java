@@ -193,7 +193,8 @@ public class FFTVisualizer extends ApplicationAdapter {
 //// specific thresholds: 32, 96, 160, 224
 //        threshold = (TimeUtils.millis() >>> 10 & 3) * 0x40p-8f + 0x20p-8f;
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, nf = noise.getFrequency(), c = (paused ? startTime : TimeUtils.timeSinceMillis(startTime)) * 0x1p-10f / nf, xx, yy, cc;
+        float bright, nf = noise.getFrequency(), c = (paused ? startTime : TimeUtils.timeSinceMillis(startTime))
+                * (noise.getNoiseType() >= Noise.MUTANT ? 0x3p-10f : 0x1p-10f) / nf, xx, yy, cc;
         double db;
         ArrayTools.fill(imag, 0.0);
         if(mode == 0) {
