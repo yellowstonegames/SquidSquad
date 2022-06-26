@@ -16,8 +16,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.bluegrass.BlueNoise;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Comparator;
@@ -25,7 +23,6 @@ import java.util.Comparator;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 import static com.github.tommyettinger.bluegrass.BlueNoise.TILE_NOISE;
-import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  */
@@ -43,7 +40,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 15;
-    private int mode = 13;
+    private int mode = 0;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -88,7 +85,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(1234567, 2+i);
             taffies[i] = new TaffyNoise(1234567, 2+i);
         }
-        noise.setNoiseType(Noise.CUBIC_FRACTAL);
+        noise.setNoiseType(Noise.MUTANT_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
 //        Pixmap pm = new Pixmap(Gdx.files.internal("special/BlueNoise512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("special/BlueNoiseTri256x256.png"));
@@ -145,6 +142,9 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case U: //mUtation
                         noise.setMutation(noise.getMutation() + (UIUtils.shift() ? -0.1f : 0.1f));
+                        break;
+                    case B: //Blur
+                        noise.setSharpness(noise.getSharpness() + (UIUtils.shift() ? 0.05f : -0.05f));
                         break;
                     case F: // frequency
                         noise.setFrequency((float) Math.sin(freq += 0.125f) * 0.1f + 0.11f);

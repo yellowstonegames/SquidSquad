@@ -17,6 +17,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -8057,7 +8059,9 @@ public class Noise {
                 + SIN_TABLE[sy & TABLE_MASK] * x
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        return Noise.wobbleTight(sx + sy, sum * 0.333333f);
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy,
+                sum * 0.25f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z) {
@@ -8080,7 +8084,9 @@ public class Noise {
                 + SIN_TABLE[sz & TABLE_MASK] * x
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
-        return Noise.wobbleTight(sx + sy + sz, sum * 0.25f);
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz,
+                sum * 0.125f);
     }
 
 
@@ -8112,7 +8118,9 @@ public class Noise {
                 + SIN_TABLE[sw & TABLE_MASK] * x
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
-        return Noise.wobbleTight(sx + sy + sz + sw, sum * 0.2f);
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                 sum * 0.125f);
     }
 
     public float singleTaffy(int seed, float x, float y) {
@@ -8132,7 +8140,7 @@ public class Noise {
         yin = p1;
         final float c = trillNoise(seed, xin + b, yin);
         final float result = (a + b + c) * F3f;
-        final float sharp = sharpness * 2.2f;
+        final float sharp = sharpness * 1.2f;
 
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
@@ -8301,7 +8309,7 @@ public class Noise {
         final float d = trillNoise(seed, xin + c, yin, zin);
 
         final float result = (a + b + c + d) * 0.25f;
-        final float sharp = sharpness * 3.3f;
+        final float sharp = sharpness * 1.3f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
@@ -8402,7 +8410,7 @@ public class Noise {
         final float e = trillNoise(seed, xin + d, yin, zin, win);
 
         final float result = (a + b + c + d + e) * 0.2f;
-        final float sharp = sharpness * 4.4f;
+        final float sharp = sharpness * 1.4f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
