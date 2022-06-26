@@ -1629,6 +1629,17 @@ public class Noise {
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u, mutation);
                 }
+            case TAFFY:
+                return singleTaffy(seed, x, y, z, w, u, mutation);
+            case TAFFY_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleTaffyFractalBillow(x, y, z, w, u, mutation);
+                    case RIDGED_MULTI:
+                        return singleTaffyFractalRidgedMulti(x, y, z, w, u, mutation);
+                    default:
+                        return singleTaffyFractalFBM(x, y, z, w, u, mutation);
+                }
             case HONEY:
                 return singleHoney(seed, x, y, z, w, u);
             case HONEY_FRACTAL:
@@ -8162,11 +8173,58 @@ public class Noise {
                 + SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
-        idx = (int) (sw + u * 1657 + x * 923);
+        idx = (int) (su + u * 1657 + x * 923);
         sum += (cos(u)
                 + SIN_TABLE[idx & TABLE_MASK]
                 + SIN_TABLE[su & TABLE_MASK] * x
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        return MathTools.swayTight(
+                //Noise.wobbleTight(sx + sy + sz + sw,
+                 sum * 0.125f);
+    }
+
+    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567,
+                su = (sw << 13 | sw >>> 19) + 1234567,
+                sv = (su << 13 | su >>> 19) + 1234567;
+        int idx = (int) (sx + x * 1657 + y * 923);
+        float sum = (cos(x)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = (int) (sy + y * 1657 + z * 923);
+        sum += (cos(y)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = (int) (sz + z * 1657 + w * 923);
+        sum += (cos(z)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = (int) (sw + w * 1657 + u * 923);
+        sum += (cos(w)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sw & TABLE_MASK] * u
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        idx = (int) (su + u * 1657 + v * 923);
+        sum += (cos(u)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[su & TABLE_MASK] * v
+                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        idx = (int) (sv + v * 1657 + x * 923);
+        sum += (cos(v)
+                + SIN_TABLE[idx & TABLE_MASK]
+                + SIN_TABLE[sv & TABLE_MASK] * x
+                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
         );
         return MathTools.swayTight(
                 //Noise.wobbleTight(sx + sy + sz + sw,
@@ -8699,7 +8757,7 @@ public class Noise {
         float win = p6;
         float uin = p1;
         float vin = p4;
-        final float a = valueNoise(seed, xin, yin, zin, win, uin, vin);
+        final float a = trillNoise(seed, xin, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p2;
         yin = p6;
@@ -8707,7 +8765,7 @@ public class Noise {
         win = p4;
         uin = p5;
         vin = p3;
-        final float b = valueNoise(seed, xin + a, yin, zin, win, uin, vin);
+        final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p1;
         yin = p2;
@@ -8715,7 +8773,7 @@ public class Noise {
         win = p4;
         uin = p6;
         vin = p5;
-        final float c = valueNoise(seed, xin + b, yin, zin, win, uin, vin);
+        final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p6;
         yin = p0;
@@ -8723,7 +8781,7 @@ public class Noise {
         win = p5;
         uin = p4;
         vin = p1;
-        final float d = valueNoise(seed, xin + c, yin, zin, win, uin, vin);
+        final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p2;
         yin = p1;
@@ -8731,7 +8789,7 @@ public class Noise {
         win = p0;
         uin = p3;
         vin = p6;
-        final float e = valueNoise(seed, xin + d, yin, zin, win, uin, vin);
+        final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p0;
         yin = p4;
@@ -8739,7 +8797,7 @@ public class Noise {
         win = p3;
         uin = p1;
         vin = p2;
-        final float f = valueNoise(seed, xin + e, yin, zin, win, uin, vin);
+        final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin);
         seed += 0x9E377;
         xin = p5;
         yin = p1;
@@ -8747,9 +8805,9 @@ public class Noise {
         win = p3;
         uin = p4;
         vin = p0;
-        final float g = valueNoise(seed, xin + f, yin, zin, win, uin, vin);
+        final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin);
         final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
-        final float sharp = sharpness * 6.6f;
+        final float sharp = sharpness * 1.6f;
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
