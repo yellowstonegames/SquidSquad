@@ -92,7 +92,10 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-        path = "out/worlds/" + date + "/EllipseFoam/";
+//        path = "out/worlds/" + date + "/EllipseFoam/";
+//        path = "out/worlds/" + date + "/HyperellipseTaffy/";
+        path = "out/worlds/" + date + "/HyperellipseSimplex/";
+//        path = "out/worlds/" + date + "/HyperellipseFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -133,9 +136,10 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 6f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
         fn.setInterpolation(Noise.QUINTIC);
@@ -172,6 +176,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            noise = new Noise.Adapted3DFrom5D(fn);
 //        else
             noise = fn;
+
 //        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);
@@ -181,7 +186,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 1.75f);
+//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 1.75f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2.5f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
@@ -223,10 +229,10 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
 //        }
         if(SEEDY){
-            wmv.generate(1.0f, 1.25f);
+            wmv.generate(1.05f, 1.3f);
         }
         else {
-            wmv.generate(0.9f, 1.25f);
+            wmv.generate(1.05f, 1.3f);
         }
         ttg = System.currentTimeMillis() - startTime;
     }
@@ -234,7 +240,7 @@ public class WorldMapWriter extends ApplicationAdapter {
     public void putMap() {
         ++counter;
         String name = makeName(thesaurus);
-        while (Gdx.files.local(path + name + ".gif").exists())
+        while (Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
         long hash;
         if (SEEDY) hash = baseSeed;
@@ -276,7 +282,7 @@ public class WorldMapWriter extends ApplicationAdapter {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidLib Demo: World Map Writer");
-        config.setWindowedMode(width * cellWidth, height * cellHeight);
+        config.setWindowedMode(400, 200);
         config.setResizable(false);
         config.useVsync(true);
         new Lwjgl3Application(new WorldMapWriter(), config);
