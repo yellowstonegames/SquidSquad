@@ -70,7 +70,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/Classic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
-        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
@@ -100,7 +101,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1, 2.5f, 0.4f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);

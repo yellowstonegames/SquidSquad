@@ -18,6 +18,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
@@ -57,7 +58,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
     
     private String date, path;
     private Noise noise;
-    private static final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
+    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -14,9 +15,9 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.IPointHash;
 import com.github.yellowstonegames.grid.Noise;
@@ -30,26 +31,25 @@ import java.util.Date;
 /**
  * Writes one or more spinning globes to the out/ folder.
  */
-public class AnimatedWorldMapWriter extends ApplicationAdapter {
-//    private static final int width = 1920, height = 1080;
+public class WorldMapWriter extends ApplicationAdapter {
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 420, height = 210; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-    private static final int width = 256, height = 256; // space view
+//    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 5;
-    private static final int FRAMES = 240;
+    private static final int LIMIT = 10;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
     private static final boolean SEEDY = false;
     private int baseSeed = 1234567890;
-    private int AA = 1;
+    private final int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -58,7 +58,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         else return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
     }
 
-    private Pixmap[] pm;
+    private Pixmap pm;
     private int counter;
     private static final int cellWidth = 1, cellHeight = 1;
     private Viewport view;
@@ -67,9 +67,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private long ttg, worldTime; // time to generate, world starting time
     private WorldMapGenerator world;
     private WorldMapView wmv;
-    private AnimatedGif writer;
-    private AnimatedPNG apng;
-    
+
     private String date, path;
     private Noise noise;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
@@ -88,13 +86,13 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewFoam/";
+        path = "out/worlds/" + date + "/EllipseFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -112,19 +110,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
-        pm = new Pixmap[FRAMES];
-        for (int i = 0; i < pm.length; i++) {
-            pm[i] = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
-            pm[i].setBlending(Pixmap.Blending.None);
-        }
+        pm = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
+        pm.setBlending(Pixmap.Blending.None);
 
-        writer = new AnimatedGif();
-//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
-        writer.setDitherStrength(0.75f);
-        writer.setFlipY(false);
-        apng = new AnimatedPNG();
-        apng.setFlipY(false);
+
         rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
         //rng = new StatefulRNG(0L);
@@ -192,10 +181,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
+        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 1.75f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
+//        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -248,38 +237,26 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         while (Gdx.files.local(path + name + ".gif").exists())
             name = makeName(thesaurus);
         long hash;
-        if(SEEDY) hash = baseSeed;
+        if (SEEDY) hash = baseSeed;
         else hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
-        for (int i = 0; i < pm.length; i++) {
-            float angle = i / (float)pm.length;
-//            if(FLOWING_LAND) {
-//                ((Noise.Adapted3DFrom5D)noise).w = TrigTools.cosTurns(angle) * 0.3125f;
-//                ((Noise.Adapted3DFrom5D)noise).u = TrigTools.sinTurns(angle) * 0.3125f;
-//            }
-            world.setCenterLongitude(angle * MathUtils.PI2);
-            generate(hash);
-            wmv.getBiomeMapper().makeBiomes(world);
-            int[][] cm = wmv.show();
-            temp.setColor(INK);
-            temp.fill();
+        generate(hash);
+        wmv.getBiomeMapper().makeBiomes(world);
+        int[][] cm = wmv.show();
+        temp.setColor(INK);
+        temp.fill();
 
-            final int bw = width << AA, bh = height << AA;
-            for (int x = 0; x < bw; x++) {
-                for (int y = 0; y < bh; y++) {
-                    temp.drawPixel(x, y, cm[x][y]);
-                }
+        final int bw = width << AA, bh = height << AA;
+        for (int x = 0; x < bw; x++) {
+            for (int y = 0; y < bh; y++) {
+                temp.drawPixel(x, y, cm[x][y]);
             }
-            pm[i].setFilter(Pixmap.Filter.BiLinear);
-            pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
-            if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
-        Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new PaletteReducer(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+        pm.setFilter(Pixmap.Filter.BiLinear);
+        pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
+        PixmapIO.writePNG(Gdx.files.local(path + name + ".png"), pm);
         temp.dispose();
 
         System.out.println();
@@ -298,10 +275,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: Animated World Map Writer");
+        config.setTitle("SquidLib Demo: World Map Writer");
         config.setWindowedMode(width * cellWidth, height * cellHeight);
         config.setResizable(false);
         config.useVsync(true);
-        new Lwjgl3Application(new AnimatedWorldMapWriter(), config);
+        new Lwjgl3Application(new WorldMapWriter(), config);
     }
 }

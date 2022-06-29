@@ -15,6 +15,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.place.Biome;
 
 /**
  * Port of Zachary Carter's world generation technique, https://github.com/zacharycarter/mapgen
@@ -52,7 +53,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
 //    public int noiseCalls = 0, pixels = 0;  // debug
 
     private final int[] NATION_COLORS = new int[49];
-    private static final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
+    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
 
 
     @Override

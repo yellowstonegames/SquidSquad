@@ -70,7 +70,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
     //private float nation = 0f;
     private long ttg; // time to generate
     private float moveAmount;
-    private final Color INK = new Color(DescriptiveColor.describe("darkmost dullest mauve"));
+    private final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
 
     private static final char[] BIOME_CHARS = new char[66];
     static {
