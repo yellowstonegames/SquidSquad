@@ -14,14 +14,28 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.world;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.PhantomNoise;
+import com.github.tommyettinger.digital.MathTools;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
 
+/**
+ * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
+ * for higher-dimensional output (4 and up, in particular). TaffyNoise doesn't slow down as rapidly as other forms of
+ * noise do when dimensions are added. Whereas a call to n-dimensional value noise requires {@code pow(2, n)} points to
+ * be hashed, each one taking {@code O(n)} operations, TaffyNoise only requires {@code O(n)} operations for its
+ * comparable-to-value-noise primitive step. Phantom uses n+1 calls to n-dimensional value noise per point, and Taffy
+ * uses n+1 of its faster primitive steps per call. Noise types like Simplex only need to hash n+1 points (each
+ * {@code O(n)}), but Simplex loses quality in dimensions past 4 or so. Taffy actually gains quality in higher
+ * dimensions, and it looks considerably worse in 2 or 3 dimensions than it does in 6 or more.
+ * <br>
+ * Consider using {@link Noise} with its {@link Noise#TAFFY} or {@link Noise#TAFFY_FRACTAL} noise type if you only need
+ * noise in 3-7 dimensions (these are mapped to dimensions 2-6, with the extra dimension editable via
+ * {@link Noise#setMutation(float)}). Noise is faster than this class because it isn't as generalized to function in
+ * higher dimensions.
+ */
 public class TaffyNoise extends PhantomNoise {
     public TaffyNoise() {
         super();
@@ -50,7 +64,7 @@ public class TaffyNoise extends PhantomNoise {
             );
             s ^= (s << 11 | s >>> 21) + 123456789;
         }
-        return Noise.wobbleTight(s, sum * inverse);
+        return MathTools.swayTight(sum * 0.125f);
     }
 
     @Override
@@ -72,7 +86,7 @@ public class TaffyNoise extends PhantomNoise {
                 + SIN_TABLE[sy & TABLE_MASK]*cx
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
         );
-        return Noise.wobbleTight(sx + sy, sum * inverse);
+        return MathTools.swayTight(sum * 0.125f);
     }
 
 }
