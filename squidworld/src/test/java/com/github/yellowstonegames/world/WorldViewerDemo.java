@@ -322,7 +322,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: Detailed World Map");
+        config.setTitle("SquidSquad Demo: Detailed World Map");
         config.useVsync(false);
         config.setResizable(false);
         config.setWindowedMode(width, height);

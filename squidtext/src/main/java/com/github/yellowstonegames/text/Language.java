@@ -1252,10 +1252,7 @@ public class Language {
      * glyphs from at most Latin Extended-A. Relative to the IAST standard, the glyphs {@code "ṛṝḷḹḍṭṅṇṣṃḥ"} become
      * {@code "ŗŕļĺđţńņşĕĭ"}, with the nth glyph in the first string being substituted with the nth glyph in the second
      * string. You may want to get a variant on this language with {@link #removeAccents()} if you can't display the
-     * less-commonly-supported glyphs {@code āīūĕĭáíúóŗŕļţĺđńñņśş}. For some time SquidLib had a separate version of
-     * imitation Hindi that was accurate to the IAST standard, but this version is more usable because font support is
-     * much better for the glyphs it uses, so the IAST kind was removed (it added quite a bit of code for something that
-     * was mostly unusable).
+     * less-commonly-supported glyphs {@code āīūĕĭáíúóŗŕļţĺđńñņśş}.
      * <br>
      * Darvāga yar; ghađhinopŕauka āĕrdur, conśaigaijo śabhodhaĕđū jiviđaudu.
      */

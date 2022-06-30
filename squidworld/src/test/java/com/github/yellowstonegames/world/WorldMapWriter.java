@@ -281,7 +281,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: World Map Writer");
+        config.setTitle("SquidSquad Demo: World Map Writer");
         config.setWindowedMode(400, 200);
         config.setResizable(false);
         config.useVsync(true);

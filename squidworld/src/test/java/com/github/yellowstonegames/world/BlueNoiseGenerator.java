@@ -183,7 +183,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Tool: Blue Noise Generator");
+        config.setTitle("SquidSquad Tool: Blue Noise Generator");
         config.setWindowedMode(size, size);
         new Lwjgl3Application(new BlueNoiseGenerator(), config);
     }

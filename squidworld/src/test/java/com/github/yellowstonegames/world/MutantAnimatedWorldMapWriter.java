@@ -237,7 +237,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: Mutant World Map Writer");
+        config.setTitle("SquidSquad Demo: Mutant World Map Writer");
         config.setWindowedMode(width * cellWidth, height * cellHeight);
         config.setResizable(false);
         config.useVsync(true);

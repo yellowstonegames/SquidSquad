@@ -72,7 +72,7 @@ public class Coord {
      * When only x is different and {@code to.x} is less than {@code from.x}, this returns 180.
      * When only y is different and {@code to.y} is less than {@code from.y}, this returns 270.
      * In cases between these, the angle is between those values; it cannot be 360 but it can be very close. This never
-     * returns a negative angle. Keep in mind, "up" depends on how your code orients the y-axis, and SquidLib generally
+     * returns a negative angle. Keep in mind, "up" depends on how your code orients the y-axis, and SquidSquad generally
      * defaults to positive y going toward the top of the screen, like in most textbook geometry.
 	 * @param from the starting Coord to measure from
 	 * @param to the ending Coord to measure to

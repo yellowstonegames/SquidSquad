@@ -1193,7 +1193,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Test: FFT Visualization");
+        config.setTitle("SquidSquad Test: FFT Visualization");
         config.setWindowedMode(width << 1, height);
         config.useVsync(false);
         config.setForegroundFPS(120);

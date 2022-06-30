@@ -353,7 +353,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Demo: Detailed World Map");
+        config.setTitle("SquidSquad Demo: World and Wild Map");
         config.useVsync(true);
         config.setWindowedMode((int)(shownWidth * cellWidth), (int)(shownHeight * cellHeight));
         new Lwjgl3Application(new WorldWildMapDemo(), config);

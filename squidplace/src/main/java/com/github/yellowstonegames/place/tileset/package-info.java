@@ -15,6 +15,7 @@
  */
 
 /**
- * Support code for working with tiled dungeon generation; normally only {@link TilesetType} is used outside SquidLib.
+ * Support code for working with tiled dungeon generation; normally only
+ * {@link com.github.yellowstonegames.place.tileset.TilesetType} is used outside SquidSquad.
  */
 package com.github.yellowstonegames.place.tileset;

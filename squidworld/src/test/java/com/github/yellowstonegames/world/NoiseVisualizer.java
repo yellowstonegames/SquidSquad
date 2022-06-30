@@ -313,7 +313,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Test: Hash Visualization");
+        config.setTitle("SquidSquad Test: Noise Visualization");
         config.useVsync(false);
         config.setResizable(false);
         config.setWindowedMode(width, height);

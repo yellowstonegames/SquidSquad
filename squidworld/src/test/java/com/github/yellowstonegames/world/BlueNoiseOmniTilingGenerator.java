@@ -260,7 +260,7 @@ public class BlueNoiseOmniTilingGenerator extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib Tool: Blue Noise Tiling Generator");
+        config.setTitle("SquidSquad Tool: Blue Noise Tiling Generator");
         config.setWindowedMode(size, size);
         new Lwjgl3Application(new BlueNoiseOmniTilingGenerator(), config);
     }
