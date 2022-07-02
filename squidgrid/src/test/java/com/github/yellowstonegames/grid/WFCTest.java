@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.random.ChopRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.place.DungeonTools;
 
@@ -11,7 +11,7 @@ import com.github.yellowstonegames.place.DungeonTools;
 public class WFCTest {
     public static void main(String[] args)
     {
-        EnhancedRandom random = new ChopRandom(12345678);
+        EnhancedRandom random = new FourWheelRandom(123456789);
         int[][] grid = new int[32][32];
         char[][] dungeon = new char[][]{
                 "  ┌───────┐ ┌─────┐ ┌────────┐  ".toCharArray(),

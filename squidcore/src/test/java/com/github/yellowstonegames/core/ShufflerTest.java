@@ -39,8 +39,8 @@ public class ShufflerTest {
 
     @Test
     public void testIntShufflerBounds() {
-        for (int i = 3; i <= 80; i += 1) {
-            IntShuffler lss = new IntShuffler(i, 31337);
+        for (int i = 3; i <= 80; i++) {
+            IntShuffler lss = new IntShuffler(i, 31337+i);
             System.out.printf("Bound %02d: %d", i, lss.next());
             for (int j = 1; j < i; j++) {
                 System.out.print(", " + lss.next());
