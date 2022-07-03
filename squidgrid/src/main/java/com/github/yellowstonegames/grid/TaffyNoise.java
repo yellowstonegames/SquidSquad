@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
 
@@ -36,17 +37,18 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * {@link Noise#setMutation(float)}). Noise is faster than this class because it isn't as generalized to operate in
  * higher dimensions.
  */
+@Beta
 public class TaffyNoise extends PhantomNoise {
     public TaffyNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
     }
 
     public TaffyNoise(long seed, int dimension) {
-        super(seed, dimension, 0.825f * 0.3f * Math.max(2, dimension));
+        this(seed, dimension, 0.25f * Math.max(2, dimension));
     }
 
     public TaffyNoise(long seed, int dimension, float sharpness) {
-        super(seed, dimension, sharpness * 0.3f);
+        super(seed, dimension, sharpness);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class TaffyNoise extends PhantomNoise {
         int s = (int)(hasher.seed ^ hasher.seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
+            s ^= (s << 11 | s >>> 21) + 123456789;
             float cx = working[i];
             float cy = working[j];
             int idx = (int) (s + cx * 1357 + cy * 421);
@@ -62,7 +65,6 @@ public class TaffyNoise extends PhantomNoise {
                     + SIN_TABLE[s & TABLE_MASK]*cy
                     + sin(SIN_TABLE[s + 4096 & TABLE_MASK]*cx)
             );
-            s ^= (s << 11 | s >>> 21) + 123456789;
         }
         return MathTools.swayTight(sum * 0.125f);
     }
@@ -74,13 +76,13 @@ public class TaffyNoise extends PhantomNoise {
         int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
         float cx = working[0];
         float cy = working[1];
-        int idx = (int) (sx + cx * 1657 + cy * 923);
+        int idx = (int) (sx + cx * 1357 + cy * 421);
         float sum = (cos(cx)
                 + SIN_TABLE[idx & TABLE_MASK]
                 + SIN_TABLE[sx & TABLE_MASK]*cy
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
         );
-        idx = (int) (sy + cy * 1657 + cx * 923);
+        idx = (int) (sy + cy * 1357 + cx * 421);
         sum += (cos(cy)
                 + SIN_TABLE[idx & TABLE_MASK]
                 + SIN_TABLE[sy & TABLE_MASK]*cx

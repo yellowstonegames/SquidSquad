@@ -60,7 +60,7 @@ public class PhantomNoise {
     protected final Hasher hasher;
     public final int dim;
     public final float sharpness;
-    protected final float inverse;
+    protected float inverse;
     protected final float[] working, points;
     protected final float[][] vertices;
     protected final int[] floors, hashFloors;
@@ -96,7 +96,7 @@ public class PhantomNoise {
             }
         }
         for (int v = 0; v <= dim; v++) {
-            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + 0.6180339887498949f,
+            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
                     dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
             vertices[v][0] = TrigTools.cos(theta) * dist;
             vertices[v][1] = TrigTools.sin(theta) * dist;
