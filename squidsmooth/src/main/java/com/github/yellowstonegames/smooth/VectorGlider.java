@@ -39,6 +39,7 @@ public class VectorGlider extends MultiGlider {
     protected @Nonnull Vector2 end;
 
     public VectorGlider() {
+        super();
         start = new Vector2();
         end = new Vector2();
     }

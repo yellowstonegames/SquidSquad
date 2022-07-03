@@ -102,6 +102,9 @@ public class MultiGlider implements IGlider {
     protected @Nonnull Interpolation interpolation;
     protected @Nullable Runnable completeRunner;
 
+    public MultiGlider() {
+        this.interpolation = Interpolation.linear;
+    }
     public MultiGlider(Changer changer) {
         this.interpolation = Interpolation.linear;
         this.changers.add(changer);
