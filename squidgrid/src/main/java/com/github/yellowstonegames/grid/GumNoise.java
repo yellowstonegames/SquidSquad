@@ -60,36 +60,40 @@ public class GumNoise extends PhantomNoise {
 
     @Override
     protected float valueNoise() {
-        int s = (int)(hasher.seed ^ hasher.seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
+        int sx = (int)(hasher.seed ^ BitConversion.floatToRawIntBits(working[dim]));
+        int sy = (int)(hasher.seed >>> 32);
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
             float cx = working[i];
             float cy = working[j];
             sum += (cosW(cx)
-                    + WOBBLE[s & TABLE_MASK]*cx
-                    - WOBBLE[s + 4096 & TABLE_MASK]*cy
+                    + WOBBLE[sx & TABLE_MASK]
+                    - WOBBLE[sx + 4096 & TABLE_MASK]*cy
+                    - sinW(cx*WOBBLE[sy + (int)(cy * 7.7f) & TABLE_MASK])
             );
-            s ^= (s << 11 | s >>> 21) + 123456789;
+            sx ^= (sx << 11 | sx >>> 21) + 123456789;
+            sy ^= (sy << 19 | sy >>> 13) + 987654321;
         }
-        return sinW(sum * 0.125f);
+        return sinW(sum);
     }
 
     @Override
     protected float valueNoise2D() {
-        int bits = BitConversion.floatToIntBits(working[dim]);
-        int sx = (int)(hasher.seed ^ bits);
-        int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
+        int sx = (int)(hasher.seed ^ BitConversion.floatToRawIntBits(working[dim]));
+        int sy = (int)(hasher.seed >>> 32);
         float cx = working[0];
         float cy = working[1];
         float sum = (cosW(cx)
-                + WOBBLE[sx & TABLE_MASK]*cx
+                + WOBBLE[sx & TABLE_MASK]
                 - WOBBLE[sx + 4096 & TABLE_MASK]*cy
+                - sinW(cx*WOBBLE[sy + (int)(cy * 7.7f) & TABLE_MASK])
         );
         sum += (cosW(cy)
-                + WOBBLE[sy & TABLE_MASK]*cx
-                - WOBBLE[sy + 4096 & TABLE_MASK]*cy
+                + WOBBLE[sy & TABLE_MASK]
+                - WOBBLE[sy + 4096 & TABLE_MASK]*cx
+                - sinW(cy*WOBBLE[sx + (int)(cx * 7.7f) & TABLE_MASK])
         );
-        return sinW(sum * 0.125f);
+        return sinW(sum);
     }
 
 }
