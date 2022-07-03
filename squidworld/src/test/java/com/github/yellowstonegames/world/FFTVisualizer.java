@@ -42,7 +42,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 16;
-    private int mode = 13;
+    private int mode = 0;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -50,7 +50,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private boolean inverse;
     private boolean paused;
     private ImmediateModeRenderer20 renderer;
-    
+
 //    private static final int width = 400, height = 400;
     private static final int width = 512, height = 512;
 //    private static final int width = 256, height = 256;
@@ -58,11 +58,11 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final double[][] realKnown = new double[width][height], imagKnown = new double[width][height];
     private final float[][] colors = new float[width][height];
     private InputAdapter input;
-    
+
     private Viewport view;
     private long ctr = -128, startTime;
     private float changeZ = 0f, changeW = 0f, changeU = 0f, changeV = 0f;
-    
+
     private Pixmap pm;
     private static final Comparator<Double> doubleComparator = new Comparator<Double>(){
         @Override
@@ -84,9 +84,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     @Override
     public void create() {
         for (int i = 0; i < 5; i++) {
-            phantoms[i] = new PhantomNoise(1234567, 2+i);
-            taffies[i] = new TaffyNoise(1234567, 2+i);
-            gums[i] = new GumNoise(1234567, 2+i);
+            phantoms[i] = new PhantomNoise(1234567 + ~i * 5555555L, 2+i);
+            taffies[i] = new TaffyNoise(1234567 + ~i * 5555555L, 2+i);
+            gums[i] = new GumNoise(1234567 + ~i * 5555555L, 2+i);
         }
         noise.setNoiseType(Noise.MUTANT_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -111,7 +111,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case MINUS:
                         mode = (mode + MODE_LIMIT - 1) % MODE_LIMIT;
                         break;
-                    case EQUALS:                         
+                    case EQUALS:
                         mode++;
                         mode %= MODE_LIMIT;
                         break;
@@ -143,7 +143,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
-                    case U: //mUtation
+                    case M: //Mutation
                         noise.setMutation(noise.getMutation() + (UIUtils.shift() ? -0.1f : 0.1f));
                         break;
                     case B: //Blur

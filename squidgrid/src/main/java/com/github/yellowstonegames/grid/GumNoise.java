@@ -45,6 +45,7 @@ public class GumNoise extends PhantomNoise {
     public GumNoise(long seed, int dimension, float sharpness) {
         super(seed, dimension, sharpness);
         inverse *= 0.5f;
+//        printDebugInfo();
     }
 
     @Override
@@ -72,13 +73,13 @@ public class GumNoise extends PhantomNoise {
         int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
         float cx = working[0];
         float cy = working[1];
-        int idx = (int) (sx + cx * 1657 + cy * 923);
+        int idx = (int) (sx + cx * 1357 + cy * 421);
         float sum = (cos(cx)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK]*cy
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
         );
-        idx = (int) (sy + cy * 1657 + cx * 923);
+        idx = (int) (sy + cy * 1357 + cx * 421);
         sum += (cos(cy)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK]*cx

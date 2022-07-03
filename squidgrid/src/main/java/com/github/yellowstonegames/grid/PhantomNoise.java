@@ -243,9 +243,10 @@ public class PhantomNoise {
 
     void printDebugInfo() {
         System.out.println("PhantomNoise with Dimension " + dim + ":");
-        final String dimNames = "xyzwuvabcdefghijklmnopqrst";
+        final String dimNames = "xyzwuvmnopqrstabcdefghijkl";
         for (int v = 0; v <= dim; v++) {
-            System.out.print("points[" + v + "] = ");
+            System.out.print("final float p" + v + " = ");
+//            System.out.print("points[" + v + "] = ");
             for (int i = 0; i < dim; i++) {
                 if(vertices[v][i] != 0.0) 
                 {
@@ -254,7 +255,7 @@ public class PhantomNoise {
                     if(vertices[v][i] == 1.0)
                         System.out.print(dimNames.charAt(i % dimNames.length()));
                     else 
-                        System.out.print(dimNames.charAt(i % dimNames.length()) + " * " + vertices[v][i]);
+                        System.out.print(dimNames.charAt(i % dimNames.length()) + " * " + vertices[v][i] + "f");
                 }
             }
             System.out.println(';');
