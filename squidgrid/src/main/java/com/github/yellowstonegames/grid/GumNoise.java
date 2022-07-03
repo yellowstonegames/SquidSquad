@@ -19,8 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.LineWobble;
 
-import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
-
 /**
  * A variant on {@link TaffyNoise}, and so also a variant on {@link PhantomNoise}, that produces arbitrary-dimensional
  * continuous noise, but that is optimized for higher-dimensional output (4 and up, in particular). GumNoise and
@@ -35,7 +33,8 @@ import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
  */
 public class GumNoise extends PhantomNoise {
 
-    private static float[] WOBBLE = null;
+    private static float[] SIN_TABLE = null;
+    private static final int TABLE_MASK = (1 << 14) - 1;
 
     public GumNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -46,54 +45,56 @@ public class GumNoise extends PhantomNoise {
     }
 
     public GumNoise(long seed, int dimension, float sharpness) {
-        super(seed, dimension, sharpness * 0.3f);
-        if(WOBBLE == null) WOBBLE = LineWobble.generateSplineLookupTable(12345, 1 << 14, 1 << 6, 4, 2f, 0.5f);
+        super(seed, dimension, sharpness);
+        if(SIN_TABLE == null) SIN_TABLE = LineWobble.generateSplineLookupTable(12345, 1 << 14, 1 << 6, 4, 2f, 0.5f);
     }
 
-    protected static float sinW(float wobbles) {
-        return WOBBLE[(int) (wobbles * 24f) & TABLE_MASK];
+    protected static float sin(float wobbles) {
+        return SIN_TABLE[(int) (wobbles * 32f) & TABLE_MASK];
     }
 
-    protected static float cosW(float wobbles) {
-        return WOBBLE[(int) (wobbles * 24f) + 4096 & TABLE_MASK];
+    protected static float cos(float wobbles) {
+        return SIN_TABLE[(int) (wobbles * 32f) + 4096 & TABLE_MASK];
     }
 
     @Override
     protected float valueNoise() {
-        int sx = (int)(hasher.seed ^ BitConversion.floatToRawIntBits(working[dim]));
-        int sy = (int)(hasher.seed >>> 32);
+        int s = (int)(hasher.seed ^ hasher.seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
             float cx = working[i];
             float cy = working[j];
-            sum += (cosW(cx)
-                    + WOBBLE[sx & TABLE_MASK]
-                    - WOBBLE[sx + 4096 & TABLE_MASK]*cy
-                    - sinW(cx*WOBBLE[sy + (int)(cy * 7.7f) & TABLE_MASK])
+            int idx = (int) (s + cx * 167 + cy * 71);
+            sum += (cos(cx)
+                    + SIN_TABLE[idx & TABLE_MASK]
+                    - SIN_TABLE[s & TABLE_MASK]*cy
+                    - sin(SIN_TABLE[s + 4096 & TABLE_MASK]*cx)
             );
-            sx ^= (sx << 11 | sx >>> 21) + 123456789;
-            sy ^= (sy << 19 | sy >>> 13) + 987654321;
+            s ^= (s << 11 | s >>> 21) + 123456789;
         }
-        return sinW(sum);
+        return sin(sum);
     }
 
     @Override
     protected float valueNoise2D() {
-        int sx = (int)(hasher.seed ^ BitConversion.floatToRawIntBits(working[dim]));
-        int sy = (int)(hasher.seed >>> 32);
+        int bits = BitConversion.floatToIntBits(working[dim]);
+        int sx = (int)(hasher.seed ^ bits);
+        int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
         float cx = working[0];
         float cy = working[1];
-        float sum = (cosW(cx)
-                + WOBBLE[sx & TABLE_MASK]
-                - WOBBLE[sx + 4096 & TABLE_MASK]*cy
-                - sinW(cx*WOBBLE[sy + (int)(cy * 7.7f) & TABLE_MASK])
+        int idx = (int) (sx + cx * 167 + cy * 71);
+        float sum = (cos(cx)
+                + SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sx & TABLE_MASK]*cy
+                - sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
         );
-        sum += (cosW(cy)
-                + WOBBLE[sy & TABLE_MASK]
-                - WOBBLE[sy + 4096 & TABLE_MASK]*cx
-                - sinW(cy*WOBBLE[sx + (int)(cx * 7.7f) & TABLE_MASK])
+        idx = (int) (sy + cy * 167 + cx * 71);
+        sum += (cos(cy)
+                + SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sy & TABLE_MASK]*cx
+                - sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
         );
-        return sinW(sum);
+        return sin(sum);
     }
 
 }
