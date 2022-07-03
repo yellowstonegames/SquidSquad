@@ -124,18 +124,18 @@ public class PhantomNoise {
 
     }
 
-    protected double valueNoise() {
+    protected float valueNoise() {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        double sum = 0.0, temp;
+        float sum = 0f, temp;
         final int limit = 1 << dim;
         int bit;
         for (int i = 0; i < limit; i++) {
-            temp = 1.0;
+            temp = 1.0f;
             for (int j = 0; j < dim; j++) {
                 bit = (i >>> j & 1);
                 temp *= bit + (1|-bit) * working[j];
@@ -143,20 +143,20 @@ public class PhantomNoise {
             }
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32 + 0.5);
+        return (sum * 0x1p-32f + 0.5f);
     }
 
-    protected double valueNoise2D() {
+    protected float valueNoise2D() {
         hashFloors[2] = BitConversion.floatToRawIntBits(working[2]);
         for (int i = 0; i < 2; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
             working[i] *= working[i] * (3.0 - 2.0 * working[i]);
         }
-        double sum = 0.0, temp;
+        float sum = 0f, temp;
         int bit;
         for (int i = 0; i < 4; i++) {
-            temp = 1.0;
+            temp = 1f;
             
             bit = i & 1;
             temp *= bit + (1|-bit) * working[0];
@@ -168,7 +168,7 @@ public class PhantomNoise {
             
             sum += temp * hasher.hash(hashFloors);
         }
-        return (sum * 0x1p-32 + 0.5);
+        return (sum * 0x1p-32f + 0.5f);
     }
     
     public float getNoise(float... args) {
@@ -181,7 +181,7 @@ public class PhantomNoise {
         // working[dim] stores what is effectively a changing seed in the array of floats, so the Hasher uses it
         working[dim] = 0.6180339887498949f; // inverse golden ratio; irrational, so its bit representation nears random
         float result = 0f;
-        double warp = 0.0;
+        float warp = 0f;
         for (int i = 0; i <= dim; i++) {
             for (int j = 0, d = 0; j < dim; j++, d++) {
                 if(d == i) d++;
@@ -212,7 +212,7 @@ public class PhantomNoise {
         points[2] = 0.9955480895004332f * x + -0.09425498125848553f * y;
         working[2] = 0.6180339887498949f;
         float result = 0f;
-        double warp = 0.0;
+        float warp = 0f;
         for (int i = 0; i <= 2; i++) {
             for (int j = 0, d = 0; j < 2; j++, d++) {
                 if(d == i) d++;

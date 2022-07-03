@@ -33,24 +33,24 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * <br>
  * Consider using {@link Noise} with its {@link Noise#TAFFY} or {@link Noise#TAFFY_FRACTAL} noise type if you only need
  * noise in 3-7 dimensions (these are mapped to dimensions 2-6, with the extra dimension editable via
- * {@link Noise#setMutation(float)}). Noise is faster than this class because it isn't as generalized to function in
+ * {@link Noise#setMutation(float)}). Noise is faster than this class because it isn't as generalized to operate in
  * higher dimensions.
  */
 public class TaffyNoise extends PhantomNoise {
     public TaffyNoise() {
-        super();
+        this(0xFEEDBEEF1337CAFEL, 3);
     }
 
     public TaffyNoise(long seed, int dimension) {
-        super(seed, dimension);
+        super(seed, dimension, 0.825f * 0.3f * Math.max(2, dimension));
     }
 
     public TaffyNoise(long seed, int dimension, float sharpness) {
-        super(seed, dimension, sharpness);
+        super(seed, dimension, sharpness * 0.3f);
     }
 
     @Override
-    protected double valueNoise() {
+    protected float valueNoise() {
         int s = (int)(hasher.seed ^ hasher.seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
@@ -68,7 +68,7 @@ public class TaffyNoise extends PhantomNoise {
     }
 
     @Override
-    protected double valueNoise2D() {
+    protected float valueNoise2D() {
         int bits = BitConversion.floatToIntBits(working[dim]);
         int sx = (int)(hasher.seed ^ bits);
         int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
