@@ -59,7 +59,7 @@ public class TaffyNoise extends PhantomNoise {
             s ^= (s << 11 | s >>> 21) + 123456789;
             float cx = working[i];
             float cy = working[j];
-            int idx = (int) (s + cx * 1357 + cy * 421);
+            int idx = s + (int) (cx * 95 + cy * 21);
             sum += (cos(cx)
                     - SIN_TABLE[idx & TABLE_MASK]
                     - SIN_TABLE[s & TABLE_MASK]*cy
@@ -76,13 +76,13 @@ public class TaffyNoise extends PhantomNoise {
         int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
         float cx = working[0];
         float cy = working[1];
-        int idx = (int) (sx + cx * 1357 + cy * 421);
+        int idx = sx + (int) (cx * 95 + cy * 21);
         float sum = (cos(cx)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK]*cy
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
         );
-        idx = (int) (sy + cy * 1357 + cx * 421);
+        idx = sy + (int) (cy * 95 + cx * 21);
         sum += (cos(cy)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK]*cx

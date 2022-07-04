@@ -87,7 +87,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
 //        path = "out/worlds/" + date + "/EllipseFoam/";
-        path = "out/worlds/" + date + "/HyperellipseTaffy/";
+        path = "out/worlds/" + date + "/EllipseTaffy/";
+//        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
 //        path = "out/worlds/" + date + "/HyperellipseFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
@@ -180,8 +181,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 1.75f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
