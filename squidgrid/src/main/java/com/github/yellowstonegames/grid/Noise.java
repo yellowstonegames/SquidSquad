@@ -3689,13 +3689,13 @@ public class Noise {
 
     protected float trillNoise(int seed, float x, float y) {
         int sx = seed, sy = (seed << 11 | seed >>> 21);
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + x * 421);
+        idx = sy + (int) (y * 95 + x * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * x
@@ -3706,19 +3706,19 @@ public class Noise {
 
     protected float trillNoise(int seed, float x, float y, float z) {
         int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567, sz = (sy << 13 | sy >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 + SIN_TABLE[idx & TABLE_MASK]
                 + SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + z * 421);
+        idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        idx = (int) (sz + z * 1357 + x * 421);
+        idx = sz + (int) (z * 95 + x * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * x
@@ -3731,25 +3731,25 @@ public class Noise {
         int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
                 sz = (sy << 13 | sy >>> 19) + 1234567,
                 sw = (sz << 13 | sz >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + z * 421);
+        idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        idx = (int) (sz + z * 1357 + w * 421);
+        idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
-        idx = (int) (sw + w * 1357 + x * 421);
+        idx = sw + (int) (w * 95 + x * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * x
@@ -3763,31 +3763,31 @@ public class Noise {
                 sz = (sy << 13 | sy >>> 19) + 1234567,
                 sw = (sz << 13 | sz >>> 19) + 1234567,
                 su = (sw << 13 | sw >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + z * 421);
+        idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        idx = (int) (sz + z * 1357 + w * 421);
+        idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
-        idx = (int) (sw + w * 1357 + u * 421);
+        idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
-        idx = (int) (su + u * 1357 + x * 421);
+        idx = su + (int) (u * 95 + x * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * x
@@ -3802,37 +3802,37 @@ public class Noise {
                 sw = (sz << 13 | sz >>> 19) + 1234567,
                 su = (sw << 13 | sw >>> 19) + 1234567,
                 sv = (su << 13 | su >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + z * 421);
+        idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        idx = (int) (sz + z * 1357 + w * 421);
+        idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
-        idx = (int) (sw + w * 1357 + u * 421);
+        idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
-        idx = (int) (su + u * 1357 + v * 421);
+        idx = su + (int) (u * 95 + v * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * v
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
         );
-        idx = (int) (sv + v * 1357 + x * 421);
+        idx = sv + (int) (v * 95 + x * 21);
         sum += (cos(v)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sv & TABLE_MASK] * x
@@ -3848,43 +3848,43 @@ public class Noise {
                 su = (sw << 13 | sw >>> 19) + 1234567,
                 sv = (su << 13 | su >>> 19) + 1234567,
                 sm = (sv << 13 | sv >>> 19) + 1234567;
-        int idx = (int) (sx + x * 1357 + y * 421);
+        int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
-        idx = (int) (sy + y * 1357 + z * 421);
+        idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
-        idx = (int) (sz + z * 1357 + w * 421);
+        idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
-        idx = (int) (sw + w * 1357 + u * 421);
+        idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
-        idx = (int) (su + u * 1357 + v * 421);
+        idx = su + (int) (u * 95 + v * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * v
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
         );
-        idx = (int) (sv + v * 1357 + m * 421);
+        idx = sv + (int) (v * 95 + m * 21);
         sum += (cos(v)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sv & TABLE_MASK] * m
                 + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
         );
-        idx = (int) (sm + m * 1357 + x * 421);
+        idx = sm + (int) (m * 95 + x * 21);
         sum += (cos(m)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sm & TABLE_MASK] * x

@@ -23,12 +23,12 @@ import java.text.DateFormat;
 import java.util.Date;
 
 /**
- * Writes one or more spinning globes to the out/ folder.
+ * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-//    private static final int width = 420, height = 210; // mimic, elliptical
+//    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
