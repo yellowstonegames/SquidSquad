@@ -42,8 +42,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 16;
-    private int mode = 0;
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int mode = 15;
+    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -52,8 +52,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private ImmediateModeRenderer20 renderer;
 
 //    private static final int width = 400, height = 400;
-    private static final int width = 512, height = 512;
-//    private static final int width = 256, height = 256;
+//    private static final int width = 512, height = 512;
+    private static final int width = 256, height = 256;
     private final double[][] real = new double[width][height], imag = new double[width][height];
     private final double[][] realKnown = new double[width][height], imagKnown = new double[width][height];
     private final float[][] colors = new float[width][height];
@@ -86,7 +86,7 @@ public class FFTVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 5; i++) {
             phantoms[i] = new PhantomNoise(1234567 + ~i * 5555555L, 2+i);
             taffies[i] = new TaffyNoise(1234567 + ~i * 5555555L, 2+i);
-            gums[i] = new GumNoise(1234567 + ~i * 5555555L, 2+i);
+            gums[i] = new GumNoise(123456789 + ~i * 55555555L, 2+i);
         }
         noise.setNoiseType(Noise.MUTANT_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -143,9 +143,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
-                    case M: //Mutation
-                        noise.setMutation(noise.getMutation() + (UIUtils.shift() ? -0.1f : 0.1f));
-                        break;
                     case B: //Blur
                         noise.setSharpness(noise.getSharpness() + (UIUtils.shift() ? 0.05f : -0.05f));
                         break;
@@ -193,6 +190,8 @@ public class FFTVisualizer extends ApplicationAdapter {
             threshold = Math.min(1, threshold + (1f/255f));
         else if(Gdx.input.isKeyPressed(DOWN))
             threshold = Math.max((1f/255f), threshold - (1f/255f));
+        if(Gdx.input.isKeyPressed(M))
+            noise.setMutation(noise.getMutation() + (UIUtils.shift() ? -Gdx.graphics.getDeltaTime() : Gdx.graphics.getDeltaTime()));
 //// specific thresholds: 32, 96, 160, 224
 //        threshold = (TimeUtils.millis() >>> 10 & 3) * 0x40p-8f + 0x20p-8f;
         renderer.begin(view.getCamera().combined, GL_POINTS);

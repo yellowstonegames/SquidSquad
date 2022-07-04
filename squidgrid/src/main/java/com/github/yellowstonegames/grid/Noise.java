@@ -4143,38 +4143,38 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w) {
-        final float p0 = x * 0.60535836f + y * 0.79595304f;
-        final float p1 = x * -0.9361983f + y * 0.3514722f;
-        final float p2 = x * 0.13598579f + y * -0.38488224f + z * 0.91287094f;
-        final float p3 = x * -0.18362284f + y * -0.36462212f + z * -0.45643544f + w * 0.7905694f;
-        final float p4 = x * -0.093033835f + y * -0.39750645f + z * -0.45643544f + w * -0.7905694f;
+        final float p0 = x * 0.9239529f + y * 0.38250628f;
+        final float p1 = x * -0.54355574f + y * 0.839373f;
+        final float p2 = x * 0.06616709f + y * -0.40282515f + z * 0.91287094f;
+        final float p3 = x * -0.07125973f + y * -0.40198097f + z * -0.45643544f + w * 0.7905694f;
+        final float p4 = x * -0.1459765f + y * -0.38125777f + z * -0.45643544f + w * -0.7905694f;
 
-        float xin = p1;
-        float yin = p2;
+        float xin = p4;
+        float yin = p1;
         float zin = p3;
-        float win = p4;
+        float win = p2;
         final float a = trillNoise(seed, xin, yin, zin, win);
         seed += 0x9E377;
-        xin = p0;
+        xin = p3;
         yin = p2;
-        zin = p3;
+        zin = p0;
         win = p4;
         final float b = trillNoise(seed, xin + a, yin, zin, win);
         seed += 0x9E377;
         xin = p0;
-        yin = p1;
-        zin = p3;
-        win = p4;
+        yin = p3;
+        zin = p4;
+        win = p1;
         final float c = trillNoise(seed, xin + b, yin, zin, win);
         seed += 0x9E377;
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        win = p4;
+        xin = p2;
+        yin = p4;
+        zin = p1;
+        win = p0;
         final float d = trillNoise(seed, xin + c, yin, zin, win);
         seed += 0x9E377;
-        xin = p0;
-        yin = p1;
+        xin = p1;
+        yin = p0;
         zin = p2;
         win = p3;
         final float e = trillNoise(seed, xin + d, yin, zin, win);
