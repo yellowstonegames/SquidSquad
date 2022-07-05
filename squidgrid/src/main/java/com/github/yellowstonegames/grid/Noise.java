@@ -457,6 +457,12 @@ public class Noise {
     protected float sharpness = 1f;
 
     /**
+     * Should always be equal to {@code (1f / sharpness)}. This is used by noise type TAFFY as part of a faster
+     * calculation to redistribute values toward or away from the center (which there is 0).
+     */
+    protected float sharpnessInverse = 1f;
+
+    /**
      * @see #getMutation()
      */
     protected float mutation = 0f;
@@ -579,6 +585,7 @@ public class Noise {
         this.cellularReturnType = other.cellularReturnType;
         this.cellularDistanceFunction = other.cellularDistanceFunction;
         this.sharpness = other.sharpness;
+        this.sharpnessInverse = 1f / this.sharpness;
         this.mutation = other.mutation;
     }
 
@@ -633,6 +640,7 @@ public class Noise {
         next.cellularReturnType = cellularReturnType;
         next.cellularDistanceFunction = cellularDistanceFunction;
         next.sharpness = sharpness;
+        next.sharpnessInverse = 1f / sharpness;
         next.mutation = mutation;
         return next;
     }
@@ -900,7 +908,9 @@ public class Noise {
      * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
      */
     public void setFoamSharpness(float sharpness) {
+        sharpness = Math.max(0.000001f, sharpness);
         this.sharpness = sharpness;
+        sharpnessInverse = 1f / sharpness;
     }
 
     /**
@@ -926,7 +936,9 @@ public class Noise {
      * @param sharpness higher results (above 1) tend to produce extremes, lower results (below 1) produce mid-range
      */
     public void setSharpness(float sharpness) {
+        sharpness = Math.max(0.000001f, sharpness);
         this.sharpness = sharpness;
+        sharpnessInverse = 1f / sharpness;
     }
 
     /**
@@ -3909,12 +3921,12 @@ public class Noise {
         xin = p0;
         yin = p1;
         final float c = trillNoise(seed, xin + b, yin);
-        final float result = (a + b + c) * G3f + 0.5f;
-        final float sharp = sharpness * 1.2f;
-
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+        final float result = (a + b + c) * F3f;
+        final float sharp = sharpnessInverse * (1f/1.2f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     public float getTaffyFractal(float x, float y) {
@@ -4078,12 +4090,12 @@ public class Noise {
         zin = p2;
         final float d = trillNoise(seed, xin + c, yin, zin);
 
-        final float result = (a + b + c + d) * 0.125f + 0.5f;
-        final float sharp = sharpness * 1.3f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-
+        final float result = (a + b + c + d) * 0.25f;
+        final float sharp = sharpnessInverse * (1f/1.3f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
 
@@ -4179,11 +4191,12 @@ public class Noise {
         win = p3;
         final float e = trillNoise(seed, xin + d, yin, zin, win);
 
-        final float result = (a + b + c + d + e) * 0.1f + 0.5f;
-        final float sharp = sharpness * 1.4f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+        final float result = (a + b + c + d + e) * 0.2f;
+        final float sharp = sharpnessInverse * (1f/1.4f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
     public float getTaffyFractal(float x, float y, float z, float w, float u) {
         x *= frequency;
@@ -4317,11 +4330,12 @@ public class Noise {
         uin = p4;
         final float f = trillNoise(seed, xin + e, yin, zin, win, uin);
 
-        final float result = (a + b + c + d + e + f) * 0.083333333f + 0.5f;
-        final float sharp = sharpness * 1.5f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+        final float result = (a + b + c + d + e + f) * (1f/6f);
+        final float sharp = sharpnessInverse * (1f/1.5f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     public float getTaffyFractal(float x, float y, float z, float w, float u, float v) {
@@ -4469,11 +4483,12 @@ public class Noise {
         uin = p4;
         vin = p0;
         final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin);
-        final float result = (a + b + c + d + e + f + g) * 0.071428571f + 0.5f;
-        final float sharp = sharpness * 1.6f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+        final float result = (a + b + c + d + e + f + g) * (1f/7f);
+        final float sharp = sharpnessInverse * (1f/1.6f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
@@ -4617,11 +4632,12 @@ public class Noise {
         vin = p2;
         min = p4;
         final float h = trillNoise(seed, xin + g, yin, zin, win, uin, vin, min);
-        final float result = (a + b + c + d + e + f + g + h) * 0.0625f + 0.5f;
-        final float sharp = sharpness * 1.7f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+        final float result = (a + b + c + d + e + f + g + h) * 0.125f;
+        final float sharp = sharpnessInverse * (1f/1.7f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float diff = 0.5f - result;
+//        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+//        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
     // Classic Perlin Noise

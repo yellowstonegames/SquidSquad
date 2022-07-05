@@ -88,7 +88,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
+        path = "out/worldsAnimated/" + date + "/SpaceViewTaffy/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
@@ -144,7 +145,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);

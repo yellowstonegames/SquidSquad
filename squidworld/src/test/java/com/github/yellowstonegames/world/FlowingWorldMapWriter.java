@@ -34,7 +34,7 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 180;
+    private static final int FRAMES = 240;
     private static final int LIMIT = 5;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
@@ -101,7 +101,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1, 2.5f, 0.4f);
+        Noise fn = new Noise((int) seed, 2.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
@@ -225,7 +225,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new GlobeMap(seed, width, height, terrainBasicNoise, 1f);
-        world = new GlobeMap(seed, width, height, terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.5f);
+        world = new GlobeMap(seed, width, height, terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.6f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
