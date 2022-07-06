@@ -17,8 +17,10 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -3700,43 +3702,43 @@ public class Noise {
     }
 
     protected float trillNoise(int seed, float x, float y) {
-        int sx = seed, sy = (seed << 11 | seed >>> 21);
+        int sx = seed, sy = (seed << 13 | seed >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
+        float sum = ((x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
         );
         idx = sy + (int) (y * 95 + x * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sy & TABLE_MASK] * x
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * x
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
         );
-        return sinTurns(sum * 0.125f);
+        return sinTurns(sum * 0.1f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z) {
         int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567, sz = (sy << 13 | sy >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
-                + SIN_TABLE[idx & TABLE_MASK]
-                + SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        float sum = ((x)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
         );
         idx = sz + (int) (z * 95 + x * 21);
-        sum += (cos(z)
+        sum += ((z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sz & TABLE_MASK] * x
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * x
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
         );
-        return sinTurns(sum * 0.125f);
+        return sinTurns(sum * 0.1f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w) {
@@ -3744,30 +3746,30 @@ public class Noise {
                 sz = (sy << 13 | sy >>> 19) + 1234567,
                 sw = (sz << 13 | sz >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
+        float sum = ((x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sx & TABLE_MASK] * y
-                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sy & TABLE_MASK] * z
-                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
-        sum += (cos(z)
+        sum += ((z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sz & TABLE_MASK] * w
-                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
         );
         idx = sw + (int) (w * 95 + x * 21);
-        sum += (cos(w)
+        sum += ((w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sw & TABLE_MASK] * x
-                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * x
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
         );
-        return sinTurns(sum * 0.125f);
+        return sinTurns(sum * 0.1f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w, float u) {
@@ -3776,31 +3778,31 @@ public class Noise {
                 sw = (sz << 13 | sz >>> 19) + 1234567,
                 su = (sw << 13 | sw >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
+        float sum = ((x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
-        sum += (cos(z)
+        sum += ((z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
-        sum += (cos(w)
+        sum += ((w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
         idx = su + (int) (u * 95 + x * 21);
-        sum += (cos(u)
+        sum += ((u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * x
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
@@ -3815,37 +3817,37 @@ public class Noise {
                 su = (sw << 13 | sw >>> 19) + 1234567,
                 sv = (su << 13 | su >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
+        float sum = ((x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
-        sum += (cos(z)
+        sum += ((z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
-        sum += (cos(w)
+        sum += ((w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
         idx = su + (int) (u * 95 + v * 21);
-        sum += (cos(u)
+        sum += ((u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * v
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
         );
         idx = sv + (int) (v * 95 + x * 21);
-        sum += (cos(v)
+        sum += ((v)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sv & TABLE_MASK] * x
                 + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
@@ -3861,43 +3863,43 @@ public class Noise {
                 sv = (su << 13 | su >>> 19) + 1234567,
                 sm = (sv << 13 | sv >>> 19) + 1234567;
         int idx = sx + (int) (x * 95 + y * 21);
-        float sum = (cos(x)
+        float sum = ((x)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sx & TABLE_MASK] * y
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
-        sum += (cos(y)
+        sum += ((y)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sy & TABLE_MASK] * z
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
-        sum += (cos(z)
+        sum += ((z)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sz & TABLE_MASK] * w
                 + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
-        sum += (cos(w)
+        sum += ((w)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sw & TABLE_MASK] * u
                 + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
         );
         idx = su + (int) (u * 95 + v * 21);
-        sum += (cos(u)
+        sum += ((u)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[su & TABLE_MASK] * v
                 + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
         );
         idx = sv + (int) (v * 95 + m * 21);
-        sum += (cos(v)
+        sum += ((v)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sv & TABLE_MASK] * m
                 + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
         );
         idx = sm + (int) (m * 95 + x * 21);
-        sum += (cos(m)
+        sum += ((m)
                 - SIN_TABLE[idx & TABLE_MASK]
                 - SIN_TABLE[sm & TABLE_MASK] * x
                 + sin(SIN_TABLE[sm + 4096 & TABLE_MASK] * m)
@@ -3905,6 +3907,87 @@ public class Noise {
         return sinTurns(sum * 0.125f);
     }
 
+    protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v, float m, float n) {
+        int sx = seed, sy = (sx << 13 | sx >>> 19) + 1234567,
+                sz = (sy << 13 | sy >>> 19) + 1234567,
+                sw = (sz << 13 | sz >>> 19) + 1234567,
+                su = (sw << 13 | sw >>> 19) + 1234567,
+                sv = (su << 13 | su >>> 19) + 1234567,
+                sm = (sv << 13 | sv >>> 19) + 1234567,
+                sn = (sm << 13 | sm >>> 19) + 1234567;
+        int idx = sx + (int) (x * 95 + y * 21);
+        float sum = ((x)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sx & TABLE_MASK] * y
+                + sin(SIN_TABLE[sx + 4096 & TABLE_MASK] * x)
+        );
+        idx = sy + (int) (y * 95 + z * 21);
+        sum += ((y)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sy & TABLE_MASK] * z
+                + sin(SIN_TABLE[sy + 4096 & TABLE_MASK] * y)
+        );
+        idx = sz + (int) (z * 95 + w * 21);
+        sum += ((z)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sz & TABLE_MASK] * w
+                + sin(SIN_TABLE[sz + 4096 & TABLE_MASK] * z)
+        );
+        idx = sw + (int) (w * 95 + u * 21);
+        sum += ((w)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sw & TABLE_MASK] * u
+                + sin(SIN_TABLE[sw + 4096 & TABLE_MASK] * w)
+        );
+        idx = su + (int) (u * 95 + v * 21);
+        sum += ((u)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[su & TABLE_MASK] * v
+                + sin(SIN_TABLE[su + 4096 & TABLE_MASK] * u)
+        );
+        idx = sv + (int) (v * 95 + m * 21);
+        sum += ((v)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sv & TABLE_MASK] * m
+                + sin(SIN_TABLE[sv + 4096 & TABLE_MASK] * v)
+        );
+        idx = sm + (int) (m * 95 + n * 21);
+        sum += ((m)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sm & TABLE_MASK] * n
+                + sin(SIN_TABLE[sm + 4096 & TABLE_MASK] * m)
+        );
+        idx = sn + (int) (n * 95 + x * 21);
+        sum += ((n)
+                - SIN_TABLE[idx & TABLE_MASK]
+                - SIN_TABLE[sn & TABLE_MASK] * x
+                + sin(SIN_TABLE[sn + 4096 & TABLE_MASK] * n)
+        );
+        return sinTurns(sum * 0.125f);
+    }
+
+    public float singleTaffyVarargs(int seed, float... coordinates) {
+        switch (coordinates.length) {
+            case 0:
+                return (Hasher.randomize3Float(seed) - 0.5f) * 2f;
+            case 1:
+                return LineWobble.wobble(seed, coordinates[0]);
+            case 2:
+                return singleTaffy(seed, coordinates[0], coordinates[1]);
+            case 3:
+                return singleTaffy(seed, coordinates[0], coordinates[1], coordinates[2]);
+            case 4:
+                return singleTaffy(seed, coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
+            case 5:
+                return singleTaffy(seed, coordinates[0], coordinates[1], coordinates[2], coordinates[3], coordinates[4]);
+            case 6:
+                return singleTaffy(seed, coordinates[0], coordinates[1], coordinates[2], coordinates[3], coordinates[4],
+                        coordinates[5]);
+            default:
+                return singleTaffy(seed, coordinates[0], coordinates[1], coordinates[2], coordinates[3], coordinates[4],
+                        coordinates[5], coordinates[6]);
+        }
+    }
     public float singleTaffy(int seed, float x, float y) {
         final float p0 = x * 0.60535836f + y * 0.79595304f;
         final float p1 = x * -0.99609566f + y * 0.08828044f;
@@ -3913,11 +3996,11 @@ public class Noise {
         float xin = p2;
         float yin = p0;
         final float a = trillNoise(seed, xin, yin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p1;
         yin = p2;
         final float b = trillNoise(seed, xin + a, yin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p0;
         yin = p1;
         final float c = trillNoise(seed, xin + b, yin);
@@ -4074,17 +4157,17 @@ public class Noise {
         float yin = p2;
         float zin = p0;
         final float a = trillNoise(seed, xin, yin, zin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p0;
         yin = p1;
         zin = p3;
         final float b = trillNoise(seed, xin + a, yin, zin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p1;
         yin = p2;
         zin = p3;
         final float c = trillNoise(seed, xin + b, yin, zin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p0;
         yin = p1;
         zin = p2;
@@ -4166,25 +4249,25 @@ public class Noise {
         float zin = p3;
         float win = p2;
         final float a = trillNoise(seed, xin, yin, zin, win);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p3;
         yin = p2;
         zin = p0;
         win = p4;
         final float b = trillNoise(seed, xin + a, yin, zin, win);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p0;
         yin = p3;
         zin = p4;
         win = p1;
         final float c = trillNoise(seed, xin + b, yin, zin, win);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p2;
         yin = p4;
         zin = p1;
         win = p0;
         final float d = trillNoise(seed, xin + c, yin, zin, win);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p1;
         yin = p0;
         zin = p2;
@@ -4435,7 +4518,7 @@ public class Noise {
         float uin = p1;
         float vin = p4;
         final float a = trillNoise(seed, xin, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p2;
         yin = p6;
         zin = p0;
@@ -4443,7 +4526,7 @@ public class Noise {
         uin = p5;
         vin = p3;
         final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p1;
         yin = p2;
         zin = p3;
@@ -4451,7 +4534,7 @@ public class Noise {
         uin = p6;
         vin = p5;
         final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p6;
         yin = p0;
         zin = p2;
@@ -4459,7 +4542,7 @@ public class Noise {
         uin = p4;
         vin = p1;
         final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p2;
         yin = p1;
         zin = p5;
@@ -4467,7 +4550,7 @@ public class Noise {
         uin = p3;
         vin = p6;
         final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p0;
         yin = p4;
         zin = p6;
@@ -4475,7 +4558,7 @@ public class Noise {
         uin = p1;
         vin = p2;
         final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p5;
         yin = p1;
         zin = p2;
@@ -4569,7 +4652,7 @@ public class Noise {
         float vin = p4;
         float min = p5;
         final float a = trillNoise(seed, xin, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p2;
         yin = p3;
         zin = p0;
@@ -4578,7 +4661,7 @@ public class Noise {
         vin = p5;
         min = p7;
         final float b = trillNoise(seed, xin + a, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p1;
         yin = p2;
         zin = p4;
@@ -4587,7 +4670,7 @@ public class Noise {
         vin = p7;
         min = p6;
         final float c = trillNoise(seed, xin + b, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p7;
         yin = p0;
         zin = p2;
@@ -4596,7 +4679,7 @@ public class Noise {
         vin = p6;
         min = p1;
         final float d = trillNoise(seed, xin + c, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p3;
         yin = p1;
         zin = p5;
@@ -4605,7 +4688,7 @@ public class Noise {
         vin = p0;
         min = p2;
         final float e = trillNoise(seed, xin + d, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p4;
         yin = p7;
         zin = p6;
@@ -4614,7 +4697,7 @@ public class Noise {
         vin = p1;
         min = p3;
         final float f = trillNoise(seed, xin + e, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p5;
         yin = p4;
         zin = p7;
@@ -4623,7 +4706,7 @@ public class Noise {
         vin = p3;
         min = p0;
         final float g = trillNoise(seed, xin + f, yin, zin, win, uin, vin, min);
-        seed += 0x9E377;
+        seed = seed * 0x9E373 ^ 0x7F4A7C15;
         xin = p6;
         yin = p5;
         zin = p1;
