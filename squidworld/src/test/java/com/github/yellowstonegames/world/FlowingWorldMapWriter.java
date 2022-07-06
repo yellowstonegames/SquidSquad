@@ -101,7 +101,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 2.5f, Noise.TAFFY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1.4f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
@@ -287,7 +287,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         String name = makeName(thesaurus);
         while (Gdx.files.local(path + name + ".gif").exists())
             name = makeName(thesaurus);
-        Gdx.files.local(path + name + "_frames/").mkdirs();
+//        Gdx.files.local(path + name + "_frames/").mkdirs();
         long hash;
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();

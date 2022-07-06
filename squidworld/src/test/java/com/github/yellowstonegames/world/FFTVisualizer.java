@@ -29,7 +29,7 @@ import static com.github.tommyettinger.bluegrass.BlueNoise.TILE_NOISE;
  */
 public class FFTVisualizer extends ApplicationAdapter {
 
-    private final Noise noise = new Noise(0x1337BEEF, 0.25f);
+    private final Noise noise = new Noise(322420472, 0.25f);
     private final IntPointHash iph = new IntPointHash();
     private final FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
     private final FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 32);
@@ -40,9 +40,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final TaffyNoise[] taffies = new TaffyNoise[5];
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 15;
-    private int mode = 14;
-    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private static final int MODE_LIMIT = 16;
+    private int mode = 0;
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -86,7 +86,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(123456789 + ~i * 55555555L, 2+i);
             taffies[i] = new TaffyNoise(123456789 + ~i * 55555555L, 2+i);
         }
-        noise.setNoiseType(Noise.MUTANT_FRACTAL);
+        noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
 //        Pixmap pm = new Pixmap(Gdx.files.internal("special/BlueNoise512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("special/BlueNoiseTri256x256.png"));
@@ -125,6 +125,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
+                        System.out.println("Using seed " + s);
                         break;
                     case S: //seed after
                         s = noise.getSeed() + 1;
@@ -132,6 +133,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
+                        System.out.println("Using seed " + s);
                         break;
                     case N: // noise type
                         if(mode == 0 || mode >= 12)
@@ -1009,6 +1011,86 @@ public class FFTVisualizer extends ApplicationAdapter {
                             points[dim][4] = xx + yy;
                             points[dim][5] = yy - xx;
                             bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
+        } else if(mode == 15) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            float cx = (c+x)*fr;
+                            float cy = (c+y)*fr;
+                            bright = basicPrepare(noise.singleTaffy(noise.getSeed(), cx, cy));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(noise.singleTaffyVarargs(noise.getSeed(), points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            bright = basicPrepare(noise.singleTaffyVarargs(noise.getSeed(), points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            bright = basicPrepare(noise.singleTaffyVarargs(noise.getSeed(), points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            points[dim][5] = yy - xx;
+                            bright = basicPrepare(noise.singleTaffyVarargs(noise.getSeed(), points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
