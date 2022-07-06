@@ -26,9 +26,9 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-//    private static final int width = 1920, height = 1080;
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-    private static final int width = 800, height = 400; // mimic, elliptical
+//    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
@@ -131,7 +131,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 2);
@@ -227,7 +227,7 @@ public class WorldMapWriter extends ApplicationAdapter {
             wmv.generate(1.0f, 1.3f);
         }
         else {
-            wmv.generate(1.0f, 1.3f);
+            wmv.generate(0.9f, 1.3f);
         }
         ttg = System.currentTimeMillis() - startTime;
     }

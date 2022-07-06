@@ -3991,9 +3991,9 @@ public class Noise {
         }
     }
     public float singleTaffy(int seed, float x, float y) {
-        final float p0 = x * 1.2107167f + y * 1.5919061f;
-        final float p1 = x * -1.9921913f + y * 0.17656088f;
-        final float p2 = x * 0.91460365f + y * -1.7782723f;
+        final float p0 = x * 1.4104849f + y * 1.8545705f;
+        final float p1 = x * -2.3209028f + y * 0.20569342f;
+        final float p2 = x * 1.0655133f + y * -2.0716872f;
 
         float xin = p2;
         float yin = p0;
@@ -4240,11 +4240,11 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w) {
-        final float p0 = x * 1.8479058f + y * 0.76501256f;
-        final float p1 = x * -1.0871115f + y * 1.678746f;
-        final float p2 = x * 0.13233417f + y * -0.8056503f + z * 1.8257419f;
-        final float p3 = x * -0.14251946f + y * -0.80396193f + z * -0.9128709f + w * 1.5811388f;
-        final float p4 = x * -0.291953f + y * -0.76251554f + z * -0.9128709f + w * -1.5811388f;
+        final float p0 = x * 1.5337617f + y * 0.6349604f;
+        final float p1 = x * -0.9023025f + y * 1.3933592f;
+        final float p2 = x * 0.10983736f + y * -0.6686897f + z * 1.5153657f;
+        final float p3 = x * -0.11829115f + y * -0.66728836f + z * -0.7576828f + w * 1.3123453f;
+        final float p4 = x * -0.24232098f + y * -0.6328879f + z * -0.7576828f + w * -1.3123453f;
 
         float xin = p4;
         float yin = p1;
@@ -4361,12 +4361,12 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u) {
-        final float p0 = x * 1.2107167f + y * 1.5919061f;
-        final float p1 = x * -1.8338176f + y * 0.79819334f;
-        final float p2 = x * 0.19527805f + y * -0.6014785f + z * 1.8973665f;
-        final float p3 = x * -0.29888582f + y * -0.5573754f + z * -0.6324556f + w * 1.7888544f;
-        final float p4 = x * -0.15990078f + y * -0.6119083f + z * -0.6324556f + w * -0.8944273f + u * 1.5491933f;
-        final float p5 = x * -0.0180668f + y * -0.6321975f + z * -0.6324556f + w * -0.8944273f + u * -1.5491936f;
+        final float p0 = x * 0.80512667f + y * 1.0586176f;
+        final float p1 = x * -1.2194887f + y * 0.5307986f;
+        final float p2 = x * 0.12985991f + y * -0.39998323f + z * 1.2617488f;
+        final float p3 = x * -0.19875908f + y * -0.37065464f + z * -0.42058298f + w * 1.1895882f;
+        final float p4 = x * -0.10633402f + y * -0.40691903f + z * -0.42058298f + w * -0.59479415f + u * 1.0302136f;
+        final float p5 = x * -0.012014422f + y * -0.42041135f + z * -0.42058298f + w * -0.59479415f + u * -1.0302138f;
 
         float xin = p1;
         float yin = p2;
@@ -4505,13 +4505,13 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v) {
-        final float p0 = x * 1.2107167f + y * 1.5919061f;
-        final float p1 = x * -1.8055117f + y * 0.86030686f;
-        final float p2 = x * 0.15094432f + y * -0.49378663f + z * 1.9321836f;
-        final float p3 = x * -0.25168332f + y * -0.45091256f + z * -0.4830459f + w * 1.8708287f;
-        final float p4 = x * -0.13896996f + y * -0.49734694f + z * -0.4830459f + w * -0.6236096f + u * 1.7638342f;
-        final float p5 = x * -0.023459021f + y * -0.5158646f + z * -0.4830459f + w * -0.6236096f + u * -0.8819171f + v * 1.5275252f;
-        final float p6 = x * -0.23491588f + y * -0.45987082f + z * -0.4830459f + w * -0.6236096f + u * -0.8819171f + v * -1.5275254f;
+        final float p0 = x * 0.6810281f + y * 0.89544713f;
+        final float p1 = x * -1.0156003f + y * 0.4839226f;
+        final float p2 = x * 0.08490618f + y * -0.277755f + z * 1.0868533f;
+        final float p3 = x * -0.14157186f + y * -0.25363833f + z * -0.27171332f + w * 1.0523412f;
+        final float p4 = x * -0.0781706f + y * -0.27975765f + z * -0.27171332f + w * -0.3507804f + u * 0.99215674f;
+        final float p5 = x * -0.013195699f + y * -0.29017383f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * 0.8592329f;
+        final float p6 = x * -0.13214019f + y * -0.25867733f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * -0.859233f;
 
         float xin = p0;
         float yin = p5;
@@ -4637,14 +4637,14 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v, float m) {
-        final float p0 = x * 1.2107167f + y * 1.5919061f;
-        final float p1 = x * -1.7842015f + y * 0.90367293f;
-        final float p2 = x * 0.12260044f + y * -0.4188149f + z * 1.9518001f;
-        final float p3 = x * -0.2173718f + y * -0.37845168f + z * -0.3903601f + w * 1.9123658f;
-        final float p4 = x * -0.122600384f + y * -0.41886193f + z * -0.3903601f + w * -0.47809148f + u * 1.8516401f;
-        final float p5 = x * -0.025175223f + y * -0.43570906f + z * -0.3903601f + w * -0.47809148f + u * -0.61721355f + v * 1.745743f;
-        final float p6 = x * -0.20314662f + y * -0.386274f + z * -0.3903601f + w * -0.47809148f + u * -0.61721355f + v * -0.8728718f + m * 1.5118577f;
-        final float p7 = x * -0.26366684f + y * -0.34778723f + z * -0.3903601f + w * -0.47809148f + u * -0.61721355f + v * -0.8728718f + m * -1.5118586f;
+        final float p0 = x * 0.60535836f + y * 0.79595304f;
+        final float p1 = x * -0.89210075f + y * 0.45183647f;
+        final float p2 = x * 0.06130022f + y * -0.20940745f + z * 0.97590005f;
+        final float p3 = x * -0.1086859f + y * -0.18922584f + z * -0.19518004f + w * 0.9561829f;
+        final float p4 = x * -0.061300192f + y * -0.20943096f + z * -0.19518004f + w * -0.23904574f + u * 0.92582005f;
+        final float p5 = x * -0.012587612f + y * -0.21785453f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * 0.8728715f;
+        final float p6 = x * -0.10157331f + y * -0.193137f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * 0.7559289f;
+        final float p7 = x * -0.13183342f + y * -0.17389362f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * -0.7559293f;
 
         float xin = p0;
         float yin = p6;

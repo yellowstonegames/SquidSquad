@@ -249,7 +249,10 @@ public class WorldMapView {
                         break;
                     default:
                         colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[biomeMapper.extractPartA(bc)],
-                                BIOME_DARK_COLOR_TABLE[biomeMapper.extractPartB(bc)], MathTools.barronSpline(biomeMapper.extractMixAmount(bc), 0.6f, 0.5f)));
+                                BIOME_DARK_COLOR_TABLE[biomeMapper.extractPartB(bc)],
+                                biomeMapper.extractMixAmount(bc)
+//                                MathTools.barronSpline(biomeMapper.extractMixAmount(bc), 0.6f, 0.5f)
+                        ));
                 }
             }
         }

@@ -540,8 +540,6 @@ public interface BiomeMapper {
                     else {
                         biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
                                 ? 1024.0f - (WorldMapGenerator.sandUpper - high) * 10240.0f
-//                                : Math.tanh(high + moist - hot) * 512.0 + 512.0) << 20;
-//                                : MathTools.zigzag((high + moist - hot)) * 512.0f + 512.0f) << 20;
                                 : MathTools.zigzag((high + moist) * (4.1f + high - hot)) * 512.0f + 512.0f) << 20;
                     }
                 }
