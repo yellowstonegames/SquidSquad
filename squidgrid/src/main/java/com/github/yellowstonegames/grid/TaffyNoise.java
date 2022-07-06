@@ -17,6 +17,9 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -37,7 +40,14 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * arbitrarily-high dimensions.
  */
 @Beta
-public class TaffyNoise extends PhantomNoise {
+public class TaffyNoise {
+    protected final long seed;
+    public final int dim;
+    public final float sharpness;
+    protected float inverse;
+    protected final float[] working, points;
+    protected final float[][] vertices;
+
     public TaffyNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
     }
@@ -47,13 +57,56 @@ public class TaffyNoise extends PhantomNoise {
     }
 
     public TaffyNoise(long seed, int dimension, float sharpness) {
-        super(seed, dimension, sharpness);
-        inverse *= 0.5f;
+        dim = Math.max(2, dimension);
+        this.sharpness = 1f / sharpness;
+        working = new float[dim+1];
+        points = new float[dim+1];
+        vertices = new float[dim+1][dim];
+        float id = -1f / dim;
+        vertices[0][0] = 1f;
+        for (int v = 1; v <= dim; v++) {
+            vertices[v][0] = id;
+        }
+        for (int d = 1; d < dim; d++) {
+            float t = 0f;
+            for (int i = 0; i < d; i++) {
+                t += vertices[d][i] * vertices[d][i];
+            }
+            vertices[d][d] = (float) Math.sqrt(1f - t);
+            t = (id - t) / vertices[d][d];
+            for (int v = d + 1; v <= dim; v++) {
+                vertices[v][d] = t;
+            }
+        }
+        for (int v = 0; v <= dim; v++) {
+            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+            vertices[v][0] = TrigTools.cos(theta) * dist;
+            vertices[v][1] = TrigTools.sin(theta) * dist;
+        }
+        this.seed = seed;
+        inverse = 1f / (dim + 1f);
+//        printDebugInfo();
     }
 
-    @Override
+    public String serializeToString() {
+        return "`" + seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
+    }
+
+    public static PhantomNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 7)
+            return null;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
+
+        return new PhantomNoise(seed, dim, sharp);
+
+    }
+
     protected float valueNoise() {
-        int s = (int)(hasher.seed ^ hasher.seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
+        int s = (int)(seed ^ seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
             s ^= (s << 11 | s >>> 21) + 123456789;
@@ -69,11 +122,10 @@ public class TaffyNoise extends PhantomNoise {
         return sinTurns(sum * 0.125f);
     }
 
-    @Override
     protected float valueNoise2D() {
         int bits = BitConversion.floatToIntBits(working[dim]);
-        int sx = (int)(hasher.seed ^ bits);
-        int sy = (int)(hasher.seed >>> 32 ^ (bits << 13 | bits >>> 19));
+        int sx = (int)(seed ^ bits);
+        int sy = (int)(seed >>> 32 ^ (bits << 13 | bits >>> 19));
         float cx = working[0];
         float cy = working[1];
         int idx = sx + (int) (cx * 95 + cy * 21);
@@ -91,7 +143,6 @@ public class TaffyNoise extends PhantomNoise {
         return sinTurns(sum * 0.125f);
     }
 
-    @Override
     public float getNoise(float... args) {
         for (int v = 0; v <= dim; v++) {
             points[v] = 0.0f;
@@ -99,7 +150,7 @@ public class TaffyNoise extends PhantomNoise {
                 points[v] += args[d] * vertices[v][d];
             }
         }
-        // working[dim] stores what is effectively a changing seed in the array of floats, so the Hasher uses it
+        // working[dim] stores what is effectively a changing seed in the array of floats
         working[dim] = 0.6180339887498949f; // inverse golden ratio; irrational, so its bit representation nears random
         float result = 0f;
         float warp = 0f;
@@ -113,13 +164,10 @@ public class TaffyNoise extends PhantomNoise {
             result += warp;
             working[dim] += -0.423310825130748f; // e - pi
         }
-        result = result * inverse + 0.5f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharpness * diff) * one) - sign - sign) - 1f;
+        result *= inverse;
+        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 
-    @Override
     public float getNoise2D(float x, float y) {
         points[0] = x *  0.60535836f + y *  0.79595304f;
         points[1] = x * -0.99609566f + y *  0.08828044f;
@@ -138,9 +186,7 @@ public class TaffyNoise extends PhantomNoise {
             result += warp;
             working[2] += -0.423310825130748f;
         }
-        result = result * inverse + 0.5f;
-        final float diff = 0.5f - result;
-        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
-        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharpness * diff) * one) - sign - sign) - 1f;
+        result *= inverse;
+        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 }
