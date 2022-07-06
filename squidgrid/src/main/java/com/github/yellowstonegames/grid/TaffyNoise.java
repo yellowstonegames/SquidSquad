@@ -109,7 +109,7 @@ public class TaffyNoise {
         int s = (int)(seed ^ seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
-            s ^= (s << 11 | s >>> 21) + 123456789;
+            s = (s << 13 | s >>> 19) + 1234567;
             float cx = working[i];
             float cy = working[j];
             int idx = s + (int) (cx * 95 + cy * 21);
