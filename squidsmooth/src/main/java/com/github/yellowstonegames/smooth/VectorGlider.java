@@ -18,6 +18,7 @@ package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
 
@@ -82,6 +83,15 @@ public class VectorGlider extends MultiGlider {
         super(other);
         this.start = other.start.cpy();
         this.end = other.end.cpy();
+        this.change = other.change;
+        this.interpolation = other.interpolation;
+        this.completeRunner = other.completeRunner;
+    }
+
+    public VectorGlider(MultiGlider other) {
+        super(other);
+        this.start = new Vector2(other.getStartFloat("x"), other.getStartFloat("y"));
+        this.end = new Vector2(other.getEndFloat("x"), other.getEndFloat("y"));
         this.change = other.change;
         this.interpolation = other.interpolation;
         this.completeRunner = other.completeRunner;

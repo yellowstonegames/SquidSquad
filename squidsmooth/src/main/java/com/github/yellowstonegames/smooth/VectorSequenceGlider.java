@@ -31,7 +31,7 @@ import static com.github.yellowstonegames.grid.Direction.*;
  * Very experimental; allows chaining a sequence of VectorGlider movements.
  */
 @Beta
-public class VectorSequenceGlider extends SequenceGlider<VectorGlider> implements IGlider {
+public class VectorSequenceGlider extends MultiSequenceGlider implements IGlider {
 
     /**
      * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using
@@ -84,40 +84,19 @@ public class VectorSequenceGlider extends SequenceGlider<VectorGlider> implement
     {
         if(sequence.length == 0) return 0;
         if(active > sequence.length)
-            return sequence[sequence.length - 1].end.x;
+            return sequence[sequence.length - 1].getEndFloat("x");
         if(sequence[active].change >= 1f)
-            return sequence[active].end.x;
-        return interpolation.apply(sequence[active].start.x, sequence[active].end.x, change);
+            return sequence[active].getEndFloat("x");
+        return interpolation.apply(sequence[active].getStartFloat("x"), sequence[active].getEndFloat("x"), change);
     }
 
     public float getY()
     {
         if(sequence.length == 0) return 0;
         if(active > sequence.length)
-            return sequence[sequence.length - 1].end.y;
+            return sequence[sequence.length - 1].getEndFloat("y");
         if(sequence[active].change >= 1f)
-            return sequence[active].end.y;
-        return interpolation.apply(sequence[active].start.y, sequence[active].end.y, sequence[active].change);
-    }
-
-    @Override
-    public float getChange() {
-        return super.getChange();
-    }
-
-    @Override
-    public void setChange(float change) {
-        super.setChange(change);
-    }
-
-    @Nonnull
-    @Override
-    public Interpolation getInterpolation() {
-        return super.getInterpolation();
-    }
-
-    @Override
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
-        super.setInterpolation(interpolation);
+            return sequence[active].getEndFloat("y");
+        return interpolation.apply(sequence[active].getStartFloat("y"), sequence[active].getEndFloat("y"), sequence[active].change);
     }
 }
