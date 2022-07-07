@@ -136,4 +136,14 @@ public class VectorGlider extends MultiGlider {
         start.set(end);
         super.onComplete();
     }
+
+    @Override
+    public String toString() {
+        return "VectorGlider{" +
+                "start=" + start +
+                ", end=" + end +
+                ", changers=" + changers +
+                ", change=" + change +
+                '}';
+    }
 }
