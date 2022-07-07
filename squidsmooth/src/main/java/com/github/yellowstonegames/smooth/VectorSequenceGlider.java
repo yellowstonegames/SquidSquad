@@ -18,6 +18,7 @@ package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.Direction;
@@ -83,11 +84,8 @@ public class VectorSequenceGlider extends MultiSequenceGlider implements IGlider
     public float getX()
     {
         if(sequence.length == 0) return 0;
-        System.out.println(change);
         if(active >= sequence.length)
             return sequence[sequence.length - 1].getEndFloat("x");
-        System.out.println("VectorSequenceGlider with active " + active + " has partial change " + sequence[active].change + " out of total change " + change);
-        System.out.println(this);
         if(sequence[active].change >= 1f)
             return sequence[active].getEndFloat("x");
         return interpolation.apply(sequence[active].getStartFloat("x"), sequence[active].getEndFloat("x"), sequence[active].change);

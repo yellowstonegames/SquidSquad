@@ -144,7 +144,6 @@ public class MultiSequenceGlider extends MultiGlider {
     @Override
     public void setChange(float change) {
         this.change = Math.max(0f, Math.min(1f, change));
-        System.out.println("setting change to " + this.change);
         if(active < sequence.length) {
             sequence[active].setChange((this.change - passed) / durations[active]);
             if (sequence[active].getChange() == 1f) {
@@ -157,53 +156,6 @@ public class MultiSequenceGlider extends MultiGlider {
                 onComplete();
             }
         }
-        else {
-            System.out.println("active was too high: " + active + " out of " + sequence.length + " in " + this);
-        }
-
-//        if(change == 0f) {
-//            active = 0;
-//            for (int i = 0; i < sequence.length; i++) {
-//                sequence[i].setChange(0f);
-//            }
-//        }
-//        else if(change == 1f) {
-//            for (int i = 0; i < sequence.length; i++) {
-//                sequence[i].setChange(1f);
-//            }
-//            active = sequence.length;
-//            onComplete();
-//        }
-//        else {
-//            float totalTime = 0f;
-//            int i = 0;
-//            for (; i < sequence.length; i++) {
-//                totalTime += durations[i];
-//                if(totalTime >= passed - MathTools.FLOAT_ROUNDING_ERROR){
-//                    break;
-//                }
-//                sequence[i].change = 1f;
-//            }
-//            if(i == sequence.length){
-//                active = sequence.length;
-//                onComplete();
-//                return;
-//            }
-//            active = i;
-//            sequence[i].setChange((this.change - passed) / durations[active]);
-//            if(sequence[i].getChange() == 1f) {
-//                passed += durations[i];
-//                i = ++active;
-//            }
-//            if(active == sequence.length){
-//                active = sequence.length;
-//                onComplete();
-//                return;
-//            }
-//            for (; i < sequence.length; i++) {
-//                sequence[i].change = 0f;
-//            }
-//        }
     }
 
     @Override

@@ -101,6 +101,7 @@ public class CoordGlider extends MultiGlider {
     @Override
     public void onComplete() {
         start = end;
+        resetToCurrent();
         super.onComplete();
     }
 }

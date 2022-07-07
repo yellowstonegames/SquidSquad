@@ -352,13 +352,17 @@ public class MultiGlider implements IGlider {
 
     @Override
     public void onComplete() {
-        for(Changer c : changers){
-            c.startF = c.endF;
-            c.startI = c.endI;
-        }
         if(completeRunner != null) {
             completeRunner.run();
         }
+    }
+
+    public void resetToCurrent() {
+        for(Changer c : changers){
+            c.startF = c.interpolatorF.apply(c.startF, c.endF, change);
+            c.startI = c.interpolatorI.apply(c.startI, c.endI, change);
+        }
+
     }
 
     @Override
