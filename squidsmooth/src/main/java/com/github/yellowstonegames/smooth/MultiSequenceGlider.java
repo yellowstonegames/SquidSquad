@@ -19,6 +19,7 @@ package com.github.yellowstonegames.smooth;
 import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import javax.annotation.Nonnull;
@@ -66,14 +67,14 @@ public class MultiSequenceGlider extends MultiGlider {
     public float getFloat(@Nonnull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
-        return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(change));
+        return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
     public int getInt(@Nonnull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
-        return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(change));
+        return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
@@ -139,14 +140,47 @@ public class MultiSequenceGlider extends MultiGlider {
     @Override
     public void setChange(float change) {
         this.change = Math.max(0f, Math.min(1f, change));
-        if(active < sequence.length) {
-            sequence[active].setChange((this.change - passed) / durations[active]);
-            if (sequence[active].getChange() == 1f) {
-                passed += durations[active];
-                ++active;
+        if(change == 0f) {
+            active = 0;
+            for (int i = 0; i < sequence.length; i++) {
+                sequence[i].setChange(0f);
             }
-            if(active == sequence.length) {
+        }
+        else if(change == 1f) {
+            for (int i = 0; i < sequence.length; i++) {
+                sequence[i].setChange(1f);
+            }
+            active = sequence.length;
+            onComplete();
+        }
+        else {
+            float totalTime = 0f;
+            int i = 0;
+            for (; i < sequence.length; i++) {
+                totalTime += durations[i];
+                if(totalTime >= passed - MathTools.FLOAT_ROUNDING_ERROR){
+                    break;
+                }
+                sequence[i].change = 1f;
+            }
+            if(i == sequence.length){
+                active = sequence.length;
                 onComplete();
+                return;
+            }
+            active = i;
+            sequence[i].setChange((this.change - passed) / durations[active]);
+            if(sequence[i].getChange() == 1f) {
+                passed += durations[i];
+                i = ++active;
+            }
+            if(active == sequence.length){
+                active = sequence.length;
+                onComplete();
+                return;
+            }
+            for (; i < sequence.length; i++) {
+                sequence[i].change = 0f;
             }
         }
     }
