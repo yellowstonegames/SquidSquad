@@ -354,8 +354,8 @@ public class FOV {
                                       int minX, int minY, int maxX, int maxY)
     {
         float radius = light.length + light[0].length;
-        ArrayTools.fill(light, 0);
-        light[startX][startY] = 1;//make the starting space full power
+        ArrayTools.fill(light, 0.0f);
+        light[startX][startY] = 1.0f;//make the starting space full power
         
         shadowCastBinary(1, 1.0f, 0.0f, 0, 1, 1, 0, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
         shadowCastBinary(1, 1.0f, 0.0f, 1, 0, 0, 1, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);

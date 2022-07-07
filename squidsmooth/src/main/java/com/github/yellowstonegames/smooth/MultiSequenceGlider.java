@@ -63,6 +63,80 @@ public class MultiSequenceGlider extends MultiGlider {
     }
 
     @Override
+    public float getFloat(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(change));
+    }
+
+    @Override
+    public int getInt(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(change));
+    }
+
+    @Override
+    public float getStartFloat(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.startF;
+    }
+
+    @Override
+    public void setStartFloat(@Nonnull String name, float start) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return;
+        c.startF = start;
+        change = 0f;
+    }
+
+    @Override
+    public float getEndFloat(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Float.NaN;
+        return c.endF;
+    }
+
+    @Override
+    public void setEndFloat(@Nonnull String name, float end) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return;
+        c.endF = end;
+        change = 0f;
+    }
+
+    @Override
+    public int getStartInt(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.startI;
+    }
+
+    @Override
+    public void setStartInt(@Nonnull String name, int start) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return;
+        c.startI = start;
+        change = 0f;
+    }
+
+    @Override
+    public int getEndInt(@Nonnull String name) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return Integer.MIN_VALUE;
+        return c.endI;
+    }
+
+    @Override
+    public void setEndInt(@Nonnull String name, int end) {
+        Changer c = sequence[active].changers.get(name);
+        if(c == null) return;
+        c.endI = end;
+        change = 0f;
+    }
+
+    @Override
     public void setChange(float change) {
         this.change = Math.max(0f, Math.min(1f, change));
         if(active < sequence.length) {
