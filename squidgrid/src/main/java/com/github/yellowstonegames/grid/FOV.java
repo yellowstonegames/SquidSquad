@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
@@ -189,17 +190,15 @@ public class FOV {
         light[startX][startY] = Math.min(1f, radius);//make the starting space full power unless radius is tiny
 
 
-        shadowCast(0, 1, 1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-        shadowCast(1, 0, 0, 1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-
-        shadowCast(0, 1, -1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-        shadowCast(1, 0, 0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-
-        shadowCast(0, -1, -1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-        shadowCast(-1, 0, 0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-
-        shadowCast(0, -1, 1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
-        shadowCast(-1, 0, 0, 1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique);
+        final int width = light.length, height = light[0].length;
+        shadowCast(1, 1f, 0f,  0,  1,  1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f,  1,  0,  0,  1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f,  0,  1, -1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f,  1,  0,  0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f,  0, -1, -1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f, -1,  0,  0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f,  0, -1,  1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCast(1, 1f, 0f, -1,  0,  0,  1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
         return light;
     }
     /**
@@ -1138,6 +1137,96 @@ public class FOV {
             }
         }
         return lightMap;
+    }
+
+    /**
+     * Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
+     * coordinates. Assigns to, and returns, a light map where the values represent a percentage of fully
+     * lit. If any cell in the returned light map is greater than 0, then both the viewer can see that cell,
+     * and anyone in that cell can see the viewer (if they have sufficient viewing range). Always uses Shadow
+     * FOV, and can reuse the state the user gives it via the {@code light} parameter. The values in light
+     * are always cleared before this is run, because prior state can make this give incorrect results. This
+     * evaluates if the viewer and target cell can mutually see each other using {@link OrthoLine}.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy.
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to
+     * @param radiusTechnique provides a means to calculate the radius as desired
+     * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
+     */
+    @Beta
+    public static float[][] reuseFOVOrtho(float[][] resistanceMap, float[][] light,
+                                          int startX, int startY, float radius,
+                                          Radius radiusTechnique)
+    {
+        float decay = 1f / radius;
+        ArrayTools.fill(light, 0);
+        light[startX][startY] = Math.min(1f, radius);//make the starting space full power unless radius is tiny
+
+        final int width = light.length, height = light[0].length;
+        shadowCastOrtho(1, 1f, 0f,  0,  1,  1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f,  1,  0,  0,  1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f,  0,  1, -1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f,  1,  0,  0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f,  0, -1, -1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f, -1,  0,  0, -1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f,  0, -1,  1,  0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        shadowCastOrtho(1, 1f, 0f, -1,  0,  0,  1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, 0, 0, width, height);
+        return light;
+    }
+
+    private static void shadowCastOrtho(int row, float start, float end, int xx, int xy, int yx, int yy,
+                                        float radius, int startX, int startY, float decay, float[][] lightMap,
+                                        float[][] map, Radius radiusStrategy,
+                                        int minX, int minY, int maxX, int maxY) {
+        float newStart = 0;
+        if (start < end) {
+            return;
+        }
+
+        boolean blocked = false;
+        for (int distance = row; distance <= radius && distance < maxX - minX + maxY - minY && !blocked; distance++) {
+            int deltaY = -distance;
+            for (int deltaX = -distance; deltaX <= 0; deltaX++) {
+                int currentX = startX + deltaX * xx + deltaY * xy;
+                int currentY = startY + deltaX * yx + deltaY * yy;
+                float leftSlope = (deltaX - 0.5f) / (deltaY + 0.5f);
+                float rightSlope = (deltaX + 0.5f) / (deltaY - 0.5f);
+
+                if (!(currentX >= minX && currentY >= minY && currentX < maxX && currentY < maxY) || start < rightSlope) {
+                    continue;
+                } else if (end > leftSlope) {
+                    break;
+                }
+                float deltaRadius = radiusStrategy.radius(deltaX, deltaY);
+                //check if it's within the light-able area and light if needed and mutually reachable
+                if (deltaRadius <= radius && (OrthoLine.reachable(startX, startY, currentX, currentY, map)
+                            || OrthoLine.reachable(currentX, currentY, startX, startY, map))) {
+                    lightMap[currentX][currentY] = 1.0f - decay * deltaRadius;
+                }
+
+                if (blocked) { //previous cell was a blocking one
+                    if (map[currentX][currentY] >= 1) {//hit a wall
+                        newStart = rightSlope;
+                    } else {
+                        blocked = false;
+                        start = newStart;
+                    }
+                } else {
+                    if (map[currentX][currentY] >= 1 && distance < radius) {//hit a wall within sight line
+                        blocked = true;
+                        shadowCastOrtho(distance + 1, start, leftSlope, xx, xy, yx, yy, radius, startX, startY, decay,
+                                lightMap, map, radiusStrategy, minX, minY, maxX, maxY);
+                        newStart = rightSlope;
+                    }
+                }
+            }
+        }
     }
 
     /**
