@@ -2,6 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.ArrayTools;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LOSTest {
@@ -81,6 +82,27 @@ public class LOSTest {
                     System.out.print(grid[x][y]);
                 }
                 System.out.println();
+            }
+        }
+    }
+    @Test
+    public void testOrthoSymmetry() {
+        char[][] grid = new char[21][21], interior = new char[19][19];
+        ArrayTools.fill(grid, '#');
+        ArrayTools.fill(interior, '.');
+        ArrayTools.insert(interior, grid, 1, 1);
+        float[][] res = new float[21][21], floors = new float[19][19];
+        ArrayTools.fill(res, 1f);
+        ArrayTools.insert(floors, res, 1, 1);
+        for (int x = 1; x < 20; x++) {
+            for (int y = 1; y < 20; y++) {
+                for (int i = 1; i < 20; i++) {
+                    for (int j = 1; j < 20; j++) {
+                        if(x == i && y == j) continue;
+                        Assert.assertEquals(OrthoLine.reachable(x, y, i, j, 42, res),
+                                OrthoLine.reachable(i, j, x, y, 42, res));
+                    }
+                }
             }
         }
     }
