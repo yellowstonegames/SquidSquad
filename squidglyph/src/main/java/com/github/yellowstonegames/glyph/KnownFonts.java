@@ -38,6 +38,13 @@ import com.github.tommyettinger.textra.Font;
  * method. It's likely that many games would only use one font file, and so would generally only need a .fnt file, a
  * .png file, and some kind of license file. They could ignore all other assets required by other fonts.
  * <br>
+ * There are some special features in Font that are easier to use with parts of this class. {@link #getStandardFamily()}
+ * pre-populates a FontFamily so you can switch between different fonts with the {@code [@Sans]} syntax.
+ * {@link #addEmoji(Font)} adds all of Twitter's emoji from the <a href="https://github.com/twitter/twemoji">Twemoji</a>
+ * project to a given font, which lets you enter emoji with the {@code [+man scientist, dark skin tone]} syntax or the
+ * generally-easier {@code [+👨🏿‍🔬]} syntax. If you want to use names for emoji, you may want to consult "Twemoji.atlas"
+ * for the exact names used; some names changed from the standard because of technical restrictions.
+ * <br>
  * There's some documentation for every known Font, including a link to a preview image and a listing of all
  * required files to use a Font. The required files include any license you need to abide by; this doesn't necessarily
  * belong in the {@code assets} folder like the rest of the files! Most of these fonts are either licensed under the OFL
@@ -57,8 +64,30 @@ public final class KnownFonts {
             throw new IllegalStateException("Gdx.app cannot be null; initialize KnownFonts in create() or later.");
     }
 
-
-    private Font astarry;
+    /**
+     * Returns a very large fixed-width Font already configured to use a square font with 45-degree angled sections,
+     * based on the typeface used on the Atari ST console. This font only supports ASCII, but it supports all of it.
+     * Caches the result for later calls. The font is "a-starry", based on "Atari ST (low-res)" by Damien Guard; it is
+     * available under a CC-BY-SA-3.0 license, which requires attribution to Damien Guard (and technically Tommy
+     * Ettinger, because he made changes in a-starry) if you use it.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/Z1RYdeJ.png">Image link</a> (uses width=8, height=8)
+     * <br>
+     * This also looks good if you scale it so its height is twice its width. For small sizes, you should stick to
+     * multiples of 8. Preview: <a href="https://i.imgur.com/fgGImSb.png">Image link</a> (uses width=8, height=16)
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-standard.fnt">AStarry-standard.fnt</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-standard.png">AStarry-standard.png</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/AStarry-license.txt">AStarry-license.txt</a></li>
+     * </ul>
+     *
+     * @return the Font object that can represent many sizes of the font A Starry
+     */
+    public static Font getAStarry() {
+        return com.github.tommyettinger.textra.KnownFonts.getAStarry().setColorLookup(GlyphMap::getRgba);
+    }
 
     /**
      * Returns a Font already configured to use a square font with 45-degree angled sections, based on the
@@ -80,8 +109,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font A Starry using MSDF
      */
-    public static Font getAStarry() {
-        return com.github.tommyettinger.textra.KnownFonts.getAStarry().setColorLookup(GlyphMap::getRgba);
+    public static Font getAStarryMSDF() {
+        return com.github.tommyettinger.textra.KnownFonts.getAStarryMSDF().setColorLookup(GlyphMap::getRgba);
     }
 
     /**
@@ -644,7 +673,28 @@ public final class KnownFonts {
     public static Font getYanoneKaffeesatz() {
         return com.github.tommyettinger.textra.KnownFonts.getYanoneKaffeesatz().setColorLookup(GlyphMap::getRgba);
     }
-
+    /**
+     * Takes a Font and adds the Twemoji icon set to it, making the glyphs available using {@code [+name]} syntax.
+     * You can use the name of an emoji, such as {@code [+clown face]}, or equivalently use the actual emoji, such as
+     * {@code [+🤡]}, with the latter preferred because the names can be unwieldy or hard to get right. This caches the
+     * Twemoji atlas for later calls. This tries to load the files "Twemoji.atlas" and "Twemoji.png" from the internal
+     * storage first, and if that fails, it tries to load them from local storage in the current working directory.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/Mw0fWA7.png">Image link</a> (uses the font {@link #getYanoneKaffeesatz()})
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Twemoji.atlas">Twemoji.atlas</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Twemoji.png">Twemoji.png</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Twemoji-License.txt">Twemoji-License.txt</a></li>
+     * </ul>
+     *
+     * @param changing a Font that will have over 3000 emoji added to it, with more aliases
+     * @return {@code changing}, after the emoji atlas has been added
+     */
+    public static Font addEmoji(Font changing) {
+        return com.github.tommyettinger.textra.KnownFonts.addEmoji(changing);
+    }
     /**
      * Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.
      * This will only function at all if all the assets (for every known Font) are present and load-able.
@@ -652,7 +702,12 @@ public final class KnownFonts {
      * @return a new array containing all Font instances this knows
      */
     public static Font[] getAll() {
-        return new Font[]{getAStarry(), getBitter(), getCanada(), getCascadiaMono(), getCozette(), getDejaVuSansMono(), getGentium(), getGentiumSDF(), getIBM8x16(), getInconsolata(), getInconsolataMSDF(), getIosevka(), getIosevkaMSDF(), getIosevkaSDF(), getIosevkaSlab(), getIosevkaSlabMSDF(), getIosevkaSlabSDF(), getKingthingsFoundation(), getLibertinusSerif(), getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()};
+        return new Font[]{getAStarry(), getAStarryMSDF(), getBitter(), getCanada(), getCascadiaMono(), getCozette(),
+                getDejaVuSansMono(), getGentium(), getGentiumSDF(), getIBM8x16(), getInconsolata(),
+                getInconsolataMSDF(), getIosevka(), getIosevkaMSDF(), getIosevkaSDF(), getIosevkaSlab(),
+                getIosevkaSlabMSDF(), getIosevkaSlabSDF(), getKingthingsFoundation(), getLibertinusSerif(),
+                getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()
+        };
     }
 
     /**
@@ -663,7 +718,10 @@ public final class KnownFonts {
      * @return a new array containing all non-distance-field Font instances this knows
      */
     public static Font[] getAllStandard() {
-        return new Font[]{getBitter(), getCanada(), getCozette(), getGentium(), getIBM8x16(), getInconsolata(), getIosevka(), getIosevkaSlab(), getKingthingsFoundation(), getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()};
+        return new Font[]{getAStarry(), getBitter(), getCanada(), getCozette(), getGentium(), getIBM8x16(),
+                getInconsolata(), getIosevka(), getIosevkaSlab(), getKingthingsFoundation(), getOpenSans(),
+                getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()
+        };
     }
 
     /**
@@ -671,27 +729,35 @@ public final class KnownFonts {
      * used with syntax like {@code [@Sans]}. The names this supports can be accessed with code using
      * {@code getStandardFamily().family.fontAliases.keys()}. These names so far are:
      * <ul>
-     *     <li>Serif</li>
-     *     <li>Sans</li>
-     *     <li>Mono</li>
-     *     <li>Condensed</li>
-     *     <li>Humanist</li>
-     *     <li>Retro</li>
-     *     <li>Slab</li>
-     *     <li>Bitter</li>
-     *     <li>Canada</li>
-     *     <li>Cozette</li>
-     *     <li>Iosevka</li>
-     *     <li>Medieval</li>
-     *     <li>Future</li>
+     *     <li>{@code Serif}, which is {@link #getGentium()},</li>
+     *     <li>{@code Sans}, which is {@link #getOpenSans()},</li>
+     *     <li>{@code Mono}, which is {@link #getInconsolata()},</li>
+     *     <li>{@code Condensed}, which is {@link #getRobotoCondensed()},</li>
+     *     <li>{@code Humanist}, which is {@link #getYanoneKaffeesatz()},</li>
+     *     <li>{@code Retro}, which is {@link #getIBM8x16()},</li>
+     *     <li>{@code Slab}, which is {@link #getIosevkaSlab()},</li>
+     *     <li>{@code Bitter}, which is {@link #getBitter()},</li>
+     *     <li>{@code Canada}, which is {@link #getCanada()},</li>
+     *     <li>{@code Cozette}, which is {@link #getCozette()},</li>
+     *     <li>{@code Iosevka}, which is {@link #getIosevka()},</li>
+     *     <li>{@code Medieval}, which is {@link #getKingthingsFoundation()},</li>
+     *     <li>{@code Future}, which is {@link #getOxanium()},</li>
+     *     <li>{@code Console}, which is {@link #getAStarry()}.</li>
      * </ul>
      * You can also always use the full name of one of these fonts, which can be obtained using {@link Font#getName()}.
+     * {@code Serif}, which is {@link #getGentium()}, will always be the default font used after a reset.
+     * <br>
      * This will only function at all if all the assets (for every known standard Font) are present and load-able.
      *
-     * @return a Font that can switch between 13 different Fonts in its FontFamily, to any non-distance-field Font this knows
+     * @return a Font that can switch between 14 different Fonts in its FontFamily, to any non-distance-field Font this knows
      */
     public static Font getStandardFamily() {
-        Font.FontFamily family = new Font.FontFamily(new String[]{"Serif", "Sans", "Mono", "Condensed", "Humanist", "Retro", "Slab", "Bitter", "Canada", "Cozette", "Iosevka", "Medieval", "Future"}, new Font[]{getGentium(), getOpenSans(), getInconsolata(), getRobotoCondensed(), getYanoneKaffeesatz(), getIBM8x16(), getIosevkaSlab(), getBitter(), getCanada(), getCozette(), getIosevka(), getKingthingsFoundation(), getOxanium()});
+        Font.FontFamily family = new Font.FontFamily(new String[]{
+                "Serif", "Sans", "Mono", "Condensed", "Humanist", "Retro", "Slab", "Bitter", "Canada", "Cozette",
+                "Iosevka", "Medieval", "Future", "Console"},
+                new Font[]{getGentium(), getOpenSans(), getInconsolata(), getRobotoCondensed(), getYanoneKaffeesatz(),
+                        getIBM8x16(), getIosevkaSlab(), getBitter(), getCanada(), getCozette(), getIosevka(),
+                        getKingthingsFoundation(), getOxanium(), getAStarry()});
         return family.connected[0].setFamily(family);
     }
 
@@ -712,6 +778,6 @@ public final class KnownFonts {
      * @return a new array containing all MSDF Font instances this knows
      */
     public static Font[] getAllMSDF() {
-        return new Font[]{getAStarry(), getCascadiaMono(), getDejaVuSansMono(), getInconsolataMSDF(), getIosevkaMSDF(), getIosevkaSlabMSDF(), getLibertinusSerif()};
+        return new Font[]{getAStarryMSDF(), getCascadiaMono(), getDejaVuSansMono(), getInconsolataMSDF(), getIosevkaMSDF(), getIosevkaSlabMSDF(), getLibertinusSerif()};
     }
 }
