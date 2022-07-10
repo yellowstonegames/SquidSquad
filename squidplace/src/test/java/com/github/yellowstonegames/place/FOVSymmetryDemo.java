@@ -20,16 +20,16 @@ public class FOVSymmetryDemo {
 //            for (int j = 0; j < floors.length; j++) {
 //                if(i == j) continue;
 //                Coord target = floors[j];
-//                if(OrthoLine.reachable(center, target, res) != OrthoLine.reachable(target, center, res))
+//                if(BresenhamLine.reachable(center, target, res) != BresenhamLine.reachable(target, center, res))
 //                    System.out.println("Asymmetry between " + center + " and " + target);
 //            }
 //        }
         for (int i = 0; i < floors.length; i++) {
             Coord center = floors[i];
-            FOV.reuseFOVOrtho(res, light, center.x, center.y, 7f, Radius.CIRCLE);
+            FOV.reuseFOVSymmetrical(res, light, center.x, center.y, 7f, Radius.CIRCLE);
             working.refill(light, 0.001f, 100f).and(floorRegion);
             for(Coord c : working) {
-                if(FOV.reuseFOVOrtho(res, light, c.x, c.y, 7f, Radius.CIRCLE)[center.x][center.y] <= 0f)
+                if(FOV.reuseFOVSymmetrical(res, light, c.x, c.y, 7f, Radius.CIRCLE)[center.x][center.y] <= 0f)
                 {
                     System.out.println(working);
                     System.out.println("Not symmetrical between " + center + " and " + c + "!");
