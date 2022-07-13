@@ -31,9 +31,9 @@ import javax.annotation.Nullable;
  * value will be different every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
  * <br>
- * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
+ * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
-public class IntColorGlider extends MultiGlider {
+public class IntColorGlider extends Glider {
 
     /**
      * Constructs an empty IntColorGlider that needs to have its {@link #setStart(int)} and {@link #setEnd(int)} methods

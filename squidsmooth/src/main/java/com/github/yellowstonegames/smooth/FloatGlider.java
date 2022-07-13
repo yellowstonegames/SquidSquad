@@ -26,9 +26,9 @@ import com.badlogic.gdx.math.Interpolation;
  * every time {@link #setChange(float)} is called with a different amount. You can
  * optionally use an {@link Interpolation} to make the rate of change different.
  * <br>
- * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
+ * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
-public class FloatGlider extends MultiGlider {
+public class FloatGlider extends Glider {
     public FloatGlider() {
         super(new Changer("f", 0f, 0f));
     }

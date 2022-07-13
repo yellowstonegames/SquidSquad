@@ -26,13 +26,13 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * Runs more than one MultiGlider in a sequence. Each individual MultiGlider will run one after the next, so it is
- * likely that you will want to use a sequence of all the same type of MultiGlider (that is, all can have their "x"
+ * Runs more than one Glider in a sequence. Each individual Glider will run one after the next, so it is
+ * likely that you will want to use a sequence of all the same type of Glider (that is, all can have their "x"
  * or "color" coordinate queried and have it mean the same thing for any member of the sequence, for example).
  */
 @Beta
-public class MultiSequenceGlider extends MultiGlider {
-    protected MultiGlider[] sequence;
+public class MultiSequenceGlider extends Glider {
+    protected Glider[] sequence;
     protected float[] durations;
     protected int active = 0;
     protected float passed = 0f;
@@ -41,10 +41,10 @@ public class MultiSequenceGlider extends MultiGlider {
         sequence = null;
         durations = null;
     }
-    public MultiSequenceGlider(MultiGlider[] gliders, float[] lengths){
+    public MultiSequenceGlider(Glider[] gliders, float[] lengths){
         this(gliders, lengths, Interpolation.linear, null);
     }
-    public MultiSequenceGlider(MultiGlider[] gliders, float[] lengths, Interpolation interpolation,
+    public MultiSequenceGlider(Glider[] gliders, float[] lengths, Interpolation interpolation,
                                @Nullable Runnable completeRunner){
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;

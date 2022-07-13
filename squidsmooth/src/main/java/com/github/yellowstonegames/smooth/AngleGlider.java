@@ -32,9 +32,9 @@ import com.badlogic.gdx.math.Interpolation;
  * radians (by multiplying an angle in turns by {@link com.github.tommyettinger.digital.TrigTools#PI2}) or to degrees
  * (by multiplying an angle in turns by {@code 360)}).
  * <br>
- * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
+ * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
-public class AngleGlider extends MultiGlider {
+public class AngleGlider extends Glider {
     public AngleGlider() {
         super(new Changer("angle", 0f, 0f, FloatInterpolator.ANGLE));
     }

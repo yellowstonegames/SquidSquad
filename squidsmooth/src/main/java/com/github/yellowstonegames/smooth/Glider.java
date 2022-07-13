@@ -28,7 +28,7 @@ import java.util.Collection;
  * A general-purpose group of smoothly-changing values, either float or int, using any rules for the
  * interpolations (specifiable by {@link FloatInterpolator} and {@link IntInterpolator} functions).
  */
-public class MultiGlider {
+public class Glider {
     /**
      * A named variable that can change either (or both) a float and/or an int value between start and end values.
      * Typical usage only will have reasonable results when using one type, either float or int, and will have the start
@@ -102,66 +102,66 @@ public class MultiGlider {
     protected @Nonnull Interpolation interpolation;
     protected @Nullable Runnable completeRunner;
 
-    public MultiGlider() {
+    public Glider() {
         this.interpolation = Interpolation.linear;
     }
-    public MultiGlider(Changer changer) {
+    public Glider(Changer changer) {
         this.interpolation = Interpolation.linear;
         this.changers.add(changer);
     }
 
-    public MultiGlider(Changer... changers) {
+    public Glider(Changer... changers) {
         this.interpolation = Interpolation.linear;
         this.changers.addAll(changers);
     }
 
-    public MultiGlider(@Nonnull Interpolation interpolation, Changer changer) {
+    public Glider(@Nonnull Interpolation interpolation, Changer changer) {
         this.interpolation = interpolation;
         this.changers.add(changer);
     }
 
-    public MultiGlider(@Nonnull Interpolation interpolation, Changer... changers) {
+    public Glider(@Nonnull Interpolation interpolation, Changer... changers) {
         this.interpolation = interpolation;
         this.changers.addAll(changers);
     }
 
-    public MultiGlider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
+    public Glider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.add(changer);
     }
 
-    public MultiGlider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
+    public Glider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.addAll(changers);
     }
 
-    public MultiGlider(@Nonnull MultiGlider other) {
+    public Glider(@Nonnull Glider other) {
         this.change = other.change;
         this.interpolation = other.interpolation;
         this.completeRunner = other.completeRunner;
         this.changers.addAll(other.changers);
     }
 
-    public MultiGlider addChanger(Changer changer) {
+    public Glider addChanger(Changer changer) {
         this.changers.add(changer);
         change = 0f;
         return this;
     }
 
-    public MultiGlider addChangers(Changer... changers) {
+    public Glider addChangers(Changer... changers) {
         this.changers.addAll(changers);
         change = 0f;
         return this;
     }
-    public MultiGlider addChangers(Collection<Changer> changers) {
+    public Glider addChangers(Collection<Changer> changers) {
         this.changers.addAll(changers);
         change = 0f;
         return this;
     }
 
-    public MultiGlider removeChanger(String name) {
+    public Glider removeChanger(String name) {
         //noinspection SuspiciousMethodCalls
         this.changers.remove(name);
         change = 0f;
@@ -169,13 +169,13 @@ public class MultiGlider {
     }
 
     /**
-     * Adds all Changers in {@code other} to this MultiGlider, and potentially changes the
-     * {@link #getCompleteRunner() runner} so that it performs other's runner, if non-null, after this MultiGlider's
+     * Adds all Changers in {@code other} to this Glider, and potentially changes the
+     * {@link #getCompleteRunner() runner} so that it performs other's runner, if non-null, after this Glider's
      * runner (or just run's other's if this has none).
-     * @param other another MultiGlider to merge into this one; will not be changed, but this may share references
+     * @param other another Glider to merge into this one; will not be changed, but this may share references
      * @return this, after modifications, for chaining
      */
-    public MultiGlider merge(final @Nonnull MultiGlider other) {
+    public Glider merge(final @Nonnull Glider other) {
         this.changers.addAll(other.changers);
         if(this.completeRunner == null) this.completeRunner = other.completeRunner;
         else if(other.completeRunner != null) this.completeRunner = () -> {
@@ -365,7 +365,7 @@ public class MultiGlider {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MultiGlider that = (MultiGlider) o;
+        Glider that = (Glider) o;
 
         if (Float.compare(that.change, change) != 0) return false;
         return changers.equals(that.changers);

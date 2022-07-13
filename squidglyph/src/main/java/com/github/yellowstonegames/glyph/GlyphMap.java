@@ -136,36 +136,40 @@ public class GlyphMap {
     public void setFont(Font font, boolean squareCenter) {
         if (font == null) return;
         this.font = font;
-        this.font.setColorLookup(GlyphMap::getRgba);
+        font.setColorLookup(GlyphMap::getRgba);
         if (squareCenter) {
-            if (this.font.distanceField == Font.DistanceFieldType.MSDF)
-                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
+            if (font.distanceField == Font.DistanceFieldType.MSDF)
+                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
             float wsx = 1f / font.scaleX;
             IntMap.Values<Font.GlyphRegion> vs = font.mapping.values();
+            float sideOff = Math.max(0f, font.originalCellHeight - font.originalCellWidth);
             while (vs.hasNext) {
                 Font.GlyphRegion g = vs.next();
-                g.offsetX += (this.font.originalCellWidth) * 0.5f;
+                g.offsetX += sideOff * 0.5f;
                 g.xAdvance = wsx;
             }
-            this.font.isMono = true;
-            this.font.kerning = null;
+            font.isMono = true;
+            font.kerning = null;
 
-            this.font.scaleX = 1f / Math.max(this.font.originalCellWidth, this.font.originalCellHeight);
-            this.font.scaleY = 1f / Math.max(this.font.originalCellWidth, this.font.originalCellHeight);
-            this.font.cellWidth = 1f;
-            this.font.cellHeight = 1f;
+//            this.font.scaleX = 1f / this.font.originalCellWidth;
+//            this.font.scaleY = 1f / this.font.originalCellHeight;
+            font.scaleX = 1f / Math.max(font.originalCellWidth, font.originalCellHeight);
+            font.scaleY = 1f / Math.max(font.originalCellWidth, font.originalCellHeight);
+            font.cellWidth = 1f;
+            font.cellHeight = 1f;
+            font.useIntegerPositions(false);
         }
         else {
-            if (this.font.distanceField == Font.DistanceFieldType.MSDF)
-                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
+            if (font.distanceField == Font.DistanceFieldType.MSDF)
+                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
 // not sure if we want this code or the above.
 //            if (this.font.distanceField != Font.DistanceFieldType.STANDARD)
 //                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
-            this.font.scaleTo(1f, 1f);
+            font.scaleTo(1f, 1f);
         }
     }
 

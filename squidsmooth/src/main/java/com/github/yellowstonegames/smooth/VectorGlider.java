@@ -32,9 +32,9 @@ import javax.annotation.Nonnull;
  * This is extremely similar to {@link CoordGlider}, but instead of locking positions to integer coordinates, this
  * allows movement to non-integer positions. This should be useful for small movements like shaking or bumping.
  * <br>
- * This is a type of MultiGlider, and so is compatible with other MultiGliders (it can also be merged with them).
+ * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
-public class VectorGlider extends MultiGlider {
+public class VectorGlider extends Glider {
     protected @Nonnull Vector2 start;
     protected @Nonnull Vector2 end;
 
@@ -87,7 +87,7 @@ public class VectorGlider extends MultiGlider {
         this.completeRunner = other.completeRunner;
     }
 
-    public VectorGlider(MultiGlider other) {
+    public VectorGlider(Glider other) {
         super(other);
         this.start = new Vector2(other.getStartFloat("x"), other.getStartFloat("y"));
         this.end = new Vector2(other.getEndFloat("x"), other.getEndFloat("y"));

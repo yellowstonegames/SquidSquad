@@ -80,7 +80,7 @@ public class DungeonMapTest extends ApplicationAdapter {
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new FourWheelRandom(seed);
         batch = new SpriteBatch();
-//        Font font = KnownFonts.getInconsolataLGC().scaleTo(20f, 20f);
+//        Font font = KnownFonts.getInconsolataMSDF().scaleTo(20f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCascadiaMono();
@@ -88,6 +88,9 @@ public class DungeonMapTest extends ApplicationAdapter {
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCozette();
 //        Font font = KnownFonts.getAStarry();
+//        Font font = KnownFonts.getIosevkaMSDF().scaleTo(24, 24);
+//        Font font = KnownFonts.getAStarry().scaleTo(16, 16);
+//        Font font = KnownFonts.getAStarry().fitCell(24, 24, true);
         Font font = KnownFonts.getInconsolataMSDF().fitCell(24, 24, false);
         gm = new GlyphMap(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
