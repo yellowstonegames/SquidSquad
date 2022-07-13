@@ -119,11 +119,12 @@ public class GlyphMap {
 
     /**
      * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
-     * to size 1x1 (this makes some calculations much easier inside GlyphMap).
+     * to size 1x1 (this makes some calculations much easier inside GlyphMap). This is the same as calling
+     * {@code setFont(font, true)}.
      * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
      */
     public void setFont(Font font) {
-        setFont(font, false);
+        setFont(font, true);
     }
     /**
      * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
@@ -142,24 +143,8 @@ public class GlyphMap {
                 font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
-            float wsx = 1f / font.scaleX;
-            IntMap.Values<Font.GlyphRegion> vs = font.mapping.values();
-            float sideOff = Math.max(0f, font.originalCellHeight - font.originalCellWidth);
-            while (vs.hasNext) {
-                Font.GlyphRegion g = vs.next();
-                g.offsetX += sideOff * 0.5f;
-                g.xAdvance = wsx;
-            }
-            font.isMono = true;
-            font.kerning = null;
-
-//            this.font.scaleX = 1f / this.font.originalCellWidth;
-//            this.font.scaleY = 1f / this.font.originalCellHeight;
-            font.scaleX = 1f / Math.max(font.originalCellWidth, font.originalCellHeight);
-            font.scaleY = 1f / Math.max(font.originalCellWidth, font.originalCellHeight);
-            font.cellWidth = 1f;
-            font.cellHeight = 1f;
-            font.useIntegerPositions(false);
+            float larger = Math.max(font.cellWidth, font.cellHeight);
+            font.scaleTo(font.cellWidth / larger, font.cellHeight / larger).fitCell(1f, 1f, true);
         }
         else {
             if (font.distanceField == Font.DistanceFieldType.MSDF)
@@ -171,6 +156,7 @@ public class GlyphMap {
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
             font.scaleTo(1f, 1f);
         }
+        font.useIntegerPositions(false);
     }
 
     /**
