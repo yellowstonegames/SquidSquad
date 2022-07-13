@@ -64,6 +64,7 @@ public final class KnownFonts {
             throw new IllegalStateException("Gdx.app cannot be null; initialize KnownFonts in create() or later.");
     }
 
+
     /**
      * Returns a very large fixed-width Font already configured to use a square font with 45-degree angled sections,
      * based on the typeface used on the Atari ST console. This font only supports ASCII, but it supports all of it.
@@ -71,10 +72,10 @@ public final class KnownFonts {
      * available under a CC-BY-SA-3.0 license, which requires attribution to Damien Guard (and technically Tommy
      * Ettinger, because he made changes in a-starry) if you use it.
      * <br>
-     * Preview: <a href="https://i.imgur.com/Z1RYdeJ.png">Image link</a> (uses width=8, height=8)
+     * Preview: <a href="https://i.imgur.com/9P1Zpfr.png">Image link</a> (uses width=8, height=8)
      * <br>
      * This also looks good if you scale it so its height is twice its width. For small sizes, you should stick to
-     * multiples of 8. Preview: <a href="https://i.imgur.com/fgGImSb.png">Image link</a> (uses width=8, height=16)
+     * multiples of 8. Preview: <a href="https://i.imgur.com/a7ZUIDX.png">Image link</a> (uses width=8, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -85,7 +86,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font A Starry
      */
-    public static Font getAStarry() {
+    public static Font getAStarry()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getAStarry().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -98,7 +100,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/T8MgsRY.png">Image link</a> (uses width=10, height=10)
+     * Preview: <a href="https://i.imgur.com/x2RQU34.png">Image link</a> (uses width=10, height=10)
      * <br>
      * Needs files:
      * <ul>
@@ -109,7 +111,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font A Starry using MSDF
      */
-    public static Font getAStarryMSDF() {
+    public static Font getAStarryMSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getAStarryMSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -127,7 +130,7 @@ public final class KnownFonts {
      * other strokes in the font. This does mean that strikethrough starts too far to the left, and extends too far to
      * the right, unfortunately, but its weight matches.
      * <br>
-     * Preview: <a href="https://i.imgur.com/1c3ymlL.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
+     * Preview: <a href="https://i.imgur.com/kuMpRJy.png">Image link</a> (uses width=33, height=30, adjustLineHeight(1.225f))
      * <br>
      * Needs files:
      * <ul>
@@ -138,7 +141,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Bitter-Light.ttf
      */
-    public static Font getBitter() {
+    public static Font getBitter()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getBitter().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -152,7 +156,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/av2WJha.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/4o8y4pA.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -163,7 +167,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Canada1500.ttf
      */
-    public static Font getCanada() {
+    public static Font getCanada()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getCanada().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -177,7 +182,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/5lFkTXJ.png">Image link</a> (uses width=9, height=16)
+     * Preview: <a href="https://i.imgur.com/zOXbBEJ.png">Image link</a> (uses width=9, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -188,7 +193,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Cascadia Code Mono using MSDF
      */
-    public static Font getCascadiaMono() {
+    public static Font getCascadiaMono()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getCascadiaMono().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -201,7 +207,7 @@ public final class KnownFonts {
      * cause major visual issues if 1 world unit corresponds to much more than 1 pixel.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/gIS7ysd.png">Image link</a> (uses width=7, height=13; this is small enough
+     * Preview: <a href="https://i.imgur.com/z0UCjaU.png">Image link</a> (uses width=7, height=13; this is small enough
      * to make the scaled text look bad in some places)
      * <br>
      * Needs files:
@@ -213,7 +219,8 @@ public final class KnownFonts {
      *
      * @return the Font object that represents the 7x13px font Cozette
      */
-    public static Font getCozette() {
+    public static Font getCozette()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getCozette().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -228,7 +235,7 @@ public final class KnownFonts {
      * Field (MSDF) technique as opposed to the normal Signed Distance Field technique, which gives the rendered font
      * sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/ngqXFG2.png">Image link</a> (uses width=9, height=20)
+     * Preview: <a href="https://i.imgur.com/dLv1VVy.png">Image link</a> (uses width=9, height=20)
      * <br>
      * Needs files:
      * <ul>
@@ -239,7 +246,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font DejaVu Sans Mono using MSDF
      */
-    public static Font getDejaVuSansMono() {
+    public static Font getDejaVuSansMono()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getDejaVuSansMono().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -252,7 +260,7 @@ public final class KnownFonts {
      * real languages. This does not use a distance field effect, as opposed to {@link #getGentiumSDF()}. You may want
      * to stick using just fonts that avoid distance fields if you have a family of fonts.
      * <br>
-     * Preview: <a href="https://i.imgur.com/nnRMpxQ.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/ovp08uR.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -263,7 +271,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Gentium.ttf
      */
-    public static Font getGentium() {
+    public static Font getGentium()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getGentium().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -278,7 +287,7 @@ public final class KnownFonts {
      * uses the Signed Distance Field (SDF) technique, which may be slightly fuzzy when zoomed in heavily, but should be
      * crisp enough when zoomed out.
      * <br>
-     * Preview: <a href="https://i.imgur.com/lnQTIRM.png">Image link</a> (uses width=50, height=45, adjustLineHeight(0.8f))
+     * Preview: <a href="https://i.imgur.com/Mgxytp3.png">Image link</a> (uses width=50, height=45, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -289,8 +298,33 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Gentium.ttf using SDF
      */
-    public static Font getGentiumSDF() {
+    public static Font getGentiumSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getGentiumSDF().setColorLookup(GlyphMap::getRgba);
+    }
+
+    /**
+     * Returns a Font already configured to use a variable-width, narrow font with nearly-complete CJK character
+     * coverage, plus Latin, Greek, and Cyrillic, that shouldm scale pretty well down, but not up.
+     * Caches the result for later calls. The font used is Hanazono (HanMinA, specifically), a free (OFL) typeface.
+     * This uses a somewhat-small standard bitmap font because of how many glyphs are present (over 34000); it might not
+     * scale as well as other standard bitmap fonts here.
+     * This may work well in a font family with other fonts that do not use a distance field effect.
+     * <br>
+     * Preview: <a href="https://i.imgur.com/6frmNrt.png">Image link</a> (uses width=17, height=21, adjustLineHeight(1.3f))
+     * <br>
+     * Needs files:
+     * <ul>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Hanazono-standard.fnt">Hanazono-standard.fnt</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Hanazono-standard.png">Hanazono-standard.png</a></li>
+     *     <li><a href="https://github.com/tommyettinger/textratypist/blob/main/knownFonts/Hanazono-License.txt">Hanazono-License.txt</a></li>
+     * </ul>
+     *
+     * @return the Font object that can represent many sizes of the font HanMinA.ttf
+     */
+    public static Font getHanazono()
+    {
+        return com.github.tommyettinger.textra.KnownFonts.getHanazono().setColorLookup(GlyphMap::getRgba);
     }
 
     /**
@@ -307,7 +341,7 @@ public final class KnownFonts {
      * of their signature font throughout the 1980s, but if the legality is concerning, you
      * can use {@link #getCozette()} for a different bitmap font.
      * <br>
-     * Preview: <a href="https://i.imgur.com/HSPyGOZ.png">Image link</a> (uses width=8, height=16)
+     * Preview: <a href="https://i.imgur.com/jbacFxO.png">Image link</a> (uses width=8, height=16)
      * <br>
      * Needs files:
      * <ul>
@@ -317,7 +351,8 @@ public final class KnownFonts {
      *
      * @return the Font object that represents an 8x16 font included with early IBM computers
      */
-    public static Font getIBM8x16() {
+    public static Font getIBM8x16()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIBM8x16().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -328,7 +363,7 @@ public final class KnownFonts {
      * use a distance field effect, as opposed to {@link #getInconsolataMSDF()}.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/O2Sf7WO.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/tIeZgyd.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -339,7 +374,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom
      */
-    public static Font getInconsolata() {
+    public static Font getInconsolata()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getInconsolata().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -350,7 +386,7 @@ public final class KnownFonts {
      * Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field technique,
      * which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/UHl77sB.png">Image link</a> (uses width=10, height=26)
+     * Preview: <a href="https://i.imgur.com/6p2nvxZ.png">Image link</a> (uses width=10, height=26)
      * <br>
      * Needs files:
      * <ul>
@@ -361,7 +397,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Inconsolata LGC Custom using MSDF
      */
-    public static Font getInconsolataMSDF() {
+    public static Font getInconsolataMSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getInconsolataMSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -376,7 +413,7 @@ public final class KnownFonts {
      * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/k1m58Jg.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
+     * Preview: <a href="https://i.imgur.com/nzr6ZU4.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -387,7 +424,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf
      */
-    public static Font getIosevka() {
+    public static Font getIosevka()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevka().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -405,7 +443,7 @@ public final class KnownFonts {
      * However, using a distance field makes it effectively impossible to mix fonts using a FontFamily (any variation in
      * distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/CzQKPPS.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
+     * Preview: <a href="https://i.imgur.com/HS8kdna.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -416,7 +454,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using MSDF
      */
-    public static Font getIosevkaMSDF() {
+    public static Font getIosevkaMSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevkaMSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -434,7 +473,7 @@ public final class KnownFonts {
      * at small sizes. However, using a distance field makes it effectively impossible to mix fonts using a FontFamily
      * (any variation in distance field settings would make some fonts in the family blurry and others too sharp).
      * <br>
-     * Preview: <a href="https://i.imgur.com/xo9Pe2Z.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
+     * Preview: <a href="https://i.imgur.com/shaPl7F.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -445,7 +484,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka.ttf using SDF
      */
-    public static Font getIosevkaSDF() {
+    public static Font getIosevkaSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevkaSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -460,7 +500,7 @@ public final class KnownFonts {
      * have an unknown effect; you may want to stick to scaling this and not re-fitting if you encounter issues.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/iq9NBRn.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
+     * Preview: <a href="https://i.imgur.com/47tODT0.png">Image link</a> (uses .scaleTo(12, 26).fitCell(10, 26, false).adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -471,7 +511,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf
      */
-    public static Font getIosevkaSlab() {
+    public static Font getIosevkaSlab()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevkaSlab().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -487,7 +528,7 @@ public final class KnownFonts {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique as opposed to the normal Signed Distance Field
      * technique, which gives the rendered font sharper edges and precise corners instead of rounded tips on strokes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/MlXRUkC.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
+     * Preview: <a href="https://i.imgur.com/O5iVUYb.png">Image link</a> (uses .scaleTo(12, 25).fitCell(9, 25, false))
      * <br>
      * Needs files:
      * <ul>
@@ -498,7 +539,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using MSDF
      */
-    public static Font getIosevkaSlabMSDF() {
+    public static Font getIosevkaSlabMSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevkaSlabMSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -515,7 +557,7 @@ public final class KnownFonts {
      * technique that {@link #getIosevkaSlabMSDF()} uses, which isn't as sharp at large sizes but can look a little
      * better at small sizes.
      * <br>
-     * Preview: <a href="https://i.imgur.com/J3Drrnh.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
+     * Preview: <a href="https://i.imgur.com/D0gXlaf.png">Image link</a> (uses scaleTo(12, 26).fitCell(10, 26, false))
      * <br>
      * Needs files:
      * <ul>
@@ -526,7 +568,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Iosevka-Slab.ttf using SDF
      */
-    public static Font getIosevkaSlabSDF() {
+    public static Font getIosevkaSlabSDF()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getIosevkaSlabSDF().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -539,7 +582,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/O3rWqnq.png">Image link</a> (uses width=23, height=30)
+     * Preview: <a href="https://i.imgur.com/35UXplI.png">Image link</a> (uses width=23, height=30)
      * <br>
      * Needs files:
      * <ul>
@@ -556,7 +599,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font KingthingsFoundation.ttf
      */
-    public static Font getKingthingsFoundation() {
+    public static Font getKingthingsFoundation()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getKingthingsFoundation().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -568,7 +612,7 @@ public final class KnownFonts {
      * This uses the Multi-channel Signed Distance Field (MSDF) technique, which should be very sharp. This probably
      * needs to be scaled so that it has much larger width than height; the default is 150x32.
      * <br>
-     * Preview: <a href="https://i.imgur.com/YuvHki8.png">Image link</a> (uses width=132, height=28)
+     * Preview: <a href="https://i.imgur.com/Npfrzuu.png">Image link</a> (uses width=132, height=28)
      * <br>
      * Needs files:
      * <ul>
@@ -579,7 +623,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font LibertinusSerif.ttf using MSDF
      */
-    public static Font getLibertinusSerif() {
+    public static Font getLibertinusSerif()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getLibertinusSerif().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -589,7 +634,7 @@ public final class KnownFonts {
      * scaled down nicely.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/wHCTmIU.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.8f))
+     * Preview: <a href="https://i.imgur.com/F9tv884.png">Image link</a> (uses width=20, height=28, adjustLineHeight(0.8f))
      * <br>
      * Needs files:
      * <ul>
@@ -600,7 +645,8 @@ public final class KnownFonts {
      *
      * @return the Font object that represents the variable-width font OpenSans
      */
-    public static Font getOpenSans() {
+    public static Font getOpenSans()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getOpenSans().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -612,7 +658,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/MFo2J4j.png">Image link</a> (uses width=31, height=35)
+     * Preview: <a href="https://i.imgur.com/rXUuB0x.png">Image link</a> (uses width=31, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -623,7 +669,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font Oxanium.ttf
      */
-    public static Font getOxanium() {
+    public static Font getOxanium()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getOxanium().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -636,7 +683,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/xi2VbDD.png">Image link</a> (uses width=25, height=35)
+     * Preview: <a href="https://i.imgur.com/90ODH7T.png">Image link</a> (uses width=25, height=35, adjustLineHeight(0.9f))
      * <br>
      * Needs files:
      * <ul>
@@ -647,7 +694,8 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font RobotoCondensed.ttf
      */
-    public static Font getRobotoCondensed() {
+    public static Font getRobotoCondensed()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getRobotoCondensed().setColorLookup(GlyphMap::getRgba);
     }
 
@@ -659,7 +707,7 @@ public final class KnownFonts {
      * This uses a very-large standard bitmap font, which lets it be scaled down nicely but not scaled up very well.
      * This may work well in a font family with other fonts that do not use a distance field effect.
      * <br>
-     * Preview: <a href="https://i.imgur.com/qJ5g2tG.png">Image link</a> (uses width=30, height=35)
+     * Preview: <a href="https://i.imgur.com/G2bspGv.png">Image link</a> (uses width=30, height=35)
      * <br>
      * Needs files:
      * <ul>
@@ -670,9 +718,11 @@ public final class KnownFonts {
      *
      * @return the Font object that can represent many sizes of the font YanoneKaffeesatz.ttf
      */
-    public static Font getYanoneKaffeesatz() {
+    public static Font getYanoneKaffeesatz()
+    {
         return com.github.tommyettinger.textra.KnownFonts.getYanoneKaffeesatz().setColorLookup(GlyphMap::getRgba);
     }
+
     /**
      * Takes a Font and adds the Twemoji icon set to it, making the glyphs available using {@code [+name]} syntax.
      * You can use the name of an emoji, such as {@code [+clown face]}, or equivalently use the actual emoji, such as
@@ -703,7 +753,7 @@ public final class KnownFonts {
      */
     public static Font[] getAll() {
         return new Font[]{getAStarry(), getAStarryMSDF(), getBitter(), getCanada(), getCascadiaMono(), getCozette(),
-                getDejaVuSansMono(), getGentium(), getGentiumSDF(), getIBM8x16(), getInconsolata(),
+                getDejaVuSansMono(), getGentium(), getGentiumSDF(), getHanazono(), getIBM8x16(), getInconsolata(),
                 getInconsolataMSDF(), getIosevka(), getIosevkaMSDF(), getIosevkaSDF(), getIosevkaSlab(),
                 getIosevkaSlabMSDF(), getIosevkaSlabSDF(), getKingthingsFoundation(), getLibertinusSerif(),
                 getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()
@@ -718,9 +768,9 @@ public final class KnownFonts {
      * @return a new array containing all non-distance-field Font instances this knows
      */
     public static Font[] getAllStandard() {
-        return new Font[]{getAStarry(), getBitter(), getCanada(), getCozette(), getGentium(), getIBM8x16(),
-                getInconsolata(), getIosevka(), getIosevkaSlab(), getKingthingsFoundation(), getOpenSans(),
-                getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()
+        return new Font[]{getAStarry(), getBitter(), getCanada(), getCozette(), getGentium(), getHanazono(),
+                getIBM8x16(), getInconsolata(), getIosevka(), getIosevkaSlab(), getKingthingsFoundation(),
+                getOpenSans(), getOxanium(), getRobotoCondensed(), getYanoneKaffeesatz()
         };
     }
 
@@ -742,22 +792,24 @@ public final class KnownFonts {
      *     <li>{@code Iosevka}, which is {@link #getIosevka()},</li>
      *     <li>{@code Medieval}, which is {@link #getKingthingsFoundation()},</li>
      *     <li>{@code Future}, which is {@link #getOxanium()},</li>
-     *     <li>{@code Console}, which is {@link #getAStarry()}.</li>
+     *     <li>{@code Console}, which is {@link #getAStarry()}, and</li>
+     *     <li>{@code Hanazono}, which is {@link #getHanazono()}.</li>
      * </ul>
      * You can also always use the full name of one of these fonts, which can be obtained using {@link Font#getName()}.
      * {@code Serif}, which is {@link #getGentium()}, will always be the default font used after a reset.
      * <br>
      * This will only function at all if all the assets (for every known standard Font) are present and load-able.
      *
-     * @return a Font that can switch between 14 different Fonts in its FontFamily, to any non-distance-field Font this knows
+     * @return a Font that can switch between 15 different Fonts in its FontFamily, to any non-distance-field Font this knows
      */
     public static Font getStandardFamily() {
-        Font.FontFamily family = new Font.FontFamily(new String[]{
-                "Serif", "Sans", "Mono", "Condensed", "Humanist", "Retro", "Slab", "Bitter", "Canada", "Cozette",
-                "Iosevka", "Medieval", "Future", "Console"},
+        Font.FontFamily family = new Font.FontFamily(
+                new String[]{"Serif", "Sans", "Mono", "Condensed", "Humanist",
+                        "Retro", "Slab", "Bitter", "Canada", "Cozette", "Iosevka",
+                        "Medieval", "Future", "Console", "Hanazono"},
                 new Font[]{getGentium(), getOpenSans(), getInconsolata(), getRobotoCondensed(), getYanoneKaffeesatz(),
                         getIBM8x16(), getIosevkaSlab(), getBitter(), getCanada(), getCozette(), getIosevka(),
-                        getKingthingsFoundation(), getOxanium(), getAStarry()});
+                        getKingthingsFoundation(), getOxanium(), getAStarry(), getHanazono()});
         return family.connected[0].setFamily(family);
     }
 
