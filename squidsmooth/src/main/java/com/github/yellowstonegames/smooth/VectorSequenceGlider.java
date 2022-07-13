@@ -16,14 +16,10 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.Direction;
-
-import javax.annotation.Nonnull;
 
 import static com.badlogic.gdx.math.Vector2.Zero;
 import static com.github.yellowstonegames.grid.Direction.*;
@@ -32,7 +28,7 @@ import static com.github.yellowstonegames.grid.Direction.*;
  * Very experimental; allows chaining a sequence of VectorGlider movements.
  */
 @Beta
-public class VectorSequenceGlider extends MultiSequenceGlider implements IGlider {
+public class VectorSequenceGlider extends MultiSequenceGlider {
 
     /**
      * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using

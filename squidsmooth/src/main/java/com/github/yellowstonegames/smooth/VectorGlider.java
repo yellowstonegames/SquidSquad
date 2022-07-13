@@ -18,7 +18,6 @@ package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
 

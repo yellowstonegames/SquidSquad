@@ -25,10 +25,10 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * A general-purpose IGlider that can interpolate multiple values, either float or int, using any rules for the
+ * A general-purpose group of smoothly-changing values, either float or int, using any rules for the
  * interpolations (specifiable by {@link FloatInterpolator} and {@link IntInterpolator} functions).
  */
-public class MultiGlider implements IGlider {
+public class MultiGlider {
     /**
      * A named variable that can change either (or both) a float and/or an int value between start and end values.
      * Typical usage only will have reasonable results when using one type, either float or int, and will have the start
@@ -213,12 +213,10 @@ public class MultiGlider implements IGlider {
         return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(change));
     }
 
-    @Override
     public float getChange() {
         return change;
     }
 
-    @Override
     public void setChange(float change) {
         if(this.change != (this.change = Math.max(0f, Math.min(1f, change))) && this.change == 1f) {
             onComplete();
@@ -329,13 +327,11 @@ public class MultiGlider implements IGlider {
         change = 0f;
     }
 
-    @Override
     @Nonnull
     public Interpolation getInterpolation() {
         return interpolation;
     }
 
-    @Override
     public void setInterpolation(@Nonnull Interpolation interpolation) {
         this.interpolation = interpolation;
         change = 0f;
@@ -350,7 +346,6 @@ public class MultiGlider implements IGlider {
         this.completeRunner = completeRunner;
     }
 
-    @Override
     public void onComplete() {
         if(completeRunner != null) {
             completeRunner.run();
