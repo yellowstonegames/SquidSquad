@@ -20,6 +20,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Extends {@link Sprite}, using a normal {@link TextureRegion} its visuals and a {@link CoordGlider} to store its
  * position. The {@link CoordGlider} is publicly available as {@link #location} or with {@link #getLocation()}, which
@@ -29,20 +32,25 @@ import com.github.yellowstonegames.grid.Coord;
  * some other unit in the world.
  */
 public class GlidingSprite extends Sprite {
+    @Nonnull
     public CoordGlider location;
+    @Nonnull
     public VectorSequenceGlider smallMotion;
-
-    protected final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
+    /**
+     * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
+     * This is public so external code can use it, but should never be modified.
+     * It is here so {@link #smallMotion} can be easily set to an empty sequence.
+     * You can also use {@code setSmallMotion(null)} to stop any small motion.
+     */
+    @Nonnull
+    public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private GlidingSprite()
     {
-        super();
+        this(null);
     }
     public GlidingSprite(TextureRegion region) {
-        super();
-        setRegion(region);
-        setSize(1f, 1f);
-        smallMotion = ownEmptyMotion;
+        this(region, Coord.get(0, 0));
     }
 
     public GlidingSprite(TextureRegion region, Coord coord) {
@@ -72,19 +80,21 @@ public class GlidingSprite extends Sprite {
         return super.getVertices();
     }
 
+    @Nonnull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(CoordGlider location) {
+    public void setLocation(@Nonnull CoordGlider location) {
         this.location = location;
     }
 
+    @Nonnull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }
 
-    public void setSmallMotion(VectorSequenceGlider smallMotion) {
+    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }

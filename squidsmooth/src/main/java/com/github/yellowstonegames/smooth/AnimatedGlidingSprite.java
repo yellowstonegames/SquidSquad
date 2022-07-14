@@ -21,6 +21,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Extends {@link Sprite}, but uses an {@link Animation} of {@link TextureRegion} for its visuals and a
  * {@link CoordGlider} to store its position. The {@link CoordGlider} is publicly available as {@link #location} or with
@@ -36,19 +39,25 @@ import com.github.yellowstonegames.grid.Coord;
  */
 public class AnimatedGlidingSprite extends Sprite {
     public Animation<? extends TextureRegion> animation;
+    @Nonnull
     public CoordGlider location;
+    @Nonnull
     public VectorSequenceGlider smallMotion;
-    protected final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
+    /**
+     * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
+     * This is public so external code can use it, but should never be modified.
+     * It is here so {@link #smallMotion} can be easily set to an empty sequence.
+     * You can also use {@code setSmallMotion(null)} to stop any small motion.
+     */
+    @Nonnull
+    public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
     {
-        super();
+        this(null, Coord.get(0, 0));
     }
     public AnimatedGlidingSprite(Animation<? extends TextureRegion> animation) {
-        super();
-        this.animation = animation;
-        setRegion(animation.getKeyFrame(0f));
-        smallMotion = ownEmptyMotion;
+        this(animation, Coord.get(0, 0));
     }
 
     public AnimatedGlidingSprite(Animation<? extends TextureRegion> animation, Coord coord) {
@@ -85,6 +94,7 @@ public class AnimatedGlidingSprite extends Sprite {
     {
         return location.getY() + smallMotion.getY();
     }
+
     @Override
     public float[] getVertices() {
         super.setPosition(getX(), getY());
@@ -99,19 +109,21 @@ public class AnimatedGlidingSprite extends Sprite {
         this.animation = animation;
     }
 
+    @Nonnull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(CoordGlider location) {
+    public void setLocation(@Nonnull CoordGlider location) {
         this.location = location;
     }
 
+    @Nonnull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }
 
-    public void setSmallMotion(VectorSequenceGlider smallMotion) {
+    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }

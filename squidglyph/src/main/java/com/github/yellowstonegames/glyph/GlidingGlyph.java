@@ -24,6 +24,7 @@ import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 import com.github.tommyettinger.textra.Font;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A single {@code long} that a {@link Font} can render as a glyph with color and styles, given a location that can
@@ -46,9 +47,10 @@ public class GlidingGlyph {
     public long glyph;
 
     /**
-     * A VectorSequenceGlider that is empty (has no motions) and belongs to this GlidingGlyph.
+     * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
      * This is public so external code can use it, but should never be modified.
      * It is here so {@link #smallMotion} can be easily set to an empty sequence.
+     * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
     @Nonnull
     public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
@@ -189,7 +191,7 @@ public class GlidingGlyph {
         return smallMotion;
     }
 
-    public void setSmallMotion(VectorSequenceGlider smallMotion) {
+    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }
