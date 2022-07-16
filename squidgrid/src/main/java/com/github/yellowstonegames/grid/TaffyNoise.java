@@ -93,7 +93,7 @@ public class TaffyNoise {
         return "`" + seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
     }
 
-    public static PhantomNoise deserializeFromString(String data) {
+    public static TaffyNoise deserializeFromString(String data) {
         if(data == null || data.length() < 7)
             return null;
         int pos;
@@ -101,7 +101,7 @@ public class TaffyNoise {
         int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
 
-        return new PhantomNoise(seed, dim, sharp);
+        return new TaffyNoise(seed, dim, sharp);
 
     }
 
