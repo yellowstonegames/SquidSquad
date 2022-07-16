@@ -44,12 +44,12 @@ public class FlanNoise {
     }
 
     public FlanNoise(long seed, int dimension) {
-        this(seed, dimension, 1.5f + 0.25f * Math.max(2, dimension));
+        this(seed, dimension, 0.5f);
     }
 
     public FlanNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
-        this.sharpness = 1f / sharpness;
+        this.sharpness = sharpness;
         working = new float[dim+1];
         points = new float[dim+1];
         vertices = new float[dim+1][dim];
@@ -76,7 +76,7 @@ public class FlanNoise {
             vertices[v][1] = TrigTools.sin(theta) * dist;
         }
         this.seed = seed;
-        inverse = 1f / (3f * (dim + 1f));
+        inverse = 1f / (5f * (dim + 1f));
 //        printDebugInfo();
     }
 
@@ -100,23 +100,25 @@ public class FlanNoise {
         for (int v = 0; v <= dim; v++) {
             points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
-                points[v] += (args[d] - 1f) * vertices[v][d];
+                points[v] += (args[d] - 5f) * vertices[v][d];
             }
         }
         float result = 0f;
         float warp = 0f;
         long s = seed;
-        for (int v = 0; v < 3; v++) {
+        for (int v = 1; v <= 5; v++) {
             for (int i = 0; i <= dim; i++) {
                 s = (s << 13 | s >>> 19) + 1234567;
                 warp = LineWobble.wobble(s, points[i] + warp);
                 result += warp;
-            }
-            for (int d = 0; d < dim; d++) {
-                points[v] += vertices[v][d];
+                for (int d = 0; d < dim; d++) {
+                    points[i] += vertices[i][d] * v;
+                }
             }
         }
-        result *= inverse;
-        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+        result = (float) Math.pow(1f + sharpness, result);
+        return (result - 1f) / (result + 1f);
+//        result = TrigTools.sin(result);
+//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 }
