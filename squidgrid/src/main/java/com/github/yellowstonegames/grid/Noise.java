@@ -3706,16 +3706,16 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + x * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z) {
@@ -3723,22 +3723,22 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + x * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w) {
@@ -3748,28 +3748,28 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
         idx = sw + (int) (w * 95 + x * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
+                - (SIN_TABLE[sw & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK]) * w)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w, float u) {
@@ -3780,34 +3780,34 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * u
-                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
+                - (SIN_TABLE[sw & TABLE_MASK]) * u
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK]) * w)
         );
         idx = su + (int) (u * 95 + x * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[su & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[su + 4096 & TABLE_MASK] + 2f) * u)
+                - (SIN_TABLE[su & TABLE_MASK]) * x
+                + sin((SIN_TABLE[su + 4096 & TABLE_MASK]) * u)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v) {
@@ -3819,40 +3819,40 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * u
-                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
+                - (SIN_TABLE[sw & TABLE_MASK]) * u
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK]) * w)
         );
         idx = su + (int) (u * 95 + v * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[su & TABLE_MASK] + 1.5f) * v
-                + sin((SIN_TABLE[su + 4096 & TABLE_MASK] + 2f) * u)
+                - (SIN_TABLE[su & TABLE_MASK]) * v
+                + sin((SIN_TABLE[su + 4096 & TABLE_MASK]) * u)
         );
         idx = sv + (int) (v * 95 + x * 21);
         sum += (cos(v)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sv & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK] + 2f) * v)
+                - (SIN_TABLE[sv & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK]) * v)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v, float m) {
@@ -3865,46 +3865,46 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * u
-                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
+                - (SIN_TABLE[sw & TABLE_MASK]) * u
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK]) * w)
         );
         idx = su + (int) (u * 95 + v * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[su & TABLE_MASK] + 1.5f) * v
-                + sin((SIN_TABLE[su + 4096 & TABLE_MASK] + 2f) * u)
+                - (SIN_TABLE[su & TABLE_MASK]) * v
+                + sin((SIN_TABLE[su + 4096 & TABLE_MASK]) * u)
         );
         idx = sv + (int) (v * 95 + m * 21);
         sum += (cos(v)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sv & TABLE_MASK] + 1.5f) * m
-                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK] + 2f) * v)
+                - (SIN_TABLE[sv & TABLE_MASK]) * m
+                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK]) * v)
         );
         idx = sm + (int) (m * 95 + x * 21);
         sum += (cos(m)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sm & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sm + 4096 & TABLE_MASK] + 2f) * m)
+                - (SIN_TABLE[sm & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sm + 4096 & TABLE_MASK]) * m)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     protected float trillNoise(int seed, float x, float y, float z, float w, float u, float v, float m, float n) {
@@ -3918,52 +3918,52 @@ public class Noise {
         int idx = sx + (int) (x * 95 + y * 21);
         float sum = (cos(x)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sx & TABLE_MASK] + 1.5f) * y
-                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK] + 2f) * x)
+                - (SIN_TABLE[sx & TABLE_MASK]) * y
+                + sin((SIN_TABLE[sx + 4096 & TABLE_MASK]) * x)
         );
         idx = sy + (int) (y * 95 + z * 21);
         sum += (cos(y)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sy & TABLE_MASK] + 1.5f) * z
-                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK] + 2f) * y)
+                - (SIN_TABLE[sy & TABLE_MASK]) * z
+                + sin((SIN_TABLE[sy + 4096 & TABLE_MASK]) * y)
         );
         idx = sz + (int) (z * 95 + w * 21);
         sum += (cos(z)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sz & TABLE_MASK] + 1.5f) * w
-                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK] + 2f) * z)
+                - (SIN_TABLE[sz & TABLE_MASK]) * w
+                + sin((SIN_TABLE[sz + 4096 & TABLE_MASK]) * z)
         );
         idx = sw + (int) (w * 95 + u * 21);
         sum += (cos(w)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sw & TABLE_MASK] + 1.5f) * u
-                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK] + 2f) * w)
+                - (SIN_TABLE[sw & TABLE_MASK]) * u
+                + sin((SIN_TABLE[sw + 4096 & TABLE_MASK]) * w)
         );
         idx = su + (int) (u * 95 + v * 21);
         sum += (cos(u)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[su & TABLE_MASK] + 1.5f) * v
-                + sin((SIN_TABLE[su + 4096 & TABLE_MASK] + 2f) * u)
+                - (SIN_TABLE[su & TABLE_MASK]) * v
+                + sin((SIN_TABLE[su + 4096 & TABLE_MASK]) * u)
         );
         idx = sv + (int) (v * 95 + m * 21);
         sum += (cos(v)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sv & TABLE_MASK] + 1.5f) * m
-                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK] + 2f) * v)
+                - (SIN_TABLE[sv & TABLE_MASK]) * m
+                + sin((SIN_TABLE[sv + 4096 & TABLE_MASK]) * v)
         );
         idx = sm + (int) (m * 95 + n * 21);
         sum += (cos(m)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sm & TABLE_MASK] + 1.5f) * n
-                + sin((SIN_TABLE[sm + 4096 & TABLE_MASK] + 2f) * m)
+                - (SIN_TABLE[sm & TABLE_MASK]) * n
+                + sin((SIN_TABLE[sm + 4096 & TABLE_MASK]) * m)
         );
         idx = sn + (int) (n * 95 + x * 21);
         sum += (cos(n)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - (SIN_TABLE[sn & TABLE_MASK] + 1.5f) * x
-                + sin((SIN_TABLE[sn + 4096 & TABLE_MASK] + 2f) * n)
+                - (SIN_TABLE[sn & TABLE_MASK]) * x
+                + sin((SIN_TABLE[sn + 4096 & TABLE_MASK]) * n)
         );
-        return sinTurns(sum * 0.09f);
+        return sinTurns(sum * 0.125f);
     }
 
     public float singleTaffyVarargs(int seed, float... coordinates) {
@@ -3991,9 +3991,12 @@ public class Noise {
         }
     }
     public float singleTaffy(int seed, float x, float y) {
-        final float p0 = x * 1.4104849f + y * 1.8545705f;
-        final float p1 = x * -2.3209028f + y * 0.20569342f;
-        final float p2 = x * 1.0655133f + y * -2.0716872f;
+//        final float p0 = x * 1.4104849f + y * 1.8545705f;
+//        final float p1 = x * -2.3209028f + y * 0.20569342f;
+//        final float p2 = x * 1.0655133f + y * -2.0716872f;
+        final float p0 = x * 0.57565147f + y * 0.8176952f;
+        final float p1 = x * -0.9655443f + y * 0.26023862f;
+        final float p2 = x * -0.17945707f + y * -0.98376584f;
 
         float xin = p2;
         float yin = p0;
@@ -4150,10 +4153,14 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z){
-        final float p0 = x * 1.6874464f + y * 1.0735568f;
-        final float p1 = x * -1.5251374f + y * 1.2938148f;
-        final float p2 = x * 0.35694847f + y * -1.0980074f + z * 1.6329931f;
-        final float p3 = x * 0.026345633f + y * -1.1543899f + z * -1.6329935f;
+//        final float p0 = x * 1.6874464f + y * 1.0735568f;
+//        final float p1 = x * -1.5251374f + y * 1.2938148f;
+//        final float p2 = x * 0.35694847f + y * -1.0980074f + z * 1.6329931f;
+//        final float p3 = x * 0.026345633f + y * -1.1543899f + z * -1.6329935f;
+        final float p0 = x * 0.7798978f + y * 0.6259069f;
+        final float p1 = x * -0.48268777f + y * 0.87579256f;
+        final float p2 = x * -0.25014642f + y * -0.5203461f + z * 0.81649655f;
+        final float p3 = x * 0.0060886918f + y * -0.5773158f + z * -0.81649673f;
 
         float xin = p3;
         float yin = p2;
@@ -4240,11 +4247,16 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w) {
-        final float p0 = x * 1.5337617f + y * 0.6349604f;
-        final float p1 = x * -0.9023025f + y * 1.3933592f;
-        final float p2 = x * 0.10983736f + y * -0.6686897f + z * 1.5153657f;
-        final float p3 = x * -0.11829115f + y * -0.66728836f + z * -0.7576828f + w * 1.3123453f;
-        final float p4 = x * -0.24232098f + y * -0.6328879f + z * -0.7576828f + w * -1.3123453f;
+//        final float p0 = x * 1.5337617f + y * 0.6349604f;
+//        final float p1 = x * -0.9023025f + y * 1.3933592f;
+//        final float p2 = x * 0.10983736f + y * -0.6686897f + z * 1.5153657f;
+//        final float p3 = x * -0.11829115f + y * -0.66728836f + z * -0.7576828f + w * 1.3123453f;
+//        final float p4 = x * -0.24232098f + y * -0.6328879f + z * -0.7576828f + w * -1.3123453f;
+        final float p0 = x * 0.84720474f + y * 0.5312665f;
+        final float p1 = x * -0.56399137f + y * 0.82578063f;
+        final float p2 = x * -0.18557791f + y * -0.36363098f + z * 0.91287094f;
+        final float p3 = x * 0.02354939f + y * -0.40755945f + z * -0.45643544f + w * 0.7905694f;
+        final float p4 = x * 0.10397277f + y * -0.39474648f + z * -0.45643544f + w * -0.7905694f;
 
         float xin = p4;
         float yin = p1;
@@ -4361,12 +4373,18 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u) {
-        final float p0 = x * 0.80512667f + y * 1.0586176f;
-        final float p1 = x * -1.2194887f + y * 0.5307986f;
-        final float p2 = x * 0.12985991f + y * -0.39998323f + z * 1.2617488f;
-        final float p3 = x * -0.19875908f + y * -0.37065464f + z * -0.42058298f + w * 1.1895882f;
-        final float p4 = x * -0.10633402f + y * -0.40691903f + z * -0.42058298f + w * -0.59479415f + u * 1.0302136f;
-        final float p5 = x * -0.012014422f + y * -0.42041135f + z * -0.42058298f + w * -0.59479415f + u * -1.0302138f;
+//        final float p0 = x * 0.80512667f + y * 1.0586176f;
+//        final float p1 = x * -1.2194887f + y * 0.5307986f;
+//        final float p2 = x * 0.12985991f + y * -0.39998323f + z * 1.2617488f;
+//        final float p3 = x * -0.19875908f + y * -0.37065464f + z * -0.42058298f + w * 1.1895882f;
+//        final float p4 = x * -0.10633402f + y * -0.40691903f + z * -0.42058298f + w * -0.59479415f + u * 1.0302136f;
+//        final float p5 = x * -0.012014422f + y * -0.42041135f + z * -0.42058298f + w * -0.59479415f + u * -1.0302138f;
+        final float p0 = x * 0.88808066f + y * 0.4596875f;
+        final float p1 = x * -0.773132f + y * 0.63424504f;
+        final float p2 = x * 0.02839993f + y * -0.31493902f + z * 0.94868326f;
+        final float p3 = x * 0.022960793f + y * -0.3153843f + z * -0.3162278f + w * 0.8944272f;
+        final float p4 = x * -0.09451942f + y * -0.30177158f + z * -0.3162278f + w * -0.44721365f + u * 0.77459663f;
+        final float p5 = x * -0.071354955f + y * -0.30807218f + z * -0.3162278f + w * -0.44721365f + u * -0.7745968f;
 
         float xin = p1;
         float yin = p2;
@@ -4505,13 +4523,20 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v) {
-        final float p0 = x * 0.6810281f + y * 0.89544713f;
-        final float p1 = x * -1.0156003f + y * 0.4839226f;
-        final float p2 = x * 0.08490618f + y * -0.277755f + z * 1.0868533f;
-        final float p3 = x * -0.14157186f + y * -0.25363833f + z * -0.27171332f + w * 1.0523412f;
-        final float p4 = x * -0.0781706f + y * -0.27975765f + z * -0.27171332f + w * -0.3507804f + u * 0.99215674f;
-        final float p5 = x * -0.013195699f + y * -0.29017383f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * 0.8592329f;
-        final float p6 = x * -0.13214019f + y * -0.25867733f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * -0.859233f;
+//        final float p0 = x * 0.6810281f + y * 0.89544713f;
+//        final float p1 = x * -1.0156003f + y * 0.4839226f;
+//        final float p2 = x * 0.08490618f + y * -0.277755f + z * 1.0868533f;
+//        final float p3 = x * -0.14157186f + y * -0.25363833f + z * -0.27171332f + w * 1.0523412f;
+//        final float p4 = x * -0.0781706f + y * -0.27975765f + z * -0.27171332f + w * -0.3507804f + u * 0.99215674f;
+//        final float p5 = x * -0.013195699f + y * -0.29017383f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * 0.8592329f;
+//        final float p6 = x * -0.13214019f + y * -0.25867733f + z * -0.27171332f + w * -0.3507804f + u * -0.49607837f + v * -0.859233f;
+        final float p0 = x * 0.87910366f + y * 0.4766307f;
+        final float p1 = x * -0.6905121f + y * 0.7233209f;
+        final float p2 = x * -0.038522165f + y * -0.25530905f + z * 0.9660918f;
+        final float p3 = x * -0.10241036f + y * -0.23702061f + z * -0.24152295f + w * 0.9354144f;
+        final float p4 = x * 0.054299045f + y * -0.25240397f + z * -0.24152295f + w * -0.3118048f + u * 0.8819171f;
+        final float p5 = x * 0.0047030966f + y * -0.2581542f + z * -0.24152295f + w * -0.3118048f + u * -0.44095856f + v * 0.7637626f;
+        final float p6 = x * -0.16337831f + y * -0.19993554f + z * -0.24152295f + w * -0.3118048f + u * -0.44095856f + v * -0.7637627f;
 
         float xin = p0;
         float yin = p5;
@@ -4637,14 +4662,22 @@ public class Noise {
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v, float m) {
-        final float p0 = x * 0.60535836f + y * 0.79595304f;
-        final float p1 = x * -0.89210075f + y * 0.45183647f;
-        final float p2 = x * 0.06130022f + y * -0.20940745f + z * 0.97590005f;
-        final float p3 = x * -0.1086859f + y * -0.18922584f + z * -0.19518004f + w * 0.9561829f;
-        final float p4 = x * -0.061300192f + y * -0.20943096f + z * -0.19518004f + w * -0.23904574f + u * 0.92582005f;
-        final float p5 = x * -0.012587612f + y * -0.21785453f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * 0.8728715f;
-        final float p6 = x * -0.10157331f + y * -0.193137f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * 0.7559289f;
-        final float p7 = x * -0.13183342f + y * -0.17389362f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * -0.7559293f;
+//        final float p0 = x * 0.60535836f + y * 0.79595304f;
+//        final float p1 = x * -0.89210075f + y * 0.45183647f;
+//        final float p2 = x * 0.06130022f + y * -0.20940745f + z * 0.97590005f;
+//        final float p3 = x * -0.1086859f + y * -0.18922584f + z * -0.19518004f + w * 0.9561829f;
+//        final float p4 = x * -0.061300192f + y * -0.20943096f + z * -0.19518004f + w * -0.23904574f + u * 0.92582005f;
+//        final float p5 = x * -0.012587612f + y * -0.21785453f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * 0.8728715f;
+//        final float p6 = x * -0.10157331f + y * -0.193137f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * 0.7559289f;
+//        final float p7 = x * -0.13183342f + y * -0.17389362f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * -0.7559293f;
+        final float p0 = x * 0.8787378f + y * 0.47730482f;
+        final float p1 = x * -0.46614632f + y * 0.8847077f;
+        final float p2 = x * -0.11980514f + y * -0.18238907f + z * 0.97590005f;
+        final float p3 = x * 0.03081842f + y * -0.21601889f + z * -0.19518004f + w * 0.9561829f;
+        final float p4 = x * 0.010164112f + y * -0.21797714f + z * -0.19518004f + w * -0.23904574f + u * 0.92582005f;
+        final float p5 = x * -0.009578837f + y * -0.21800756f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * 0.8728715f;
+        final float p6 = x * 0.046218276f + y * -0.21324952f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * 0.7559289f;
+        final float p7 = x * -0.059933554f + y * -0.20982619f + z * -0.19518004f + w * -0.23904574f + u * -0.30860677f + v * -0.4364359f + m * -0.7559293f;
 
         float xin = p0;
         float yin = p6;
