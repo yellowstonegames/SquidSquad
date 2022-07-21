@@ -23,7 +23,7 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import static com.github.tommyettinger.digital.TrigTools.*;
+import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
@@ -36,7 +36,7 @@ public class FlanNoise {
     public final int dim;
     public final float sharpness;
     protected float inverse;
-    protected final float[] working, points;
+    protected final float[] working, points, wobbleTable;
     protected final float[][] vertices;
 
     public FlanNoise() {
@@ -44,7 +44,7 @@ public class FlanNoise {
     }
 
     public FlanNoise(long seed, int dimension) {
-        this(seed, dimension, 0.5f);
+        this(seed, dimension, 5f);
     }
 
     public FlanNoise(long seed, int dimension, float sharpness) {
@@ -75,8 +75,14 @@ public class FlanNoise {
             vertices[v][0] = TrigTools.cos(theta) * dist;
             vertices[v][1] = TrigTools.sin(theta) * dist;
         }
+        for (int v = 0; v <= dim; v++) {
+            for (int d = 0; d < dim; d++) {
+                vertices[v][d] *= 43f;
+            }
+        }
         this.seed = seed;
         inverse = 1f / (5f * (dim + 1f));
+        wobbleTable = LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 //        printDebugInfo();
     }
 
@@ -100,23 +106,31 @@ public class FlanNoise {
         for (int v = 0; v <= dim; v++) {
             points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
-                points[v] += (args[d] - 5f) * vertices[v][d];
+                points[v] += (args[d] - 2f) * vertices[v][d];
             }
         }
         float result = 0f;
-        float warp = 0f;
-        long s = seed;
-        for (int v = 1; v <= 5; v++) {
-            for (int i = 0; i <= dim; i++) {
-                s = (s << 13 | s >>> 19) + 1234567;
-                warp = LineWobble.wobble(s, points[i] + warp);
-                result += warp;
+        float warp = 0.5f, t;
+        int s = (int)(seed ^ seed >>> 32);
+        for (int v = 1; v < 16384; v += 3275) {
+            for (int i = 0; i < dim; i++) {
+//                s = (s << 13 | s >>> 19) + 1234567;
+                warp += t = wobbleTable[s + (int)(points[i+1]) & 0x3FFF] - wobbleTable[(s += v) + (int)(points[i] + warp) & 0x3FFF];
+                result += t;
                 for (int d = 0; d < dim; d++) {
-                    points[i] += vertices[i][d] * v;
+                    points[i] += vertices[i][d];
                 }
             }
+//            s = (s << 13 | s >>> 19) + 1234567;
+            warp += t = wobbleTable[s + (int)(points[0]) & 0x3FFF] - wobbleTable[(s += v) + (int)(points[dim] + warp) & 0x3FFF];
+            result += t;
+            for (int d = 0; d < dim; d++) {
+                points[dim] += vertices[dim][d];
+            }
         }
-        result = (float) Math.pow(1f + sharpness, result);
+//        result *= inverse;
+//        return (barronSpline(result, 10f, 0.5f) - 0.5f) * 2f;
+        result = (float) Math.pow(sharpness, result);
         return (result - 1f) / (result + 1f);
 //        result = TrigTools.sin(result);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
