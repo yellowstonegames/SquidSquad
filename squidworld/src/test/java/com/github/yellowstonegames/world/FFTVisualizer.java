@@ -85,7 +85,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     public void create() {
         for (int i = 0; i < 5; i++) {
             phantoms[i] = new PhantomNoise(123456789 + ~i * 55555555L, 2+i);
-            taffies[i] = new TaffyNoise(123456789 + ~i * 55555555L, 2+i);
+            taffies[i] = new TaffyNoise(noise.getSeed(), 2+i);
             flans[i] = new FlanNoise(123456789 + ~i * 55555555L, 2+i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
@@ -127,6 +127,9 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
+                        for (int i = 0; i < taffies.length; i++) {
+                            taffies[i].seed = s;
+                        }
                         System.out.println("Using seed " + s);
                         break;
                     case S: //seed after
@@ -135,6 +138,9 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
+                        for (int i = 0; i < taffies.length; i++) {
+                            taffies[i].seed = s;
+                        }
                         System.out.println("Using seed " + s);
                         break;
                     case N: // noise type
@@ -946,8 +952,11 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
+//                            points[dim][0] = (c+x)*fr;
+//                            points[dim][1] = (c+y)*fr;
                             float cx = (c+x)*fr;
                             float cy = (c+y)*fr;
+//                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
                             bright = basicPrepare(taffies[dim].getNoise2D(cx, cy));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);

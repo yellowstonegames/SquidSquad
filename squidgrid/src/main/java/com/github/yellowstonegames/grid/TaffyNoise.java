@@ -41,7 +41,7 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  */
 @Beta
 public class TaffyNoise {
-    protected final long seed;
+    public long seed;
     public final int dim;
     public final float sharpness;
     protected float inverse;
@@ -111,36 +111,37 @@ public class TaffyNoise {
         for (int i = 0, j = 1; i < dim; i++, j++) {
             s = (s << 13 | s >>> 19) + 1234567;
             float cx = working[i];
+            if(j == dim) j = 0;
             float cy = working[j];
             int idx = s + (int) (cx * 95 + cy * 21);
             sum += (cos(cx)
                     - SIN_TABLE[idx & TABLE_MASK]
-                    - SIN_TABLE[s & TABLE_MASK]*cy
+                    - cos(SIN_TABLE[s & TABLE_MASK]*cy)
                     + sin(SIN_TABLE[s + 4096 & TABLE_MASK]*cx)
             );
         }
-        return sinTurns(sum * 0.125f);
+        return sinTurns(sum * 0.75f * inverse);
     }
 
     protected float valueNoise2D() {
         int bits = BitConversion.floatToIntBits(working[dim]);
-        int sx = (int)(seed ^ bits);
-        int sy = (int)(seed >>> 32 ^ (bits << 13 | bits >>> 19));
+        int sx = (int)(seed ^ seed >>> 32 ^ bits);
+        int sy = sx + 1234567 ^ (bits << 13 | bits >>> 19);
         float cx = working[0];
         float cy = working[1];
         int idx = sx + (int) (cx * 95 + cy * 21);
         float sum = (cos(cx)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sx & TABLE_MASK]*cy
+                - cos(SIN_TABLE[sx & TABLE_MASK]*cy)
                 + sin(SIN_TABLE[sx + 4096 & TABLE_MASK]*cx)
         );
         idx = sy + (int) (cy * 95 + cx * 21);
         sum += (cos(cy)
                 - SIN_TABLE[idx & TABLE_MASK]
-                - SIN_TABLE[sy & TABLE_MASK]*cx
+                - cos(SIN_TABLE[sy & TABLE_MASK]*cx)
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
         );
-        return sinTurns(sum * 0.125f);
+        return sinTurns(sum * 0.75f * inverse);
     }
 
     public float getNoise(float... args) {
@@ -182,7 +183,7 @@ public class TaffyNoise {
                 working[j] = points[d];
             }
             working[0] += warp;
-            warp = valueNoise2D();
+            warp = valueNoise();
             result += warp;
             working[2] += -0.423310825130748f;
         }
