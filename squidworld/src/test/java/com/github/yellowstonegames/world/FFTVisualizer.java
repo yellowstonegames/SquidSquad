@@ -86,7 +86,7 @@ public class FFTVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 5; i++) {
             phantoms[i] = new PhantomNoise(123456789 + ~i * 55555555L, 2+i);
             taffies[i] = new TaffyNoise(noise.getSeed(), 2+i);
-            flans[i] = new FlanNoise(123456789 + ~i * 55555555L, 2+i);
+            flans[i] = new FlanNoise(noise.getSeed(), 2+i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -129,6 +129,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
+                            flans[i].setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -140,6 +141,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
+                            flans[i].setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;

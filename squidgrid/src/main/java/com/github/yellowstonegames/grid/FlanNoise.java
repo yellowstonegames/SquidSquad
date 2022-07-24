@@ -20,24 +20,22 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
-
-import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
  * for higher-dimensional output (4 and up, in particular). FlanNoise doesn't slow down as rapidly as other forms of
- * noise do when dimensions are added.
+ * noise do when dimensions are added. This has configurable detail; 4 is typically the minimum for decent noise in low
+ * dimensions, and detail 5 seems to be high-quality up to at least 6D.
  */
 @Beta
 public class FlanNoise {
-    protected final long seed;
+    protected long seed;
     public final int dim, vc;
     public final float sharpness;
     protected float inverse;
-    protected final float[] points, wobbleTable;
+    protected final float[] points;
     protected final float[][] vertices;
     public final int detail;
 
@@ -46,19 +44,26 @@ public class FlanNoise {
     }
 
     public FlanNoise(long seed, int dimension) {
-        this(seed, dimension, 8f);
+        this(seed, dimension, 3f * Math.max(2, dimension));
     }
 
     public FlanNoise(long seed, int dimension, float sharpness) {
-        this(seed, dimension, sharpness, 6);
+        this(seed, dimension, sharpness, 5);
     }
     public FlanNoise(long seed, int dimension, float sharpness, int detail) {
         dim = Math.max(2, dimension);
-        this.sharpness = sharpness;
+        this.sharpness = 1f/sharpness;
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
         vertices = new float[vc][dim];
+        setSeed(seed);
+        inverse = 2f / vc;
+//        printDebugInfo();
+    }
+    //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
+
+    public void setSeed(long seed) {
         this.seed = seed;
         for (int i = 0; i < dim; i++) {
             points[i] = Hasher.randomize3Float(seed+i);
@@ -72,14 +77,11 @@ public class FlanNoise {
                 vertices[v][d] = (float) g;
                 sum += g * g;
             }
-            sum = 64.0 / Math.sqrt(sum);
+            sum = 907.0 / Math.sqrt(sum);
             for (int d = 0; d < dim; d++) {
                 vertices[v][d] *= sum;
             }
         }
-        inverse = 1f / vc;
-        wobbleTable = LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
-//        printDebugInfo();
     }
 
     public String serializeToString() {
@@ -108,17 +110,17 @@ public class FlanNoise {
         }
         float result = 0f;
         float warp = 0.5f;
-        int s = (int)(seed ^ seed >>> 32);
-        for (int i = 0, ctr = 1111111; i < vc; i++, ctr += 1234567) {
-            warp = wobbleTable[(s ^= (s << 21 | s >>> 11) + ctr) + (int) (points[i] + 512f * warp) & 0x3FFF];
+        int s = (int)(seed), ctr = (int) (seed >>> 32);
+        for (int i = 1; i < vc; i++, ctr += 1234567) {
+            warp = TrigTools.SIN_TABLE[(s ^= ctr) + (int) (points[i] + points[i-1] + 3001f * warp) & 0x3FFF];
             result += warp;
         }
-//            warp = wobbleTable[(s = (s << 21 | s >>> 11) + 1234567) + (int)(points[dim] + warp) & 0x3FFF];
-//            result += warp;
+        result += TrigTools.SIN_TABLE[(s ^ ctr) + (int)(points[0] + points[vc-1] + 3001f * warp) & 0x3FFF];
         result *= inverse;
-        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
-//        result = (float) Math.pow(sharpness, result);
-//        return (result - 1f) / (result + 1f);
+//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
+        result = (float) Math.pow(sharpness, result);
+        return (result - 1f) / (result + 1f);
 //        result = TrigTools.sin(result);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
