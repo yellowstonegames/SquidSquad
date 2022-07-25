@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
@@ -74,7 +75,43 @@ public class FlanNoise {
         }
 
         inverse = 2f / vc;
-//        printDebugInfo();
+        printDebugInfo();
+    }
+
+    private void printDebugInfo() {
+        System.out.println("FlanNoise with dimension " + dim + " and detail " + detail + ": \nnew float[] {");
+
+        final String dimNames = "xyzwuvmnopqrstabcdefghijkl";
+        for (int v = 0; v < vc; v++) {
+            System.out.print("final float p" + v + (v < 10 ? " " : "") +  " = ");
+//            System.out.print("points[" + v + "] = ");
+            for (int d = 0; d < dim; d++) {
+                if(vertices[v][d] != 0.0)
+                {
+                    if(d > 0)
+                        System.out.print(" + ");
+                    if(vertices[v][d] == 1.0)
+                        System.out.print(dimNames.charAt(d % dimNames.length()));
+                    else
+                        // swap this in during dev, swap it out to work on GWT
+//                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
+                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
+                }
+            }
+            System.out.println(';');
+        }
+
+
+//        for (int v = 0; v < vc; v++) {
+//            System.out.print("{ ");
+//            for (int d = 0; d < vertices[v].length; d++) {
+//          //       swap this in during dev, swap it out to work on GWT
+////                System.out.printf("% 11.6ff, ", vertices[v][d]);
+//                System.out.print(vertices[v][d] + "f, ");
+//            }
+//            System.out.println("},");
+//        }
+//        System.out.println("};");
     }
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 

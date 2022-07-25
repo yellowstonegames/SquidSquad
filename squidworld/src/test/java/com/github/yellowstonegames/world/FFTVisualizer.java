@@ -36,9 +36,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt};
-    private final PhantomNoise[] phantoms = new PhantomNoise[5];
-    private final TaffyNoise[] taffies = new TaffyNoise[5];
-    private final FlanNoise[] flans = new FlanNoise[5];
+    private final PhantomNoise[] phantoms = new PhantomNoise[7];
+    private final TaffyNoise[] taffies = new TaffyNoise[7];
+    private final FlanNoise[] flans = new FlanNoise[7];
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 17;
@@ -83,9 +83,9 @@ public class FFTVisualizer extends ApplicationAdapter {
 
     @Override
     public void create() {
-        for (int i = 0; i < 5; i++) {
-            phantoms[i] = new PhantomNoise(123456789 + ~i * 55555555L, 2+i);
-            taffies[i] = new TaffyNoise(noise.getSeed(), 2+i);
+        for (int i = 0; i < 7; i++) {
+            phantoms[i] = new PhantomNoise(123456789 + ~i * 55555555L, 2 + i);
+            taffies[i] = new TaffyNoise(noise.getSeed(), 2 + i);
             flans[i] = new FlanNoise(noise.getSeed(), 2+i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
