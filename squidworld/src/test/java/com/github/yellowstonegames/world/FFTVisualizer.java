@@ -147,7 +147,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case N: // noise type
                         if(mode == 0 || mode >= 12)
-                            noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 17 : 1)) % 18);
+                            noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 19 : 1)) % 20);
                         break;
                     case ENTER:
                     case D: //dimension
