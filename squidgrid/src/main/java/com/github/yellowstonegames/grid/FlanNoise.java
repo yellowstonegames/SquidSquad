@@ -31,7 +31,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  */
 @Beta
 public class FlanNoise {
-    protected long seed;
+    public long seed;
     public final int dim, vc;
     public final float sharpness;
     protected float inverse;
@@ -57,7 +57,22 @@ public class FlanNoise {
         vc = dim * detail;
         points = new float[vc];
         vertices = new float[vc][dim];
-        setSeed(seed);
+        this.seed = seed;
+        for (int v = 0; v < vc; v++) {
+            double sum = 0.0;
+            for (int d = 0; d < dim; d++) {
+                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
+                g -= (int)g;
+                g = EnhancedRandom.probit(g);
+                vertices[v][d] = (float) g;
+                sum += g * g;
+            }
+            sum = 707.17 / Math.sqrt(sum);
+            for (int d = 0; d < dim; d++) {
+                vertices[v][d] *= sum;
+            }
+        }
+
         inverse = 2f / vc;
 //        printDebugInfo();
     }
@@ -65,23 +80,6 @@ public class FlanNoise {
 
     public void setSeed(long seed) {
         this.seed = seed;
-        for (int i = 0; i < dim; i++) {
-            points[i] = Hasher.randomize3Float(seed+i);
-        }
-        for (int v = 0; v < vc; v++) {
-            double sum = 0.0;
-            for (int d = 0; d < dim; d++) {
-                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1) + points[d];
-                g -= (int)g;
-                g = EnhancedRandom.probit(g);
-                vertices[v][d] = (float) g;
-                sum += g * g;
-            }
-            sum = 907.0 / Math.sqrt(sum);
-            for (int d = 0; d < dim; d++) {
-                vertices[v][d] *= sum;
-            }
-        }
     }
 
     public String serializeToString() {
@@ -109,13 +107,13 @@ public class FlanNoise {
             }
         }
         float result = 0f;
-        float warp = 0.5f;
-        int s = (int)(seed), ctr = (int) (seed >>> 32);
-        for (int i = 1; i < vc; i++, ctr += 1234567) {
-            warp = TrigTools.SIN_TABLE[(s ^= ctr) + (int) (points[i] + points[i-1] + 3001f * warp) & 0x3FFF];
+        float warp = 0.0f;
+        int x = (int)(seed ^ seed >>> 32);
+        for (int i = 0; i < vc; i++) {
+            warp = TrigTools.SIN_TABLE[((x = (x << 17 | x >>> 15) * 0xBCFD)) + (int) (points[i] + 3301f * warp) & 0x3FFF];
             result += warp;
         }
-        result += TrigTools.SIN_TABLE[(s ^ ctr) + (int)(points[0] + points[vc-1] + 3001f * warp) & 0x3FFF];
+//        result += TrigTools.SIN_TABLE[((y << 13 | y >>> 19) ^ (x << 17 | x >>> 15)) + (int)(points[0] + points[vc-1] + 3001f * warp) & 0x3FFF];
         result *= inverse;
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;

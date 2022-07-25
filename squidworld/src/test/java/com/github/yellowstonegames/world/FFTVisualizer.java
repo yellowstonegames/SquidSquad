@@ -129,7 +129,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
-                            flans[i].setSeed(s);
+                            flans[i].seed = s;
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -141,7 +141,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
-                            flans[i].setSeed(s);
+                            flans[i].seed = s;
                         }
                         System.out.println("Using seed " + s);
                         break;
