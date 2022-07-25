@@ -79,16 +79,21 @@ public class FlanNoise {
     }
 
     private void printDebugInfo() {
-        System.out.println("FlanNoise with dimension " + dim + " and detail " + detail + ": \nnew float[] {");
+        System.out.println("FlanNoise with dimension " + dim + " and detail " + detail + ": \n" +
+                "        float result = 0.0f;\n" +
+                "        float warp = 0.0f;");
 
         final String dimNames = "xyzwuvmnopqrstabcdefghijkl";
         for (int v = 0; v < vc; v++) {
-            System.out.print("final float p" + v + (v < 10 ? " " : "") +  " = ");
+//            System.out.print("final float p" + v + (v < 10 ? " " : "") +  " = ");
 //            System.out.print("points[" + v + "] = ");
+            System.out.println("            result += warp = TrigTools.SIN_TABLE[((seed = (seed << 17 | seed >>> 15) * 0xBCFD)) + (int) (");
             for (int d = 0; d < dim; d++) {
                 if(vertices[v][d] != 0.0)
                 {
-                    if(d > 0)
+                    if(d == 0)
+                        System.out.print("                            ");
+                    else
                         System.out.print(" + ");
                     if(vertices[v][d] == 1.0)
                         System.out.print(dimNames.charAt(d % dimNames.length()));
@@ -98,7 +103,7 @@ public class FlanNoise {
                         System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
                 }
             }
-            System.out.println(';');
+            System.out.println("\n                            + 3301f * warp) & 0x3FFF];");
         }
 
 
@@ -111,7 +116,8 @@ public class FlanNoise {
 //            }
 //            System.out.println("},");
 //        }
-//        System.out.println("};");
+        System.out.println("        result = (float) Math.pow(sharpness * " + (3 * dim) + ".0f, result * " + (1f/vc) + "f);\n" +
+                "        return (result - 1f) / (result + 1f);\n");
     }
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 
@@ -143,19 +149,18 @@ public class FlanNoise {
                 points[v] += args[d] * vertices[v][d];
             }
         }
-        float result = 0f;
+        float result = 0.0f;
         float warp = 0.0f;
-        int x = (int)(seed ^ seed >>> 32);
+        int seed = (int)(this.seed ^ this.seed >>> 32);
         for (int i = 0; i < vc; i++) {
-            warp = TrigTools.SIN_TABLE[((x = (x << 17 | x >>> 15) * 0xBCFD)) + (int) (points[i] + 3301f * warp) & 0x3FFF];
-            result += warp;
+            result += warp = TrigTools.SIN_TABLE[((seed = (seed << 17 | seed >>> 15) * 0xBCFD)) + (int) (
+                    points[i]
+                            + 3301f * warp) & 0x3FFF];
         }
-//        result += TrigTools.SIN_TABLE[((y << 13 | y >>> 19) ^ (x << 17 | x >>> 15)) + (int)(points[0] + points[vc-1] + 3001f * warp) & 0x3FFF];
-        result *= inverse;
+        result = (float) Math.pow(sharpness, result * inverse);
+        return (result - 1f) / (result + 1f);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
-        result = (float) Math.pow(sharpness, result);
-        return (result - 1f) / (result + 1f);
 //        result = TrigTools.sin(result);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
