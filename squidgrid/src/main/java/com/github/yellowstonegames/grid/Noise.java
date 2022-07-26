@@ -4871,34 +4871,34 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  685.232849f + y *  174.772202f
+                x *  6852.32849f + y *  1747.72202f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   15.983096f + y * -706.989380f
+                x *   159.83096f + y * -7069.89380f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -531.570984f + y *  466.392212f
+                x * -5315.70984f + y *  4663.92212f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -680.391357f + y * -192.761520f
+                x * -6803.91357f + y * -1927.61520f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  416.694183f + y *  571.362732f
+                x *  4166.94183f + y *  5713.62732f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  239.132965f + y * -665.510986f
+                x *  2391.32965f + y * -6655.10986f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -171.230408f + y *  686.126526f
+                x * -1712.30408f + y *  6861.26526f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -704.697876f + y *   59.078644f
+                x * -7046.97876f + y *   590.78644f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  414.571167f + y * -572.905029f
+                x *  4145.71167f + y * -5729.05029f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  162.298370f + y *  688.294006f
+                x *  1622.98370f + y *  6882.94006f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 6.0f, result * 0.1f);
         return (result - 1f) / (result + 1f);
@@ -5043,49 +5043,49 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  631.409607f + y *  306.491150f + z *   86.455414f
+                x *  6314.09607f + y *  3064.91150f + z *   864.55414f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  179.661102f + y * -206.421967f + z * -652.074585f
+                x *  1796.61102f + y * -2064.21967f + z * -6520.74585f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -33.419636f + y * -696.122925f + z *  119.938980f
+                x *  -334.19636f + y * -6961.22925f + z *  1199.38980f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -368.081055f + y *  297.720337f + z * -525.326904f
+                x * -3680.81055f + y *  2977.20337f + z * -5253.26904f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -609.969543f + y * -173.469589f + z *  312.945435f
+                x * -6099.69543f + y * -1734.69589f + z *  3129.45435f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  398.788177f + y * -563.363647f + z * -153.879303f
+                x *  3987.88177f + y * -5633.63647f + z * -1538.79303f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  337.912170f + y *  279.078033f + z *  554.995667f
+                x *  3379.12170f + y *  2790.78033f + z *  5549.95667f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  213.054962f + y * -533.772461f + z * -412.048462f
+                x *  2130.54962f + y * -5337.72461f + z * -4120.48462f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -95.317749f + y * -515.371399f + z *  474.759155f
+                x *  -953.17749f + y * -5153.71399f + z *  4747.59155f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -596.586426f + y *  379.667847f + z *   -5.138897f
+                x * -5965.86426f + y *  3796.67847f + z *   -51.38897f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -567.615234f + y *  -74.627899f + z * -415.130157f
+                x * -5676.15234f + y *  -746.27899f + z * -4151.30157f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  355.844727f + y * -604.304993f + z *   90.990967f
+                x *  3558.44727f + y * -6043.04993f + z *   909.90967f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  213.709763f + y *  330.911835f + z * -587.294556f
+                x *  2137.09763f + y *  3309.11835f + z * -5872.94556f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -96.079712f + y * -324.072083f + z *  621.156494f
+                x *  -960.79712f + y * -3240.72083f + z *  6211.56494f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -226.369583f + y * -609.481262f + z * -278.170410f
+                x * -2263.69583f + y * -6094.81262f + z * -2781.70410f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 10.0f, result * 0.06666667f);
         return (result - 1f) / (result + 1f);
@@ -5151,64 +5151,64 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  587.891846f + y *  344.639221f + z *  181.212082f + w *   53.465096f
+                x *  5878.91846f + y *  3446.39221f + z *  1812.12082f + w *   534.65096f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  239.028946f + y *  -34.310600f + z * -276.438019f + w * -604.449646f
+                x *  2390.28946f + y *  -343.10600f + z * -2764.38019f + w * -6044.49646f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   82.796310f + y * -392.144714f + z *  566.007507f + w *  138.174561f
+                x *   827.96310f + y * -3921.44714f + z *  5660.07507f + w *  1381.74561f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -71.102577f + y *  584.338501f + z *   14.304085f + w * -391.634674f
+                x *  -711.02577f + y *  5843.38501f + z *   143.04085f + w * -3916.34674f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -293.269531f + y *  224.450638f + z * -545.013489f + w *  258.194855f
+                x * -2932.69531f + y *  2244.50638f + z * -5450.13489f + w *  2581.94855f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -501.295532f + y * -113.562599f + z *  346.347626f + w * -340.498291f
+                x * -5012.95532f + y * -1135.62599f + z *  3463.47626f + w * -3404.98291f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  634.025696f + y * -254.838608f + z *  -58.509274f + w *  172.437912f
+                x *  6340.25696f + y * -2548.38608f + z *  -585.09274f + w *  1724.37912f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  298.724976f + y *  321.644531f + z * -535.967346f + w * -141.903503f
+                x *  2987.24976f + y *  3216.44531f + z * -5359.67346f + w * -1419.03503f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  309.984253f + y *  149.156952f + z *  228.451614f + w *  574.074280f
+                x *  3099.84253f + y *  1491.56952f + z *  2284.51614f + w *  5740.74280f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  153.389130f + y * -379.051147f + z * -512.779480f + w * -264.459137f
+                x *  1533.89130f + y * -3790.51147f + z * -5127.79480f + w * -2644.59137f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -55.233402f + y * -416.140656f + z *  393.838867f + w *  410.799927f
+                x *  -552.33402f + y * -4161.40656f + z *  3938.38867f + w *  4107.99927f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -391.013062f + y *  581.139343f + z *   74.992958f + w *  -62.058743f
+                x * -3910.13062f + y *  5811.39343f + z *   749.92958f + w *  -620.58743f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -237.743546f + y *   22.132349f + z * -204.460892f + w * -633.461365f
+                x * -2377.43546f + y *   221.32349f + z * -2044.60892f + w * -6334.61365f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  651.842163f + y * -157.460464f + z *  222.909027f + w *   26.627455f
+                x *  6518.42163f + y * -1574.60464f + z *  2229.09027f + w *   266.27455f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  246.894882f + y * -569.525513f + z *  -41.629921f + w * -336.214172f
+                x *  2468.94882f + y * -5695.25513f + z *  -416.29921f + w * -3362.14172f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  213.614990f + y *  255.352783f + z * -612.751465f + w *  117.424980f
+                x *  2136.14990f + y *  2553.52783f + z * -6127.51465f + w *  1174.24980f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   99.472557f + y *  -37.222996f + z *  305.192322f + w * -629.020447f
+                x *   994.72557f + y *  -372.22996f + z *  3051.92322f + w * -6290.20447f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -131.324768f + y * -525.419678f + z * -310.785370f + w *  331.948608f
+                x * -1313.24768f + y * -5254.19678f + z * -3107.85370f + w *  3319.48608f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -171.408539f + y *  459.780396f + z *  463.618652f + w * -210.637726f
+                x * -1714.08539f + y *  4597.80396f + z *  4636.18652f + w * -2106.37726f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -550.175903f + y *  228.823212f + z *   92.641876f + w *  369.395813f
+                x * -5501.75903f + y *  2288.23212f + z *   926.41876f + w *  3693.95813f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 15.0f, result * 0.05f);
         return (result - 1f) / (result + 1f);
@@ -5295,79 +5295,79 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  553.301208f + y *  356.369263f + z *  224.869003f + w *  122.502274f + u *   37.084660f
+                x *  5533.01208f + y *  3563.69263f + z *  2248.69003f + w *  1225.02274f + u *   370.84660f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  264.472443f + y *   49.581066f + z * -123.952446f + w * -303.222778f + u * -566.018738f
+                x *  2644.72443f + y *   495.81066f + z * -1239.52446f + w * -3032.22778f + u * -5660.18738f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  134.475876f + y * -160.543289f + z * -588.626099f + w *  319.554443f + u *   87.382698f
+                x *  1344.75876f + y * -1605.43289f + z * -5886.26099f + w *  3195.54443f + u *   873.82698f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   24.430294f + y * -483.400543f + z *  247.062561f + w *  -85.677017f + u * -444.337738f
+                x *   244.30294f + y * -4834.00543f + z *  2470.62561f + w *  -856.77017f + u * -4443.37738f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -66.784103f + y *  335.751038f + z *  -55.359364f + w * -605.568054f + u *  114.556335f
+                x *  -667.84103f + y *  3357.51038f + z *  -553.59364f + w * -6055.68054f + u *  1145.56335f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -232.670090f + y *  171.086426f + z * -516.942505f + w *  125.771729f + u * -365.561798f
+                x * -2326.70090f + y *  1710.86426f + z * -5169.42505f + w *  1257.71729f + u * -3655.61798f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -426.311798f + y *  -71.121964f + z *  360.226746f + w * -340.173981f + u *  260.399109f
+                x * -4263.11798f + y *  -711.21964f + z *  3602.26746f + w * -3401.73981f + u *  2603.99109f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -538.432251f + y * -260.717499f + z *  -20.184544f + w *  306.686523f + u * -218.500519f
+                x * -5384.32251f + y * -2607.17499f + z *  -201.84544f + w *  3066.86523f + u * -2185.00519f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  346.234894f + y *  539.684692f + z * -231.732422f + w *  -41.956367f + u *  183.005341f
+                x *  3462.34894f + y *  5396.84692f + z * -2317.32422f + w *  -419.56367f + u *  1830.05341f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  255.943161f + y *  209.558960f + z *  291.786072f + w * -535.137878f + u * -138.404663f
+                x *  2559.43161f + y *  2095.58960f + z *  2917.86072f + w * -5351.37878f + u * -1384.04663f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  298.702148f + y *   63.652901f + z *   42.451942f + w *  203.035156f + u *  603.149475f
+                x *  2987.02148f + y *   636.52901f + z *   424.51942f + w *  2030.35156f + u *  6031.49475f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  109.878311f + y * -271.320770f + z * -460.582306f + w * -412.625732f + u * -178.899933f
+                x *  1098.78311f + y * -2713.20770f + z * -4605.82306f + w * -4126.25732f + u * -1788.99933f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -31.217522f + y * -372.518799f + z *  362.538422f + w *  285.746490f + u *  383.744019f
+                x *  -312.17522f + y * -3725.18799f + z *  3625.38422f + w *  2857.46490f + u *  3837.44019f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -236.960007f + y *  645.782776f + z *  117.252464f + w *  -79.228256f + u *  -82.937813f
+                x * -2369.60007f + y *  6457.82776f + z *  1172.52464f + w *  -792.28256f + u *  -829.37813f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -198.138550f + y *   98.188301f + z * -159.358185f + w * -426.590454f + u *  493.776428f
+                x * -1981.38550f + y *   981.88301f + z * -1593.58185f + w * -4265.90454f + u *  4937.76428f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -423.941040f + y *  -61.616600f + z *  547.807495f + w *  128.285995f + u *    4.058287f
+                x * -4239.41040f + y *  -616.16600f + z *  5478.07495f + w *  1282.85995f + u *    40.58287f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  497.048218f + y * -197.889023f + z *   82.342545f + w * -157.652924f + u * -426.893097f
+                x *  4970.48218f + y * -1978.89023f + z *   823.42545f + w * -1576.52924f + u * -4268.93097f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  297.392761f + y *  555.879517f + z * -127.407410f + w *  290.244781f + u *   46.586296f
+                x *  2973.92761f + y *  5558.79517f + z * -1274.07410f + w *  2902.44781f + u *   465.86296f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  150.330048f + y *  158.977859f + z * -604.281921f + w *  -22.889036f + u * -294.169617f
+                x *  1503.30048f + y *  1589.77859f + z * -6042.81921f + w *  -228.89036f + u * -2941.69617f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  135.262329f + y *   34.804523f + z *  208.069229f + w * -645.936890f + u *  141.615234f
+                x *  1352.62329f + y *   348.04523f + z *  2080.69229f + w * -6459.36890f + u *  1416.15234f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *    9.681323f + y * -286.739075f + z * -186.653458f + w *  248.070709f + u * -566.919556f
+                x *    96.81323f + y * -2867.39075f + z * -1866.53458f + w *  2480.70709f + u * -5669.19556f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -89.430565f + y * -429.032440f + z * -495.351776f + w * -192.833008f + u *  159.576920f
+                x *  -894.30565f + y * -4290.32440f + z * -4953.51776f + w * -1928.33008f + u *  1595.76920f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -221.396896f + y *  393.251129f + z *  233.666550f + w *  410.366943f + u * -270.971008f
+                x * -2213.96896f + y *  3932.51129f + z *  2336.66550f + w *  4103.66943f + u * -2709.71008f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -557.372192f + y *  192.241043f + z * -100.102707f + w *  -32.374203f + u *  376.032471f
+                x * -5573.72192f + y *  1922.41043f + z * -1001.02707f + w *  -323.74203f + u *  3760.32471f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -486.219116f + y *  -55.609570f + z * -320.418030f + w * -369.642609f + u * -145.892380f
+                x * -4862.19116f + y *  -556.09570f + z * -3204.18030f + w * -3696.42609f + u * -1458.92380f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 20.0f, result * 0.04f);
         return (result - 1f) / (result + 1f);
@@ -5458,94 +5458,94 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  525.149109f + y *  358.232391f + z *  247.322296f + w *  161.273590f + u *   89.656189f + v *   27.598646f
+                x *  5251.49109f + y *  3582.32391f + z *  2473.22296f + w *  1612.73590f + u *   896.56189f + v *   275.98646f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  275.822784f + y *   97.058762f + z *  -40.428654f + w * -169.690201f + u * -313.471222f + v * -534.693726f
+                x *  2758.22784f + y *   970.58762f + z *  -404.28654f + w * -1696.90201f + u * -3134.71222f + v * -5346.93726f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  168.696701f + y *  -64.114365f + z * -304.645294f + w *  563.169067f + u *  230.507401f + v *   66.471115f
+                x *  1686.96701f + y *  -641.14365f + z * -3046.45294f + w *  5631.69067f + u *  2305.07401f + v *   664.71115f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   83.909790f + y * -258.569061f + z *  455.046051f + w *   96.730606f + u * -140.401657f + v * -435.952118f
+                x *   839.09790f + y * -2585.69061f + z *  4550.46051f + w *   967.30606f + u * -1404.01657f + v * -4359.52118f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   -4.881689f + y * -513.704346f + z *   94.984009f + w * -185.303864f + u *  427.881317f + v *   98.648537f
+                x *   -48.81689f + y * -5137.04346f + z *   949.84009f + w * -1853.03864f + u *  4278.81317f + v *   986.48537f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -95.933861f + y *  355.739258f + z * -130.610168f + w *  475.652893f + u *   14.486054f + v * -347.593414f
+                x *  -959.33861f + y *  3557.39258f + z * -1306.10168f + w *  4756.52893f + u *   144.86054f + v * -3475.93414f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -188.148132f + y *  134.218658f + z * -478.866852f + w *   56.056114f + u * -432.031555f + v *  166.036270f
+                x * -1881.48132f + y *  1342.18658f + z * -4788.66852f + w *   560.56114f + u * -4320.31555f + v *  1660.36270f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -358.840607f + y *  -40.275238f + z *  351.518158f + w * -318.116852f + u *  200.517456f + v * -323.620422f
+                x * -3588.40607f + y *  -402.75238f + z *  3515.18158f + w * -3181.16852f + u *  2005.17456f + v * -3236.20422f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -463.916168f + y * -211.841934f + z *   27.169964f + w *  385.386597f + u * -205.048126f + v *  220.654602f
+                x * -4639.16168f + y * -2118.41934f + z *   271.69964f + w *  3853.86597f + u * -2050.48126f + v *  2206.54602f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  523.240845f + y * -339.119873f + z * -154.089691f + w *   12.946824f + u *  256.400940f + v * -147.150986f
+                x *  5232.40845f + y * -3391.19873f + z * -1540.89691f + w *   129.46824f + u *  2564.00940f + v * -1471.50986f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  284.219879f + y *  282.002563f + z *  501.956787f + w * -222.017227f + u *  -31.551321f + v *  193.740189f
+                x *  2842.19879f + y *  2820.02563f + z *  5019.56787f + w * -2220.17227f + u *  -315.51321f + v *  1937.40189f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  233.708893f + y *  148.373398f + z *  163.660843f + w *  279.542389f + u * -547.002319f + v * -138.976944f
+                x *  2337.08893f + y *  1483.73398f + z *  1636.60843f + w *  2795.42389f + u * -5470.02319f + v * -1389.76944f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  284.231110f + y *   -2.220032f + z *  -98.701797f + w *  -32.466091f + u *  181.538559f + v *  612.817078f
+                x *  2842.31110f + y *   -22.20032f + z *  -987.01797f + w *  -324.66091f + u *  1815.38559f + v *  6128.17078f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   79.382935f + y * -196.455826f + z * -384.959625f + w * -435.486847f + u * -318.995392f + v * -124.868286f
+                x *   793.82935f + y * -1964.55826f + z * -3849.59625f + w * -4354.86847f + u * -3189.95392f + v * -1248.68286f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -14.833800f + y * -353.599274f + z *  353.110718f + w *  228.908066f + u *  237.532562f + v *  375.937653f
+                x *  -148.33800f + y * -3535.99274f + z *  3531.10718f + w *  2289.08066f + u *  2375.32562f + v *  3759.37653f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -143.313828f + y *  654.488770f + z *  131.420074f + w *  -75.859253f + u * -144.619507f + v *  -85.172440f
+                x * -1433.13828f + y *  6544.88770f + z *  1314.20074f + w *  -758.59253f + u * -1446.19507f + v *  -851.72440f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -141.110016f + y *  145.369095f + z * -100.059471f + w * -324.184204f + u *  427.667175f + v *  401.296265f
+                x * -1411.10016f + y *  1453.69095f + z * -1000.59471f + w * -3241.84204f + u *  4276.67175f + v *  4012.96265f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -345.244232f + y *   33.871922f + z * -566.417664f + w *  237.607590f + u *   46.156673f + v *  -18.212242f
+                x * -3452.44232f + y *   338.71922f + z * -5664.17664f + w *  2376.07590f + u *   461.56673f + v *  -182.12242f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -319.791534f + y *  -88.960533f + z *  177.819519f + w *  -61.022217f + u * -243.689774f + v * -543.305237f
+                x * -3197.91534f + y *  -889.60533f + z *  1778.19519f + w *  -610.22217f + u * -2436.89774f + v * -5433.05237f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  480.400940f + y * -256.574158f + z *    9.162954f + w * -426.002991f + u *  146.510605f + v *   21.123316f
+                x *  4804.00940f + y * -2565.74158f + z *    91.62954f + w * -4260.02991f + u *  1465.10605f + v *   211.23316f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  288.494659f + y *  442.658356f + z * -179.264603f + w *  130.309311f + u * -127.654053f + v * -394.337372f
+                x *  2884.94659f + y *  4426.58356f + z * -1792.64603f + w *  1303.09311f + u * -1276.54053f + v * -3943.37372f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  210.659332f + y *  207.245621f + z *  519.969727f + w * -111.193710f + u *  355.104095f + v *   62.688099f
+                x *  2106.59332f + y *  2072.45621f + z *  5199.69727f + w * -1111.93710f + u *  3551.04095f + v *   626.88099f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   81.522423f + y *   34.930004f + z *   93.436493f + w * -657.891052f + u *   -9.353702f + v * -224.910828f
+                x *   815.22423f + y *   349.30004f + z *   934.36493f + w * -6578.91052f + u *   -93.53702f + v * -2249.10828f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   73.203209f + y * -129.040863f + z *  -89.321480f + w *  168.219543f + u * -646.471252f + v *  154.524963f
+                x *   732.03209f + y * -1290.40863f + z *  -893.21480f + w *  1682.19543f + u * -6464.71252f + v *  1545.24963f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -33.069569f + y * -344.483612f + z * -417.138794f + w * -200.175537f + u *  153.151382f + v * -377.884216f
+                x *  -330.69569f + y * -3444.83612f + z * -4171.38794f + w * -2001.75537f + u *  1531.51382f + v * -3778.84216f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -68.606529f + y *  547.118408f + z *  223.031647f + w *  340.760071f + u * -141.518433f + v *  100.776779f
+                x *  -686.06529f + y *  5471.18408f + z *  2230.31647f + w *  3407.60071f + u * -1415.18433f + v *  1007.76779f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -270.452423f + y *  367.186646f + z *  102.643898f + w *  118.322144f + u *  398.760925f + v * -329.503723f
+                x * -2704.52423f + y *  3671.86646f + z *  1026.43898f + w *  1183.22144f + u *  3987.60925f + v * -3295.03723f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -472.528961f + y *  136.741959f + z * -223.640900f + w * -306.958466f + u * -108.628349f + v *  319.481689f
+                x * -4725.28961f + y *  1367.41959f + z * -2236.40900f + w * -3069.58466f + u * -1086.28349f + v *  3194.81689f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -284.740417f + y *  -37.270573f + z * -309.660828f + w *  250.613953f + u *  496.682404f + v * -110.601158f
+                x * -2847.40417f + y *  -372.70573f + z * -3096.60828f + w *  2506.13953f + u *  4966.82404f + v * -1106.01158f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  555.202637f + y * -237.696198f + z *  237.019287f + w *   52.432129f + u *   66.310188f + v *  268.357361f
+                x *  5552.02637f + y * -2376.96198f + z *  2370.19287f + w *   524.32129f + u *   663.10188f + v *  2683.57361f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 25.0f, result * 0.033333335f);
         return (result - 1f) / (result + 1f);
@@ -5615,109 +5615,109 @@ public class Noise {
         float result = 0.0f;
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  501.675262f + y *  355.885803f + z *  259.409882f + w *  184.770142f + u *  122.782402f + v *   69.163330f + m *   21.541986f
+                x *  5016.75262f + y *  3558.85803f + z *  2594.09882f + w *  1847.70142f + u *  1227.82402f + v *   691.63330f + m *   215.41986f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  280.441315f + y *  126.357170f + z *   11.421729f + w *  -91.466843f + u * -195.421219f + v * -316.333191f + m * -508.648376f
+                x *  2804.41315f + y *  1263.57170f + z *   114.21729f + w *  -914.66843f + u * -1954.21219f + v * -3163.33191f + m * -5086.48376f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  203.285782f + y *   -5.684657f + z * -196.039673f + w * -474.200470f + u *  394.942535f + v *  190.386505f + m *   56.636551f
+                x *  2032.85782f + y *   -56.84657f + z * -1960.39673f + w * -4742.00470f + u *  3949.42535f + v *  1903.86505f + m *   566.36551f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  104.675964f + y * -127.253181f + z * -523.693604f + w *  198.893280f + u *   12.611614f + v * -149.846176f + m * -369.476074f
+                x *  1046.75964f + y * -1272.53181f + z * -5236.93604f + w *  1988.93280f + u *   126.11614f + v * -1498.46176f + m * -3694.76074f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   50.631329f + y * -352.537598f + z *  277.235077f + w *  -41.172375f + u * -363.568756f + v *  389.978790f + m *  102.092903f
+                x *   506.31329f + y * -3525.37598f + z *  2772.35077f + w *  -411.72375f + u * -3635.68756f + v *  3899.78790f + m *  1020.92903f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -19.388794f + y *  557.719421f + z *   28.820049f + w * -270.380890f + u *  193.484589f + v *  -36.294926f + m * -275.631104f
+                x *  -193.88794f + y *  5577.19421f + z *   288.20049f + w * -2703.80890f + u *  1934.84589f + v *  -362.94926f + m * -2756.31104f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -81.781517f + y *  244.423523f + z * -139.662811f + w *  262.219940f + u *  -63.905869f + v * -573.203857f + m *  112.901199f
+                x *  -817.81517f + y *  2444.23523f + z * -1396.62811f + w *  2622.19940f + u *  -639.05869f + v * -5732.03857f + m *  1129.01199f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -146.351746f + y *  101.952301f + z * -416.596893f + w *   16.487003f + u * -482.471710f + v *   61.652645f + m * -240.565033f
+                x * -1463.51746f + y *  1019.52301f + z * -4165.96893f + w *   164.87003f + u * -4824.71710f + v *   616.52645f + m * -2405.65033f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -309.461121f + y *  -19.718990f + z *  339.716309f + w * -295.506958f + u *  160.224701f + v * -365.268921f + m *  205.206024f
+                x * -3094.61121f + y *  -197.18990f + z *  3397.16309f + w * -2955.06958f + u *  1602.24701f + v * -3652.68921f + m *  2052.06024f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -390.964783f + y * -162.137131f + z *   62.123608f + w *  429.761353f + u * -176.094208f + v *  208.939072f + m * -240.267899f
+                x * -3909.64783f + y * -1621.37131f + z *   621.23608f + w *  4297.61353f + u * -1760.94208f + v *  2089.39072f + m * -2402.67899f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -483.896088f + y * -271.330505f + z * -108.954552f + w *   61.407410f + u *  362.392426f + v * -123.322929f + m *  173.594208f
+                x * -4838.96088f + y * -2713.30505f + z * -1089.54552f + w *   614.07410f + u *  3623.92426f + v * -1233.22929f + m *  1735.94208f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  346.396759f + y *  427.846191f + z * -299.593719f + w * -126.019981f + u *   30.470419f + v *  270.214905f + m * -132.152832f
+                x *  3463.96759f + y *  4278.46191f + z * -2995.93719f + w * -1260.19981f + u *   304.70419f + v *  2702.14905f + m * -1321.52832f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  253.588287f + y *  207.960083f + z *  250.708084f + w *  488.187195f + u * -219.951630f + v *  -24.411810f + m *  205.861816f
+                x *  2535.88287f + y *  2079.60083f + z *  2507.08084f + w *  4881.87195f + u * -2199.51630f + v *  -244.11810f + m *  2058.61816f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  220.956863f + y *  106.032631f + z *   82.828362f + w *  134.374176f + u *  275.410187f + v * -564.991089f + m * -141.569489f
+                x *  2209.56863f + y *  1060.32631f + z *   828.28362f + w *  1343.74176f + u *  2754.10187f + v * -5649.91089f + m * -1415.69489f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  251.361832f + y *  -48.982273f + z * -195.456085f + w * -202.274612f + u *  -80.435600f + v *  152.686584f + m *  570.619080f
+                x *  2513.61832f + y *  -489.82273f + z * -1954.56085f + w * -2022.74612f + u *  -804.35600f + v *  1526.86584f + m *  5706.19080f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   55.708260f + y * -138.262543f + z * -302.444977f + w * -426.906219f + u * -376.613342f + v * -234.474060f + m *  -85.626472f
+                x *   557.08260f + y * -1382.62543f + z * -3024.44977f + w * -4269.06219f + u * -3766.13342f + v * -2344.74060f + m *  -856.26472f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   -2.239749f + y * -347.882019f + z *  355.439087f + w *  195.794510f + u *  161.418823f + v *  211.096863f + m *  379.172974f
+                x *   -22.39749f + y * -3478.82019f + z *  3554.39087f + w *  1957.94510f + u *  1614.18823f + v *  2110.96863f + m *  3791.72974f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -85.840317f + y *  642.192627f + z *  128.859390f + w *  -65.434769f + u * -162.253769f + v * -164.063538f + m *  -78.612648f
+                x *  -858.40317f + y *  6421.92627f + z *  1288.59390f + w *  -654.34769f + u * -1622.53769f + v * -1640.63538f + m *  -786.12648f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -107.170525f + y *  184.283585f + z *  -62.225113f + w * -268.876831f + u *  403.678955f + v *  298.467682f + m *  355.579895f
+                x * -1071.70525f + y *  1842.83585f + z *  -622.25113f + w * -2688.76831f + u *  4036.78955f + v *  2984.67682f + m *  3555.79895f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -325.052368f + y *  135.522797f + z * -458.468628f + w *  391.458160f + u *  101.189522f + v *  -25.421261f + m *  -41.778095f
+                x * -3250.52368f + y *  1355.22797f + z * -4584.68628f + w *  3914.58160f + u *  1011.89522f + v *  -254.21261f + m *  -417.78095f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -227.392487f + y *  -26.284042f + z *  283.936157f + w *    0.964681f + u * -165.068802f + v * -349.133972f + m *  466.827911f
+                x * -2273.92487f + y *  -262.84042f + z *  2839.36157f + w *    09.64681f + u * -1650.68802f + v * -3491.33972f + m *  4668.27911f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -505.637604f + y * -182.544830f + z *  135.495392f + w * -275.054749f + u *  326.942566f + v *  100.716927f + m *    6.925093f
+                x * -5056.37604f + y * -1825.44830f + z *  1354.95392f + w * -2750.54749f + u *  3269.42566f + v *  1007.16927f + m *    69.25093f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  401.316803f + y * -265.008667f + z *  -42.360432f + w *  260.431213f + u *  -11.663049f + v * -185.229889f + m * -405.881378f
+                x *  4013.16803f + y * -2650.08667f + z *  -423.60432f + w *  2604.31213f + u *  -116.63049f + v * -1852.29889f + m * -4058.81378f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  314.906738f + y *  429.215637f + z * -246.359131f + w *   50.029636f + u * -333.727570f + v *  201.825165f + m *   37.333996f
+                x *  3149.06738f + y *  4292.15637f + z * -2463.59131f + w *   500.29636f + u * -3337.27570f + v *  2018.25165f + m *   373.33996f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  222.395691f + y *  208.514786f + z *  425.336975f + w * -174.136765f + u *  175.681259f + v * -109.011452f + m * -391.367584f
+                x *  2223.95691f + y *  2085.14786f + z *  4253.36975f + w * -1741.36765f + u *  1756.81259f + v * -1090.11452f + m * -3913.67584f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  157.416077f + y *   80.118210f + z *  152.694763f + w *  503.832397f + u * -100.999741f + v *  419.150909f + m *   76.416374f
+                x *  1574.16077f + y *   801.18210f + z *  1526.94763f + w *  5038.32397f + u * -1009.99741f + v *  4191.50909f + m *   764.16374f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   67.591141f + y *  -37.319778f + z *  -27.552303f + w *   87.646217f + u *  641.826416f + v *   -3.450804f + m * -271.540131f
+                x *   675.91141f + y *  -373.19778f + z *  -275.52303f + w *   876.46217f + u *  6418.26416f + v *   -34.50804f + m * -2715.40131f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *   22.729149f + y * -228.087128f + z * -296.025848f + w * -156.327194f + u *  118.719368f + v * -549.473877f + m *  139.512451f
+                x *   227.29149f + y * -2280.87128f + z * -2960.25848f + w * -1563.27194f + u *  1187.19368f + v * -5494.73877f + m *  1395.12451f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  -35.293476f + y * -282.751587f + z *  408.343506f + w * -425.767120f + u * -144.165390f + v *   79.839600f + m * -209.081863f
+                x *  -352.93476f + y * -2827.51587f + z *  4083.43506f + w * -4257.67120f + u * -1441.65390f + v *   798.39600f + m * -2090.81863f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -119.740417f + y *  451.592804f + z *  183.826935f + w *  175.485809f + u *  367.798584f + v * -240.711044f + m *  154.952805f
+                x * -1197.40417f + y *  4515.92804f + z *  1838.26935f + w *  1754.85809f + u *  3677.98584f + v * -2407.11044f + m *  1549.52805f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -304.992706f + y *  335.370300f + z *  -19.497267f + w * -110.679962f + u *   17.588654f + v *  380.452484f + m * -370.016174f
+                x * -3049.92706f + y *  3353.70300f + z *  -194.97267f + w * -1106.79962f + u *   175.88654f + v *  3804.52484f + m * -3700.16174f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -307.247681f + y *   75.242531f + z * -227.213318f + w * -418.045898f + u * -342.991669f + v * -112.916649f + m *  207.954544f
+                x * -3072.47681f + y *   752.42531f + z * -2272.13318f + w * -4180.45898f + u * -3429.91669f + v * -1129.16649f + m *  2079.54544f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x * -254.518814f + y *  -35.601727f + z *  548.635132f + w *  146.936523f + u *  137.814728f + v *  280.984894f + m * -116.214783f
+                x * -2545.18814f + y *  -356.01727f + z *  5486.35132f + w *  1469.36523f + u *  1378.14728f + v *  2809.84894f + m * -1162.14783f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  631.548157f + y * -165.846207f + z *  173.884018f + w *  -13.127171f + u *  -61.292881f + v *    7.006536f + m *  198.790085f
+                x *  6315.48157f + y * -1658.46207f + z *  1738.84018f + w *  -131.27171f + u *  -612.92881f + v *    70.06536f + m *  1987.90085f
                         + 3301f * warp) & 0x3FFF];
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
-                x *  293.443359f + y * -306.193481f + z *    7.655765f + w * -213.225418f + u * -410.612518f + v * -306.207153f + m * -111.070984f
+                x *  2934.43359f + y * -3061.93481f + z *    76.55765f + w * -2132.25418f + u * -4106.12518f + v * -3062.07153f + m * -1110.70984f
                         + 3301f * warp) & 0x3FFF];
         result = (float) Math.pow(sharpness * 4f * 30.0f, result * 0.028571429f);
         return (result - 1f) / (result + 1f);

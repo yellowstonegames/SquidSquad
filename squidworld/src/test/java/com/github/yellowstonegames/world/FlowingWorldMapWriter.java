@@ -109,7 +109,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 10f, Noise.FLAN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.FLAN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
