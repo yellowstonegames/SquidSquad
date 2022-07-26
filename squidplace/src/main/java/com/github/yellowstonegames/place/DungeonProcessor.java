@@ -152,6 +152,7 @@ public class DungeonProcessor implements PlaceGenerator{
     public int mazeFX;
     protected int height, width;
     public Coord stairsUp, stairsDown;
+    public boolean markStairsUp, markStairsDown;
     public EnhancedRandom rng;
     protected EnhancedRandom rebuildRNG;
     protected boolean seedFixed;
@@ -636,6 +637,26 @@ public class DungeonProcessor implements PlaceGenerator{
     }
 
     /**
+     * Enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.
+     * @return this DungeonProcessor; can be chained
+     */
+    public DungeonProcessor addStairs() {
+        return addStairs(true, true);
+    }
+
+    /**
+     * Potentially enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.
+     * @param up if true, stairs up will be marked as '&lt;'; if false, no up stairs will be marked
+     * @param down if true, stairs down will be marked as '&gt;'; if false, no down stairs will be marked
+     * @return this DungeonProcessor; can be chained
+     */
+    public DungeonProcessor addStairs(boolean up, boolean down){
+        markStairsUp = up;
+        markStairsDown = down;
+        return this;
+    }
+
+    /**
      * Removes any door, water, or trap insertion effects that this DungeonGenerator would put in future dungeons.
      * @return this DungeonGenerator, with all effects removed. Can be chained.
      */
@@ -1058,6 +1079,10 @@ public class DungeonProcessor implements PlaceGenerator{
             }
         }
         placement = new Placement(finder);
+        if(markStairsUp)
+            dungeon[stairsUp.x][stairsUp.y] = '<';
+        if(markStairsDown)
+            dungeon[stairsDown.x][stairsDown.y] = '>';
         return dungeon;
 
     }
