@@ -25,6 +25,7 @@ import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -59,6 +60,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
     private AnimatedPNG apng;
+    private PixmapIO.PNG pngWriter;
 
     private String date, path;
     private float mutationA, mutationB;
@@ -98,8 +100,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         apng = new AnimatedPNG();
         apng.setFlipY(false);
         apng.setCompression(7);
-//        pngWriter = new PixmapIO.PNG();
-//        pngWriter.setFlipY(false);
+        pngWriter = new PixmapIO.PNG();
+        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
@@ -107,7 +109,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 12f, Noise.FLAN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 10f, Noise.FLAN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
@@ -168,6 +170,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         };
+//        terrainBasicNoise.setMutation(1.618f);
+        
         //// Maelstrom
 //        Noise terrainRidgedNoise = new Noise(fn) {
 //            @Override
@@ -307,7 +311,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
                 mutationA = TrigTools.sinTurns(angle) * 0.3125f;
-                mutationB = TrigTools.sinTurns(angle) * 0.3125f;
+                mutationB = TrigTools.cosTurns(angle) * 0.3125f;
+
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
 //                wmv.getBiomeMapper().makeBiomes(world);

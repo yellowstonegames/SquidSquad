@@ -5399,12 +5399,12 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x = (x + 501.618f) * lacunarity;
-            y = (y + 511.618f) * lacunarity;
-            z = (z + 521.618f) * lacunarity;
-            w = (w + 531.618f) * lacunarity;
-            u = (u + 541.618f) * lacunarity;
-            v = (v + 551.618f) * lacunarity;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
 
             amp *= gain;
             sum += singleFlan(++seed, x, y, z, w, u, v) * amp;
