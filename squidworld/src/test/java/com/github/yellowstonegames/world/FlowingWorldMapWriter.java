@@ -12,8 +12,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
+import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
@@ -35,7 +37,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
     private static final int FRAMES = 240;
-    private static final int LIMIT = 5;
+    private static final int LIMIT = 3;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -56,8 +58,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
-    private PixmapIO.PNG pngWriter;
-    
+    private AnimatedPNG apng;
+
     private String date, path;
     private float mutationA, mutationB;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
@@ -70,7 +72,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/Classic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
-        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
+        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
+//        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
@@ -92,6 +95,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         writer.setDitherStrength(0.75f);
         writer.fastAnalysis = true;
         writer.setFlipY(false);
+        apng = new AnimatedPNG();
+        apng.setFlipY(false);
+        apng.setCompression(7);
 //        pngWriter = new PixmapIO.PNG();
 //        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
@@ -101,7 +107,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 12f, Noise.FLAN_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
@@ -298,9 +305,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        wmv.world.heatModifier = world.rng.nextFloat(1.15f, 1.5f);
 //        try {
             for (int i = 0; i < FRAMES; i++) {
-                float angle = i * MathUtils.PI2 / (float) FRAMES;
-                mutationA = MathUtils.cos(angle) * 0.3125f;
-                mutationB = MathUtils.sin(angle) * 0.3125f;
+                float angle = i / (float) FRAMES;
+                mutationA = TrigTools.sinTurns(angle) * 0.3125f;
+                mutationB = TrigTools.sinTurns(angle) * 0.3125f;
                 world.setCenterLongitude(angle);
                 generate(hash);
 //                wmv.getBiomeMapper().makeBiomes(world);
@@ -323,6 +330,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             writer.setDitherStrength(0.75f);
             writer.palette = new PaletteReducer(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
+            apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
 //        } catch (IOException e) {
 //            e.printStackTrace();
@@ -333,7 +341,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     }
     @Override
     public void render() {
-        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
+//        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
     }
 
     @Override
