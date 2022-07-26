@@ -308,7 +308,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                 float angle = i / (float) FRAMES;
                 mutationA = TrigTools.sinTurns(angle) * 0.3125f;
                 mutationB = TrigTools.sinTurns(angle) * 0.3125f;
-                world.setCenterLongitude(angle);
+                world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
 //                wmv.getBiomeMapper().makeBiomes(world);
                 int[][] cm = wmv.show();
