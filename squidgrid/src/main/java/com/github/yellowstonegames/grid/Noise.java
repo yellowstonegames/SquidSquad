@@ -4322,6 +4322,23 @@ public class Noise {
         }
         return sum * 2f / correction - 1f;
     }
+    public float getTaffyFractal(float x, float y, float z, float w) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleTaffyFractalFBM(x, y, z, w);
+            case BILLOW:
+                return singleTaffyFractalBillow(x, y, z, w);
+            case RIDGED_MULTI:
+                return singleTaffyFractalRidgedMulti(x, y, z, w);
+            default:
+                return 0;
+        }
+    }
 
     public float getTaffy(float x, float y, float z, float w) {
         return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency);
@@ -4900,6 +4917,10 @@ public class Noise {
         return (result - 1f) / (result + 1f);
     }
 
+    public float getFlan(float x, float y) {
+        return singleFlan(seed, x * frequency, y * frequency);
+    }
+
     public float getFlanFractal(float x, float y) {
         x *= frequency;
         y *= frequency;
@@ -5138,6 +5159,24 @@ public class Noise {
         }
         return sum * 2f / correction - 1f;
     }
+    public float getFlanFractal(float x, float y, float z, float w) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleFlanFractalFBM(x, y, z, w);
+            case BILLOW:
+                return singleFlanFractalBillow(x, y, z, w);
+            case RIDGED_MULTI:
+                return singleFlanFractalRidgedMulti(x, y, z, w);
+            default:
+                return 0;
+        }
+    }
+
 
     public float getFlan(float x, float y, float z, float w) {
         return singleFlan(seed, x * frequency, y * frequency, z * frequency, w * frequency);
