@@ -23,6 +23,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 
+import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.tommyettinger.digital.TrigTools.*;
 import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 import static com.github.yellowstonegames.grid.IntPointHash.*;
@@ -1170,15 +1171,10 @@ public class Noise {
         return r;
     }
 
-    protected static int fastFloor(float f) {
-        return (f >= 0 ? (int) f : (int) f - 1);
-    }
-
 
     protected static int fastRound(float f) {
-        return (f >= 0) ? (int) (f + 0.5f) : (int) (f - 0.5f);
+        return (int)(f + 16384.5) - 16384;
     }
-
 
     private static float lerp(float a, float b, float t) {
         return a + t * (b - a);
