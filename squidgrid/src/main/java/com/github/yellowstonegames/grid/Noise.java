@@ -4913,8 +4913,10 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  1622.98370f + y *  6882.94006f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 6.0f, result * 0.1f);
-        return (result - 1f) / (result + 1f);
+        final float sharp = sharpnessInverse * (0.75f/2f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 6.0f, result * 0.1f);
+//        return (result - 1f) / (result + 1f);
     }
 
     public float getFlan(float x, float y) {
@@ -5104,8 +5106,11 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x * -2263.69583f + y * -6094.81262f + z * -2781.70410f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 10.0f, result * 0.06666667f);
-        return (result - 1f) / (result + 1f);
+        result *= 0.06666667f;
+        final float sharp = sharpnessInverse * (0.75f/3f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 10.0f, result * 0.06666667f);
+//        return (result - 1f) / (result + 1f);
     }
 
 
@@ -5245,8 +5250,15 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x * -5501.75903f + y *  2288.23212f + z *   926.41876f + w *  3693.95813f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 15.0f, result * 0.05f);
-        return (result - 1f) / (result + 1f);
+//        return TrigTools.sin(result);
+//        result = TrigTools.sin(result);
+        result *= 0.05f;
+        final float sharp = sharpnessInverse * (0.75f/4f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        final float sharp = sharpnessInverse * (12f/4f);
+//        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 15.0f, result * 0.05f);
+//        return (result - 1f) / (result + 1f);
     }
 
     public float getFlanFractal(float x, float y, float z, float w, float u) {
@@ -5404,8 +5416,11 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x * -4862.19116f + y *  -556.09570f + z * -3204.18030f + w * -3696.42609f + u * -1458.92380f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 20.0f, result * 0.04f);
-        return (result - 1f) / (result + 1f);
+        result *= 0.04f;
+        final float sharp = sharpnessInverse * (0.75f/5f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 20.0f, result * 0.04f);
+//        return (result - 1f) / (result + 1f);
     }
 
     public float getFlanFractal(float x, float y, float z, float w, float u, float v) {
@@ -5582,8 +5597,11 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  5552.02637f + y * -2376.96198f + z *  2370.19287f + w *   524.32129f + u *   663.10188f + v *  2683.57361f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 25.0f, result * 0.033333335f);
-        return (result - 1f) / (result + 1f);
+        result *= 0.033333335f;
+        final float sharp = sharpnessInverse * (0.75f/6f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 25.0f, result * 0.033333335f);
+//        return (result - 1f) / (result + 1f);
     }
 
     private float singleFlanFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
@@ -5754,8 +5772,11 @@ public class Noise {
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  2934.43359f + y * -3061.93481f + z *    76.55765f + w * -2132.25418f + u * -4106.12518f + v * -3062.07153f + m * -1110.70984f
                         + 3301f * warp) & 0x3FFF];
-        result = (float) Math.pow(sharpness * 4f * 30.0f, result * 0.028571429f);
-        return (result - 1f) / (result + 1f);
+        result *= 0.028571429f;
+        final float sharp = sharpnessInverse * (0.75f/7f);
+        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = (float) Math.pow(sharpness * 4f * 30.0f, result * 0.028571429f);
+//        return (result - 1f) / (result + 1f);
     }
 
     // Classic Perlin Noise
