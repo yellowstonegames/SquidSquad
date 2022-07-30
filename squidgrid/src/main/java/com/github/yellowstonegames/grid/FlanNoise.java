@@ -17,11 +17,9 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
@@ -74,7 +72,7 @@ public class FlanNoise {
             }
         }
 
-        inverse = 2f / vc;
+        inverse = 0.75f / vc;
         printDebugInfo();
     }
 
@@ -153,12 +151,17 @@ public class FlanNoise {
         float warp = 0.0f;
         int seed = (int)(this.seed ^ this.seed >>> 32);
         for (int i = 0; i < vc; i++) {
-            result += warp = TrigTools.SIN_TABLE[((seed = (seed << 17 | seed >>> 15) * 0xBCFD)) + (int) (
+            seed = (seed << 17 | seed >>> 15) * 0xBCFD;
+            result += warp = TrigTools.SIN_TABLE[seed + (int) (
                     points[i]
                             + 3301f * warp) & 0x3FFF];
         }
-        result = (float) Math.pow(sharpness, result * inverse);
-        return (result - 1f) / (result + 1f);
+        result *= inverse;
+        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+
+//        result = (float) Math.pow(sharpness, result * inverse);
+//        return (result - 1f) / (result + 1f);
+
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
 //        result = TrigTools.sin(result);
