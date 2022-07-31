@@ -1042,32 +1042,45 @@ public class DungeonProcessor implements PlaceGenerator{
                 allCaves = RoomFinder.merge(cv, width, height),
                 caveMap = innerGenerate(allCaves, caveFX),
                 doorMap;
-        char[][][] lakesAndMazes = makeLake(rm, cv);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (corridorMap[x][y] != '#' && lakesAndMazes[0][x][y] != '#')
-                    dungeon[x][y] = ':';
-                else if (roomMap[x][y] != '#')
-                    dungeon[x][y] = roomMap[x][y];
-                else if (lakesAndMazes[1][x][y] != '#') {
-                    dungeon[x][y] = lakesAndMazes[1][x][y];
-                    finder.environment[x][y] = DungeonTools.CORRIDOR_FLOOR;
-                } else if (corridorMap[x][y] != '#')
-                    dungeon[x][y] = corridorMap[x][y];
-                else if (caveMap[x][y] != '#')
-                    dungeon[x][y] = caveMap[x][y];
-                else if (lakesAndMazes[0][x][y] != '#') {
-                    dungeon[x][y] = lakesAndMazes[0][x][y];
-                    finder.environment[x][y] = DungeonTools.NATURAL_FLOOR;
+        if(mazeFX != 0 || lakeFX != 0) {
+            char[][][] lakesAndMazes = makeLake(rm, cv);
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    if (corridorMap[x][y] != '#' && lakesAndMazes[0][x][y] != '#')
+                        dungeon[x][y] = ':';
+                    else if (roomMap[x][y] != '#')
+                        dungeon[x][y] = roomMap[x][y];
+                    else if (lakesAndMazes[1][x][y] != '#') {
+                        dungeon[x][y] = lakesAndMazes[1][x][y];
+                        finder.environment[x][y] = DungeonTools.CORRIDOR_FLOOR;
+                    } else if (corridorMap[x][y] != '#')
+                        dungeon[x][y] = corridorMap[x][y];
+                    else if (caveMap[x][y] != '#')
+                        dungeon[x][y] = caveMap[x][y];
+                    else if (lakesAndMazes[0][x][y] != '#') {
+                        dungeon[x][y] = lakesAndMazes[0][x][y];
+                        finder.environment[x][y] = DungeonTools.NATURAL_FLOOR;
+                    }
+                }
+            }
+            finder = new RoomFinder(dungeon, finder.environment);
+            rm = finder.findRooms();
+            cr = finder.findCorridors();
+            cv = finder.findCaves();
+            cv.add(lakesAndMazes[0]);
+            allCaves = RoomFinder.merge(cv, width, height);
+        } else {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    if (roomMap[x][y] != '#')
+                        dungeon[x][y] = roomMap[x][y];
+                    else if (corridorMap[x][y] != '#')
+                        dungeon[x][y] = corridorMap[x][y];
+                    else if (caveMap[x][y] != '#')
+                        dungeon[x][y] = caveMap[x][y];
                 }
             }
         }
-        finder = new RoomFinder(dungeon, finder.environment);
-        rm = finder.findRooms();
-        cr = finder.findCorridors();
-        cv = finder.findCaves();
-        cv.add(lakesAndMazes[0]);
-        allCaves = RoomFinder.merge(cv, width, height);
         doorMap = makeDoors(rm, cr, allCaves, allCorridors);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -1075,7 +1088,6 @@ public class DungeonProcessor implements PlaceGenerator{
                     dungeon[x][y] = doorMap[x][y];
                 else if (doorMap[x][y] == '*')
                     dungeon[x][y] = '#';
-
             }
         }
         placement = new Placement(finder);
