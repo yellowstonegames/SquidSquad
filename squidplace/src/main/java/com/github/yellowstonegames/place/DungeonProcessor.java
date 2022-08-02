@@ -721,7 +721,6 @@ public class DungeonProcessor implements PlaceGenerator{
                                                   char[][] allCorridors)
     {
         CoordOrderedSet doors = new CoordOrderedSet();
-        CoordOrderedSet blocked = new CoordOrderedSet(4);
         Region bounds = new Region(width, height), reuse = new Region(width, height);
         int[][] scan = new int[width][height];
         for(int x = 1; x < map.length - 1; x++) {

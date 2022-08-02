@@ -22,17 +22,15 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import regexodus.MatchResult;
-import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.Replacer;
 import regexodus.Substitution;
 import regexodus.TextBuffer;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
+import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
 
 /**
  * A palette of predefined colors as packed Oklab ints, and tools for obtaining Oklab int colors from a description.
@@ -1776,7 +1774,6 @@ public final class DescriptiveColor {
     }
 
     private static final IntList mixing = new IntList(4);
-    private static final Matcher wordMatcher = Pattern.compile("[a-z]+").matcher();
 
     /**
      * Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
@@ -1843,7 +1840,7 @@ public final class DescriptiveColor {
     }
     /**
      * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
-     * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphabetical characters (typically
      * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
      * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
      * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
@@ -1866,12 +1863,11 @@ public final class DescriptiveColor {
      * @return a packed Oklab int color as described
      */
     public static int describeOklab(final CharSequence description, int start, int length) {
-        float intensity = 0f, saturation = 0f;
-        wordMatcher.setTarget(description, start, length);
-        final List<String> terms = wordMatcher.foundStrings();
+        float lightness = 0f, saturation = 0f;
+        final String[] terms = description.toString().split("[^a-zA-Z]+");
         mixing.clear();
-        for (int i = 0; i < terms.size(); i++) {
-            String term = terms.get(i);
+        for (int i = 0; i < terms.length; i++) {
+            String term = terms[i];
             if (term == null || term.isEmpty()) continue;
             final int len = term.length();
             switch (term.charAt(0)) {
@@ -1879,13 +1875,13 @@ public final class DescriptiveColor {
                     if (len > 2 && term.charAt(2) == 'g') {
                         switch (len) {
                             case 9:
-                                intensity += 0.125f;
+                                lightness += 0.125f;
                             case 8:
-                                intensity += 0.125f;
+                                lightness += 0.125f;
                             case 7:
-                                intensity += 0.125f;
+                                lightness += 0.125f;
                             case 5:
-                                intensity += 0.125f;
+                                lightness += 0.125f;
                                 break;
                             default:
                                 mixing.add(TRANSPARENT);
@@ -1919,13 +1915,13 @@ public final class DescriptiveColor {
                     if (len > 1 && term.charAt(1) == 'a') {
                         switch (len) {
                             case 8:
-                                intensity -= 0.15f;
+                                lightness -= 0.15f;
                             case 7:
-                                intensity -= 0.15f;
+                                lightness -= 0.15f;
                             case 6:
-                                intensity -= 0.15f;
+                                lightness -= 0.15f;
                             case 4:
-                                intensity -= 0.15f;
+                                lightness -= 0.15f;
                                 break;
                             default:
                                 mixing.add(TRANSPARENT);
@@ -1959,8 +1955,8 @@ public final class DescriptiveColor {
         int result = mix(mixing.items, 0, mixing.size());
         if(result == 0) return 0;
 
-        if (intensity > 0) result = lighten(result, intensity);
-        else if (intensity < 0) result = darken(result, -intensity);
+        if (lightness > 0) result = lighten(result, lightness);
+        else if (lightness < 0) result = darken(result, -lightness);
 
         if (saturation > 0) result = enrich(result, saturation);
         else if (saturation < 0) result = limitToGamut(dullen(result, -saturation));
