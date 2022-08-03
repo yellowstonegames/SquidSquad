@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -30,6 +31,44 @@ import com.github.yellowstonegames.core.annotations.Beta;
  */
 @Beta
 public class FlanNoise {
+    /**
+     * Generates a balanced wobbly line by shrinking sections of a sine wave, with an equal amount shrunken from the
+     * negative side as the positive side. Fills the generated data into result, which must have length 16384 (0x4000).
+     * You can call this with {@link #WOBBLE} as the result and any seed you want to change the static line data.
+     * @param result a float array that will be modified; must have length 16384 (0x4000)
+     * @param seed a long seed to determine some shuffled ordering
+     */
+    public static void generateLookupTable(float[] result, long seed) {
+        float[] high = new float[32], low = new float[32];
+        int m = 0;
+        for (float f = 0x1p-6f; f < 1f; f+= 0x1p-5f, m++) {
+            high[m] = low[m] = f;
+        }
+        WhiskerRandom random = new WhiskerRandom(seed);
+        random.shuffle(high);
+        random.shuffle(low);
+        for (int outer = 0, idx = 0; outer < 32; outer++) {
+            for (int lobe = 0; lobe < 0x2000; lobe += 32) {
+                result[idx++] = TrigTools.SIN_TABLE[lobe] * high[outer];
+            }
+            for (int lobe = 0x2000; lobe < 0x4000; lobe += 32) {
+                result[idx++] = TrigTools.SIN_TABLE[lobe] * low[outer];
+            }
+        }
+    }
+    public static final float[] WOBBLE = new float[0x4000];
+    static {
+        generateLookupTable(WOBBLE, 1234567890123L);
+    }
+
+//    public static void main(String[] args) {
+//        double sum = 0;
+//        for (int i = 0; i < 0x4000; i++) {
+//            sum += wobble[i];
+//        }
+//        System.out.println(sum);
+//    }
+
     public long seed;
     public final int dim, vc;
     public final float sharpness;
@@ -43,7 +82,7 @@ public class FlanNoise {
     }
 
     public FlanNoise(long seed, int dimension) {
-        this(seed, dimension, 3f * Math.max(2, dimension));
+        this(seed, dimension, 1.75f * Math.max(2, dimension));
     }
 
     public FlanNoise(long seed, int dimension, float sharpness) {
@@ -66,13 +105,13 @@ public class FlanNoise {
                 vertices[v][d] = (float) g;
                 sum += g * g;
             }
-            sum = 707.17 / Math.sqrt(sum);
+            sum = 101.7 / Math.sqrt(sum);
             for (int d = 0; d < dim; d++) {
                 vertices[v][d] *= sum;
             }
         }
 
-        inverse = 0.75f / vc;
+        inverse = 1.25f / vc;
         printDebugInfo();
     }
 
@@ -152,9 +191,9 @@ public class FlanNoise {
         int seed = (int)(this.seed ^ this.seed >>> 32);
         for (int i = 0; i < vc; i++) {
             seed = (seed << 17 | seed >>> 15) * 0xBCFD;
-            result += warp = TrigTools.SIN_TABLE[seed + (int) (
+            result += warp = WOBBLE[seed + (int) (
                     points[i]
-                            + 3301f * warp) & 0x3FFF];
+                            + 163f * warp) & 0x3FFF];
         }
         result *= inverse;
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);

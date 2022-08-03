@@ -4885,34 +4885,34 @@ public class Noise {
         float warp = 0.0f;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  6852.32849f + y *  1747.72202f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[(seed >>> 18) + (int) (
                 x *   159.83096f + y * -7069.89380f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x * -5315.70984f + y *  4663.92212f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[(seed >>> 18) + (int) (
                 x * -6803.91357f + y * -1927.61520f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  4166.94183f + y *  5713.62732f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[(seed >>> 18) + (int) (
                 x *  2391.32965f + y * -6655.10986f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x * -1712.30408f + y *  6861.26526f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[(seed >>> 18) + (int) (
                 x * -7046.97876f + y *   590.78644f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9)) + (int) (
                 x *  4145.71167f + y * -5729.05029f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         result += warp = TrigTools.SIN_TABLE[(seed >>> 18) + (int) (
                 x *  1622.98370f + y *  6882.94006f
-                        + 3301f * warp) & 0x3FFF];
+                        + 3301f * warp) & 0x3FFF]; x += warp;
         final float sharp = sharpnessInverse * (0.75f/2f);
         return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        result = (float) Math.pow(sharpness * 4f * 6.0f, result * 0.1f);
