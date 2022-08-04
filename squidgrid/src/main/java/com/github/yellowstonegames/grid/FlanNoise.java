@@ -82,15 +82,15 @@ public class FlanNoise {
     }
 
     public FlanNoise(long seed, int dimension) {
-        this(seed, dimension, 1.75f * Math.max(2, dimension));
+        this(seed, dimension, Math.max(2, dimension));
     }
 
     public FlanNoise(long seed, int dimension, float sharpness) {
-        this(seed, dimension, sharpness, 5);
+        this(seed, dimension, sharpness, 4);
     }
     public FlanNoise(long seed, int dimension, float sharpness, int detail) {
         dim = Math.max(2, dimension);
-        this.sharpness = 1f/sharpness;
+        this.sharpness = 4f / sharpness;
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
@@ -111,7 +111,7 @@ public class FlanNoise {
             }
         }
 
-        inverse = 1.25f / vc;
+        inverse = 1f / vc;
         printDebugInfo();
     }
 
@@ -190,20 +190,21 @@ public class FlanNoise {
         float warp = 0.0f;
         int seed = (int)(this.seed ^ this.seed >>> 32);
         for (int i = 0; i < vc; i++) {
-            seed = (seed << 17 | seed >>> 15) * 0xBCFD;
+//            seed ^= (seed << 17 | seed >>> 15) * 0xBCFD;
+            seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9;
             result += warp = WOBBLE[seed + (int) (
                     points[i]
-                            + 163f * warp) & 0x3FFF];
+                            + 113f * warp) & 0x3FFF];
         }
-        result *= inverse;
-        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result *= inverse;
+//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 
 //        result = (float) Math.pow(sharpness, result * inverse);
 //        return (result - 1f) / (result + 1f);
 
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
-//        result = TrigTools.sin(result);
-//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+        result = TrigTools.sinTurns(result * inverse);
+        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 }
