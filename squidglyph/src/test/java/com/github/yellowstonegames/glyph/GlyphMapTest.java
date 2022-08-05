@@ -12,6 +12,7 @@ import com.github.tommyettinger.random.LaserRandom;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
 import com.github.tommyettinger.textra.Font;
+import com.github.tommyettinger.textra.KnownFonts;
 public class GlyphMapTest extends ApplicationAdapter {
 
     Font font;
@@ -32,7 +33,7 @@ public class GlyphMapTest extends ApplicationAdapter {
     public void create() {
         random = new LaserRandom();
         batch = new SpriteBatch();
-        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(12f, 20f);
+        font = KnownFonts.getIosevkaSlab().scaleTo(12f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);

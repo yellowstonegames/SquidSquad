@@ -19,7 +19,7 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.glyph.GlyphMap;
-import com.github.yellowstonegames.glyph.KnownFonts;
+import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.tommyettinger.textra.KnownFonts;
 
 public class FontTest extends ApplicationAdapter {
 
