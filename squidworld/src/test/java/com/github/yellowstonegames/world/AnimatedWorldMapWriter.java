@@ -37,9 +37,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-    private static final int width = 256, height = 256; // space view
+//    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
-//    private static final int width = 300, height = 300;
+    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
@@ -49,7 +49,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final boolean ALIEN_COLORS = false;
     private static final boolean SEEDY = false;
     private int baseSeed = 1234567890;
-    private int AA = 1;
+    private final int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -88,7 +88,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-        path = "out/worldsAnimated/" + date + "/SpaceViewTaffy/";
+        path = "out/worldsAnimated/" + date + "/SpaceViewFlan/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewTaffy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
@@ -145,8 +146,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1f, Noise.FLAN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);

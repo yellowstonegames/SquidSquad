@@ -129,7 +129,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
-                            flans[i].seed = s;
+                            flans[i].setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -141,7 +141,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].seed = s;
-                            flans[i].seed = s;
+                            flans[i].setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -954,12 +954,12 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-//                            points[dim][0] = (c+x)*fr;
-//                            points[dim][1] = (c+y)*fr;
-                            float cx = (c+x)*fr;
-                            float cy = (c+y)*fr;
-//                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
-                            bright = basicPrepare(taffies[dim].getNoise2D(cx, cy));
+                            points[dim][0] = (c+x)*fr;
+                            points[dim][1] = (c+y)*fr;
+//                            float cx = (c+x)*fr;
+//                            float cy = (c+y)*fr;
+                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+//                            bright = basicPrepare(taffies[dim].getNoise2D(cx, cy));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);

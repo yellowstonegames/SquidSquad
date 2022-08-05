@@ -76,6 +76,7 @@ public class FlanNoise {
     protected final float[] points;
     protected final float[][] vertices;
     public final int detail;
+    private final WhiskerRandom random;
 
     public FlanNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -90,18 +91,20 @@ public class FlanNoise {
     }
     public FlanNoise(long seed, int dimension, float sharpness, int detail) {
         dim = Math.max(2, dimension);
-        this.sharpness = 4f / sharpness;
+        this.sharpness = 0.5f / sharpness;
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
         vertices = new float[vc][dim];
         this.seed = seed;
+        random = new WhiskerRandom(seed);
+//                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
+//                g -= (int)g;
+//                g = EnhancedRandom.probit(g);
         for (int v = 0; v < vc; v++) {
             double sum = 0.0;
             for (int d = 0; d < dim; d++) {
-                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
-                g -= (int)g;
-                g = EnhancedRandom.probit(g);
+                double g = random.nextGaussian();
                 vertices[v][d] = (float) g;
                 sum += g * g;
             }
@@ -159,7 +162,20 @@ public class FlanNoise {
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 
     public void setSeed(long seed) {
-        this.seed = seed;
+        random.setSeed(this.seed = seed);
+        for (int v = 0; v < vc; v++) {
+            double sum = 0.0;
+            for (int d = 0; d < dim; d++) {
+                double g = random.nextGaussian();
+                vertices[v][d] = (float) g;
+                sum += g * g;
+            }
+            sum = 101.7 / Math.sqrt(sum);
+            for (int d = 0; d < dim; d++) {
+                vertices[v][d] *= sum;
+            }
+        }
+
     }
 
     public String serializeToString() {
@@ -196,15 +212,15 @@ public class FlanNoise {
                     points[i]
                             + 113f * warp) & 0x3FFF];
         }
-//        result *= inverse;
-//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
-
+        result *= inverse;
+        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//
 //        result = (float) Math.pow(sharpness, result * inverse);
 //        return (result - 1f) / (result + 1f);
 
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
-        result = TrigTools.sinTurns(result * inverse);
-        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+//        result = TrigTools.sinTurns(result * inverse);
+//        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 }
