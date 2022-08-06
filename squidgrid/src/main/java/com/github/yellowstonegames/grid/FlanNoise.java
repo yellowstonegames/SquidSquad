@@ -76,7 +76,6 @@ public class FlanNoise {
     protected final float[] points;
     protected final float[][] vertices;
     public final int detail;
-    private final WhiskerRandom random;
 
     public FlanNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -91,24 +90,22 @@ public class FlanNoise {
     }
     public FlanNoise(long seed, int dimension, float sharpness, int detail) {
         dim = Math.max(2, dimension);
-        this.sharpness = 0.5f / sharpness;
+        this.sharpness = 0.75f / sharpness;
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
         vertices = new float[vc][dim];
         this.seed = seed;
-        random = new WhiskerRandom(seed);
-//                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
-//                g -= (int)g;
-//                g = EnhancedRandom.probit(g);
         for (int v = 0; v < vc; v++) {
             double sum = 0.0;
             for (int d = 0; d < dim; d++) {
-                double g = random.nextGaussian();
+                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
+                g -= (int)g;
+                g = EnhancedRandom.probit(g);
                 vertices[v][d] = (float) g;
                 sum += g * g;
             }
-            sum = 101.7 / Math.sqrt(sum);
+            sum = 1f / Math.sqrt(sum);
             for (int d = 0; d < dim; d++) {
                 vertices[v][d] *= sum;
             }
@@ -162,20 +159,7 @@ public class FlanNoise {
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 
     public void setSeed(long seed) {
-        random.setSeed(this.seed = seed);
-        for (int v = 0; v < vc; v++) {
-            double sum = 0.0;
-            for (int d = 0; d < dim; d++) {
-                double g = random.nextGaussian();
-                vertices[v][d] = (float) g;
-                sum += g * g;
-            }
-            sum = 101.7 / Math.sqrt(sum);
-            for (int d = 0; d < dim; d++) {
-                vertices[v][d] *= sum;
-            }
-        }
-
+        this.seed = seed;
     }
 
     public String serializeToString() {
@@ -203,14 +187,13 @@ public class FlanNoise {
             }
         }
         float result = 0.0f;
-        float warp = 0.0f;
+        float warp = 0.5f;
         int seed = (int)(this.seed ^ this.seed >>> 32);
-        for (int i = 0; i < vc; i++) {
-//            seed ^= (seed << 17 | seed >>> 15) * 0xBCFD;
-            seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9;
-            result += warp = WOBBLE[seed + (int) (
-                    points[i]
-                            + 113f * warp) & 0x3FFF];
+        result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) (
+                points[0] + 4213f * warp)) & 0x3FFF] * TrigTools.sin(points[dim-1] - warp);
+        for (int v = 1; v < vc; v++) {
+            result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) (
+                    points[v] + 4213f * warp)) & 0x3FFF] * TrigTools.sin(points[v-1] - warp);
         }
         result *= inverse;
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);

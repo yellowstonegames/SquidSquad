@@ -37,7 +37,7 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 240;
+    private static final int FRAMES = 300;
     private static final int LIMIT = 3;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
@@ -74,8 +74,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/Classic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
-        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
-//        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
+        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
@@ -109,8 +109,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 1f, Noise.FLAN_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 2f, Noise.TAFFY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.FLAN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
