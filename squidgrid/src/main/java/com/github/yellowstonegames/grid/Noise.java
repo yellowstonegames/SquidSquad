@@ -18,14 +18,12 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.tommyettinger.digital.TrigTools.*;
-import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 import static com.github.yellowstonegames.grid.IntPointHash.*;
 
 /**

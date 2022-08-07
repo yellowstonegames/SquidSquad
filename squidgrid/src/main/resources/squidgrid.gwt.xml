@@ -9,6 +9,5 @@
   -->
 <module>
     <inherits name="squidcore" />
-    <inherits name="com.github.tommyettinger.bluegrass" />
     <source path="com/github/yellowstonegames/grid" />
 </module>

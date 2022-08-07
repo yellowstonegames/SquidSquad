@@ -7,7 +7,6 @@ javadoc.exclude("emu")
 
 dependencies {
     api project(':squidcore')
-    api "com.github.tommyettinger:bluegrass:$bluegrassVersion"
     testImplementation project(':squidplace')
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"

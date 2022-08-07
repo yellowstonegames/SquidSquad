@@ -28,7 +28,7 @@ import static com.github.yellowstonegames.grid.Direction.*;
  * Very experimental; allows chaining a sequence of VectorGlider movements.
  */
 @Beta
-public class VectorSequenceGlider extends MultiSequenceGlider {
+public class VectorSequenceGlider extends SequenceGlider {
 
     /**
      * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using

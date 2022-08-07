@@ -31,21 +31,21 @@ import java.util.Arrays;
  * or "color" coordinate queried and have it mean the same thing for any member of the sequence, for example).
  */
 @Beta
-public class MultiSequenceGlider extends Glider {
+public class SequenceGlider extends Glider {
     protected Glider[] sequence;
     protected float[] durations;
     protected int active = 0;
     protected float passed = 0f;
 
-    protected MultiSequenceGlider(){
+    protected SequenceGlider(){
         sequence = null;
         durations = null;
     }
-    public MultiSequenceGlider(Glider[] gliders, float[] lengths){
+    public SequenceGlider(Glider[] gliders, float[] lengths){
         this(gliders, lengths, Interpolation.linear, null);
     }
-    public MultiSequenceGlider(Glider[] gliders, float[] lengths, Interpolation interpolation,
-                               @Nullable Runnable completeRunner){
+    public SequenceGlider(Glider[] gliders, float[] lengths, Interpolation interpolation,
+                          @Nullable Runnable completeRunner){
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         final int len = Math.min(gliders.length, lengths.length);
@@ -175,7 +175,7 @@ public class MultiSequenceGlider extends Glider {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MultiSequenceGlider that = (MultiSequenceGlider) o;
+        SequenceGlider that = (SequenceGlider) o;
 
         if (Float.compare(that.change, change) != 0) return false;
         if (active != that.active) return false;
@@ -199,7 +199,7 @@ public class MultiSequenceGlider extends Glider {
 
     @Override
     public String toString() {
-        return "MultiSequenceGlider{" +
+        return "SequenceGlider{" +
                 "sequence=" + Arrays.toString(sequence) +
                 ", durations=" + Arrays.toString(durations) +
                 ", active=" + active +

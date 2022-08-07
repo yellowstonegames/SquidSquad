@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.bluegrass.BlueNoise;
+import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.ObjectLongOrderedMap;

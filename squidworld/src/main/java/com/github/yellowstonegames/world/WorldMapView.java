@@ -16,13 +16,12 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.digital.MathTools;
-import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.place.Biome;
 
-import static com.github.yellowstonegames.core.DescriptiveColor.*;
 import static com.github.tommyettinger.digital.MathTools.zigzag;
+import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
