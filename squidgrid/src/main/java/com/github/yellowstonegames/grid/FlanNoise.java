@@ -19,9 +19,10 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
+
+import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
@@ -31,35 +32,35 @@ import com.github.yellowstonegames.core.annotations.Beta;
  */
 @Beta
 public class FlanNoise {
-    /**
-     * Generates a balanced wobbly line by shrinking sections of a sine wave, with an equal amount shrunken from the
-     * negative side as the positive side. Fills the generated data into result, which must have length 16384 (0x4000).
-     * You can call this with {@link #WOBBLE} as the result and any seed you want to change the static line data.
-     * @param result a float array that will be modified; must have length 16384 (0x4000)
-     * @param seed a long seed to determine some shuffled ordering
-     */
-    public static void generateLookupTable(float[] result, long seed) {
-        float[] high = new float[32], low = new float[32];
-        int m = 0;
-        for (float f = 0x1p-6f; f < 1f; f+= 0x1p-5f, m++) {
-            high[m] = low[m] = f;
-        }
-        WhiskerRandom random = new WhiskerRandom(seed);
-        random.shuffle(high);
-        random.shuffle(low);
-        for (int outer = 0, idx = 0; outer < 32; outer++) {
-            for (int lobe = 0; lobe < 0x2000; lobe += 32) {
-                result[idx++] = TrigTools.SIN_TABLE[lobe] * high[outer];
-            }
-            for (int lobe = 0x2000; lobe < 0x4000; lobe += 32) {
-                result[idx++] = TrigTools.SIN_TABLE[lobe] * low[outer];
-            }
-        }
-    }
-    public static final float[] WOBBLE = new float[0x4000];
-    static {
-        generateLookupTable(WOBBLE, 1234567890123L);
-    }
+//    /**
+//     * Generates a balanced wobbly line by shrinking sections of a sine wave, with an equal amount shrunken from the
+//     * negative side as the positive side. Fills the generated data into result, which must have length 16384 (0x4000).
+//     * You can call this with {@link #WOBBLE} as the result and any seed you want to change the static line data.
+//     * @param result a float array that will be modified; must have length 16384 (0x4000)
+//     * @param seed a long seed to determine some shuffled ordering
+//     */
+//    public static void generateLookupTable(float[] result, long seed) {
+//        float[] high = new float[32], low = new float[32];
+//        int m = 0;
+//        for (float f = 0x1p-6f; f < 1f; f+= 0x1p-5f, m++) {
+//            high[m] = low[m] = f;
+//        }
+//        WhiskerRandom random = new WhiskerRandom(seed);
+//        random.shuffle(high);
+//        random.shuffle(low);
+//        for (int outer = 0, idx = 0; outer < 32; outer++) {
+//            for (int lobe = 0; lobe < 0x2000; lobe += 32) {
+//                result[idx++] = TrigTools.SIN_TABLE[lobe] * high[outer];
+//            }
+//            for (int lobe = 0x2000; lobe < 0x4000; lobe += 32) {
+//                result[idx++] = TrigTools.SIN_TABLE[lobe] * low[outer];
+//            }
+//        }
+//    }
+//    public static final float[] WOBBLE = new float[0x4000];
+//    static {
+//        generateLookupTable(WOBBLE, 1234567890123L);
+//    }
 
 //    public static void main(String[] args) {
 //        double sum = 0;
@@ -90,7 +91,7 @@ public class FlanNoise {
     }
     public FlanNoise(long seed, int dimension, float sharpness, int detail) {
         dim = Math.max(2, dimension);
-        this.sharpness = 0.75f / sharpness;
+        this.sharpness = 0.625f / sharpness;
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
@@ -195,15 +196,17 @@ public class FlanNoise {
             result += warp = TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) (
                     points[v] + 4213f * warp)) & 0x3FFF] * TrigTools.sin(points[v-1] - warp);
         }
+//        return result * inverse;
+
         result *= inverse;
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
-//
+
 //        result = (float) Math.pow(sharpness, result * inverse);
 //        return (result - 1f) / (result + 1f);
 
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
-//        result = TrigTools.sinTurns(result * inverse);
+//        return TrigTools.sinTurns(result * inverse);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
 }
