@@ -131,8 +131,8 @@ public class FlanNoise {
                         System.out.print(dimNames.charAt(d % dimNames.length()));
                     else
                         // swap this in during dev, swap it out to work on GWT
-                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
-//                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
+//                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
+                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
                 }
             }
         }
@@ -155,8 +155,8 @@ public class FlanNoise {
                         System.out.print(dimNames.charAt(d % dimNames.length()));
                     else
                         // swap this in during dev, swap it out to work on GWT
-                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
-//                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
+//                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
+                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
                 }
             }
             System.out.println("\n                            ) + 4213f * warp) & 0x3FFF];");

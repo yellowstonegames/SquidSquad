@@ -148,7 +148,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.FLAN_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
@@ -199,7 +199,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
+
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.5f);
+//        world = new GlobeMap(seed, width << AA, height << AA, noise, 0.75f);
+
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -257,6 +260,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
+        if(world instanceof RotatingGlobeMap) {
+            world.setCenterLongitude(0f);
+            generate(hash);
+        }
+
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
 //            if(FLOWING_LAND) {
@@ -264,8 +272,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //                ((Noise.Adapted3DFrom5D)noise).u = TrigTools.sinTurns(angle) * 0.3125f;
 //            }
             world.setCenterLongitude(angle * MathUtils.PI2);
-            generate(hash);
-            wmv.getBiomeMapper().makeBiomes(world);
+            if(!(world instanceof RotatingGlobeMap)) {
+                generate(hash);
+            }
+            else
+                wmv.getBiomeMapper().makeBiomes(world);
             int[][] cm = wmv.show();
             temp.setColor(INK);
             temp.fill();
