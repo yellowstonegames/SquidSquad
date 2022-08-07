@@ -131,8 +131,8 @@ public class FlanNoise {
                         System.out.print(dimNames.charAt(d % dimNames.length()));
                     else
                         // swap this in during dev, swap it out to work on GWT
-//                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
-                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
+                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
+//                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
                 }
             }
         }
@@ -140,15 +140,10 @@ public class FlanNoise {
         for (int v = 0; v < vc; v++) {
 //            System.out.print("final float p" + v + (v < 10 ? " " : "") +  " = ");
 //            System.out.print("points[" + v + "] = ");
-            /*
-        result += warp = TrigTools.sin(points[dim-1] - warp) * TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) (
-                (points[0]) + 4213f * warp)) & 0x3FFF];
-        for (int v = 1; v < vc; v++) {
-            result += warp = TrigTools.sin(points[v-1] - warp) * TrigTools.SIN_TABLE[((seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) (
-                    (points[v]) + 4213f * warp)) & 0x3FFF];
-        }
-             */
-            System.out.println("            result += warp = TrigTools.sin(p - warp) * TrigTools.SIN_TABLE[(seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) ((p = ");
+            if((v & 1) == 0)
+                System.out.println("            result += warp = TrigTools.sin(p - warp) * TrigTools.SIN_TABLE[(seed ^= (seed << 21 | seed >>> 11) + 0x9E3779B9) + (int) ((p = ");
+            else
+                System.out.println("            result += warp = TrigTools.sin(p - warp) * TrigTools.SIN_TABLE[(seed >>> 18) + (int) ((p = ");
             for (int d = 0; d < dim; d++) {
                 if(vertices[v][d] != 0.0)
                 {
@@ -160,8 +155,8 @@ public class FlanNoise {
                         System.out.print(dimNames.charAt(d % dimNames.length()));
                     else
                         // swap this in during dev, swap it out to work on GWT
-//                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
-                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
+                        System.out.printf("%s * % 11.6ff", dimNames.charAt(d % dimNames.length()), vertices[v][d]);
+//                        System.out.print(dimNames.charAt(d % dimNames.length()) + " * " + vertices[v][d] + "f");
                 }
             }
             System.out.println("\n                            ) + 4213f * warp) & 0x3FFF];");
@@ -179,7 +174,7 @@ public class FlanNoise {
 //        }
         System.out.println("        final float sharp = sharpnessInverse * (0.75f/"+dim+"f);\n" +
                 "        result *= "+(1f / vc)+";\n" +
-                "        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);\n\n");
+                "        return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);\n\n");
     }
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 
