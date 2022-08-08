@@ -86,6 +86,17 @@ public class DistributedRandom extends EnhancedRandom {
         else reduction = DistributedRandom::fraction;
     }
 
+    public DoubleUnaryOperator getReduction(){
+        return reduction;
+    }
+
+    public boolean isClamping() {
+        return clamping;
+    }
+    public void useClamping(boolean useClamping) {
+        if(clamping = useClamping) reduction = DistributedRandom::clamp;
+        else reduction = DistributedRandom::fraction;
+    }
     @Override
     public long nextLong() {
         return (distribution.generator.getSelectedState(0) >>> 52) | ((long)(nextDouble() * 0x1p52) << 12);
@@ -108,37 +119,36 @@ public class DistributedRandom extends EnhancedRandom {
 
     @Override
     public void nextBytes(@Nonnull byte[] bytes) {
-        for (int i = 0; i < bytes.length; ) { for (int n = Math.min(bytes.length - i, 8); n-- > 0;) { bytes[i++] = (byte)(256 * distribution.nextDouble(random)); } }
+        for (int i = 0; i < bytes.length; ) { for (int n = Math.min(bytes.length - i, 8); n-- > 0;) { bytes[i++] = (byte)(256 * nextDouble()); } }
     }
 
     @Override
     public int nextInt() {
-        return (int)(long)(0x1p32 * distribution.nextDouble(random));
+        return (int)(long)(0x1p32 * nextDouble());
     }
 
     @Override
     public int nextInt(int bound) {
-        return (int)(bound * distribution.nextDouble(random)) & ~(bound >> 31);
+        return (int)(bound * nextDouble()) & ~(bound >> 31);
     }
 
     @Override
     public int nextSignedInt(int outerBound) {
-        return (int)(outerBound * distribution.nextDouble(random));
+        return (int)(outerBound * nextDouble());
     }
 
     @Override
     public boolean nextBoolean() {
-        return distribution.nextDouble(random) < 0.5f;
+        return nextDouble() < 0.5f;
     }
 
     /**
-     * Because nextGaussian() already specifies a distribution, this uses {@link FourWheelRandom#nextGaussian()} as-is.
-     * @return the next pseudorandom, approximately Gaussian ("normally") distributed double value with mean 0.0 and
-     *         standard deviation 1.0 from this random number generator's sequence
+     * This runs {@link EnhancedRandom#probit(double)} on a distributed double this produces.
+     * @return a "Gaussian-ized" result of {@link #nextDouble()}
      */
     @Override
     public double nextGaussian() {
-        return random.nextGaussian();
+        return EnhancedRandom.probit(nextDouble());
     }
 
     /**
@@ -164,80 +174,60 @@ public class DistributedRandom extends EnhancedRandom {
     @Override
     @Nonnull
     public DistributedRandom copy() {
-        return new DistributedRandom(distribution, random.getStateA(), random.getStateB(), random.getStateC(), random.getStateD());
-    }
-
-    public long getStateA() {
-        return random.getStateA();
-    }
-
-    public void setStateA(long stateA) {
-        random.setStateA(stateA);
-    }
-
-    public long getStateB() {
-        return random.getStateB();
-    }
-
-    public void setStateB(long stateB) {
-        random.setStateB(stateB);
-    }
-
-    public long getStateC() {
-        return random.getStateC();
-    }
-
-    public void setStateC(long stateC) {
-        random.setStateC(stateC);
-    }
-
-    public long getStateD() {
-        return random.getStateD();
-    }
-
-    public void setStateD(long stateD) {
-        random.setStateD(stateD);
+        return new DistributedRandom(distribution, clamping);
     }
 
     @Override
+    public void setState(long stateA) {
+        distribution.generator.setState(stateA);
+    }
+    @Override
+    public void setState(long stateA, long stateB) {
+        distribution.generator.setState(stateA, stateB);
+    }
+    @Override
+    public void setState(long stateA, long stateB, long stateC) {
+        distribution.generator.setState(stateA, stateB, stateC);
+    }
+    @Override
     public void setState(long stateA, long stateB, long stateC, long stateD) {
-        random.setState(stateA, stateB, stateC, stateD);
+        distribution.generator.setState(stateA, stateB, stateC, stateD);
     }
 
     @Override
     public int getStateCount() {
-        return 4;
+        return distribution.generator.getStateCount();
     }
 
     @Override
     public long getSelectedState(int selection) {
-        return random.getSelectedState(selection);
+        return distribution.generator.getSelectedState(selection);
     }
 
     @Override
     public void setSelectedState(int selection, long value) {
-        random.setSelectedState(selection, value);
+        distribution.generator.setSelectedState(selection, value);
     }
 
     @Override
     public void setSeed(long seed) {
-        random.setSeed(seed);
+        distribution.generator.setSeed(seed);
     }
 
-    public IDistribution.SimpleDistribution getDistribution() {
+    public Distribution getDistribution() {
         return distribution;
     }
 
-    public void setDistribution(IDistribution.SimpleDistribution distribution) {
+    public void setDistribution(Distribution distribution) {
         this.distribution = distribution;
     }
 
-    public FourWheelRandom getRandom() {
-        return random;
+    public EnhancedRandom getRandom() {
+        return distribution.generator;
     }
 
-    public void setRandom(FourWheelRandom random) {
-        this.random = random;
+    public void setRandom(EnhancedRandom random) {
+        this.distribution.generator = random;
     }
 
     /**
