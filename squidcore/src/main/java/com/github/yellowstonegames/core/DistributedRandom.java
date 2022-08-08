@@ -231,23 +231,24 @@ public class DistributedRandom extends EnhancedRandom {
     }
 
     /**
-     * Serializes the four states this uses, but not the distribution used here; you must somehow store it yourself.
      * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
      * @return this, for chaining
      */
     @Override
     public String stringSerialize(Base base) {
-        return super.stringSerialize(base);
+        return getTag() + '`' + (clamping ? "1~" : "0~") + distribution.stringSerialize(base);
     }
 
     /**
-     * This deserialization method does not assign the distribution this class uses; you must set it yourself.
      * @param data a String probably produced by {@link #stringSerialize(Base)}
      * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
      * @return this, for chaining
      */
     @Override
     public EnhancedRandom stringDeserialize(String data, Base base) {
-        return super.stringDeserialize(data, base);
+        int idx = data.indexOf('`');
+        useClamping(base.readInt(data, idx + 1, (idx = data.indexOf('~', idx + 1))) != 0);
+        distribution.stringDeserialize(data.substring(idx + 1), base);
+        return this;
     }
 }
