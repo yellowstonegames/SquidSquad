@@ -4,17 +4,12 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.random.DistinctRandom;
-import com.github.tommyettinger.random.FourWheelRandom;
-import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.random.*;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.GapShuffler;
-import com.github.yellowstonegames.core.IntShuffler;
-import com.github.yellowstonegames.core.ProbabilityTable;
-import com.github.yellowstonegames.core.WeightedTable;
+import com.github.tommyettinger.random.distribution.Distribution;
+import com.github.tommyettinger.random.distribution.NormalDistribution;
+import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
 import regexodus.Pattern;
@@ -275,6 +270,21 @@ public class JsonCoreTest {
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
+    }
+
+    @Test
+    public void testDistributedRandom() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerDistributedRandom(json);
+        Distribution dist = new NormalDistribution(new MizuchiRandom(123), 0.5, 0.25);
+        DistributedRandom random = new DistributedRandom(dist, true);
+        System.out.println("Output: " + Long.toString(random.nextLong(), 36));
+        System.out.println("State 0 of initial: " + Long.toString(random.getSelectedState(0), 36));
+        String data = json.toJson(random);
+        System.out.println(data);
+        DistributedRandom random2 = json.fromJson(DistributedRandom.class, data);
+        System.out.println("State 0 of product: " + Long.toString(random2.getSelectedState(0), 36));
+        Assert.assertEquals(random.nextLong(), random2.nextLong());
     }
 
 }

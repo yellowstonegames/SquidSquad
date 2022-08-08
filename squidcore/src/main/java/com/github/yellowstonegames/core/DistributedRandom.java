@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.random.Deserializer;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -211,7 +212,8 @@ public class DistributedRandom extends EnhancedRandom {
 
     @Override
     public void setSeed(long seed) {
-        distribution.generator.setSeed(seed);
+        if(distribution != null)
+            distribution.generator.setSeed(seed);
     }
 
     public Distribution getDistribution() {
@@ -248,7 +250,7 @@ public class DistributedRandom extends EnhancedRandom {
     public DistributedRandom stringDeserialize(String data, Base base) {
         int idx = data.indexOf('`');
         useClamping(base.readInt(data, idx + 1, (idx = data.indexOf('~', idx + 1))) != 0);
-        distribution.stringDeserialize(data.substring(idx + 1), base);
+        distribution = Deserializer.deserializeDistribution(data.substring(idx + 1), base);
         return this;
     }
 }
