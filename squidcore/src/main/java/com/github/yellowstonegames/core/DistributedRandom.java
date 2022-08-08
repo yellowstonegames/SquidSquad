@@ -245,7 +245,7 @@ public class DistributedRandom extends EnhancedRandom {
      * @return this, for chaining
      */
     @Override
-    public EnhancedRandom stringDeserialize(String data, Base base) {
+    public DistributedRandom stringDeserialize(String data, Base base) {
         int idx = data.indexOf('`');
         useClamping(base.readInt(data, idx + 1, (idx = data.indexOf('~', idx + 1))) != 0);
         distribution.stringDeserialize(data.substring(idx + 1), base);

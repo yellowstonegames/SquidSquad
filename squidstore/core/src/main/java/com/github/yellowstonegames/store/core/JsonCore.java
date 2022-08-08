@@ -18,13 +18,21 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
-import com.github.yellowstonegames.core.*;
+import com.github.yellowstonegames.core.Dice;
+import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.DistributedRandom;
+import com.github.yellowstonegames.core.GapShuffler;
+import com.github.yellowstonegames.core.IntShuffler;
+import com.github.yellowstonegames.core.ProbabilityTable;
+import com.github.yellowstonegames.core.StringTools;
+import com.github.yellowstonegames.core.WeightedTable;
 import regexodus.Pattern;
 
 import javax.annotation.Nonnull;
@@ -52,6 +60,7 @@ public final class JsonCore {
         registerGapShuffler(json);
         registerWeightedTable(json);
         registerIntShuffler(json);
+        registerDistributedRandom(json);
 
         registerPattern(json);
     }
@@ -345,6 +354,29 @@ public final class JsonCore {
             @Override
             public IntShuffler read(Json json, JsonValue jsonData, Class type) {
                 return IntShuffler.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers DistributedRandom with the given Json object, so DistributedRandom can be written to and read from JSON.
+     * This is a simple wrapper around DistributedRandom's built-in {@link DistributedRandom#stringSerialize(Base)} and
+     * {@link DistributedRandom#stringDeserialize(String, Base)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDistributedRandom(@Nonnull Json json) {
+        JsonSupport.registerEnhancedRandom(json);
+        JsonSupport.registerDistribution(json);
+        json.setSerializer(DistributedRandom.class, new Json.Serializer<DistributedRandom>() {
+            @Override
+            public void write(Json json, DistributedRandom object, Class knownType) {
+                json.writeValue(object.stringSerialize(JsonSupport.getNumeralBase()));
+            }
+
+            @Override
+            public DistributedRandom read(Json json, JsonValue jsonData, Class type) {
+                return new DistributedRandom().stringDeserialize(jsonData.asString(), JsonSupport.getNumeralBase());
             }
         });
     }
