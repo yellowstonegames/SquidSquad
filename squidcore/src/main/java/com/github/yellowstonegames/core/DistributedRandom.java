@@ -19,70 +19,91 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FourWheelRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.distribution.ContinuousUniformDistribution;
+import com.github.tommyettinger.random.distribution.Distribution;
 
 import javax.annotation.Nonnull;
+import java.util.function.DoubleUnaryOperator;
 
 /**
- * An EnhancedRandom that delegates to a {@link FourWheelRandom}, but runs it through a user-controlled
- * {@link IDistribution.SimpleDistribution} to distribute any floats, ints, or doubles as by that distribution.
- * Generating random long values is trickier because a distribution works on doubles, and doubles only provide 52 bits
- * of usable random data, while a long can need as many as 64.
+ * An EnhancedRandom that delegates to a {@link Distribution} to distribute any floats, ints, or doubles as by that
+ * distribution.
  */
 public class DistributedRandom extends EnhancedRandom {
+
+    public static double clamp(double n) {
+        return Math.min(Math.max(n, 0.0), 0.9999999999999999);
+    }
+    public static double fraction(double n) {
+        return n - Math.floor(n);
+    }
 
     @Override
     public String getTag() {
         return "DsrR";
     }
 
-    protected IDistribution.SimpleDistribution distribution;
-    protected FourWheelRandom random;
+    protected Distribution distribution;
+
+    private DoubleUnaryOperator reduction;
+
+    protected boolean clamping = false;
 
     public DistributedRandom() {
-        this(IDistribution.UniformDistribution.instance);
+        distribution = new ContinuousUniformDistribution(0.0, 1.0);
+        reduction = DistributedRandom::fraction;
     }
 
     public DistributedRandom(long seed) {
-        this(IDistribution.UniformDistribution.instance, seed);
+        distribution = new ContinuousUniformDistribution(new WhiskerRandom(seed), 0.0, 1.0);
+        reduction = DistributedRandom::fraction;
     }
 
     public DistributedRandom(long stateA, long stateB, long stateC, long stateD) {
-        this(IDistribution.UniformDistribution.instance, stateA, stateB, stateC, stateD);
+        distribution = new ContinuousUniformDistribution(new WhiskerRandom(stateA, stateB, stateC, stateD), 0.0, 1.0);
+        reduction = DistributedRandom::fraction;
     }
 
-    public DistributedRandom(IDistribution.SimpleDistribution distribution) {
-        random = new FourWheelRandom();
-        this.distribution = distribution;
+    public DistributedRandom(Distribution distribution, boolean useClamping) {
+        this.distribution = distribution.copy();
+        if(clamping = useClamping) reduction = DistributedRandom::clamp;
+        else reduction = DistributedRandom::fraction;
     }
 
-    public DistributedRandom(IDistribution.SimpleDistribution distribution, long seed) {
-        random = new FourWheelRandom(seed);
-        this.distribution = distribution;
+    public DistributedRandom(Distribution distribution, boolean useClamping, long seed) {
+        this.distribution = distribution.copy();
+        distribution.generator.setSeed(seed);
+        if(clamping = useClamping) reduction = DistributedRandom::clamp;
+        else reduction = DistributedRandom::fraction;
+
     }
 
-    public DistributedRandom(IDistribution.SimpleDistribution distribution, long stateA, long stateB, long stateC, long stateD) {
-        random = new FourWheelRandom(stateA, stateB, stateC, stateD);
-        this.distribution = distribution;
+    public DistributedRandom(Distribution distribution, boolean useClamping, long stateA, long stateB, long stateC, long stateD) {
+        this.distribution = distribution.copy();
+        this.distribution.generator = new WhiskerRandom(stateA, stateB, stateC, stateD);
+        if(clamping = useClamping) reduction = DistributedRandom::clamp;
+        else reduction = DistributedRandom::fraction;
     }
 
     @Override
     public long nextLong() {
-        return (random.getStateB() >>> 52) | ((long)(distribution.nextDouble(random) * 0x1p52) << 12);
+        return (distribution.generator.getSelectedState(0) >>> 52) | ((long)(nextDouble() * 0x1p52) << 12);
     }
 
     @Override
     public int next(int bits) {
-        return (int)(long)((1L << bits) * distribution.nextDouble(random));
+        return (int)(long)((1L << bits) * nextDouble());
     }
 
     @Override
     public double nextDouble() {
-        return distribution.nextDouble(random);
+        return reduction.applyAsDouble(distribution.nextDouble());
     }
 
     @Override
     public float nextFloat() {
-        return (float) distribution.nextDouble(random);
+        return (float) nextDouble();
     }
 
     @Override
