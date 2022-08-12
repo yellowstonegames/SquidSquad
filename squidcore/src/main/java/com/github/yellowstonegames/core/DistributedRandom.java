@@ -25,21 +25,38 @@ import com.github.tommyettinger.random.distribution.ContinuousUniformDistributio
 import com.github.tommyettinger.random.distribution.Distribution;
 
 import javax.annotation.Nonnull;
-import java.util.function.DoubleUnaryOperator;
 
 /**
  * An EnhancedRandom that delegates to a {@link Distribution} to distribute any floats, ints, or doubles as by that
  * distribution.
  */
 public class DistributedRandom extends EnhancedRandom {
+    /**
+     * One of two possible modes this can use to limit the range of a Distribution. {@code FRACTION} simply gets the
+     * fractional part of a distribution by subtracting the floor from a result. {@code CLAMP} uses
+     * {@link Math#min(double, double)} and {@link Math#max(double, double)} to cap the values at both ends, inclusive
+     * on 0.0 and exclusive on 1.0 .
+     */
+    public enum ReductionMode {
+        FRACTION {
+            @Override
+            public double applyAsDouble(double n) {
+                return n - Math.floor(n);
+            }
+        },
+        CLAMP {
+            @Override
+            public double applyAsDouble(double n) {
+                return Math.min(Math.max(n, 0.0), 0.9999999999999999);
+            }
+        };
 
-    public static double clamp(double n) {
-        return Math.min(Math.max(n, 0.0), 0.9999999999999999);
-    }
-    public static double fraction(double n) {
-        return n - Math.floor(n);
-    }
+        ReductionMode() {
+        }
 
+        public abstract double applyAsDouble(double n);
+    }
+    private static final ReductionMode[] MODES = ReductionMode.values();
     @Override
     public String getTag() {
         return "DsrR";
@@ -47,56 +64,59 @@ public class DistributedRandom extends EnhancedRandom {
 
     protected Distribution distribution;
 
-    private DoubleUnaryOperator reduction;
-
-    protected boolean clamping = false;
+    protected ReductionMode reduction;
 
     public DistributedRandom() {
         distribution = new ContinuousUniformDistribution(0.0, 1.0);
-        reduction = DistributedRandom::fraction;
+        reduction = ReductionMode.FRACTION;
     }
 
     public DistributedRandom(long seed) {
         distribution = new ContinuousUniformDistribution(new WhiskerRandom(seed), 0.0, 1.0);
-        reduction = DistributedRandom::fraction;
+        reduction = ReductionMode.FRACTION;
     }
 
     public DistributedRandom(long stateA, long stateB, long stateC, long stateD) {
         distribution = new ContinuousUniformDistribution(new WhiskerRandom(stateA, stateB, stateC, stateD), 0.0, 1.0);
-        reduction = DistributedRandom::fraction;
+        reduction = ReductionMode.FRACTION;
     }
 
     public DistributedRandom(Distribution distribution, boolean useClamping) {
         this.distribution = distribution.copy();
-        if(clamping = useClamping) reduction = DistributedRandom::clamp;
-        else reduction = DistributedRandom::fraction;
+        if(useClamping) reduction = ReductionMode.CLAMP;
+        else reduction = ReductionMode.FRACTION;
     }
 
     public DistributedRandom(Distribution distribution, boolean useClamping, long seed) {
         this.distribution = distribution.copy();
         distribution.generator.setSeed(seed);
-        if(clamping = useClamping) reduction = DistributedRandom::clamp;
-        else reduction = DistributedRandom::fraction;
+        if(useClamping) reduction = ReductionMode.CLAMP;
+        else reduction = ReductionMode.FRACTION;
 
     }
 
     public DistributedRandom(Distribution distribution, boolean useClamping, long stateA, long stateB, long stateC, long stateD) {
         this.distribution = distribution.copy();
         this.distribution.generator = new WhiskerRandom(stateA, stateB, stateC, stateD);
-        if(clamping = useClamping) reduction = DistributedRandom::clamp;
-        else reduction = DistributedRandom::fraction;
+        if(useClamping) reduction = ReductionMode.CLAMP;
+        else reduction = ReductionMode.FRACTION;
     }
 
-    public DoubleUnaryOperator getReduction(){
+    public ReductionMode getReduction(){
         return reduction;
     }
 
+    public void setReduction(ReductionMode reduction) {
+        if(reduction != null)
+            this.reduction = reduction;
+    }
+
     public boolean isClamping() {
-        return clamping;
+        return reduction == ReductionMode.CLAMP;
     }
     public void useClamping(boolean useClamping) {
-        if(clamping = useClamping) reduction = DistributedRandom::clamp;
-        else reduction = DistributedRandom::fraction;
+        if(useClamping) reduction = ReductionMode.CLAMP;
+        else reduction = ReductionMode.FRACTION;
     }
     @Override
     public long nextLong() {
@@ -175,7 +195,7 @@ public class DistributedRandom extends EnhancedRandom {
     @Override
     @Nonnull
     public DistributedRandom copy() {
-        return new DistributedRandom(distribution, clamping);
+        return new DistributedRandom(distribution, reduction == ReductionMode.CLAMP);
     }
 
     @Override
@@ -238,7 +258,7 @@ public class DistributedRandom extends EnhancedRandom {
      */
     @Override
     public String stringSerialize(Base base) {
-        return getTag() + '`' + (clamping ? "1~" : "0~") + distribution.stringSerialize(base);
+        return getTag() + "`" + reduction.ordinal() + "~" + distribution.stringSerialize(base);
     }
 
     /**
