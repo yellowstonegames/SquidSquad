@@ -6,6 +6,7 @@ idea.module.excludeDirs += [file("src/main/java/emu/")]
 [compileJava, compileTestJava, javadoc]*.exclude("emu")
 
 dependencies {
+    api "com.github.tommyettinger:digital:$digitalVersion"
     api "com.github.tommyettinger:juniper:$juniperVersion"
     api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
     api "com.github.tommyettinger:regexodus:$regexodusVersion"

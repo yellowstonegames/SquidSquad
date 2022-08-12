@@ -27,7 +27,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.Dice;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.DistributedRandom;
+import com.github.tommyettinger.random.DistributedRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 import com.github.yellowstonegames.core.IntShuffler;
 import com.github.yellowstonegames.core.ProbabilityTable;

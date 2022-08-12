@@ -9,8 +9,15 @@ dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
     api("com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"){
         exclude module: 'jdkgdxds'
+        exclude module: 'juniper'
+        exclude module: 'digital'
     }
-    api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
+    api("com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"){
+        exclude module: 'juniper'
+        exclude module: 'digital'
+    }
+    api "com.github.tommyettinger:juniper:$juniperVersion"
+    api "com.github.tommyettinger:digital:$digitalVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"
