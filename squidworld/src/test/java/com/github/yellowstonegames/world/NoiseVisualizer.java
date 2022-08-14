@@ -8,6 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -15,6 +16,7 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -36,10 +38,11 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
     private FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 16);
     private FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 32);
+    private FlawedPointHash.SquishedCubeHash squish = new FlawedPointHash.SquishedCubeHash(1, 16);
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private FlawedPointHash.LowLeaningHash low = new FlawedPointHash.LowLeaningHash(123);
-    private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, low};
-    private int hashIndex = 4;
+    private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, squish, low};
+    private int hashIndex = 6;
 
     private static final int width = 512, height = 512;
 
@@ -67,7 +70,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
         gif.palette = new PaletteReducer(new int[] {
-                0x00000000, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
+                0x000000FF, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
                 0x080808FF, 0x090909FF, 0x0A0A0AFF, 0x0B0B0BFF, 0x0C0C0CFF, 0x0D0D0DFF, 0x0E0E0EFF, 0x0F0F0FFF,
                 0x101010FF, 0x111111FF, 0x121212FF, 0x131313FF, 0x141414FF, 0x151515FF, 0x161616FF, 0x171717FF,
                 0x181818FF, 0x191919FF, 0x1A1A1AFF, 0x1B1B1BFF, 0x1C1C1CFF, 0x1D1D1DFF, 0x1E1E1EFF, 0x1F1F1FFF,
@@ -139,12 +142,12 @@ public class NoiseVisualizer extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case W:
-                        if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-3f);
-                        for (int c = 0; c < 256; c++) {
+                        if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
+                        for (int c = 0; c < 128; c++) {
                             Pixmap p = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
-                            for (int x = 0; x < 256; x++) {
-                                for (int y = 0; y < 256; y++) {
-                                    float color = basicPrepare(noise.getConfiguredNoise(x, y, c));
+                            for (int x = 0; x < p.getWidth(); x++) {
+                                for (int y = 0; y < p.getHeight(); y++) {
+                                    float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(x, y, c)));
 //                                    color *= color * 0.8125f;
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
@@ -153,6 +156,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             frames.add(p);
                         }
                         Gdx.files.local("out/").mkdirs();
+                        for (int i = 0; i < 256; i++) {
+                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
+                        }
                         gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 12);
                         for (int i = 0; i < frames.size; i++) {
                             frames.get(i).dispose();
@@ -173,24 +179,24 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case N: // noise type
                     case EQUALS:
                     case ENTER:
-                        noise.setNoiseType((noise.getNoiseType() + 1) % 14);
+                        noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 13 : 1)) % 14);
                         break;
                     case M:
                     case MINUS:
                         noise.setNoiseType((noise.getNoiseType() + 13) % 14);
                         break;
                     case D: //dimension
-                        dim = (dim + 1) % 5;
+                        dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
                     case F: // frequency
 //                        noise.setFrequency(NumberTools.sin(freq += 0.125f) * 0.25f + 0.25f + 0x1p-7f);
                         noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
                         break;
                     case R: // fRactal type
-                        noise.setFractalType((noise.getFractalType() + 1) % 3);
+                        noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 2 : 1)) % 3);
                         break;
                     case G: // GLITCH!
-                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + 1) % pointHashes.length]);
+                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + (UIUtils.shift() ? pointHashes.length - 1 : 1)) % pointHashes.length]);
                         break;
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);

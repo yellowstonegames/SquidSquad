@@ -370,6 +370,129 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
     }
 
     /**
+     * Like CubeHash, but with a squished Z axis in 3D.
+     */
+    class SquishedCubeHash extends LongImpl implements FlawedPointHash {
+        private int size = 6;
+        private long mask = (1L << size) - 1L;
+        public SquishedCubeHash() {
+        }
+
+        public SquishedCubeHash(long state) {
+            super(state);
+        }
+
+        public SquishedCubeHash(long state, int size) {
+            super(state);
+            setSize(size);
+        }
+
+        public long getState() {
+            return state;
+        }
+
+        public int getSize() {
+            return 1 << size;
+        }
+
+        public void setSize(int size) {
+            this.size = 32 - Integer.numberOfLeadingZeros(Math.max(1, size));
+            mask = (1L << this.size) - 1L;
+        }
+
+        public long hashLongs(long x, long y, long s) {
+            x &= mask;
+            y &= mask;
+            x *= x * 0xC13FA9A902A6328FL;
+            y *= y * 0x91E10DA5C79E7B1DL;
+            x &= mask;
+            y &= mask;
+            long t;
+            if (x < y) {
+                t = x;
+                x = y;
+                y = t;
+            }
+            x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + y);
+            y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
+            s = (s + 0x9E3779B97F4A7C15L ^ s) * (y + x);
+            return s;
+        }
+
+        public long hashLongs(long x, long y, long z, long s) {
+            z += z;
+
+            x &= mask;
+            y &= mask;
+            z &= mask;
+            x *= x * 0xD1B54A32D192ED03L;
+            y *= y * 0xABC98388FB8FAC03L;
+            z *= z * 0x8CB92BA72F3D8DD7L;
+            x = x & mask;
+            y = y & mask;
+            z = z & mask;
+            long t;
+            if (x < y) {
+                t = x;
+                x = y;
+                y = t;
+            }
+            if(x < z){
+                t = x;
+                x = z;
+                z = t;
+            }
+            if(y < z){
+                t = y;
+                y = z;
+                z = t;
+            }
+            x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + z);
+            y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
+            z = (z + 0x9E3779B97F4A7C15L ^ z) * (y + x);
+            s = (s + 0x9E3779B97F4A7C15L ^ s) * (z + y);
+            return s;
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long s) {
+            return hashLongs(x, hashLongs(y, hashLongs(z, w, s), s), s);
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long u, long s) {
+            return hashLongs(x, hashLongs(y, hashLongs(z, hashLongs(w, u, s), s), s), s);
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long u, long v, long s) {
+            return hashLongs(x, hashLongs(y, hashLongs(z, hashLongs(w, hashLongs(u, v, s), s), s), s), s);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int state) {
+            return (int)(hashLongs(x, y, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int state) {
+            return (int)(hashLongs(x, y, z, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int state) {
+            return (int)(hashLongs(x, y, z, w, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int state) {
+            return (int)(hashLongs(x, y, z, w, u, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
+            return (int)(hashLongs(x, y, z, w, u, v, state) >>> 32);
+        }
+    }
+
+    /**
      * FNV32a is OK as a hash for bytes when used in some hash tables, but it has major issues on its low-order bits
      * when used as a point hash (the high bits aren't much better). Unfortunately, it is not aesthetically pleasing as
      * a point hash. Some usages might be able to use it to apply a grimy, glitchy effect.
