@@ -179,11 +179,11 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case N: // noise type
                     case EQUALS:
                     case ENTER:
-                        noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 13 : 1)) % 14);
+                        noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 19 : 1)) % 20);
                         break;
                     case M:
                     case MINUS:
-                        noise.setNoiseType((noise.getNoiseType() + 13) % 14);
+                        noise.setNoiseType((noise.getNoiseType() + 19) % 20);
                         break;
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
