@@ -88,7 +88,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             taffies[i] = new TaffyNoise(noise.getSeed(), 2 + i);
             flans[i] = new FlanNoise(noise.getSeed(), 2+i);
         }
-        noise.setNoiseType(Noise.TAFFY_FRACTAL);
+        noise.setNoiseType(Noise.PEAR_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
 //        Pixmap pm = new Pixmap(Gdx.files.internal("special/BlueNoise512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("special/BlueNoiseTri256x256.png"));
@@ -147,7 +147,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case N: // noise type
                         if(mode == 0 || mode >= 12)
-                            noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 19 : 1)) % 20);
+                            noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 21 : 1)) % 22);
                         break;
                     case ENTER:
                     case D: //dimension

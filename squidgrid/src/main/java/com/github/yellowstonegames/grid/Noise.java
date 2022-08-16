@@ -321,7 +321,23 @@ public class Noise {
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
-    FLAN_FRACTAL = 19;
+    FLAN_FRACTAL = 19,
+    /**
+     * Based off of {@link #SIMPLEX}, but... not.
+     * <br>
+     * <a href="">Noise sample at left, FFT at right.</a>
+     * <br>
+     * This is meant to be used with {@link #setNoiseType(int)}.
+     */
+    PEAR = 20,
+    /**
+     * Based off of {@link #SIMPLEX_FRACTAL}, but... not.
+     * <br>
+     * <a href="">Noise sample at left, FFT at right.</a>
+     * <br>
+     * This is meant to be used with {@link #setNoiseType(int)}.
+     */
+    PEAR_FRACTAL = 21;
 
     /**
      * Simple linear interpolation. May result in artificial-looking noise.
@@ -1273,6 +1289,39 @@ public class Noise {
                 wd * GRADIENTS_6D[hash+3] + ud * GRADIENTS_6D[hash+4] + vd * GRADIENTS_6D[hash+5];
     }
 
+    protected float pearCoord2D(int seed, int x, int y, float xd, float yd) {
+        final int hash = hashAll(x, y, seed), h1 = hash & 0x1FE, h2 = hash >>> 9 & 0x1FE;
+        return xd * GRADIENTS_2D[h1] + yd * GRADIENTS_2D[h1 + 1] + (1f - xd) * GRADIENTS_2D[h2] + (1f - yd) * GRADIENTS_2D[h2 + 1];
+    }
+
+    protected float pearCoord3D(int seed, int x, int y, int z, float xd, float yd, float zd) {
+        final int hash = hashAll(x, y, z, seed), h1 = hash & 0x7C, h2 = hash >>> 7 & 0x7C;
+        return xd * GRADIENTS_3D[h1] + yd * GRADIENTS_3D[h1+1] + zd * GRADIENTS_3D[h1+2] -
+                xd * GRADIENTS_3D[h2] + yd * GRADIENTS_3D[h2+1] + zd * GRADIENTS_3D[h2+2];
+    }
+
+    protected float pearCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
+        final int hash = hashAll(x, y, z, w, seed), h1 = hash & 0xFC, h2 = hash >>> 8 & 0xFC;
+        return xd * GRADIENTS_4D[h1] + yd * GRADIENTS_4D[h1 + 1] + zd * GRADIENTS_4D[h1 + 2] + wd * GRADIENTS_4D[h1 + 3] -
+                xd * GRADIENTS_4D[h2] + yd * GRADIENTS_4D[h2 + 1] + zd * GRADIENTS_4D[h2 + 2] + wd * GRADIENTS_4D[h2 + 3];
+    }
+
+    protected float pearCoord5D(int seed, int x, int y, int z, int w, int u,
+                                float xd, float yd, float zd, float wd, float ud) {
+        final int hash = hashAll(x, y, z, w, u, seed), h1 = hash & 0x7F8, h2 = hash >>> 11 & 0x7F8;
+        return xd * GRADIENTS_5D[h1] + yd * GRADIENTS_5D[h1+1] + zd * GRADIENTS_5D[h1+2] + wd * GRADIENTS_5D[h1+3] + ud * GRADIENTS_5D[h1+4] -
+                xd * GRADIENTS_5D[h2] + yd * GRADIENTS_5D[h2+1] + zd * GRADIENTS_5D[h2+2] + wd * GRADIENTS_5D[h2+3] + ud * GRADIENTS_5D[h2+4];
+    }
+
+    protected float pearCoord6D(int seed, int x, int y, int z, int w, int u, int v,
+                                float xd, float yd, float zd, float wd, float ud, float vd) {
+        final int hash = hashAll(x, y, z, w, u, v, seed), h1 = hash & 0x7F8, h2 = hash >>> 11 & 0x7F8; ;
+        return xd * GRADIENTS_6D[h1] + yd * GRADIENTS_6D[h1+1] + zd * GRADIENTS_6D[h1+2] +
+                wd * GRADIENTS_6D[h1+3] + ud * GRADIENTS_6D[h1+4] + vd * GRADIENTS_6D[h1+5] -
+                xd * GRADIENTS_6D[h2] + yd * GRADIENTS_6D[h2+1] + zd * GRADIENTS_6D[h2+2] +
+                wd * GRADIENTS_6D[h2+3] + ud * GRADIENTS_6D[h2+4] + vd * GRADIENTS_6D[h2+5];
+    }
+
 
     /**
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
@@ -1341,6 +1390,17 @@ public class Noise {
                         return singleFlanFractalRidgedMulti(x, y, mutation);
                     default:
                         return singleFlanFractalFBM(x, y, mutation);
+                }
+            case PEAR:
+                return singlePear(seed, x, y);
+            case PEAR_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singlePearFractalBillow(x, y);
+                    case RIDGED_MULTI:
+                        return singlePearFractalRidgedMulti(x, y);
+                    default:
+                        return singlePearFractalFBM(x, y);
                 }
             case HONEY:
                 return singleHoney(seed, x, y);
@@ -6432,38 +6492,6 @@ public class Noise {
         return sum / ampFractal;
     }
 
-    private float singleSimplexFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleSimplexFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
     /**
      * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5).
@@ -6515,6 +6543,38 @@ public class Noise {
             y *= lacunarity;
         }
         return sum * 2f / correction - 1f;
+    }
+
+    private float singleSimplexFractalFBM(float x, float y) {
+        int seed = this.seed;
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleSimplexFractalBillow(float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
     }
 
     private float singleSimplexFractalRidgedMulti(float x, float y) {
@@ -7626,6 +7686,109 @@ public class Noise {
         }
 
         return sum * fractalBounding;
+    }
+
+    // Pear Noise
+
+    private float singlePearFractalFBM(float x, float y) {
+        int seed = this.seed;
+        float sum = singlePear(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += singlePear(seed + i, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singlePearFractalBillow(float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(singlePear(seed, x, y)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singlePear(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singlePearFractalRidgedMulti(float x, float y) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singlePear(seed + i, x, y));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getPear(float x, float y) {
+        return singlePear(seed, x * frequency, y * frequency);
+    }
+
+    public float singlePear(int seed, float x, float y) {
+        float t = (x + y) * F2f;
+        int i = fastFloor(x + t);
+        int j = fastFloor(y + t);
+
+        t = (i + j) * G2f;
+        float X0 = i - t;
+        float Y0 = j - t;
+
+        float x0 = x - X0;
+        float y0 = y - Y0;
+
+        int i1, j1;
+        if (x0 > y0) {
+            i1 = 1;
+            j1 = 0;
+        } else {
+            i1 = 0;
+            j1 = 1;
+        }
+
+        float x1 = x0 - i1 + G2f;
+        float y1 = y0 - j1 + G2f;
+        float x2 = x0 - 1 + H2f;
+        float y2 = y0 - 1 + H2f;
+
+        float n = 0f;
+
+        t = 1f - x0 * x0 - y0 * y0;
+        if (t >= 0) {
+            t *= t;
+            n += t * t * pearCoord2D(seed, i, j, x0, y0);
+        }
+
+        t = 1f - x1 * x1 - y1 * y1;
+        if (t > 0) {
+            t *= t;
+            n += t * t * pearCoord2D(seed, i + i1, j + j1, x1, y1);
+        }
+
+        t = 1f - x2 * x2 - y2 * y2;
+        if (t > 0)  {
+            t *= t;
+            n += t * t * pearCoord2D(seed, i + 1, j + 1, x2, y2);
+        }
+//        float e = (float)Math.pow(1.0 + sharpness,
+//        return (0.125f *
+        return TrigTools.sinTurns(0x1p-10f *
+                n * 99.20689070704672f); // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
+//        return (e - 1f) / (e + 1f);
     }
 
     // Cubic Noise
