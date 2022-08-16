@@ -74,8 +74,8 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
 //        path = "out/worldsAnimated/" + date + "/WarpingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/WarpingFoamAlien/";
-//        path = "out/worldsAnimated/" + date + "/WarpingFlan/";
-        path = "out/worldsAnimated/" + date + "/WarpingTaffy/";
+        path = "out/worldsAnimated/" + date + "/WarpingFlan/";
+//        path = "out/worldsAnimated/" + date + "/WarpingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/WarpingMutant/";
 //        path = "out/worldsAnimated/" + date + "/WarpingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
@@ -109,8 +109,8 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-//        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1); fn.setSharpness(0.6f);
+//        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.MUTANT_FRACTAL, 1);
 
         fn.setInterpolation(Noise.HERMITE);
@@ -253,7 +253,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
-        WOBBLE = LineWobble.generateLookupTable(world.rng.nextInt(), FRAMES, 8, 3);
+        WOBBLE = LineWobble.generateLookupTable(world.rng.nextInt(), FRAMES, 7, 3);
         if (ALIEN_COLORS) {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
@@ -261,10 +261,10 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                terrainBasicNoise.setMutation(WOBBLE[(i + 41) % FRAMES] * 0.375f * terrainBasicNoise.getFrequency());
-                terrainRidgedNoise.setMutation(WOBBLE[(i + 83) % FRAMES] * 0.3125f * terrainRidgedNoise.getFrequency());
+                terrainBasicNoise.setMutation(WOBBLE[(i + 141) % FRAMES] * 0.375f * terrainBasicNoise.getFrequency());
+                terrainRidgedNoise.setMutation(WOBBLE[(i + 283) % FRAMES] * 0.3125f * terrainRidgedNoise.getFrequency());
                 heatNoise.setMutation(WOBBLE[(i + 127) % FRAMES] * 0.25f * heatNoise.getFrequency());
-                moistureNoise.setMutation(WOBBLE[(i + 157) % FRAMES] * 0.125f * moistureNoise.getFrequency());
+                moistureNoise.setMutation(WOBBLE[(i + 257) % FRAMES] * 0.125f * moistureNoise.getFrequency());
                 otherRidgedNoise.setMutation(WOBBLE[(i + 197) % FRAMES] * 0.0625f * otherRidgedNoise.getFrequency());
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
