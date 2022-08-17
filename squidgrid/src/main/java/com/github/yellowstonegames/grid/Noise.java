@@ -1297,8 +1297,8 @@ public class Noise {
 
     protected float pearCoord3D(int seed, int x, int y, int z, float xd, float yd, float zd) {
         final int hash = hashAll(x, y, z, seed), h1 = hash & 0x7C, h2 = hash >>> 7 & 0x7C;
-        return xd * GRADIENTS_3D[h1] + yd * GRADIENTS_3D[h1+1] + zd * GRADIENTS_3D[h1+2] -
-                xd * GRADIENTS_3D[h2] + yd * GRADIENTS_3D[h2+1] + zd * GRADIENTS_3D[h2+2];
+        return xd * GRADIENTS_3D[h1] + yd * GRADIENTS_3D[h1+1] + zd * GRADIENTS_3D[h1+2] +
+                (1f - xd) * GRADIENTS_3D[h2] + yd * GRADIENTS_3D[h2+1] + zd * GRADIENTS_3D[h2+2];
     }
 
     protected float pearCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
@@ -1530,6 +1530,17 @@ public class Noise {
                         return singleFlanFractalRidgedMulti(x, y, z, mutation);
                     default:
                         return singleFlanFractalFBM(x, y, z, mutation);
+                }
+            case PEAR:
+                return singlePear(seed, x, y, z);
+            case PEAR_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singlePearFractalBillow(x, y, z);
+                    case RIDGED_MULTI:
+                        return singlePearFractalRidgedMulti(x, y, z);
+                    default:
+                        return singlePearFractalFBM(x, y, z);
                 }
             case HONEY:
                 return singleHoney(seed, x, y, z);
@@ -6809,40 +6820,6 @@ public class Noise {
         return sum / ampFractal;
     }
 
-    private float singleSimplexFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    private float singleSimplexFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
     /**
      * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5).
@@ -6899,6 +6876,40 @@ public class Noise {
             z *= lacunarity;
         }
         return sum * 2f / correction - 1f;
+    }
+    
+    private float singleSimplexFractalFBM(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = singleSimplex(seed, x, y, z);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleSimplexFractalBillow(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(singleSimplex(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleSimplex(seed + i, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
     }
 
     private float singleSimplexFractalRidgedMulti(float x, float y, float z) {
@@ -7790,6 +7801,161 @@ public class Noise {
 //        return TrigTools.sinTurns(0x1p-3f *
                 n * 99.20689070704672f); // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
 //        return (e - 1f) / (e + 1f);
+    }
+    private float singlePearFractalFBM(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = singlePear(seed, x, y, z);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += singlePear(seed + i, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singlePearFractalBillow(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(singlePear(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singlePear(seed + i, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singlePearFractalRidgedMulti(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singlePear(seed + i, x, y, z));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    public float getPear(float x, float y, float z) {
+        return singlePear(seed, x * frequency, y * frequency, z * frequency);
+    }
+
+    public float singlePear(int seed, float x, float y, float z) {
+        float t = (x + y + z) * F3f;
+        int i = fastFloor(x + t);
+        int j = fastFloor(y + t);
+        int k = fastFloor(z + t);
+
+        t = (i + j + k) * G3f;
+        float x0 = x - (i - t);
+        float y0 = y - (j - t);
+        float z0 = z - (k - t);
+
+        int i1, j1, k1;
+        int i2, j2, k2;
+
+        if (x0 >= y0) {
+            if (y0 >= z0) {
+                i1 = 1;
+                j1 = 0;
+                k1 = 0;
+                i2 = 1;
+                j2 = 1;
+                k2 = 0;
+            } else if (x0 >= z0) {
+                i1 = 1;
+                j1 = 0;
+                k1 = 0;
+                i2 = 1;
+                j2 = 0;
+                k2 = 1;
+            } else // x0 < z0
+            {
+                i1 = 0;
+                j1 = 0;
+                k1 = 1;
+                i2 = 1;
+                j2 = 0;
+                k2 = 1;
+            }
+        } else // x0 < y0
+        {
+            if (y0 < z0) {
+                i1 = 0;
+                j1 = 0;
+                k1 = 1;
+                i2 = 0;
+                j2 = 1;
+                k2 = 1;
+            } else if (x0 < z0) {
+                i1 = 0;
+                j1 = 1;
+                k1 = 0;
+                i2 = 0;
+                j2 = 1;
+                k2 = 1;
+            } else // x0 >= z0
+            {
+                i1 = 0;
+                j1 = 1;
+                k1 = 0;
+                i2 = 1;
+                j2 = 1;
+                k2 = 0;
+            }
+        }
+
+        float x1 = x0 - i1 + G3f;
+        float y1 = y0 - j1 + G3f;
+        float z1 = z0 - k1 + G3f;
+        float x2 = x0 - i2 + F3f;
+        float y2 = y0 - j2 + F3f;
+        float z2 = z0 - k2 + F3f;
+        float x3 = x0 - 0.5f;
+        float y3 = y0 - 0.5f;
+        float z3 = z0 - 0.5f;
+
+        float n = 0;
+
+        t = 0.7937f - x0 * x0 - y0 * y0 - z0 * z0;
+        if (t > 0) {
+            t *= t;
+            n += t * t * pearCoord3D(seed, i, j, k, x0, y0, z0);
+        }
+
+        t = 0.7937f - x1 * x1 - y1 * y1 - z1 * z1;
+        if (t > 0) {
+            t *= t;
+            n += t * t * pearCoord3D(seed, i + i1, j + j1, k + k1, x1, y1, z1);
+        }
+
+        t = 0.7937f - x2 * x2 - y2 * y2 - z2 * z2;
+        if (t > 0) {
+            t *= t;
+            n += t * t * pearCoord3D(seed, i + i2, j + j2, k + k2, x2, y2, z2);
+        }
+
+        t = 0.7937f - x3 * x3 - y3 * y3 - z3 * z3;
+        if (t > 0)  {
+            t *= t;
+            n += t * t * pearCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
+        }
+        return (0x1p-4f *
+                29f * n);
     }
 
     // Cubic Noise
