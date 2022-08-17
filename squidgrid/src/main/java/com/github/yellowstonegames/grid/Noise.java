@@ -1303,23 +1303,23 @@ public class Noise {
 
     protected float pearCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
         final int hash = hashAll(x, y, z, w, seed), h1 = hash & 0xFC, h2 = hash >>> 8 & 0xFC;
-        return xd * GRADIENTS_4D[h1] + yd * GRADIENTS_4D[h1 + 1] + zd * GRADIENTS_4D[h1 + 2] + wd * GRADIENTS_4D[h1 + 3] -
-                xd * GRADIENTS_4D[h2] + yd * GRADIENTS_4D[h2 + 1] + zd * GRADIENTS_4D[h2 + 2] + wd * GRADIENTS_4D[h2 + 3];
+        return xd * GRADIENTS_4D[h1] + yd * GRADIENTS_4D[h1 + 1] + zd * GRADIENTS_4D[h1 + 2] + wd * GRADIENTS_4D[h1 + 3] +
+                (1f - xd) * GRADIENTS_4D[h2] + yd * GRADIENTS_4D[h2 + 1] + zd * GRADIENTS_4D[h2 + 2] + wd * GRADIENTS_4D[h2 + 3];
     }
 
     protected float pearCoord5D(int seed, int x, int y, int z, int w, int u,
                                 float xd, float yd, float zd, float wd, float ud) {
         final int hash = hashAll(x, y, z, w, u, seed), h1 = hash & 0x7F8, h2 = hash >>> 11 & 0x7F8;
-        return xd * GRADIENTS_5D[h1] + yd * GRADIENTS_5D[h1+1] + zd * GRADIENTS_5D[h1+2] + wd * GRADIENTS_5D[h1+3] + ud * GRADIENTS_5D[h1+4] -
-                xd * GRADIENTS_5D[h2] + yd * GRADIENTS_5D[h2+1] + zd * GRADIENTS_5D[h2+2] + wd * GRADIENTS_5D[h2+3] + ud * GRADIENTS_5D[h2+4];
+        return xd * GRADIENTS_5D[h1] + yd * GRADIENTS_5D[h1+1] + zd * GRADIENTS_5D[h1+2] + wd * GRADIENTS_5D[h1+3] + ud * GRADIENTS_5D[h1+4] +
+                (1f - xd) * GRADIENTS_5D[h2] + yd * GRADIENTS_5D[h2+1] + zd * GRADIENTS_5D[h2+2] + wd * GRADIENTS_5D[h2+3] + ud * GRADIENTS_5D[h2+4];
     }
 
     protected float pearCoord6D(int seed, int x, int y, int z, int w, int u, int v,
                                 float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash = hashAll(x, y, z, w, u, v, seed), h1 = hash & 0x7F8, h2 = hash >>> 11 & 0x7F8; ;
         return xd * GRADIENTS_6D[h1] + yd * GRADIENTS_6D[h1+1] + zd * GRADIENTS_6D[h1+2] +
-                wd * GRADIENTS_6D[h1+3] + ud * GRADIENTS_6D[h1+4] + vd * GRADIENTS_6D[h1+5] -
-                xd * GRADIENTS_6D[h2] + yd * GRADIENTS_6D[h2+1] + zd * GRADIENTS_6D[h2+2] +
+                wd * GRADIENTS_6D[h1+3] + ud * GRADIENTS_6D[h1+4] + vd * GRADIENTS_6D[h1+5] +
+                (1f - xd) * GRADIENTS_6D[h2] + yd * GRADIENTS_6D[h2+1] + zd * GRADIENTS_6D[h2+2] +
                 wd * GRADIENTS_6D[h2+3] + ud * GRADIENTS_6D[h2+4] + vd * GRADIENTS_6D[h2+5];
     }
 
@@ -1670,6 +1670,17 @@ public class Noise {
                         return singleFlanFractalRidgedMulti(x, y, z, w, mutation);
                     default:
                         return singleFlanFractalFBM(x, y, z, w, mutation);
+                }
+            case PEAR:
+                return singlePear(seed, x, y, z, w);
+            case PEAR_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singlePearFractalBillow(x, y, z, w);
+                    case RIDGED_MULTI:
+                        return singlePearFractalRidgedMulti(x, y, z, w);
+                    default:
+                        return singlePearFractalFBM(x, y, z, w);
                 }
             case HONEY:
                 return singleHoney(seed, x, y, z, w);
@@ -7036,6 +7047,74 @@ public class Noise {
 
     // 4D Simplex
 
+    public float getSimplexFractal(float x, float y, float z, float w) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+
+        switch (fractalType) {
+            case FBM:
+                return singleSimplexFractalFBM(x, y, z, w);
+            case BILLOW:
+                return singleSimplexFractalBillow(x, y, z, w);
+            case RIDGED_MULTI:
+                return singleSimplexFractalRidgedMulti(x, y, z, w);
+            default:
+                return 0;
+        }
+    }
+
+    private float singleSimplexFractalFBM(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = singleSimplex(seed, x, y, z, w);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y, z, w) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    private float singleSimplexFractalRidgedMulti(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    private float singleSimplexFractalBillow(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = Math.abs(singleSimplex(seed, x, y, z, w)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleSimplex(seed + i, x, y, z, w)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
     public float getSimplex(float x, float y, float z, float w) {
         return singleSimplex(seed, x * frequency, y * frequency, z * frequency, w * frequency);
     }
@@ -7137,75 +7216,6 @@ public class Noise {
         else t4 = 0;
 
         return (t0 + t1 + t2 + t3 + t4) * 14.7279f;
-    }
-
-    // 4D Simplex
-    public float getSimplexFractal(float x, float y, float z, float w) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y, z, w);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y, z, w);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y, z, w);
-            default:
-                return 0;
-        }
-    }
-
-    private float singleSimplexFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    private float singleSimplexFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    private float singleSimplexFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
     }
     
     // 5D Simplex
@@ -7796,11 +7806,13 @@ public class Noise {
             t *= t;
             n += t * t * pearCoord2D(seed, i + 1, j + 1, x2, y2);
         }
-//        float e = (float)Math.pow(4.0 * sharpness,
-        return (0x1p-5f *
+        float e = (float)Math.pow(1.707f, n * 16f * sharpness);
+        return (e - 1f) / (e + 1f);
+
+//        return (0x1p-5f *
+//                n * 99.20689070704672f); // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
+
 //        return TrigTools.sinTurns(0x1p-3f *
-                n * 99.20689070704672f); // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
-//        return (e - 1f) / (e + 1f);
     }
     private float singlePearFractalFBM(float x, float y, float z) {
         int seed = this.seed;
@@ -7954,8 +7966,166 @@ public class Noise {
             t *= t;
             n += t * t * pearCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
         }
-        return (0x1p-4f *
-                29f * n);
+        float e = (float)Math.pow(1.707f, n * 11f * sharpness);
+        return (e - 1f) / (e + 1f);
+
+//        return (0x1p-4f *
+//                29f * n);
+    }
+    private float singlePearFractalFBM(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = singlePear(seed, x, y, z, w);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += singlePear(seed + i, x, y, z, w) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    private float singlePearFractalRidgedMulti(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singlePear(seed + i, x, y, z, w));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    private float singlePearFractalBillow(float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = Math.abs(singlePear(seed, x, y, z, w)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singlePear(seed + i, x, y, z, w)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    public float getPear(float x, float y, float z, float w) {
+        return singlePear(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    }
+
+    public float singlePear(int seed, float x, float y, float z, float w) {
+        float skew = (x + y + z + w) * F4f;
+        int i = fastFloor(x + skew);
+        int j = fastFloor(y + skew);
+        int k = fastFloor(z + skew);
+        int l = fastFloor(w + skew);
+        float unskew = (i + j + k + l) * G4f;
+        float X0 = i - unskew;
+        float Y0 = j - unskew;
+        float Z0 = k - unskew;
+        float W0 = l - unskew;
+        float x0 = x - X0;
+        float y0 = y - Y0;
+        float z0 = z - Z0;
+        float w0 = w - W0;
+
+        int rankx = 0;
+        int ranky = 0;
+        int rankz = 0;
+        int rankw = 0;
+
+        if (x0 > y0) rankx++; else ranky++;
+        if (x0 > z0) rankx++; else rankz++;
+        if (x0 > w0) rankx++; else rankw++;
+
+        if (y0 > z0) ranky++; else rankz++;
+        if (y0 > w0) ranky++; else rankw++;
+
+        if (z0 > w0) rankz++; else rankw++;
+
+        int i1 = 2 - rankx >>> 31;
+        int j1 = 2 - ranky >>> 31;
+        int k1 = 2 - rankz >>> 31;
+        int l1 = 2 - rankw >>> 31;
+
+        int i2 = 1 - rankx >>> 31;
+        int j2 = 1 - ranky >>> 31;
+        int k2 = 1 - rankz >>> 31;
+        int l2 = 1 - rankw >>> 31;
+
+        int i3 = -rankx >>> 31;
+        int j3 = -ranky >>> 31;
+        int k3 = -rankz >>> 31;
+        int l3 = -rankw >>> 31;
+
+        float x1 = x0 - i1 + G4f;
+        float y1 = y0 - j1 + G4f;
+        float z1 = z0 - k1 + G4f;
+        float w1 = w0 - l1 + G4f;
+
+        float x2 = x0 - i2 + 2 * G4f;
+        float y2 = y0 - j2 + 2 * G4f;
+        float z2 = z0 - k2 + 2 * G4f;
+        float w2 = w0 - l2 + 2 * G4f;
+
+        float x3 = x0 - i3 + 3 * G4f;
+        float y3 = y0 - j3 + 3 * G4f;
+        float z3 = z0 - k3 + 3 * G4f;
+        float w3 = w0 - l3 + 3 * G4f;
+
+        float x4 = x0 - 1 + 4 * G4f;
+        float y4 = y0 - 1 + 4 * G4f;
+        float z4 = z0 - 1 + 4 * G4f;
+        float w4 = w0 - 1 + 4 * G4f;
+
+        float t0 = 0.7500f - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
+        if(t0 > 0) {
+            t0 *= t0;
+            t0 *= t0 * pearCoord4D(seed, i, j, k, l, x0, y0, z0, w0);
+        }
+        else t0 = 0;
+        float t1 = 0.7500f - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
+        if (t1 > 0) {
+            t1 *= t1;
+            t1 *= t1 * pearCoord4D(seed, i + i1, j + j1, k + k1, l + l1, x1, y1, z1, w1);
+        }
+        else t1 = 0;
+        float t2 = 0.7500f - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
+        if (t2 > 0) {
+            t2 *= t2;
+            t2 *= t2 * pearCoord4D(seed, i + i2, j + j2, k + k2, l + l2, x2, y2, z2, w2);
+        }
+        else t2 = 0;
+        float t3 = 0.7500f - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
+        if (t3 > 0) {
+            t3 *= t3;
+            t3 *= t3 * pearCoord4D(seed, i + i3, j + j3, k + k3, l + l3, x3, y3, z3, w3);
+        }
+        else t3 = 0;
+        float t4 = 0.7500f - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
+        if (t4 > 0) {
+            t4 *= t4;
+            t4 *= t4 * pearCoord4D(seed, i + 1, j + 1, k + 1, l + 1, x4, y4, z4, w4);
+        }
+        else t4 = 0;
+
+        float e = (t0 + t1 + t2 + t3 + t4);
+        e = (float)Math.pow(1.707f, e * 9f * sharpness);
+        return (e - 1f) / (e + 1f);
+//        return (t0 + t1 + t2 + t3 + t4) * 0x1p-4f * 14.7279f;
     }
 
     // Cubic Noise
