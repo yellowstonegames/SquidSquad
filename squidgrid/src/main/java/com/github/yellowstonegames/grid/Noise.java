@@ -1291,7 +1291,8 @@ public class Noise {
 
     protected float pearCoord2D(int seed, int x, int y, float xd, float yd) {
         final int hash = hashAll(x, y, seed), h1 = hash & 0x1FE, h2 = hash >>> 9 & 0x1FE;
-        return xd * GRADIENTS_2D[h1] + yd * GRADIENTS_2D[h1 + 1] + (1f - xd) * GRADIENTS_2D[h2] + (1f - yd) * GRADIENTS_2D[h2 + 1];
+//        return (xd + GRADIENTS_2D[h2]) * GRADIENTS_2D[h1] + (yd + GRADIENTS_2D[h2 + 1]) * GRADIENTS_2D[h1 + 1];
+        return xd * GRADIENTS_2D[h1] + yd * GRADIENTS_2D[h1 + 1] + (1f - xd) * GRADIENTS_2D[h2] + yd * GRADIENTS_2D[h2 + 1];
     }
 
     protected float pearCoord3D(int seed, int x, int y, int z, float xd, float yd, float zd) {
@@ -7767,26 +7768,26 @@ public class Noise {
 
         float n = 0f;
 
-        t = 1f - x0 * x0 - y0 * y0;
+        t = 0.7071f - x0 * x0 - y0 * y0;
         if (t >= 0) {
             t *= t;
             n += t * t * pearCoord2D(seed, i, j, x0, y0);
         }
 
-        t = 1f - x1 * x1 - y1 * y1;
+        t = 0.7071f - x1 * x1 - y1 * y1;
         if (t > 0) {
             t *= t;
             n += t * t * pearCoord2D(seed, i + i1, j + j1, x1, y1);
         }
 
-        t = 1f - x2 * x2 - y2 * y2;
+        t = 0.7071f - x2 * x2 - y2 * y2;
         if (t > 0)  {
             t *= t;
             n += t * t * pearCoord2D(seed, i + 1, j + 1, x2, y2);
         }
-//        float e = (float)Math.pow(1.0 + sharpness,
-//        return (0.125f *
-        return TrigTools.sinTurns(0x1p-10f *
+//        float e = (float)Math.pow(4.0 * sharpness,
+        return (0x1p-5f *
+//        return TrigTools.sinTurns(0x1p-3f *
                 n * 99.20689070704672f); // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
 //        return (e - 1f) / (e + 1f);
     }
