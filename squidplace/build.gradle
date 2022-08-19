@@ -9,7 +9,7 @@ dependencies {
     api project(':squidcore')
     api project(':squidgrid')
     testImplementation "junit:junit:$junitVersion"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
 
 jar {

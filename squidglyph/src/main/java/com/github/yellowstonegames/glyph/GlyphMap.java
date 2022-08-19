@@ -136,7 +136,7 @@ public class GlyphMap {
     public void setFont(Font font, boolean squareCenter) {
         if (font == null) return;
         this.font = font;
-        font.setColorLookup(GlyphMap::getRgba);
+        font.setColorLookup(ColorLookup.DESCRIPTIVE);
         if (squareCenter) {
             if (font.distanceField == Font.DistanceFieldType.MSDF)
                 font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;

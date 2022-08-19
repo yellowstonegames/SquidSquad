@@ -89,29 +89,29 @@ public class GlidingGlyph {
     }
 
     public GlidingGlyph(char glyph, String markup) {
-        this(Font.markupGlyph(glyph, markup, GlyphMap::getRgba), Coord.get(0, 0));
+        this(Font.markupGlyph(glyph, markup, ColorLookup.DESCRIPTIVE), Coord.get(0, 0));
     }
 
     public GlidingGlyph(char glyph, String markup, Coord coord) {
-        this(Font.markupGlyph(glyph, markup, GlyphMap::getRgba), coord, coord);
+        this(Font.markupGlyph(glyph, markup, ColorLookup.DESCRIPTIVE), coord, coord);
     }
 
     public GlidingGlyph(char glyph, String markup, Coord start, Coord end) {
-        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
+        this.glyph = Font.markupGlyph(glyph, markup, ColorLookup.DESCRIPTIVE);
         location = new CoordGlider(start, end);
         rotation = new AngleGlider();
         smallMotion = ownEmptyMotion;
     }
 
     public GlidingGlyph(char glyph, String markup, Coord start, Coord end, float rotation) {
-        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
+        this.glyph = Font.markupGlyph(glyph, markup, ColorLookup.DESCRIPTIVE);
         location = new CoordGlider(start, end);
         this.rotation = new AngleGlider(rotation);
         smallMotion = ownEmptyMotion;
     }
 
     public GlidingGlyph(char glyph, String markup, Coord start, Coord end, float rotationStart, float rotationEnd) {
-        this.glyph = Font.markupGlyph(glyph, markup, GlyphMap::getRgba);
+        this.glyph = Font.markupGlyph(glyph, markup, ColorLookup.DESCRIPTIVE);
         location = new CoordGlider(start, end);
         rotation = new AngleGlider(rotationStart, rotationEnd);
         smallMotion = ownEmptyMotion;

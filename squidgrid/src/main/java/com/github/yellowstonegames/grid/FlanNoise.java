@@ -25,8 +25,8 @@ import com.github.yellowstonegames.core.annotations.Beta;
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
  * for higher-dimensional output (4 and up, in particular). FlanNoise doesn't slow down as rapidly as other forms of
- * noise do when dimensions are added. This has configurable detail; 4 is typically the minimum for decent noise in low
- * dimensions, and detail 5 seems to be high-quality up to at least 6D.
+ * noise do when dimensions are added. This has configurable detail; 3 is typically the minimum for decent noise in low
+ * dimensions, but it can be set higher independently of fractal octaves.
  */
 @Beta
 public class FlanNoise {
@@ -111,7 +111,7 @@ public class FlanNoise {
         }
 
         inverse = 1f / vc;
-        printDebugInfo();
+//        printDebugInfo();
     }
 
     private void printDebugInfo() {
