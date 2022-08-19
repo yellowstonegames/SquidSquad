@@ -18,11 +18,14 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.textra.ColorLookup;
 import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.grid.Coord;
@@ -360,5 +363,20 @@ public class GlyphGrid extends Group {
     public void resize(int screenWidth, int screenHeight) {
         viewport.update(screenWidth, screenHeight, false);
         font.resizeDistanceField(screenWidth, screenHeight);
+    }
+
+    /**
+     * Sets the visibility of each Actor child of this GlyphGrid based on the result of a predicate called on its x, y
+     * grid position (rounded from its float position). If {@code predicate} returns true, an Actor will be set to be
+     * visible, while if it returns false, the Actor will be set to be invisible.
+     * @param predicate will be given the rounded x,y positions of Actors and should return true if the Actor is visible
+     */
+    public void setVisibilities(IntIntPredicate predicate) {
+        SnapshotArray<Actor> children = getChildren();
+        Actor[] kids = children.begin();
+        for (int i = 0, n = children.size; i < n; i++) {
+            kids[i].setVisible(predicate.test(Math.round(kids[i].getX()), Math.round(kids[i].getY())));
+        }
+        children.end();
     }
 }
