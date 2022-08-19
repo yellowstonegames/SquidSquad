@@ -145,6 +145,8 @@ public class GlyphGrid extends Group {
         }
     }
 
+
+
     /**
      * Gets how wide the grid is, measured in discrete cells.
      * @return how many cells wide the grid is
@@ -275,7 +277,7 @@ public class GlyphGrid extends Group {
      * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      */
     public void draw(Batch batch) {
-        viewport.apply(false);
+        getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
         if(backgrounds != null)
@@ -296,7 +298,7 @@ public class GlyphGrid extends Group {
      * @param limit a Frustum, usually obtained from {@link com.badlogic.gdx.graphics.Camera#frustum}, that delimits what will be rendered
      */
     public void draw(Batch batch, Frustum limit) {
-        viewport.apply(false);
+        getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
         if(backgrounds != null)
@@ -328,7 +330,7 @@ public class GlyphGrid extends Group {
      * @param endCellY the exclusive y of the upper-right corner, measured in cells, to stop rendering at
      */
     public void draw(Batch batch, int startCellX, int startCellY, int endCellX, int endCellY) {
-        viewport.apply(false);
+        getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
         if(backgrounds != null)
@@ -366,7 +368,7 @@ public class GlyphGrid extends Group {
     }
 
     /**
-     * Sets the visibility of each Actor child of this GlyphGrid based on the result of a predicate called on its x, y
+     * Sets the visibility of each Actor child of this GlyphGrid based on the result of a predicate called on its x,y
      * grid position (rounded from its float position). If {@code predicate} returns true, an Actor will be set to be
      * visible, while if it returns false, the Actor will be set to be invisible.
      * @param predicate will be given the rounded x,y positions of Actors and should return true if the Actor is visible
