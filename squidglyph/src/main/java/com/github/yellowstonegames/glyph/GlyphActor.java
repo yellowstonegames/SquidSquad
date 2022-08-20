@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.github.tommyettinger.textra.ColorLookup;
 import com.github.tommyettinger.textra.Font;
+import com.github.yellowstonegames.grid.Coord;
 
 public class GlyphActor extends Actor {
 
@@ -77,5 +78,13 @@ public class GlyphActor extends Actor {
 
     public void setChar(char c) {
         glyph = (glyph & 0xFFFFFFFFFFFF0000L) | c;
+    }
+
+    public Coord getLocation() {
+        return Coord.get(Math.round(getX()), Math.round(getY()));
+    }
+
+    public void setLocation(Coord location) {
+        setPosition(location.x, location.y);
     }
 }
