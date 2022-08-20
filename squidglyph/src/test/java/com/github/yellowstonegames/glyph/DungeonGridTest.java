@@ -50,7 +50,7 @@ public class DungeonGridTest extends ApplicationAdapter {
     private final Vector2 pos = new Vector2();
     private Runnable post;
 
-    private static final int GRID_WIDTH = 25;
+    private static final int GRID_WIDTH = 40;
     private static final int GRID_HEIGHT = 25;
     private static final int CELL_WIDTH = 32;
     private static final int CELL_HEIGHT = 32;
@@ -191,13 +191,13 @@ public class DungeonGridTest extends ApplicationAdapter {
 
         final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.deltaX), Math.round(playerGlyph.getY() + way.deltaY));
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
-            playerGlyph.addAction(Actions.sequence(Actions.moveTo(next.x, next.y, 0.3f), Actions.delay(0.3f, Actions.run(post))));
+            playerGlyph.addAction(Actions.sequence(Actions.moveTo(next.x, next.y, 0.2f), Actions.run(post)));
         }
         else{
             playerGlyph.addAction(Actions.sequence(
                     Actions.moveBy(way.deltaX * 0.4f, way.deltaY * 0.4f, 0.1f),
                     Actions.moveBy(way.deltaX * -0.4f, way.deltaY * -0.4f, 0.2f),
-                    Actions.delay(0.3f, Actions.run(post))
+                    Actions.run(post)
             ));
         }
     }
@@ -351,6 +351,7 @@ public class DungeonGridTest extends ApplicationAdapter {
         camera.update();
         stage.draw();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
+        stage.act();
     }
 
     @Override
