@@ -131,6 +131,18 @@ public class MoreActions {
             super.restart();
             index = 0;
         }
+
+        /**
+         * Appends a Runnable to run at the conclusion of the sequence. If {@code runnable} is null, simply returns this
+         * without changes.
+         * @param runnable may be null (in which case nothing changes), otherwise will be run after the sequence
+         * @return this, for chaining
+         */
+        public LenientSequenceAction conclude(Runnable runnable) {
+            if(runnable == null) return this;
+            addAction(Actions.run(runnable));
+            return this;
+        }
     }
     static public LenientSequenceAction sequence (Action action1) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
