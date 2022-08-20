@@ -22,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+
 /**
  * Supplemental {@link Action} classes and methods to augment {@link Actions}.
  */
@@ -129,5 +131,106 @@ public class MoreActions {
             super.restart();
             index = 0;
         }
+    }
+    static public LenientSequenceAction sequence (Action action1) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        action.addAction(action1);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence (Action action1, Action action2) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        action.addAction(action4);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4, Action action5) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        action.addAction(action4);
+        action.addAction(action5);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence (Action... actions) {
+        LenientSequenceAction action = action(LenientSequenceAction.class);
+        for (int i = 0, n = actions.length; i < n; i++)
+            action.addAction(actions[i]);
+        return action;
+    }
+
+    static public LenientSequenceAction sequence () {
+        return action(LenientSequenceAction.class);
+    }
+
+    static public LenientParallelAction parallel (Action action1) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        action.addAction(action1);
+        return action;
+    }
+
+    static public LenientParallelAction parallel (Action action1, Action action2) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        return action;
+    }
+
+    static public LenientParallelAction parallel (Action action1, Action action2, Action action3) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        return action;
+    }
+
+    static public LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        action.addAction(action4);
+        return action;
+    }
+
+    static public LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4, Action action5) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        action.addAction(action1);
+        action.addAction(action2);
+        action.addAction(action3);
+        action.addAction(action4);
+        action.addAction(action5);
+        return action;
+    }
+
+    static public LenientParallelAction parallel (Action... actions) {
+        LenientParallelAction action = action(LenientParallelAction.class);
+        for (int i = 0, n = actions.length; i < n; i++)
+            action.addAction(actions[i]);
+        return action;
+    }
+
+    static public LenientParallelAction parallel () {
+        return action(LenientParallelAction.class);
     }
 }
