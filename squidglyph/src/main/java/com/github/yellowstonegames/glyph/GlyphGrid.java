@@ -381,4 +381,18 @@ public class GlyphGrid extends Group {
         }
         children.end();
     }
+
+    /**
+     * Returns true if any children of this GlyphGrid currently have Actions, or false if none do.
+     * @return whether any children of this GlyphGrid currently have Actions
+     */
+    public boolean areChildrenActing() {
+        SnapshotArray<Actor> children = getChildren();
+        for (int i = 0, n = children.size; i < n; i++) {
+            if(children.get(i).hasActions()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -99,7 +99,8 @@ public class DungeonGridTest extends ApplicationAdapter {
         playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
         gg.addActor(playerGlyph);
         post = () -> {
-            seen.or(inView.refill(FOV.reuseFOV(res, light, Math.round(playerGlyph.getX()), Math.round(playerGlyph.getY()), 6.5f, Radius.CIRCLE), 0.001f, 2f));
+            seen.or(inView.refill(FOV.reuseFOV(res, light,
+                    Math.round(playerGlyph.getX()), Math.round(playerGlyph.getY()), 6.5f, Radius.CIRCLE), 0.001f, 999f));
             blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         };
@@ -312,7 +313,7 @@ public class DungeonGridTest extends ApplicationAdapter {
         recolor();
         handleHeldKeys();
 
-        if(!playerGlyph.hasActions() && !awaitedMoves.isEmpty())
+        if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
         {
             Coord m = awaitedMoves.remove(0);
             if (!toCursor.isEmpty())
@@ -320,7 +321,7 @@ public class DungeonGridTest extends ApplicationAdapter {
             move(playerGlyph.getLocation().toGoTo(m));
         }
         else {
-            if (!playerGlyph.hasActions()) {
+            if (!gg.areChildrenActing()) {
 //                postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
