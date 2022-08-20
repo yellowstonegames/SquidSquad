@@ -18,9 +18,12 @@ package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.grid.Direction;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
@@ -244,5 +247,37 @@ public class MoreActions {
 
     static public LenientParallelAction parallel () {
         return action(LenientParallelAction.class);
+    }
+
+
+    public LenientSequenceAction bump(Direction way) {
+        return sequence(
+                Actions.moveBy(way.deltaX * 0.4f, way.deltaY * 0.4f, 0.1f),
+                Actions.moveBy(way.deltaX * -0.4f, way.deltaY * -0.4f, 0.2f)
+        );
+    }
+
+    public LenientSequenceAction bump(Direction way, Runnable post) {
+        return bump(way).conclude(post);
+    }
+
+    public DelayAction bump(Direction way, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, bump(way).conclude(post));
+    }
+
+    public LenientSequenceAction bump(float degrees) {
+        float cos = TrigTools.cosDeg(degrees), sin = TrigTools.sinDeg(degrees);
+        return sequence(
+                Actions.moveBy(cos *  0.4f, sin *  0.4f, 0.1f),
+                Actions.moveBy(cos * -0.4f, sin * -0.4f, 0.2f)
+        );
+    }
+
+    public LenientSequenceAction bump(float degrees, Runnable post) {
+        return bump(degrees).conclude(post);
+    }
+
+    public DelayAction bump(float degrees, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, bump(degrees).conclude(post));
     }
 }
