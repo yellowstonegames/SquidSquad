@@ -248,59 +248,59 @@ public class MoreActions {
     }
 
 
-    public static LenientSequenceAction bump(Direction way) {
+    public static LenientSequenceAction bump(Direction way, float duration) {
         return sequence(
-                Actions.moveBy(way.deltaX * 0.4f, way.deltaY * 0.4f, 0.1f),
-                Actions.moveBy(way.deltaX * -0.4f, way.deltaY * -0.4f, 0.2f)
+                Actions.moveBy(way.deltaX * 0.4f, way.deltaY * 0.4f, duration * 0.3f),
+                Actions.moveBy(way.deltaX * -0.4f, way.deltaY * -0.4f, duration * 0.7f)
         );
     }
 
-    public static LenientSequenceAction bump(Direction way, Runnable post) {
-        return bump(way).conclude(post);
+    public static LenientSequenceAction bump(Direction way, float duration, Runnable post) {
+        return bump(way, duration).conclude(post);
     }
 
-    public static DelayAction bump(Direction way, float delaySeconds, Runnable post) {
-        return Actions.delay(delaySeconds, bump(way).conclude(post));
+    public static DelayAction bump(Direction way, float duration, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, bump(way, duration).conclude(post));
     }
 
-    public static LenientSequenceAction bump(float degrees) {
+    public static LenientSequenceAction bump(float degrees, float duration) {
         float cos = TrigTools.cosDeg(degrees), sin = TrigTools.sinDeg(degrees);
         return sequence(
-                Actions.moveBy(cos *  0.4f, sin *  0.4f, 0.1f),
-                Actions.moveBy(cos * -0.4f, sin * -0.4f, 0.2f)
+                Actions.moveBy(cos *  0.4f, sin *  0.4f, duration * 0.3f),
+                Actions.moveBy(cos * -0.4f, sin * -0.4f, duration * 0.7f)
         );
     }
 
-    public static LenientSequenceAction bump(float degrees, Runnable post) {
-        return bump(degrees).conclude(post);
+    public static LenientSequenceAction bump(float degrees, float duration, Runnable post) {
+        return bump(degrees, duration).conclude(post);
     }
 
-    public static DelayAction bump(float degrees, float delaySeconds, Runnable post) {
-        return Actions.delay(delaySeconds, bump(degrees).conclude(post));
+    public static DelayAction bump(float degrees, float duration, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, bump(degrees, duration).conclude(post));
     }
 
-    public static MoveToAction slideTo(float x, float y) {
-        return Actions.moveTo(x, y, 0.15f);
+    public static MoveToAction slideTo(float x, float y, float duration) {
+        return Actions.moveTo(x, y, duration);
     }
 
-    public static LenientSequenceAction slideTo(float x, float y, Runnable post) {
-        return sequence(slideTo(x, y), Actions.run(post));
+    public static LenientSequenceAction slideTo(float x, float y, float duration, Runnable post) {
+        return sequence(slideTo(x, y, duration), Actions.run(post));
     }
 
-    public static DelayAction slideTo(float x, float y, float delaySeconds, Runnable post) {
-        return Actions.delay(delaySeconds, slideTo(x, y, post));
+    public static DelayAction slideTo(float x, float y, float duration, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, slideTo(x, y, duration, post));
     }
 
-    public static MoveByAction slideBy(float x, float y) {
-        return Actions.moveBy(x, y, 0.15f);
+    public static MoveByAction slideBy(float x, float y, float duration) {
+        return Actions.moveBy(x, y, duration);
     }
 
-    public static LenientSequenceAction slideBy(float x, float y, Runnable post) {
-        return sequence(slideBy(x, y), Actions.run(post));
+    public static LenientSequenceAction slideBy(float x, float y, float duration, Runnable post) {
+        return sequence(slideBy(x, y, duration), Actions.run(post));
     }
 
-    public static DelayAction slideBy(float x, float y, float delaySeconds, Runnable post) {
-        return Actions.delay(delaySeconds, slideBy(x, y, post));
+    public static DelayAction slideBy(float x, float y, float duration, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, slideBy(x, y, duration, post));
     }
 
 }
