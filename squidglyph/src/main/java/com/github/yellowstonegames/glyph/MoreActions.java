@@ -147,20 +147,20 @@ public class MoreActions {
             return this;
         }
     }
-    static public LenientSequenceAction sequence (Action action1) {
+    public static LenientSequenceAction sequence (Action action1) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
         return action;
     }
 
-    static public LenientSequenceAction sequence (Action action1, Action action2) {
+    public static LenientSequenceAction sequence (Action action1, Action action2) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
         action.addAction(action2);
         return action;
     }
 
-    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3) {
+    public static LenientSequenceAction sequence (Action action1, Action action2, Action action3) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -168,7 +168,7 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4) {
+    public static LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -177,7 +177,7 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4, Action action5) {
+    public static LenientSequenceAction sequence (Action action1, Action action2, Action action3, Action action4, Action action5) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -187,31 +187,31 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientSequenceAction sequence (Action... actions) {
+    public static LenientSequenceAction sequence (Action... actions) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         for (int i = 0, n = actions.length; i < n; i++)
             action.addAction(actions[i]);
         return action;
     }
 
-    static public LenientSequenceAction sequence () {
+    public static LenientSequenceAction sequence () {
         return action(LenientSequenceAction.class);
     }
 
-    static public LenientParallelAction parallel (Action action1) {
+    public static LenientParallelAction parallel (Action action1) {
         LenientParallelAction action = action(LenientParallelAction.class);
         action.addAction(action1);
         return action;
     }
 
-    static public LenientParallelAction parallel (Action action1, Action action2) {
+    public static LenientParallelAction parallel (Action action1, Action action2) {
         LenientParallelAction action = action(LenientParallelAction.class);
         action.addAction(action1);
         action.addAction(action2);
         return action;
     }
 
-    static public LenientParallelAction parallel (Action action1, Action action2, Action action3) {
+    public static LenientParallelAction parallel (Action action1, Action action2, Action action3) {
         LenientParallelAction action = action(LenientParallelAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -219,7 +219,7 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4) {
+    public static LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4) {
         LenientParallelAction action = action(LenientParallelAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -228,7 +228,7 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4, Action action5) {
+    public static LenientParallelAction parallel (Action action1, Action action2, Action action3, Action action4, Action action5) {
         LenientParallelAction action = action(LenientParallelAction.class);
         action.addAction(action1);
         action.addAction(action2);
@@ -238,34 +238,34 @@ public class MoreActions {
         return action;
     }
 
-    static public LenientParallelAction parallel (Action... actions) {
+    public static LenientParallelAction parallel (Action... actions) {
         LenientParallelAction action = action(LenientParallelAction.class);
         for (int i = 0, n = actions.length; i < n; i++)
             action.addAction(actions[i]);
         return action;
     }
 
-    static public LenientParallelAction parallel () {
+    public static LenientParallelAction parallel () {
         return action(LenientParallelAction.class);
     }
 
 
-    public LenientSequenceAction bump(Direction way) {
+    public static LenientSequenceAction bump(Direction way) {
         return sequence(
                 Actions.moveBy(way.deltaX * 0.4f, way.deltaY * 0.4f, 0.1f),
                 Actions.moveBy(way.deltaX * -0.4f, way.deltaY * -0.4f, 0.2f)
         );
     }
 
-    public LenientSequenceAction bump(Direction way, Runnable post) {
+    public static LenientSequenceAction bump(Direction way, Runnable post) {
         return bump(way).conclude(post);
     }
 
-    public DelayAction bump(Direction way, float delaySeconds, Runnable post) {
+    public static DelayAction bump(Direction way, float delaySeconds, Runnable post) {
         return Actions.delay(delaySeconds, bump(way).conclude(post));
     }
 
-    public LenientSequenceAction bump(float degrees) {
+    public static LenientSequenceAction bump(float degrees) {
         float cos = TrigTools.cosDeg(degrees), sin = TrigTools.sinDeg(degrees);
         return sequence(
                 Actions.moveBy(cos *  0.4f, sin *  0.4f, 0.1f),
@@ -273,11 +273,11 @@ public class MoreActions {
         );
     }
 
-    public LenientSequenceAction bump(float degrees, Runnable post) {
+    public static LenientSequenceAction bump(float degrees, Runnable post) {
         return bump(degrees).conclude(post);
     }
 
-    public DelayAction bump(float degrees, float delaySeconds, Runnable post) {
+    public static DelayAction bump(float degrees, float delaySeconds, Runnable post) {
         return Actions.delay(delaySeconds, bump(degrees).conclude(post));
     }
 }
