@@ -196,7 +196,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                     //Actions.sequence(Actions.moveTo(next.x, next.y, 0.2f), Actions.run(post)));
         }
         else{
-            playerGlyph.addAction(MoreActions.bump(way, 0.3f).conclude(post));
+            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f)).conclude(post));
         }
     }
 

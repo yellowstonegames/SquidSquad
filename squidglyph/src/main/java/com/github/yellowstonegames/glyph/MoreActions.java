@@ -135,6 +135,18 @@ public class MoreActions {
         }
 
         /**
+         * Appends a Runnable to run after the rest of the sequence. If {@code runnable} is null, simply returns this
+         * without changes.
+         * @param after may be null (in which case nothing changes), otherwise will be run after the sequence
+         * @return this, for chaining
+         */
+        public LenientSequenceAction append(Action after) {
+            if(after == null) return this;
+            addAction(after);
+            return this;
+        }
+
+        /**
          * Appends a Runnable to run at the conclusion of the sequence. If {@code runnable} is null, simply returns this
          * without changes.
          * @param runnable may be null (in which case nothing changes), otherwise will be run after the sequence
