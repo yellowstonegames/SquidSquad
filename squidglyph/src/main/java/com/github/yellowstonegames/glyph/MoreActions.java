@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Direction;
 
@@ -301,6 +302,28 @@ public class MoreActions {
 
     public static DelayAction slideBy(float x, float y, float duration, float delaySeconds, Runnable post) {
         return Actions.delay(delaySeconds, slideBy(x, y, duration, post));
+    }
+
+    public static LenientSequenceAction wiggle(float strength, float duration) {
+        long time = System.currentTimeMillis() << 2;
+        float x1 =   TrigTools.sinTurns(Hasher.randomize1Float(time)) * strength,
+                y1 = TrigTools.sinTurns(Hasher.randomize1Float(time+1)) * strength,
+                x2 = TrigTools.sinTurns(Hasher.randomize1Float(time+2)) * strength,
+                y2 = TrigTools.sinTurns(Hasher.randomize1Float(time+3)) * strength;
+        return sequence(
+                Actions.moveBy(x1, y1, duration * 0.25f),
+                Actions.moveBy(x2, y2, duration * 0.25f),
+                Actions.moveBy(-x2, -y1, duration * 0.25f),
+                Actions.moveBy(-x1, -y2, duration * 0.25f)
+        );
+    }
+
+    public static LenientSequenceAction wiggle(float strength, float duration, Runnable post) {
+        return wiggle(strength, duration).conclude(post);
+    }
+
+    public static DelayAction wiggle(float strength, float duration, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, bump(strength, duration).conclude(post));
     }
 
 }
