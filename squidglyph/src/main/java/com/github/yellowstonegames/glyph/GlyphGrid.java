@@ -20,6 +20,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -28,6 +30,7 @@ import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.textra.ColorLookup;
 import com.github.tommyettinger.textra.Font;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
 
 /**
@@ -394,5 +397,19 @@ public class GlyphGrid extends Group {
             }
         }
         return false;
+    }
+
+    //TODO: Change color handling internally so this can remember color changes.
+    public MoreActions.LenientSequenceAction dyeFG(int x, int y, int newColor, float change, float duration, Runnable post) {
+        int fused = fuse(x, y);
+        long existing = map.getOrDefault(fused, 0);
+        TemporalAction temporal = new TemporalAction() {
+            @Override
+            protected void update(float percent) {
+                map.put(fused, (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int)(existing >>> 32), newColor, change * percent) << 32);
+            }
+        };
+        temporal.setDuration(duration);
+        return new MoreActions.LenientSequenceAction(temporal, post == null ? null : Actions.run(post));
     }
 }

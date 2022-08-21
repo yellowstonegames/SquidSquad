@@ -193,10 +193,9 @@ public class DungeonGridTest extends ApplicationAdapter {
         final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.deltaX), Math.round(playerGlyph.getY() + way.deltaY));
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
             playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
-                    //Actions.sequence(Actions.moveTo(next.x, next.y, 0.2f), Actions.run(post)));
         }
         else{
-            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f)).conclude(post));
+            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f)).conclude(post));//gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
         }
     }
 
