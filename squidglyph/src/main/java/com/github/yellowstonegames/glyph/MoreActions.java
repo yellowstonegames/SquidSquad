@@ -17,9 +17,7 @@
 package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.github.tommyettinger.digital.TrigTools;
@@ -280,4 +278,29 @@ public class MoreActions {
     public static DelayAction bump(float degrees, float delaySeconds, Runnable post) {
         return Actions.delay(delaySeconds, bump(degrees).conclude(post));
     }
+
+    public static MoveToAction slideTo(float x, float y) {
+        return Actions.moveTo(x, y, 0.15f);
+    }
+
+    public static LenientSequenceAction slideTo(float x, float y, Runnable post) {
+        return sequence(slideTo(x, y), Actions.run(post));
+    }
+
+    public static DelayAction slideTo(float x, float y, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, slideTo(x, y, post));
+    }
+
+    public static MoveByAction slideBy(float x, float y) {
+        return Actions.moveBy(x, y, 0.15f);
+    }
+
+    public static LenientSequenceAction slideBy(float x, float y, Runnable post) {
+        return sequence(slideBy(x, y), Actions.run(post));
+    }
+
+    public static DelayAction slideBy(float x, float y, float delaySeconds, Runnable post) {
+        return Actions.delay(delaySeconds, slideBy(x, y, post));
+    }
+
 }
