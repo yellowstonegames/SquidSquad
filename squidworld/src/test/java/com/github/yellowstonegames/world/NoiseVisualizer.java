@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
@@ -26,8 +27,8 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC, 1);
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
+    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
     private boolean inverse;
@@ -157,7 +158,15 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         }
                         Gdx.files.local("out/").mkdirs();
                         for (int i = 0; i < 256; i++) {
-                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
+                            float hue = 0.2f; // apricot
+//                            float hue = 0.625f; // a soft blue
+                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
+                                    DescriptiveColor.oklabByHSL(
+                                            (i & 255) * 0x1p-12f + hue, // small hue variation
+                                            (i + 90 & 255) * 0x3p-10f + 0.125f, // maxes out just below 7.0f/8.0f
+                                            0.55f + TrigTools.cosTurns(i * 0x1p-10f) * 0.35f, // very light, from 0.55f to 0.9f, more are high
+                                            1f));
+//                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
                         }
                         gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 12);
                         for (int i = 0; i < frames.size; i++) {
@@ -175,6 +184,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         break;
                     case S: //seed
                         noise.setSeed(noise.getSeed() + 1);
+                        break;
+                    case SLASH:
+                        noise.setSeed((int) Hasher.randomize3(noise.getSeed()));
                         break;
                     case N: // noise type
                     case EQUALS:
