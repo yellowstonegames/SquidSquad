@@ -299,16 +299,19 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long z, long s) {
+            // mask is a power of two minus 1, if larger, the cube of mirrors is larger.
             x &= mask;
             y &= mask;
             z &= mask;
+            // some randomizing, not great, doesn't need to be
             x *= x * 0xD1B54A32D192ED03L;
             y *= y * 0xABC98388FB8FAC03L;
             z *= z * 0x8CB92BA72F3D8DD7L;
-            x = x & mask;
-            y = y & mask;
-            z = z & mask;
+            x &= mask;
+            y &= mask;
+            z &= mask;
             long t;
+            // transpose part
             if (x < y) {
                 t = x;
                 x = y;
@@ -324,6 +327,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
                 y = z;
                 z = t;
             }
+            // not actually sure why this works. It does incorporate all of the states into the result.
             x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + z);
             y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
             z = (z + 0x9E3779B97F4A7C15L ^ z) * (y + x);

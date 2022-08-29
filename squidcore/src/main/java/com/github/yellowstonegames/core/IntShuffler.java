@@ -23,7 +23,12 @@ import com.github.tommyettinger.digital.MathTools;
 import javax.annotation.Nonnull;
 
 import com.github.tommyettinger.digital.Hasher;
-import static com.github.tommyettinger.digital.Hasher.*;
+
+import static com.github.tommyettinger.digital.Hasher.b1;
+import static com.github.tommyettinger.digital.Hasher.b2;
+import static com.github.tommyettinger.digital.Hasher.b3;
+import static com.github.tommyettinger.digital.Hasher.b4;
+import static com.github.tommyettinger.digital.Hasher.randomize2;
 
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
@@ -157,9 +162,23 @@ public class IntShuffler {
         key2 = randomize2(seed - b1);
         key3 = randomize2(seed ^ b2);
     }
+
+    /**
+     * Used by the round function, this can technically be any deterministic function that takes two long inputs and
+     * produces a long output. It doesn't need to be "fair" at all. Other good options for this are
+     * {@link Hasher#wow(long, long)} and potentially {@link Hasher#mum(long, long)} (which sometimes fails tests with a
+     * random component, though any random-enough function should fail such tests occasionally).
+     * @param a any long
+     * @param b any long
+     * @return any long
+     */
+    public static long fuse(long a, long b) {
+        a *= b;
+        return a ^ a >>> 25 ^ a >>> 50;
+    }
     public static int round(long data, long seed)
     {
-        return (int) (wow(data + b1, seed - b2));
+        return (int) (fuse(data + b1, seed - b2));
     }
 
     /**

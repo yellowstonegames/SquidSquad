@@ -23,7 +23,7 @@ import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.TrigTools;
 
 public class PoissonDisk {
-    private static final float inverseRootTwo = 1f / (float)Math.sqrt(2f);
+    private static final float inverseRootTwo = (float)Math.sqrt(0.5f);
 
 
     private PoissonDisk() {
@@ -295,8 +295,8 @@ public class PoissonDisk {
         }
         return true;
     }
-    private static Coord sample(float x, float y, float iCellSize, FloatList qx, FloatList qy, float[][] gridX, float[][] gridY, Coord minPos){
-        final int gx = (int)((x - minPos.x) * iCellSize), gy = (int)((y - minPos.y) * iCellSize);
+    private static Coord sample(float x, float y, float invCellSize, FloatList qx, FloatList qy, float[][] gridX, float[][] gridY, Coord minPos){
+        final int gx = (int)((x - minPos.x) * invCellSize), gy = (int)((y - minPos.y) * invCellSize);
         gridX[gx][gy] = x;
         gridY[gx][gy] = y;
         qx.add(x);
