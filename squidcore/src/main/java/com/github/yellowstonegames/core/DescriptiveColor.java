@@ -86,9 +86,10 @@ public final class DescriptiveColor {
 
     public static final IntList LIST = new IntList(50);
 
+
     /**
-     * This color constant "transparent" has RGBA8888 code {@code 00000000}, L 0.0, A 0.49803922, B 0.49803922, alpha 0.0, hue 0.625, saturation 0.0, and chroma 0.0055242716.
-     * It has the encoded Oklab value 0x007f7f00 .
+     * This color constant "transparent" has RGBA8888 code {@code 00000000}, L 0.0, A 0.49803922, B 0.49803922, alpha 0.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
+     * It has the encoded Oklab value {@code 0x007f7f00}.
      * <pre>
      * <font style='background-color: #000000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #000000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #000000; color: #888888'>&nbsp;@&nbsp;</font>
@@ -99,8 +100,8 @@ public final class DescriptiveColor {
     static { NAMED.put("transparent", 0x007f7f00); LIST.add(0x007f7f00); }
 
     /**
-     * This color constant "black" has RGBA8888 code {@code 000000FF}, L 0.0, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.625, saturation 0.0, and chroma 0.0055242716.
-     * It has the encoded Oklab value 0xff7f7f00 .
+     * This color constant "black" has RGBA8888 code {@code 000000FF}, L 0.0, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
+     * It has the encoded Oklab value {@code 0xff7f7f00}.
      * <pre>
      * <font style='background-color: #000000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #000000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;@&nbsp;</font><font style='background-color: #000000; color: #888888'>&nbsp;@&nbsp;</font>
@@ -111,8 +112,8 @@ public final class DescriptiveColor {
     static { NAMED.put("black", 0xff7f7f00); LIST.add(0xff7f7f00); }
 
     /**
-     * This color constant "gray" has RGBA8888 code {@code 808080FF}, L 0.5137255, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.625, saturation 0.0016803193, and chroma 0.0055242716.
-     * It has the encoded Oklab value 0xff7f7f83 .
+     * This color constant "gray" has RGBA8888 code {@code 808080FF}, L 0.5137255, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
+     * It has the encoded Oklab value {@code 0xff7f7f83}.
      * <pre>
      * <font style='background-color: #808080;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #808080; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #808080;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #808080'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #808080'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #808080'>&nbsp;@&nbsp;</font><font style='background-color: #808080; color: #888888'>&nbsp;@&nbsp;</font>
@@ -123,8 +124,8 @@ public final class DescriptiveColor {
     static { NAMED.put("gray", 0xff7f7f83); LIST.add(0xff7f7f83); }
 
     /**
-     * This color constant "silver" has RGBA8888 code {@code B6B6B6FF}, L 0.7176471, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.625, saturation 0.0013493, and chroma 0.0055242716.
-     * It has the encoded Oklab value 0xff7f7fb7 .
+     * This color constant "silver" has RGBA8888 code {@code B6B6B6FF}, L 0.7176471, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
+     * It has the encoded Oklab value {@code 0xff7f7fb7}.
      * <pre>
      * <font style='background-color: #B6B6B6;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #B6B6B6; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #B6B6B6;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #B6B6B6'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #B6B6B6'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #B6B6B6'>&nbsp;@&nbsp;</font><font style='background-color: #B6B6B6; color: #888888'>&nbsp;@&nbsp;</font>
@@ -135,8 +136,8 @@ public final class DescriptiveColor {
     static { NAMED.put("silver", 0xff7f7fb7); LIST.add(0xff7f7fb7); }
 
     /**
-     * This color constant "white" has RGBA8888 code {@code FFFFFFFF}, L 1.0, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.625, saturation 0.0, and chroma 0.0055242716.
-     * It has the encoded Oklab value 0xff7f7fff .
+     * This color constant "white" has RGBA8888 code {@code FFFFFFFF}, L 1.0, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
+     * It has the encoded Oklab value {@code 0xff7f7fff}.
      * <pre>
      * <font style='background-color: #FFFFFF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFFFFF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFFFFF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFFFFF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFFFFF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFFFFF'>&nbsp;@&nbsp;</font><font style='background-color: #FFFFFF; color: #888888'>&nbsp;@&nbsp;</font>
@@ -147,8 +148,8 @@ public final class DescriptiveColor {
     static { NAMED.put("white", 0xff7f7fff); LIST.add(0xff7f7fff); }
 
     /**
-     * This color constant "red" has RGBA8888 code {@code FF0000FF}, L 0.50980395, A 0.6117647, B 0.56078434, alpha 1.0, hue 0.07928106, saturation 0.8972241, and chroma 0.25345513.
-     * It has the encoded Oklab value 0xff8f9c82 .
+     * This color constant "red" has RGBA8888 code {@code FF0000FF}, L 0.50980395, A 0.6117647, B 0.56078434, alpha 1.0, hue 0.08024464, saturation 0.98868626, and chroma 0.25345513.
+     * It has the encoded Oklab value {@code 0xff8f9c82}.
      * <pre>
      * <font style='background-color: #FF0000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FF0000; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FF0000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FF0000'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FF0000'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FF0000'>&nbsp;@&nbsp;</font><font style='background-color: #FF0000; color: #888888'>&nbsp;@&nbsp;</font>
@@ -159,8 +160,8 @@ public final class DescriptiveColor {
     static { NAMED.put("red", 0xff8f9c82); LIST.add(0xff8f9c82); }
 
     /**
-     * This color constant "orange" has RGBA8888 code {@code FF7F00FF}, L 0.6509804, A 0.54901963, B 0.57254905, alpha 1.0, hue 0.15541562, saturation 0.8137945, and chroma 0.17443058.
-     * It has the encoded Oklab value 0xff928ca6 .
+     * This color constant "orange" has RGBA8888 code {@code FF7F00FF}, L 0.6509804, A 0.54901963, B 0.57254905, alpha 1.0, hue 0.1544865, saturation 0.9592387, and chroma 0.17443058.
+     * It has the encoded Oklab value {@code 0xff928ca6}.
      * <pre>
      * <font style='background-color: #FF7F00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FF7F00; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FF7F00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FF7F00'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FF7F00'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FF7F00'>&nbsp;@&nbsp;</font><font style='background-color: #FF7F00; color: #888888'>&nbsp;@&nbsp;</font>
@@ -171,8 +172,8 @@ public final class DescriptiveColor {
     static { NAMED.put("orange", 0xff928ca6); LIST.add(0xff928ca6); }
 
     /**
-     * This color constant "yellow" has RGBA8888 code {@code FFFF00FF}, L 0.92941177, A 0.4627451, B 0.59607846, alpha 1.0, hue 0.30886024, saturation 0.92988807, and chroma 0.20529193.
-     * It has the encoded Oklab value 0xff9876ed .
+     * This color constant "yellow" has RGBA8888 code {@code FFFF00FF}, L 0.92941177, A 0.4627451, B 0.59607846, alpha 1.0, hue 0.3049839, saturation 0.9662058, and chroma 0.20529193.
+     * It has the encoded Oklab value {@code 0xff9876ed}.
      * <pre>
      * <font style='background-color: #FFFF00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFFF00; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFFF00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFFF00'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFFF00'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFFF00'>&nbsp;@&nbsp;</font><font style='background-color: #FFFF00; color: #888888'>&nbsp;@&nbsp;</font>
@@ -183,8 +184,8 @@ public final class DescriptiveColor {
     static { NAMED.put("yellow", 0xff9876ed); LIST.add(0xff9876ed); }
 
     /**
-     * This color constant "green" has RGBA8888 code {@code 00FF00FF}, L 0.8, A 0.38039216, B 0.5882353, alpha 1.0, hue 0.39883053, saturation 0.9818446, and chroma 0.29610303.
-     * It has the encoded Oklab value 0xff9661cc .
+     * This color constant "green" has RGBA8888 code {@code 00FF00FF}, L 0.8, A 0.38039216, B 0.5882353, alpha 1.0, hue 0.39588714, saturation 0.9947925, and chroma 0.29610303.
+     * It has the encoded Oklab value {@code 0xff9661cc}.
      * <pre>
      * <font style='background-color: #00FF00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #00FF00; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #00FF00;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #00FF00'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #00FF00'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #00FF00'>&nbsp;@&nbsp;</font><font style='background-color: #00FF00; color: #888888'>&nbsp;@&nbsp;</font>
@@ -195,8 +196,8 @@ public final class DescriptiveColor {
     static { NAMED.put("green", 0xff9661cc); LIST.add(0xff9661cc); }
 
     /**
-     * This color constant "blue" has RGBA8888 code {@code 0000FFFF}, L 0.30588236, A 0.48235294, B 0.34117648, alpha 1.0, hue 0.7323789, saturation 0.97586775, and chroma 0.31835338.
-     * It has the encoded Oklab value 0xff577b4e .
+     * This color constant "blue" has RGBA8888 code {@code 0000FFFF}, L 0.30588236, A 0.48235294, B 0.34117648, alpha 1.0, hue 0.73413044, saturation 0.9925803, and chroma 0.31835338.
+     * It has the encoded Oklab value {@code 0xff577b4e}.
      * <pre>
      * <font style='background-color: #0000FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #0000FF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #0000FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #0000FF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #0000FF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #0000FF'>&nbsp;@&nbsp;</font><font style='background-color: #0000FF; color: #888888'>&nbsp;@&nbsp;</font>
@@ -207,8 +208,8 @@ public final class DescriptiveColor {
     static { NAMED.put("blue", 0xff577b4e); LIST.add(0xff577b4e); }
 
     /**
-     * This color constant "indigo" has RGBA8888 code {@code 520FE0FF}, L 0.32156864, A 0.53333336, B 0.36862746, alpha 1.0, hue 0.7895446, saturation 0.9090131, and chroma 0.27001202.
-     * It has the encoded Oklab value 0xff5e8852 .
+     * This color constant "indigo" has RGBA8888 code {@code 520FE0FF}, L 0.32156864, A 0.53333336, B 0.36862746, alpha 1.0, hue 0.79236877, saturation 0.95014614, and chroma 0.27001202.
+     * It has the encoded Oklab value {@code 0xff5e8852}.
      * <pre>
      * <font style='background-color: #520FE0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #520FE0; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #520FE0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #520FE0'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #520FE0'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #520FE0'>&nbsp;@&nbsp;</font><font style='background-color: #520FE0; color: #888888'>&nbsp;@&nbsp;</font>
@@ -219,8 +220,8 @@ public final class DescriptiveColor {
     static { NAMED.put("indigo", 0xff5e8852); LIST.add(0xff5e8852); }
 
     /**
-     * This color constant "violet" has RGBA8888 code {@code 9040EFFF}, L 0.4627451, A 0.56078434, B 0.39607844, alpha 1.0, hue 0.8342395, saturation 0.6792487, and chroma 0.23984502.
-     * It has the encoded Oklab value 0xff658f76 .
+     * This color constant "violet" has RGBA8888 code {@code 9040EFFF}, L 0.4627451, A 0.56078434, B 0.39607844, alpha 1.0, hue 0.83780813, saturation 0.84801877, and chroma 0.23984502.
+     * It has the encoded Oklab value {@code 0xff658f76}.
      * <pre>
      * <font style='background-color: #9040EF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #9040EF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #9040EF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #9040EF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #9040EF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #9040EF'>&nbsp;@&nbsp;</font><font style='background-color: #9040EF; color: #888888'>&nbsp;@&nbsp;</font>
@@ -231,20 +232,20 @@ public final class DescriptiveColor {
     static { NAMED.put("violet", 0xff658f76); LIST.add(0xff658f76); }
 
     /**
-     * This color constant "purple" has RGBA8888 code {@code C000FFFF}, L 0.49803922, A 0.60784316, B 0.3882353, alpha 1.0, hue 0.8721605, saturation 0.96817255, and chroma 0.30940855.
-     * It has the encoded Oklab value 0xff639b7f .
+     * This color constant "purple" has RGBA8888 code {@code C000FFFF}, L 0.49803922, A 0.6039216, B 0.3882353, alpha 1.0, hue 0.8721089, saturation 0.9847418, and chroma 0.30403575.
+     * It has the encoded Oklab value {@code 0xff639a7f}.
      * <pre>
      * <font style='background-color: #C000FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #C000FF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #C000FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #C000FF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #C000FF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #C000FF'>&nbsp;@&nbsp;</font><font style='background-color: #C000FF; color: #888888'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #C000FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #C000FF; color: #ffffff'>&nbsp;@&nbsp;</font>
      * </pre>
      */
-    public static final int PURPLE = 0xff639b7f;
-    static { NAMED.put("purple", 0xff639b7f); LIST.add(0xff639b7f); }
+    public static final int PURPLE = 0xff639a7f;
+    static { NAMED.put("purple", 0xff639a7f); LIST.add(0xff639a7f); }
 
     /**
-     * This color constant "brown" has RGBA8888 code {@code 8F573BFF}, L 0.4117647, A 0.5254902, B 0.5294118, alpha 1.0, hue 0.13634071, saturation 0.24020728, and chroma 0.07753685.
-     * It has the encoded Oklab value 0xff878669 .
+     * This color constant "brown" has RGBA8888 code {@code 8F573BFF}, L 0.4117647, A 0.5254902, B 0.5294118, alpha 1.0, hue 0.13558689, saturation 0.5315073, and chroma 0.07753685.
+     * It has the encoded Oklab value {@code 0xff878669}.
      * <pre>
      * <font style='background-color: #8F573B;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #8F573B; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #8F573B;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #8F573B'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #8F573B'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #8F573B'>&nbsp;@&nbsp;</font><font style='background-color: #8F573B; color: #888888'>&nbsp;@&nbsp;</font>
@@ -255,8 +256,8 @@ public final class DescriptiveColor {
     static { NAMED.put("brown", 0xff878669); LIST.add(0xff878669); }
 
     /**
-     * This color constant "pink" has RGBA8888 code {@code FFA0E0FF}, L 0.7607843, A 0.5568628, B 0.4745098, alpha 1.0, hue 0.9329364, saturation 0.68139654, and chroma 0.124142565.
-     * It has the encoded Oklab value 0xff798ec2 .
+     * This color constant "pink" has RGBA8888 code {@code FFA0E0FF}, L 0.7607843, A 0.5568628, B 0.4745098, alpha 1.0, hue 0.939452, saturation 0.89752746, and chroma 0.124142565.
+     * It has the encoded Oklab value {@code 0xff798ec2}.
      * <pre>
      * <font style='background-color: #FFA0E0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFA0E0; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFA0E0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFA0E0'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFA0E0'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFA0E0'>&nbsp;@&nbsp;</font><font style='background-color: #FFA0E0; color: #888888'>&nbsp;@&nbsp;</font>
@@ -267,8 +268,8 @@ public final class DescriptiveColor {
     static { NAMED.put("pink", 0xff798ec2); LIST.add(0xff798ec2); }
 
     /**
-     * This color constant "magenta" has RGBA8888 code {@code F500F5FF}, L 0.5764706, A 0.6313726, B 0.41568628, alpha 1.0, hue 0.9091779, saturation 0.9090322, and chroma 0.31098264.
-     * It has the encoded Oklab value 0xff6aa193 .
+     * This color constant "magenta" has RGBA8888 code {@code F500F5FF}, L 0.5764706, A 0.6313726, B 0.41568628, alpha 1.0, hue 0.9119308, saturation 0.96295136, and chroma 0.31098264.
+     * It has the encoded Oklab value {@code 0xff6aa193}.
      * <pre>
      * <font style='background-color: #F500F5;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #F500F5; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #F500F5;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #F500F5'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #F500F5'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #F500F5'>&nbsp;@&nbsp;</font><font style='background-color: #F500F5; color: #888888'>&nbsp;@&nbsp;</font>
@@ -279,8 +280,8 @@ public final class DescriptiveColor {
     static { NAMED.put("magenta", 0xff6aa193); LIST.add(0xff6aa193); }
 
     /**
-     * This color constant "brick" has RGBA8888 code {@code D5524AFF}, L 0.5137255, A 0.5686275, B 0.53333336, alpha 1.0, hue 0.07195936, saturation 0.3226597, and chroma 0.15199278.
-     * It has the encoded Oklab value 0xff889183 .
+     * This color constant "brick" has RGBA8888 code {@code D5524AFF}, L 0.5137255, A 0.5686275, B 0.53333336, alpha 1.0, hue 0.073790275, saturation 0.60073465, and chroma 0.15199278.
+     * It has the encoded Oklab value {@code 0xff889183}.
      * <pre>
      * <font style='background-color: #D5524A;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #D5524A; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #D5524A;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #D5524A'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #D5524A'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #D5524A'>&nbsp;@&nbsp;</font><font style='background-color: #D5524A; color: #888888'>&nbsp;@&nbsp;</font>
@@ -291,8 +292,8 @@ public final class DescriptiveColor {
     static { NAMED.put("brick", 0xff889183); LIST.add(0xff889183); }
 
     /**
-     * This color constant "ember" has RGBA8888 code {@code F55A32FF}, L 0.57254905, A 0.57254905, B 0.5568628, alpha 1.0, hue 0.10581406, saturation 0.668431, and chroma 0.1836353.
-     * It has the encoded Oklab value 0xff8e9292 .
+     * This color constant "ember" has RGBA8888 code {@code F55A32FF}, L 0.57254905, A 0.57254905, B 0.5568628, alpha 1.0, hue 0.10637331, saturation 0.8493838, and chroma 0.1836353.
+     * It has the encoded Oklab value {@code 0xff8e9292}.
      * <pre>
      * <font style='background-color: #F55A32;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #F55A32; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #F55A32;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #F55A32'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #F55A32'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #F55A32'>&nbsp;@&nbsp;</font><font style='background-color: #F55A32; color: #888888'>&nbsp;@&nbsp;</font>
@@ -303,8 +304,8 @@ public final class DescriptiveColor {
     static { NAMED.put("ember", 0xff8e9292); LIST.add(0xff8e9292); }
 
     /**
-     * This color constant "salmon" has RGBA8888 code {@code FF6262FF}, L 0.6117647, A 0.5803922, B 0.53333336, alpha 1.0, hue 0.06254671, saturation 0.8039996, and chroma 0.17337766.
-     * It has the encoded Oklab value 0xff88949c .
+     * This color constant "salmon" has RGBA8888 code {@code FF6262FF}, L 0.6117647, A 0.5803922, B 0.53333336, alpha 1.0, hue 0.06443131, saturation 0.9519716, and chroma 0.17337766.
+     * It has the encoded Oklab value {@code 0xff88949c}.
      * <pre>
      * <font style='background-color: #FF6262;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FF6262; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FF6262;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FF6262'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FF6262'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FF6262'>&nbsp;@&nbsp;</font><font style='background-color: #FF6262; color: #888888'>&nbsp;@&nbsp;</font>
@@ -315,8 +316,8 @@ public final class DescriptiveColor {
     static { NAMED.put("salmon", 0xff88949c); LIST.add(0xff88949c); }
 
     /**
-     * This color constant "chocolate" has RGBA8888 code {@code 683818FF}, L 0.27450982, A 0.5254902, B 0.53333336, alpha 1.0, hue 0.14608382, saturation 0.49234077, and chroma 0.0835974.
-     * It has the encoded Oklab value 0xff888646 .
+     * This color constant "chocolate" has RGBA8888 code {@code 683818FF}, L 0.27450982, A 0.5254902, B 0.53333336, alpha 1.0, hue 0.14477962, saturation 0.76011693, and chroma 0.0835974.
+     * It has the encoded Oklab value {@code 0xff888646}.
      * <pre>
      * <font style='background-color: #683818;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #683818; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #683818;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #683818'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #683818'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #683818'>&nbsp;@&nbsp;</font><font style='background-color: #683818; color: #888888'>&nbsp;@&nbsp;</font>
@@ -327,8 +328,8 @@ public final class DescriptiveColor {
     static { NAMED.put("chocolate", 0xff888646); LIST.add(0xff888646); }
 
     /**
-     * This color constant "tan" has RGBA8888 code {@code D2B48CFF}, L 0.7294118, A 0.5058824, B 0.5254902, alpha 1.0, hue 0.21390288, saturation 0.08232166, and chroma 0.052115876.
-     * It has the encoded Oklab value 0xff8681ba .
+     * This color constant "tan" has RGBA8888 code {@code D2B48CFF}, L 0.7294118, A 0.5058824, B 0.5254902, alpha 1.0, hue 0.20571564, saturation 0.32356045, and chroma 0.052115876.
+     * It has the encoded Oklab value {@code 0xff8681ba}.
      * <pre>
      * <font style='background-color: #D2B48C;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #D2B48C; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #D2B48C;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #D2B48C'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #D2B48C'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #D2B48C'>&nbsp;@&nbsp;</font><font style='background-color: #D2B48C; color: #888888'>&nbsp;@&nbsp;</font>
@@ -339,8 +340,8 @@ public final class DescriptiveColor {
     static { NAMED.put("tan", 0xff8681ba); LIST.add(0xff8681ba); }
 
     /**
-     * This color constant "bronze" has RGBA8888 code {@code CE8E31FF}, L 0.61960787, A 0.5137255, B 0.56078434, alpha 1.0, hue 0.21465261, saturation 0.5864422, and chroma 0.124142565.
-     * It has the encoded Oklab value 0xff8f839e .
+     * This color constant "bronze" has RGBA8888 code {@code CE8E31FF}, L 0.61960787, A 0.5137255, B 0.56078434, alpha 1.0, hue 0.21101315, saturation 0.8246211, and chroma 0.124142565.
+     * It has the encoded Oklab value {@code 0xff8f839e}.
      * <pre>
      * <font style='background-color: #CE8E31;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #CE8E31; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #CE8E31;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #CE8E31'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #CE8E31'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #CE8E31'>&nbsp;@&nbsp;</font><font style='background-color: #CE8E31; color: #888888'>&nbsp;@&nbsp;</font>
@@ -351,20 +352,20 @@ public final class DescriptiveColor {
     static { NAMED.put("bronze", 0xff8f839e); LIST.add(0xff8f839e); }
 
     /**
-     * This color constant "cinnamon" has RGBA8888 code {@code D2691DFF}, L 0.54509807, A 0.54509807, B 0.56078434, alpha 1.0, hue 0.14839543, saturation 0.7197198, and chroma 0.15078327.
-     * It has the encoded Oklab value 0xff8f8b8b .
+     * This color constant "cinnamon" has RGBA8888 code {@code D2691DFF}, L 0.54509807, A 0.5411765, B 0.56078434, alpha 1.0, hue 0.15413038, saturation 0.88256764, and chroma 0.14626285.
+     * It has the encoded Oklab value {@code 0xff8f8a8b}.
      * <pre>
      * <font style='background-color: #D2691D;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #D2691D; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #D2691D;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #D2691D'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #D2691D'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #D2691D'>&nbsp;@&nbsp;</font><font style='background-color: #D2691D; color: #888888'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #D2691D;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #D2691D; color: #ffffff'>&nbsp;@&nbsp;</font>
      * </pre>
      */
-    public static final int CINNAMON = 0xff8f8b8b;
-    static { NAMED.put("cinnamon", 0xff8f8b8b); LIST.add(0xff8f8b8b); }
+    public static final int CINNAMON = 0xff8f8a8b;
+    static { NAMED.put("cinnamon", 0xff8f8a8b); LIST.add(0xff8f8a8b); }
 
     /**
-     * This color constant "apricot" has RGBA8888 code {@code FFA828FF}, L 0.7372549, A 0.52156866, B 0.5764706, alpha 1.0, hue 0.20625468, saturation 0.75939417, and chroma 0.1582875.
-     * It has the encoded Oklab value 0xff9385bc .
+     * This color constant "apricot" has RGBA8888 code {@code FFA828FF}, L 0.7372549, A 0.52156866, B 0.5764706, alpha 1.0, hue 0.20362332, saturation 0.97119135, and chroma 0.1582875.
+     * It has the encoded Oklab value {@code 0xff9385bc}.
      * <pre>
      * <font style='background-color: #FFA828;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFA828; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFA828;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFA828'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFA828'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFA828'>&nbsp;@&nbsp;</font><font style='background-color: #FFA828; color: #888888'>&nbsp;@&nbsp;</font>
@@ -375,8 +376,8 @@ public final class DescriptiveColor {
     static { NAMED.put("apricot", 0xff9385bc); LIST.add(0xff9385bc); }
 
     /**
-     * This color constant "peach" has RGBA8888 code {@code FFBF81FF}, L 0.79607844, A 0.5176471, B 0.54509807, alpha 1.0, hue 0.19064914, saturation 0.6557377, and chroma 0.096477255.
-     * It has the encoded Oklab value 0xff8b84cb .
+     * This color constant "peach" has RGBA8888 code {@code FFBF81FF}, L 0.79607844, A 0.5176471, B 0.54509807, alpha 1.0, hue 0.1871773, saturation 0.9285714, and chroma 0.096477255.
+     * It has the encoded Oklab value {@code 0xff8b84cb}.
      * <pre>
      * <font style='background-color: #FFBF81;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFBF81; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFBF81;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFBF81'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFBF81'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFBF81'>&nbsp;@&nbsp;</font><font style='background-color: #FFBF81; color: #888888'>&nbsp;@&nbsp;</font>
@@ -387,8 +388,8 @@ public final class DescriptiveColor {
     static { NAMED.put("peach", 0xff8b84cb); LIST.add(0xff8b84cb); }
 
     /**
-     * This color constant "pear" has RGBA8888 code {@code D3E330FF}, L 0.8235294, A 0.45882353, B 0.58431375, alpha 1.0, hue 0.32230157, saturation 0.7434462, and chroma 0.18692946.
-     * It has the encoded Oklab value 0xff9575d2 .
+     * This color constant "pear" has RGBA8888 code {@code D3E330FF}, L 0.8235294, A 0.45882353, B 0.58431375, alpha 1.0, hue 0.31789324, saturation 0.911928, and chroma 0.18692946.
+     * It has the encoded Oklab value {@code 0xff9575d2}.
      * <pre>
      * <font style='background-color: #D3E330;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #D3E330; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #D3E330;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #D3E330'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #D3E330'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #D3E330'>&nbsp;@&nbsp;</font><font style='background-color: #D3E330; color: #888888'>&nbsp;@&nbsp;</font>
@@ -399,8 +400,8 @@ public final class DescriptiveColor {
     static { NAMED.put("pear", 0xff9575d2); LIST.add(0xff9575d2); }
 
     /**
-     * This color constant "saffron" has RGBA8888 code {@code FFD510FF}, L 0.83137256, A 0.4862745, B 0.5882353, alpha 1.0, hue 0.27457327, saturation 0.8132536, and chroma 0.17789528.
-     * It has the encoded Oklab value 0xff967cd4 .
+     * This color constant "saffron" has RGBA8888 code {@code FFD510FF}, L 0.83137256, A 0.4862745, B 0.5882353, alpha 1.0, hue 0.27065513, saturation 0.9467276, and chroma 0.17789528.
+     * It has the encoded Oklab value {@code 0xff967cd4}.
      * <pre>
      * <font style='background-color: #FFD510;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFD510; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFD510;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFD510'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFD510'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFD510'>&nbsp;@&nbsp;</font><font style='background-color: #FFD510; color: #888888'>&nbsp;@&nbsp;</font>
@@ -411,8 +412,8 @@ public final class DescriptiveColor {
     static { NAMED.put("saffron", 0xff967cd4); LIST.add(0xff967cd4); }
 
     /**
-     * This color constant "butter" has RGBA8888 code {@code FFF288FF}, L 0.9098039, A 0.4862745, B 0.5568628, alpha 1.0, hue 0.28769454, saturation 0.49273357, and chroma 0.11653464.
-     * It has the encoded Oklab value 0xff8e7ce8 .
+     * This color constant "butter" has RGBA8888 code {@code FFF288FF}, L 0.9098039, A 0.4862745, B 0.5568628, alpha 1.0, hue 0.28142345, saturation 0.92709446, and chroma 0.11653464.
+     * It has the encoded Oklab value {@code 0xff8e7ce8}.
      * <pre>
      * <font style='background-color: #FFF288;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #FFF288; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #FFF288;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #FFF288'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #FFF288'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #FFF288'>&nbsp;@&nbsp;</font><font style='background-color: #FFF288; color: #888888'>&nbsp;@&nbsp;</font>
@@ -423,8 +424,8 @@ public final class DescriptiveColor {
     static { NAMED.put("butter", 0xff8e7ce8); LIST.add(0xff8e7ce8); }
 
     /**
-     * This color constant "chartreuse" has RGBA8888 code {@code C8FF41FF}, L 0.8862745, A 0.4392157, B 0.58431375, alpha 1.0, hue 0.34942675, saturation 0.9817451, and chroma 0.2070681.
-     * It has the encoded Oklab value 0xff9570e2 .
+     * This color constant "chartreuse" has RGBA8888 code {@code C8FF41FF}, L 0.8862745, A 0.4392157, B 0.58431375, alpha 1.0, hue 0.34525383, saturation 0.91817427, and chroma 0.2070681.
+     * It has the encoded Oklab value {@code 0xff9570e2}.
      * <pre>
      * <font style='background-color: #C8FF41;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #C8FF41; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #C8FF41;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #C8FF41'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #C8FF41'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #C8FF41'>&nbsp;@&nbsp;</font><font style='background-color: #C8FF41; color: #888888'>&nbsp;@&nbsp;</font>
@@ -435,8 +436,8 @@ public final class DescriptiveColor {
     static { NAMED.put("chartreuse", 0xff9570e2); LIST.add(0xff9570e2); }
 
     /**
-     * This color constant "cactus" has RGBA8888 code {@code 30A000FF}, L 0.5254902, A 0.41960785, B 0.5647059, alpha 1.0, hue 0.39212817, saturation 0.809409, and chroma 0.20558903.
-     * It has the encoded Oklab value 0xff906b86 .
+     * This color constant "cactus" has RGBA8888 code {@code 30A000FF}, L 0.5254902, A 0.41960785, B 0.5647059, alpha 1.0, hue 0.38786715, saturation 0.95450217, and chroma 0.20558903.
+     * It has the encoded Oklab value {@code 0xff906b86}.
      * <pre>
      * <font style='background-color: #30A000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #30A000; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #30A000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #30A000'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #30A000'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #30A000'>&nbsp;@&nbsp;</font><font style='background-color: #30A000; color: #888888'>&nbsp;@&nbsp;</font>
@@ -447,8 +448,8 @@ public final class DescriptiveColor {
     static { NAMED.put("cactus", 0xff906b86); LIST.add(0xff906b86); }
 
     /**
-     * This color constant "lime" has RGBA8888 code {@code 93D300FF}, L 0.7294118, A 0.43529412, B 0.5803922, alpha 1.0, hue 0.3578718, saturation 0.78243065, and chroma 0.20558903.
-     * It has the encoded Oklab value 0xff946fba .
+     * This color constant "lime" has RGBA8888 code {@code 93D300FF}, L 0.7294118, A 0.43529412, B 0.5803922, alpha 1.0, hue 0.35363457, saturation 0.9600275, and chroma 0.20558903.
+     * It has the encoded Oklab value {@code 0xff946fba}.
      * <pre>
      * <font style='background-color: #93D300;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #93D300; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #93D300;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #93D300'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #93D300'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #93D300'>&nbsp;@&nbsp;</font><font style='background-color: #93D300; color: #888888'>&nbsp;@&nbsp;</font>
@@ -459,8 +460,8 @@ public final class DescriptiveColor {
     static { NAMED.put("lime", 0xff946fba); LIST.add(0xff946fba); }
 
     /**
-     * This color constant "olive" has RGBA8888 code {@code 818000FF}, L 0.49019608, A 0.4745098, B 0.56078434, alpha 1.0, hue 0.31318712, saturation 0.76235455, and chroma 0.13131043.
-     * It has the encoded Oklab value 0xff8f797d .
+     * This color constant "olive" has RGBA8888 code {@code 818000FF}, L 0.49019608, A 0.4745098, B 0.56078434, alpha 1.0, hue 0.30708748, saturation 0.9493337, and chroma 0.13131043.
+     * It has the encoded Oklab value {@code 0xff8f797d}.
      * <pre>
      * <font style='background-color: #818000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #818000; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #818000;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #818000'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #818000'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #818000'>&nbsp;@&nbsp;</font><font style='background-color: #818000; color: #888888'>&nbsp;@&nbsp;</font>
@@ -471,8 +472,8 @@ public final class DescriptiveColor {
     static { NAMED.put("olive", 0xff8f797d); LIST.add(0xff8f797d); }
 
     /**
-     * This color constant "fern" has RGBA8888 code {@code 4E7942FF}, L 0.43137255, A 0.4627451, B 0.5294118, alpha 1.0, hue 0.3936267, saturation 0.22094448, and chroma 0.0945603.
-     * It has the encoded Oklab value 0xff87766e .
+     * This color constant "fern" has RGBA8888 code {@code 4E7942FF}, L 0.43137255, A 0.4627451, B 0.5294118, alpha 1.0, hue 0.3843443, saturation 0.51240826, and chroma 0.0945603.
+     * It has the encoded Oklab value {@code 0xff87766e}.
      * <pre>
      * <font style='background-color: #4E7942;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #4E7942; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #4E7942;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #4E7942'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #4E7942'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #4E7942'>&nbsp;@&nbsp;</font><font style='background-color: #4E7942; color: #888888'>&nbsp;@&nbsp;</font>
@@ -483,8 +484,8 @@ public final class DescriptiveColor {
     static { NAMED.put("fern", 0xff87766e); LIST.add(0xff87766e); }
 
     /**
-     * This color constant "moss" has RGBA8888 code {@code 204608FF}, L 0.22745098, A 0.45882353, B 0.5372549, alpha 1.0, hue 0.38294512, saturation 0.6363817, and chroma 0.11062346.
-     * It has the encoded Oklab value 0xff89753a .
+     * This color constant "moss" has RGBA8888 code {@code 204608FF}, L 0.22745098, A 0.45882353, B 0.5372549, alpha 1.0, hue 0.375, saturation 0.94280905, and chroma 0.11062346.
+     * It has the encoded Oklab value {@code 0xff89753a}.
      * <pre>
      * <font style='background-color: #204608;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #204608; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #204608;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #204608'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #204608'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #204608'>&nbsp;@&nbsp;</font><font style='background-color: #204608; color: #888888'>&nbsp;@&nbsp;</font>
@@ -495,8 +496,8 @@ public final class DescriptiveColor {
     static { NAMED.put("moss", 0xff89753a); LIST.add(0xff89753a); }
 
     /**
-     * This color constant "celery" has RGBA8888 code {@code 7DFF73FF}, L 0.84313726, A 0.41960785, B 0.56078434, alpha 1.0, hue 0.39695174, saturation 0.8276294, and chroma 0.20078278.
-     * It has the encoded Oklab value 0xff8f6bd7 .
+     * This color constant "celery" has RGBA8888 code {@code 7DFF73FF}, L 0.84313726, A 0.41960785, B 0.56078434, alpha 1.0, hue 0.39260027, saturation 0.88318956, and chroma 0.20078278.
+     * It has the encoded Oklab value {@code 0xff8f6bd7}.
      * <pre>
      * <font style='background-color: #7DFF73;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #7DFF73; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #7DFF73;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #7DFF73'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #7DFF73'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #7DFF73'>&nbsp;@&nbsp;</font><font style='background-color: #7DFF73; color: #888888'>&nbsp;@&nbsp;</font>
@@ -507,8 +508,8 @@ public final class DescriptiveColor {
     static { NAMED.put("celery", 0xff8f6bd7); LIST.add(0xff8f6bd7); }
 
     /**
-     * This color constant "sage" has RGBA8888 code {@code ABE3C5FF}, L 0.81960785, A 0.46666667, B 0.50980395, alpha 1.0, hue 0.45448294, saturation 0.118390046, and chroma 0.069218926.
-     * It has the encoded Oklab value 0xff8277d1 .
+     * This color constant "sage" has RGBA8888 code {@code ABE3C5FF}, L 0.81960785, A 0.46666667, B 0.50980395, alpha 1.0, hue 0.44291252, saturation 0.31069103, and chroma 0.069218926.
+     * It has the encoded Oklab value {@code 0xff8277d1}.
      * <pre>
      * <font style='background-color: #ABE3C5;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ABE3C5; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #ABE3C5;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #ABE3C5'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #ABE3C5'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #ABE3C5'>&nbsp;@&nbsp;</font><font style='background-color: #ABE3C5; color: #888888'>&nbsp;@&nbsp;</font>
@@ -519,8 +520,8 @@ public final class DescriptiveColor {
     static { NAMED.put("sage", 0xff8277d1); LIST.add(0xff8277d1); }
 
     /**
-     * This color constant "jade" has RGBA8888 code {@code 3FBF3FFF}, L 0.6313726, A 0.41568628, B 0.5568628, alpha 1.0, hue 0.4055531, saturation 0.71121687, and chroma 0.20259848.
-     * It has the encoded Oklab value 0xff8e6aa1 .
+     * This color constant "jade" has RGBA8888 code {@code 3FBF3FFF}, L 0.6313726, A 0.41568628, B 0.5568628, alpha 1.0, hue 0.4012713, saturation 0.806468, and chroma 0.20259848.
+     * It has the encoded Oklab value {@code 0xff8e6aa1}.
      * <pre>
      * <font style='background-color: #3FBF3F;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #3FBF3F; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #3FBF3F;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #3FBF3F'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #3FBF3F'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #3FBF3F'>&nbsp;@&nbsp;</font><font style='background-color: #3FBF3F; color: #888888'>&nbsp;@&nbsp;</font>
@@ -531,8 +532,8 @@ public final class DescriptiveColor {
     static { NAMED.put("jade", 0xff8e6aa1); LIST.add(0xff8e6aa1); }
 
     /**
-     * This color constant "cyan" has RGBA8888 code {@code 00FFFFFF}, L 0.8509804, A 0.42352942, B 0.47843137, alpha 1.0, hue 0.54374534, saturation 0.95340395, and chroma 0.1582875.
-     * It has the encoded Oklab value 0xff7a6cd9 .
+     * This color constant "cyan" has RGBA8888 code {@code 00FFFFFF}, L 0.8509804, A 0.42352942, B 0.47843137, alpha 1.0, hue 0.5409493, saturation 0.9583845, and chroma 0.1582875.
+     * It has the encoded Oklab value {@code 0xff7a6cd9}.
      * <pre>
      * <font style='background-color: #00FFFF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #00FFFF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #00FFFF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #00FFFF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #00FFFF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #00FFFF'>&nbsp;@&nbsp;</font><font style='background-color: #00FFFF; color: #888888'>&nbsp;@&nbsp;</font>
@@ -543,8 +544,8 @@ public final class DescriptiveColor {
     static { NAMED.put("cyan", 0xff7a6cd9); LIST.add(0xff7a6cd9); }
 
     /**
-     * This color constant "mint" has RGBA8888 code {@code 7FFFD4FF}, L 0.8666667, A 0.4392157, B 0.50980395, alpha 1.0, hue 0.47453672, saturation 0.8283974, and chroma 0.12265874.
-     * It has the encoded Oklab value 0xff8270dd .
+     * This color constant "mint" has RGBA8888 code {@code 7FFFD4FF}, L 0.8666667, A 0.4392157, B 0.50980395, alpha 1.0, hue 0.46857655, saturation 0.89982694, and chroma 0.12265874.
+     * It has the encoded Oklab value {@code 0xff8270dd}.
      * <pre>
      * <font style='background-color: #7FFFD4;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #7FFFD4; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #7FFFD4;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #7FFFD4'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #7FFFD4'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #7FFFD4'>&nbsp;@&nbsp;</font><font style='background-color: #7FFFD4; color: #888888'>&nbsp;@&nbsp;</font>
@@ -555,8 +556,8 @@ public final class DescriptiveColor {
     static { NAMED.put("mint", 0xff8270dd); LIST.add(0xff8270dd); }
 
     /**
-     * This color constant "teal" has RGBA8888 code {@code 007F7FFF}, L 0.4392157, A 0.4509804, B 0.4862745, alpha 1.0, hue 0.543443, saturation 0.89123964, and chroma 0.10141215.
-     * It has the encoded Oklab value 0xff7c7370 .
+     * This color constant "teal" has RGBA8888 code {@code 007F7FFF}, L 0.4392157, A 0.4509804, B 0.4862745, alpha 1.0, hue 0.53898686, saturation 0.95148593, and chroma 0.10141215.
+     * It has the encoded Oklab value {@code 0xff7c7370}.
      * <pre>
      * <font style='background-color: #007F7F;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #007F7F; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #007F7F;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #007F7F'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #007F7F'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #007F7F'>&nbsp;@&nbsp;</font><font style='background-color: #007F7F; color: #888888'>&nbsp;@&nbsp;</font>
@@ -567,8 +568,8 @@ public final class DescriptiveColor {
     static { NAMED.put("teal", 0xff7c7370); LIST.add(0xff7c7370); }
 
     /**
-     * This color constant "turquoise" has RGBA8888 code {@code 2ED6C9FF}, L 0.7254902, A 0.43137255, B 0.49019608, alpha 1.0, hue 0.52259654, saturation 0.8433125, and chroma 0.1381068.
-     * It has the encoded Oklab value 0xff7d6eb9 .
+     * This color constant "turquoise" has RGBA8888 code {@code 2ED6C9FF}, L 0.7254902, A 0.43137255, B 0.49019608, alpha 1.0, hue 0.51864916, saturation 0.9009075, and chroma 0.1381068.
+     * It has the encoded Oklab value {@code 0xff7d6eb9}.
      * <pre>
      * <font style='background-color: #2ED6C9;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #2ED6C9; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #2ED6C9;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #2ED6C9'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #2ED6C9'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #2ED6C9'>&nbsp;@&nbsp;</font><font style='background-color: #2ED6C9; color: #888888'>&nbsp;@&nbsp;</font>
@@ -579,8 +580,8 @@ public final class DescriptiveColor {
     static { NAMED.put("turquoise", 0xff7d6eb9); LIST.add(0xff7d6eb9); }
 
     /**
-     * This color constant "sky" has RGBA8888 code {@code 10C0E0FF}, L 0.67058825, A 0.44313726, B 0.4627451, alpha 1.0, hue 0.59232193, saturation 0.8547556, and chroma 0.13542919.
-     * It has the encoded Oklab value 0xff7671ab .
+     * This color constant "sky" has RGBA8888 code {@code 10C0E0FF}, L 0.67058825, A 0.44313726, B 0.4627451, alpha 1.0, hue 0.59094226, saturation 0.9246287, and chroma 0.13542919.
+     * It has the encoded Oklab value {@code 0xff7671ab}.
      * <pre>
      * <font style='background-color: #10C0E0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #10C0E0; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #10C0E0;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #10C0E0'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #10C0E0'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #10C0E0'>&nbsp;@&nbsp;</font><font style='background-color: #10C0E0; color: #888888'>&nbsp;@&nbsp;</font>
@@ -591,8 +592,8 @@ public final class DescriptiveColor {
     static { NAMED.put("sky", 0xff7671ab); LIST.add(0xff7671ab); }
 
     /**
-     * This color constant "cobalt" has RGBA8888 code {@code 0046ABFF}, L 0.30588236, A 0.48235294, B 0.4117647, alpha 1.0, hue 0.71857655, saturation 0.73578477, and chroma 0.1792624.
-     * It has the encoded Oklab value 0xff697b4e .
+     * This color constant "cobalt" has RGBA8888 code {@code 0046ABFF}, L 0.30588236, A 0.48235294, B 0.4117647, alpha 1.0, hue 0.72136545, saturation 0.9126808, and chroma 0.1792624.
+     * It has the encoded Oklab value {@code 0xff697b4e}.
      * <pre>
      * <font style='background-color: #0046AB;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #0046AB; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #0046AB;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #0046AB'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #0046AB'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #0046AB'>&nbsp;@&nbsp;</font><font style='background-color: #0046AB; color: #888888'>&nbsp;@&nbsp;</font>
@@ -603,8 +604,8 @@ public final class DescriptiveColor {
     static { NAMED.put("cobalt", 0xff697b4e); LIST.add(0xff697b4e); }
 
     /**
-     * This color constant "denim" has RGBA8888 code {@code 3088B8FF}, L 0.5058824, A 0.46666667, B 0.45490196, alpha 1.0, hue 0.6486837, saturation 0.5816889, and chroma 0.11172148.
-     * It has the encoded Oklab value 0xff747781 .
+     * This color constant "denim" has RGBA8888 code {@code 3088B8FF}, L 0.5058824, A 0.46666667, B 0.45490196, alpha 1.0, hue 0.64991105, saturation 0.7772269, and chroma 0.11172148.
+     * It has the encoded Oklab value {@code 0xff747781}.
      * <pre>
      * <font style='background-color: #3088B8;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #3088B8; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #3088B8;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #3088B8'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #3088B8'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #3088B8'>&nbsp;@&nbsp;</font><font style='background-color: #3088B8; color: #888888'>&nbsp;@&nbsp;</font>
@@ -615,8 +616,8 @@ public final class DescriptiveColor {
     static { NAMED.put("denim", 0xff747781); LIST.add(0xff747781); }
 
     /**
-     * This color constant "navy" has RGBA8888 code {@code 000080FF}, L 0.14117648, A 0.4862745, B 0.4, alpha 1.0, hue 0.7282781, saturation 0.96145123, and chroma 0.20108652.
-     * It has the encoded Oklab value 0xff667c24 .
+     * This color constant "navy" has RGBA8888 code {@code 000080FF}, L 0.14117648, A 0.4862745, B 0.4, alpha 1.0, hue 0.73098123, saturation 0.9874258, and chroma 0.20108652.
+     * It has the encoded Oklab value {@code 0xff667c24}.
      * <pre>
      * <font style='background-color: #000080;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000080; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #000080;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000080'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #000080'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #000080'>&nbsp;@&nbsp;</font><font style='background-color: #000080; color: #888888'>&nbsp;@&nbsp;</font>
@@ -627,8 +628,8 @@ public final class DescriptiveColor {
     static { NAMED.put("navy", 0xff667c24); LIST.add(0xff667c24); }
 
     /**
-     * This color constant "lavender" has RGBA8888 code {@code B991FFFF}, L 0.67058825, A 0.53333336, B 0.43529412, alpha 1.0, hue 0.82570946, saturation 0.84011585, and chroma 0.14500555.
-     * It has the encoded Oklab value 0xff6f88ab .
+     * This color constant "lavender" has RGBA8888 code {@code B991FFFF}, L 0.67058825, A 0.53333336, B 0.43529412, alpha 1.0, hue 0.83155453, saturation 0.9414133, and chroma 0.14500555.
+     * It has the encoded Oklab value {@code 0xff6f88ab}.
      * <pre>
      * <font style='background-color: #B991FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #B991FF; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #B991FF;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #B991FF'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #B991FF'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #B991FF'>&nbsp;@&nbsp;</font><font style='background-color: #B991FF; color: #888888'>&nbsp;@&nbsp;</font>
@@ -639,20 +640,20 @@ public final class DescriptiveColor {
     static { NAMED.put("lavender", 0xff6f88ab); LIST.add(0xff6f88ab); }
 
     /**
-     * This color constant "plum" has RGBA8888 code {@code BE0DC6FF}, L 0.45490196, A 0.6117647, B 0.42352942, alpha 1.0, hue 0.90448654, saturation 0.9074911, and chroma 0.26978588.
-     * It has the encoded Oklab value 0xff6c9c74 .
+     * This color constant "plum" has RGBA8888 code {@code BE0DC6FF}, L 0.45490196, A 0.60784316, B 0.42352942, alpha 1.0, hue 0.9050996, saturation 0.9399402, and chroma 0.26337513.
+     * It has the encoded Oklab value {@code 0xff6c9b74}.
      * <pre>
      * <font style='background-color: #BE0DC6;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #BE0DC6; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #BE0DC6;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #BE0DC6'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #BE0DC6'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #BE0DC6'>&nbsp;@&nbsp;</font><font style='background-color: #BE0DC6; color: #888888'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #BE0DC6;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #BE0DC6; color: #ffffff'>&nbsp;@&nbsp;</font>
      * </pre>
      */
-    public static final int PLUM = 0xff6c9c74;
-    static { NAMED.put("plum", 0xff6c9c74); LIST.add(0xff6c9c74); }
+    public static final int PLUM = 0xff6c9b74;
+    static { NAMED.put("plum", 0xff6c9b74); LIST.add(0xff6c9b74); }
 
     /**
-     * This color constant "mauve" has RGBA8888 code {@code AB73ABFF}, L 0.54901963, A 0.5411765, B 0.47058824, alpha 1.0, hue 0.90127134, saturation 0.09785124, and chroma 0.1008085.
-     * It has the encoded Oklab value 0xff788a8c .
+     * This color constant "mauve" has RGBA8888 code {@code AB73ABFF}, L 0.54901963, A 0.5411765, B 0.47058824, alpha 1.0, hue 0.90979147, saturation 0.3259601, and chroma 0.1008085.
+     * It has the encoded Oklab value {@code 0xff788a8c}.
      * <pre>
      * <font style='background-color: #AB73AB;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #AB73AB; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #AB73AB;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #AB73AB'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #AB73AB'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #AB73AB'>&nbsp;@&nbsp;</font><font style='background-color: #AB73AB; color: #888888'>&nbsp;@&nbsp;</font>
@@ -663,8 +664,8 @@ public final class DescriptiveColor {
     static { NAMED.put("mauve", 0xff788a8c); LIST.add(0xff788a8c); }
 
     /**
-     * This color constant "rose" has RGBA8888 code {@code E61E78FF}, L 0.49411765, A 0.6156863, B 0.49411765, alpha 1.0, hue 0.99192464, saturation 0.7659808, and chroma 0.23076649.
-     * It has the encoded Oklab value 0xff7e9d7e .
+     * This color constant "rose" has RGBA8888 code {@code E61E78FF}, L 0.49411765, A 0.6156863, B 0.49411765, alpha 1.0, hue 0.99470973, saturation 0.90959585, and chroma 0.23076649.
+     * It has the encoded Oklab value {@code 0xff7e9d7e}.
      * <pre>
      * <font style='background-color: #E61E78;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #E61E78; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #E61E78;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #E61E78'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #E61E78'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #E61E78'>&nbsp;@&nbsp;</font><font style='background-color: #E61E78; color: #888888'>&nbsp;@&nbsp;</font>
@@ -675,8 +676,8 @@ public final class DescriptiveColor {
     static { NAMED.put("rose", 0xff7e9d7e); LIST.add(0xff7e9d7e); }
 
     /**
-     * This color constant "raspberry" has RGBA8888 code {@code 911437FF}, L 0.3019608, A 0.5803922, B 0.5137255, alpha 1.0, hue 0.02692472, saturation 0.73546606, and chroma 0.16247371.
-     * It has the encoded Oklab value 0xff83944d .
+     * This color constant "raspberry" has RGBA8888 code {@code 911437FF}, L 0.3019608, A 0.5803922, B 0.5137255, alpha 1.0, hue 0.029965011, saturation 0.9096833, and chroma 0.16247371.
+     * It has the encoded Oklab value {@code 0xff83944d}.
      * <pre>
      * <font style='background-color: #911437;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #888888; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #ffffff; color: #000000'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #911437; color: #000000'>&nbsp;@&nbsp;</font>
      * <font style='background-color: #911437;'>&nbsp;&nbsp;&nbsp;</font><font style='background-color: #000000; color: #911437'>&nbsp;@&nbsp;</font><font style='background-color: #888888; color: #911437'>&nbsp;@&nbsp;</font><font style='background-color: #ffffff; color: #911437'>&nbsp;@&nbsp;</font><font style='background-color: #911437; color: #888888'>&nbsp;@&nbsp;</font>
@@ -712,15 +713,6 @@ public final class DescriptiveColor {
      */
     public static final ObjectList<String> NAMES_BY_LIGHTNESS = new ObjectList<>(NAMES);
 
-    /**
-     *  Linearly interpolates between fromValue to toValue on progress position.
-     * @param fromValue starting float value; can be any finite float
-     * @param toValue ending float value; can be any finite float
-     * @param progress how far the interpolation should go, between 0 (equal to fromValue) and 1 (equal to toValue)
-     */
-    public static float lerp (final float fromValue, final float toValue, final float progress) {
-        return fromValue + (toValue - fromValue) * progress;
-    }
     /**
      * Used when converting from Oklab to RGB, as an intermediate step.
      * Really just {@code x * x * x}.

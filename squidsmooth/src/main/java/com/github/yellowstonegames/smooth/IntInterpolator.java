@@ -33,7 +33,7 @@ public interface IntInterpolator {
     IntInterpolator LINEAR = ((start, end, change) -> MathUtils.round(MathUtils.lerp(start, end, change)));
 
     /**
-     * A method reference to {@link DescriptiveColor#lerp(float, float, float)}.
+     * A method reference to {@link DescriptiveColor#lerpColors(int, int, float)}.
      */
     IntInterpolator COLOR = DescriptiveColor::lerpColors;
 }
