@@ -145,10 +145,13 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case W:
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
                         for (int c = 0; c < 128; c++) {
-                            Pixmap p = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
-                            for (int x = 0; x < p.getWidth(); x++) {
-                                for (int y = 0; y < p.getHeight(); y++) {
-                                    float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(x, y, c)));
+                            int w = 256, h = 256;
+                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f;
+                            Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+                            for (int x = 0; x < w; x++) {
+                                for (int y = 0; y < h; y++) {
+                                    float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(
+                                            x, y, c - (0x1p-7f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))));
 //                                    color *= color * 0.8125f;
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
@@ -160,7 +163,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         for (int i = 0; i < 256; i++) {
 //                            float hue = 0.94f; // pink
 //                            float hue = 0.2f; // apricot
-                            float hue = 0.625f; // a soft blue
+//                            float hue = 0.625f; // a soft blue
+                            float hue = 0.475f; // bright green
+//                            float hue = 0.075f; // bright red
                             gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
                                             (i & 255) * 0x1p-12f - 0x3p-7f + hue, // small hue variation
