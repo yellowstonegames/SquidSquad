@@ -727,7 +727,7 @@ public final class DescriptiveColor {
      * An approximation of the cube-root function for float inputs and outputs.
      * This can be about twice as fast as {@link Math#cbrt(double)}. This
      * version does not tolerate negative inputs, because in the narrow use
-     * case it has in this class, it never is given negative inputs.
+     * case it has in this class, it is never given negative inputs.
      * <br>
      * Has very low relative error (less than 1E-9) when inputs are uniformly
      * distributed between 0 and 512, and absolute mean error of less than

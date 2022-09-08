@@ -16,6 +16,7 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
@@ -68,6 +69,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         view = new ScreenViewport();
         noise.setPointHash(pointHashes[hashIndex]);
         noise.setFractalType(Noise.RIDGED_MULTI);
+        noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
         gif.palette = new PaletteReducer(new int[] {
@@ -151,7 +153,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
                                     float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(
-                                            x, y, c - (0x1p-7f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))));
+                                            x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))))) * 0.5f +
+                                            0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
+                                    color -= MathTools.fastFloor(color);
 //                                    color *= color * 0.8125f;
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
@@ -168,10 +172,14 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hue = 0.075f; // bright red
                             gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
-                                            (i & 255) * 0x1p-12f - 0x3p-7f + hue, // small hue variation
+//                                            (i & 255) * 0x1p-12f - 0x3p-7f + hue, // small hue variation
+                                            (i & 127) * 0x1p-7f + hue, // small hue variation
 //                                            (i + 90 & 255) * 0x1p-9f + 0.9f,
-                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
-                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
+//                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
+                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
+                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.3f), // biased
+//                                            (i * i * 0x1p-16f), //very dark
+//                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
 //                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
                                             1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
