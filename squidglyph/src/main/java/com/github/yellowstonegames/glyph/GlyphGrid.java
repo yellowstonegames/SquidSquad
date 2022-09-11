@@ -52,7 +52,7 @@ public class GlyphGrid extends Group {
     public int[][] backgrounds = null;
     protected Font font;
     public Viewport viewport;
-    
+    public int startX, startY, endX, endY;
     /**
      * Constructs a bare-bones GlyphGrid with size 64x64. Does not set {@link #font}, you will have to set it later.
      */
@@ -94,8 +94,10 @@ public class GlyphGrid extends Group {
     public GlyphGrid(Font font, int gridWidth, int gridHeight, boolean squareCenteredCells) {
         super();
         setTransform(false);
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
+        this.startX = 0;
+        this.startY = 0;
+        this.gridWidth = this.endX = gridWidth;
+        this.gridHeight = this.endY = gridHeight;
         map = new IntLongOrderedMap(gridWidth * gridHeight);
         viewport = new StretchViewport(gridWidth, gridHeight);
         if (font != null) {
@@ -325,7 +327,8 @@ public class GlyphGrid extends Group {
      * (inclusive) and endCellX (exclusive), and likewise for startCellY and endCellY, where those ints represent cell
      * positions and not screen or world positions. This only even considers keys that are in the given start-to-end
      * rectangle, and doesn't check keys or values outside it. This is probably the most efficient of the draw() methods
-     * here, but requires you to know what the start and end bounds are.
+     * here, but requires you to know what the start and end bounds are. All of the start and end cell coordinates must
+     * be non-negative.
      * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      * @param startCellX the inclusive x of the lower-left corner, measured in cells, to start rendering at
      * @param startCellY the inclusive y of the lower-left corner, measured in cells, to start rendering at
@@ -355,7 +358,7 @@ public class GlyphGrid extends Group {
     public void draw(Batch batch, float parentAlpha) {
         batch.getColor().a *= parentAlpha;
         batch.setColor(batch.getColor());
-        draw(batch);
+        draw(batch, startX, startY, endX, endY);
     }
 
     /**

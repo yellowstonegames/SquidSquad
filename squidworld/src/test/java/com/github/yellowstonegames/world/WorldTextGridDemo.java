@@ -297,14 +297,16 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         }
         camera.position.set(position);
         camera.update();
+        temp.set(0, Gdx.graphics.getBackBufferHeight(), 0);
+        view.unproject(temp);
+        display.startX = MathUtils.floor(temp.x);
+        display.startY = MathUtils.floor(temp.y);
+        display.endX = display.startX + shownWidth + 1;
+        display.endY = display.startY + shownHeight + 1;
         stage.draw();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
         stage.act();
 
-        temp.set(0, Gdx.graphics.getBackBufferHeight(), 0);
-        view.unproject(temp);
-        int lowX = MathUtils.floor(temp.x);
-        int lowY = MathUtils.floor(temp.y);
 
 //        batch.begin();
 //        display.draw(batch, lowX, lowY, lowX + shownWidth + 1, lowY + shownHeight + 1);
