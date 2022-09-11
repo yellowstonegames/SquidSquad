@@ -324,8 +324,8 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Demo: Text World Map");
-        config.useVsync(false);
-        config.setForegroundFPS(0);
+        config.useVsync(true);
+        config.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
         config.setWindowedMode(shownWidth * cellWidth, shownHeight * cellHeight);
         new Lwjgl3Application(new WorldTextGridDemo(), config);
     }
