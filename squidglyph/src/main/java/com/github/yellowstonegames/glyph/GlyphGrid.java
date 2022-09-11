@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -39,11 +40,11 @@ import com.github.yellowstonegames.grid.Coord;
  * Glyphs are represented by long values, and are handled by a {@link Font} (which this also stores) to get a char,
  * foreground color, and a variety of possible styles for each glyph. A GlyphGrid also stores a {@link Viewport}, which
  * defaults to a {@link StretchViewport} but can be changed easily; this viewport affects what region of the GlyphGrid
- * is drawn. You typically call one of the {@link #draw(Batch)} methods in your rendering code every
- * frame, some time after clearing the screen. There are draw() overloads that only render a subregion of the GlyphGrid;
- * one uses a {@link Frustum} (almost always from {@link com.badlogic.gdx.graphics.Camera#frustum}) to draw only visible
- * glyphs and backgrounds, while another takes a specific rectangular area of cells. You should call
- * {@link #resize(int, int)} in your application's or screen's resize code, because it keeps the viewport accurate.
+ * is drawn. This is a scene2d Group and Actor, and must be added to a Stage to function correctly. If you want to draw
+ * a limited portion of the grid for performance, you can use an overload of {@link #draw(Batch, Frustum)} and manually
+ * draw the GlyphGrid, or keep using {@link Stage#draw()} and set the {@link #startX}, {@link #startY}, {@link #endX},
+ * and {@link #endY} fields to restrict the drawn area. You should call {@link #resize(int, int)} in your application's
+ * or screen's resize code, because it keeps the viewport accurate.
  */
 public class GlyphGrid extends Group {
     protected int gridWidth;
