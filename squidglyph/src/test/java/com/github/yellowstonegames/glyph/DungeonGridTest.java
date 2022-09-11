@@ -8,19 +8,15 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
@@ -28,8 +24,6 @@ import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
-import com.github.yellowstonegames.smooth.CoordGlider;
-import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
@@ -202,7 +196,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                         .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
             else
                 playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                    .append(new GridAction.GibberishAction(gg, 1.5f, inView, next, 5)).conclude(post));
+                    .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useElectricColors()).conclude(post));
             //gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
         }
     }
