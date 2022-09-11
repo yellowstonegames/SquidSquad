@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
@@ -565,6 +566,58 @@ public abstract class GridAction extends TemporalAction {
             }
         }
     }
+    public static class CloudAction extends ExplosionAction
+    {
+        public CloudAction(GlyphGrid targeting, Coord center, int radius) {
+            super(targeting, center, radius);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Coord center, int radius) {
+            super(targeting, duration, center, radius);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius) {
+            super(targeting, duration, valid, center, radius);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, IntList coloring) {
+            super(targeting, duration, valid, center, radius, coloring);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, int[] coloring) {
+            super(targeting, duration, valid, center, radius, coloring);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span) {
+            super(targeting, duration, valid, center, radius, angle, span);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, IntList coloring) {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+        }
+
+        public CloudAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, int[] coloring) {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+        }
+        @Override
+        protected void update(float percent) {
+            int len = affected.size();
+            Coord c;
+            float f, light;
+            int seed = System.identityHashCode(this);
+            for (int i = 0; i < len; i++) {
+                c = affected.get(i);
+                if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                    continue;
+                f = Noise.instance.singleSimplex(seed, c.x * 0.3f, c.y * 0.3f, percent * 1.3f)
+                        * 0.498f + 0.4999f;
+                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
+                        DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
+                                colors[((int) (f * colors.length) + 1) % colors.length],
+                                (f * colors.length) % 1f), MathTools.swayTight(percent * 2f) * light);
+            }
+        }
+    }
     public static class PulseAction extends ExplosionAction
     {
         public PulseAction(GlyphGrid targeting, Coord center, int radius) {
@@ -603,13 +656,11 @@ public abstract class GridAction extends TemporalAction {
             int len = affected.size();
             Coord c;
             float f, light;
-            int seed = System.identityHashCode(this);
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 0.3f, c.y * 0.3f, percent * 1.3f)
-                        * 0.498f + 0.4999f;
+                f = Math.min(0.999f, Math.max(0f, TrigTools.sinTurns((c.distance(center) - percent * 5f) * 0.35f)));
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],
