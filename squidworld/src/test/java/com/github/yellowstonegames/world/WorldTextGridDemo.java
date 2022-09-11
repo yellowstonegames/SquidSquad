@@ -5,9 +5,9 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -19,7 +19,7 @@ import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.glyph.GlyphMap;
+import com.github.yellowstonegames.glyph.GlyphGrid;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
@@ -35,7 +35,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
  * It seems to mostly work now, though it only generates one view of the map that it renders (but biome, moisture, heat,
  * and height maps can all be requested from it).
  */
-public class WorldMapTextDemo extends ApplicationAdapter {
+public class WorldTextGridDemo extends ApplicationAdapter {
     //private static final int bigWidth = 314 * 3, bigHeight = 300;
 //    private static final int bigWidth = 256, bigHeight = 256;
 //    private static final int bigWidth = 1024, bigHeight = 512;
@@ -44,8 +44,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     //private static final int bigWidth = 400, bigHeight = 400;
     private static final int cellWidth = 16, cellHeight = 16;
     private static final int shownWidth = 96, shownHeight = 48;
-    private SpriteBatch batch;
-    private GlyphMap display;//, overlay;
+    private Stage stage;
+    private GlyphGrid display;//, overlay;
     private InputProcessor input;
     private Viewport view;
     private Camera camera;
@@ -75,8 +75,8 @@ public class WorldMapTextDemo extends ApplicationAdapter {
     
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        display = new GlyphMap(
+        stage = new Stage();
+        display = new GlyphGrid(
                 KnownFonts.getIosevkaSlab().scaleTo(cellWidth, cellHeight),
                 bigWidth, bigHeight);
         view = display.viewport = new StretchViewport(shownWidth, shownHeight);
@@ -150,6 +150,7 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         generate(seedA, seedB);
         rng.setSelectedState(0, seedA);
         rng.setSelectedState(1, seedB);
+        stage.addActor(display);
         Gdx.input.setInputProcessor(input);
     }
 
@@ -295,21 +296,18 @@ public class WorldMapTextDemo extends ApplicationAdapter {
             }
         }
         camera.position.set(position);
-
-//        Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
+        camera.update();
+        stage.draw();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
-        batch.setProjectionMatrix(camera.combined);
+        stage.act();
 
         temp.set(0, Gdx.graphics.getBackBufferHeight(), 0);
         view.unproject(temp);
         int lowX = MathUtils.floor(temp.x);
         int lowY = MathUtils.floor(temp.y);
-        batch.begin();
-        display.draw(batch, 0f, 0f, lowX, lowY, lowX + shownWidth + 1, lowY + shownHeight + 1);
-        batch.end();
 
 //        batch.begin();
-//        display.draw(batch, 0f, 0f, camera.frustum);
+//        display.draw(batch, lowX, lowY, lowX + shownWidth + 1, lowY + shownHeight + 1);
 //        batch.end();
     }
 
@@ -327,6 +325,6 @@ public class WorldMapTextDemo extends ApplicationAdapter {
         config.useVsync(false);
         config.setForegroundFPS(0);
         config.setWindowedMode(shownWidth * cellWidth, shownHeight * cellHeight);
-        new Lwjgl3Application(new WorldMapTextDemo(), config);
+        new Lwjgl3Application(new WorldTextGridDemo(), config);
     }
 }
