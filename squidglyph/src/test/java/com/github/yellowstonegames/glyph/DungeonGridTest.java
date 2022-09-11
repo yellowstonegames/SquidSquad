@@ -197,8 +197,12 @@ public class DungeonGridTest extends ApplicationAdapter {
             playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
         }
         else{
-            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                    .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
+            if(MathUtils.randomBoolean())
+                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+                        .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
+            else
+                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+                    .append(new GridAction.GibberishAction(gg, 1.5f, inView, next, 5)).conclude(post));
             //gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
         }
     }

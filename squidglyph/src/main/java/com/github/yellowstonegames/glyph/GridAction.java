@@ -16,8 +16,10 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
@@ -275,8 +277,8 @@ public abstract class GridAction extends TemporalAction {
         }
         /**
          * Sets the colors this ExplosionAction uses to go from through various shades of gray-purple before fading.
-         * Meant for electrical bursts, this will affect character foregrounds in a GibberishEffect. This should look
-         * like sparks in GibberishEffect if the chars in its choices are selected in a way that
+         * Meant for electrical bursts, this will affect character foregrounds in a GibberishAction. This should look
+         * like sparks in GibberishAction if the chars in its {@link GibberishAction#choices} are selected in a way that
          * fits that theme.
          */
         public ExplosionAction useElectricColors()
@@ -293,8 +295,8 @@ public abstract class GridAction extends TemporalAction {
 
         /**
          * Sets the colors this ExplosionAction uses to go from orange, to yellow, to orange, to dark gray, then fade.
-         * Meant for fiery explosions with smoke, this will affect character foregrounds in a GibberishEffect.
-         * This may look more like a fiery blast if used with an ExplosionAction than a GibberishEffect.
+         * Meant for fiery explosions with smoke, this will affect character foregrounds in a GibberishAction.
+         * This may look more like a fiery blast if used with an ExplosionAction than a GibberishAction.
          */
         public ExplosionAction useFieryColors()
         {
@@ -307,7 +309,261 @@ public abstract class GridAction extends TemporalAction {
             colors[6] = (0x59565299); // SColor.DB_SOOT
             return this;
         }
+    }
 
+    public static class GibberishAction extends ExplosionAction
+    {
+        /**
+         * This char array contains all characters that can be used in the foreground of this effect. You can assign
+         * another char array, such as if you take {@link com.github.yellowstonegames.core.StringTools#PUNCTUATION} and
+         * call {@link String#toCharArray()} on it, to this at any time between calls to {@link #update(float)} (which
+         * is usually called indirectly via Stage's {@link com.badlogic.gdx.scenes.scene2d.Stage#act()} method if this
+         * has been added to an Actor on that Stage). These chars are pseudo-randomly selected approximately once every
+         * eighth of a second, and may change sooner if the effect expands more quickly than that.
+         */
+        public char[] choices = "`~!@#$%^&*()-_=+\\|][}{'\";:/?.>,<".toCharArray();
+
+        public GibberishAction(GlyphGrid targeting, Coord center, int radius)
+        {
+            super(targeting, 1f, center, radius);
+            useElectricColors();
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
+         * the full expanse of the GlyphGrid.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Coord center, int radius) {
+            super(targeting, duration, center, radius);
+            useElectricColors();
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
+         * the full expanse of the GlyphGrid.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Coord center, int radius, char[] choices) {
+            super(targeting, duration, center, radius);
+            this.choices = choices;
+            useElectricColors();
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius)
+        {
+            super(targeting, duration, valid, center, radius);
+            useElectricColors();
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius);
+            this.choices = choices;
+            useElectricColors();
+        }
+
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, IntList coloring)
+        {
+            super(targeting, duration, valid, center, radius, coloring);
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, IntList coloring, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius, coloring);
+            this.choices = choices;
+        }
+
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, int[] coloring)
+        {
+            super(targeting, duration, valid, center, radius, coloring);
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, int[] coloring, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius, coloring);
+            this.choices = choices;
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields; this constructor allows
+         * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
+         * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
+         * @param span the span, in degrees, of the full arc at the end of the sector-shaped effect
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius, angle, span);
+            this.choices = choices;
+            useElectricColors();
+        }
+
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+         * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
+         * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
+         * @param span the span, in degrees, of the full arc at the end of the sector-shaped effect
+         * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, IntList coloring)
+        {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+         * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
+         * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
+         * @param span the span, in degrees, of the full arc at the end of the sector-shaped effect
+         * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, IntList coloring, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+            this.choices = choices;
+        }
+
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+         * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
+         * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
+         * @param span the span, in degrees, of the full arc at the end of the sector-shaped effect
+         * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, int[] coloring)
+        {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+        }
+        /**
+         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+         * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
+         * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
+         * @param span the span, in degrees, of the full arc at the end of the sector-shaped effect
+         * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
+         */
+        public GibberishAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span, int[] coloring, char[] choices)
+        {
+            super(targeting, duration, valid, center, radius, angle, span, coloring);
+            this.choices = choices;
+        }
+        /**
+         * Called each frame.
+         *
+         * @param percent The percentage of completion for this action, growing from 0 to 1 over the duration. If
+         *                {@link #setReverse(boolean) reversed}, this will shrink from 1 to 0.
+         */
+        @Override
+        protected void update(float percent) {
+            int len = affected.size();
+            Coord c;
+            float f;
+            int color;
+            int idx, seed = System.identityHashCode(this), clen = choices.length;
+            final long tick = Hasher.randomize1((System.currentTimeMillis() >>> 7) * seed);
+            for (int i = 0; i < len; i++) {
+                c = affected.get(i);
+                if(lightMap[c.x][c.y] <= 0.0)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                    continue;
+                f = Noise.instance.singleSimplex(seed, c.x * 1.5f, c.y * 1.5f, percent * 5)
+                        * 0.17f + percent * 1.2f;
+                if(f < 0f || 0.5 * lightMap[c.x][c.y] + f < 0.4)
+                    continue;
+                idx = (int) (f * colors.length);
+                if(idx >= colors.length - 1)
+                    color = DescriptiveColor.lerpColors(colors[colors.length-1], (colors[colors.length-1] & 0xFFFFFF00), (Math.min(0.99f, f) * colors.length) % 1f);
+                else
+                    color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], (f * colors.length) % 1f);
+                grid.put(c.x, c.y, choices[Hasher.randomize1Bounded(tick + i, clen)], color);
+            }
+        }
     }
 
 }
