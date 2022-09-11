@@ -197,7 +197,9 @@ public class DungeonGridTest extends ApplicationAdapter {
             playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
         }
         else{
-            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f)).conclude(post));//gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
+            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+                    .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
+            //gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
         }
     }
 
@@ -347,9 +349,9 @@ public class DungeonGridTest extends ApplicationAdapter {
         Camera camera = gg.viewport.getCamera();
         camera.position.set(gg.gridWidth * 0.5f, gg.gridHeight * 0.5f, 0f);
         camera.update();
+        stage.act();
         stage.draw();
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
-        stage.act();
     }
 
     @Override
