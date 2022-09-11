@@ -325,6 +325,21 @@ public abstract class GridAction extends TemporalAction {
             colors[6] = (0x99BBEE77);
             return this;
         }
+        /**
+         * Sets the colors this ExplosionAction uses to go from through various shades of yellow-green before fading.
+         * Meant for acidic effects or some poisons, especially with {@link CloudAction}.
+         */
+        public ExplosionAction useAcridColors()
+        {
+            colors[0] = (0xCCFF55CC);
+            colors[1] = (0xDDFF66EE);
+            colors[2] = (0xEEFF77FF);
+            colors[3] = (0xDDEE55EE);
+            colors[4] = (0xDDFF66CC);
+            colors[5] = (0xCCEE55AA);
+            colors[6] = (0xBBEE4477);
+            return this;
+        }
     }
 
     public static class GibberishAction extends ExplosionAction
