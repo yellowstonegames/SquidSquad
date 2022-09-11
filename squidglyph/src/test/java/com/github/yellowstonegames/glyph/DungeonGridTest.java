@@ -196,7 +196,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                         .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
             else
                 playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                    .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useElectricColors()).conclude(post));
+                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useMistyColors()).conclude(post));
             //gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
         }
     }

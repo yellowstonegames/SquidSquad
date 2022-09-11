@@ -310,6 +310,21 @@ public abstract class GridAction extends TemporalAction {
             colors[6] = (0x59565299); // SColor.DB_SOOT
             return this;
         }
+        /**
+         * Sets the colors this ExplosionAction uses to go from through various shades of pale blue before fading.
+         * Meant for mist or fog, especially with {@link CloudAction}.
+         */
+        public ExplosionAction useMistyColors()
+        {
+            colors[0] = (0xAACCFFCC);
+            colors[1] = (0xBBDDFFEE);
+            colors[2] = (0xCCEEFFFF);
+            colors[3] = (0x99CCEEEE);
+            colors[4] = (0xBBEEFFCC);
+            colors[5] = (0xAACCEEAA);
+            colors[6] = (0x99BBEE77);
+            return this;
+        }
     }
 
     public static class GibberishAction extends ExplosionAction
