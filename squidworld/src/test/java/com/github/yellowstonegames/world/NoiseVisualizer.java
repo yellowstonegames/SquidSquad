@@ -221,7 +221,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
                         break;
                     case R: // fRactal type
-                        noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 2 : 1)) % 3);
+                        noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
                         break;
                     case G: // GLITCH!
                         noise.setPointHash(pointHashes[hashIndex = (hashIndex + (UIUtils.shift() ? pointHashes.length - 1 : 1)) % pointHashes.length]);

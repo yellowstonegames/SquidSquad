@@ -386,6 +386,14 @@ public class Noise {
      * Meant to be used with {@link #setFractalType(int)}.
      */
     public static final int RIDGED_MULTI = 2;
+    /**
+     * Layered octaves of noise, where each octave has a different frequency and weight, and the results of
+     * earlier octaves affect the inputs to later octave calculations. Tends to look cloudy but with swirling
+     * distortions, and generally like a natural process.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int DOMAIN_WARP = 3;
 
     /**
      * Measures distances "as the crow flies."
@@ -844,9 +852,9 @@ public class Noise {
 
     /**
      * Sets the method for combining octaves in all fractal noise types, allowing an int argument corresponding to one
-     * of the following constants from this class: {@link #FBM} (0), {@link #BILLOW} (1), or {@link #RIDGED_MULTI} (2).
-     * If this hasn't been called, it will use FBM.
-     * @param fractalType an int (0, 1, or 2) that corresponds to a constant like {@link #FBM} or {@link #RIDGED_MULTI}
+     * of the following constants from this class: {@link #FBM} (0), {@link #BILLOW} (1), {@link #RIDGED_MULTI} (2), or
+     * {@link #DOMAIN_WARP} (3). If this hasn't been called, it will use FBM.
+     * @param fractalType an int (0, 1, 2, or 3) that corresponds to a constant like {@link #FBM} or {@link #RIDGED_MULTI}
      */
     public void setFractalType(int fractalType) {
         this.fractalType = fractalType;
@@ -854,9 +862,9 @@ public class Noise {
 
     /**
      * Gets the method for combining octaves in all fractal noise types, allowing an int argument corresponding to one
-     * of the following constants from this class: {@link #FBM} (0), {@link #BILLOW} (1), or {@link #RIDGED_MULTI} (2).
-     * The default is FBM.     
-     * @return the fractal type as a code; 0, 1, or 2
+     * of the following constants from this class: {@link #FBM} (0), {@link #BILLOW} (1), {@link #RIDGED_MULTI} (2), or
+     * {@link #DOMAIN_WARP} (3). The default is FBM.
+     * @return the fractal type as a code; 0, 1, 2, or 3
      */
     public int getFractalType()
     {
@@ -1422,6 +1430,8 @@ public class Noise {
                         return singlePerlinFractalBillow(x, y);
                     case RIDGED_MULTI:
                         return singlePerlinFractalRidgedMulti(x, y);
+                    case DOMAIN_WARP:
+                        return singlePerlinFractalDomainWarp(x, y);
                     default:
                         return singlePerlinFractalFBM(x, y);
                 }
@@ -5717,14 +5727,14 @@ public class Noise {
         y *= frequency;
 
         switch (fractalType) {
-            case FBM:
-                return singlePerlinFractalFBM(x, y);
+            case DOMAIN_WARP:
+                return singlePerlinFractalDomainWarp(x, y);
             case BILLOW:
                 return singlePerlinFractalBillow(x, y);
             case RIDGED_MULTI:
                 return singlePerlinFractalRidgedMulti(x, y);
             default:
-                return 0;
+                return singlePerlinFractalFBM(x, y);
         }
     }
 
@@ -5739,6 +5749,23 @@ public class Noise {
 
             amp *= gain;
             sum += singlePerlin(++seed, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singlePerlinFractalDomainWarp(float x, float y) {
+        int seed = this.seed;
+        float latest = singlePerlin(seed, x, y);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += (latest = singlePerlin(++seed, x + latest, y + latest)) * amp;
         }
 
         return sum * fractalBounding;
