@@ -1852,6 +1852,8 @@ public class Noise {
                         return singlePerlinFractalBillow(x, y, z, w, u);
                     case RIDGED_MULTI:
                         return singlePerlinFractalRidgedMulti(x, y, z, w, u);
+                    case DOMAIN_WARP:
+                        return singlePerlinFractalDomainWarp(x, y, z, w, u);
                     default:
                         return singlePerlinFractalFBM(x, y, z, w, u);
                 }
@@ -1977,6 +1979,8 @@ public class Noise {
                         return singlePerlinFractalBillow(x, y, z, w, u, v);
                     case RIDGED_MULTI:
                         return singlePerlinFractalRidgedMulti(x, y, z, w, u, v);
+                    case DOMAIN_WARP:
+                        return singlePerlinFractalDomainWarp(x, y, z, w, u, v);
                     default:
                         return singlePerlinFractalFBM(x, y, z, w, u, v);
                 }
@@ -6250,6 +6254,31 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    private float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singlePerlin(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
 
     private float singlePerlinFractalBillow(float x, float y, float z, float w, float u) {
         int seed = this.seed;
@@ -6447,6 +6476,33 @@ public class Noise {
 
             amp *= gain;
             sum += singlePerlin(++seed, x, y, z, w, u, v) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    private float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singlePerlin(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
         }
 
         return sum * fractalBounding;
