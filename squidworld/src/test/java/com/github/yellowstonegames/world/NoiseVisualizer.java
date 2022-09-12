@@ -28,7 +28,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.VALUE_FRACTAL, 1);
+    private Noise noise = new Noise(1, 0.0625f, Noise.PERLIN_FRACTAL, 1);
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
