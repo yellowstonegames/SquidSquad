@@ -45,6 +45,13 @@ import com.github.yellowstonegames.grid.Coord;
  * draw the GlyphGrid, or keep using {@link Stage#draw()} and set the {@link #startX}, {@link #startY}, {@link #endX},
  * and {@link #endY} fields to restrict the drawn area. You should call {@link #resize(int, int)} in your application's
  * or screen's resize code, because it keeps the viewport accurate.
+ * <br>
+ * {@link com.badlogic.gdx.scenes.scene2d.Action} behavior is unfortunately a little complex, but issues can usually be
+ * resolved by moving around the order in which {@link Stage#act()} {@link Stage#draw()}, and map-changing methods are
+ * called. Typically, if you {@link #put(int, long)} every visible glyph every frame, you would do that first, then call
+ * Stage.act(), and only then call Stage.draw(). This allows Actions (in act()) to affect the GlyphGrid without the map
+ * being overwritten before it can be drawn. There are some useful Actions specialized to working with GlyphGrid in
+ * {@link GridAction}, and some non-specialized support code for Actions in {@link MoreActions}.
  */
 public class GlyphGrid extends Group {
     protected int gridWidth;
@@ -403,14 +410,14 @@ public class GlyphGrid extends Group {
         return false;
     }
 
-    //TODO: Change color handling internally so this can remember color changes.
     public MoreActions.LenientSequenceAction dyeFG(int x, int y, int newColor, float change, float duration, Runnable post) {
-        int fused = fuse(x, y);
-        long existing = map.getOrDefault(fused, 0);
+        final int fused = fuse(x, y);
+        final long existing = map.getOrDefault(fused, 0),
+                next = (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int)(existing >>> 32), newColor, change) << 32;
         TemporalAction temporal = new TemporalAction() {
             @Override
             protected void update(float percent) {
-                map.put(fused, (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int)(existing >>> 32), newColor, change * percent) << 32);
+                map.put(fused, next);
             }
         };
         temporal.setDuration(duration);

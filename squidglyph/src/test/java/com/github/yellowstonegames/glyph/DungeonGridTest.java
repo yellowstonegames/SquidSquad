@@ -191,13 +191,14 @@ public class DungeonGridTest extends ApplicationAdapter {
             playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
         }
         else{
-            if(MathUtils.randomBoolean())
-                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                        .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
-            else
-                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useToxicColors()).conclude(post));
-            //gg.dyeFG(next.x, next.y, 0x992200FF, 1f, 0.1f, null)
+//            if(MathUtils.randomBoolean())
+//                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+//                        .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
+//            else
+//                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+//                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useToxicColors()).conclude(post));
+            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f)));
+            gg.addAction(gg.dyeFG(next.x, next.y, 0x992200FF, 1f, Float.POSITIVE_INFINITY, null));
         }
     }
 
