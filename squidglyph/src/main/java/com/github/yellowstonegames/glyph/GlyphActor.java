@@ -42,6 +42,11 @@ public class GlyphActor extends Actor {
         font = f;
     }
 
+    public GlyphActor(char c, int color, Font f) {
+        glyph = ((long) color << 32 & 0xFFFFFFFE00000000L) | c;
+        font = f;
+    }
+
     public GlyphActor(char c, String markup, Font f) {
         glyph = Font.markupGlyph(c, markup, ColorLookup.DESCRIPTIVE, f.family);
         font = f;
@@ -54,16 +59,22 @@ public class GlyphActor extends Actor {
         font.drawGlyph(batch, glyph, getX(), getY(), getRotation(), getScaleX(), getScaleY());
     }
 
+    public void setColor(int color) {
+        super.getColor().set(color);
+        super.setColor(super.getColor());
+        glyph = (glyph & 0xFFFFFFFFL) | ((long) color << 32 & 0xFFFFFFFE00000000L);
+    }
+
     @Override
     public void setColor(Color color) {
         super.setColor(color);
-        glyph = (glyph & 0xFFFFFFFFL) | (long) Color.rgba8888(color) << 32;
+        glyph = (glyph & 0xFFFFFFFFL) | ((long) Color.rgba8888(color) << 32 & 0xFFFFFFFE00000000L);
     }
 
     @Override
     public void setColor(float r, float g, float b, float a) {
         super.setColor(r, g, b, a);
-        glyph = (glyph & 0xFFFFFFFFL) | (long) Color.rgba8888(super.getColor()) << 32;
+        glyph = (glyph & 0xFFFFFFFFL) | ((long) Color.rgba8888(super.getColor()) << 32 & 0xFFFFFFFE00000000L);
     }
 
     @Override

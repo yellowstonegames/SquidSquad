@@ -16,8 +16,10 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -33,6 +35,8 @@ import com.github.tommyettinger.textra.ColorLookup;
 import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
+
+import javax.annotation.Nullable;
 
 /**
  * Stores a sparse map of (unmoving) glyphs by their positions, as a dense grid of background colors, and potentially
@@ -423,4 +427,81 @@ public class GlyphGrid extends Group {
         temporal.setDuration(duration);
         return new MoreActions.LenientSequenceAction(temporal, post == null ? null : Actions.run(post));
     }
+
+
+    /**
+     * Create a new Glyph at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+     * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+     * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+     * complete before removing the GlyphActor.
+     * @param startX the starting x position in world coordinates
+     * @param startY the starting y position in world coordinates
+     * @param endX the ending x position in world coordinates
+     * @param endY the ending y position in world coordinates
+     * @param shown the char to show (the same char throughout the effect)
+     * @param startColor the starting Color
+     * @param endColor the Color to transition to
+     * @param startRotation the starting rotation for the summoned glyph, in degrees
+     * @param endRotation the ending rotation for the summoned glyph, in degrees
+     * @param duration the duration in seconds for the effect
+     */
+    public void summon(float startX, float startY, float endX, float endY, char shown,
+                       final int startColor, final int endColor, final float startRotation, final float endRotation,
+                       float duration)
+    {
+        summon(0f, startX, startY, endX, endY, shown, startColor, endColor, startRotation, endRotation, duration, null);
+    }
+    /**
+     * Add a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+     * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+     * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+     * complete before running postRunnable (if it is non-null) and finally removing the GlyphActor.
+     * @param delay how long to wait in seconds before starting the effect
+     * @param startX the starting x position in world coordinates
+     * @param startY the starting y position in world coordinates
+     * @param endX the ending x position in world coordinates
+     * @param endY the ending y position in world coordinates
+     * @param shown the char to show (the same char throughout the effect)
+     * @param startColor the starting Color
+     * @param endColor the Color to transition to
+     * @param startRotation the starting rotation for the summoned glyph, in degrees
+     * @param endRotation the ending rotation for the summoned glyph, in degrees
+     * @param duration the duration in seconds for the effect
+     * @param postRunnable a Runnable to execute after the summoning completes; may be null to do nothing.
+     */
+    public void summon(float delay, float startX, float startY, float endX, float endY, char shown,
+                       final int startColor, final int endColor, final float startRotation, final float endRotation,
+                       float duration, @Nullable Runnable postRunnable)
+    {
+        final int nbActions = 2 + (0 < delay ? 1 : 0) + (postRunnable == null ? 0 : 1);
+        int index = 0;
+        final Action[] sequence = new Action[nbActions];
+        if (0 < delay)
+            sequence[index++] = Actions.delay(delay);
+        final GlyphActor glyph = new GlyphActor(shown, startColor, font);
+        glyph.setRotation(startRotation);
+        addActor(glyph);
+        sequence[index++] = Actions.parallel(
+                new TemporalAction(duration) {
+                    @Override
+                    protected void update(float percent) {
+                        glyph.setColor(DescriptiveColor.lerpColors(startColor, endColor, percent * 0.95f));
+                    }
+                },
+                Actions.moveTo(endX, endY, duration),
+                Actions.rotateTo(endRotation, duration));
+        if(postRunnable != null)
+        {
+            sequence[index++] = Actions.run(postRunnable);
+        }
+        /* Do this one last, so that hasActiveAnimations() returns true during 'postRunnables' */
+        sequence[index] = Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                removeActor(glyph);
+            }
+        });
+        glyph.addAction(Actions.sequence(sequence));
+    }
+
 }
