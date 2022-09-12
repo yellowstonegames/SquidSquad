@@ -28,8 +28,8 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
-    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private Noise noise = new Noise(1, 0.0625f, Noise.VALUE_FRACTAL, 1);
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
     private boolean inverse;
@@ -68,7 +68,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
         noise.setPointHash(pointHashes[hashIndex]);
-        noise.setFractalType(Noise.RIDGED_MULTI);
+        noise.setFractalType(Noise.DOMAIN_WARP);
         noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);

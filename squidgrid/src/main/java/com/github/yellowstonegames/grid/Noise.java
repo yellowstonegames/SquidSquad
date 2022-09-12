@@ -1353,6 +1353,8 @@ public class Noise {
                         return singleValueFractalBillow(x, y);
                     case RIDGED_MULTI:
                         return singleValueFractalRidgedMulti(x, y);
+                    case DOMAIN_WARP:
+                        return singleValueFractalDomainWarp(x, y);
                     default:
                         return singleValueFractalFBM(x, y);
                 }
@@ -2147,6 +2149,23 @@ public class Noise {
 
             amp *= gain;
             sum += singleValue(++seed, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    private float singleValueFractalDomainWarp(float x, float y) {
+        int seed = this.seed;
+        float latest = singleValue(seed, x, y);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity + TrigTools.cosTurns(latest) * 0.25f;
+            y = y * lacunarity + TrigTools.sinTurns(latest) * 0.25f;
+
+            amp *= gain;
+            sum += (latest = singleValue(++seed, x, y)) * amp;
         }
 
         return sum * fractalBounding;
