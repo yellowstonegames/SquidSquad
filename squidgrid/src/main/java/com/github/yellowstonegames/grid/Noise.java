@@ -2161,11 +2161,14 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity + TrigTools.cosTurns(latest) * 0.25f;
-            y = y * lacunarity + TrigTools.sinTurns(latest) * 0.25f;
+            x = x * lacunarity;
+            y = y * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float st = TrigTools.SIN_TABLE[idx],
+                    ct = TrigTools.SIN_TABLE[idx + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
 
             amp *= gain;
-            sum += (latest = singleValue(++seed, x, y)) * amp;
+            sum += (latest = singleValue(++seed, x + ct, y + st)) * amp;
         }
 
         return sum * fractalBounding;
@@ -5780,11 +5783,14 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
+            x = x * lacunarity;
+            y = y * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float st = TrigTools.SIN_TABLE[idx],
+                    ct = TrigTools.SIN_TABLE[idx + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
 
             amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + latest, y + latest)) * amp;
+            sum += (latest = singlePerlin(++seed, x + ct, y + st)) * amp;
         }
 
         return sum * fractalBounding;
