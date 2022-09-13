@@ -28,8 +28,8 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.PERLIN_FRACTAL, 1);
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 2);
+    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
     private boolean inverse;
@@ -153,8 +153,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
                                     float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(
-                                            x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))))) * 0.5f +
-                                            0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
+                                            x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))))
+                                            ;
+//                                            * 0.5f + 0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
                                     color -= MathTools.fastFloor(color);
 //                                    color *= color * 0.8125f;
                                     p.setColor(color, color, color, 1f);
@@ -167,16 +168,19 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         for (int i = 0; i < 256; i++) {
 //                            float hue = 0.94f; // pink
 //                            float hue = 0.2f; // apricot
+                            float hue = 0.11f; // apricot
 //                            float hue = 0.625f; // a soft blue
-                            float hue = 0.475f; // bright green
+//                            float hue = 0.475f; // bright green
 //                            float hue = 0.075f; // bright red
                             gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
 //                                            (i & 255) * 0x1p-12f - 0x3p-7f + hue, // small hue variation
-                                            (i & 127) * 0x1p-7f + hue, // small hue variation
+                                            (i & 255) * 0x1p-11f - 0x3p-7f + hue, // smallish hue variation
+//                                            (i & 127) * 0x1p-7f + hue, // widest hue variation
 //                                            (i + 90 & 255) * 0x1p-9f + 0.9f,
 //                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
-                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
+//                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
+                                            1f - (i + 90 & 255) * 0x1p-11f,
                                             MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.3f), // biased
 //                                            (i * i * 0x1p-16f), //very dark
 //                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f

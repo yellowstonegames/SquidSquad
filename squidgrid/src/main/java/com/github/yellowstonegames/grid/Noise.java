@@ -1465,6 +1465,8 @@ public class Noise {
                         return singleCubicFractalBillow(x, y);
                     case RIDGED_MULTI:
                         return singleCubicFractalRidgedMulti(x, y);
+                    case DOMAIN_WARP:
+                        return singleCubicFractalDomainWarp(x, y);
                     default:
                         return singleCubicFractalFBM(x, y);
                 }
@@ -1606,6 +1608,8 @@ public class Noise {
                         return singleCubicFractalBillow(x, y, z);
                     case RIDGED_MULTI:
                         return singleCubicFractalRidgedMulti(x, y, z);
+                    case DOMAIN_WARP:
+                        return singleCubicFractalDomainWarp(x, y, z);
                     default:
                         return singleCubicFractalFBM(x, y, z);
                 }
@@ -8787,6 +8791,25 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    private float singleCubicFractalDomainWarp(float x, float y) {
+        int seed = this.seed;
+        float latest = singleCubic(seed, x, y);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx],
+                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleCubic(++seed, x + a, y + b)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
 
     private float singleCubicFractalBillow(float x, float y) {
         int seed = this.seed;
@@ -8888,6 +8911,27 @@ public class Noise {
 
             amp *= gain;
             sum += singleCubic(++seed, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    private float singleCubicFractalDomainWarp(float x, float y, float z) {
+        int seed = this.seed;
+        float latest = singleCubic(seed, x, y, z);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleCubic(++seed, x + a, y + b, z + c)) * amp;
         }
 
         return sum * fractalBounding;
