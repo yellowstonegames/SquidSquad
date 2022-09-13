@@ -74,11 +74,11 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
 //        path = "out/worldsAnimated/" + date + "/WarpingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/WarpingFoamAlien/";
-        path = "out/worldsAnimated/" + date + "/WarpingFlan/";
+//        path = "out/worldsAnimated/" + date + "/WarpingFlan/";
 //        path = "out/worldsAnimated/" + date + "/WarpingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/WarpingMutant/";
 //        path = "out/worldsAnimated/" + date + "/WarpingSimplex/";
-//        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
+        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
 //        path = "out/worldsAnimated/" + date + "/WarpingValue/";
 //        path = "out/worldsAnimated/" + date + "/WarpingHoney/";
 
@@ -109,7 +109,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1); fn.setSharpness(0.6f);
+        Noise fn = new Noise((int) seed, 2f, Noise.PERLIN_FRACTAL, 1); fn.setSharpness(0.6f);
 //        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.MUTANT_FRACTAL, 1);
 
