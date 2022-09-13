@@ -146,12 +146,14 @@ public class NoiseVisualizer extends ApplicationAdapter {
                 switch (keycode) {
                     case W:
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
+//                        for (int c = 0; c < 32; c++) {
                         for (int c = 0; c < 128; c++) {
                             int w = 256, h = 256;
                             float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f;
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
+//                                    float color = basicPrepare(noise.getConfiguredNoise(x, y, c));
                                     float color = basicPrepare(TrigTools.sinTurns(noise.getConfiguredNoise(
                                             x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))))
                                             ;
@@ -211,11 +213,11 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case N: // noise type
                     case EQUALS:
                     case ENTER:
-                        noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 19 : 1)) % 20);
+                        noise.setNoiseType((noise.getNoiseType() + (UIUtils.shift() ? 21 : 1)) % 22);
                         break;
                     case M:
                     case MINUS:
-                        noise.setNoiseType((noise.getNoiseType() + 19) % 20);
+                        noise.setNoiseType((noise.getNoiseType() + 21) % 22);
                         break;
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
