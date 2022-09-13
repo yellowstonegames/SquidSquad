@@ -1565,6 +1565,8 @@ public class Noise {
                         return singleFoamFractalBillow(x, y, z, w, mutation);
                     case RIDGED_MULTI:
                         return singleFoamFractalRidgedMulti(x, y, z, w, mutation);
+                    case DOMAIN_WARP:
+                        return singleFoamFractalDomainWarp(x, y, z, w, mutation);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, mutation);
                 }
@@ -1576,6 +1578,8 @@ public class Noise {
                         return singleTaffyFractalBillow(x, y, z, w, mutation);
                     case RIDGED_MULTI:
                         return singleTaffyFractalRidgedMulti(x, y, z, w, mutation);
+                    case DOMAIN_WARP:
+                        return singleTaffyFractalDomainWarp(x, y, z, w, mutation);
                     default:
                         return singleTaffyFractalFBM(x, y, z, w, mutation);
                 }
@@ -1675,6 +1679,8 @@ public class Noise {
                         return singleFoamFractalBillow(x, y, z, w, u);
                     case RIDGED_MULTI:
                         return singleFoamFractalRidgedMulti(x, y, z, w, u);
+                    case DOMAIN_WARP:
+                        return singleFoamFractalDomainWarp(x, y, z, w, u);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u);
                 }
@@ -1708,6 +1714,8 @@ public class Noise {
                         return singleHoneyFractalBillow(x, y, z, w, u);
                     case RIDGED_MULTI:
                         return singleHoneyFractalRidgedMulti(x, y, z, w, u);
+                    case DOMAIN_WARP:
+                        return singleHoneyFractalDomainWarp(x, y, z, w, u);
                     default:
                         return singleHoneyFractalFBM(x, y, z, w, u);
                 }
@@ -1730,6 +1738,8 @@ public class Noise {
                         return singleSimplexFractalBillow(x, y, z, w, u);
                     case RIDGED_MULTI:
                         return singleSimplexFractalRidgedMulti(x, y, z, w, u);
+                    case DOMAIN_WARP:
+                        return singleSimplexFractalDomainWarp(x, y, z, w, u);
                     default:
                         return singleSimplexFractalFBM(x, y, z, w, u);
                 }
@@ -1991,7 +2001,7 @@ public class Noise {
         }
     }
 
-    private float singleValueFractalFBM(float x, float y) {
+    protected float singleValueFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleValue(seed, x, y);
         float amp = 1;
@@ -2007,7 +2017,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalDomainWarp(float x, float y) {
+    protected float singleValueFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singleValue(seed, x, y);
         float sum = latest;
@@ -2027,7 +2037,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalBillow(float x, float y) {
+    protected float singleValueFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleValue(seed, x, y)) * 2 - 1;
         float amp = 1;
@@ -2042,7 +2052,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalRidgedMulti(float x, float y) {
+    protected float singleValueFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -2117,7 +2127,7 @@ public class Noise {
         }
     }
 
-    private float singleValueFractalFBM(float x, float y, float z) {
+    protected float singleValueFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleValue(seed, x, y, z);
         float amp = 1;
@@ -2133,7 +2143,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleValueFractalDomainWarp(float x, float y, float z) {
+    protected float singleValueFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleValue(seed, x, y, z);
         float sum = latest;
@@ -2156,7 +2166,7 @@ public class Noise {
     }
 
 
-    private float singleValueFractalBillow(float x, float y, float z) {
+    protected float singleValueFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleValue(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -2173,7 +2183,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalRidgedMulti(float x, float y, float z) {
+    protected float singleValueFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -2270,7 +2280,7 @@ public class Noise {
         }
     }
 
-    private float singleValueFractalFBM(float x, float y, float z, float w) {
+    protected float singleValueFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleValue(seed, x, y, z, w);
         float amp = 1;
@@ -2287,7 +2297,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleValueFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleValueFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleValue(seed, x, y, z, w);
         float sum = latest;
@@ -2311,7 +2321,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalBillow(float x, float y, float z, float w) {
+    protected float singleValueFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleValue(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -2329,7 +2339,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleValueFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -2444,7 +2454,7 @@ public class Noise {
                 return singleValueFractalFBM(x, y, z, w, u);
         }
     }
-    private float singleValueFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singleValueFractalFBM(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = singleValue(seed, x, y, z, w, u);
         float amp = 1;
@@ -2462,8 +2472,33 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleValueFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singleValue(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
 
-    private float singleValueFractalBillow(float x, float y, float z, float w, float u) {
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleValue(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleValueFractalBillow(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = Math.abs(singleValue(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -2482,7 +2517,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -2644,7 +2679,7 @@ public class Noise {
                 return singleValueFractalFBM(x, y, z, w, u, v);
         }
     }
-    private float singleValueFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singleValueFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singleValue(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -2664,7 +2699,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singleValueFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singleValue(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -2684,7 +2719,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -3120,7 +3155,7 @@ public class Noise {
         }
     }
 
-    private float singleFoamFractalFBM(float x, float y) {
+    protected float singleFoamFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleFoam(seed, x, y);
         float amp = 1, t;
@@ -3136,7 +3171,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleFoamFractalDomainWarp(float x, float y) {
+    protected float singleFoamFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singleFoam(seed, x, y);
         float sum = latest;
@@ -3156,7 +3191,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalBillow(float x, float y) {
+    protected float singleFoamFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y)) * 2 - 1;
         float amp = 1, t;
@@ -3173,7 +3208,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y) {
+    protected float singleFoamFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float t;
         float sum = 0f, exp = 2f, correction = 0f, spike;
@@ -3206,7 +3241,7 @@ public class Noise {
         }
     }
 
-    private float singleFoamFractalFBM(float x, float y, float z) {
+    protected float singleFoamFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleFoam(seed, x, y, z);
         float amp = 1;
@@ -3222,7 +3257,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleFoamFractalDomainWarp(float x, float y, float z) {
+    protected float singleFoamFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleFoam(seed, x, y, z);
         float sum = latest;
@@ -3244,7 +3279,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalBillow(float x, float y, float z) {
+    protected float singleFoamFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -3261,7 +3296,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y, float z) {
+    protected float singleFoamFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -3314,7 +3349,7 @@ public class Noise {
     }
 
 
-    private float singleFoamFractalFBM(float x, float y, float z, float w) {
+    protected float singleFoamFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleFoam(seed, x, y, z, w);
         float amp = 1;
@@ -3331,7 +3366,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleFoamFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleFoam(seed, x, y, z, w);
         float sum = latest;
@@ -3355,7 +3390,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalBillow(float x, float y, float z, float w) {
+    protected float singleFoamFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -3373,7 +3408,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -3454,7 +3489,7 @@ public class Noise {
         }
     }
 
-    private float singleFoamFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = singleFoam(seed, x, y, z, w, u);
         float amp = 1;
@@ -3472,8 +3507,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singleFoam(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
 
-    private float singleFoamFractalBillow(float x, float y, float z, float w, float u) {
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -3492,7 +3553,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -3594,7 +3655,7 @@ public class Noise {
         }
     }
 
-    private float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singleFoam(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -3614,7 +3675,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -3634,7 +3695,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -3725,7 +3786,7 @@ public class Noise {
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    private float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = singleFoam(seed, x, y, z, w, u, v, m);
         float amp = 1;
@@ -3746,7 +3807,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v, m)) * 2 - 1;
         float amp = 1;
@@ -3767,7 +3828,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -4210,7 +4271,7 @@ public class Noise {
         }
     }
 
-    private float singleTaffyFractalFBM(float x, float y) {
+    protected float singleTaffyFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleTaffy(seed, x, y);
         float amp = 1, t;
@@ -4227,7 +4288,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalBillow(float x, float y) {
+    protected float singleTaffyFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y)) * 2 - 1;
         float amp = 1, t;
@@ -4244,7 +4305,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float t;
         float sum = 0f, exp = 2f, correction = 0f, spike;
@@ -4277,7 +4338,7 @@ public class Noise {
         }
     }
 
-    private float singleTaffyFractalFBM(float x, float y, float z) {
+    protected float singleTaffyFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleTaffy(seed, x, y, z);
         float amp = 1;
@@ -4293,7 +4354,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleTaffyFractalDomainWarp(float x, float y, float z) {
+    protected float singleTaffyFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleTaffy(seed, x, y, z);
         float sum = latest;
@@ -4316,7 +4377,7 @@ public class Noise {
     }
 
 
-    private float singleTaffyFractalBillow(float x, float y, float z) {
+    protected float singleTaffyFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -4333,7 +4394,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -4390,7 +4451,7 @@ public class Noise {
     }
 
 
-    private float singleTaffyFractalFBM(float x, float y, float z, float w) {
+    protected float singleTaffyFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleTaffy(seed, x, y, z, w);
         float amp = 1;
@@ -4407,7 +4468,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleTaffyFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleTaffy(seed, x, y, z, w);
         float sum = latest;
@@ -4431,7 +4492,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalBillow(float x, float y, float z, float w) {
+    protected float singleTaffyFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -4449,7 +4510,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -4553,7 +4614,7 @@ public class Noise {
         }
     }
 
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = singleTaffy(seed, x, y, z, w, u);
         float amp = 1;
@@ -4571,8 +4632,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singleTaffy(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
 
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u) {
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -4591,7 +4678,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -4700,7 +4787,7 @@ public class Noise {
         }
     }
 
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singleTaffy(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -4720,7 +4807,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -4740,7 +4827,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -4840,7 +4927,7 @@ public class Noise {
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    private float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = singleTaffy(seed, x, y, z, w, u, v, m);
         float amp = 1;
@@ -4861,7 +4948,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v, m)) * 2 - 1;
         float amp = 1;
@@ -4882,7 +4969,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
+    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5015,7 +5102,7 @@ public class Noise {
         }
     }
 
-    private float singlePerlinFractalFBM(float x, float y) {
+    protected float singlePerlinFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singlePerlin(seed, x, y);
         float amp = 1;
@@ -5031,7 +5118,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalDomainWarp(float x, float y) {
+    protected float singlePerlinFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singlePerlin(seed, x, y);
         float sum = latest;
@@ -5051,7 +5138,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalBillow(float x, float y) {
+    protected float singlePerlinFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singlePerlin(seed, x, y)) * 2 - 1;
         float amp = 1;
@@ -5067,7 +5154,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalRidgedMulti(float x, float y) {
+    protected float singlePerlinFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5084,7 +5171,7 @@ public class Noise {
         return singlePerlin(seed, x * frequency, y * frequency);
     }
 
-    private float singlePerlin(int seed, float x, float y) {
+    protected float singlePerlin(int seed, float x, float y) {
         int x0 = fastFloor(x);
         int y0 = fastFloor(y);
         int x1 = x0 + 1;
@@ -5135,7 +5222,7 @@ public class Noise {
         }
     }
 
-    private float singlePerlinFractalFBM(float x, float y, float z) {
+    protected float singlePerlinFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singlePerlin(seed, x, y, z);
         float amp = 1;
@@ -5152,7 +5239,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalDomainWarp(float x, float y, float z) {
+    protected float singlePerlinFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singlePerlin(seed, x, y, z);
         float sum = latest;
@@ -5174,7 +5261,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalBillow(float x, float y, float z) {
+    protected float singlePerlinFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singlePerlin(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -5191,7 +5278,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalRidgedMulti(float x, float y, float z) {
+    protected float singlePerlinFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5209,7 +5296,7 @@ public class Noise {
         return singlePerlin(seed, x * frequency, y * frequency, z * frequency);
     }
 
-    private float singlePerlin(int seed, float x, float y, float z) {
+    protected float singlePerlin(int seed, float x, float y, float z) {
         int x0 = fastFloor(x);
         int y0 = fastFloor(y);
         int z0 = fastFloor(z);
@@ -5258,7 +5345,7 @@ public class Noise {
         return singlePerlin(seed, x * frequency, y * frequency, z * frequency, w * frequency);
     }
 
-    private float singlePerlin(int seed, float x, float y, float z, float w) {
+    protected float singlePerlin(int seed, float x, float y, float z, float w) {
         int x0 = fastFloor(x);
         int y0 = fastFloor(y);
         int z0 = fastFloor(z);
@@ -5318,7 +5405,7 @@ public class Noise {
         final float zf1 = lerp(yf01, yf11, zs);
         return lerp(zf0, zf1, ws) * 0.55f;
     }
-    private float singlePerlinFractalFBM(float x, float y, float z, float w) {
+    protected float singlePerlinFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singlePerlin(seed, x, y, z, w);
         float amp = 1;
@@ -5335,7 +5422,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singlePerlinFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singlePerlin(seed, x, y, z, w);
         float sum = latest;
@@ -5359,7 +5446,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalBillow(float x, float y, float z, float w) {
+    protected float singlePerlinFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singlePerlin(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -5377,7 +5464,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5398,7 +5485,7 @@ public class Noise {
     
 //    public float minBound = -1f, maxBound = 1f;
     
-    private float singlePerlin(int seed, float x, float y, float z, float w, float u) {
+    protected float singlePerlin(int seed, float x, float y, float z, float w, float u) {
         int x0 = fastFloor(x);
         int y0 = fastFloor(y);
         int z0 = fastFloor(z);
@@ -5483,7 +5570,7 @@ public class Noise {
 
         return lerp(wf0, wf1, us) * 0.7777777f;
     }
-    private float singlePerlinFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singlePerlinFractalFBM(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = singlePerlin(seed, x, y, z, w, u);
         float amp = 1;
@@ -5501,7 +5588,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u) {
+    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float latest = singlePerlin(seed, x, y, z, w, u);
         float sum = latest;
@@ -5527,7 +5614,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalBillow(float x, float y, float z, float w, float u) {
+    protected float singlePerlinFractalBillow(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = Math.abs(singlePerlin(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -5546,7 +5633,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5574,7 +5661,7 @@ public class Noise {
         return singlePerlin(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
     }
 
-    private float singlePerlin(int seed, float x, float y, float z, float w, float u, float v) {
+    protected float singlePerlin(int seed, float x, float y, float z, float w, float u, float v) {
         int x0 = fastFloor(x);
         int y0 = fastFloor(y);
         int z0 = fastFloor(z);
@@ -5708,7 +5795,7 @@ public class Noise {
 
         return lerp(uf0, uf1, vs) * 1.61f;
     }
-    private float singlePerlinFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singlePerlinFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singlePerlin(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -5727,7 +5814,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float latest = singlePerlin(seed, x, y, z, w, u, v);
         float sum = latest;
@@ -5755,7 +5842,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singlePerlinFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singlePerlin(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -5775,7 +5862,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -5994,7 +6081,7 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
 
-    private float singleSimplexFractalFBM(float x, float y) {
+    protected float singleSimplexFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleSimplex(seed, x, y);
         float amp = 1;
@@ -6009,7 +6096,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleSimplexFractalDomainWarp(float x, float y) {
+    protected float singleSimplexFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singleSimplex(seed, x, y);
         float sum = latest;
@@ -6029,7 +6116,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleSimplexFractalBillow(float x, float y) {
+    protected float singleSimplexFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
         float amp = 1;
@@ -6045,7 +6132,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleSimplexFractalRidgedMulti(float x, float y) {
+    protected float singleSimplexFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -6334,7 +6421,7 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
     
-    private float singleSimplexFractalFBM(float x, float y, float z) {
+    protected float singleSimplexFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleSimplex(seed, x, y, z);
         float amp = 1;
@@ -6350,7 +6437,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleSimplexFractalDomainWarp(float x, float y, float z) {
+    protected float singleSimplexFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleSimplex(seed, x, y, z);
         float sum = latest;
@@ -6372,7 +6459,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleSimplexFractalBillow(float x, float y, float z) {
+    protected float singleSimplexFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleSimplex(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -6389,7 +6476,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleSimplexFractalRidgedMulti(float x, float y, float z) {
+    protected float singleSimplexFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -6531,7 +6618,7 @@ public class Noise {
         }
     }
 
-    private float singleSimplexFractalFBM(float x, float y, float z, float w) {
+    protected float singleSimplexFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleSimplex(seed, x, y, z, w);
         float amp = 1;
@@ -6548,7 +6635,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleSimplexFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleSimplex(seed, x, y, z, w);
         float sum = latest;
@@ -6572,7 +6659,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleSimplexFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -6587,7 +6674,7 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
 
-    private float singleSimplexFractalBillow(float x, float y, float z, float w) {
+    protected float singleSimplexFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleSimplex(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -6733,7 +6820,7 @@ public class Noise {
         }
     }
 
-    private float singleSimplexFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singleSimplexFractalFBM(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = singleSimplex(seed, x, y, z, w, u);
         float amp = 1;
@@ -6751,7 +6838,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singleSimplex(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -6767,7 +6881,7 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
 
-    private float singleSimplexFractalBillow(float x, float y, float z, float w, float u) {
+    protected float singleSimplexFractalBillow(float x, float y, float z, float w, float u) {
         int seed = this.seed;
         float sum = Math.abs(singleSimplex(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -6957,7 +7071,7 @@ public class Noise {
         }
     }
 
-    private float singleSimplexFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singleSimplexFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singleSimplex(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -6976,7 +7090,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -6993,7 +7107,7 @@ public class Noise {
         return sum * 2f / correction - 1f;
     }
 
-    private float singleSimplexFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singleSimplexFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singleSimplex(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -7217,7 +7331,7 @@ public class Noise {
         }
     }
 
-    private float singleCubicFractalFBM(float x, float y) {
+    protected float singleCubicFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleCubic(seed, x, y);
         float amp = 1;
@@ -7233,7 +7347,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleCubicFractalDomainWarp(float x, float y) {
+    protected float singleCubicFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singleCubic(seed, x, y);
         float sum = latest;
@@ -7253,7 +7367,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalBillow(float x, float y) {
+    protected float singleCubicFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleCubic(seed, x, y)) * 2 - 1;
         float amp = 1;
@@ -7270,7 +7384,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalRidgedMulti(float x, float y) {
+    protected float singleCubicFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -7292,7 +7406,7 @@ public class Noise {
 
     private final static float CUBIC_2D_BOUNDING = 1f / 1.5f / 1.5f;
 
-    private float singleCubic(int seed, float x, float y) {
+    protected float singleCubic(int seed, float x, float y) {
         int x1 = fastFloor(x);
         int y1 = fastFloor(y);
 
@@ -7340,7 +7454,7 @@ public class Noise {
         }
     }
 
-    private float singleCubicFractalFBM(float x, float y, float z) {
+    protected float singleCubicFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleCubic(seed, x, y, z);
         float amp = 1;
@@ -7357,7 +7471,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleCubicFractalDomainWarp(float x, float y, float z) {
+    protected float singleCubicFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleCubic(seed, x, y, z);
         float sum = latest;
@@ -7379,7 +7493,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalBillow(float x, float y, float z) {
+    protected float singleCubicFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleCubic(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -7397,7 +7511,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalRidgedMulti(float x, float y, float z) {
+    protected float singleCubicFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -7417,7 +7531,7 @@ public class Noise {
 
     private final static float CUBIC_3D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f);
 
-    private float singleCubic(int seed, float x, float y, float z) {
+    protected float singleCubic(int seed, float x, float y, float z) {
         int x1 = fastFloor(x);
         int y1 = fastFloor(y);
         int z1 = fastFloor(z);
@@ -7493,7 +7607,7 @@ public class Noise {
         }
     }
 
-    private float singleCubicFractalFBM(float x, float y, float z, float w) {
+    protected float singleCubicFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleCubic(seed, x, y, z, w);
         float amp = 1;
@@ -7511,7 +7625,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleCubicFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleCubicFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleCubic(seed, x, y, z, w);
         float sum = latest;
@@ -7535,7 +7649,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalBillow(float x, float y, float z, float w) {
+    protected float singleCubicFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleCubic(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -7554,7 +7668,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleCubicFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleCubicFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -7574,7 +7688,7 @@ public class Noise {
 
     private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f * 1.5f);
 
-    private float singleCubic(int seed, float x, float y, float z, float w) {
+    protected float singleCubic(int seed, float x, float y, float z, float w) {
         int x1 = fastFloor(x);
         int y1 = fastFloor(y);
         int z1 = fastFloor(z);
@@ -7727,7 +7841,7 @@ public class Noise {
         }
     }
 
-    private float singleCellular(float x, float y, float z) {
+    protected float singleCellular(float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
         int zr = fastRound(z);
@@ -7819,7 +7933,7 @@ public class Noise {
         }
     }
 
-    private float singleCellular2Edge(float x, float y, float z) {
+    protected float singleCellular2Edge(float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
         int zr = fastRound(z);
@@ -7916,7 +8030,7 @@ public class Noise {
         }
     }
 
-    private float singleCellular(float x, float y) {
+    protected float singleCellular(float x, float y) {
         int xr = fastRound(x);
         int yr = fastRound(y);
 
@@ -7996,7 +8110,7 @@ public class Noise {
         }
     }
 
-    private float singleCellular2Edge(float x, float y) {
+    protected float singleCellular2Edge(float x, float y) {
         int xr = fastRound(x);
         int yr = fastRound(y);
 
@@ -8250,7 +8364,7 @@ public class Noise {
         }
     }
 
-    private float singleHoneyFractalFBM(float x, float y) {
+    protected float singleHoneyFractalFBM(float x, float y) {
         int seed = this.seed;
         float sum = singleHoney(seed, x, y);
         float amp = 1, t;
@@ -8266,7 +8380,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleHoneyFractalDomainWarp(float x, float y) {
+    protected float singleHoneyFractalDomainWarp(float x, float y) {
         int seed = this.seed;
         float latest = singleHoney(seed, x, y);
         float sum = latest;
@@ -8286,7 +8400,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalBillow(float x, float y) {
+    protected float singleHoneyFractalBillow(float x, float y) {
         int seed = this.seed;
         float sum = Math.abs(singleHoney(seed, x, y)) * 2 - 1;
         float amp = 1, t;
@@ -8303,7 +8417,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalRidgedMulti(float x, float y) {
+    protected float singleHoneyFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
         float t;
         float sum = 0f, exp = 2f, correction = 0f, spike;
@@ -8335,7 +8449,7 @@ public class Noise {
         }
     }
 
-    private float singleHoneyFractalFBM(float x, float y, float z) {
+    protected float singleHoneyFractalFBM(float x, float y, float z) {
         int seed = this.seed;
         float sum = singleHoney(seed, x, y, z);
         float amp = 1;
@@ -8351,7 +8465,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleHoneyFractalDomainWarp(float x, float y, float z) {
+    protected float singleHoneyFractalDomainWarp(float x, float y, float z) {
         int seed = this.seed;
         float latest = singleHoney(seed, x, y, z);
         float sum = latest;
@@ -8373,7 +8487,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalBillow(float x, float y, float z) {
+    protected float singleHoneyFractalBillow(float x, float y, float z) {
         int seed = this.seed;
         float sum = Math.abs(singleHoney(seed, x, y, z)) * 2 - 1;
         float amp = 1;
@@ -8390,7 +8504,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalRidgedMulti(float x, float y, float z) {
+    protected float singleHoneyFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -8414,7 +8528,7 @@ public class Noise {
     }
 
 
-    private float singleHoneyFractalFBM(float x, float y, float z, float w) {
+    protected float singleHoneyFractalFBM(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = singleHoney(seed, x, y, z, w);
         float amp = 1;
@@ -8431,7 +8545,7 @@ public class Noise {
 
         return sum * fractalBounding;
     }
-    private float singleHoneyFractalDomainWarp(float x, float y, float z, float w) {
+    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w) {
         int seed = this.seed;
         float latest = singleHoney(seed, x, y, z, w);
         float sum = latest;
@@ -8455,7 +8569,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalBillow(float x, float y, float z, float w) {
+    protected float singleHoneyFractalBillow(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = Math.abs(singleHoney(seed, x, y, z, w)) * 2 - 1;
         float amp = 1;
@@ -8473,7 +8587,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalRidgedMulti(float x, float y, float z, float w) {
+    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -8515,7 +8629,7 @@ public class Noise {
         }
     }
 
-    private float singleHoneyFractalFBM(float x, float y, float z, float w, float u) {
+    protected float singleHoneyFractalFBM(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = singleHoney(seed, x, y, z, w, u);
         float amp = 1;
@@ -8533,8 +8647,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w, float u) {
+        int seed = this.seed;
+        float latest = singleHoney(seed, x, y, z, w, u);
+        float sum = latest;
+        float amp = 1;
 
-    private float singleHoneyFractalBillow(float x, float y, float z, float w, float u) {
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleHoney(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float singleHoneyFractalBillow(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = Math.abs(singleHoney(seed, x, y, z, w, u)) * 2 - 1;
         float amp = 1;
@@ -8553,7 +8693,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u) {
+    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u) {
         final int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -8598,7 +8738,7 @@ public class Noise {
         }
     }
 
-    private float singleHoneyFractalFBM(float x, float y, float z, float w, float u, float v) {
+    protected float singleHoneyFractalFBM(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = singleHoney(seed, x, y, z, w, u, v);
         float amp = 1;
@@ -8618,7 +8758,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalBillow(float x, float y, float z, float w, float u, float v) {
+    protected float singleHoneyFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = Math.abs(singleHoney(seed, x, y, z, w, u, v)) * 2 - 1;
         float amp = 1;
@@ -8638,7 +8778,7 @@ public class Noise {
         return sum * fractalBounding;
     }
 
-    private float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
+    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
