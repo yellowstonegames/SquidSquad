@@ -753,7 +753,7 @@ public class Noise {
      * @param octaves the number of octaves to use for fractal noise types, as a positive non-zero int
      */
     public void setFractalOctaves(int octaves) {
-        this.octaves = octaves;
+        this.octaves = Math.max(1, octaves);
         calculateFractalBounding();
     }
 

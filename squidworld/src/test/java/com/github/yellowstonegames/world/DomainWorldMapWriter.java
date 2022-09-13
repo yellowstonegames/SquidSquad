@@ -17,7 +17,6 @@ import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.Noise;
@@ -33,18 +32,14 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 /**
  * Writes one or more spinning globes to the out/ folder.
  */
-public class WarpingWorldMapWriter extends ApplicationAdapter {
+public class DomainWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
-    private static final boolean WARPING_LAND = true;
+    private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
-
-    private Noise terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise;
-
-    private static float[] WOBBLE = null;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -66,21 +61,18 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
     private PixmapIO.PNG pngWriter;
 
     private String date, path;
+    private float mutationA, mutationB;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
-//        path = "out/worldsAnimated/" + date + "/WarpingFoamMaelstrom/";
-//        path = "out/worldsAnimated/" + date + "/WarpingFoamAlien/";
-//        path = "out/worldsAnimated/" + date + "/WarpingFlan/";
-//        path = "out/worldsAnimated/" + date + "/WarpingTaffy/";
-//        path = "out/worldsAnimated/" + date + "/WarpingMutant/";
-//        path = "out/worldsAnimated/" + date + "/WarpingSimplex/";
-        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
-//        path = "out/worldsAnimated/" + date + "/WarpingValue/";
-//        path = "out/worldsAnimated/" + date + "/WarpingHoney/";
+        path = "out/worldsAnimated/" + date + "/DomainClassic/";
+//        path = "out/worldsAnimated/" + date + "/DomainTaffy/";
+//        path = "out/worldsAnimated/" + date + "/DomainFoam/";
+//        path = "out/worldsAnimated/" + date + "/DomainSimplex/";
+//        path = "out/worldsAnimated/" + date + "/DomainValue/";
+//        path = "out/worldsAnimated/" + date + "/DomainHoney/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -109,18 +101,78 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-//        Noise fn = new Noise((int) seed, 3f, Noise.TAFFY_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1.4f, Noise.MUTANT_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 0.8f, Noise.PEAR_FRACTAL, 1);    // between 43797ms and 45564ms
+//        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1);    // between 50908ms and 52215ms
+//        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
+//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
+//        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
+//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
+//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);  // between 35894ms and 42264ms
 
         fn.setInterpolation(Noise.HERMITE);
 
-        terrainRidgedNoise = new Noise(fn);
-        terrainBasicNoise = new Noise(fn);
-        heatNoise = new Noise(fn);
-        moistureNoise = new Noise(fn);
-        otherRidgedNoise = new Noise(fn);
-//        terrainBasicNoise.setMutation(1.618f);
+        Noise terrainRidgedNoise = new Noise(fn) {
+            @Override
+            public float getNoise(float x, float y, float z) {
+                return getNoise(x, y, z, mutationA, mutationB);
+            }
+            @Override
+            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+            }
+            @Override
+            protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
+                return super.singlePerlinFractalDomainWarp(x, y, z, w, u);
+            }
+        }, terrainBasicNoise = new Noise(fn) {
+            @Override
+            public float getNoise(float x, float y, float z) {
+                return getNoise(x, y, z, mutationA, mutationB);
+            }
 
+            @Override
+            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+            }
+        }, heatNoise = new Noise(fn) {
+            @Override
+            public float getNoise(float x, float y, float z) {
+                return getNoise(x, y, z, mutationA, mutationB);
+            }
+
+            @Override
+            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+            }
+        }, moistureNoise = new Noise(fn) {
+            @Override
+            public float getNoise(float x, float y, float z) {
+                return getNoise(x, y, z, mutationA, mutationB);
+            }
+
+            @Override
+            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+            }
+        }, otherRidgedNoise = new Noise(fn) {
+            @Override
+            public float getNoise(float x, float y, float z) {
+                return getNoise(x, y, z, mutationA, mutationB);
+            }
+            @Override
+            public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
+            }
+            @Override
+            protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
+                return super.singlePerlinFractalDomainWarp(x, y, z, w, u);
+            }
+        };
+//        terrainBasicNoise.setMutation(1.618f);
+        
         //// Maelstrom
 //        Noise terrainRidgedNoise = new Noise(fn) {
 //            @Override
@@ -176,7 +228,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalType(FastNoise.BILLOW);
-
+        
 //        world = new WorldMapGenerator.RotatingSpaceMap(seed, width, height, noise, 1.0);
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
@@ -252,7 +304,6 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
-        WOBBLE = LineWobble.generateLookupTable(world.rng.nextInt(), FRAMES, 7, 3);
         if (ALIEN_COLORS) {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
@@ -260,11 +311,8 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                terrainBasicNoise.setMutation(WOBBLE[(i + 141) % FRAMES] * 0.375f * terrainBasicNoise.getFrequency());
-                terrainRidgedNoise.setMutation(WOBBLE[(i + 283) % FRAMES] * 0.3125f * terrainRidgedNoise.getFrequency());
-                heatNoise.setMutation(WOBBLE[(i + 127) % FRAMES] * 0.25f * heatNoise.getFrequency());
-                moistureNoise.setMutation(WOBBLE[(i + 257) % FRAMES] * 0.125f * moistureNoise.getFrequency());
-                otherRidgedNoise.setMutation(WOBBLE[(i + 197) % FRAMES] * 0.0625f * otherRidgedNoise.getFrequency());
+                mutationA = TrigTools.sinTurns(angle) * 0.3125f;
+                mutationB = TrigTools.cosTurns(angle) * 0.3125f;
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
@@ -309,10 +357,10 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidSquad Demo: Warping World Map Writer");
+        config.setTitle("SquidSquad Demo: Domain World Map Writer");
         config.setWindowedMode(width * cellWidth, height * cellHeight);
         config.setResizable(false);
         config.useVsync(true);
-        new Lwjgl3Application(new WarpingWorldMapWriter(), config);
+        new Lwjgl3Application(new DomainWorldMapWriter(), config);
     }
 }

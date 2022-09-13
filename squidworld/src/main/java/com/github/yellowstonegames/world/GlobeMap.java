@@ -222,17 +222,17 @@ public class GlobeMap extends WorldMapGenerator {
         terrainBasic = terrainBasicNoise;
         terrainBasic.setFrequency(terrainBasic.getFrequency() * terrainLayeredFreq);
         terrainBasic.setNoiseType(terrainBasic.getNoiseType() | 1);
-        terrainBasic.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 8));
+        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
 
         heat = heatNoise;
         heat.setFrequency(heat.getFrequency() * heatFreq);
         heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 3));
+        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
 
         moisture = moistureNoise;
         moisture.setFrequency(moisture.getFrequency() * moistureFreq);
         moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 4));
+        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
 
         otherRidged = otherRidgedNoise;
         otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
