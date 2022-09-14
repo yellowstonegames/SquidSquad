@@ -160,6 +160,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            * 0.5f + 0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
                                     color -= MathTools.fastFloor(color);
 //                                    color *= color * 0.8125f;
+//                                    color = color * 0x0.FFp0f + 0x1p-8f;
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
                                 }
@@ -170,7 +171,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         for (int i = 0; i < 256; i++) {
 //                            float hue = 0.94f; // pink
 //                            float hue = 0.2f; // apricot
-                            float hue = 0.11f; // apricot
+                            float hue = 0.11f; // fire
 //                            float hue = 0.625f; // a soft blue
 //                            float hue = 0.475f; // bright green
 //                            float hue = 0.075f; // bright red
