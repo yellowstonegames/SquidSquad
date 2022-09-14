@@ -158,8 +158,6 @@ public class NoiseVisualizer extends ApplicationAdapter {
                                             x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))))
                                             ;
 //                                            * 0.5f + 0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
-                                    color -= MathTools.fastFloor(color);
-//                                    color *= color * 0.8125f;
 //                                    color = color * 0x0.FFp0f + 0x1p-8f;
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
