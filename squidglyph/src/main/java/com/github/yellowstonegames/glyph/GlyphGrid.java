@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.function.IntIntPredicate;
@@ -428,12 +429,12 @@ public class GlyphGrid extends Group {
         return new MoreActions.LenientSequenceAction(temporal, post == null ? null : Actions.run(post));
     }
 
-
     /**
-     * Create a new Glyph at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
-     * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+     * Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+     * using the char shown with the given startColor and startRotation, and immediately starts changing color
      * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
-     * complete before removing the GlyphActor.
+     * complete before removing the GlyphActor. This doesn't return any kind of Action because it handles the creating
+     * of a GlyphActor and its Actions on its own.
      * @param startX the starting x position in world coordinates
      * @param startY the starting y position in world coordinates
      * @param endX the ending x position in world coordinates
@@ -452,7 +453,7 @@ public class GlyphGrid extends Group {
         summon(0f, startX, startY, endX, endY, shown, startColor, endColor, startRotation, endRotation, duration, null);
     }
     /**
-     * Add a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+     * Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
      * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
      * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
      * complete before running postRunnable (if it is non-null) and finally removing the GlyphActor. This doesn't return
@@ -504,6 +505,66 @@ public class GlyphGrid extends Group {
             }
         });
         glyph.addAction(Actions.sequence(sequence));
+    }
+
+    /**
+     * Adds {@code count} new GlyphActors at (startX, startY) in world coordinates (which should have 1 world unit equal
+     * to 1 cell) using the char shown with the given startColor, and immediately starts changing color to endColor,
+     * changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+     * complete before finally removing the GlyphActors. The rotation of each GlyphActor this spawns will be different;
+     * the given startRotation applies to the always-created GlyphActor directly above the start, and the endRotation
+     * will be that GlyphActor's rotation when it is removed, but any other created GlyphActors will have their own
+     * rotations based on the direction they move in. This doesn't return any kind of Action because it handles the
+     * creating of a GlyphActor and its Actions on its own.
+     * @param startX the starting x position in world coordinates
+     * @param startY the starting y position in world coordinates
+     * @param distance how far away each GlyphActor should move away from the start, in world coordinates
+     * @param count how many chars to summon
+     * @param shown the char to show (the same char throughout the effect)
+     * @param startColor the starting Color
+     * @param endColor the Color to transition to
+     * @param startRotation the starting rotation for the top summoned glyph, in degrees
+     * @param endRotation the ending rotation for the top summoned glyph, in degrees
+     * @param duration the duration in seconds for the effect
+     */
+    public void burst(float startX, float startY, float distance, int count, char shown,
+                       final int startColor, final int endColor, final float startRotation, final float endRotation,
+                       float duration)
+    {
+        burst(0f, startX, startY, distance, count, shown, startColor, endColor, startRotation, endRotation, duration, null);
+    }
+    /**
+     * Adds {@code count} new GlyphActors at (startX, startY) in world coordinates (which should have 1 world unit equal
+     * to 1 cell) using the char shown with the given startColor, and after delay seconds, starts changing color to
+     * endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+     * complete before running postRunnable (if it is non-null) and finally removing the GlyphActors. The rotation of
+     * each GlyphActor this spawns will be different; the given startRotation applies to the always-created GlyphActor
+     * directly above the start, and the endRotation will be that GlyphActor's rotation when it is removed, but any
+     * other created GlyphActors will have their own rotations based on the direction they move in. This doesn't return
+     * any kind of Action because it handles the creating of a GlyphActor and its Actions on its own.
+     * @param delay how long to wait in seconds before starting the effect
+     * @param startX the starting x position in world coordinates
+     * @param startY the starting y position in world coordinates
+     * @param distance how far away each GlyphActor should move away from the start, in world coordinates
+     * @param shown the char to show (the same char throughout the effect)
+     * @param startColor the starting Color
+     * @param endColor the Color to transition to
+     * @param startRotation the starting rotation for the top summoned glyph, in degrees
+     * @param endRotation the ending rotation for the top summoned glyph, in degrees
+     * @param duration the duration in seconds for the effect
+     * @param postRunnable a Runnable to execute after the summoning completes; may be null to do nothing.
+     */
+    public void burst(float delay, float startX, float startY, float distance, int count, char shown,
+                       final int startColor, final int endColor, final float startRotation, final float endRotation,
+                       float duration, @Nullable Runnable postRunnable) {
+                    for (int i = 0; i < count; i++) {
+                        float angle = 360f * i / count + 90f;
+                        summon(delay, startX, startY, startX + TrigTools.cosDeg(angle) * distance, startY + TrigTools.sinDeg(angle) * distance,
+                                shown, startColor, endColor,
+                                angle - 90f + startRotation, angle - 90f + endRotation,
+                                duration, postRunnable);
+                    }
+
     }
 
 }
