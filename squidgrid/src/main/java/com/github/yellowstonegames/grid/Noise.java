@@ -1809,6 +1809,8 @@ public class Noise {
                         return singleFoamFractalBillow(x, y, z, w, u, v, mutation);
                     case RIDGED_MULTI:
                         return singleFoamFractalRidgedMulti(x, y, z, w, u, v, mutation);
+                    case DOMAIN_WARP:
+                        return singleFoamFractalDomainWarp(x, y, z, w, u, v, mutation);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u, v, mutation);
                 }
@@ -1820,6 +1822,8 @@ public class Noise {
                         return singleTaffyFractalBillow(x, y, z, w, u, v, mutation);
                     case RIDGED_MULTI:
                         return singleTaffyFractalRidgedMulti(x, y, z, w, u, v, mutation);
+                    case DOMAIN_WARP:
+                        return singleTaffyFractalDomainWarp(x, y, z, w, u, v, mutation);
                     default:
                         return singleTaffyFractalFBM(x, y, z, w, u, v, mutation);
                 }
@@ -3874,6 +3878,35 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float latest = singleFoam(seed, x, y, z, w, u, v, m);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            m = m * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
+            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e, v + f, m + g)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
 
     protected float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
         int seed = this.seed;
@@ -5039,6 +5072,35 @@ public class Noise {
 
             amp *= gain;
             sum += singleTaffy(++seed, x, y, z, w, u, v, m) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float latest = singleTaffy(seed, x, y, z, w, u, v, m);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            m = m * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
+            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e, v + f, m + g)) * amp;
         }
 
         return sum * fractalBounding;
