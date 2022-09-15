@@ -455,7 +455,8 @@ public class GlyphGrid extends Group {
      * Add a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
      * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
      * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
-     * complete before running postRunnable (if it is non-null) and finally removing the GlyphActor.
+     * complete before running postRunnable (if it is non-null) and finally removing the GlyphActor. This doesn't return
+     * any kind of Action because it handles the creating of a GlyphActor and its Actions on its own.
      * @param delay how long to wait in seconds before starting the effect
      * @param startX the starting x position in world coordinates
      * @param startY the starting y position in world coordinates
@@ -479,6 +480,7 @@ public class GlyphGrid extends Group {
         if (0 < delay)
             sequence[index++] = Actions.delay(delay);
         final GlyphActor glyph = new GlyphActor(shown, startColor, font);
+        glyph.setPosition(startX, startY);
         glyph.setRotation(startRotation);
         addActor(glyph);
         sequence[index++] = Actions.parallel(
