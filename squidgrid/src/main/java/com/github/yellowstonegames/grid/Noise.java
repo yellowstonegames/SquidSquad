@@ -1692,6 +1692,8 @@ public class Noise {
                         return singleFoamFractalBillow(x, y, z, w, u, mutation);
                     case RIDGED_MULTI:
                         return singleFoamFractalRidgedMulti(x, y, z, w, u, mutation);
+                    case DOMAIN_WARP:
+                        return singleFoamFractalDomainWarp(x, y, z, w, u, mutation);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u, mutation);
                 }
@@ -1703,6 +1705,8 @@ public class Noise {
                         return singleTaffyFractalBillow(x, y, z, w, u, mutation);
                     case RIDGED_MULTI:
                         return singleTaffyFractalRidgedMulti(x, y, z, w, u, mutation);
+                    case DOMAIN_WARP:
+                        return singleTaffyFractalDomainWarp(x, y, z, w, u, mutation);
                     default:
                         return singleTaffyFractalFBM(x, y, z, w, u, mutation);
                 }
@@ -1779,6 +1783,8 @@ public class Noise {
                         return singleValueFractalBillow(x, y, z, w, u, v);
                     case RIDGED_MULTI:
                         return singleValueFractalRidgedMulti(x, y, z, w, u, v);
+                    case DOMAIN_WARP:
+                        return singleValueFractalDomainWarp(x, y, z, w, u, v);
                     default:
                         return singleValueFractalFBM(x, y, z, w, u, v);
                 }
@@ -1790,6 +1796,8 @@ public class Noise {
                         return singleFoamFractalBillow(x, y, z, w, u, v);
                     case RIDGED_MULTI:
                         return singleFoamFractalRidgedMulti(x, y, z, w, u, v);
+                    case DOMAIN_WARP:
+                        return singleFoamFractalDomainWarp(x, y, z, w, u, v);
                     default:
                         return singleFoamFractalFBM(x, y, z, w, u, v);
                 }
@@ -1823,6 +1831,8 @@ public class Noise {
                         return singleHoneyFractalBillow(x, y, z, w, u, v);
                     case RIDGED_MULTI:
                         return singleHoneyFractalRidgedMulti(x, y, z, w, u, v);
+                    case DOMAIN_WARP:
+                        return singleHoneyFractalDomainWarp(x, y, z, w, u, v);
                     default:
                         return singleHoneyFractalFBM(x, y, z, w, u, v);
                 }
@@ -1845,6 +1855,8 @@ public class Noise {
                         return singleSimplexFractalBillow(x, y, z, w, u, v);
                     case RIDGED_MULTI:
                         return singleSimplexFractalRidgedMulti(x, y, z, w, u, v);
+                    case DOMAIN_WARP:
+                        return singleSimplexFractalDomainWarp(x, y, z, w, u, v);
                     default:
                         return singleSimplexFractalFBM(x, y, z, w, u, v);
                 }
@@ -2694,6 +2706,34 @@ public class Noise {
 
             amp *= gain;
             sum += singleValue(++seed, x, y, z, w, u, v) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleValueFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singleValue(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleValue(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
         }
 
         return sum * fractalBounding;
@@ -3670,6 +3710,34 @@ public class Noise {
 
             amp *= gain;
             sum += singleFoam(++seed, x, y, z, w, u, v) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singleFoam(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
         }
 
         return sum * fractalBounding;
@@ -4806,6 +4874,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singleTaffy(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
 
     protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
@@ -7090,6 +7186,34 @@ public class Noise {
 
         return sum * fractalBounding;
     }
+    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singleSimplex(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
     protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
@@ -8753,6 +8877,34 @@ public class Noise {
 
             amp *= gain;
             sum += singleHoney(++seed, x, y, z, w, u, v) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
+        int seed = this.seed;
+        float latest = singleHoney(seed, x, y, z, w, u, v);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleHoney(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
         }
 
         return sum * fractalBounding;
