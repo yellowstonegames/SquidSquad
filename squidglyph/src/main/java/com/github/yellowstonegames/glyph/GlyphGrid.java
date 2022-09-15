@@ -498,12 +498,7 @@ public class GlyphGrid extends Group {
             sequence[index++] = Actions.run(postRunnable);
         }
         /* Do this one last, so that hasActiveAnimations() returns true during 'postRunnables' */
-        sequence[index] = Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                removeActor(glyph);
-            }
-        });
+        sequence[index] = Actions.run(() -> removeActor(glyph));
         glyph.addAction(Actions.sequence(sequence));
     }
 
