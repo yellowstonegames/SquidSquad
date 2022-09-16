@@ -24,11 +24,7 @@ import javax.annotation.Nonnull;
 
 import com.github.tommyettinger.digital.Hasher;
 
-import static com.github.tommyettinger.digital.Hasher.b1;
-import static com.github.tommyettinger.digital.Hasher.b2;
-import static com.github.tommyettinger.digital.Hasher.b3;
-import static com.github.tommyettinger.digital.Hasher.b4;
-import static com.github.tommyettinger.digital.Hasher.randomize2;
+import static com.github.tommyettinger.digital.Hasher.*;
 
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
@@ -172,11 +168,13 @@ public class IntShuffler {
      * @param b any long
      * @return any long
      */
-    public static long fuse(long a, long b) {
+    public long fuse(long a, long b) {
         a *= b;
-        return a ^ a >>> 25 ^ a >>> 50;
+        return a ^ a >>> 32;
+//        return a ^ a >>> 25 ^ a >>> 50;
+//        return randomize3(a + randomize3(b));
     }
-    public static int round(long data, long seed)
+    public int round(long data, long seed)
     {
         return (int) (fuse(data + b1, seed - b2));
     }

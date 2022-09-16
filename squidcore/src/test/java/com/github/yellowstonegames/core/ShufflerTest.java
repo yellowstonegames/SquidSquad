@@ -79,30 +79,36 @@ public class ShufflerTest {
         }
     }
 
+    /**
+     * May take about a minute to run, possibly longer on older hardware.
+     */
     @Test
     public void testManyBounds() {
-        for (int bound = 3; bound <= 42; bound++) {
-            long seed = 123456789L;
-            IntShuffler is = new IntShuffler(bound, seed);
-            int[] buckets = new int[bound];
-            for (int i = 0; i < 1000000; i++) {
-                is.restart(seed++);
-                buckets[is.next()]++;
+        for (int outer = 0; outer < 50; outer++) {
+            for (int bound = 3; bound <= 42; bound++) {
+                long seed = Hasher.randomize3(outer);
+                IntShuffler is = new IntShuffler(bound, seed);
+                int[] buckets = new int[bound];
+                for (int i = 0; i < 1000000; i++) {
+                    is.restart(seed++);
+                    buckets[is.next()]++;
+                }
+                int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
+                for (int i = 0; i < bound; i++) {
+                    mn = Math.min(mn, buckets[i]);
+                    mx = Math.max(mx, buckets[i]);
+                }
+                if ((mx - mn) * bound >= 85000) {
+                    System.out.println("Got through: " + outer);
+                    System.out.println("Worst: " + (mx - mn) * bound);
+                    System.out.println("Bound: " + bound);
+                    System.out.println("Seed: " + seed);
+                    System.out.println("Max: " + mx);
+                    System.out.println("Min: " + mn);
+                    System.out.println(StringTools.join(", ", buckets));
+                }
+                Assert.assertTrue((mx - mn) * bound < 85000);
             }
-            int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
-            for (int i = 0; i < bound; i++) {
-                mn = Math.min(mn, buckets[i]);
-                mx = Math.max(mx, buckets[i]);
-            }
-            if((mx - mn) * bound >= 75000){
-                System.out.println("Worst: " + (mx - mn) * bound);
-                System.out.println("Bound: " + bound);
-                System.out.println("Seed: " + seed);
-                System.out.println("Max: " + mx);
-                System.out.println("Min: " + mn);
-                System.out.println(StringTools.join(", ", buckets));
-            }
-            Assert.assertTrue((mx - mn) * bound < 75000);
         }
     }
 
