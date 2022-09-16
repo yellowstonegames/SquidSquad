@@ -341,6 +341,21 @@ public class MoreActions {
     }
 
     /**
+     * Meant to be used with {@link GlyphGrid#summon(float, float, float, float, float, char, int, int, float, float, float, Interpolation, Runnable)}
+     * as its {@code moveRunnable}, this makes a summoned glyph take an "arc-like" path toward the target, where it is
+     * fast at the beginning and end of its motion and reaches the height of its arc at the center. This effect can also
+     * be achieved with {@link BiasGain} when its shape is less than 1.0, and with BiasGain you can change where the
+     * height of the arc is by raising or lowering the turning parameter. Using arcMoveInterpolation is still simplest.
+     */
+    public static Interpolation arcMoveInterpolation = new Interpolation() {
+        @Override
+        public float apply(float a) {
+            if (a <= 0.5f) return (1 - ((float)Math.pow(2f, -3f * (a * 2)) - 0.125f) * 1.1428572f) * 0.5f;
+            return (1 + (float) Math.pow(2f, 3f * (a * 2 - 2)) - 0.25f) * 0.5714286f;
+        }
+    };
+
+    /**
      * A wrapper around {@link MathTools#barronSpline(float, float, float)} to use it as an Interpolation.
      * Useful because it can imitate the wide variety of symmetrical Interpolations by setting turning to 0.5 and shape
      * to some value greater than 1, while also being able to produce the inverse of those interpolations by setting

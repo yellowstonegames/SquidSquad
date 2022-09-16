@@ -19,6 +19,7 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -66,10 +67,11 @@ public class GlyphGrid extends Group {
     protected Font font;
     public Viewport viewport;
     public int startX, startY, endX, endY;
+
     /**
      * Constructs a bare-bones GlyphGrid with size 64x64. Does not set {@link #font}, you will have to set it later.
      */
-    public GlyphGrid(){
+    public GlyphGrid() {
         this(null, 64, 64, false);
     }
 
@@ -77,9 +79,10 @@ public class GlyphGrid extends Group {
      * Constructs a 64x64 GlyphGrid with the specified Font. You probably want {@link #GlyphGrid(Font, int, int)} unless
      * your maps are always 64x64. This calls {@link #GlyphGrid(Font, int, int, boolean)} with
      * squareCenteredCells=false.
+     *
      * @param font a Font that will be copied and used for the new GlyphGrid
      */
-    public GlyphGrid(Font font){
+    public GlyphGrid(Font font) {
         this(font, 64, 64, false);
     }
 
@@ -87,21 +90,24 @@ public class GlyphGrid extends Group {
      * Constructs a GlyphGrid with the specified size in cells wide and cells tall for its grid, using the specified
      * Font (which will be copied). This calls {@link #GlyphGrid(Font, int, int, boolean)} with
      * squareCenteredCells=false.
-     * @param font a Font that will be copied and used for the new GlyphGrid
-     * @param gridWidth how many cells wide the grid should be
+     *
+     * @param font       a Font that will be copied and used for the new GlyphGrid
+     * @param gridWidth  how many cells wide the grid should be
      * @param gridHeight how many cells tall the grid should be
      */
     public GlyphGrid(Font font, int gridWidth, int gridHeight) {
         this(font, gridWidth, gridHeight, false);
     }
+
     /**
      * Constructs a GlyphGrid with the specified size in cells wide and cells tall for its grid, using the specified
      * Font (which will be copied). If squareCenteredGlyphs is true, the Font copy this uses will be modified to have
      * extra space around glyphs so that they fit in square cells. For fonts that use gridGlyphs (the default behavior),
      * any box drawing characters will still take up the full cell, and will connect seamlessly.
-     * @param font a Font that will be copied and used for the new GlyphGrid
-     * @param gridWidth how many cells wide the grid should be
-     * @param gridHeight how many cells tall the grid should be
+     *
+     * @param font                a Font that will be copied and used for the new GlyphGrid
+     * @param gridWidth           how many cells wide the grid should be
+     * @param gridHeight          how many cells tall the grid should be
      * @param squareCenteredCells if true, space will be added to make glyphs fit in square cells
      */
     public GlyphGrid(Font font, int gridWidth, int gridHeight, boolean squareCenteredCells) {
@@ -126,17 +132,20 @@ public class GlyphGrid extends Group {
      * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
      * to size 1x1 (this makes some calculations much easier inside GlyphGrid). This is the same as calling
      * {@code setFont(font, true)}.
+     *
      * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
      */
     public void setFont(Font font) {
         setFont(font, true);
     }
+
     /**
      * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
      * to size 1x1 (this makes some calculations much easier inside GlyphGrid). This can add spacing to cells so that
      * they are always square, while keeping the aspect ratio of {@code font} as it was passed in. Use squareCenter=true
      * to enable this; note that it modifies the Font more deeply than normally.
-     * @param font a Font that will be used directly (not copied) and used to calculate the viewport dimensions
+     *
+     * @param font         a Font that will be used directly (not copied) and used to calculate the viewport dimensions
      * @param squareCenter if true, spacing will be added to the sides of each glyph so that they fit in square cells
      */
     public void setFont(Font font, boolean squareCenter) {
@@ -150,8 +159,7 @@ public class GlyphGrid extends Group {
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
             float larger = Math.max(font.cellWidth, font.cellHeight);
             font.scaleTo(font.cellWidth / larger, font.cellHeight / larger).fitCell(1f, 1f, true);
-        }
-        else {
+        } else {
             if (font.distanceField == Font.DistanceFieldType.MSDF)
                 font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
 // not sure if we want this code or the above.
@@ -164,9 +172,9 @@ public class GlyphGrid extends Group {
     }
 
 
-
     /**
      * Gets how wide the grid is, measured in discrete cells.
+     *
      * @return how many cells wide the grid is
      */
     public int getGridWidth() {
@@ -175,6 +183,7 @@ public class GlyphGrid extends Group {
 
     /**
      * Gets how high the grid is, measured in discrete cells.
+     *
      * @return how many cells high the grid is
      */
     public int getGridHeight() {
@@ -186,12 +195,12 @@ public class GlyphGrid extends Group {
      * This is used to get the keys for a GlyphGrid given x,y inputs. Because jdkgdxds uses
      * Fibonacci hashing to scramble keys, there's no concern here from leaving all of x in
      * the lower half of the bits and all of y in the upper half.
+     *
      * @param x an up-to-15-bit non-negative int (between 0 and 32767, inclusive)
      * @param y an up-to-15-bit non-negative int (between 0 and 32767, inclusive)
      * @return a non-negative int that combines x and y into one value
      */
-    public static int fuse(final int x, final int y)
-    {
+    public static int fuse(final int x, final int y) {
         return (x & 0x7FFF) | (y << 16 & 0x7FFF0000);
     }
 
@@ -200,37 +209,40 @@ public class GlyphGrid extends Group {
      * non-negative result int. This is used to get the keys for a GlyphGrid given x,y inputs. Because
      * jdkgdxds uses Fibonacci hashing to scramble keys, there's no concern here from leaving all of
      * x in the lower half of the bits and all of y in the upper half.
+     *
      * @param xy a Coord with non-negative x and y
      * @return a non-negative int that combines the Coord's x and y into one value
      */
-    public static int fuse(final Coord xy)
-    {
+    public static int fuse(final Coord xy) {
         return (xy.x & 0x7FFF) | (xy.y << 16 & 0x7FFF0000);
     }
 
     /**
      * Given a fused x,y pair as an int (typically produced by {@link #fuse(int, int)}), this
      * gets the x component from it, as an int.
+     *
      * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
      * @return the x component of fused
      */
-    public static int extractX(int fused){
+    public static int extractX(int fused) {
         return fused & 0x7FFF;
     }
 
     /**
      * Given a fused x,y pair as an int (typically produced by {@link #fuse(int, int)}), this
      * gets the y component from it, as an int.
+     *
      * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
      * @return the y component of fused
      */
-    public static int extractY(int fused){
+    public static int extractY(int fused) {
         return fused >>> 16 & 0x7FFF;
     }
 
     /**
      * A convenience method that extracts the x and y components from {@code fused} and returns
      * them as a Coord.
+     *
      * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
      * @return
      */
@@ -240,8 +252,9 @@ public class GlyphGrid extends Group {
 
     /**
      * Places a character (optionally with style information) at the specified cell, using white foreground color.
-     * @param x x position of the cell, measured in cells on the grid
-     * @param y y position of the cell, measured in cells on the grid
+     *
+     * @param x         x position of the cell, measured in cells on the grid
+     * @param y         y position of the cell, measured in cells on the grid
      * @param codepoint the character, with or without style information, to place
      */
     public void put(int x, int y, int codepoint) {
@@ -250,10 +263,11 @@ public class GlyphGrid extends Group {
 
     /**
      * Places a character (optionally with style information) at the specified cell, using the given foreground color.
-     * @param x x position of the cell, measured in cells on the grid
-     * @param y y position of the cell, measured in cells on the grid
+     *
+     * @param x         x position of the cell, measured in cells on the grid
+     * @param y         y position of the cell, measured in cells on the grid
      * @param codepoint the character, with or without style information, to place
-     * @param color the RGBA8888 color to use for the character
+     * @param color     the RGBA8888 color to use for the character
      */
     public void put(int x, int y, int codepoint, int color) {
         map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
@@ -261,10 +275,11 @@ public class GlyphGrid extends Group {
 
     /**
      * Places a character (optionally with style information) at the specified cell, using the given foreground color.
-     * @param x x position of the cell, measured in cells on the grid
-     * @param y y position of the cell, measured in cells on the grid
+     *
+     * @param x          x position of the cell, measured in cells on the grid
+     * @param y          y position of the cell, measured in cells on the grid
      * @param simpleChar the character, without style information, to place
-     * @param color the RGBA8888 color to use for the character
+     * @param color      the RGBA8888 color to use for the character
      */
     public void put(int x, int y, char simpleChar, int color) {
         map.put(fuse(x, y), (simpleChar) | (long) color << 32);
@@ -272,8 +287,9 @@ public class GlyphGrid extends Group {
 
     /**
      * Places a glyph (optionally with style information and/or color) at the specified cell.
-     * @param x x position of the cell, measured in cells on the grid
-     * @param y y position of the cell, measured in cells on the grid
+     *
+     * @param x     x position of the cell, measured in cells on the grid
+     * @param y     y position of the cell, measured in cells on the grid
      * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
      */
     public void put(int x, int y, long glyph) {
@@ -283,26 +299,28 @@ public class GlyphGrid extends Group {
     /**
      * Places a glyph (optionally with style information and/or color) at the specified cell (given as a fused value).
      * This put() method has the least overhead if you already have a fused int key and long glyph.
+     *
      * @param fused a fused x,y position, as produced by {@link #fuse(int, int)}
      * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
      */
-    public void put(int fused, long glyph){
+    public void put(int fused, long glyph) {
         map.put(fused, glyph);
     }
 
     /**
      * Draws the entire GlyphGrid at its position in world units. Does no clipping.
+     *
      * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      */
     public void draw(Batch batch) {
         getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
-        if(backgrounds != null)
+        if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         IntList order = map.order();
-        for(int i = 0, n = order.size(); i < n; i++) {
+        for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             font.drawGlyph(batch, map.getAt(i), x + extractX(pos), y + extractY(pos));
         }
@@ -312,6 +330,7 @@ public class GlyphGrid extends Group {
     /**
      * Draws part of the GlyphGrid at its position in world units. Still iterates through all keys in order,
      * but only draws those that are visible in the given {@link Frustum} {@code limit}.
+     *
      * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      * @param limit a Frustum, usually obtained from {@link com.badlogic.gdx.graphics.Camera#frustum}, that delimits what will be rendered
      */
@@ -319,16 +338,16 @@ public class GlyphGrid extends Group {
         getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
-        if(backgrounds != null)
+        if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
         IntList order = map.order();
-        for(int i = 0, n = order.size(); i < n; i++) {
+        for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             xPos = x + extractX(pos);
             yPos = y + extractY(pos);
-            if(limit.boundsInFrustum(xPos, yPos, 0, boundsWidth, boundsHeight, 1f))
+            if (limit.boundsInFrustum(xPos, yPos, 0, boundsWidth, boundsHeight, 1f))
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
         super.drawChildren(batch, 1f);
@@ -342,17 +361,18 @@ public class GlyphGrid extends Group {
      * rectangle, and doesn't check keys or values outside it. This is probably the most efficient of the draw() methods
      * here, but requires you to know what the start and end bounds are. All of the start and end cell coordinates must
      * be non-negative.
-     * @param batch a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
+     *
+     * @param batch      a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
      * @param startCellX the inclusive x of the lower-left corner, measured in cells, to start rendering at
      * @param startCellY the inclusive y of the lower-left corner, measured in cells, to start rendering at
-     * @param endCellX the exclusive x of the upper-right corner, measured in cells, to stop rendering at
-     * @param endCellY the exclusive y of the upper-right corner, measured in cells, to stop rendering at
+     * @param endCellX   the exclusive x of the upper-right corner, measured in cells, to stop rendering at
+     * @param endCellY   the exclusive y of the upper-right corner, measured in cells, to stop rendering at
      */
     public void draw(Batch batch, int startCellX, int startCellY, int endCellX, int endCellY) {
         getStage().setViewport(viewport);
         font.enableShader(batch);
         float x = getX(), y = getY();
-        if(backgrounds != null)
+        if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         long glyph;
@@ -360,7 +380,7 @@ public class GlyphGrid extends Group {
             for (int yy = startCellY; yy < endCellY; yy++) {
                 pos = fuse(xx, yy);
                 glyph = map.getOrDefault(pos, 0L);
-                if((glyph & 0x000000FE00000000L) != 0L) // if pos was found and glyph is not transparent
+                if ((glyph & 0x000000FE00000000L) != 0L) // if pos was found and glyph is not transparent
                     font.drawGlyph(batch, glyph, x + xx * font.cellWidth, y + yy * font.cellHeight);
             }
         }
@@ -378,7 +398,8 @@ public class GlyphGrid extends Group {
      * This should generally be called in the {@link com.badlogic.gdx.ApplicationListener#resize(int, int)} or
      * {@link com.badlogic.gdx.Screen#resize(int, int)} method when the screen size changes. This affects the viewport
      * only.
-     * @param screenWidth the new screen width in pixels
+     *
+     * @param screenWidth  the new screen width in pixels
      * @param screenHeight the new screen height in pixels
      */
     public void resize(int screenWidth, int screenHeight) {
@@ -390,6 +411,7 @@ public class GlyphGrid extends Group {
      * Sets the visibility of each Actor child of this GlyphGrid based on the result of a predicate called on its x,y
      * grid position (rounded from its float position). If {@code predicate} returns true, an Actor will be set to be
      * visible, while if it returns false, the Actor will be set to be invisible.
+     *
      * @param predicate will be given the rounded x,y positions of Actors and should return true if the Actor is visible
      */
     public void setVisibilities(IntIntPredicate predicate) {
@@ -403,12 +425,13 @@ public class GlyphGrid extends Group {
 
     /**
      * Returns true if any children of this GlyphGrid currently have Actions, or false if none do.
+     *
      * @return whether any children of this GlyphGrid currently have Actions
      */
     public boolean areChildrenActing() {
         SnapshotArray<Actor> children = getChildren();
         for (int i = 0, n = children.size; i < n; i++) {
-            if(children.get(i).hasActions()) {
+            if (children.get(i).hasActions()) {
                 return true;
             }
         }
@@ -418,7 +441,7 @@ public class GlyphGrid extends Group {
     public MoreActions.LenientSequenceAction dyeFG(int x, int y, int newColor, float change, float duration, Runnable post) {
         final int fused = fuse(x, y);
         final long existing = map.getOrDefault(fused, 0),
-                next = (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int)(existing >>> 32), newColor, change) << 32;
+                next = (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int) (existing >>> 32), newColor, change) << 32;
         TemporalAction temporal = new TemporalAction() {
             @Override
             protected void update(float percent) {
@@ -435,29 +458,57 @@ public class GlyphGrid extends Group {
      * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
      * complete before removing the GlyphActor. This doesn't return any kind of Action because it handles the creating
      * of a GlyphActor and its Actions on its own.
-     * @param startX the starting x position in world coordinates
-     * @param startY the starting y position in world coordinates
-     * @param endX the ending x position in world coordinates
-     * @param endY the ending y position in world coordinates
-     * @param shown the char to show (the same char throughout the effect)
-     * @param startColor the starting Color
-     * @param endColor the Color to transition to
+     *
+     * @param startX        the starting x position in world coordinates
+     * @param startY        the starting y position in world coordinates
+     * @param endX          the ending x position in world coordinates
+     * @param endY          the ending y position in world coordinates
+     * @param shown         the char to show (the same char throughout the effect)
+     * @param startColor    the starting Color
+     * @param endColor      the Color to transition to
      * @param startRotation the starting rotation for the summoned glyph, in degrees
-     * @param endRotation the ending rotation for the summoned glyph, in degrees
-     * @param duration the duration in seconds for the effect
+     * @param endRotation   the ending rotation for the summoned glyph, in degrees
+     * @param duration      the duration in seconds for the effect
      */
     public void summon(float startX, float startY, float endX, float endY, char shown,
                        final int startColor, final int endColor, final float startRotation, final float endRotation,
-                       float duration)
-    {
+                       float duration) {
         summon(0f, startX, startY, endX, endY, shown, startColor, endColor, startRotation, endRotation, duration, null);
     }
+
     /**
      * Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
      * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
      * to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
      * complete before running postRunnable (if it is non-null) and finally removing the GlyphActor. This doesn't return
      * any kind of Action because it handles the creating of a GlyphActor and its Actions on its own.
+     *
+     * @param delay         how long to wait in seconds before starting the effect
+     * @param startX        the starting x position in world coordinates
+     * @param startY        the starting y position in world coordinates
+     * @param endX          the ending x position in world coordinates
+     * @param endY          the ending y position in world coordinates
+     * @param shown         the char to show (the same char throughout the effect)
+     * @param startColor    the starting Color
+     * @param endColor      the Color to transition to
+     * @param startRotation the starting rotation for the summoned glyph, in degrees
+     * @param endRotation   the ending rotation for the summoned glyph, in degrees
+     * @param duration      the duration in seconds for the effect
+     * @param postRunnable  a Runnable to execute after the summoning completes; may be null to do nothing.
+     */
+    public void summon(float delay, float startX, float startY, float endX, float endY, char shown,
+                       final int startColor, final int endColor, final float startRotation, final float endRotation,
+                       float duration, @Nullable Runnable postRunnable){
+        summon(delay, startX, startY, endX, endY, shown, startColor, endColor, startRotation, endRotation, duration,
+                Interpolation.linear, postRunnable);
+    }
+    /**
+     * Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+     * using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+     * to endColor, changing position using the given Interpolation so that it ends at the world coordinates (endX,
+     * endY), taking duration seconds to complete before running postRunnable (if it is non-null) and finally removing
+     * the GlyphActor. This doesn't return any kind of Action because it handles the creating of a GlyphActor and its
+     * Actions on its own.
      * @param delay how long to wait in seconds before starting the effect
      * @param startX the starting x position in world coordinates
      * @param startY the starting y position in world coordinates
@@ -469,11 +520,12 @@ public class GlyphGrid extends Group {
      * @param startRotation the starting rotation for the summoned glyph, in degrees
      * @param endRotation the ending rotation for the summoned glyph, in degrees
      * @param duration the duration in seconds for the effect
+     * @param moveInterpolation a non-null Interpolation that affects the rate at which the glyph moves
      * @param postRunnable a Runnable to execute after the summoning completes; may be null to do nothing.
      */
     public void summon(float delay, float startX, float startY, float endX, float endY, char shown,
                        final int startColor, final int endColor, final float startRotation, final float endRotation,
-                       float duration, @Nullable Runnable postRunnable)
+                       float duration, Interpolation moveInterpolation, @Nullable Runnable postRunnable)
     {
         final int nbActions = 2 + (0 < delay ? 1 : 0) + (postRunnable == null ? 0 : 1);
         int index = 0;
@@ -491,7 +543,7 @@ public class GlyphGrid extends Group {
                         glyph.setColor(DescriptiveColor.lerpColors(startColor, endColor, percent * 0.95f));
                     }
                 },
-                Actions.moveTo(endX, endY, duration),
+                Actions.moveTo(endX, endY, duration, moveInterpolation),
                 Actions.rotateTo(endRotation, duration));
         if(postRunnable != null)
         {
@@ -559,7 +611,6 @@ public class GlyphGrid extends Group {
                                 angle - 90f + startRotation, angle - 90f + endRotation,
                                 duration, postRunnable);
                     }
-
     }
 
 }
