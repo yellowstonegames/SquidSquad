@@ -16,11 +16,13 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Direction;
 
@@ -336,6 +338,50 @@ public class MoreActions {
 
     public static DelayAction wiggle(float strength, float duration, float delaySeconds, Runnable post) {
         return Actions.delay(delaySeconds, bump(strength, duration).conclude(post));
+    }
+
+    /**
+     * A wrapper around {@link MathTools#barronSpline(float, float, float)} to use it as an Interpolation.
+     * Useful because it can imitate the wide variety of symmetrical Interpolations by setting turning to 0.5 and shape
+     * to some value greater than 1, while also being able to produce the inverse of those interpolations by setting
+     * shape to some value between 0 and 1.
+     */
+    public static class BiasGain extends Interpolation {
+        /**
+         * The shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
+         * values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
+         * start like square root does, taking off very quickly, but also end like square does, landing abruptly at
+         * the ending level).
+         */
+        public final float shape;
+        /**
+         * A value between 0.0 and 1.0, inclusive, where the shape changes.
+         */
+        public final float turning;
+
+        /**
+         * Constructs a useful default BiasGain interpolation with a smoothstep-like shape.
+         * This has a shape of 2.0f and a turning of 0.5f .
+         */
+        public BiasGain() {
+            this(2f, 0.5f);
+        }
+
+        /**
+         * Constructs a BiasGain interpolation with the specified (positive) shape and specified turning (between 0 and
+         * 1 inclusive).
+         * @param shape must be positive; similar to a straight line when near 1, becomes smoothstep-like above 1, and
+         *              becomes shaped like transpose of smoothstep below 1
+         * @param turning where, between 0 and 1 inclusive, this should change from the starting curve to the ending one
+         */
+        public BiasGain (float shape, float turning) {
+            this.shape = Math.max(0.0001f, shape);
+            this.turning = Math.min(Math.max(turning, 0f), 1f);
+        }
+
+        public float apply (float a) {
+            return MathTools.barronSpline(a, shape, turning);
+        }
     }
 
 }
