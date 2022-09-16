@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
@@ -101,7 +103,7 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionAction with explicit settings for some fields. The valid cells this can affect will be
          * the full expanse of the GlyphGrid.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param duration the duration of this GridAction in seconds, as a float
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -118,8 +120,8 @@ public abstract class GridAction extends TemporalAction {
         /**
          * Constructs an ExplosionAction with explicit settings for most fields.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -141,8 +143,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using fiery/smoke colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring an IntList of RGBA8888 colors that will replace the default fire/smoke colors here
@@ -161,8 +163,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using fiery/smoke colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring an array of RGBA8888 int colors that will replace the default fire/smoke colors here
@@ -180,8 +182,8 @@ public abstract class GridAction extends TemporalAction {
          * an explosion is directed in a cone or sector shape. It will center the sector on {@code angle} (in degrees)
          * and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -207,8 +209,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -231,8 +233,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -378,7 +380,7 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
          * the full expanse of the GlyphGrid.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param duration the duration of this GridAction in seconds, as a float
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -390,7 +392,7 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
          * the full expanse of the GlyphGrid.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
+         * @param duration the duration of this GridAction in seconds, as a float
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -402,8 +404,8 @@ public abstract class GridAction extends TemporalAction {
         /**
          * Constructs an ExplosionEffect with explicit settings for most fields.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -415,8 +417,8 @@ public abstract class GridAction extends TemporalAction {
         /**
          * Constructs an ExplosionEffect with explicit settings for most fields.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
@@ -431,8 +433,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
@@ -445,8 +447,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring a List of Color or subclasses thereof that will replace the default purple spark colors here
@@ -461,8 +463,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
@@ -475,8 +477,8 @@ public abstract class GridAction extends TemporalAction {
          * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param coloring an array of colors as packed floats that will replace the default purple spark colors here
@@ -491,8 +493,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -511,8 +513,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -529,8 +531,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -549,8 +551,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -567,8 +569,8 @@ public abstract class GridAction extends TemporalAction {
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
-         * @param duration the duration of this PanelEffect in seconds, as a float
-         * @param valid the valid cells that can be changed by this PanelEffect, as a Region
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          * @param angle the angle, in degrees, that will be the center of the sector-shaped effect
@@ -713,5 +715,159 @@ public abstract class GridAction extends TemporalAction {
             }
         }
     }
+    public static class ProjectileEffect extends GridAction
+    {
+        /**
+         * Normally you should set this in the constructor, and not change it later.
+         */
+        public Coord startPoint;
+        /**
+         * Normally you should set this in the constructor, and not change it later.
+         */
+        public Coord endPoint;
+
+        /**
+         * The char to show at each stage of the projectile's path; defaults to a Unicode bullet symbol, '·'.
+         */
+        public char shown = '·';
+        /**
+         * The color used for the projectile as an RGBA8888 int; defaults to white.
+         */
+        public int color = DescriptiveColor.WHITE;
+        /**
+         * The raw list of Coords that might be affected by the projectile, or are on its (potential) path. You can edit
+         * this if you need to, but it isn't recommended; because it is an array you would need to assign a new Coord
+         * array if the length changes.
+         */
+        public Coord[] affected;
+        /**
+         * Constructs a ProjectileEffect with explicit settings for some fields. The valid cells this can affect will be
+         * the full expanse of the GlyphGrid. The duration will be 1 second.
+         * @param targeting the GlyphGrid to affect
+         * @param startPoint the starting point of the projectile; may be best if it is adjacent to whatever fires it
+         * @param endPoint the point to try to hit with the projectile; this should always succeed with no obstructions
+         */
+        public ProjectileEffect(GlyphGrid targeting, Coord startPoint, Coord endPoint)
+        {
+            this(targeting, 1f, startPoint, endPoint);
+        }
+        /**
+         * Constructs a ProjectileEffect with explicit settings for some fields. The valid cells this can affect will be
+         * the full expanse of the GlyphGrid.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param startPoint the starting point of the projectile; may be best if it is adjacent to whatever fires it
+         * @param endPoint the point to try to hit with the projectile; this should always succeed with no obstructions
+         */
+        public ProjectileEffect(GlyphGrid targeting, float duration, Coord startPoint, Coord endPoint)
+        {
+            super(targeting, duration);
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
+            affected = BresenhamLine.lineArray(startPoint, endPoint);
+        }
+        /**
+         * Constructs a ProjectileEffect with explicit settings for most fields.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
+         * @param startPoint the starting point of the projectile; may be best if it is adjacent to whatever fires it
+         * @param endPoint the point to try to hit with the projectile; this may not be reached if the path crosses a cell not in valid
+         */
+        public ProjectileEffect(GlyphGrid targeting, float duration, Region valid, Coord startPoint, Coord endPoint)
+        {
+            super(targeting, duration, valid);
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
+            affected = BresenhamLine.lineArray(startPoint, endPoint);
+            for (int i = 0; i < affected.length; i++) {
+                if(!this.valid.contains(affected[i]))
+                    affected[i] = null;
+            }
+        }
+
+        /**
+         * Constructs a ProjectileEffect with explicit settings for most fields but also an alternate Color
+         * object for the projectile instead of the default white color.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
+         * @param startPoint the starting point of the projectile; may be best if it is adjacent to whatever fires it
+         * @param endPoint the point to try to hit with the projectile; this may not be reached if the path crosses a cell not in valid
+         * @param shown the char to show at each step of the projectile's path as it advances
+         * @param coloring a Color or subclass thereof that will replace the default white color here
+         */
+        public ProjectileEffect(GlyphGrid targeting, float duration, Region valid, Coord startPoint, Coord endPoint, char shown, Color coloring)
+        {
+            this(targeting, duration, valid, startPoint, endPoint);
+            this.shown = shown;
+            if(coloring != null)
+                color = Color.rgba8888(coloring);
+        }
+
+        /**
+         * Constructs a ProjectileEffect with explicit settings for most fields but also an alternate Color
+         * object for the projectile instead of the default white color.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
+         * @param startPoint the starting point of the projectile; may be best if it is adjacent to whatever fires it
+         * @param endPoint the point to try to hit with the projectile; this may not be reached if the path crosses a cell not in valid
+         * @param shown the char to show at each step of the projectile's path as it advances
+         * @param coloring an array of colors as packed floats that will replace the default white color here
+         */
+        public ProjectileEffect(GlyphGrid targeting, float duration, Region valid, Coord startPoint, Coord endPoint, char shown, int coloring)
+        {
+            this(targeting, duration, valid, startPoint, endPoint);
+            this.shown = shown;
+            color = coloring;
+        }
+
+        /**
+         * Makes this ProjectileEffect take an "arc-like" path toward the target, where it is fast at the
+         * beginning and end of its motion and is reaching the height of its arc at the center.
+         */
+        public void useArcPathInterpolation()
+        {
+            setInterpolation(fastInSlowMidFastOut);
+        }
+
+        /**
+         * Makes this ProjectileEffect take a direct path to the target, traveling at uniform speed throughout its path.
+         */
+        public void useStraightPathInterpolation()
+        {
+            setInterpolation(Interpolation.linear);
+        }
+        /**
+         * Called each frame.
+         *
+         * @param percent The percentage of completion for this action, growing from 0 to 1 over the duration. If
+         *                {@link #setReverse(boolean) reversed}, this will shrink from 1 to 0.
+         */
+        @Override
+        protected void update(float percent) {
+            int len = affected.length, index = (int)((len - 1) * percent);
+            if(index < 0 || index >= len) return;
+            Coord c = affected[index];
+            if(c != null)
+            {
+                grid.put(c.x, c.y, shown, color);
+            }
+            else {
+                for (int i = index + 1; i < len; i++) {
+                    affected[i] = null;
+                }
+            }
+        }
+    }
+
+    public static Interpolation fastInSlowMidFastOut = new Interpolation() {
+        @Override
+        public float apply(float a) {
+            if (a <= 0.5f) return (1 - ((float)Math.pow(2f, -3f * (a * 2)) - 0.125f) * 1.1428572f) * 0.5f;
+            return (1 + (float) Math.pow(2f, 3f * (a * 2 - 2)) - 0.25f) * 0.5714286f;
+        }
+    };
 
 }
