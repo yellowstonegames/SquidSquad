@@ -9,6 +9,11 @@
   -->
 <module>
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
+    <inherits name="funderby" />
+    <inherits name="digital" />
+    <inherits name="juniper" />
+    <inherits name="jdkgdxds" />
+    <inherits name="regexodus"/>
     <inherits name="squidcore" />
     <inherits name="squidgrid" />
     <source path="com/github/yellowstonegames/smooth" />

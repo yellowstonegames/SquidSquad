@@ -8,6 +8,11 @@
     <inherits name="squidpath" />
   -->
 <module>
+    <inherits name="funderby" />
+    <inherits name="digital" />
+    <inherits name="juniper" />
+    <inherits name="jdkgdxds" />
+    <inherits name="regexodus"/>
     <inherits name="squidgrid" />
     <source path="com/github/yellowstonegames/path" />
 </module>

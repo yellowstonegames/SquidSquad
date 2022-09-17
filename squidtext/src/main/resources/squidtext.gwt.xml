@@ -9,5 +9,10 @@
   -->
 <module>
     <inherits name="squidcore" />
+    <inherits name="funderby" />
+    <inherits name="digital" />
+    <inherits name="juniper" />
+    <inherits name="jdkgdxds" />
+    <inherits name="regexodus"/>
     <source path="com/github/yellowstonegames/text" />
 </module>
