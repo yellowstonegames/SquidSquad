@@ -28,9 +28,9 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
+    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 2);
     private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
-    private int octaves = 1;
+    private int octaves = 2;
     private float freq = 1f;
     private boolean inverse;
     private ImmediateModeRenderer20 renderer;
@@ -174,11 +174,15 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hue = 0.625f; // a soft blue
 //                            float hue = 0.45f; // bright green
 //                            float hue = 0.425f; // Brazil green
-                            float hue = 0.08f; // bright red
-                            int hiLo = Math.round(MathTools.cube(MathTools.swayTight(i * 0x1p-6f + 1f)));
+//                            float hue = 0.08f; // bright red
+                            float hueBase = 0.675f; // a slightly violet-ish blue
+                            float hueHigh = 0.15f; // apricot
+//                            float hueHigh = 0.27f; // gold
+                            int hiLo = Math.round(MathTools.square((MathTools.swayTight(i * 0x1p-6f + 1f))));
                             gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
-                                            hiLo * 0.19f + hue, // red to gold
+                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // red to gold
+//                                            hiLo * 0.19f + hue, // red to gold
 //                                            (i & 255) * 0x1p-12f - 0x1p-5f + hue, // small hue variation
 //                                            (i & 255) * 0x1p-11f - 0x3p-7f + hue, // smallish hue variation
 //                                            (i & 127) * 0x1p-7f + hue, // widest hue variation
@@ -186,9 +190,13 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
 //                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
 //                                            1f - (i + 90 & 255) * 0x1p-11f,
-                                            1f - (i + 90 & 255) * 0x1p-13f,
-                                            hiLo == 1 && i < 160 ? 0.6f + (i * 0x1p-9f) :
-                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
+//                                            1f - (i + 90 & 255) * 0x1p-13f,
+//                                            1f - (i & 255) * 0x1p-13f,
+                                            1f,
+                                            hiLo == 1 && i < 160 ? 0.5f + (i * 0x1p-9f) :
+//                                            hiLo == 1 && i < 160 ? 0.6f + (i * 0x1p-9f) :
+                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
+//                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.4f), // biased
 //                                            (i * i * 0x1p-16f), //very dark
 //                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
