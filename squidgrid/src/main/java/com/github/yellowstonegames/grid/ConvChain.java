@@ -174,14 +174,14 @@ public class ConvChain {
         float[] weights = new float[1 << (N * N)];
         for (int x = 0; x < sample.width; x++) {
             for (int y = 0; y < sample.height; y++) {
-                weights[Pattern.index(sample, x, y, N, false, false, false)]++;
-                weights[Pattern.index(sample, x, y, N, false, true, true)]++;
-                weights[Pattern.index(sample, x, y, N, true, true, false)]++;
-                weights[Pattern.index(sample, x, y, N, true, false, true)]++;
-                weights[Pattern.index(sample, x, y, N, true, false, false)]++;
-                weights[Pattern.index(sample, x, y, N, true, true, true)]++;
-                weights[Pattern.index(sample, x, y, N, false, true, false)]++;
-                weights[Pattern.index(sample, x, y, N, false, false, true)]++;
+                weights[index(sample, x, y, false, false, false)]++;
+                weights[index(sample, x, y, false, true, true)]++;
+                weights[index(sample, x, y, true, true, false)]++;
+                weights[index(sample, x, y, true, false, true)]++;
+                weights[index(sample, x, y, true, false, false)]++;
+                weights[index(sample, x, y, true, true, true)]++;
+                weights[index(sample, x, y, false, true, false)]++;
+                weights[index(sample, x, y, false, false, true)]++;
             }
         }
 
@@ -246,420 +246,351 @@ public class ConvChain {
         return field;
     }
 
-    private static class Pattern {
-        public boolean[][] data;
-
-
-        Pattern(boolean[][] exact) {
-            data = exact;
-        }
-
-        Pattern(boolean[][] field, int x, int y, int size) {
-            data = new boolean[size][size];
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    data[i][j] =
-                            field[(x + i + field.length) % field.length][(y + j + field[0].length) % field[0].length];
+    private static int index(Region field, int x, int y, boolean flipX, boolean flipY, boolean swap) {
+        int result = 0;
+        int width = field.width, height = field.height;
+        if(swap)
+        {
+            for (int i = 0; i < ConvChain.N; i++) {
+                for (int j = 0; j < ConvChain.N; j++) {
+                    if(field.contains((height * 2 + (flipY ? -(y + j) : (y + j))) % height,
+                            (width * 2 + (flipX ? -(x + i) : (x + i))) % width))
+                        result += 1 << (j * ConvChain.N + i);
                 }
             }
         }
-
-        Pattern rotate() {
-            boolean[][] next = new boolean[data.length][data.length];
-            for (int x = 0; x < data.length; x++) {
-                for (int y = 0; y < data.length; y++) {
-                    next[data.length - 1 - y][x] = data[x][y];
+        else
+        {
+            for (int i = 0; i < ConvChain.N; i++) {
+                for (int j = 0; j < ConvChain.N; j++) {
+                    if(field.contains((width * 2 + (flipX ? -(x + i) : (x + i))) % width,
+                            (height * 2 + (flipY ? -(y + j) : (y + j))) % height))
+                        result += 1 << (j * ConvChain.N + i);
                 }
             }
-            return new Pattern(next);
         }
-
-        Pattern reflect() {
-            boolean[][] next = new boolean[data.length][data.length];
-            for (int x = 0; x < data.length; x++) {
-				System.arraycopy(data[x], 0, next[data.length - 1 - x], 0, data.length);
-            }
-            return new Pattern(next);
-        }
-
-        int index() {
-            int result = 0, power = 1;
-            for (int y = 0; y < data.length; y++) {
-                for (int x = 0; x < data.length; x++) {
-                    result += data[data.length - 1 - x][data.length - 1 - y] ? power : 0;
-                    power <<= 1;
-                }
-            }
-            return result;
-        }
-
-        static int index(boolean[][] field, int x, int y, int size) {
-            int result = 0;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (field[(x + i + field.length) % field.length][(y + j + field[0].length) % field[0].length])
-                        result += 1 << (j * size + i);
-                }
-            }
-            return result;
-        }
-        
-        static int index(boolean[][] field, int x, int y, int size, boolean flipX, boolean flipY, boolean swap) {
-            int result = 0;
-            int width = field.length, height = field[0].length;
-            if(swap)
-            {
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if(field[(height * 2 + (flipY ? -(y + j) : (y + j))) % height]
-                                [(width * 2 + (flipX ? -(x + i) : (x + i))) % width])
-                            result += 1 << (j * size + i);
-                    }
-                }
-            }
-            else 
-            {
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if(field[(width * 2 + (flipX ? -(x + i) : (x + i))) % width]
-                                [(height * 2 + (flipY ? -(y + j) : (y + j))) % height])
-                            result += 1 << (j * size + i);
-                    }
-                }
-            }
-            return result;
-        }
+        return result;
     }
+
 
     /**
      * Predefined sample; many small separate squares.
      */
-    public static final boolean[][] boulders = new boolean[][]{
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,false ,false ,true  ,true  ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,false ,false ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,false ,false ,true  },
-            new boolean[]{true  ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,false ,false ,true  },
-            new boolean[]{true  ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  }
-    };
+    public static final Region boulders = new Region(new char[][]{
+            "...........##...".toCharArray(),
+            "..##..##...##...".toCharArray(),
+            "..##..##........".toCharArray(),
+            ".........##..##.".toCharArray(),
+            "...##.##.##..##.".toCharArray(),
+            "...##.##........".toCharArray(),
+            "##..............".toCharArray(),
+            "##..##.##.......".toCharArray(),
+            "....##.##...##..".toCharArray(),
+            ".##.........##..".toCharArray(),
+            ".##.##..........".toCharArray(),
+            "....##...##.....".toCharArray(),
+            ".........##.##..".toCharArray(),
+            ".##...##....##..".toCharArray(),
+            ".##...##........".toCharArray(),
+            "................".toCharArray()
+    }, '.');
 
     /**
-     * Predefined sample; a large, enclosed, organic space that usually makes large cave-like rooms,
+     * Predefined sample; a large, enclosed, organic space that usually makes large cave-like rooms.
      */
-    public static final boolean[][] cave = new boolean[][]{
-            new boolean[]{false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false },
-            new boolean[]{false , false , false , false , true  , false , false , false , false , true  , false , false , false , false , false , false },
-            new boolean[]{false , false , false , true  , true  , true  , false , false , true  , true  , true  , true  , true  , true  , false , false },
-            new boolean[]{false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false , false , false },
-            new boolean[]{false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false },
-            new boolean[]{false , false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false },
-            new boolean[]{false , false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false , false },
-            new boolean[]{false , false , false , false , true  , true  , true  , true  , true  , true  , true  , true  , false , false , false , false },
-            new boolean[]{false , false , false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false , false },
-            new boolean[]{false , false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false },
-            new boolean[]{false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false , false },
-            new boolean[]{false , false , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , true  , false },
-            new boolean[]{false , false , false , true  , true  , true  , true  , true  , false , false , true  , true  , true  , true  , true  , false },
-            new boolean[]{false , false , false , false , true  , true  , true  , false , false , false , false , true  , true  , false , false , false },
-            new boolean[]{false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false },
-            new boolean[]{false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false }
-    };
+    public static final Region cave = new Region(new char[][]{
+            "################".toCharArray(),
+            "####.####.######".toCharArray(),
+            "###...##......##".toCharArray(),
+            "##..........####".toCharArray(),
+            "##............##".toCharArray(),
+            "###............#".toCharArray(),
+            "###..........###".toCharArray(),
+            "####........####".toCharArray(),
+            "####.........###".toCharArray(),
+            "###...........##".toCharArray(),
+            "##............##".toCharArray(),
+            "##.............#".toCharArray(),
+            "###.....##.....#".toCharArray(),
+            "####...####..###".toCharArray(),
+            "################".toCharArray(),
+            "################".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; several medium-sized organic spaces that usually make tight, chaotic tunnels.
      */
-    public static final boolean[][] caves = new boolean[][]{
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false }
-    };
+    public static final Region caves = new Region(new char[][]{
+            "###.########.###".toCharArray(),
+            "###.#######..###".toCharArray(),
+            "##...######..###".toCharArray(),
+            "#.....####....##".toCharArray(),
+            "#..............#".toCharArray(),
+            "........#.......".toCharArray(),
+            "##.....###....##".toCharArray(),
+            "###...#####..###".toCharArray(),
+            "####..#####.####".toCharArray(),
+            "####.#####...###".toCharArray(),
+            "##....###.....##".toCharArray(),
+            "#..............#".toCharArray(),
+            ".......##.......".toCharArray(),
+            "#.....###.....##".toCharArray(),
+            "##....####....##".toCharArray(),
+            "###.########.###".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; a checkerboard pattern that typically loses recognition as such after generation.
      */
-    public static final boolean[][] chess = new boolean[][]{
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  }
-    };
+    public static final Region chess = new Region(new char[][]{
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray(),
+            ".#.#.#.#.#.#.#.#".toCharArray(),
+            "#.#.#.#.#.#.#.#.".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces rectangular rooms with small corridors between them.
      */
-    public static final boolean[][] lessRooms = new boolean[][]{
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false }
-    };
+    public static final Region lessRooms = new Region(new char[][]{
+            "###.########.###".toCharArray(),
+            "###.#####......#".toCharArray(),
+            "###.#####......#".toCharArray(),
+            "###.#####......#".toCharArray(),
+            "##.............#".toCharArray(),
+            "...######.......".toCharArray(),
+            "##.######......#".toCharArray(),
+            "##.######......#".toCharArray(),
+            "##.########.####".toCharArray(),
+            "##.########.####".toCharArray(),
+            "##......###.####".toCharArray(),
+            "........###.....".toCharArray(),
+            "##...........###".toCharArray(),
+            "##......####.###".toCharArray(),
+            "##......####.###".toCharArray(),
+            "###.########.###".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces a suitable filler for a maze (but it is unlikely to connect both ends like a maze).
      */
-    public static final boolean[][] maze = new boolean[][]{
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,false ,true  ,true  ,false },
-            new boolean[]{true  ,false ,false ,false ,true  ,false ,true  ,true  ,false ,true  ,false ,false ,false ,false ,false ,false },
-            new boolean[]{true  ,false ,true  ,true  ,true  ,false ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,false ,true  },
-            new boolean[]{true  ,false ,false ,false ,false ,false ,true  ,false ,true  ,true  ,true  ,true  ,false ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,false ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,true  ,false ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,true  ,false ,true  ,false ,true  ,false ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,false ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,true  },
-            new boolean[]{true  ,true  ,false ,true  ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{true  ,false ,false ,true  ,false ,true  ,false ,true  ,false ,true  ,true  ,false ,true  ,false ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,false ,false ,false ,true  ,false ,false ,true  ,false ,true  ,false ,false ,true  },
-            new boolean[]{false ,false ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,false },
-            new boolean[]{true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  ,false }
-    };
+    public static final Region maze = new Region(new char[][]{
+            ".....####...#..#".toCharArray(),
+            ".###.#..#.######".toCharArray(),
+            ".#...#.####...#.".toCharArray(),
+            ".#####.#....#.##".toCharArray(),
+            "...#...####.###.".toCharArray(),
+            "######....#.#.##".toCharArray(),
+            ".....#..#.#.#.#.".toCharArray(),
+            "######..#...#.#.".toCharArray(),
+            "........#####.##".toCharArray(),
+            "###.###..#....#.".toCharArray(),
+            "..#.#...########".toCharArray(),
+            ".##.#.#.#..#.#..".toCharArray(),
+            "....###.##.#.##.".toCharArray(),
+            "##..#......#..##".toCharArray(),
+            ".########..##..#".toCharArray(),
+            "........#...#..#".toCharArray()
+    }, '.');
 
     /**
-     * Predefined sample; produces weird, large areas of "true" and "false" that suddenly change to the other.
+     * Predefined sample; produces weird, large areas of "on" and "off" that suddenly change to the other.
      */
-    public static final boolean[][] quarterBlack = new boolean[][]{
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  }
-    };
+    public static final Region quarterBlack = new Region(new char[][]{
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray(),
+            "####............".toCharArray()
+    }, '.');
 
     /**
-     * Predefined sample; produces multiple directions of flowing, river-like shapes made of "false".
+     * Predefined sample; produces multiple directions of flowing, river-like shapes made of "off".
      */
-    public static final boolean[][] river = new boolean[][]{
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  }
-    };
+    public static final Region river = new Region(new char[][]{
+            "......###.......".toCharArray(),
+            "......###.......".toCharArray(),
+            ".......###......".toCharArray(),
+            ".......###......".toCharArray(),
+            ".......###......".toCharArray(),
+            "........###.....".toCharArray(),
+            "........###.....".toCharArray(),
+            "........###.....".toCharArray(),
+            ".......###......".toCharArray(),
+            ".......###......".toCharArray(),
+            "......###.......".toCharArray(),
+            "......###.......".toCharArray(),
+            ".....###........".toCharArray(),
+            ".....###........".toCharArray(),
+            "......###.......".toCharArray(),
+            "......###.......".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces rectangular rooms with a dense packing.
      */
-    public static final boolean[][] rooms = new boolean[][]{
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false }
-    };
+    public static final Region rooms = new Region(new char[][]{
+            "###.########.###".toCharArray(),
+            "###.#####......#".toCharArray(),
+            "#.....###......#".toCharArray(),
+            "#.....###......#".toCharArray(),
+            "#..............#".toCharArray(),
+            "......###.......".toCharArray(),
+            "#.....###......#".toCharArray(),
+            "##.######......#".toCharArray(),
+            "##.########.####".toCharArray(),
+            "##.########.####".toCharArray(),
+            "##......##....##".toCharArray(),
+            "........##......".toCharArray(),
+            "##............##".toCharArray(),
+            "##......##....##".toCharArray(),
+            "##......####.###".toCharArray(),
+            "###.########.###".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces an uncanny imitation of a maze with a tiny sample size.
      */
-    public static final boolean[][] simpleMaze = new boolean[][]{
-            new boolean[]{true  ,true  ,true  ,true  },
-            new boolean[]{true  ,false ,false ,false },
-            new boolean[]{true  ,false ,true  ,false },
-            new boolean[]{true  ,false ,false ,false }
-    };
+    public static final Region simpleMaze = new Region(new char[][]{
+            "....".toCharArray(),
+            ".###".toCharArray(),
+            ".#.#".toCharArray(),
+            ".###".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces mostly rectangular rooms with very few corridor-like areas.
      */
-    public static final boolean[][] simpleRooms = new boolean[][]{
-            new boolean[]{false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false }
-    };
+    public static final Region simpleRooms = new Region(new char[][]{
+            "#####.#####".toCharArray(),
+            "#####.#####".toCharArray(),
+            "##.......##".toCharArray(),
+            "##.......##".toCharArray(),
+            "##.......##".toCharArray(),
+            "...........".toCharArray(),
+            "##.......##".toCharArray(),
+            "##.......##".toCharArray(),
+            "##.......##".toCharArray(),
+            "#####.#####".toCharArray(),
+            "#####.#####".toCharArray()
+    }, '.');
 
     /**
      * Predefined sample; produces largely rectangular rooms with a good amount of thin corridors.
      */
-    public static final boolean[][] thickWalls = new boolean[][]{
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false }
-    };
+    public static final Region thickWalls = new Region(new char[][]{
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray(),
+            "####.......####".toCharArray(),
+            "####.......####".toCharArray(),
+            "####.......####".toCharArray(),
+            "...............".toCharArray(),
+            "####.......####".toCharArray(),
+            "####.......####".toCharArray(),
+            "####.......####".toCharArray(),
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray(),
+            "#######.#######".toCharArray()
+    }, '.');
 
-    public static final boolean[][] ruins = new boolean[][]{
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  },
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,true  ,true  ,false ,false ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,false ,false ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,false ,false ,false ,true  ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,true  ,false ,false ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,false ,false ,false ,false ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,false },
-            new boolean[]{false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,false ,false ,false ,true  ,false ,false ,false ,false ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,false ,false ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,false ,false ,true  ,false ,false ,true  ,false ,false ,false ,false ,true  ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,false },
-            new boolean[]{false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{false ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-    };
+    public static final Region ruins = new Region(new char[][]{
+            "#.#####..........#########......".toCharArray(),
+            "#.#####..######.......########..".toCharArray(),
+            "#.######.######..###............".toCharArray(),
+            "#.....##.######......#######.##.".toCharArray(),
+            "#......#.######.###.####.....##.".toCharArray(),
+            "#...............###.###......##.".toCharArray(),
+            "......####..........####........".toCharArray(),
+            "#.##.......##.......####....####".toCharArray(),
+            "#.########..#......#######..####".toCharArray(),
+            "#.########........########..####".toCharArray(),
+            "...###........##.#########......".toCharArray(),
+            "...####.......############..####".toCharArray(),
+            "...####.......####..#####...####".toCharArray(),
+            "...####......######.#######.##..".toCharArray(),
+            "#######....#.##.###.#######.....".toCharArray(),
+            "#########.##.##.###.######..####".toCharArray(),
+            "#########.#..##.###.........####".toCharArray(),
+            "####.####.##.##.###...#.....####".toCharArray(),
+            "###..####.##.##..###..#.##.#####".toCharArray(),
+            "###..####.##.##..####.#.##.#####".toCharArray(),
+            "####.##.#.##.###.####.#.##.###.#".toCharArray(),
+            "#.##.......#.###.####.#....###.#".toCharArray(),
+            ".......##.##..........########..".toCharArray(),
+            "........#.##.###......#####.....".toCharArray(),
+            "######.##.##.####.##..##########".toCharArray(),
+            "######.##.....######..####...###".toCharArray(),
+            "######.####...######..####...###".toCharArray(),
+            "........###...######...###......".toCharArray(),
+            "######.......####...........##.#".toCharArray(),
+            "###.......########.#######...###".toCharArray(),
+            "#######..#########.#######...###".toCharArray(),
+            "#.#####..######....#####........".toCharArray(),
+    }, '.');
 
-    public static final boolean[][] openRooms = new boolean[][]{
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  },
-            new boolean[]{true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false },
-            new boolean[]{false ,false ,false ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,true  ,true  ,true  ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,false ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,false ,true  ,true  },
-            new boolean[]{true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-            new boolean[]{true  ,false ,false ,false ,false ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,false ,false ,false ,false ,false ,true  ,true  ,false ,false ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  ,true  },
-    };
+    public static final Region openRooms = new Region(new char[][]{
+            "......#......#......##..........".toCharArray(),
+            "......#.........................".toCharArray(),
+            "....###...............####......".toCharArray(),
+            "....###...##..........#..#...#..".toCharArray(),
+            "..#####....#.....######..#...#..".toCharArray(),
+            ".....####..########......#...###".toCharArray(),
+            ".....####..####..........#....##".toCharArray(),
+            ".....#........#.......######..##".toCharArray(),
+            ".....#........###.....#....#####".toCharArray(),
+            ".....#..##....###.....#....#####".toCharArray(),
+            ".....#..#####.........#....#####".toCharArray(),
+            ".....#..#####.........#....#####".toCharArray(),
+            "######..#...###.......#.......##".toCharArray(),
+            "........#...####......#.........".toCharArray(),
+            "......###......#####..#.........".toCharArray(),
+            "#.....###......#####..#######..#".toCharArray(),
+            "#..#####.......#..###########..#".toCharArray(),
+            "#..##.............#####........#".toCharArray(),
+            "#..##.............#...#........#".toCharArray(),
+            "#####.......#.....#...#........#".toCharArray(),
+            "............#.....#####........#".toCharArray(),
+            "............#..................#".toCharArray(),
+            ".....########..................#".toCharArray(),
+            "........###########......###....".toCharArray(),
+            ".........####.....#......###....".toCharArray(),
+            ".........####.....#...######....".toCharArray(),
+            ".........###......#...#....#....".toCharArray(),
+            ".......###........#...#....###..".toCharArray(),
+            ".#########........#####....###..".toCharArray(),
+            ".##...............############..".toCharArray(),
+            ".##.................##..........".toCharArray(),
+            ".######......#####..##..........".toCharArray(),
+    }, '.');
 
-    public static final boolean[][][] samples = new boolean[][][]{
+    public static final Region[] samples = new Region[]{
             boulders, cave, caves, chess, lessRooms, maze, quarterBlack,
             river, rooms, simpleMaze, simpleRooms, thickWalls, ruins, openRooms
     };
-
-    /*
-    // this would throw an ArrayIndexOutOfBoundsException before a fix added after beta 8
-    public static void main(String[] args) {
-        boolean[][] binarySample = new boolean[20][20];
-        int length = 100;
-        boolean[][] binaryOut = MimicFill.fill(binarySample, length, .01, 5, new RNG());
-        squidpony.squidgrid.mapping.DungeonUtility.debugPrint(
-                squidpony.squidgrid.mapping.DungeonUtility.hashesToLines(sampleToMap(binaryOut, '.', '#')));
-    }
-    */
 }
