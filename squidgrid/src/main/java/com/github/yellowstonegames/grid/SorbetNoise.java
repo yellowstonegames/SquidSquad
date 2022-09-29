@@ -79,7 +79,7 @@ public class SorbetNoise {
     }
 
     public SorbetNoise(long seed, int dimension) {
-        this(seed, dimension, Math.max(2, dimension));
+        this(seed, dimension, 2f);
     }
 
     public SorbetNoise(long seed, int dimension, float sharpness) {
@@ -179,12 +179,16 @@ public class SorbetNoise {
         int vc = Math.min(args.length, points.length);
         System.arraycopy(args, 0, points, 0, vc);
         float result = 0.0f;
-        result += TrigTools.tan(LineWobble.wobble(seed, points[0]) * 1.5f) * points[vc - 1];
+        points[0] -= result += (LineWobble.wobble(seed, result - points[vc - 1]));
         for (int v = 1; v < vc; v++) {
-            result += TrigTools.tan(LineWobble.wobble(seed + v, points[v]) * 1.5f) * points[v - 1];
-
+            points[v] -= result += (LineWobble.wobble(seed, result - points[v - 1]));
         }
-        result = LineWobble.wobble(~seed, result * inverse);
+        points[0] -= result += (LineWobble.wobble(seed, result - points[vc - 1]));
+//        result -= points[0] += TrigTools.tan(LineWobble.wobble(seed, points[vc - 1] * 1.5f));
+//        for (int v = 1; v < vc; v++) {
+//            result -= points[v] += TrigTools.tan(LineWobble.wobble(seed, points[v - 1] * 1.5f));
+//        }
+        result = LineWobble.wobble(~seed, result + result);
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 
 //        result = (float) Math.pow(sharpness, result * inverse);
