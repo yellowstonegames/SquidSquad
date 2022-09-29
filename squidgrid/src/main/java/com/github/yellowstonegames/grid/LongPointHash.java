@@ -68,6 +68,8 @@ public final class LongPointHash extends IPointHash.LongImpl
         return state;
     }
 
+    //        return (s = ((s = ((s = (s ^ s >>> 32) * 0xBEA225F9EB34556DL) ^ s >>> 29) * 0xBEA225F9EB34556DL) ^ s >>> 32) * 0xBEA225F9EB34556DL) ^ s >>> 29;
+
     /**
      * Gets a 64-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
      * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
@@ -80,7 +82,6 @@ public final class LongPointHash extends IPointHash.LongImpl
         s ^= x * 0x8CB92BA72F3D8DD7L ^ y * 0xABC98388FB8FAC03L;
         return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
-//        return (s = ((s = ((s = (s ^ s >>> 32) * 0xBEA225F9EB34556DL) ^ s >>> 29) * 0xBEA225F9EB34556DL) ^ s >>> 32) * 0xBEA225F9EB34556DL) ^ s >>> 29;
 
     /**
      * Gets a 64-bit point hash of a 3D point (x, y, and z are all longs) and a state/seed as a long.
