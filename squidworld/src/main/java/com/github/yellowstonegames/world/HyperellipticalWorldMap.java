@@ -225,6 +225,77 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
     }
 
     /**
+     * Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+     * ellipse without distortion of the sizes of features but with significant distortion of shape.
+     * Takes an initial seed, the width/height of the map, and parameters for noise generation (a
+     * {@link Noise} implementation, where {@link Noise#instance} is suggested, and a
+     * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
+     * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
+     * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
+     * cannot be changed after the fact, but you can zoom in. Noise will be the fastest 3D generator to use for
+     * {@code noiseGenerator}, and the seed it's constructed with doesn't matter because this will change the
+     * seed several times at different scales of noise (it's fine to use the static {@link Noise#instance}
+     * because it has no changing state between runs of the program). The {@code octaveMultiplier} parameter should
+     * probably be no lower than 0.5f, but can be arbitrarily high if you're willing to spend much more time on
+     * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
+     * that don't require zooming.
+     *
+     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param mapWidth         the width of the map(s) to generate; cannot be changed later
+     * @param mapHeight        the height of the map(s) to generate; cannot be changed later
+     * @param terrainNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param terrainLayeredNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param heatNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param moistureNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param otherRidgedNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
+     * @param alpha            one of the Tobler parameters;  0.0625f is the default and this can range from 0f to 1f at least
+     * @param kappa            one of the Tobler parameters; 2.5f is the default but 2f-5f range values are also often used
+     */
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainNoise, Noise terrainLayeredNoise,
+                                   Noise heatNoise, Noise moistureNoise, Noise otherRidgedNoise,
+                                   float octaveMultiplier, float alpha, float kappa) {
+        super(initialSeed, mapWidth, mapHeight);
+        xPositions = new float[width][height];
+        yPositions = new float[width][height];
+        zPositions = new float[width][height];
+        edges = new int[height << 1];
+
+        terrain = terrainNoise;
+        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
+        terrain.setNoiseType(terrain.getNoiseType() | 1);
+        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
+        terrain.setFractalType(Noise.RIDGED_MULTI);
+
+        terrainLayered = terrainLayeredNoise;
+        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
+        terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
+        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
+
+        heat = heatNoise;
+        heat.setFrequency(heat.getFrequency() * heatFreq);
+        heat.setNoiseType(heat.getNoiseType() | 1);
+        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+
+        moisture = moistureNoise;
+        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
+        moisture.setNoiseType(moisture.getNoiseType() | 1);
+        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
+
+        otherRidged = otherRidgedNoise;
+        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
+        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
+        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
+        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+
+        this.alpha = alpha;
+        this.kappa = kappa;
+        this.buffer = new float[height << 2];
+        this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
+        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25f / height, alpha, kappa, epsilon);
+    }
+
+    /**
      * Copies the HyperellipticalWorldMap {@code other} to construct a new one that is exactly the same. References will only
      * be shared to Noise classes.
      *

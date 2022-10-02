@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
@@ -120,28 +121,30 @@ public class WorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-//        final Noise.Noise3D noise = new Noise.Noise3D() {
-//            @Override
-//            public double getNoise(double x, double y, double z) {
-//                return WorldMapGenerator.DEFAULT_NOISE.getNoiseWithSeed(x, y, z, mutationA, mutationB, 123456789);
-//            }
-//
-//            @Override
-//            public double getNoiseWithSeed(double x, double y, double z, long seed) {
-//                return WorldMapGenerator.DEFAULT_NOISE.getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
-//            }
-//        };
+        final Noise terrainNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1) {
+            @Override
+            public float getConfiguredNoise(float x, float y, float z) {
+                return MathTools.cbrt(super.getConfiguredNoise(x, y, z));
+            }
+        };
         
+        final Noise terrainLayeredNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+
+        final Noise heatNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        final Noise moistureNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        final Noise otherRidgedNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+
 //        Noise fn = new Noise((int) seed, 1f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
-        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
+        noise = terrainNoise;
 
-        fn.setInterpolation(Noise.QUINTIC);
+        noise.setInterpolation(Noise.QUINTIC);
 
         if(SEEDY) {
-            fn.setPointHash(new IPointHash.IntImpl() {
+            noise.setPointHash(new IPointHash.IntImpl() {
                 @Override
                 public int hashWithState(int x, int y, int state) {
                     return (int) (0xC13FA9A902A6328FL * x + 0x91E10DA5C79E7B1DL * y + 0x9E3779B97F4A7C15L * state);
@@ -171,7 +174,6 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);
 //        else
-            noise = fn;
 
 //        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
@@ -183,7 +185,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f, 1f, 2.5f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
@@ -228,7 +230,7 @@ public class WorldMapWriter extends ApplicationAdapter {
             wmv.generate(1.0f, 1.3f);
         }
         else {
-            wmv.generate(1.15f, 1.3f);
+            wmv.generate(0.9f, 1.3f);
         }
         ttg = System.currentTimeMillis() - startTime;
     }
