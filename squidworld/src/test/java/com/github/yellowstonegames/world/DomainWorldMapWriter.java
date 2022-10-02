@@ -57,7 +57,7 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
-    private AnimatedPNG apng;
+//    private AnimatedPNG apng;
     private PixmapIO.PNG pngWriter;
 
     private String date, path;
@@ -67,9 +67,9 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-        path = "out/worldsAnimated/" + date + "/DomainClassic/";
+//        path = "out/worldsAnimated/" + date + "/DomainClassic/";
 //        path = "out/worldsAnimated/" + date + "/DomainTaffy/";
-//        path = "out/worldsAnimated/" + date + "/DomainFoam/";
+        path = "out/worldsAnimated/" + date + "/DomainFoam/";
 //        path = "out/worldsAnimated/" + date + "/DomainSimplex/";
 //        path = "out/worldsAnimated/" + date + "/DomainValue/";
 //        path = "out/worldsAnimated/" + date + "/DomainHoney/";
@@ -84,14 +84,15 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
+        writer.palette = new PaletteReducer();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
-        writer.setDitherStrength(0.75f);
-        writer.fastAnalysis = true;
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.ROBERTS);
+        writer.setDitherStrength(0.5f);
+//        writer.fastAnalysis = true;
         writer.setFlipY(false);
-        apng = new AnimatedPNG();
-        apng.setFlipY(false);
-        apng.setCompression(7);
+//        apng = new AnimatedPNG();
+//        apng.setFlipY(false);
+//        apng.setCompression(7);
         pngWriter = new PixmapIO.PNG();
         pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
@@ -104,13 +105,13 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 0.8f, Noise.PEAR_FRACTAL, 1);    // between 43797ms and 45564ms
 //        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1);    // between 50908ms and 52215ms
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
-//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
+        Noise fn = new Noise((int) seed, 0.75f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
 //        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);  // between 35894ms and 42264ms
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 2);  // between 35894ms and 42264ms
 
         fn.setInterpolation(Noise.HERMITE);
 
@@ -237,7 +238,7 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new GlobeMap(seed, width, height, terrainBasicNoise, 1f);
-        world = new GlobeMap(seed, width, height, terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.75f);
+        world = new GlobeMap(seed, width, height, terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise, 0.7f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -289,7 +290,7 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
         world.seedB = world.rng.getStateB();
 //        wmv.generate(0.9f, wmv.world.heatModifier);
         wmv.generate(
-                (float) (1.0 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
+                (float) (0.9 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
                 (float) (1.0625 + Hasher.randomize1Double(world.seedB * 0x123456789ABL ^ world.seedA) * 0.375));
         ttg = System.currentTimeMillis() - startTime;
     }
@@ -332,10 +333,10 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
-            writer.setDitherStrength(0.75f);
-            writer.palette = new PaletteReducer(pms);
+            writer.setDitherStrength(0.35f);
+            writer.palette.analyze(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-            apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+//            apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
 //        } catch (IOException e) {
 //            e.printStackTrace();

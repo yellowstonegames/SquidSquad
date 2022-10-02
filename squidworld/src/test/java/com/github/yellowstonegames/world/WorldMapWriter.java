@@ -26,12 +26,12 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-    private static final int width = 1920, height = 1080;
+//    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
-//    private static final int width = 2048, height = 1024; // mimic, elliptical
+    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
@@ -87,10 +87,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
 //        path = "out/worlds/" + date + "/EllipseFoam/";
-        path = "out/worlds/" + date + "/EllipseTaffy/";
+//        path = "out/worlds/" + date + "/EllipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
 //        path = "out/worlds/" + date + "/HyperellipseFoam/";
+        path = "out/worlds/" + date + "/EquirectangularFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -131,10 +132,10 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            }
 //        };
         
-        Noise fn = new Noise((int) seed, 1f, Noise.TAFFY_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 2);
+        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
         fn.setInterpolation(Noise.QUINTIC);
@@ -181,8 +182,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f, 1f, 2.5f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
@@ -227,7 +228,7 @@ public class WorldMapWriter extends ApplicationAdapter {
             wmv.generate(1.0f, 1.3f);
         }
         else {
-            wmv.generate(0.9f, 1.3f);
+            wmv.generate(1.15f, 1.3f);
         }
         ttg = System.currentTimeMillis() - startTime;
     }
