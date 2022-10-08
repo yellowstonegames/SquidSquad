@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 
 /**
@@ -37,7 +37,7 @@ public class PacMazeGenerator implements PlaceGenerator {
     public PacMazeGenerator(int width, int height) {
         this.height = height;
         this.width = width;
-        rng = new LaserRandom();
+        rng = new WhiskerRandom();
     }
 
     public PacMazeGenerator(int width, int height, EnhancedRandom rng) {

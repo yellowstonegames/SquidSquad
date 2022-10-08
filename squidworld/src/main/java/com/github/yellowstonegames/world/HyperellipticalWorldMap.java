@@ -89,7 +89,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
      *
-     * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
@@ -105,7 +105,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
@@ -123,7 +123,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * Uses the given noise generator, with 1f as the octave multiplier affecting detail. The suggested Noise
      * implementation to use is {@link Noise#instance}.
      *
-     * @param initialSeed    the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed    the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth       the width of the map(s) to generate; cannot be changed later
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -148,7 +148,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -174,7 +174,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -240,7 +240,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param terrainNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}

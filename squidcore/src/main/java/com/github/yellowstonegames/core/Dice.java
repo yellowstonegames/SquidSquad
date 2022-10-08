@@ -16,12 +16,12 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import regexodus.Matcher;
 import regexodus.Pattern;
-import com.github.tommyettinger.digital.Hasher;
 
 import javax.annotation.Nonnull;
 
@@ -54,14 +54,14 @@ public class Dice {
      * Creates a new dice roller that uses a random RNG seed for an RNG that it owns.
      */
     public Dice() {
-        rng = new LaserRandom();
+        rng = new WhiskerRandom();
     }
 
     /**
      * Creates a new dice roller that uses the given EnhancedRandom, which can be seeded before it's given here. The EnhancedRandom will be
      * shared, not copied, so requesting a random number from the same EnhancedRandom in another place may change the value of the
      * next die roll this makes, and dice rolls this makes will change the state of the shared EnhancedRandom.
-     * @param rng an EnhancedRandom, such as {@link LaserRandom}; will be shared (dice rolls will change the IRNG state outside here)
+     * @param rng an EnhancedRandom, such as {@link WhiskerRandom}; will be shared (dice rolls will change the generator's state outside here)
      */
     public Dice(EnhancedRandom rng)
     {
@@ -69,22 +69,22 @@ public class Dice {
     }
 
     /**
-     * Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with the given seed.
-     * @param seed a long to use as a seed for a new LaserRandom (can also be an int, short, or byte)
+     * Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with the given seed.
+     * @param seed a long to use as a seed for a new WhiskerRandom (can also be an int, short, or byte)
      */
     public Dice(long seed)
     {
-        rng = new LaserRandom(seed);
+        rng = new WhiskerRandom(seed);
     }
     /**
-     * Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with a hash of the
-     * given String seed. This can take any CharSequence, not just String, and uses {@link Hasher#dantalion}
-     * and {@link Hasher#decarabia_} to hash the seed.
-     * @param seed a String or other CharSequence to use as a seed for a new LaserRandom
+     * Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with a hash of the
+     * given String seed. This can take any CharSequence, not just String, and uses {@link Hasher#dantalion},
+     * {@link Hasher#dantalion_}, {@link Hasher#decarabia}, and {@link Hasher#decarabia_} to hash the seed.
+     * @param seed a String or other CharSequence to use as a seed for a new WhiskerRandom
      */
     public Dice(CharSequence seed)
     {
-        rng = new LaserRandom(Hasher.dantalion.hash64(seed), Hasher.decarabia_.hash64(seed));
+        rng = new WhiskerRandom(Hasher.dantalion.hash64(seed), Hasher.dantalion_.hash64(seed), Hasher.decarabia.hash64(seed), Hasher.decarabia_.hash64(seed));
     }
     /**
      * Sets the random number generator to be used.

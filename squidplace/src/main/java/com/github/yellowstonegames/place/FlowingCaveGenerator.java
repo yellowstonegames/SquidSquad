@@ -18,7 +18,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.CellularAutomaton;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
@@ -135,7 +135,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
         this.width = Math.max(3, width);
         this.height = Math.max(3, height);
         type = TilesetType.DEFAULT_DUNGEON;
-        rng = new LaserRandom();
+        rng = new WhiskerRandom();
         gen = new DungeonBoneGen(rng);
         ca = new CellularAutomaton(this.width, this.height);
         environment = new int[this.width][this.height];
@@ -152,7 +152,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
         this.width = Math.max(3, width);
         this.height = Math.max(3, height);
         this.type = type == null ? TilesetType.DEFAULT_DUNGEON : type;
-        this.rng = rng == null ? new LaserRandom() : rng;
+        this.rng = rng == null ? new WhiskerRandom() : rng;
         gen = new DungeonBoneGen(this.rng);
         ca = new CellularAutomaton(this.width, this.height);
         environment = new int[this.width][this.height];

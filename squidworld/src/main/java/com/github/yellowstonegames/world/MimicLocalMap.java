@@ -64,7 +64,7 @@ public class MimicLocalMap extends LocalMap {
      * The width and height of the map cannot be changed after the fact.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
      *
-     * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param toMimic     the world map to imitate, as a Region with land as "on"; the height and width will be copied
      */
     public MimicLocalMap(long initialSeed, Region toMimic) {
@@ -80,7 +80,7 @@ public class MimicLocalMap extends LocalMap {
      * The width and height of the map cannot be changed after the fact.
      * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param toMimic          the world map to imitate, as a Region with land as "on"; the height and width will be copied
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
@@ -100,7 +100,7 @@ public class MimicLocalMap extends LocalMap {
      * {@link Noise#instance} or {@link Noise#instance} because they have no changing state between runs
      * of the program). Uses the given noise generator, with 1f as the octave multiplier affecting detail.
      *
-     * @param initialSeed    the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed    the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param toMimic        the world map to imitate, as a Region with land as "on"; the height and width will be copied
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
      */
@@ -124,7 +124,7 @@ public class MimicLocalMap extends LocalMap {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param toMimic          the world map to imitate, as a Region with land as "on"; the height and width will be copied
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal

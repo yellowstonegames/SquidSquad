@@ -19,7 +19,7 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 import com.github.tommyettinger.digital.Hasher;
@@ -57,14 +57,14 @@ public class Thesaurus {
     public Thesaurus()
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        rng = new LaserRandom();
+        rng = new MizuchiRandom();
         addKnownCategories();
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
+     * Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with the next long from
      * the given EnhancedRandom.
-     * @param rng an EnhancedRandom that will only be used to get one long (for seeding this class' internal LaserRandom)
+     * @param rng an EnhancedRandom that will only be used to get one long (for seeding this class' internal MizuchiRandom)
      */
     public Thesaurus(EnhancedRandom rng)
     {
@@ -72,31 +72,31 @@ public class Thesaurus {
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with shuffleSeed.
-     * @param shuffleSeed a long for seeding this class' LaserRandom
+     * Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with shuffleSeed.
+     * @param shuffleSeed a long for seeding this class' MizuchiRandom
      */
     public Thesaurus(long shuffleSeed)
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        this.rng = new LaserRandom(shuffleSeed);
+        this.rng = new MizuchiRandom(shuffleSeed);
         addKnownCategories();
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.
-     * @param shuffleSeedA a long for seeding this class' LaserRandom
-     * @param shuffleSeedB a long for seeding this class' LaserRandom; if even, will be made odd by adding 1
+     * Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.
+     * @param shuffleSeedA a long for seeding this class' MizuchiRandom
+     * @param shuffleSeedB a long for seeding this class' MizuchiRandom; if even, will be made odd by adding 1
      */
     public Thesaurus(long shuffleSeedA, long shuffleSeedB)
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        this.rng = new LaserRandom(shuffleSeedA, shuffleSeedB);
+        this.rng = new MizuchiRandom(shuffleSeedA, shuffleSeedB);
         addKnownCategories();
     }
 
 
     /**
-     * Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with two different hashes of
+     * Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with two different hashes of
      * shuffleSeed (produced by {@link Hasher#sallos} and {@link Hasher#sallos_}).
      * @param shuffleSeed a String for seeding this class' RNG
      */
@@ -125,14 +125,12 @@ public class Thesaurus {
      * Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
      * different version that knows all the same synonyms and categories but will produce different results.
      * This version of refresh() is meant for cases where you know the generator this uses has two states, 128 bits.
-     * @param stateA any long; the first part of a two-state EnhancedRandom like a {@link LaserRandom}
-     * @param stateB any long; the second part of a two-state EnhancedRandom like a {@link LaserRandom}
+     * @param stateA any long; the first part of a two-state EnhancedRandom like a {@link MizuchiRandom}
+     * @param stateB any long; the second part of a two-state EnhancedRandom like a {@link MizuchiRandom}
      */
     public void refresh(long stateA, long stateB)
     {
-        this.rng.setSeed(stateA);
-        this.rng.setSelectedState(0, stateA);
-        this.rng.setSelectedState(1, stateB);
+        this.rng.setState(stateA, stateB);
         final int sz = mappings.size();
         for (int i = 0; i < sz; i++) {
             mappings.getAt(i).setRNG(rng, true);
@@ -149,10 +147,7 @@ public class Thesaurus {
      */
     public void refresh(long stateA, long stateB, long stateC)
     {
-        this.rng.setSeed(stateA);
-        this.rng.setSelectedState(0, stateA);
-        this.rng.setSelectedState(1, stateB);
-        this.rng.setSelectedState(2, stateC);
+        this.rng.setState(stateA, stateB, stateC);
         final int sz = mappings.size();
         for (int i = 0; i < sz; i++) {
             mappings.getAt(i).setRNG(rng, true);

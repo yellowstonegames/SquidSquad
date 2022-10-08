@@ -19,8 +19,9 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Region;
 
 /**
@@ -148,11 +149,11 @@ public class ConnectingMapGenerator implements PlaceGenerator {
 
     /**
      * Calls {@link #ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)} with width 80, height 80, roomWidth 8,
-     * roomHeight 8, a new {@link LaserRandom} for random, and wallThickness 2.
+     * roomHeight 8, a new {@link WhiskerRandom} for random, and wallThickness 2.
      */
     public ConnectingMapGenerator()
     {
-        this(80, 80, 8, 8, new LaserRandom(), 2);
+        this(80, 80, 8, 8, new WhiskerRandom(), 2);
     }
     /**
      * Determines room width and room height by dividing width or height by 10; wallThickness is 2. 

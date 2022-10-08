@@ -21,7 +21,7 @@ import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.Region;
@@ -310,7 +310,7 @@ public class PoliticalMapper {
      */
     public PoliticalMapper()
     {
-        rng = new LaserRandom();
+        rng = new WhiskerRandom();
     }
 
     /**

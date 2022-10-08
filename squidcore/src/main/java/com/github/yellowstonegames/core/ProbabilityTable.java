@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectIntMap;
@@ -23,8 +24,7 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.random.WhiskerRandom;
 
 /**
  * A generic method of holding a probability table to determine weighted random
@@ -64,7 +64,7 @@ public class ProbabilityTable<T> {
      * Creates a new probability table with a random seed.
      */
     public ProbabilityTable() {
-        this(new LaserRandom());
+        this(new WhiskerRandom());
     }
 
     /**
@@ -74,7 +74,7 @@ public class ProbabilityTable<T> {
      * @param rng the source of randomness
      */
     public ProbabilityTable(EnhancedRandom rng) {
-        this.rng = rng == null ? new LaserRandom() : rng;
+        this.rng = rng == null ? new WhiskerRandom() : rng;
         table = new NumberedSet<>(64, 0.5f);
         extraTable = new ObjectList<>(16);
         weights = new IntList(64);
@@ -88,7 +88,7 @@ public class ProbabilityTable<T> {
      * @param seed the RNG seed as a long
      */
     public ProbabilityTable(long seed) {
-        this(new LaserRandom(seed));
+        this(new WhiskerRandom(seed));
     }
 
     /**
@@ -97,7 +97,8 @@ public class ProbabilityTable<T> {
      * @param seed the RNG seed as a String
      */
     public ProbabilityTable(String seed) {
-        this(new LaserRandom(Hasher.purson.hash64(seed), Hasher.purson_.hash64(seed)));
+        this(new WhiskerRandom(Hasher.purson.hash64(seed), Hasher.purson_.hash64(seed),
+                Hasher.astaroth.hash64(seed), Hasher.astaroth_.hash(seed)));
     }
 
     /**
@@ -363,7 +364,7 @@ public class ProbabilityTable<T> {
 
     /**
      * Sets the current random number generator to the given EnhancedRandom.
-     * @param random an EnhancedRandom, typically with a seed you want control over; for instance, a {@link LaserRandom}
+     * @param random an EnhancedRandom, typically with a seed you want control over; for instance, a {@link WhiskerRandom}
      */
     public void setRandom(EnhancedRandom random)
     {

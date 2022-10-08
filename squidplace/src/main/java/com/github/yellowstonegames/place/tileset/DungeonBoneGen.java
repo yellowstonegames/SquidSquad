@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.place.tileset;
 
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Region;
 
 /**
@@ -127,7 +127,7 @@ public class DungeonBoneGen {
     /**
      * Constructs a DungeonBoneGen that uses the given EnhancedRandom.
      *
-     * @param random An EnhancedRandom, such as a LaserRandom, to be used during the dungeon generation
+     * @param random An EnhancedRandom, such as a WhiskerRandom, to be used during the dungeon generation
      */
     public DungeonBoneGen(EnhancedRandom random) {
         rng = random;
@@ -137,10 +137,10 @@ public class DungeonBoneGen {
     }
 
     /**
-     * Constructs a DungeonBoneGen that uses a default LaserRandom, randomly seeded.
+     * Constructs a DungeonBoneGen that uses a default WhiskerRandom, randomly seeded.
      */
     public DungeonBoneGen() {
-        this(new LaserRandom());
+        this(new WhiskerRandom());
     }
 
     private Tile chooseTile(Tile[] list, int numlist, int[] y_positions, int[] x_positions) {

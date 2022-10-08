@@ -99,7 +99,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width    the width of the final map in cells
      * @param height   the height of the final map in cells
-     * @param rng      an EnhancedRandom, such as a LaserRandom, to use for random choices; this make a lot of random choices.
+     * @param rng      an EnhancedRandom, such as a WhiskerRandom, to use for random choices; this make a lot of random choices.
      * @param sequence a ObjectList of Coord to connect in order; index 0 is the start, index size() - 1 is the end.
      * @see SerpentMapGenerator a class that uses this technique
      */
@@ -116,7 +116,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
      *
      * @param width    the width of the final map in cells
      * @param height   the height of the final map in cells
-     * @param rng      an EnhancedRandom, such as a LaserRandom, to use for random choices; this make a lot of random choices.
+     * @param rng      an EnhancedRandom, such as a WhiskerRandom, to use for random choices; this make a lot of random choices.
      * @param sequence a ObjectList of Coord to connect in order; index 0 is the start, index size() - 1 is the end.
      * @see SerpentMapGenerator a class that uses this technique
      */

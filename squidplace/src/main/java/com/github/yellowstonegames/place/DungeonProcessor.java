@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
@@ -261,11 +261,11 @@ public class DungeonProcessor implements PlaceGenerator{
 
 
     /**
-     * Make a DungeonProcessor with a LaserRandom using a random seed, height 40, and width 40.
+     * Make a DungeonProcessor with a WhiskerRandom using a random seed, height 40, and width 40.
      */
     public DungeonProcessor()
     {
-        rng = new LaserRandom();
+        rng = new WhiskerRandom();
         rebuildRNG = rng.copy();
         height = 40;
         width = 40;
@@ -276,7 +276,7 @@ public class DungeonProcessor implements PlaceGenerator{
 
     /**
      * Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
-     * adding features will be a LaserRandom using a random seed. If width or height is greater than 256, then this will
+     * adding features will be a WhiskerRandom using a random seed. If width or height is greater than 256, then this will
      * expand the Coord pool from its 256x256 default so it stores a reference to each Coord that might be used in the
      * creation of the dungeon (if width and height are 300 and 300, the Coord pool will be 300x300; if width and height
      * are 500 and 100, the Coord pool will be 500x256 because it won't shrink below the default size of 256x256).
@@ -285,7 +285,7 @@ public class DungeonProcessor implements PlaceGenerator{
      */
     public DungeonProcessor(int width, int height)
     {
-    	this(width, height, new LaserRandom());
+    	this(width, height, new WhiskerRandom());
     }
 
     /**

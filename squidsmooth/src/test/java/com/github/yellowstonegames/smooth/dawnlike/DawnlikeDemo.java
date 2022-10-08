@@ -18,6 +18,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
@@ -41,7 +42,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private long animationStart;
 
     // random number generator
-    private LaserRandom rng;
+    private WhiskerRandom rng;
 
     // Stores all images we use here efficiently, as well as the font image
     private TextureAtlas atlas;
@@ -141,7 +142,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // We can seed a LaserRandom or other EnhancedRandom generator, so it produces
         // the same results reliably across runs. You can also omit the seed to use
         // a different seed each time.
-        rng = new LaserRandom(123456);
+        rng = new WhiskerRandom(123456);
         //Some classes in SquidLib need access to a batch to render certain things, so it's a good idea to have one.
         batch = new SpriteBatch();
         animationStart = TimeUtils.millis();

@@ -19,7 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.TrigTools;
 
 public class PoissonDisk {
@@ -45,7 +45,7 @@ public class PoissonDisk {
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY)
     {
-        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new LaserRandom());
+        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new WhiskerRandom());
     }
 
     /**
@@ -83,7 +83,7 @@ public class PoissonDisk {
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
     {
-        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new LaserRandom());
+        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new WhiskerRandom());
     }
 
     /**

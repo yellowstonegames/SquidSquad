@@ -17,9 +17,10 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.Region;
@@ -58,7 +59,7 @@ public abstract class WorldMapGenerator {
     public long seedB;
     public long cacheA;
     public long cacheB;
-    public LaserRandom rng;
+    public MizuchiRandom rng;
     public final float[][] heightData, heatData, moistureData;
     public final Region landData;
     public final int[][] heightCodeData;
@@ -188,7 +189,7 @@ public abstract class WorldMapGenerator {
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      *
-     * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth the width of the map(s) to generate; cannot be changed later
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
@@ -202,7 +203,7 @@ public abstract class WorldMapGenerator {
         seedB = initialSeed + 0xC6BC279692B5C323L | 1L;
         cacheA = ~seedA;
         cacheB = ~seedB;
-        rng = new LaserRandom(seedA, seedB);
+        rng = new MizuchiRandom(seedA, seedB);
         heightData = new float[width][height];
         heatData = new float[width][height];
         moistureData = new float[width][height];

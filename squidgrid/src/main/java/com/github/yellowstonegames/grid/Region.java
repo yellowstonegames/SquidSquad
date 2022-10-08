@@ -16,12 +16,11 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
@@ -1085,7 +1084,7 @@ public class Region implements Collection<Coord> {
     /**
      * Constructor for a random Region of the given width and height, typically assigning approximately half of
      * the cells in this to "on" and the rest to off.
-     * @param random a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param random a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
      */
@@ -1111,7 +1110,7 @@ public class Region implements Collection<Coord> {
      * Reassigns this Region by filling it with random values from random, reusing the current data storage
      * (without extra allocations) if this.width == width and this.height == height, and typically assigning
      * approximately half of the cells in this to "on" and the rest to off.
-     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
+     * @param random a EnhancedRandom or a recommended subclass, like {@link WhiskerRandom}
      * @param width the width of the desired Region
      * @param height the height of the desired Region
      * @return this for chaining
@@ -1151,8 +1150,8 @@ public class Region implements Collection<Coord> {
      * better speed than generating one random number per cell, although the precision is probably good enough (fraction
      * is effectively rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
      * {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential for patterns or
-     * artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
+     * artifacts in the output if you use {@link WhiskerRandom} or another higher-quality subclass.
+     * @param random a EnhancedRandom or a recommended subclass, like {@link WhiskerRandom}
      * @param fraction between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
@@ -1185,8 +1184,8 @@ public class Region implements Collection<Coord> {
      * generating one random number per cell, although the precision is probably good enough (fraction is effectively
      * rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
      * {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential for patterns or
-     * artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
+     * artifacts in the output if you use {@link WhiskerRandom} or another higher-quality subclass.
+     * @param random a EnhancedRandom or a recommended subclass, like {@link WhiskerRandom}
      * @param fraction between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps
      * @param width the maximum width for the Region
      * @param height the maximum height for the Region
@@ -3304,14 +3303,14 @@ public class Region implements Collection<Coord> {
     /**
      * Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.
      * For example, calling this with a parameter of 32 will be equivalent to calling nextLong() on the given
-     * EnhancedRandom, which is recommended to be a subclass like {@link LaserRandom}.
+     * EnhancedRandom, which is recommended to be a subclass like {@link WhiskerRandom}.
      * Calling this with a parameter of 16 will have on average 16 of the 64 bits in the returned long set to '1',
      * distributed pseudo-randomly, while a parameter of 47 will have on average 47 bits set. This can be useful for
      * certain code that uses bits to represent data but needs a different ratio of set bits to unset bits than 1:1.
      * <br>
      * The parameter {@code random} can be a plain {@link EnhancedRandom}, but will be much faster and have less potential
-     * for patterns or artifacts in the output if you use {@link LaserRandom} or another higher-quality subclass.
-     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
+     * for patterns or artifacts in the output if you use {@link WhiskerRandom} or another higher-quality subclass.
+     * @param random a EnhancedRandom or a recommended subclass, like {@link WhiskerRandom}
      * @param bitCount an int, only considered if between 0 and 64, that is the average number of bits to set
      * @return a 64-bit long that, on average, should have bitCount bits set to 1, potentially anywhere in the long
      */
@@ -4251,7 +4250,7 @@ public class Region implements Collection<Coord> {
      * before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
      * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, EnhancedRandom)} fills a whole volume.
      * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
-     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @return this, after expanding randomly once, for chaining
      */
     public Region splash(Region bounds, EnhancedRandom rng) {
@@ -4268,7 +4267,7 @@ public class Region implements Collection<Coord> {
      * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
-     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @return this, after expanding randomly, for chaining
      */
     public Region spill(Region bounds, int volume, EnhancedRandom rng) {
@@ -4959,7 +4958,7 @@ public class Region implements Collection<Coord> {
      * that surface with the given fractionKept, taking the original Region and removing its whole surface with
      * {@link #retract()}, then inserting the randomly-removed surface into this Region to replace its surface
      * with a randomly "damaged" one.
-     * @param random a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param random a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @param fractionKept the fraction between 0.0 and 1.0 of how many cells on the outer surface of this to keep "on"
      * @return this for chaining
      */
@@ -4973,7 +4972,7 @@ public class Region implements Collection<Coord> {
      * Modifies this Region so it contains a random subset of its previous contents, choosing cells so that the
      * distance between any two "on" cells is at least {@code minimumDistance}, with at least one cell as "on" if any
      * were "on" in this originally. Does not limit the count of "on" cells in the result.
-     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @param minimumDistance the minimum distance between "on" cells in the result
      * @return this for chaining
      */
@@ -4986,7 +4985,7 @@ public class Region implements Collection<Coord> {
      * were "on" in this originally.
      * Restricts the total count of "on" cells after this returns to a maximum of {@code limit} (minimum is 0 if no
      * cells are "on"). If limit is negative, this will not restrict the count.
-     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @param minimumDistance the minimum distance between "on" cells in the result
      * @param limit the maximum count of "on" cells to keep
      * @return this for chaining
@@ -5369,7 +5368,7 @@ public class Region implements Collection<Coord> {
      * {@link #asCoords()} and call {@link EnhancedRandom#nextInt(int)} to get an index inside that Coord array. If you
      * take the asCoords() call out of consideration, getting random elements out of an array (especially a large one)
      * can be hundreds of times faster.
-     * @param rng a EnhancedRandom, or a recommended subclass like {@link LaserRandom}
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @return a single randomly-chosen Coord from the "on" positions in this Region, or (-1,-1) if empty
      */
     public Coord singleRandom(EnhancedRandom rng)
@@ -6244,8 +6243,8 @@ public class Region implements Collection<Coord> {
      * points without change (returning this Region), while anything less than 0.015625 (1.0/64) will empty this
      * Region (using {@link #empty()}) and then return it. The parameter {@code random} can be a plain {@link EnhancedRandom},
      * but will be much faster and have less potential for patterns or artifacts in the output if you use
-     * {@link LaserRandom} or another higher-quality subclass.
-     * @param random a EnhancedRandom or a recommended subclass, like {@link LaserRandom}
+     * {@link WhiskerRandom} or another higher-quality subclass.
+     * @param random a EnhancedRandom or a recommended subclass, like {@link WhiskerRandom}
      * @param preservation the rough fraction of points to keep, between 0.0 and 1.0
      * @return a randomly modified change to this Region
      */

@@ -70,7 +70,7 @@ public class TilingWorldMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses Noise as its noise generator, with 1.0f as the octave multiplier affecting detail.
      *
-     * @param initialSeed the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
@@ -89,7 +89,7 @@ public class TilingWorldMap extends WorldMapGenerator {
      * times. The detail level, which is the {@code octaveMultiplier} parameter that can be passed to another
      * constructor, is always 1.0f with this constructor.
      *
-     * @param initialSeed    the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed    the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth       the width of the map(s) to generate; cannot be changed later
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 4D noise, recommended to be {@link Noise#instance}
@@ -111,7 +111,7 @@ public class TilingWorldMap extends WorldMapGenerator {
      * high if you're willing to spend much more time on generating detail only noticeable at very high zoom;
      * normally 1.0f is fine and may even be too high for maps that don't require zooming.
      *
-     * @param initialSeed      the seed for the LaserRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator   an instance of a noise generator capable of 4D noise, almost always {@link Noise}

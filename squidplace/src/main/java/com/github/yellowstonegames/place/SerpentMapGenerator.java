@@ -42,7 +42,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
     private int[] columns, rows;
 
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
      * the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
      * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
@@ -58,7 +58,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
     }
 
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
      * the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
      * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
@@ -66,7 +66,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
      *
      * @param width       the width of the final map in cells
      * @param height      the height of the final map in cells
-     * @param random      an LaserRandom object to use for random choices; this makes a lot of random choices.
+     * @param random      an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param symmetrical true if this should generate a bi-radially symmetric map, false for a typical map
      * @see MixedGenerator
      */
@@ -120,7 +120,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
     }
 
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
      * the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
      * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
@@ -137,7 +137,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
     }
 
     /**
-     * This prepares a map generator that will generate a map with the given width and height, using the given LaserRandom.
+     * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
      * the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
      * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
