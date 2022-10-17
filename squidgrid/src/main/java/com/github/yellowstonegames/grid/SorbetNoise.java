@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LineWobble;
@@ -72,22 +73,47 @@ public class SorbetNoise {
     public final int dim;
     public final float sharpness;
     protected float inverse;
-    protected final float[] points;
+    protected final float[] working, points;
+    protected final float[][] vertices;
 
     public SorbetNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
     }
 
     public SorbetNoise(long seed, int dimension) {
-        this(seed, dimension, 2f);
+        this(seed, dimension, 5f);
     }
 
     public SorbetNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
         this.sharpness = 0.625f / sharpness;
-        points = new float[dim];
+        working = new float[dim+1];
+        points = new float[dim+1];
+        vertices = new float[dim+1][dim];
+        float id = -1f / dim;
+        vertices[0][0] = 1f;
+        for (int v = 1; v <= dim; v++) {
+            vertices[v][0] = id;
+        }
+        for (int d = 1; d < dim; d++) {
+            float t = 0f;
+            for (int i = 0; i < d; i++) {
+                t += vertices[d][i] * vertices[d][i];
+            }
+            vertices[d][d] = (float) Math.sqrt(1f - t);
+            t = (id - t) / vertices[d][d];
+            for (int v = d + 1; v <= dim; v++) {
+                vertices[v][d] = t;
+            }
+        }
+        for (int v = 0; v <= dim; v++) {
+            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+            vertices[v][0] = TrigTools.cos(theta) * dist;
+            vertices[v][1] = TrigTools.sin(theta) * dist;
+        }
         this.seed = seed;
-        inverse = 1f / dim;
+        inverse = 1f / (dim+1f);
 //        printDebugInfo();
     }
 
@@ -176,19 +202,23 @@ public class SorbetNoise {
     }
 
     public float getNoise(float... args) {
-        int vc = Math.min(args.length, points.length);
-        System.arraycopy(args, 0, points, 0, vc);
-        float result = 0.0f;
-        points[0] -= result += (LineWobble.wobble(seed, result - points[vc - 1]));
-        for (int v = 1; v < vc; v++) {
-            points[v] -= result += (LineWobble.wobble(seed, result - points[v - 1]));
+        for (int v = 0; v <= dim; v++) {
+            points[v] = 0.0f;
+            for (int d = 0; d < dim; d++) {
+                points[v] += args[d] * vertices[v][d];
+            }
+            working[v] = LineWobble.wobble(seed + v, points[v]) * inverse + inverse;
         }
-        points[0] -= result += (LineWobble.wobble(seed, result - points[vc - 1]));
-//        result -= points[0] += TrigTools.tan(LineWobble.wobble(seed, points[vc - 1] * 1.5f));
-//        for (int v = 1; v < vc; v++) {
-//            result -= points[v] += TrigTools.tan(LineWobble.wobble(seed, points[v - 1] * 1.5f));
-//        }
-        result = LineWobble.wobble(~seed, result + result);
+        float result = 0f;
+        for (int i = 0; i <= dim; i++) {
+            float warp = 0.5f;
+            for (int j = 0, d = 0; j < dim; j++, d++) {
+                if(d == i) d++;
+                warp += working[d];
+            }
+            result += LineWobble.wobble(~(seed + i), LineWobble.wobble(seed + 1234567 ^ i, points[i] + warp) * warp);
+        }
+        result *= inverse;
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 
 //        result = (float) Math.pow(sharpness, result * inverse);
