@@ -208,4 +208,16 @@ public class TaffyNoise {
         result *= inverse;
         return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TaffyNoise that = (TaffyNoise) o;
+
+        if (seed != that.seed) return false;
+        if (dim != that.dim) return false;
+        return Float.compare(that.sharpness, sharpness) == 0;
+    }
 }
