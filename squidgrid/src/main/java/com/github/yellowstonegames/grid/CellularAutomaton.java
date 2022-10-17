@@ -21,9 +21,9 @@ import com.github.tommyettinger.digital.ArrayTools;
 /**
  * Various simple cellular-automata rules and the data they operate on. This has Conway's Game of Life, when you can run
  * on a {@link Region} given to the constructor previously with {@link #runGameOfLife()}; this version of Life doesn't
- * wrap at the edges. It has a smoothing method that rounds off hard edges, {@link #runBasicSmoothing()}. It also has a
- * method that may be useful for ensuring maps are always possible to pass through by a creature moving
- * orthogonally-only (Manhattan movement); this is {@link #runDiagonalGapCleanup()}.
+ * wrap at the edges. It has a smoothing method that rounds off hard edges, {@link #runBasicSmoothing()}. It also has
+ * two methods that may be useful for ensuring maps are always possible to pass through by a creature moving
+ * orthogonally-only (Manhattan metric); these are {@link #runDiagonalGapCleanup()} and {@link #runDiagonalGapWiden()}.
  */
 public class CellularAutomaton {
     /**
@@ -164,6 +164,31 @@ public class CellularAutomaton {
         current.andNot(neighbors[5].and(neighbors[0]).and(neighbors[3]));
         current.andNot(neighbors[6].and(neighbors[1]).and(neighbors[2]));
         current.andNot(neighbors[7].and(neighbors[1]).and(neighbors[3]));
+        return current;
+    }
+
+    /**
+     * This takes the {@link #current} Region, then takes any "on" cells that have an "on" diagonal neighbor and that
+     * neighbor cannot be accessed from shared orthogonal neighbors, and sets the shared orthogonal neighbors to "on."
+     * That is, if a 2x2 area contains two "off" cells that are diagonally adjacent and contains two "on" cells that are
+     * diagonally adjacent, this sets that whole 2x2 area to "on."
+     * @return {@link #current} after orthogonally-inaccessible pairs of diagonal "on" cells are widened
+     */
+    public Region runDiagonalGapWiden()
+    {
+        neighbors[0].remake(current).neighborUp();
+        neighbors[1].remake(current).neighborDown();
+        neighbors[2].remake(current).neighborLeft();
+        neighbors[3].remake(current).neighborRight();
+        neighbors[4].remake(current).neighborUpLeft();
+        neighbors[5].remake(current).neighborUpRight();
+        neighbors[6].remake(current).neighborDownLeft();
+        neighbors[7].remake(current).neighborDownRight();
+//        neighbors[8].remake(current);
+        current.or(neighbors[4].notAnd(neighbors[0]).and(neighbors[2]));
+        current.or(neighbors[5].notAnd(neighbors[0]).and(neighbors[3]));
+        current.or(neighbors[6].notAnd(neighbors[1]).and(neighbors[2]));
+        current.or(neighbors[7].notAnd(neighbors[1]).and(neighbors[3]));
         return current;
     }
 }
