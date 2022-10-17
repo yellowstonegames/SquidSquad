@@ -53,6 +53,7 @@ public final class JsonGrid {
         registerLightingManager(json);
         registerNoise(json);
         registerPhantomNoise(json);
+        registerTaffyNoise(json);
     }
 
     /**
@@ -414,6 +415,28 @@ public final class JsonGrid {
             public PhantomNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return PhantomNoise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers TaffyNoise with the given Json object, so TaffyNoise can be written to and read from JSON.
+     * This is a simple wrapper around TaffyNoise's built-in {@link TaffyNoise#serializeToString()} and
+     * {@link TaffyNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerTaffyNoise(@Nonnull Json json) {
+        json.setSerializer(TaffyNoise.class, new Json.Serializer<TaffyNoise>() {
+            @Override
+            public void write(Json json, TaffyNoise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public TaffyNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return TaffyNoise.deserializeFromString(jsonData.asString());
             }
         });
     }
