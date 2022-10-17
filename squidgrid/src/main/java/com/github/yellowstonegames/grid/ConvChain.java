@@ -29,11 +29,6 @@ import java.util.Collection;
  */
 public class ConvChain {
 
-    /**
-     * The order of the algorithm; this determines how big each sample is (the edge length of a square sample).
-     */
-    private static final int N = 3;
-
     private ConvChain()
     {
 
@@ -168,26 +163,50 @@ public class ConvChain {
      */
     public static Region fill(Region field, Region sample, double temperature, int iterations, EnhancedRandom random)
     {
+        return fill(field, sample, temperature, iterations, random, 3);
+    }
+    /**
+     * The main part of MimicFill; generates a Region that mimics the patterns present in the Region
+     * sample, but can produce a larger or smaller output Region than the sample.
+     * Takes a Region to fill with the output, a Region as a "sample" (often one of the constants in this class) and
+     * several other parameters that affect how closely the output
+     * will match the input. The temperature is how "agitated" or "chaotic" the changes to the map can be; 0.2f is
+     * definitely recommended for map-like data but other values (between 0 and 1, both exclusive) may be better fits
+     * for certain kinds of output. The iterations parameter should usually be between 3 and 5, with higher values
+     * taking longer but fitting more closely; values over 5 are barely different from 5 here.
+     * @param field a Region that will be modified; should be square, otherwise it will have its size increased
+     * @param sample a Region to mimic visually; you can use mapToSample() if you have a 2D char array
+     * @param temperature typically 0.2f works well for this, but other numbers between 0 and 1 may work
+     * @param iterations typically 3-5 works well for this; lower numbers may have slight problems with quality,
+     *                   and higher numbers make this slightly slower
+     * @param random an EnhancedRandom to use for the random components of this technique
+     * @param order the order of the algorithm from 2 to 5 inclusive; this determines how big each sample is (the edge
+     *             length of a square sample).
+     * @return a new Region, width = size, height = size, mimicking the visual style of sample
+     */
+    public static Region fill(Region field, Region sample, double temperature, int iterations, EnhancedRandom random, int order)
+    {
         if(field == null) field = new Region(64, 64);
         if(sample == null) return field;
         int size = Math.max(field.width, field.height);
-        float[] weights = new float[1 << (N * N)];
+        order = Math.min(Math.max(order, 2), 5);
+        float[] weights = new float[1 << (order * order)];
         for (int x = 0; x < sample.width; x++) {
             for (int y = 0; y < sample.height; y++) {
-                weights[index(sample, x, y, false, false, false)]++;
-                weights[index(sample, x, y, false, true, true)]++;
-                weights[index(sample, x, y, true, true, false)]++;
-                weights[index(sample, x, y, true, false, true)]++;
-                weights[index(sample, x, y, true, false, false)]++;
-                weights[index(sample, x, y, true, true, true)]++;
-                weights[index(sample, x, y, false, true, false)]++;
-                weights[index(sample, x, y, false, false, true)]++;
+                weights[index(sample, x, y, order, false, false, false)]++;
+                weights[index(sample, x, y, order, false, true, true)]++;
+                weights[index(sample, x, y, order, true, true, false)]++;
+                weights[index(sample, x, y, order, true, false, true)]++;
+                weights[index(sample, x, y, order, true, false, false)]++;
+                weights[index(sample, x, y, order, true, true, true)]++;
+                weights[index(sample, x, y, order, false, true, false)]++;
+                weights[index(sample, x, y, order, false, false, true)]++;
             }
         }
 
         for (int k = 0; k < weights.length; k++)
         {
-            if (weights[k] <= 0)
+            if (weights[k] < 0.1f)
                 weights[k] = 0.1f;
         }
         field.refill(random, size, size);
@@ -196,14 +215,14 @@ public class ConvChain {
             int x = random.nextInt(size), y = random.nextInt(size);
 
             double q = 1;
-            for (int sy = y - N + 1; sy <= y + N - 1; sy++)
+            for (int sy = y - order + 1; sy <= y + order - 1; sy++)
             {
-                for (int sx = x - N + 1; sx <= x + N - 1; sx++)
+                for (int sx = x - order + 1; sx <= x + order - 1; sx++)
                 {
                     int ind = 0, difference = 0;
-                    for (int dy = 0; dy < N; dy++)
+                    for (int dy = 0; dy < order; dy++)
                     {
-                        for (int dx = 0; dx < N; dx++)
+                        for (int dx = 0; dx < order; dx++)
                         {
                             int X = sx + dx;
                             if (X < 0) X += size;
@@ -214,7 +233,7 @@ public class ConvChain {
                             else if (Y >= size) Y -= size;
 
                             boolean value = field.contains(X, Y);
-                            int power = 1 << (dy * N + dx);
+                            int power = 1 << (dy * order + dx);
                             if(value) {
                                 ind += power;
                                 if (X == x && Y == y)
@@ -246,26 +265,26 @@ public class ConvChain {
         return field;
     }
 
-    private static int index(Region field, int x, int y, boolean flipX, boolean flipY, boolean swap) {
+    private static int index(Region field, int x, int y, int order, boolean flipX, boolean flipY, boolean swap) {
         int result = 0;
         int width = field.width, height = field.height;
         if(swap)
         {
-            for (int i = 0; i < ConvChain.N; i++) {
-                for (int j = 0; j < ConvChain.N; j++) {
+            for (int i = 0; i < order; i++) {
+                for (int j = 0; j < order; j++) {
                     if(field.contains((height * 2 + (flipY ? -(y + j) : (y + j))) % height,
                             (width * 2 + (flipX ? -(x + i) : (x + i))) % width))
-                        result += 1 << (j * ConvChain.N + i);
+                        result += 1 << (j * order + i);
                 }
             }
         }
         else
         {
-            for (int i = 0; i < ConvChain.N; i++) {
-                for (int j = 0; j < ConvChain.N; j++) {
+            for (int i = 0; i < order; i++) {
+                for (int j = 0; j < order; j++) {
                     if(field.contains((width * 2 + (flipX ? -(x + i) : (x + i))) % width,
                             (height * 2 + (flipY ? -(y + j) : (y + j))) % height))
-                        result += 1 << (j * ConvChain.N + i);
+                        result += 1 << (j * order + i);
                 }
             }
         }

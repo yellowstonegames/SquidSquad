@@ -18,6 +18,7 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.ConvChain;
 import com.github.yellowstonegames.grid.LineTools;
 import com.github.yellowstonegames.grid.Noise;
@@ -28,35 +29,34 @@ public class ConvChainTest {
     public static void main(String[] args)
     {
         //seed is, in base 36, the number SQUIDLIB
-        DistinctRandom rng = new DistinctRandom(2252637788195L);
-        long time2d = 0L, time, junk = 0L;
+        WhiskerRandom rng = new WhiskerRandom(2252637788195L);
+        long timeSamples, time, junk = 0L;
 
-        rng.setState(2252637788195L);
+        for (int o = 2; o <= 5; o++) {
+            rng.setState(2252637788195L);
 
-        Region world = new MimicWorldMap(1L, Noise.instance, 0.1f).earthOriginal.copy();
-        Region doubleWorld = new Region(world.width, world.width);
-        doubleWorld.insert(0, 0, world);
-        doubleWorld.insert(0, world.height, world);
-        Region result = new Region(140, 140);
-        result = ConvChain.fill(result, doubleWorld, 0.2, 5, rng);
-
-        DungeonTools.debugPrint(LineTools.hashesToLines(ConvChain.sampleToMap(result, '.', '#'), true));
-        System.out.println();
-
-
-        time = System.currentTimeMillis();
-        for(Region sample : ConvChain.samples)
-        {
-            ConvChain.fill(result, sample, 0.2, 3, rng);
+            Region world = new MimicLocalMap(1L, Noise.instance, 0.1f).earthOriginal.copy();
+            Region result = new Region(140, 140);
+            result = ConvChain.fill(result, world, 0.125, 15, rng, o);
 
             DungeonTools.debugPrint(LineTools.hashesToLines(ConvChain.sampleToMap(result, '.', '#'), true));
             System.out.println();
 
-        }
-        time2d += System.currentTimeMillis() - time;
-        junk += rng.nextLong();
 
-        System.out.println("2D time: " + time2d);
+            time = System.currentTimeMillis();
+            for (Region sample : ConvChain.samples) {
+                ConvChain.fill(result, sample, 0.125, 15, rng, o);
+
+                DungeonTools.debugPrint(LineTools.hashesToLines(ConvChain.sampleToMap(result, '.', '#'), true));
+                System.out.println();
+
+            }
+            timeSamples = System.currentTimeMillis() - time;
+            junk += rng.nextLong();
+
+            System.out.println("Time for all samples: " + timeSamples);
+            System.out.println();
+        }
         System.out.println("Extra data, irrelevant except that it forces calculations: " + junk);
     }
 }
