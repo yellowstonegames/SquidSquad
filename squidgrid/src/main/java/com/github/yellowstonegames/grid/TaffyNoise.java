@@ -44,7 +44,7 @@ public class TaffyNoise {
     public long seed;
     public final int dim;
     public final float sharpness;
-    protected float inverse;
+    protected float inverse, lesserInverse;
     protected final float[] working, points;
     protected final float[][] vertices;
 
@@ -86,6 +86,7 @@ public class TaffyNoise {
         }
         this.seed = seed;
         inverse = 1f / (dim + 1f);
+        lesserInverse = 0.5f / (dim);
 //        printDebugInfo();
     }
 
@@ -109,9 +110,8 @@ public class TaffyNoise {
         int s = (int)(seed ^ seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
-            s = (s << 13 | s >>> 19) + 1234567;
+            s = s * 0x9E373 ^ 0x7F4A7C15;
             float cx = working[i];
-            if(j == dim) j = 0;
             float cy = working[j];
             int idx = s + (int) (cx * 95 + cy * 21);
             sum += (cos(cx)
@@ -120,13 +120,13 @@ public class TaffyNoise {
                     + sin(SIN_TABLE[s + 4096 & TABLE_MASK]*cx)
             );
         }
-        return sinTurns(sum * 0.75f * inverse);
+        return sinTurns(sum * lesserInverse);
     }
 
     protected float valueNoise2D() {
-        int bits = BitConversion.floatToIntBits(working[dim]);
-        int sx = (int)(seed ^ seed >>> 32 ^ bits);
-        int sy = sx + 1234567 ^ (bits << 13 | bits >>> 19);
+        int bits = BitConversion.floatToRawIntBits(working[dim]);
+        int sx = (int)(seed ^ seed >>> 32 ^ bits) * 0x9E373 ^ 0x7F4A7C15;;
+        int sy = sx * 0x9E373 ^ 0x7F4A7C15;
         float cx = working[0];
         float cy = working[1];
         int idx = sx + (int) (cx * 95 + cy * 21);
@@ -141,7 +141,7 @@ public class TaffyNoise {
                 - cos(SIN_TABLE[sy & TABLE_MASK]*cx)
                 + sin(SIN_TABLE[sy + 4096 & TABLE_MASK]*cy)
         );
-        return sinTurns(sum * 0.75f * inverse);
+        return sinTurns(sum * lesserInverse);
     }
 
     public float getNoise(float... args) {
@@ -183,7 +183,7 @@ public class TaffyNoise {
                 working[j] = points[d];
             }
             working[0] += warp;
-            warp = valueNoise();
+            warp = valueNoise2D();
             result += warp;
             working[2] += -0.423310825130748f;
         }

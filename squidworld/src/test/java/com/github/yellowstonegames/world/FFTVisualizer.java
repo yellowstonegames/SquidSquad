@@ -960,8 +960,8 @@ public class FFTVisualizer extends ApplicationAdapter {
                             points[dim][1] = (c+y)*fr;
 //                            float cx = (c+x)*fr;
 //                            float cy = (c+y)*fr;
-                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
-//                            bright = basicPrepare(taffies[dim].getNoise2D(cx, cy));
+//                            bright = basicPrepare(taffies[dim].getNoise(points[dim]));
+                            bright = basicPrepare(taffies[dim].getNoise2D(points[dim][0], points[dim][1]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
