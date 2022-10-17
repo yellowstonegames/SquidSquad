@@ -40,7 +40,7 @@ import java.util.Collections;
  * the ideal residents for difficult mountainous terrain). This needs both a {@link WorldMapGenerator} and a
  * {@link BiomeMapper} to allocate biomes and height/moisture info. If allocating human groups only, you might want to
  * decide where a faction would settle by what technologies they use regularly; a seafaring culture would have a
- * {@link Faction#preferredHeight} that includes 4 so they can settle on shorelines, while a horse-riding culture might
+ * {@link Faction#preferredHeight} that includes 4, so they can settle on shorelines, while a horse-riding culture might
  * have {@link Faction#preferredBiomes} that include "Grassland" and "Savanna" so they can ride easily.
  * The WorldMapGenerator is commonly a {@link LocalMap} for continent/area maps, or a {@link StretchWorldMap} for a
  * world map for a familiar shape for world maps, but an {@link EllipticalWorldMap} or {@link HyperellipticalWorldMap}
@@ -60,7 +60,18 @@ public class PoliticalMapper {
      * of 4 (shoreline) for seafaring groups, or preferredBiomes that include "Grassland" for equestrians.
      */
     public static class Faction {
-        public String name, shortName;
+        /**
+         * The (typically longer) formal name of the Faction, such as "The United States of America" or "The Noble
+         * Fiefdom of Harjalia".
+         */
+        public String name;
+        /**
+         * The short name of the Faction, such as "America" or "Harjalia".
+         */
+        public String shortName;
+        /**
+         * What {@link Language} to use to generate place names and the names of nations.
+         */
         public Language language;
         /**
          * An ObjectSet of String keys, where each key is the name of a biome this Faction wants to occupy.
@@ -97,12 +108,9 @@ public class PoliticalMapper {
          */
         public Faction()
         {
-            language = Language.randomLanguage(
-                    (long) ((Math.random() - 0.5) * 0x10000000000000L)
-                            ^ (long) (((Math.random() - 0.5) * 2.0) * 0x8000000000000000L));
+            language = Language.randomLanguage(EnhancedRandom.seedFromMath());
             shortName = name = language.word(true);
-            this.blockedBiomes = new ObjectSet<>(1, 0.75f);
-            blockedBiomes.add("Ocean");
+            this.blockedBiomes = ObjectSet.with("Ocean");
         }
 
         /**
@@ -114,8 +122,7 @@ public class PoliticalMapper {
         {
             this.language = language;
             shortName = name = language.word(true);
-            this.blockedBiomes = new ObjectSet<>(1, 0.75f);
-            blockedBiomes.add("Ocean");
+            this.blockedBiomes = ObjectSet.with("Ocean");
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name and shortName to the
@@ -127,8 +134,7 @@ public class PoliticalMapper {
         {
             this.language = language;
             shortName = this.name = name;
-            this.blockedBiomes = new ObjectSet<>(1, 0.75f);
-            blockedBiomes.add("Ocean");
+            this.blockedBiomes = ObjectSet.with("Ocean");
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
@@ -142,8 +148,7 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.blockedBiomes = new ObjectSet<>(1, 0.75f);
-            blockedBiomes.add("Ocean");
+            this.blockedBiomes = ObjectSet.with("Ocean");
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
@@ -162,10 +167,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes.length, 0.75f);
-            Collections.addAll(this.preferredBiomes, preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(1, 0.75f);
-            blockedBiomes.add("Ocean");
+            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = ObjectSet.with("Ocean");
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
@@ -184,10 +187,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes.length, 0.75f);
-            Collections.addAll(this.preferredBiomes, preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes.length, 0.75f);
-            Collections.addAll(this.blockedBiomes, blockedBiomes);
+            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
@@ -208,10 +209,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes.length, 0.75f);
-            Collections.addAll(this.preferredBiomes, preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes.length, 0.75f);
-            Collections.addAll(this.blockedBiomes, blockedBiomes);
+            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
         }
 
@@ -238,10 +237,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes.length, 0.75f);
-            Collections.addAll(this.preferredBiomes, preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes.length, 0.75f);
-            Collections.addAll(this.blockedBiomes, blockedBiomes);
+            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
             this.preferredHeat = preferredHeat;
         }
@@ -270,10 +267,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes.length, 0.75f);
-            Collections.addAll(this.preferredBiomes, preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes.length, 0.75f);
-            Collections.addAll(this.blockedBiomes, blockedBiomes);
+            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
             this.preferredHeat = preferredHeat;
             this.preferredMoisture = preferredMoisture;
