@@ -53,7 +53,7 @@ public class TaffyNoise {
     }
 
     public TaffyNoise(long seed, int dimension) {
-        this(seed, dimension, 0.5f + 0.25f * Math.max(2, dimension));
+        this(seed, dimension, 0.25f + 0.4f * Math.max(2, dimension));
     }
 
     public TaffyNoise(long seed, int dimension, float sharpness) {
@@ -62,6 +62,24 @@ public class TaffyNoise {
         working = new float[dim+1];
         points = new float[dim+1];
         vertices = new float[dim+1][dim];
+        inverse = 1f / (dim + 1f);
+        lesserInverse = 1f / (dim + 4f);
+        setSeed(seed);
+//        printDebugInfo();
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    /**
+     * Sets the seed, BUT ALSO resets the vertices this has, using the seed to randomize them. This can be significantly
+     * more computationally expensive than a plain setter, but still shouldn't slow down most usage unless you call this
+     * method many times per frame.
+     * @param seed any long
+     */
+    public void setSeed(long seed) {
+        this.seed = seed;
         float id = -1f / dim;
         vertices[0][0] = 1f;
         for (int v = 1; v <= dim; v++) {
@@ -79,15 +97,15 @@ public class TaffyNoise {
             }
         }
         for (int v = 0; v <= dim; v++) {
-            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
-                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
-            vertices[v][0] = TrigTools.cos(theta) * dist;
-            vertices[v][1] = TrigTools.sin(theta) * dist;
+//            final float theta = TrigTools.atan2Turns(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+//                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+//            vertices[v][0] = TrigTools.cosTurns(theta) * dist;
+//            vertices[v][1] = TrigTools.sinTurns(theta) * dist;
+            for (int d = 0; d < dim; d++) {
+                vertices[v][d] *= Hasher.randomize3Float(--seed) + 1f;
+            }
         }
-        this.seed = seed;
-        inverse = 1f / (dim + 1f);
-        lesserInverse = 0.5f / (dim);
-//        printDebugInfo();
+
     }
 
     public String serializeToString() {
