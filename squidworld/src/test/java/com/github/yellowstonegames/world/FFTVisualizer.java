@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
@@ -43,7 +45,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 18;
-    private int mode = 17;
+    private int mode = 5;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -82,6 +84,52 @@ public class FFTVisualizer extends ApplicationAdapter {
         return n * 0.5 + 0.5;
     }
 
+    private static final double root2pi = Math.sqrt(TrigTools.PI2_D);
+    private static final double invRoot2pi = 1.0 / root2pi;
+    public static double normalPDF(double x) {
+        return Math.exp(-0.5*x*x)*invRoot2pi;
+    }
+    public static double normalPDFStigler(double x) {
+        return Math.exp(-TrigTools.PI_D*x*x);
+    }
+
+    /**
+     * Inverse to the {@link com.github.tommyettinger.random.EnhancedRandom#probit(double)} function; takes a normal-distributed input and returns a value between 0.0
+     * and 1.0, both inclusive. This is based on a scaled error function approximation; the original approximation has a
+     * maximum error of {@code 3.0e-7}, and scaling it shouldn't change that too drastically. The CDF of the normal
+     * distribution is essentially the same as this method.
+     * <br>
+     * Equivalent to a scaled error function from Abramowitz and Stegun, 1964; equation 7.1.27 .
+     * See <a href="https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions">Wikipedia</a>.
+     * @param x any finite double, typically normal-distributed but not necessarily
+     * @return a double between 0 and 1, inclusive
+     */
+    public double normalCDF(final double x) {
+        final double a1 = 0.0705230784, a2 = 0.0422820123, a3 = 0.0092705272, a4 = 0.0001520143, a5 = 0.0002765672, a6 = 0.0000430638;
+        final double sign = Math.signum(x), y1 = sign * x * 0.7071067811865475, y2 = y1 * y1, y3 = y1 * y2, y4 = y2 * y2, y5 = y2 * y3, y6 = y3 * y3;
+        double n = 1.0 + a1 * y1 + a2 * y2 + a3 * y3 + a4 * y4 + a5 * y5 + a6 * y6;
+        n *= n;
+        n *= n;
+        n *= n;
+        return sign * (0.5 - 0.5 / (n * n)) + 0.5;
+    }
+
+    /**
+     * Error function from Abramowitz and Stegun, 1964; equation 7.1.27 .
+     * See <a href="https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions">Wikipedia</a>.
+     * @param x any finite double
+     * @return a double between -1 and 1, inclusive
+     */
+    public double erf(final double x) {
+        final double a1 = 0.0705230784, a2 = 0.0422820123, a3 = 0.0092705272, a4 = 0.0001520143, a5 = 0.0002765672, a6 = 0.0000430638;
+        final double sign = Math.signum(x), y1 = sign * x, y2 = y1 * y1, y3 = y1 * y2, y4 = y2 * y2, y5 = y2 * y3, y6 = y3 * y3;
+        double n = 1.0 + a1 * y1 + a2 * y2 + a3 * y3 + a4 * y4 + a5 * y5 + a6 * y6;
+        n *= n;
+        n *= n;
+        n *= n;
+        return sign * (1.0 - 1.0 / (n * n));
+    }
+
     @Override
     public void create() {
         for (int i = 0; i < 7; i++) {
@@ -97,7 +145,7 @@ public class FFTVisualizer extends ApplicationAdapter {
         pm = new Pixmap(Gdx.files.local("out/blueNoise/BlueNoiseOmniTiling8x8.png"));
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                realKnown[x][y] = ((pm.getPixel(x, y) >> 24) + 128.0) / 255.0;
+                realKnown[x][y] = ((pm.getPixel(x, y) >> 24) + 0.5);
             }
         }
         Fft.transformWindowless2D(realKnown, imagKnown);
@@ -489,37 +537,52 @@ public class FFTVisualizer extends ApplicationAdapter {
             }
         } else if(mode == 5) {
 //            norm.clear();
-//
-//            //// Set up an initial Fourier transform for this to invert
+            double maxReal = 0.0, maxImag = 0.0;
+            //// Set up an initial Fourier transform for this to invert
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    real[x][y] = realKnown[x][y];
+                    imag[x][y] = imagKnown[x][y];
+                 }
+            }
+
+//            //// This is likely incorrect... imag probably also needs some values.
 //            for (int x = 0; x < width; x++) {
 //                for (int y = 0; y < height >>> 1; y++) {
-//                    norm.put(Coord.get(x, y),
-//                            real[x][y] = real[width - 1 - x][height - 1 - y] = realKnown[x][y]);
-//                    imag[x][y] = imag[width - 1 - x][height - 1 - y] = imagKnown[x][y];
+//                    final double hx = 1.0 - Math.abs(x - width * 0.5 + 0.5) / 255.5, hy = 1.0 - (height * 0.5 - 0.5 - y) / 255.5;
+//                    final double a = Math.sqrt(hx * hx + hy * hy);
+//                    norm.put(Coord.get(x + 256 & 511, y + 256 & 511),
+//                            real[x][y] = real[width - 1 - x][height - 1 - y] =
+//                            (1f/255f) * IntPointHash.hash256(x, y, noise.getSeed()) * MathUtils.clamp((a * a * a * (a * (a * 6.0 -15.0) + 10.0) - 0.125), 0.0, 1.0));
 //                 }
 //            }
-//
-////            //// This is likely incorrect... imag probably also needs some values.
-////            for (int x = 0; x < width; x++) {
-////                for (int y = 0; y < height >>> 1; y++) {
-////                    final double hx = 1.0 - Math.abs(x - width * 0.5 + 0.5) / 255.5, hy = 1.0 - (height * 0.5 - 0.5 - y) / 255.5;
-////                    final double a = Math.sqrt(hx * hx + hy * hy);
-////                    norm.put(Coord.get(x + 256 & 511, y + 256 & 511),
-////                            real[x][y] = real[width - 1 - x][height - 1 - y] =
-////                            (1f/255f) * IntPointHash.hash256(x, y, noise.getSeed()) * MathUtils.clamp((a * a * a * (a * (a * 6.0 -15.0) + 10.0) - 0.125), 0.0, 1.0));
-////                 }
-////            }
-////            real[width >>> 1][height >>> 1] = 1.0;
-////            real[(width >>> 1)-1][(height >>> 1)] = 1.0;
-////            real[(width >>> 1)-1][(height >>> 1)-1] = 1.0;
-////            real[(width >>> 1)][(height >>> 1)-1] = 1.0;
-////            norm.put(Coord.get(width >>> 1, (height >>> 1)-1), 1.0);
-////            norm.put(Coord.get((width >>> 1) - 1, (height >>> 1)-1), 1.0);
-//
-//            //// Done setting up the initial Fourier transform
-//
-//            Fft.transformWindowless2D(imag, real);
-//            //// re-normalize
+//            real[width >>> 1][height >>> 1] = 1.0;
+//            real[(width >>> 1)-1][(height >>> 1)] = 1.0;
+//            real[(width >>> 1)-1][(height >>> 1)-1] = 1.0;
+//            real[(width >>> 1)][(height >>> 1)-1] = 1.0;
+//            norm.put(Coord.get(width >>> 1, (height >>> 1)-1), 1.0);
+//            norm.put(Coord.get((width >>> 1) - 1, (height >>> 1)-1), 1.0);
+
+            //// Done setting up the initial Fourier transform
+
+            Fft.transformWindowless2D(imag, real);
+
+            //// re-normalize
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    maxReal = Math.max(Math.abs(real[x][y]), maxReal);
+                    maxImag = Math.max(Math.abs(imag[x][y]), maxImag);
+                }
+            }
+            maxReal = 1.0 / maxReal;
+//            maxImag = 1.0 / maxImag;
+
+            for (int x = 0; x < real.length; x++) {
+                for (int y = 0; y < real[x].length; y++) {
+                    real[x][y] = normalPDFStigler(real[x][y] * maxReal);
+                }
+            }
 //
 //            norm.shuffle(shuffler);
 //            norm.sortByValue(doubleComparator);
@@ -530,24 +593,37 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                real[co.x][co.y] = real[width - 1 - co.x][height - 1 - co.y] = i / den;
 //            }
 //            shuffler.setState(0x1234567890ABCDEFL);
-//            //// done re-normalizing
+            //// done re-normalizing
 
-            Color color = new Color(255);
-            int ic;
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    ic = pm.getPixel(x, y);
-                    real[x][y] = (ic >>> 24) / 255.0;
-//                    bright = (float) real[x][y];
-                    Color.rgba8888ToColor(color, ic);
-                    renderer.color(color);
-                    renderer.vertex(x, y, 0);
+            switch (dim & 1) {
+                case 0:
+                    Fft.getColors(real, imag, colors);
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        renderer.color(colors[x][y]);
+                        renderer.vertex(x, y, 0);
+                    }
                 }
+                break;
+                case 1:
+                    Fft.getColorsThreshold(real, imag, colors, threshold);
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        renderer.color(colors[x][y]);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+                break;
             }
-//            Fft.getColors(real, imag, colors);
+
+//            Color color = new Color(255);
+//            int ic;
 //            for (int x = 0; x < width; x++) {
 //                for (int y = 0; y < height; y++) {
-//                    renderer.color(colors[x][y]);
+//                    ic = pm.getPixel(x, y);
+//                    real[x][y] = (ic >>> 24) / 255.0;
+//                    Color.rgba8888ToColor(color, ic);
+//                    renderer.color(color);
 //                    renderer.vertex(x, y, 0);
 //                }
 //            }
