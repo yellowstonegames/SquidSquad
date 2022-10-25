@@ -2,6 +2,7 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -581,6 +582,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             for (int x = 0; x < real.length; x++) {
                 for (int y = 0; y < real[x].length; y++) {
                     real[x][y] = normalPDFStigler(real[x][y] * maxReal);
+//                    imag[x][y] = normalPDFStigler(imag[x][y] * maxImag);
                 }
             }
 //
@@ -598,6 +600,11 @@ public class FFTVisualizer extends ApplicationAdapter {
             switch (dim & 1) {
                 case 0:
                     Fft.getColors(real, imag, colors);
+                    if(Gdx.input.isKeyJustPressed(P)) {
+                        for (int i = 0; i < 256; i++) {
+                            System.out.printf("%3d: %d\n", i, Fft.histogram[i]);
+                        }
+                    }
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         renderer.color(colors[x][y]);

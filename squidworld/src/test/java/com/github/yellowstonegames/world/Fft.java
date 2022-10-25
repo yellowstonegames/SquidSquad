@@ -22,6 +22,8 @@
  */
 package com.github.yellowstonegames.world;
 
+import java.util.Arrays;
+
 public final class Fft {
 	
 	/* 
@@ -156,6 +158,10 @@ public final class Fft {
 		}
 	}
 
+	public static final int[] histogram = new int[256];
+
+	private static final double[][] temp = new double[256][256];
+
 	public static void getColors(double[][] real, double[][] imag, float[][] background){
 		final int n = real.length, mask = n - 1, half = n >>> 1;
 		double max = 0.0, mag, r, i;
@@ -165,19 +171,21 @@ public final class Fft {
 				i = imag[x + half & mask][y + half & mask];
 				mag = Math.sqrt(r * r + i * i);
 				max = Math.max(mag, max);
-				background[x][y] = (float) mag;
+				temp[x][y] = mag;
 			}
 		}
 		if(max <= 0.0)
 			max = 0.001;
-		double c = 255.0 / Math.log1p(max);
+		double c = 255.9999 / Math.log1p(max);
 		double d = 1.0 / Math.log1p(max);
 		int cb;
+		Arrays.fill(histogram, 0);
 		for (int x = 0; x < n; x++) {
 			for (int y = 0; y < n; y++) {
-				double lg = Math.log1p(background[x][y]);
+				double lg = Math.log1p(temp[x][y]);
 				real[x][y] = d * lg;
 				cb = (int)(c * lg);
+				histogram[cb]++;
 				background[x][y] = Float.intBitsToFloat(cb * 0x010101 | 0xFE000000);
 			}
 		}
