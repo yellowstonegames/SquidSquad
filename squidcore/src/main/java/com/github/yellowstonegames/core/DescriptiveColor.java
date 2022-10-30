@@ -1886,13 +1886,13 @@ public final class DescriptiveColor {
                     if (len > 2 && (term.charAt(2) == 'g')) { // light
                         switch (len) {
                             case 9:
-                                lightness += 0.20f;
+                                lightness += 0.150f;
                             case 8:
-                                lightness += 0.20f;
+                                lightness += 0.150f;
                             case 7:
-                                lightness += 0.20f;
+                                lightness += 0.150f;
                             case 5:
-                                lightness += 0.20f;
+                                lightness += 0.150f;
                                 break;
                         }
                     } else {
@@ -1903,17 +1903,17 @@ public final class DescriptiveColor {
                     if (len > 3 && (term.charAt(3) == 'g')) { // bright
                         switch (len) {
                             case 10:
-                                lightness += 0.20f;
-                                saturation += 0.200f;
+                                lightness += 0.150f;
+                                saturation += 0.25f;
                             case 9:
-                                lightness += 0.20f;
-                                saturation += 0.200f;
+                                lightness += 0.150f;
+                                saturation += 0.2f;
                             case 8:
-                                lightness += 0.20f;
-                                saturation += 0.200f;
+                                lightness += 0.150f;
+                                saturation += 0.1f;
                             case 6:
-                                lightness += 0.20f;
-                                saturation += 0.200f;
+                                lightness += 0.150f;
+                                saturation += 0.1f;
                                 break;
                         }
                     } else {
@@ -1925,17 +1925,17 @@ public final class DescriptiveColor {
                         switch (len) {
                             case 8: // palemost
                             case 7: // palerer
-                                lightness += 0.20f;
-                                saturation -= 0.200f;
+                                lightness += 0.150f;
+                                saturation -= 0.25f;
                             case 6: // palest
-                                lightness += 0.20f;
-                                saturation -= 0.200f;
+                                lightness += 0.150f;
+                                saturation -= 0.2f;
                             case 5: // paler
-                                lightness += 0.20f;
-                                saturation -= 0.200f;
+                                lightness += 0.150f;
+                                saturation -= 0.15f;
                             case 4: // pale
-                                lightness += 0.20f;
-                                saturation -= 0.200f;
+                                lightness += 0.150f;
+                                saturation -= 0.1f;
                                 break;
                         }
                     } else {
@@ -1946,17 +1946,17 @@ public final class DescriptiveColor {
                     if (len > 3 && (term.charAt(3) == 'k')) { // weak
                         switch (len) {
                             case 8:
-                                lightness -= 0.20f;
-                                saturation -= 0.200f;
+                                lightness -= 0.150f;
+                                saturation -= 0.25f;
                             case 7:
-                                lightness -= 0.20f;
-                                saturation -= 0.200f;
+                                lightness -= 0.150f;
+                                saturation -= 0.2f;
                             case 6:
-                                lightness -= 0.20f;
-                                saturation -= 0.200f;
+                                lightness -= 0.150f;
+                                saturation -= 0.15f;
                             case 4:
-                                lightness -= 0.20f;
-                                saturation -= 0.200f;
+                                lightness -= 0.150f;
+                                saturation -= 0.1f;
                                 break;
                         }
                     } else {
@@ -1967,13 +1967,13 @@ public final class DescriptiveColor {
                     if (len > 1 && (term.charAt(1) == 'i')) { // rich
                         switch (len) {
                             case 8:
-                                saturation += 0.200f;
+                                saturation += 0.25f;
                             case 7:
-                                saturation += 0.200f;
+                                saturation += 0.2f;
                             case 6:
-                                saturation += 0.200f;
+                                saturation += 0.15f;
                             case 4:
-                                saturation += 0.200f;
+                                saturation += 0.1f;
                                 break;
                         }
                     } else {
@@ -1984,41 +1984,41 @@ public final class DescriptiveColor {
                     if (len > 1 && (term.charAt(1) == 'a')) { // dark
                         switch (len) {
                             case 8:
-                                lightness -= 0.20f;
+                                lightness -= 0.150f;
                             case 7:
-                                lightness -= 0.20f;
+                                lightness -= 0.150f;
                             case 6:
-                                lightness -= 0.20f;
+                                lightness -= 0.150f;
                             case 4:
-                                lightness -= 0.20f;
+                                lightness -= 0.150f;
                                 break;
                         }
                     } else if (len > 1 && (term.charAt(1) == 'u')) { // dull
                         switch (len) {
                             case 8:
-                                saturation -= 0.200f;
+                                saturation -= 0.25f;
                             case 7:
-                                saturation -= 0.200f;
+                                saturation -= 0.2f;
                             case 6:
-                                saturation -= 0.200f;
+                                saturation -= 0.15f;
                             case 4:
-                                saturation -= 0.200f;
+                                saturation -= 0.1f;
                                 break;
                         }
                     } else if (len > 3 && (term.charAt(3) == 'p')) { // deep
                         switch (len) {
                             case 8:
-                                lightness -= 0.20f;
-                                saturation += 0.200f;
+                                lightness -= 0.150f;
+                                saturation += 0.25f;
                             case 7:
-                                lightness -= 0.20f;
-                                saturation += 0.200f;
+                                lightness -= 0.150f;
+                                saturation += 0.2f;
                             case 6:
-                                lightness -= 0.20f;
-                                saturation += 0.200f;
+                                lightness -= 0.150f;
+                                saturation += 0.15f;
                             case 4:
-                                lightness -= 0.20f;
-                                saturation += 0.200f;
+                                lightness -= 0.150f;
+                                saturation += 0.1f;
                                 break;
                         }
                     } else {
