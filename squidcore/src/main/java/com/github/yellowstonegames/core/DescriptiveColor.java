@@ -1724,19 +1724,30 @@ public final class DescriptiveColor {
 
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.
-     * If {@code colors} is null or has no items, this returns {@link #TRANSPARENT}.
-     *
-     * @param colors an array or varargs of packed int colors; all should use the same color space
+     * If {@code colors} is null or has no items, this returns 256 (a transparent placeholder used by
+     * TextraTypist for "no color found").
+     * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
+     * for colors, typically 0 for offset, and its {@code size} for size.
+     * @param colors an array of packed int colors; all should use the same color space
      * @param offset the index of the first item in {@code colors} to use
-     * @param size   how many items from {@code colors} to use
-     * @return an even mix of all colors given, as a packed int color
+     * @param size how many items from {@code colors} to use
+     * @return an even mix of all colors given, as a packed int color with the same color space as the input(s)
      */
     public static int mix(int[] colors, int offset, int size) {
-        if (colors == null || colors.length < offset + size || offset < 0 || size <= 0)
-            return TRANSPARENT;
-        int result = colors[offset];
-        for (int i = offset + 1, o = offset + size, denom = 2; i < o; i++, denom++) {
-            result = lerpColors(result, colors[i], 1f / denom);
+        int end = offset + size;
+        if(colors == null || colors.length < end || offset < 0 || size <= 0)
+            return 256; // transparent super-dark-blue, used to indicate "not found"
+        int result = 256;
+        while(colors[offset] == 256)
+        {
+            offset++;
+        }
+        if(offset < end)
+            result = colors[offset];
+        for (int i = offset + 1, o = end, denom = 2; i < o; i++, denom++) {
+            if(colors[i] != 256)
+                result = lerpColors(result, colors[i], 1f / denom);
+            else --denom;
         }
         return result;
     }
@@ -1833,16 +1844,24 @@ public final class DescriptiveColor {
     /**
      * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
      * Color descriptions consist of one or more alphabetical words, separated by non-alphabetical characters (typically
-     * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
-     * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
-     * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
-     * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
-     * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
-     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. Technically,
-     * the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
-     * "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
-     * appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
-     * name or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
+     * words, the colors will be mixed using {@link #mix(int[], int, int)}, or if there is just one color name word,
+     * then the corresponding color will be used.
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the RGBA8888 int value 256 (used as a placeholder by TextraTypist, and suggested as a
+     * placeholder for other code).
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
@@ -1864,88 +1883,156 @@ public final class DescriptiveColor {
             final int len = term.length();
             switch (term.charAt(0)) {
                 case 'l':
-                    if (len > 2 && term.charAt(2) == 'g') {
+                    if (len > 2 && (term.charAt(2) == 'g')) { // light
                         switch (len) {
                             case 9:
-                                lightness += 0.125f;
+                                lightness += 0.20f;
                             case 8:
-                                lightness += 0.125f;
+                                lightness += 0.20f;
                             case 7:
-                                lightness += 0.125f;
+                                lightness += 0.20f;
                             case 5:
-                                lightness += 0.125f;
-                                break;
-                            default:
-                                mixing.add(TRANSPARENT);
+                                lightness += 0.20f;
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 0));
+                        mixing.add(NAMED.getOrDefault(term, 256));
+                    }
+                    break;
+                case 'b':
+                    if (len > 3 && (term.charAt(3) == 'g')) { // bright
+                        switch (len) {
+                            case 10:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 9:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 8:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 6:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, 256));
+                    }
+                    break;
+                case 'p':
+                    if (len > 2 && (term.charAt(2) == 'l')) { // pale
+                        switch (len) {
+                            case 8: // palemost
+                            case 7: // palerer
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 6: // palest
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 5: // paler
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 4: // pale
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, 256));
+                    }
+                    break;
+                case 'w':
+                    if (len > 3 && (term.charAt(3) == 'k')) { // weak
+                        switch (len) {
+                            case 8:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 7:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 6:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 4:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, 256));
                     }
                     break;
                 case 'r':
-                    if (len > 1 && term.charAt(1) == 'i') {
+                    if (len > 1 && (term.charAt(1) == 'i')) { // rich
                         switch (len) {
                             case 8:
-                                saturation += 0.2f;
+                                saturation += 0.200f;
                             case 7:
-                                saturation += 0.2f;
+                                saturation += 0.200f;
                             case 6:
-                                saturation += 0.2f;
+                                saturation += 0.200f;
                             case 4:
-                                saturation += 0.2f;
-                                break;
-                            default:
-                                mixing.add(TRANSPARENT);
+                                saturation += 0.200f;
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 0));
+                        mixing.add(NAMED.getOrDefault(term, 256));
                     }
                     break;
                 case 'd':
-                    if (len > 1 && term.charAt(1) == 'a') {
+                    if (len > 1 && (term.charAt(1) == 'a')) { // dark
                         switch (len) {
                             case 8:
-                                lightness -= 0.15f;
+                                lightness -= 0.20f;
                             case 7:
-                                lightness -= 0.15f;
+                                lightness -= 0.20f;
                             case 6:
-                                lightness -= 0.15f;
+                                lightness -= 0.20f;
                             case 4:
-                                lightness -= 0.15f;
-                                break;
-                            default:
-                                mixing.add(TRANSPARENT);
+                                lightness -= 0.20f;
                                 break;
                         }
-                    } else if (len > 1 && term.charAt(1) == 'u') {
+                    } else if (len > 1 && (term.charAt(1) == 'u')) { // dull
                         switch (len) {
                             case 8:
-                                saturation -= 0.2f;
+                                saturation -= 0.200f;
                             case 7:
-                                saturation -= 0.2f;
+                                saturation -= 0.200f;
                             case 6:
-                                saturation -= 0.2f;
+                                saturation -= 0.200f;
                             case 4:
-                                saturation -= 0.2f;
+                                saturation -= 0.200f;
                                 break;
-                            default:
-                                mixing.add(TRANSPARENT);
+                        }
+                    } else if (len > 3 && (term.charAt(3) == 'p')) { // deep
+                        switch (len) {
+                            case 8:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 7:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 6:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 4:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 0));
+                        mixing.add(NAMED.getOrDefault(term, 256));
                     }
                     break;
                 default:
-                    mixing.add(NAMED.getOrDefault(term, 0));
+                    mixing.add(NAMED.getOrDefault(term, 256));
                     break;
             }
         }
         if(mixing.size() == 0) return 0;
         int result = mix(mixing.items, 0, mixing.size());
-        if(result == 0) return 0;
+        if(result == 256) return result;
 
         if (lightness > 0) result = lighten(result, lightness);
         else if (lightness < 0) result = darken(result, -lightness);
