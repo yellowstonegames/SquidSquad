@@ -1749,7 +1749,7 @@ public final class DescriptiveColor {
         }
         if(offset < end)
             result = colors[offset];
-        for (int i = offset + 1, o = end, denom = 2; i < o; i++, denom++) {
+        for (int i = offset + 1, denom = 2; i < end; i++, denom++) {
             if(colors[i] != PLACEHOLDER)
                 result = lerpColors(result, colors[i], 1f / denom);
             else --denom;
@@ -1869,7 +1869,7 @@ public final class DescriptiveColor {
      * placeholder for other code).
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
-     * and "lightest richer apricot-olive".
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", and "weakmost celery".
      * <br>
      * This overload always considers its input a color description, and won't parse hex colors.
      *
@@ -1898,11 +1898,10 @@ public final class DescriptiveColor {
                                 lightness += 0.150f;
                             case 5:
                                 lightness += 0.150f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 case 'b':
                     if (len > 3 && (term.charAt(3) == 'g')) { // bright
@@ -1919,11 +1918,10 @@ public final class DescriptiveColor {
                             case 6:
                                 lightness += 0.150f;
                                 saturation += 0.1f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 case 'p':
                     if (len > 2 && (term.charAt(2) == 'l')) { // pale
@@ -1941,11 +1939,10 @@ public final class DescriptiveColor {
                             case 4: // pale
                                 lightness += 0.150f;
                                 saturation -= 0.1f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 case 'w':
                     if (len > 3 && (term.charAt(3) == 'k')) { // weak
@@ -1962,11 +1959,10 @@ public final class DescriptiveColor {
                             case 4:
                                 lightness -= 0.150f;
                                 saturation -= 0.1f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 case 'r':
                     if (len > 1 && (term.charAt(1) == 'i')) { // rich
@@ -1979,11 +1975,10 @@ public final class DescriptiveColor {
                                 saturation += 0.15f;
                             case 4:
                                 saturation += 0.1f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 case 'd':
                     if (len > 1 && (term.charAt(1) == 'a')) { // dark
@@ -1996,7 +1991,7 @@ public final class DescriptiveColor {
                                 lightness -= 0.150f;
                             case 4:
                                 lightness -= 0.150f;
-                                break;
+                                continue;
                         }
                     } else if (len > 1 && (term.charAt(1) == 'u')) { // dull
                         switch (len) {
@@ -2008,7 +2003,7 @@ public final class DescriptiveColor {
                                 saturation -= 0.15f;
                             case 4:
                                 saturation -= 0.1f;
-                                break;
+                                continue;
                         }
                     } else if (len > 3 && (term.charAt(3) == 'p')) { // deep
                         switch (len) {
@@ -2024,11 +2019,10 @@ public final class DescriptiveColor {
                             case 4:
                                 lightness -= 0.150f;
                                 saturation += 0.1f;
-                                break;
+                                continue;
                         }
-                    } else {
-                        mixing.add(NAMED.get(term));
                     }
+                    mixing.add(NAMED.get(term));
                     break;
                 default:
                     mixing.add(NAMED.get(term));
