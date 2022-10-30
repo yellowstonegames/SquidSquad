@@ -86,6 +86,11 @@ public final class DescriptiveColor {
 
     public static final IntList LIST = new IntList(50);
 
+    /**
+     * A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
+     * that aren't valid in some way.
+     */
+    public static final int PLACEHOLDER = 0x00000100;
 
     /**
      * This color constant "transparent" has RGBA8888 code {@code 00000000}, L 0.0, A 0.49803922, B 0.49803922, alpha 0.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.
@@ -694,7 +699,7 @@ public final class DescriptiveColor {
     public static final ObjectList<String> NAMES = NAMED.order();
 
     static {
-        NAMED.setDefaultValue(TRANSPARENT);
+        NAMED.setDefaultValue(PLACEHOLDER);
         NAMES.sort(null);
     }
 
@@ -1724,7 +1729,7 @@ public final class DescriptiveColor {
 
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.
-     * If {@code colors} is null or has no items, this returns 256 (a transparent placeholder used by
+     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER} (a transparent placeholder used by
      * TextraTypist for "no color found").
      * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
      * for colors, typically 0 for offset, and its {@code size} for size.
@@ -1736,16 +1741,16 @@ public final class DescriptiveColor {
     public static int mix(int[] colors, int offset, int size) {
         int end = offset + size;
         if(colors == null || colors.length < end || offset < 0 || size <= 0)
-            return 256; // transparent super-dark-blue, used to indicate "not found"
-        int result = 256;
-        while(colors[offset] == 256)
+            return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
+        int result = PLACEHOLDER;
+        while(colors[offset] == PLACEHOLDER)
         {
             offset++;
         }
         if(offset < end)
             result = colors[offset];
         for (int i = offset + 1, o = end, denom = 2; i < o; i++, denom++) {
-            if(colors[i] != 256)
+            if(colors[i] != PLACEHOLDER)
                 result = lerpColors(result, colors[i], 1f / denom);
             else --denom;
         }
@@ -1787,7 +1792,7 @@ public final class DescriptiveColor {
      * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
      * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
      * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. If a color name
-     * or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * or adjective is invalid, it is considered the same as adding the invalid "color" {@link #PLACEHOLDER}.
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
@@ -1828,7 +1833,7 @@ public final class DescriptiveColor {
      * the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
      * "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
      * appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
-     * name or adjective is invalid, it is considered the same as adding the color {@link #TRANSPARENT}.
+     * name or adjective is invalid, it is considered the same as adding the invalid "color" {@link #PLACEHOLDER}.
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * and "lightest richer apricot-olive".
@@ -1860,7 +1865,7 @@ public final class DescriptiveColor {
      * "palemax" or (its equivalent) "palemost", where only the word length is checked.
      * <br>
      * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
-     * invalid, this returns the RGBA8888 int value 256 (used as a placeholder by TextraTypist, and suggested as a
+     * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
      * placeholder for other code).
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
@@ -1896,7 +1901,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 case 'b':
@@ -1917,7 +1922,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 case 'p':
@@ -1939,7 +1944,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 case 'w':
@@ -1960,7 +1965,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 case 'r':
@@ -1977,7 +1982,7 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 case 'd':
@@ -2022,17 +2027,17 @@ public final class DescriptiveColor {
                                 break;
                         }
                     } else {
-                        mixing.add(NAMED.getOrDefault(term, 256));
+                        mixing.add(NAMED.get(term));
                     }
                     break;
                 default:
-                    mixing.add(NAMED.getOrDefault(term, 256));
+                    mixing.add(NAMED.get(term));
                     break;
             }
         }
         if(mixing.size() == 0) return 0;
         int result = mix(mixing.items, 0, mixing.size());
-        if(result == 256) return result;
+        if(result == PLACEHOLDER) return result;
 
         if (lightness > 0) result = lighten(result, lightness);
         else if (lightness < 0) result = darken(result, -lightness);
