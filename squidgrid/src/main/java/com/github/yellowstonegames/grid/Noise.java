@@ -2874,6 +2874,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -2895,6 +2904,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -2922,6 +2940,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -2943,6 +2970,15 @@ public class Noise {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w, u, v));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -6236,6 +6272,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -6256,6 +6301,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -6283,6 +6337,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -6304,6 +6367,15 @@ public class Noise {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z, w, u, v));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -7616,6 +7688,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -7636,6 +7717,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -7664,6 +7754,15 @@ public class Noise {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w, u, v));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -7680,6 +7779,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -9482,6 +9590,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -9503,6 +9620,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -9530,6 +9656,15 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -9551,6 +9686,15 @@ public class Noise {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y, z, w, u, v));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
