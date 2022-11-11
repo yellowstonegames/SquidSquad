@@ -2415,6 +2415,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -2433,6 +2440,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -2456,6 +2470,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -2475,6 +2496,13 @@ public class Noise {
             spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -5726,6 +5754,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -5744,6 +5779,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -5767,6 +5809,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -5786,6 +5835,13 @@ public class Noise {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y,  z, w));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -6983,6 +7039,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -7001,6 +7064,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -7025,6 +7095,13 @@ public class Noise {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -7039,6 +7116,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -8045,6 +8129,13 @@ public class Noise {
         int i = 0;
 
         while (++i < octaves) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -8063,6 +8154,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -8087,6 +8185,13 @@ public class Noise {
         int i = 0;
 
         while (++i < octaves) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -8109,6 +8214,7 @@ public class Noise {
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
+            w *= lacunarity;
         }
         return sum * 2f / correction - 1f;
     }
@@ -9010,6 +9116,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -9028,6 +9141,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             z = z * lacunarity;
@@ -9051,6 +9171,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
@@ -9070,6 +9197,13 @@ public class Noise {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y,  z, w));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
