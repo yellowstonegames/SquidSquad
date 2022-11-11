@@ -601,6 +601,7 @@ public class Noise {
         this.sharpness = other.sharpness;
         this.sharpnessInverse = 1f / this.sharpness;
         this.mutation = other.mutation;
+        this.fractalSpiral = other.fractalSpiral;
     }
 
     /**
@@ -612,7 +613,7 @@ public class Noise {
     public String serializeToString(){
         return "`" + seed + '~' + noiseType + '~' + octaves + '~' +
                 fractalType + '~' + interpolation + '~' +
-                cellularReturnType + '~' + cellularDistanceFunction + '~' +
+                cellularReturnType + '~' + cellularDistanceFunction + '~' + (fractalSpiral ? '1' : '0') + '~' +
                 BitConversion.floatToReversedIntBits(frequency) + '~' +
                 BitConversion.floatToReversedIntBits(lacunarity) + '~' +
                 BitConversion.floatToReversedIntBits(gain) + '~' +
@@ -639,6 +640,7 @@ public class Noise {
         int interpolation =            DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         int cellularReturnType =       DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         int cellularDistanceFunction = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        boolean fractalSpiral =        DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)) == 1;
 
         float frequency =          BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
         float lacunarity =         BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
@@ -656,6 +658,7 @@ public class Noise {
         next.sharpness = sharpness;
         next.sharpnessInverse = 1f / sharpness;
         next.mutation = mutation;
+        next.fractalSpiral = fractalSpiral;
         return next;
     }
 
@@ -9752,6 +9755,7 @@ public class Noise {
                 ", gradientPerturbAmp=" + gradientPerturbAmp +
                 ", sharpness=" + sharpness +
                 ", mutation=" + mutation +
+                ", fractalSpiral=" + fractalSpiral +
                 '}';
     }
 
