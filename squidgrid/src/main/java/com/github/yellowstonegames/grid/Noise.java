@@ -477,6 +477,11 @@ public class Noise {
     protected float mutation = 0f;
 
     /**
+     * @see #isFractalSpiral()
+     */
+    protected boolean fractalSpiral = false;
+
+    /**
      * @see #getPointHash()
      */
     protected IPointHash pointHash = new IntPointHash();
@@ -971,6 +976,30 @@ public class Noise {
     }
 
     /**
+     * Returns true if this uses a spiraling rotation as octaves are added to fractal noise.
+     * This mode affects all fractal types when there are 2 or more octaves. It changes
+     * {@link #VALUE_FRACTAL}, {@link #CUBIC_FRACTAL}, {@link #PERLIN_FRACTAL}, {@link #SIMPLEX_FRACTAL},
+     * and {@link #HONEY_FRACTAL} noise types, but none of the others because those show no real improvement
+     * with this on. This mode defaults to false if not set.
+     * @return true if using fractal spiral mode, false otherwise
+     */
+    public boolean isFractalSpiral() {
+        return fractalSpiral;
+    }
+
+    /**
+     * Sets the fractal spiral mode on or off; if on, this uses a spiraling rotation as octaves are added to
+     * fractal noise. This mode affects all fractal types when there are 2 or more octaves. It changes
+     * {@link #VALUE_FRACTAL}, {@link #CUBIC_FRACTAL}, {@link #PERLIN_FRACTAL}, {@link #SIMPLEX_FRACTAL},
+     * and {@link #HONEY_FRACTAL} noise types, but none of the others because those show no real improvement
+     * with this on. This mode defaults to false if not set.
+     * @param fractalSpiral true to set fractal spiral mode on, false to set it off
+     */
+    public void setFractalSpiral(boolean fractalSpiral) {
+        this.fractalSpiral = fractalSpiral;
+    }
+
+    /**
      * Sets the point hash, typically to one with intentional flaws, as found in {@link FlawedPointHash} types.
      * Only matters for {@link #CUBIC} and {@link #CUBIC_FRACTAL} noise types.
      * @param hash a non-null IPointHash implementation
@@ -1250,6 +1279,46 @@ public class Noise {
         return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash+1] + zd * GRADIENTS_6D[hash+2] +
                 wd * GRADIENTS_6D[hash+3] + ud * GRADIENTS_6D[hash+4] + vd * GRADIENTS_6D[hash+5];
     }
+
+    // The rotation methods below work in a specific dimensionality n (like rotateX2D, which works in 2D, so n is 2 there).
+    // Each takes n parameters for an n-dimensional point, and uses them to get the value for one component at a time of
+    // a new n-dimensional point. These each use a fixed rotation (there is no way to change how much these rotate a
+    // point), but each dimensionality rotates differently.
+    // To take a 2D point "alpha" and produce a rotated 2D point "beta," you would call:
+    // beta.x = rotateX2D(alpha.x, alpha.y); beta.y = rotateY2D(alpha.x, alpha.y);
+
+    protected float rotateX2D(float x, float y){ return x * +0.6088885514347261f + y * -0.7943553508622062f; }
+    protected float rotateY2D(float x, float y){ return x * +0.7943553508622062f + y * +0.6088885514347261f; }
+
+    protected float rotateX3D(float x, float y, float z){ return x * +0.0227966890756033f + y * +0.6762915140143574f + z * -0.7374004675850091f; }
+    protected float rotateY3D(float x, float y, float z){ return x * +0.2495309026014970f + y * +0.7103480212381728f + z * +0.6592220931706847f; }
+    protected float rotateZ3D(float x, float y, float z){ return x * +0.9680388783970242f + y * -0.1990510681264026f + z * -0.1525764462988358f; }
+
+    protected float rotateX4D(float x, float y, float z, float w){ return x * +0.5699478528112771f + y * +0.7369836852218905f + z * -0.0325828875824773f + w * -0.3639975881105405f; }
+    protected float rotateY4D(float x, float y, float z, float w){ return x * +0.1552282348051943f + y * +0.1770952336543200f + z * -0.7097702517705363f + w * +0.6650917154025483f; }
+    protected float rotateZ4D(float x, float y, float z, float w){ return x * +0.0483833371062336f + y * +0.3124109456042325f + z * +0.6948457959606478f + w * +0.6469518300143685f; }
+    protected float rotateW4D(float x, float y, float z, float w){ return x * +0.8064316315440612f + y * -0.5737907885437848f + z * +0.1179845891415618f + w * +0.0904374415002696f; }
+
+    protected float rotateX5D(float x, float y, float z, float w, float u){ return x * +0.1524127934921893f + y * -0.2586710352203958f + z * -0.4891826043642151f + w * +0.7663312575129502f + u * -0.2929089192051232f; }
+    protected float rotateY5D(float x, float y, float z, float w, float u){ return x * -0.0716486050004579f + y * -0.5083828718253534f + z * -0.5846508329893165f + w * -0.3242340701968086f + u * +0.5400343264823232f; }
+    protected float rotateZ5D(float x, float y, float z, float w, float u){ return x * +0.5391124130592424f + y * +0.4637201165727557f + z * -0.0268449575347777f + w * +0.2805630001516211f + u * +0.6471616940596671f; }
+    protected float rotateW5D(float x, float y, float z, float w, float u){ return x * -0.4908590743023694f + y * -0.3159190659906883f + z * +0.4868180845277980f + w * +0.4733894151555028f + u * +0.4492456287606979f; }
+    protected float rotateU5D(float x, float y, float z, float w, float u){ return x * +0.6656547456376498f + y * -0.6028584537113622f + z * +0.4289447660591045f + w * -0.0882009139887838f + u * -0.0676076855220496f; }
+
+    protected float rotateX6D(float x, float y, float z, float w, float u, float v){ return x * -0.0850982316788443f + y * +0.0621411489653063f + z * +0.6423842935800755f + w * +0.5472782330246069f + u * -0.5181072879831091f + v * -0.1137065126038194f; }
+    protected float rotateY6D(float x, float y, float z, float w, float u, float v){ return x * +0.1080560582151551f + y * -0.3254670556393390f + z * -0.3972292333437380f + w * +0.0964380840482216f + u * -0.5818281028726723f + v * +0.6182273380506453f; }
+    protected float rotateZ6D(float x, float y, float z, float w, float u, float v){ return x * +0.2504893307323878f + y * -0.3866469165898269f + z * -0.2346647170372642f + w * +0.7374659593233097f + u * +0.4257828596124605f + v * -0.1106816328431182f; }
+    protected float rotateW6D(float x, float y, float z, float w, float u, float v){ return x * +0.0990858373676681f + y * +0.4040947615164614f + z * +0.3012734241554820f + w * +0.1520113643725959f + u * +0.4036980496402723f + v * +0.7440701998573674f; }
+    protected float rotateU6D(float x, float y, float z, float w, float u, float v){ return x * -0.7720417581190233f + y * -0.5265151283855897f + z * +0.1995725381386031f + w * -0.0464596713813553f + u * +0.2186511264128518f + v * +0.1990962291039879f; }
+    protected float rotateV6D(float x, float y, float z, float w, float u, float v){ return x * +0.5606136879764017f + y * -0.5518123912290505f + z * +0.4997557173523122f + w * -0.3555852919481873f + u * +0.0731165180984564f + v * +0.0560452079067605f; }
+
+    protected float rotateX7D(float x, float y, float z, float w, float u, float v, float m){ return x * -0.0056246451693253f + y * +0.2208551678461124f + z * -0.0568956770971728f + w * -0.6432848816359004f + u * -0.3348708518986324f + v * +0.6496998046598708f + m * -0.0687675146270736f; }
+    protected float rotateY7D(float x, float y, float z, float w, float u, float v, float m){ return x * +0.0159667398563612f + y * -0.3708057332823732f + z * -0.0255290165081347f + w * -0.1074204597656161f + u * -0.6966577799927093f + v * -0.2848524769688026f + m * +0.5374576476886094f; }
+    protected float rotateZ7D(float x, float y, float z, float w, float u, float v, float m){ return x * +0.0089215457766600f + y * -0.3451906379293453f + z * +0.3653420930191292f + w * +0.5084714165020501f + u * -0.3967137045018020f + v * +0.4026281835802747f + m * -0.4199529479045513f; }
+    protected float rotateW7D(float x, float y, float z, float w, float u, float v, float m){ return x * +0.0389034073294095f + y * -0.5202531080058671f + z * -0.5396631178057520f + w * +0.1521217441742421f + u * +0.3144183583432352f + v * +0.4756642075085537f + m * +0.3037334167449179f; }
+    protected float rotateU7D(float x, float y, float z, float w, float u, float v, float m){ return x * -0.0120867392478421f + y * +0.2988470721412648f + z * +0.5341516385009615f + w * +0.2333218272366783f + u * +0.1612453247801415f + v * +0.3296939247342339f + m * +0.6629005534068590f; }
+    protected float rotateV7D(float x, float y, float z, float w, float u, float v, float m){ return x * -0.8755449392648650f + y * -0.3094947987824562f + z * +0.2386200725428088f + w * -0.2303379633118088f + u * +0.1687924564004422f + v * -0.0239773671533026f + m * -0.0167628366708356f; }
+    protected float rotateM7D(float x, float y, float z, float w, float u, float v, float m){ return x * +0.4820384791758567f + y * -0.4914996236160800f + z * +0.4837833759906052f + w * -0.4381443982669666f + u * +0.3117477166617179f + v * -0.0641025039100050f + m * -0.0491357938317362f; }
 
     /**
      * After being configured with the setters in this class, such as {@link #setNoiseType(int)},
@@ -2023,6 +2092,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -2040,8 +2114,13 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx],
                     b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
@@ -2059,6 +2138,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
             amp *= gain;
@@ -2075,6 +2159,11 @@ public class Noise {
             spike = 1f - Math.abs(singleValue(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
         }
@@ -5266,6 +5355,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -5283,6 +5377,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
@@ -5302,6 +5401,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -5319,6 +5423,11 @@ public class Noise {
             spike = 1f - Math.abs(singlePerlin(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
         }
@@ -6245,6 +6354,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -6261,6 +6375,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
@@ -6280,6 +6399,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -6297,6 +6421,11 @@ public class Noise {
             spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
         }
@@ -7524,6 +7653,11 @@ public class Noise {
         int i = 0;
 
         while (++i < octaves) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -7540,6 +7674,11 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x = x * lacunarity;
             y = y * lacunarity;
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
@@ -7560,6 +7699,11 @@ public class Noise {
         int i = 0;
 
         while (++i < octaves) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
 
@@ -7577,6 +7721,11 @@ public class Noise {
             spike = 1f - Math.abs(singleCubic(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             x *= lacunarity;
             y *= lacunarity;
         }
@@ -8556,6 +8705,11 @@ public class Noise {
         float amp = 1, t;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             t = x;
             x = y * lacunarity;
             y = t * lacunarity;
@@ -8570,11 +8724,17 @@ public class Noise {
         int seed = this.seed;
         float latest = singleHoney(seed, x, y);
         float sum = latest;
-        float amp = 1;
+        float amp = 1, t;
 
         for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            t = x;
+            x = y * lacunarity;
+            y = t * lacunarity;
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx],
                     b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
@@ -8592,6 +8752,11 @@ public class Noise {
         float amp = 1, t;
 
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             t = x;
             x = y * lacunarity;
             y = t * lacunarity;
@@ -8611,6 +8776,11 @@ public class Noise {
             spike = 1f - Math.abs(singleHoney(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             t = x;
             x = y * lacunarity;
             y = t * lacunarity;

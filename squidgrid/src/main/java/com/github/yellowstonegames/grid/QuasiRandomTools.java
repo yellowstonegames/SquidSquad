@@ -21,7 +21,11 @@ package com.github.yellowstonegames.grid;
  * lower "discrepancy" between results). In practice, this means that the points this produces from a sequence tend to
  * be distant from other points from nearby in the sequence.
  */
-public class QuasiRandomTools {
+public final class QuasiRandomTools {
+    /**
+     * Cannot be instantiated.
+     */
+    private QuasiRandomTools() {}
     /**
      * Gets the {@code index}-th element from the base-{@code base} van der Corput sequence. The base should usually be
      * a prime number. The index must be greater than 0 and should be less than 16777216. The number this returns is a
