@@ -126,7 +126,7 @@ public class Connection<V> extends Edge<V> {
 
         @Override
         public int hashCode() {
-            return (int) (a.hashCode() * 0xC13FA9A902A6328FL + b.hashCode() * 0x91E10DA5C79E7B1DL >>> 32);
+            return a.hashCode() * 107 + b.hashCode();
         }
 
         @Override
@@ -153,7 +153,7 @@ public class Connection<V> extends Edge<V> {
 
         @Override
         public int hashCode() {
-            return (int) ((a.hashCode() + b.hashCode()) * 0x9E3779B97F4A7C15L >>> 32);
+            return a.hashCode() + b.hashCode();
         }
 
         @Override

@@ -288,11 +288,11 @@ public class Radiance {
     @Override
     public int hashCode() {
         int result = BitConversion.floatToIntBits(range);
-        result ^= (result << 11 | result >>> 21) + (result << 19 | result >>> 13) + color;
-        result ^= (result << 11 | result >>> 21) + (result << 19 | result >>> 13) + BitConversion.floatToIntBits(flicker);
-        result ^= (result << 11 | result >>> 21) + (result << 19 | result >>> 13) + BitConversion.floatToIntBits(strobe);
-        result ^= (result << 11 | result >>> 21) + (result << 19 | result >>> 13) + BitConversion.floatToIntBits(delay);
-        result ^= (result << 11 | result >>> 21) + (result << 19 | result >>> 13) + BitConversion.floatToIntBits(flare);
+        result = (result ^ (result << 11 | result >>> 21) ^ (result << 19 | result >>> 13)) + BitConversion.floatToIntBits(flicker);
+        result = (result ^ (result << 11 | result >>> 21) ^ (result << 19 | result >>> 13)) + BitConversion.floatToIntBits(strobe);
+        result = (result ^ (result << 11 | result >>> 21) ^ (result << 19 | result >>> 13)) + BitConversion.floatToIntBits(delay);
+        result = (result ^ (result << 11 | result >>> 21) ^ (result << 19 | result >>> 13)) + BitConversion.floatToIntBits(flare);
+        result = (result ^ (result << 11 | result >>> 21) ^ (result << 19 | result >>> 13)) + color;
         return result;
     }
 

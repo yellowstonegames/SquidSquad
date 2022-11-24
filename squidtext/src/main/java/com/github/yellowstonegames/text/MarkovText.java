@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
@@ -268,7 +269,7 @@ public class MarkovText {
             later = (pair != 0);
             rf = processed[pairs.get(pair)];
             // This is SplitMix64 to generate a random long given sequential states
-            state = ((state = ((state = ((seed += 0x9E3779B97F4A7C15L) ^ seed >>> 30) * 0xBF58476D1CE4E5B9L) ^ state >>> 27) * 0x94D049BB133111EBL) ^ state >>> 31);
+            state = Hasher.randomize3(++seed);
             // get a random int (using half the bits of our previously-calculated state) that is less than size
             int column = (int) ((rf.length * (state & 0xFFFFFFFFL)) / 0x300000000L) * 3; // divide by 2^32, round down to multiple of 3
             // use the other half of the bits of state to get a double, compare to probability and choose either the

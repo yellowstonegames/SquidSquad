@@ -483,8 +483,8 @@ public class Coord {
         //// Gray code, XLCG, XLCG (ending on a XOR to stay within int range on GWT).
         //// The Gray code moves bits around just a little, but keeps the same power-of-two upper bound.
         //// the XLCGs together only really randomize the upper bits; they don't change the lower bit at all.
-        //// (recall from RNG class that an XLCG is a XOR by a constant, then a multiply by a constant, where
-        //// the XOR constant, mod 8, is 5, while the multiplier, mod 8, is 3; the order can be reversed too.)
+        //// (an XLCG is a XOR by a constant, then a multiply by a constant, where the XOR constant, mod 8, is 5,
+        //// while the multiplier, mod 8, is 3; the order can be reversed too.)
         //// ending on a XOR helps mostly for GWT.
         return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
     }

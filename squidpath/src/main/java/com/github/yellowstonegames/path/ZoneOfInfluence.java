@@ -180,7 +180,7 @@ public class ZoneOfInfluence {
      * Given the zones resulting from this class' {@link #calculate()} method and a Coord to check, finds the indices of
      * all influencing groups in zones that have the Coord in their area, and returns all such indices as a
      * newly-allocated {@link IntList}.
-     * @param zones a Region[] returned by calculate
+     * @param zones a Region[] returned by {@link #calculate()}
      * @param point the Coord to test
      * @return an IntVLA where each element is the index of an influencing group in zones
      */

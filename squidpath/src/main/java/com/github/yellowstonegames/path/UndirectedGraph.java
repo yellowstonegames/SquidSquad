@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author earlygrey
  */
 public class UndirectedGraph<V> extends Graph<V>{
-    UndirectedGraphAlgorithms<V> algorithms;
+    protected UndirectedGraphAlgorithms<V> algorithms;
 
     //================================================================================
     // Constructors

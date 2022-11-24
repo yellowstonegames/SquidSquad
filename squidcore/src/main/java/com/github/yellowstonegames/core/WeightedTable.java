@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 
 import javax.annotation.Nonnull;
@@ -163,11 +164,10 @@ public class WeightedTable {
      */
     public int random(long state)
     {
-        // This is DiverRNG's algorithm to generate a random long given sequential states
-        state = (state = ((state = (((state * 0x632BE59BD9B4E019L) ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ 
-                state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25;
+        // This uses the MX3 algorithm to generate a random long given sequential states
+        state = Hasher.randomize3(state);
         // get a random int (using half the bits of our previously-calculated state) that is less than size
-        int column = (int)((size * (state & 0xFFFFFFFFL)) >> 32);
+        int column = (int)((size * (state & 0xFFFFFFFFL)) >>> 32);
         // use the other half of the bits of state to get a 31-bit int, compare to probability and choose either the
         // current column or the alias for that column based on that probability
         return ((state >>> 33) <= mixed[column << 1]) ? column : mixed[column << 1 | 1];

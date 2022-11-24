@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author earlygrey
  */
 public class DirectedGraph<V> extends Graph<V>{
-    DirectedGraphAlgorithms<V> algorithms;
+    protected DirectedGraphAlgorithms<V> algorithms;
 
     //================================================================================
     // Constructors

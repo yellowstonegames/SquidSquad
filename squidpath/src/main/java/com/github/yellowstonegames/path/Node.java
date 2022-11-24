@@ -167,7 +167,6 @@ public class Node<V> extends BinaryHeap.Node {
         return o == this;
     }
 
-
     @Override
     public int hashCode() {
         return idHash;
