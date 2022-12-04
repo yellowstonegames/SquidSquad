@@ -59,9 +59,8 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     @Override
-    protected int place(Object item) {
-        final int x = ((Coord)item).x, y = ((Coord)item).y;
-        return y + ((x + y) * (x + y + 1) >> 1) & mask; // Cantor pairing function
+    protected int place(final Object item) {
+        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Rosenberg-Strong
     }
 
     @Override
