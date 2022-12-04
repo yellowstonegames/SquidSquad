@@ -464,36 +464,33 @@ public class Coord {
 
     /**
      * Gets the hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs will
-     * generate, but instead uses a highly-specific technique based on the Rosenberg-Strong pairing function, a Gray
-     * code, and two XLCG steps at the end. It manages to get extremely low collision rates under many circumstances,
-     * and very frequently manages to avoid colliding on more than 25% of Coords (making the load factor of most
-     * hash-based collections fine at a default of 0.75) while often having 0 collisions with some data sets.
-     * It does much better when Coords are in the default pooled range of -3 or greater.
-     * @see #rosenbergStrongHashCode(int, int) A static method that gets the same result as this method without involving a Coord
+     * generate, but instead uses a highly-specific technique based on the
+     * <a href="https://arxiv.org/abs/1706.04129">Rosenberg-Strong pairing function</a>. This technique will generally
+     * return all low values before it returns high values, if small Coord components are hashed first. The bits of the
+     * results will not be especially random, but they won't collide much at all, so in this case we may not want the
+     * most-random hashes. It does much better when Coords are in the default pooled range of -3 or greater.
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">The Rosenberg-Strong pairing function is discussed more here</a>;.
+     * @see #rosenbergStrongHashCode(int, int) A static method that gets similar but more-random results than this method without involving a Coord
      * @return an int that should, for most different Coord values, be significantly different from the other hash codes
      */
     @Override
     public int hashCode() {
         //// for Coord, since it can be as low as -3, and Rosenberg-Strong works only for positive integers
-        final int x = this.x + 3;
-        final int y = this.y + 3;
+//        final int x = this.x + 3; // These are incorporated into the math below.
+//        final int y = this.y + 3;
         //// Rosenberg-Strong pairing function; has excellent traits for keeping the hash gap-less while the
         //// inputs fit inside a square, and is still good for rectangles.
-        final int n = (x >= y ? x * (x + 2) - y : y * y + x);
-        //// Gray code, XLCG, XLCG (ending on a XOR to stay within int range on GWT).
-        //// The Gray code moves bits around just a little, but keeps the same power-of-two upper bound.
-        //// the XLCGs together only really randomize the upper bits; they don't change the lower bit at all.
-        //// (an XLCG is a XOR by a constant, then a multiply by a constant, where the XOR constant, mod 8, is 5,
-        //// while the multiplier, mod 8, is 3; the order can be reversed too.)
-        //// ending on a XOR helps mostly for GWT.
-        return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
+//        final int n = (x >= y ? x * (x + 2) - y : y * y + x);
+        //// This modifies Rosenberg-Strong so here, x is effectively (x+3) and y is (y+3).
+        //// This requires less addition sometimes, and shouldn't ever require more.
+        return (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
     }
 
     /**
      * A specialized hashing function that is meant to pack Coord items extremely densely in hash-based Maps or Sets, at
      * the expense of any random-seeming quality in the hash. This is simply the Cantor pairing function, and while it
      * does not behave particularly well with negative x or negative y, it does extremely well at not wasting space or
-     * computation time in a hash table with Coord keys.
+     * computation time in a hash table with Coord keys that are very densely packed.
      * @return an int that should, for different non-negative Coord values, be at least a little different from other hash codes
      */
     public int denseHashCode() {
@@ -507,20 +504,41 @@ public class Coord {
      * Rosenberg-Strong pairing function can be written simply as {@code ((x >= y) ? x * (x + 2) - y : y * y + x)}; it
      * produces sequential results for a sequence of positive points traveling in square "shells" away from the origin.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">the algorithm is discussed more here</a>; the only
-     * changes this makes are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord), and some
-     * finalizing steps that help randomize the upper bits of the hash code (the lower bits are quite non-random because
-     * they can't permit any gaps while optimizing collision rates).
+     * changes made here are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord).
      * @param x the x coordinate of the "imaginary Coord" to hash
      * @param y the y coordinate of the "imaginary Coord" to hash
      * @return the equivalent to the hashCode() of an "imaginary Coord"
      */
     public static int rosenbergStrongHashCode(int x, int y) {
         //// for Coord, since it can be as low as -3, and Rosenberg-Strong works only for positive integers
-        x += 3;
-        y += 3;
+//        x += 3; // These are incorporated into the math below.
+//        y += 3;
         //// Rosenberg-Strong pairing function; has excellent traits for keeping the hash gap-less while the
         //// inputs fit inside a square, and is still good for rectangles.
-        final int n = (x >= y ? x * (x + 2) - y : y * y + x);
+        return (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
+    }
+    /**
+     * A static version of an earlier {@link #hashCode()} method of this class, taking x and y as parameters instead of
+     * requiring a Coord object. Like the earlier hashCode() method, this involves the close-to-optimal mathematical
+     * Rosenberg-Strong pairing function to distribute x and y without overlap until they get very large. The
+     * Rosenberg-Strong pairing function can be written simply as {@code ((x >= y) ? x * (x + 2) - y : y * y + x)}; it
+     * produces sequential results for a sequence of positive points traveling in square "shells" away from the origin.
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">the algorithm is discussed more here</a>; the only
+     * changes made here are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord), and some
+     * finalizing steps that help randomize the upper bits of the hash code (the lower bits are quite non-random because
+     * they can't permit any gaps while optimizing collision rates). This method is "Randomized" because of these final
+     * steps, and they may slow it down as a hash code somewhat, but make the result more chaotic.
+     * @param x the x coordinate of the "imaginary Coord" to hash
+     * @param y the y coordinate of the "imaginary Coord" to hash
+     * @return the equivalent to the hashCode() of an "imaginary Coord"
+     */
+    public static int rosenbergStrongRandomizedHashCode(int x, int y) {
+        //// for Coord, since it can be as low as -3, and Rosenberg-Strong works only for positive integers
+//        x += 3; // These are incorporated into the math below.
+//        y += 3;
+        //// Rosenberg-Strong pairing function; has excellent traits for keeping the hash gap-less while the
+        //// inputs fit inside a square, and is still good for rectangles.
+        final int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
         //// Gray code, XLCG, XLCG (ending on a XOR to stay within int range on GWT).
         //// The Gray code moves bits around just a little, but keeps the same power-of-two upper bound.
         //// the XLCGs together only really randomize the upper bits; they don't change the lower bit at all.
