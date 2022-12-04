@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 
 import javax.annotation.Nonnull;
@@ -37,8 +37,12 @@ import java.util.Date;
  * OrderedMap's orderedKeys in libGDX and selectRanked() with that, but there's no OrderedMap with primitive float keys.
  */
 public class BlueNoiseTilingGenerator extends ApplicationAdapter {
-    private static final int shift = 8, size = 1 << shift, sector = size >>> 2,
-            mask = size - 1, sectorMask = sector - 1, wrapMask = sectorMask >>> 1;
+    private static final int shift = 8;
+    private static final int size = 1 << shift;
+    private static final int sector = size >>> 2;
+    private static final int mask = size - 1;
+    private static final int sectorMask = sector - 1;
+    private static final int wrapMask = sectorMask >>> 1;
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
     private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
     {
@@ -57,7 +61,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private TricycleRandom rng;
+    private WhiskerRandom rng;
     private PixmapIO.PNG writer;
     private String path;
 
@@ -75,7 +79,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new TricycleRandom(Hasher.hash64(1L, date));
+        rng = new WhiskerRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];

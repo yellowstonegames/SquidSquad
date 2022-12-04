@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
@@ -55,7 +55,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[size][size];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private TricycleRandom rng;
+    private WhiskerRandom rng;
     private PixmapIO.PNG writer;
     private String path;
 
@@ -73,7 +73,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new TricycleRandom(Hasher.hash64(1L, date));
+        rng = new WhiskerRandom(Hasher.hash64(1L, date));
 
         final int hs = size >>> 1;
         float[] column = new float[size];

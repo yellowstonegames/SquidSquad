@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.random.TrimRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
@@ -69,7 +69,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 9;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
@@ -109,7 +109,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
-    private TrimRandom rng;
+    private WhiskerRandom rng;
     private PixmapIO.PNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
@@ -128,7 +128,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new TrimRandom(Hasher.hash64(1L, date));
+        rng = new WhiskerRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
