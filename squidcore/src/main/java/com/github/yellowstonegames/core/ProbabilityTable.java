@@ -56,9 +56,20 @@ public class ProbabilityTable<T> {
      * the nested tables).
      */
     public final ObjectList<ProbabilityTable<T>> extraTable;
+    /**
+     * The list of weights associated with both {@link #table} and {@link #extraTable}, with all of table first and then
+     * all of extraTable.
+     */
     public final IntList weights;
+    /**
+     * The random number generator; don't assign null to this, but otherwise it can be any EnhancedRandom.
+     */
     public EnhancedRandom rng;
-    protected int total, normalTotal;
+    /**
+     * The total of all weights. This is only public because {@link #weights} is also public, and changes to weights
+     * must be reflected here.
+     */
+    public int total;
 
     /**
      * Creates a new probability table with a random seed.
@@ -79,7 +90,6 @@ public class ProbabilityTable<T> {
         extraTable = new ObjectList<>(16);
         weights = new IntList(64);
         total = 0;
-        normalTotal = 0;
     }
 
     /**
@@ -103,7 +113,7 @@ public class ProbabilityTable<T> {
 
     /**
      * Returns an object randomly based on assigned weights.
-     *
+     * <br>
      * Returns null if no elements have been put in the table.
      *
      * @return the chosen object or null
@@ -112,7 +122,8 @@ public class ProbabilityTable<T> {
         if (table.isEmpty() && extraTable.isEmpty()) {
             return null;
         }
-        int index = (int) ((total * ((long)rng.next(31))) >>> 31), sz = table.size();
+        int index = rng.nextInt(total);
+        int sz = table.size();
         for (int i = 0; i < sz; i++) {
             index -= weights.get(i);
             if (index < 0)
@@ -128,7 +139,7 @@ public class ProbabilityTable<T> {
 
     /**
      * Adds the given item to the table.
-     *
+     * <br>
      * Weight must be greater than 0.
      *
      * @param item the object to be added
@@ -143,13 +154,11 @@ public class ProbabilityTable<T> {
             weights.insert(table.size(), weight);
             table.add(item);
             total += weight;
-            normalTotal += weight;
         } else {
             int i2 = weights.get(i);
             int w = Math.max(0, i2 + weight);
             weights.set(i, w);
             total += w - i2;
-            normalTotal += w - i2;
         }
         return this;
     }
@@ -209,7 +218,6 @@ public class ProbabilityTable<T> {
         }
         w = Math.min(o, o - w);
         total -= w;
-        normalTotal -= w;
         return true;
     }
 
@@ -255,7 +263,7 @@ public class ProbabilityTable<T> {
      * eventually terminate in a StackOverflowError if the cycles randomly repeated for too long. Only the first case
      * is checked for (if the contents of this and table are equivalent, it returns without doing anything; this also
      * happens if table is empty or null).
-     *
+     * <br>
      * Weight must be greater than 0.
      *
      * @param table the ProbabilityTable to be added; should not be the same as this object (avoid cycles)
@@ -395,7 +403,6 @@ public class ProbabilityTable<T> {
             n.extraTable.add(extraTable.get(i).copy());
         }
         n.total = total;
-        n.normalTotal = normalTotal;
         return n;
     }
 

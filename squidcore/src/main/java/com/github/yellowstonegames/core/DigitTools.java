@@ -26,7 +26,12 @@ import com.github.tommyettinger.digital.Hasher;
  * class, since you can control whether you want signed or unsigned output using the Base API. This class only produces
  * unsigned output from its wrapper methods.
  */
-public class DigitTools {
+public final class DigitTools {
+    /**
+     * No need to instantiate this.
+     */
+    private DigitTools() {
+    }
     public static String hex(long number) {
         return Base.BASE16.unsigned(number);
     }

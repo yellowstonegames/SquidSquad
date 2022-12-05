@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.Dice;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.GapShuffler;
@@ -56,6 +57,7 @@ public final class JsonCore {
 
         registerDiceRule(json);
         registerGapShuffler(json);
+        registerProbabilityTable(json);
         registerWeightedTable(json);
         registerIntShuffler(json);
 
@@ -270,9 +272,9 @@ public final class JsonCore {
     /**
      * Registers ProbabilityTable with the given Json object, so ProbabilityTable can be written to and read from JSON.
      * This registers serialization/deserialization for ObjectList as well, since ProbabilityTable requires it.
-     * You should either register the EnhancedRandom you use with this (which is {@link TricycleRandom} if unspecified),
-     * use {@link JsonSupport#registerAtomicLong(Json)} (if you don't know what type the random number generator uses),
-     * or just call {@link #registerAll(Json)}.
+     * You should either register the EnhancedRandom you use with this (which is {@link WhiskerRandom} if unspecified),
+     * use {@link JsonSupport#registerEnhancedRandom(Json)} (if you don't know what type the random number generator
+     * uses), or just call {@link #registerAll(Json)}.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
