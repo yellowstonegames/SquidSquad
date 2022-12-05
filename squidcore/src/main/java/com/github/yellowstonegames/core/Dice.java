@@ -489,7 +489,6 @@ public class Dice {
         int en = mat.pattern().groupId("en");
         boolean starting = true;
         while (mat.find()) {
-            System.out.println(mat.group());
             if(starting && !mat.isCaptured(op)){
                 into.instructions.add('+');
                 starting = false;

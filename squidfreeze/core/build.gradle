@@ -1,0 +1,42 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+ext.projectName = 'SquidFreezeCore'
+eclipse.project.name = ext.projectName
+sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
+javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
+
+dependencies {
+    api project(':squidcore')
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+	
+	api("com.github.tommyettinger:kryo-regexodus:0.1.13.0")
+	api("com.github.tommyettinger:kryo-digital:0.1.5.0"){
+        exclude module: 'digital'
+    }
+	api("com.github.tommyettinger:kryo-jdkgdxds:1.1.0.0"){
+        exclude module: 'jdkgdxds'
+        exclude module: 'digital'
+    }
+	api("com.github.tommyettinger:kryo-juniper:0.1.7.0"){
+        exclude module: 'juniper'
+        exclude module: 'digital'
+    }
+
+    api("com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"){
+        exclude module: 'juniper'
+        exclude module: 'digital'
+    }
+    api "com.github.tommyettinger:juniper:$juniperVersion"
+    api "com.github.tommyettinger:digital:$digitalVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}

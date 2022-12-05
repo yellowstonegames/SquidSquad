@@ -13,6 +13,8 @@ import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -57,7 +59,8 @@ import java.util.Date;
  */
 public class BlueNoiseRSGenerator extends ApplicationAdapter {
 
-    //Took 29135ms to calculate.
+    //Took 29135ms to calculate. (calling Coord.hashCode())
+    //Took 28907ms to calculate. (inlined)
 
     /**
      * True if this should produce triangular-mapped blue noise.
@@ -88,7 +91,20 @@ public class BlueNoiseRSGenerator extends ApplicationAdapter {
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f);
+    private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f){
+        @Override
+        protected int place(final @Nonnull Object item) {
+            final Coord c = (Coord)item;
+            final int x = c.x, y = c.y;
+            return (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12) & mask;
+
+        }
+
+        @Override
+        protected boolean equate(Object left, @Nullable Object right) {
+            return super.equate(left, right);
+        }
+    };
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm;
