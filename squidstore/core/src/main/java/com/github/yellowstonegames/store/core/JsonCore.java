@@ -264,7 +264,10 @@ public final class JsonCore {
             @Override
             public GapShuffler<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new GapShuffler<>(json.readValue("items", ObjectList.class, jsonData), json.readValue("rng", EnhancedRandom.class, jsonData), jsonData.get("idx").asInt(), true, false);
+                return new GapShuffler<>(json.readValue("items", ObjectList.class, jsonData),
+                        json.readValue("rng", EnhancedRandom.class, jsonData),
+                        jsonData.get("idx").asInt(),
+                        true, false);
             }
         });
     }

@@ -46,7 +46,10 @@ public class GapShufflerSerializer extends Serializer<GapShuffler> {
 
     @Override
     public GapShuffler read(final Kryo kryo, final Input input, final Class<? extends GapShuffler> dataClass) {
-        return new GapShuffler<>(kryo.readObject(input, ObjectList.class), kryo.readObject(input, EnhancedRandom.class), input.readInt(true), true, false);
+        return new GapShuffler<>(kryo.readObject(input, ObjectList.class),
+                kryo.readObject(input, EnhancedRandom.class),
+                input.readInt(true),
+                true, false);
     }
 
 
