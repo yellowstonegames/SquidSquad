@@ -1,5 +1,11 @@
 package com.github.yellowstonegames.freeze.core;
 
+import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer;
+import com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,4 +37,25 @@ public class CoreTest {
         }
     }
 
+    @Test
+    public void testGapShuffler() {
+        Kryo kryo = new Kryo();
+        kryo.register(EnhancedRandom.class, new EnhancedRandomSerializer());
+        kryo.register(WhiskerRandom.class, new WhiskerRandomSerializer());
+        kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
+        kryo.register(GapShuffler.class, new GapShufflerSerializer());
+
+        GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new WhiskerRandom(123));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            GapShuffler data2 = kryo.readObject(input, GapShuffler.class);
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data, data2);
+        }
+    }
 }

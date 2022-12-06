@@ -25,8 +25,10 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 
 /**
- * Needs {@link com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer} to be registered, and
- * {@link com.esotericsoftware.kryo.serializers.CollectionSerializer} for {@link ObjectList} to be registered as well.
+ * Needs {@link com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer} to be registered,
+ * {@link com.esotericsoftware.kryo.serializers.CollectionSerializer} for {@link ObjectList} to be registered,
+ * and whatever type of EnhancedRandom the GapShuffler uses to be registered (by default,
+ * {@link com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer}).
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class GapShufflerSerializer extends Serializer<GapShuffler> {
@@ -40,14 +42,14 @@ public class GapShufflerSerializer extends Serializer<GapShuffler> {
         ObjectList items = new ObjectList();
         data.fillInto(items);
         kryo.writeObject(output, items);
-        kryo.writeObject(output, data.random);
+        kryo.writeClassAndObject(output, data.random);
         output.writeInt(data.getIndex(), true);
     }
 
     @Override
     public GapShuffler read(final Kryo kryo, final Input input, final Class<? extends GapShuffler> dataClass) {
         return new GapShuffler<>(kryo.readObject(input, ObjectList.class),
-                kryo.readObject(input, EnhancedRandom.class),
+                (EnhancedRandom) kryo.readClassAndObject(input),
                 input.readInt(true),
                 true, false);
     }
