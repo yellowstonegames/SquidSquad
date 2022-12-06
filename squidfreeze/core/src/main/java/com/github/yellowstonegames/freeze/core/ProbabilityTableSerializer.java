@@ -30,7 +30,9 @@ import com.github.yellowstonegames.core.ProbabilityTable;
  * Needs {@link com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer} to be registered,
  * {@link com.esotericsoftware.kryo.serializers.CollectionSerializer} for {@link ObjectList} to be registered,
  * {@link com.esotericsoftware.kryo.serializers.CollectionSerializer} for {@link NumberedSet} to be registered,
- * and {@link com.github.tommyettinger.kryo.jdkgdxds.IntListSerializer} to be registered.
+ * and {@link com.github.tommyettinger.kryo.jdkgdxds.IntListSerializer} to be registered,
+ * and whatever type of EnhancedRandom the ProbabilityTable uses to be registered (by default,
+ * {@link com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer}).
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ProbabilityTableSerializer extends Serializer<ProbabilityTable> {

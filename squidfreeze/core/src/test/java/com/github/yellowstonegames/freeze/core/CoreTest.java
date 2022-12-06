@@ -1,7 +1,10 @@
 package com.github.yellowstonegames.freeze.core;
 
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.kryo.jdkgdxds.IntListSerializer;
 import com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer;
 import com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer;
 import com.github.tommyettinger.random.EnhancedRandom;
@@ -55,6 +58,34 @@ public class CoreTest {
             GapShuffler data2 = kryo.readObject(input, GapShuffler.class);
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testProbabilityTable() {
+        Kryo kryo = new Kryo();
+        kryo.register(EnhancedRandom.class, new EnhancedRandomSerializer());
+        kryo.register(WhiskerRandom.class, new WhiskerRandomSerializer());
+        kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
+        kryo.register(NumberedSet.class, new CollectionSerializer<NumberedSet<?>>());
+        kryo.register(IntList.class, new IntListSerializer());
+        kryo.register(ProbabilityTable.class, new ProbabilityTableSerializer());
+
+        ProbabilityTable<String> data = new ProbabilityTable<>(new WhiskerRandom(123));
+        data.add("Foo", 5);
+        data.add("Bar", 4);
+        data.add("Baz", 3);
+        data.add("Quux", 1);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            ProbabilityTable data2 = kryo.readObject(input, ProbabilityTable.class);
+            Assert.assertEquals(data.random(), data2.random());
+            Assert.assertEquals(data.random(), data2.random());
             Assert.assertEquals(data, data2);
         }
     }
