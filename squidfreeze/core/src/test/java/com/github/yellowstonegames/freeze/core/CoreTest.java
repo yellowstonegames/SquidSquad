@@ -111,6 +111,29 @@ public class CoreTest {
             Assert.assertEquals(data.random(1L), data2.random(1L));
             Assert.assertEquals(data.random(2L), data2.random(2L));
             Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testIntShuffler() {
+        Kryo kryo = new Kryo();
+        kryo.register(IntShuffler.class, new IntShufflerSerializer());
+
+        IntShuffler data = new IntShuffler(10, 123L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            IntShuffler data2 = kryo.readObject(input, IntShuffler.class);
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data, data2);
         }
     }
 }

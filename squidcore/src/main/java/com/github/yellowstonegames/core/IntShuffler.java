@@ -75,7 +75,7 @@ public class IntShuffler {
     /**
      * Constructs an IntShuffler with the given exclusive upper bound and int seed.
      * @param bound how many distinct ints this can return
-     * @param seed any int; will be used to get several seeds used internally
+     * @param seed any long; will be used to get several seeds used internally
      */
     public IntShuffler(int bound, long seed)
     {
@@ -148,7 +148,7 @@ public class IntShuffler {
     /**
      * Starts the sequence over, but can change the seed (completely changing the sequence). If {@code seed} is the same
      * as the seed given in the constructor, this will use the same sequence, acting like {@link #restart()}.
-     * @param seed any int; will be used to get several seeds used internally
+     * @param seed any long; will be used to get several seeds used internally
      */
     public void restart(long seed)
     {
@@ -238,7 +238,7 @@ public class IntShuffler {
     }
 
     public static IntShuffler deserializeFromString(@Nonnull String data) {
-        if(data.length() < 9) return null;
+        if(data.length() < 13) return null;
         int idx = 0;
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
         int index = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));

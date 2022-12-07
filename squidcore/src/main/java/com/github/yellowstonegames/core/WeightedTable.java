@@ -208,4 +208,20 @@ public class WeightedTable {
         }
         return new WeightedTable(mixed, true);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeightedTable that = (WeightedTable) o;
+
+        if (size != that.size) return false;
+        return Arrays.equals(mixed, that.mixed);
+    }
+
+    @Override
+    public int hashCode() {
+        return Hasher.hash(size ^ 0xFEDCBA9876543210L, mixed);
+    }
 }
