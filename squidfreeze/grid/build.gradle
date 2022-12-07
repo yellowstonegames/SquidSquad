@@ -1,20 +1,22 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'SquidFreezeCore'
+ext.projectName = 'SquidFreezeGrid'
 eclipse.project.name = ext.projectName
 sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
 javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
 
 dependencies {
     api project(':squidcore')
+    api project(':squidfreeze:core')
+    api project(':squidgrid')
 
-	api("com.github.tommyettinger:kryo-digital:0.1.5.0"){
+    api("com.github.tommyettinger:kryo-digital:0.1.5.0"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-jdkgdxds:1.1.0.0"){
+    api("com.github.tommyettinger:kryo-jdkgdxds:1.1.0.0"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-juniper:0.1.7.0"){
+    api("com.github.tommyettinger:kryo-juniper:0.1.7.0"){
         exclude module: 'juniper'
         exclude module: 'digital'
     }
