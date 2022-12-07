@@ -6408,7 +6408,7 @@ public class Noise {
     }
 
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * Generates FBM simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5) in 2D.
      * @param x
      * @param y
@@ -6418,29 +6418,10 @@ public class Noise {
      */
     public float layered2D(float x, float y, int seed, int octaves)
     {
-        x *= 0.03125f;
-        y *= 0.03125f;
-
-        float sum = 1 - Math.abs(singleSimplex(seed, x, y));
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
-
-            amp *= 0.5f;
-            sum -= (1 - Math.abs(singleSimplex(seed + i, x, y))) * amp;
-        }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
-        return sum / ampFractal;
+        return layered2D(x, y, seed, octaves, 0.03125f);
     }
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, default lacunarity
+     * Generates FBM simplex noise with the given amount of octaves, given frequency, default lacunarity
      * (2) and default gain (0.5) in 2D.
      * @param x
      * @param y
@@ -6457,22 +6438,17 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
+            x += x;
+            y += y;
 
             amp *= 0.5f;
             sum += singleSimplex(seed + i, x, y) * amp;
         }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
+        float ampFractal = (1 << octaves) - 1;
         return sum / ampFractal;
     }
     /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
+     * Generates FBM simplex noise with the given amount of octaves and specified lacunarity (the amount of
      * frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 2D.
      * @param x
      * @param y
@@ -6493,7 +6469,7 @@ public class Noise {
             x *= lacunarity;
             y *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += singleSimplex(seed + i, x, y) * amp;
         }
         amp = gain;
@@ -6506,7 +6482,7 @@ public class Noise {
     }
 
     /**
-     * Generates layered simplex noise with the given amount of octaves and specified lacunarity (the amount of
+     * Generates FBM simplex noise with the given amount of octaves and specified lacunarity (the amount of
      * frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 2D.
      * @param x
      * @param y
@@ -6746,7 +6722,7 @@ public class Noise {
     }
 
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
+     * Generates FBM simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5) in 3D.
      * @param x
      * @param y
@@ -6757,31 +6733,10 @@ public class Noise {
      */
     public float layered3D(float x, float y, float z, int seed, int octaves)
     {
-        x *= 0.03125f;
-        y *= 0.03125f;
-        z *= 0.03125f;
-
-        float sum = 1 - Math.abs(singleSimplex(seed, x, y, z));
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-
-            amp *= 0.5f;
-            sum -= (1 - Math.abs(singleSimplex(seed + i, x, y, z))) * amp;
-        }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
-        return sum / ampFractal;
+        return layered3D(x, y, z, seed, octaves, 0.03125f);
     }
     /**
-     * Generates ridged-multi simplex noise with the given amount of octaves, given frequency, and default lacunarity
+     * Generates FBM simplex noise with the given amount of octaves, given frequency, and default lacunarity
      * (2) and gain (0.5) in 3D.
      * @param x
      * @param y
@@ -6800,23 +6755,18 @@ public class Noise {
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
+            x += x;
+            y += y;
+            z += z;
 
             amp *= 0.5f;
             sum += singleSimplex(seed + i, x, y, z) * amp;
         }
-        amp = 0.5f;
-        float ampFractal = 1;
-        for (int i = 1; i < octaves; i++) {
-            ampFractal += amp;
-            amp *= 0.5f;
-        }
+        float ampFractal = (1 << octaves) - 1;
         return sum / ampFractal;
     }
     /**
-     * Generates layered simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
+     * Generates FBM simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
      * amount of frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 3D.
      * @param x
      * @param y
@@ -6855,7 +6805,7 @@ public class Noise {
     }
 
     /**
-     * Generates layered simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
+     * Generates FBM simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
      * of frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.
      * @param x
      * @param y
