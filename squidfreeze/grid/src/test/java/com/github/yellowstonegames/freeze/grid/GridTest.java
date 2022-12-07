@@ -19,6 +19,8 @@ package com.github.yellowstonegames.freeze.grid;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,6 +48,22 @@ public class GridTest {
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
             Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data, data2);
+        }
+    }
+    @Test
+    public void testCoord() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
+        ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            ObjectList data2 = kryo.readObject(input, ObjectList.class);
             Assert.assertEquals(data, data2);
         }
     }
