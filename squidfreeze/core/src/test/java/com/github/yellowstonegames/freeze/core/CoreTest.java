@@ -77,6 +77,10 @@ public class CoreTest {
         data.add("Bar", 4);
         data.add("Baz", 3);
         data.add("Quux", 1);
+        ProbabilityTable<String> bonus = new ProbabilityTable<>(new WhiskerRandom(456));
+        bonus.add("Magic", 1);
+        bonus.add("Normality", 10);
+        data.add(bonus, 6);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
         Output output = new Output(baos);
@@ -87,6 +91,26 @@ public class CoreTest {
             Assert.assertEquals(data.random(), data2.random());
             Assert.assertEquals(data.random(), data2.random());
             Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testWeightedTable() {
+        Kryo kryo = new Kryo();
+        kryo.register(WeightedTable.class, new WeightedTableSerializer());
+
+        WeightedTable data = new WeightedTable(1f, 2f, 3f, 4f, 0.5f, 5.5f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            WeightedTable data2 = kryo.readObject(input, WeightedTable.class);
+            Assert.assertEquals(data.random(0L), data2.random(0L));
+            Assert.assertEquals(data.random(1L), data2.random(1L));
+            Assert.assertEquals(data.random(2L), data2.random(2L));
+            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
         }
     }
 }

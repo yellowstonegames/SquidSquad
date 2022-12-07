@@ -202,7 +202,9 @@ public class WeightedTable {
         int count = StringTools.count(data, ',') + 1;
         int[] mixed = new int[count];
         for (int i = 0; i < count; i++) {
-            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = data.indexOf(',', pos+1));
+            int next = data.indexOf(',', pos+1);
+            if(next == -1) next = data.length();
+            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = next);
         }
         return new WeightedTable(mixed, true);
     }
