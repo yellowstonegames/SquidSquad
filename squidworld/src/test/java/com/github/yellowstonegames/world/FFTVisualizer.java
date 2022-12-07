@@ -42,11 +42,10 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
-    private final SorbetNoise[] sorbets = new SorbetNoise[7];
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 18;
-    private int mode = 5;
+    private static final int MODE_LIMIT = 17;
+    private int mode = 16;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -137,7 +136,6 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(noise.getSeed() + ~i * 55555555L, 2 + i);
             taffies[i] = new TaffyNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
             flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
-            sorbets[i] = new SorbetNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -211,10 +209,10 @@ public class FFTVisualizer extends ApplicationAdapter {
                         noise.setFrequency((float) Math.sin(freq += 0.125f) * 0.1f + 0.11f);
                         break;
                     case R: // fRactal type
-                        noise.setFractalType((noise.getFractalType() + 1) % 3);
+                        noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 3 : 1)) & 3);
                         break;
                     case G: // Glitch!
-                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + 1) % 5]);
+                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + (UIUtils.shift() ? 4 : 1)) % 5]);
                         break;
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
@@ -233,6 +231,9 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case K: // sKip
                         startTime -= 1000000L;
+                        break;
+                    case W: // whirl, like a spiral
+                        noise.setFractalSpiral(!noise.isFractalSpiral());
                         break;
                     case Q:
                     case ESCAPE: {
@@ -1269,86 +1270,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                             points[dim][4] = xx + yy;
                             points[dim][5] = yy - xx;
                             bright = basicPrepare(flans[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-            }
-        } else if(mode == 17) {
-            float fr = noise.getFrequency();
-            switch (dim) {
-                case 0:
-                    for (int x = 0; x < width; x++) {
-                        points[dim][0] = (c+x)*fr;
-                        for (int y = 0; y < height; y++) {
-                            points[dim][1] = (c+y)*fr;
-                            bright = basicPrepare(sorbets[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 1:
-                    points[dim][2] = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
-                        for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            bright = basicPrepare(sorbets[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 2:
-                    points[dim][2] = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
-                        for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
-                            bright = basicPrepare(sorbets[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 3:
-                    cc = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
-                        for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            bright = basicPrepare(sorbets[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 4:
-                    cc = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
-                        for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            points[dim][5] = yy - xx;
-                            bright = basicPrepare(sorbets[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
