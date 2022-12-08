@@ -24,7 +24,7 @@ import com.github.yellowstonegames.grid.Noise;
 
 public class NoiseSerializer extends Serializer<Noise> {
     public NoiseSerializer() {
-        setImmutable(true);
+        setImmutable(false);
         setAcceptsNull(false);
     }
 

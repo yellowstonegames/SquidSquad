@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.freeze.core;
+package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.yellowstonegames.core.IntShuffler;
+import com.github.yellowstonegames.grid.Region;
 
-public class IntShufflerSerializer extends Serializer<IntShuffler> {
-    public IntShufflerSerializer() {
+public class RegionSerializer extends Serializer<Region> {
+    public RegionSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public void write(final Kryo kryo, final Output output, final IntShuffler data) {
-        output.writeString(data.serializeToString());
+    public void write(final Kryo kryo, final Output output, final Region data) {
+        output.writeString(data.toCompressedString());
     }
 
     @Override
-    public IntShuffler read(final Kryo kryo, final Input input, final Class<? extends IntShuffler> dataClass) {
-        return IntShuffler.deserializeFromString(input.readString());
+    public Region read(final Kryo kryo, final Input input, final Class<? extends Region> dataClass) {
+        return Region.decompress(input.readString());
     }
 }

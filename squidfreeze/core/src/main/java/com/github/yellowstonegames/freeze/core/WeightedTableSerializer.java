@@ -24,7 +24,7 @@ import com.github.yellowstonegames.core.WeightedTable;
 
 public class WeightedTableSerializer extends Serializer<WeightedTable> {
     public WeightedTableSerializer() {
-        setImmutable(true);
+        setImmutable(false);
         setAcceptsNull(false);
     }
 
