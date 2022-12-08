@@ -16,8 +16,6 @@
 
 package com.github.yellowstonegames.glyph;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;

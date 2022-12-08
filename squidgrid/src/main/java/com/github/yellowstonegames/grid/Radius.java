@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 
 import java.util.List;

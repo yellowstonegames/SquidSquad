@@ -19,7 +19,6 @@ package com.github.yellowstonegames.store.old;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.digital.Base;
 import com.github.yellowstonegames.old.v300.*;
 
 import javax.annotation.Nonnull;

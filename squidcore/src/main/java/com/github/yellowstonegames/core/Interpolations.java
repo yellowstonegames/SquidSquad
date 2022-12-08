@@ -16,8 +16,6 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.digital.MathTools;
-
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 public class Interpolations {

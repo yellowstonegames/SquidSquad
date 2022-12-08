@@ -18,8 +18,6 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.tommyettinger.digital.MathTools;
 
-import java.io.Serializable;
-
 /**
  * Gets a sequence of distinct pseudo-random ints (typically used as indices) from 0 to some bound, without storing all
  * the sequence in memory. Uses a Feistel network, as described in

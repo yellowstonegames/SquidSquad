@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 

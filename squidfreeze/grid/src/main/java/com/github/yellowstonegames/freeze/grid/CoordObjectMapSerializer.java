@@ -17,17 +17,17 @@
 package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
-import com.github.yellowstonegames.grid.CoordSet;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
+import com.github.yellowstonegames.grid.CoordObjectMap;
 
-public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
-    public CoordSetSerializer() {
+public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap> {
+    public CoordObjectMapSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public CoordSet copy(Kryo kryo, CoordSet original) {
-        return new CoordSet(original);
+    public CoordObjectMap copy(Kryo kryo, CoordObjectMap original) {
+        return new CoordObjectMap(original);
     }
 }

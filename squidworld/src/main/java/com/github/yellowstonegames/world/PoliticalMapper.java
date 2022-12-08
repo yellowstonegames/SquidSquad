@@ -30,7 +30,6 @@ import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * When you have a world map as produced by {@link WorldMapGenerator}, you may want to fill it with claims by various

@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.grid.*;
 
