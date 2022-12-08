@@ -22,6 +22,9 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.Coord;
 
+/**
+ * A serializer for everybody's favorite immutable pair of ints, {@link Coord}! Doesn't need anything else registered.
+ */
 public class CoordSerializer extends Serializer<Coord> {
     public CoordSerializer() {
         setImmutable(true);

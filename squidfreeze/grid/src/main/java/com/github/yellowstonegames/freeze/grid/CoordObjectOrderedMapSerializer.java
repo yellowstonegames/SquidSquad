@@ -17,20 +17,22 @@
 package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
-import com.github.yellowstonegames.grid.CoordOrderedSet;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 
 /**
- * Serializer for {@link CoordOrderedSet}; needs {@link CoordSerializer} registered for Coord.
+ * Serializer for {@link CoordObjectOrderedMap}; needs {@link CoordSerializer} registered for Coord, and a serializer
+ * registered for whatever Object type the Map has for its values.
  */
-public class CoordOrderedSetSerializer extends CollectionSerializer<CoordOrderedSet> {
-    public CoordOrderedSetSerializer() {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOrderedMap> {
+    public CoordObjectOrderedMapSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public CoordOrderedSet copy(Kryo kryo, CoordOrderedSet original) {
-        return new CoordOrderedSet(original);
+    public CoordObjectOrderedMap copy(Kryo kryo, CoordObjectOrderedMap original) {
+        return new CoordObjectOrderedMap(original);
     }
 }

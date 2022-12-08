@@ -20,6 +20,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.github.yellowstonegames.grid.CoordSet;
 
+/**
+ * Serializer for {@link CoordSet}; needs {@link CoordSerializer} registered for Coord.
+ */
 public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
     public CoordSetSerializer() {
         setImmutable(false);

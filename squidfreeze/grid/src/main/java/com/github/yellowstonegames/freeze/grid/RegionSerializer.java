@@ -22,6 +22,11 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.Region;
 
+/**
+ * Serializer for {@link Region}; does not need any other classes to be registered, although registering Coord with
+ * {@link CoordSerializer} is a good idea. Uses a compressed String representation that may be better than a naive
+ * uncompressed approach, even a binary one.
+ */
 public class RegionSerializer extends Serializer<Region> {
     public RegionSerializer() {
         setImmutable(false);

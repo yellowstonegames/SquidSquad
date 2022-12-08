@@ -22,6 +22,9 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.Noise;
 
+/**
+ * Serializer for {@link Noise}; doesn't need anything else registered.
+ */
 public class NoiseSerializer extends Serializer<Noise> {
     public NoiseSerializer() {
         setImmutable(false);
