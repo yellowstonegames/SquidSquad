@@ -92,6 +92,19 @@ public class IntShuffler {
         leftMask = pow4 ^ rightMask;
     }
 
+    public IntShuffler(IntShuffler other) {
+        bound = other.bound;
+        index = other.index;
+        key0 = other.key0;
+        key1 = other.key1;
+        key2 = other.key2;
+        key3 = other.key3;
+        pow4 = other.pow4;
+        halfBits = other.halfBits;
+        rightMask = other.rightMask;
+        leftMask = other.leftMask;
+    }
+
     /**
      * Gets the next distinct int in the sequence, or -1 if all distinct ints have been returned that are non-negative
      * and less than {@link #bound}.
@@ -209,16 +222,11 @@ public class IntShuffler {
 
     /**
      * Fully copies this IntShuffler, including its current index in its sequence and internal seeds.
+     * This simply returns {@link #IntShuffler(IntShuffler)} with this as the argument.
      * @return an exact copy of this IntShuffler
      */
     public IntShuffler copy() {
-        IntShuffler next = new IntShuffler(bound, 0);
-        next.index = index;
-        next.key0 = key0;
-        next.key1 = key1;
-        next.key2 = key2;
-        next.key3 = key3;
-        return next;
+        return new IntShuffler(this);
     }
 
     public String serializeToString() {

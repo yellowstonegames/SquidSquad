@@ -67,6 +67,6 @@ public class ProbabilityTableSerializer extends Serializer<ProbabilityTable> {
 
     @Override
     public ProbabilityTable copy(Kryo kryo, ProbabilityTable original) {
-        return original.copy();
+        return new ProbabilityTable(original);
     }
 }

@@ -37,4 +37,9 @@ public class RegionSerializer extends Serializer<Region> {
     public Region read(final Kryo kryo, final Input input, final Class<? extends Region> dataClass) {
         return Region.decompress(input.readString());
     }
+
+    @Override
+    public Region copy(Kryo kryo, Region original) {
+        return new Region(original);
+    }
 }

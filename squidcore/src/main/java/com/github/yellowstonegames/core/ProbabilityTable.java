@@ -93,6 +93,21 @@ public class ProbabilityTable<T> {
     }
 
     /**
+     * Copy constructor.
+     * @param other another ProbabilityTable; must not contain cyclical references to tables that contain themselves
+     */
+    public ProbabilityTable(ProbabilityTable<? extends T> other) {
+        rng = other.rng.copy();
+        table = new NumberedSet<>(other.table);
+        extraTable = new ObjectList<>(other.extraTable.size());
+        for (int i = 0; i < other.extraTable.size(); i++) {
+            extraTable.add(new ProbabilityTable<>(other.extraTable.get(i)));
+        }
+        weights = new IntList(other.weights);
+        total = other.total;
+    }
+
+    /**
      * Creates a new probability table with the provided long seed used.
      *
      * @param seed the RNG seed as a long
@@ -396,14 +411,7 @@ public class ProbabilityTable<T> {
      */
     public ProbabilityTable<T> copy()
     {
-        ProbabilityTable<T> n = new ProbabilityTable<>(rng.copy());
-        n.weights.addAll(weights);
-        n.table.addAll(table);
-        for (int i = 0; i < extraTable.size(); i++) {
-            n.extraTable.add(extraTable.get(i).copy());
-        }
-        n.total = total;
-        return n;
+        return new ProbabilityTable<>(this);
     }
 
     @Override

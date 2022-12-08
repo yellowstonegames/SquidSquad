@@ -37,4 +37,9 @@ public class WeightedTableSerializer extends Serializer<WeightedTable> {
     public WeightedTable read(final Kryo kryo, final Input input, final Class<? extends WeightedTable> dataClass) {
         return WeightedTable.deserializeFromString(input.readString());
     }
+
+    @Override
+    public WeightedTable copy(Kryo kryo, WeightedTable original) {
+        return new WeightedTable(original);
+    }
 }

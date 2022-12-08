@@ -37,4 +37,9 @@ public class IntShufflerSerializer extends Serializer<IntShuffler> {
     public IntShuffler read(final Kryo kryo, final Input input, final Class<? extends IntShuffler> dataClass) {
         return IntShuffler.deserializeFromString(input.readString());
     }
+
+    @Override
+    public IntShuffler copy(Kryo kryo, IntShuffler original) {
+        return new IntShuffler(original);
+    }
 }
