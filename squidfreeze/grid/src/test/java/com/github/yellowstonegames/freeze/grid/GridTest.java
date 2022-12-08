@@ -67,4 +67,54 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testRegion() {
+        Kryo kryo = new Kryo();
+        kryo.register(Region.class, new RegionSerializer());
+        Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Region data2 = kryo.readObject(input, Region.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordSet() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordSet.class, new CoordSetSerializer());
+        CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordSet data2 = kryo.readObject(input, CoordSet.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordOrderedSet() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordOrderedSet.class, new CoordOrderedSetSerializer());
+        CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordOrderedSet data2 = kryo.readObject(input, CoordOrderedSet.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
