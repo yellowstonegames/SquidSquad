@@ -117,4 +117,72 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testCoordObjectMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordObjectMap.class, new CoordObjectMapSerializer());
+        CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordObjectMap data2 = kryo.readObject(input, CoordObjectMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordObjectOrderedMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordObjectOrderedMap data2 = kryo.readObject(input, CoordObjectOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordFloatMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordFloatMap.class, new CoordFloatMapSerializer());
+        CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordFloatMap data2 = kryo.readObject(input, CoordFloatMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordFloatOrderedMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
+        CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CoordFloatOrderedMap data2 = kryo.readObject(input, CoordFloatOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
