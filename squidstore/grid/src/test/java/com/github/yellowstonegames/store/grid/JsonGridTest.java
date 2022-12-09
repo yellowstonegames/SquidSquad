@@ -314,14 +314,7 @@ public class JsonGridTest {
         String data = json.toJson(points);
         System.out.println(data);
         SpatialMap<IGI> points2 = json.fromJson(SpatialMap.class, IGI.class, data);
-//        if(!points.equals(points2)){
-//            System.out.println(json.toJson(points2));
-//        }
         Assert.assertEquals(points, points2);
-//        for(IGridIdentified pair : points2.values()) {
-//            System.out.print(pair);
-//            System.out.print("; ");
-//        }
     }
 
     @Test

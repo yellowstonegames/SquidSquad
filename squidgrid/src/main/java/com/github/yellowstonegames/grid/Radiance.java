@@ -16,9 +16,10 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.tommyettinger.random.LineWobble;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.MathTools;
@@ -50,7 +51,7 @@ public class Radiance {
     /**
      * Randomly-seeded and only used for things that should be visually random, but won't matter for equality.
      */
-    private static final FourWheelRandom random = new FourWheelRandom();
+    private static final WhiskerRandom random = new WhiskerRandom();
 
     /**
      * How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.
@@ -63,7 +64,7 @@ public class Radiance {
     public int color;
     /**
      * The rate of random continuous change to radiance range, like the light from a campfire. The random component of
-     * the change is determined by a unique seed produced by an internal {@link FourWheelRandom}, which will
+     * the change is determined by a unique seed produced by an internal {@link WhiskerRandom}, which will
      * probably make all flicker effects different when flicker is non-0.
      */
     public float flicker;
@@ -87,7 +88,7 @@ public class Radiance {
      */
     public float flare;
     /**
-     * Assigned during construction by an internal {@link FourWheelRandom}, this is used for flickering effects, but does
+     * Assigned during construction by an internal {@link WhiskerRandom}, this is used for flickering effects, but does
      * not affect {@link #equals(Object)} or {@link #hashCode()}.
      */
     private final int seed;
@@ -298,25 +299,26 @@ public class Radiance {
 
     public String serializeToString()
     {
-        return  "{" + DigitTools.hex(BitConversion.floatToRawIntBits(range)) +
-                "," + DigitTools.hex(color) +
-                "," + DigitTools.hex(BitConversion.floatToRawIntBits(flicker)) +
-                "," + DigitTools.hex(BitConversion.floatToRawIntBits(strobe)) +
-                "," + DigitTools.hex(BitConversion.floatToRawIntBits(delay)) +
-                "," + DigitTools.hex(BitConversion.floatToRawIntBits(flare)) +
-                "}";
+        StringBuilder sb = new StringBuilder(48);
+        sb.append('`');
+        Base.SIMPLE64.appendSigned(sb, range).append('~');
+        Base.SIMPLE64.appendSigned(sb, color).append('~');
+        Base.SIMPLE64.appendSigned(sb, flicker).append('~');
+        Base.SIMPLE64.appendSigned(sb, strobe).append('~');
+        Base.SIMPLE64.appendSigned(sb, delay).append('~');
+        Base.SIMPLE64.appendSigned(sb, flare).append('`');
+        return sb.toString();
     }
     
     public static Radiance deserializeFromString(String data)
     {
-        return data != null && data.length() >= 54
-                ? new Radiance(
-                BitConversion.intBitsToFloat(DigitTools.intFromHex(data, 1, 9)),
-                DigitTools.intFromHex(data, 10, 18),
-                BitConversion.intBitsToFloat(DigitTools.intFromHex(data, 19, 27)),
-                BitConversion.intBitsToFloat(DigitTools.intFromHex(data, 28, 36)),
-                BitConversion.intBitsToFloat(DigitTools.intFromHex(data, 37, 45)),
-                BitConversion.intBitsToFloat(DigitTools.intFromHex(data, 46, 54)))
-                : null;
+        if(data == null) return null;
+        int idx = 0;
+        return new Radiance(Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloat(data, idx + 1, data.indexOf('`', idx + 1)));
     }
 }
