@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -94,9 +95,9 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz;
         for (int i = 0; i < octaves; i++) {
-            xx = TrigTools.sin(x * warpTrk) * warp;
-            yy = TrigTools.sin(y * warpTrk) * warp;
-            zz = TrigTools.sin(z * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk + 1) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk + 2) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk + 3) * warp;
 
             x += zz;
             y += xx;
@@ -106,7 +107,11 @@ float cyclicNoise(vec3 p){
             int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
             int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
 
-            noise += TrigTools.sinTurns((SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]) * (1f/6f)) * amp;
+            noise += TrigTools.sin((
+                    SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]
+                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
+                    )
+            ) * amp;
 
             xx = Noise.rotateX3D(x, y, z);
             yy = Noise.rotateY3D(x, y, z);
