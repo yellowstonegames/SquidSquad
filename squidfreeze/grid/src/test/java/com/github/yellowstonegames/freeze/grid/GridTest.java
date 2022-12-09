@@ -185,4 +185,84 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    public static class IGI implements IGridIdentified {
+        public final int id;
+        public Coord position;
+        private static int COUNTER = 0;
+
+        public IGI(){
+            id = COUNTER++;
+            position = Coord.get(0, 0);
+        }
+        public IGI(Coord pos){
+            id = COUNTER++;
+            position = pos;
+        }
+        public IGI(int id, Coord pos){
+            this.id = id;
+            position = pos;
+        }
+
+        @Override
+        public int getIdentifier() {
+            return id;
+        }
+
+        @Override
+        public Coord getCoordPosition() {
+            return position;
+        }
+
+        @Override
+        public void setCoordPosition(Coord position) {
+            this.position = position;
+        }
+
+        @Override
+        public String toString() {
+            return "IGI{" +
+                    "id=" + id +
+                    ", position=" + position +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            IGI igi = (IGI) o;
+
+            if (id != igi.id) return false;
+            return position != null ? position.equals(igi.position) : igi.position == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return id;
+        }
+    }
+    @Test
+    public void testSpatialMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(IGI.class);
+        kryo.register(SpatialMap.class, new SpatialMapSerializer());
+        SpatialMap<IGI> data = new SpatialMap<>(8);
+        data.add(new IGI(Coord.get(1, 2)));
+        data.add(new IGI(Coord.get(2, 2)));
+        data.add(new IGI(Coord.get(1, 3)));
+        data.add(new IGI(Coord.get(2, 3)));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            SpatialMap data2 = kryo.readObject(input, SpatialMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 }
