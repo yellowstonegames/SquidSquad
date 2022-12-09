@@ -18,11 +18,10 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DigitTools;
-import com.github.tommyettinger.digital.MathTools;
 
 /**
  * Grouping of qualities related to glow and light emission. When a Radiance variable in some object is null, it
@@ -91,7 +90,7 @@ public class Radiance {
      * Assigned during construction by an internal {@link WhiskerRandom}, this is used for flickering effects, but does
      * not affect {@link #equals(Object)} or {@link #hashCode()}.
      */
-    private final int seed;
+    private transient final int seed;
 
     /**
      * All-default constructor; makes a single-cell unchanging white light. This assumes the color is being treated as

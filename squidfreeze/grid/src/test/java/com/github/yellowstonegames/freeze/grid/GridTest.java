@@ -51,6 +51,7 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
     @Test
     public void testCoord() {
         Kryo kryo = new Kryo();
@@ -265,4 +266,20 @@ public class GridTest {
         }
     }
 
+    @Test
+    public void testRadiance() {
+        Kryo kryo = new Kryo();
+        kryo.register(Radiance.class, new RadianceSerializer());
+
+        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Radiance data2 = kryo.readObject(input, Radiance.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
