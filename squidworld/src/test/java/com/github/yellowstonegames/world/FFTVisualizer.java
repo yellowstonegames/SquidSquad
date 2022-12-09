@@ -42,10 +42,11 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
+    private final CyclicNoise cyclic = new CyclicNoise(3);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 17;
-    private int mode = 16;
+    private static final int MODE_LIMIT = 18;
+    private int mode = 17;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -216,9 +217,11 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
+                        cyclic.octaves = octaves;
                         break;
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
+                        cyclic.octaves = octaves;
                         break;
                     case I: // inverse mode
                         if (inverse = !inverse) {
@@ -1277,6 +1280,19 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
             }
+        } else if (mode == 17) {
+            float fr = noise.getFrequency();
+            points[1][2] = c * fr;
+                for (int x = 0; x < width; x++) {
+                    points[1][0] = x * fr;
+                    for (int y = 0; y < height; y++) {
+                        points[1][1] = y * fr;
+                        bright = basicPrepare(cyclic.getNoise(points[1][0], points[1][1], points[1][2]));
+                        real[x][y] = bright;
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
         }
 
         Fft.transform2D(real, imag);

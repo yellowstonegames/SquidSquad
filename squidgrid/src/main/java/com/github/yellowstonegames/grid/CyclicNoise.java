@@ -106,7 +106,7 @@ float cyclicNoise(vec3 p){
             int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
             int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
 
-            noise += TrigTools.sinTurns(SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]) * amp;
+            noise += TrigTools.sinTurns((SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]) * (1f/6f)) * amp;
 
             xx = Noise.rotateX3D(x, y, z);
             yy = Noise.rotateY3D(x, y, z);
