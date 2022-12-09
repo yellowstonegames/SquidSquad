@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * A type of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.
+ * A kind of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.
  * This requires its {@code V} values to implement {@link IGridIdentified}, which makes this able to associate each V
  * with its own position and id. The most commonly-used non-standard method here is probably
  * {@link #move(Coord, Coord)}, which gets the value at a position and attempts to move it to another position, updating
