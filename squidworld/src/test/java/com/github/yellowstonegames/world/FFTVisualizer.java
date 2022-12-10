@@ -217,11 +217,11 @@ public class FFTVisualizer extends ApplicationAdapter {
                         break;
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
-                        cyclic.octaves = octaves + 1;
+                        cyclic.setOctaves(octaves + 1);
                         break;
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
-                        cyclic.octaves = octaves + 1;
+                        cyclic.setOctaves(octaves + 1);
                         break;
                     case I: // inverse mode
                         if (inverse = !inverse) {
