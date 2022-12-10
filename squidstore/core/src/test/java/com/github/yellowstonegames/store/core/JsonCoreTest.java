@@ -7,8 +7,6 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.*;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.random.distribution.Distribution;
-import com.github.tommyettinger.random.distribution.NormalDistribution;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;

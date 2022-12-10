@@ -2,7 +2,6 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -15,9 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.grid.*;

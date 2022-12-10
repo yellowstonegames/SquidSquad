@@ -16,7 +16,6 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;

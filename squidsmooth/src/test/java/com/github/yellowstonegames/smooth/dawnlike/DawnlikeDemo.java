@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;

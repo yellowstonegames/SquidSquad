@@ -1,8 +1,6 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;

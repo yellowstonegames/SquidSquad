@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;

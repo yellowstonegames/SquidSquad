@@ -57,8 +57,18 @@ import com.github.tommyettinger.digital.TrigTools;
  * density of information in higher-dimensional space.
  */
 public class PhantomNoise {
-    protected final Hasher hasher;
+    /**
+     * Effectively, this contains the seed for the noise.
+     */
+    public final Hasher hasher;
+    /**
+     * How many dimensions of noise to generate; usually at least 2.
+     */
     public final int dim;
+    /**
+     * This should go up linearly with dimension, typically, and is usually 0.825 times {@link #dim}.
+     * It can be raised to make the noise more starkly black and white, or lowered to have more mid-gray values.
+     */
     public final float sharpness;
     protected float inverse;
     protected final float[] working, points;
