@@ -300,4 +300,21 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+    @Test
+    public void testTaffyNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(TaffyNoise.class, new TaffyNoiseSerializer());
+
+        TaffyNoise data = new TaffyNoise(1234, 8, 7f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            TaffyNoise data2 = kryo.readObject(input, TaffyNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
