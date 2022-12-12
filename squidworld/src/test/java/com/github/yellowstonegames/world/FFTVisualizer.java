@@ -1311,7 +1311,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-                default:
                     points[2][2] = c * fr;
                     for (int x = 0; x < width; x++) {
                         points[2][0] = x * fr;
@@ -1319,6 +1318,25 @@ public class FFTVisualizer extends ApplicationAdapter {
                             points[2][1] = y * fr;
                             points[2][3] = 0x1p-4f * fr * (x + y - c);
                             bright = basicPrepare(cyclic.getNoise(points[2][0], points[2][1], points[2][2], points[2][3]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                default:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[3][0] = cc + xx;
+                        points[3][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[3][2] = yy - cc;
+                            points[3][3] = cc - yy;
+                            points[3][4] = xx + yy;
+                            bright = basicPrepare(cyclic.getNoise(points[3][0], points[3][1], points[3][2], points[3][3], points[3][4]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
