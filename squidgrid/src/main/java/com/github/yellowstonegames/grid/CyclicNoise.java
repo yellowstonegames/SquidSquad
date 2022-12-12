@@ -292,5 +292,67 @@ float cyclicNoise(vec3 p){
         }
         return noise * total;
     }
+
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        float noise = 0f;
+
+        float amp = start;
+
+        final float warp = 0.3f;
+        float warpTrk = 1.2f;
+        final float warpTrkGain = 1.5f;
+
+        float xx, yy, zz, ww, uu, vv;
+        for (int i = 0; i < octaves; i++) {
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+            uu = TrigTools.sin((u-2) * warpTrk) * warp;
+            vv = TrigTools.sin((v-2) * warpTrk) * warp;
+
+            x += vv;
+            y += xx;
+            z += yy;
+            w += zz;
+            u += ww;
+            v += uu;
+
+            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (w * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            int us = (int) (u * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
+            int vs = (int) (v * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
+
+            noise += TrigTools.sin((
+                    + SIN_TABLE[xc] * SIN_TABLE[vs]
+                    + SIN_TABLE[yc] * SIN_TABLE[xs]
+                    + SIN_TABLE[zc] * SIN_TABLE[ys]
+                    + SIN_TABLE[wc] * SIN_TABLE[zs]
+                    + SIN_TABLE[uc] * SIN_TABLE[ws]
+                    + SIN_TABLE[vc] * SIN_TABLE[us]
+                    )
+            ) * amp;
+
+            xx = Noise.rotateX6D(x, y, z, w, u, v);
+            yy = Noise.rotateY6D(x, y, z, w, u, v);
+            zz = Noise.rotateZ6D(x, y, z, w, u, v);
+            ww = Noise.rotateW6D(x, y, z, w, u, v);
+            uu = Noise.rotateU6D(x, y, z, w, u, v);
+            vv = Noise.rotateV6D(x, y, z, w, u, v);
+
+            x = xx * lacunarity;
+            y = yy * lacunarity;
+            z = zz * lacunarity;
+            w = ww * lacunarity;
+            u = uu * lacunarity;
+            u = vv * lacunarity;
+
+            warpTrk *= warpTrkGain;
+            amp *= gain;
+        }
+        return noise * total;
+    }
     private static final float radToIndex = TABLE_SIZE / PI2;
 }
