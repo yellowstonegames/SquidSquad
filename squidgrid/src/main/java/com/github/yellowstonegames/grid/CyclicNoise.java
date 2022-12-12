@@ -16,7 +16,6 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -104,6 +103,44 @@ float cyclicNoise(vec3 p){
             total += start;
         }
         total = 1f / total;
+    }
+
+    public float getNoise(float x, float y) {
+        float noise = 0f;
+
+        float amp = start;
+
+        final float warp = 0.3f;
+        float warpTrk = 1.2f;
+        final float warpTrkGain = 1.5f;
+
+        float xx, yy;
+        for (int i = 0; i < octaves; i++) {
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+
+            x += yy;
+            y += xx;
+
+            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+
+            noise += TrigTools.sin((
+                            SIN_TABLE[xc] * SIN_TABLE[ys] + SIN_TABLE[yc] * SIN_TABLE[xs]
+//                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
+                    )
+            ) * amp;
+
+            xx = Noise.rotateX2D(x, y);
+            yy = Noise.rotateY2D(x, y);
+
+            x = xx * lacunarity;
+            y = yy * lacunarity;
+
+            warpTrk *= warpTrkGain;
+            amp *= gain;
+        }
+        return noise * total;
     }
 
     public float getNoise(float x, float y, float z) {
