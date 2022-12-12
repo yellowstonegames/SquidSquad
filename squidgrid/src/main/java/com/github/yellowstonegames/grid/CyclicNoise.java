@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -76,8 +75,8 @@ float cyclicNoise(vec3 p){
 
     private int octaves;
     protected float total = 1f, start = 1f;
-    protected final float lacunarity = 1.25f;
-    protected final float gain = 0.8f;
+    protected final float lacunarity = 1.6f;
+    protected final float gain = 0.6f;
     public CyclicNoise() {
         this(3);
     }
@@ -99,20 +98,12 @@ float cyclicNoise(vec3 p){
             total += start;
         }
         total = 1f / total;
-//        System.out.printf("With %d octaves, total: %f, start: %f\n", this.octaves, total, start);
     }
 
     public float getNoise(float x, float y, float z) {
         float noise = 0f;
 
-
         float amp = start;
-
-//        float total = ((1 << octaves) - 1);
-//        float amp = gain * (1 << octaves);
-
-//        float total = 7f;
-//        float amp = 4f;
 
         final float warp = 0.3f;
         float warpTrk = 1.2f;
@@ -120,22 +111,22 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz;
         for (int i = 0; i < octaves; i++) {
-            xx = TrigTools.sin((x-2) * warpTrk + 1) * warp;
-            yy = TrigTools.sin((y-2) * warpTrk + 2) * warp;
-            zz = TrigTools.sin((z-2) * warpTrk + 3) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
 
-            x += zz - yy;
-            y += xx - zz;
-            z += yy - xx;
+            x += zz;// - yy;
+            y += xx;// - zz;
+            z += yy;// - xx;
 
             int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
             int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
             int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
 
-            noise += TrigTools.sinTurns((
+            noise += TrigTools.sin((
                     SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]
-                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
-                    ) * 0.25f
+//                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
+                    )
             ) * amp;
 
             xx = Noise.rotateX3D(x, y, z);
