@@ -158,17 +158,18 @@ float cyclicNoise(vec3 p){
             yy = TrigTools.sin((y-2) * warpTrk) * warp;
             zz = TrigTools.sin((z-2) * warpTrk) * warp;
 
-            x += zz;// - yy;
-            y += xx;// - zz;
-            z += yy;// - xx;
+            x += zz;
+            y += xx;
+            z += yy;
 
             int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
             int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
             int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
-                            SIN_TABLE[xc] * SIN_TABLE[zs] + SIN_TABLE[yc] * SIN_TABLE[xs] + SIN_TABLE[zc] * SIN_TABLE[ys]
-//                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
+                    SIN_TABLE[xc] * SIN_TABLE[zs] +
+                    SIN_TABLE[yc] * SIN_TABLE[xs] +
+                    SIN_TABLE[zc] * SIN_TABLE[ys]
                     )
             ) * amp;
 
@@ -179,6 +180,56 @@ float cyclicNoise(vec3 p){
             x = xx * lacunarity;
             y = yy * lacunarity;
             z = zz * lacunarity;
+
+            warpTrk *= warpTrkGain;
+            amp *= gain;
+        }
+        return noise * total;
+    }
+
+    public float getNoise(float x, float y, float z, float w) {
+        float noise = 0f;
+
+        float amp = start;
+
+        final float warp = 0.3f;
+        float warpTrk = 1.2f;
+        final float warpTrkGain = 1.5f;
+
+        float xx, yy, zz, ww;
+        for (int i = 0; i < octaves; i++) {
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+
+            x += ww;
+            y += xx;
+            z += yy;
+            w += zz;
+
+            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (w * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+
+            noise += TrigTools.sin((
+                    + SIN_TABLE[xc] * SIN_TABLE[ws]
+                    + SIN_TABLE[yc] * SIN_TABLE[xs]
+                    + SIN_TABLE[zc] * SIN_TABLE[ys]
+                    + SIN_TABLE[wc] * SIN_TABLE[zs]
+                    )
+            ) * amp;
+
+            xx = Noise.rotateX4D(x, y, z, w);
+            yy = Noise.rotateY4D(x, y, z, w);
+            zz = Noise.rotateZ4D(x, y, z, w);
+            ww = Noise.rotateW4D(x, y, z, w);
+
+            x = xx * lacunarity;
+            y = yy * lacunarity;
+            z = zz * lacunarity;
+            w = ww * lacunarity;
 
             warpTrk *= warpTrkGain;
             amp *= gain;
