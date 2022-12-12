@@ -39,7 +39,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
-    private final CyclicNoise cyclic = new CyclicNoise();
+    private final SorbetNoise cyclic = new SorbetNoise();
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 18;
