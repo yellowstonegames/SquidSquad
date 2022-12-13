@@ -16,9 +16,11 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.Ziggurat;
 
 /**
  * This has tools for matrix rotations, potentially in higher dimensions than the typical 2 or 3.
@@ -55,13 +57,13 @@ public final class RotationTools {
 
     /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
-     * {@link #rotate(float[], float[], float[])}. Uses the given random number generator to get just one int, looking
-     * it up in {@link TrigTools#SIN_TABLE}.
-     * @param random any EnhancedRandom generator
+     * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
+     * {@link Hasher#randomize2(long)} and {@link TrigTools#SIN_TABLE}.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
      */
-    public static float[] randomRotation2D(EnhancedRandom random) {
-        final int index = random.next(14);
+    public static float[] randomRotation2D(long seed) {
+        final int index = (int)(Hasher.randomize2(seed) >>> 50);
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
@@ -69,16 +71,16 @@ public final class RotationTools {
 
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
-     * {@link #rotate(float[], float[], float[])}. Uses the given random number generator to get one int and three
-     * Gaussian floats.
-     * @param random any EnhancedRandom generator
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
      * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
      */
-    public static float[] randomRotation3D(EnhancedRandom random) {
-        final int index = random.next(14);
-        final float x = (float) random.nextGaussian() * MathTools.ROOT2;
-        final float y = (float) random.nextGaussian() * MathTools.ROOT2;
-        final float z = (float) random.nextGaussian() * MathTools.ROOT2;
+    public static float[] randomRotation3D(long seed) {
+        final int index = (int)((seed = Hasher.randomize2(seed)) >>> 50);
+        final float x = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
+        final float y = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
+        final float z = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
         final float xx = x * x - 1;
         final float yy = y * y - 1;
         final float zz = z * z - 1;
