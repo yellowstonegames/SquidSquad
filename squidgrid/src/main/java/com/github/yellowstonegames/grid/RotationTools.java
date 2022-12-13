@@ -16,6 +16,9 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.EnhancedRandom;
+
 /**
  * This has tools for matrix rotations, potentially in higher dimensions than the typical 2 or 3.
  * <br>
@@ -47,5 +50,19 @@ public final class RotationTools {
                 output[r] += rotation[m++] * input[c];
             }
         }
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 2D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given random number generator to get just one int, looking
+     * it up in {@link TrigTools#SIN_TABLE}.
+     * @param random any EnhancedRandom generator
+     * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
+     */
+    public static float[] randomRotation2D(EnhancedRandom random) {
+        final int index = random.next(14);
+        final float s = TrigTools.SIN_TABLE[index];
+        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        return new float[]{c, s, -s, c};
     }
 }
