@@ -442,6 +442,50 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers FlanNoise with the given Json object, so FlanNoise can be written to and read from JSON.
+     * This is a simple wrapper around FlanNoise's built-in {@link FlanNoise#serializeToString()} and
+     * {@link FlanNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerFlanNoise(@Nonnull Json json) {
+        json.setSerializer(FlanNoise.class, new Json.Serializer<FlanNoise>() {
+            @Override
+            public void write(Json json, FlanNoise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public FlanNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return FlanNoise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SorbetNoise with the given Json object, so SorbetNoise can be written to and read from JSON.
+     * This is a simple wrapper around SorbetNoise's built-in {@link SorbetNoise#serializeToString()} and
+     * {@link SorbetNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSorbetNoise(@Nonnull Json json) {
+        json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
+            @Override
+            public void write(Json json, SorbetNoise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public SorbetNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return SorbetNoise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
      * Registers SpatialMap with the given Json object, so SpatialMap can be written to and read from JSON.
      * This also registers Coord, CoordObjectOrderedMap, and IntObjectOrderedMap with the given Json object.
      *

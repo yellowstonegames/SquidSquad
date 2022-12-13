@@ -196,7 +196,6 @@ public class FlanNoise {
         float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
 
         return new FlanNoise(seed, dim, sharp, detail);
-
     }
 
     public float getNoise(float... args) {

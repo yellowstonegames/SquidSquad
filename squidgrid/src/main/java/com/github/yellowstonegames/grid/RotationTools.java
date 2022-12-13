@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**

@@ -16,8 +16,10 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -59,6 +61,19 @@ public class SorbetNoise {
             total += start;
         }
         total = 1f / total;
+    }
+    public String serializeToString() {
+        return "`" + seed + '~' + octaves + '`';
+    }
+
+    public static SorbetNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 5)
+            return null;
+        int pos;
+        int seed =   DigitTools.intFromDec(data, 1, pos = data.indexOf('~'));
+        int octaves =     DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+
+        return new SorbetNoise(seed, octaves);
     }
 
     /**
