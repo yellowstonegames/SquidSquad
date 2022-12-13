@@ -78,9 +78,13 @@ public final class RotationTools {
      */
     public static float[] randomRotation3D(long seed) {
         final int index = (int)((seed = Hasher.randomize2(seed)) >>> 50);
-        final float x = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
-        final float y = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
-        final float z = (float) Ziggurat.normal(Hasher.randomize2(++seed)) * MathTools.ROOT2;
+        float x = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+        float y = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+        float z = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+        final float inv = MathTools.ROOT2 / (float) Math.sqrt(x * x + y * y + z * z);
+        x *= inv;
+        y *= inv;
+        z *= inv;
         final float xx = x * x - 1;
         final float yy = y * y - 1;
         final float zz = z * z - 1;
