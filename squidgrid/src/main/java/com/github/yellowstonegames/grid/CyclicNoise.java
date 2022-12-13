@@ -19,6 +19,8 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
+import java.util.Arrays;
+
 import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
@@ -82,11 +84,17 @@ float cyclicNoise(vec3 p){
     protected float total = 1f, start = 1f;
     protected final float lacunarity = 1.6f;
     protected final float gain = 0.6f;
+    protected long seed;
+    // TODO: Update this when we can handle more rotation types
+    protected float[][] rotations = new float[2][];
+    protected float[][] inputs = new float[][]{new float[2], new float[3]};
+    protected float[][] outputs = new float[][]{new float[2], new float[3]};
     public CyclicNoise() {
         this(3);
     }
     public CyclicNoise(int octaves) {
         setOctaves(octaves);
+        setSeed(0xBEEF1E57CA77L);
     }
 
     public int getOctaves() {
@@ -105,6 +113,16 @@ float cyclicNoise(vec3 p){
         total = 1f / total;
     }
 
+    public long getSeed() {
+        return seed;
+    }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
+        rotations[0] = RotationTools.randomRotation2D(seed);
+        rotations[1] = RotationTools.randomRotation3D(seed);
+    }
+
     public float getNoise(float x, float y) {
         float noise = 0f;
 
@@ -119,20 +137,21 @@ float cyclicNoise(vec3 p){
             xx = TrigTools.sin((x-2) * warpTrk) * warp;
             yy = TrigTools.sin((y-2) * warpTrk) * warp;
 
-            x += yy;
-            y += xx;
+            inputs[0][0] = x + yy;
+            inputs[0][1] = y + xx;
+            Arrays.fill(outputs[0], 0f);
+            RotationTools.rotate(inputs[0], rotations[0], outputs[0]);
+            xx = outputs[0][0];
+            yy = outputs[0][1];
 
-            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
                             SIN_TABLE[xc] * SIN_TABLE[ys] + SIN_TABLE[yc] * SIN_TABLE[xs]
 //                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
                     )
             ) * amp;
-
-            xx = Noise.rotateX2D(x, y);
-            yy = Noise.rotateY2D(x, y);
 
             x = xx * lacunarity;
             y = yy * lacunarity;
@@ -162,9 +181,18 @@ float cyclicNoise(vec3 p){
             y += xx;
             z += yy;
 
-            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            inputs[1][0] = x + zz;
+            inputs[1][1] = y + xx;
+            inputs[1][2] = z + yy;
+            Arrays.fill(outputs[1], 0f);
+            RotationTools.rotate(inputs[1], rotations[1], outputs[1]);
+            xx = outputs[1][0];
+            yy = outputs[1][1];
+            zz = outputs[1][2];
+
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
                     SIN_TABLE[xc] * SIN_TABLE[zs] +
@@ -172,10 +200,6 @@ float cyclicNoise(vec3 p){
                     SIN_TABLE[zc] * SIN_TABLE[ys]
                     )
             ) * amp;
-
-            xx = Noise.rotateX3D(x, y, z);
-            yy = Noise.rotateY3D(x, y, z);
-            zz = Noise.rotateZ3D(x, y, z);
 
             x = xx * lacunarity;
             y = yy * lacunarity;
@@ -208,10 +232,15 @@ float cyclicNoise(vec3 p){
             z += yy;
             w += zz;
 
-            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (w * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            xx = Noise.rotateX4D(x, y, z, w);
+            yy = Noise.rotateY4D(x, y, z, w);
+            zz = Noise.rotateZ4D(x, y, z, w);
+            ww = Noise.rotateW4D(x, y, z, w);
+
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
                     + SIN_TABLE[xc] * SIN_TABLE[ws]
@@ -220,11 +249,6 @@ float cyclicNoise(vec3 p){
                     + SIN_TABLE[wc] * SIN_TABLE[zs]
                     )
             ) * amp;
-
-            xx = Noise.rotateX4D(x, y, z, w);
-            yy = Noise.rotateY4D(x, y, z, w);
-            zz = Noise.rotateZ4D(x, y, z, w);
-            ww = Noise.rotateW4D(x, y, z, w);
 
             x = xx * lacunarity;
             y = yy * lacunarity;
@@ -260,11 +284,17 @@ float cyclicNoise(vec3 p){
             w += zz;
             u += ww;
 
-            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (w * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
-            int us = (int) (u * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
+            xx = Noise.rotateX5D(x, y, z, w, u);
+            yy = Noise.rotateY5D(x, y, z, w, u);
+            zz = Noise.rotateZ5D(x, y, z, w, u);
+            ww = Noise.rotateW5D(x, y, z, w, u);
+            uu = Noise.rotateU5D(x, y, z, w, u);
+
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
                     + SIN_TABLE[xc] * SIN_TABLE[us]
@@ -274,12 +304,6 @@ float cyclicNoise(vec3 p){
                     + SIN_TABLE[uc] * SIN_TABLE[ws]
                     )
             ) * amp;
-
-            xx = Noise.rotateX5D(x, y, z, w, u);
-            yy = Noise.rotateY5D(x, y, z, w, u);
-            zz = Noise.rotateZ5D(x, y, z, w, u);
-            ww = Noise.rotateW5D(x, y, z, w, u);
-            uu = Noise.rotateU5D(x, y, z, w, u);
 
             x = xx * lacunarity;
             y = yy * lacunarity;
@@ -318,12 +342,20 @@ float cyclicNoise(vec3 p){
             u += ww;
             v += uu;
 
-            int xs = (int) (x * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (y * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (z * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (w * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
-            int us = (int) (u * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
-            int vs = (int) (v * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
+
+            xx = Noise.rotateX6D(x, y, z, w, u, v);
+            yy = Noise.rotateY6D(x, y, z, w, u, v);
+            zz = Noise.rotateZ6D(x, y, z, w, u, v);
+            ww = Noise.rotateW6D(x, y, z, w, u, v);
+            uu = Noise.rotateU6D(x, y, z, w, u, v);
+            vv = Noise.rotateV6D(x, y, z, w, u, v);
+
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
+            int vs = (int) (vv * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
 
             noise += TrigTools.sin((
                     + SIN_TABLE[xc] * SIN_TABLE[vs]
@@ -335,19 +367,12 @@ float cyclicNoise(vec3 p){
                     )
             ) * amp;
 
-            xx = Noise.rotateX6D(x, y, z, w, u, v);
-            yy = Noise.rotateY6D(x, y, z, w, u, v);
-            zz = Noise.rotateZ6D(x, y, z, w, u, v);
-            ww = Noise.rotateW6D(x, y, z, w, u, v);
-            uu = Noise.rotateU6D(x, y, z, w, u, v);
-            vv = Noise.rotateV6D(x, y, z, w, u, v);
-
             x = xx * lacunarity;
             y = yy * lacunarity;
             z = zz * lacunarity;
             w = ww * lacunarity;
             u = uu * lacunarity;
-            u = vv * lacunarity;
+            v = vv * lacunarity;
 
             warpTrk *= warpTrkGain;
             amp *= gain;

@@ -179,6 +179,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                             taffies[i].setSeed(s);
                             flans[i].setSeed(s);
                             sorbet.seed = s;
+                            cyclic.setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -192,6 +193,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                             taffies[i].setSeed(s);
                             flans[i].setSeed(s);
                             sorbet.seed = s;
+                            cyclic.setSeed(s);
                         }
                         System.out.println("Using seed " + s);
                         break;
