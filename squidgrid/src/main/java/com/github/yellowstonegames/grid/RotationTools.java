@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 
@@ -64,5 +65,32 @@ public final class RotationTools {
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 3D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given random number generator to get one int and three
+     * Gaussian floats.
+     * @param random any EnhancedRandom generator
+     * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
+     */
+    public static float[] randomRotation3D(EnhancedRandom random) {
+        final int index = random.next(14);
+        final float x = (float) random.nextGaussian() * MathTools.ROOT2;
+        final float y = (float) random.nextGaussian() * MathTools.ROOT2;
+        final float z = (float) random.nextGaussian() * MathTools.ROOT2;
+        final float xx = x * x - 1;
+        final float yy = y * y - 1;
+        final float zz = z * z - 1;
+        final float xy = x * y;
+        final float xz = x * z;
+        final float yz = y * z;
+
+        final float s = TrigTools.SIN_TABLE[index];
+        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        return new float[]{
+                c * xx - s * xy, s * xx + c * xy, xz,
+                c * xy - s * yy, s * xy + c * yy, yz,
+                c * xz - s * yz, s * xz + c * yz, zz};
     }
 }
