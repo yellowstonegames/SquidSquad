@@ -35,8 +35,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.RotationTools;
@@ -2237,15 +2239,18 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
-    private static final float[] pole = {0, 0, 1};
+    private static final float[] pole = {-1f, 0, 0};
 
     private void sphereRotationMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < 0x20000; i++) {
-            circleCoord[0] = circleCoord[1] = 0f;
-            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), circleCoord);
+            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
             renderer.color(black);
             renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
+                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
+                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
         }
         renderer.end();
     }
@@ -2839,6 +2844,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
         config.setResizable(false);
+        config.setForegroundFPS(60);
         config.setWindowedMode(512, 520);
         new Lwjgl3Application(new SphereVisualizer(), config);
     }

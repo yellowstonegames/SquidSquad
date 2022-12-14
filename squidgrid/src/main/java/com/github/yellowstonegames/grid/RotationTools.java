@@ -47,9 +47,9 @@ public final class RotationTools {
      * @param output the output vector of length {@code m}
      */
     public static void rotate(float[] input, float[] rotation, float[] output) {
-        for (int c = 0, m = 0; c < input.length; c++) {
-            for (int r = 0; r < output.length; r++) {
-                output[r] += rotation[m++] * input[c];
+        for (int r = 0; r < output.length; r++) {
+            for (int c = 0, m = 0; c < input.length; c++) {
+                output[c] += rotation[m++] * input[r];
             }
         }
     }
@@ -86,8 +86,10 @@ public final class RotationTools {
         float[] gauss = new float[targetSize], house = new float[squareSize], large = new float[squareSize],
                 out = new float[squareSize];
         for (int i = 0; i < smallSize; i++) {
+//            System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
             System.arraycopy(small, i * smallSize, large, i * targetSize, smallSize);
         }
+//        large[0] = 1;
         large[squareSize - 1] = 1;
         seed = Hasher.randomize2(seed + squareSize);
         float sum = 0f, t;
@@ -105,7 +107,7 @@ public final class RotationTools {
             }
         }
         for (int i = 0; i < targetSize; i++) {
-            house[i + targetSize * i]--;
+            house[targetSize * i + i]--;
         }
         matrixMultiply(house, large, out, targetSize);
         return out;
@@ -155,6 +157,20 @@ public final class RotationTools {
                 c * xx - sxy   , s * xx + cxy   , xz,
                 cxy    - s * yy, sxy    + c * yy, yz,
                 c * xz - s * yz, s * xz + c * yz, zz};
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 3D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
+     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 2D rotation matrix to avoid redoing
+     * any generation work already done for 2D. There will probably be some correlation between the appearance of the 2D
+     * rotation this will build upon and the 3D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation3D(long seed, float[] rotation2D) {
+        return rotateStep(seed, rotation2D, 3);
     }
 
     /**
