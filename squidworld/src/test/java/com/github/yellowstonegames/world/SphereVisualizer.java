@@ -1,0 +1,2830 @@
+/*
+ * Copyright (c) 2022 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.github.yellowstonegames.world;
+
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.NumberUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.HilbertCurve;
+
+import java.util.Arrays;
+import java.util.Random;
+
+/**
+ * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
+ */
+public class SphereVisualizer extends ApplicationAdapter {
+    private int mode = 0;
+    private int modes = 2;
+    private SpriteBatch batch;
+    private ImmediateModeRenderer20 renderer;
+    private InputAdapter input;
+    private BitmapFont font;
+    private ScreenViewport viewport;
+    private Camera camera;
+    private int[] amounts = new int[512];
+    private double[] dAmounts = new double[512];
+    private long seed = 1L;
+    private long startTime;
+    private float[] circleCoord = new float[2];
+    private WhiskerRandom whisker = new WhiskerRandom(seed);
+    private final float black = Color.BLACK.toFloatBits();
+    private final float blue = Color.BLUE.toFloatBits();
+    private final float cyan = Color.CYAN.toFloatBits();
+    private final float red = Color.RED.toFloatBits();
+
+    @Override
+    public void create() {
+        startTime = TimeUtils.millis();
+        Coord.expandPoolTo(512, 512);
+        HilbertCurve.init2D();
+        batch = new SpriteBatch();
+        font = new BitmapFont(Gdx.files.internal("Cozette-standard.fnt"));
+        font.setColor(Color.BLACK);
+        batch = new SpriteBatch();
+        viewport = new ScreenViewport();
+        camera = viewport.getCamera();
+        renderer = new ImmediateModeRenderer20(0x80000, false, true, 0);
+        Arrays.fill(amounts, 0);
+        input = new InputAdapter(){
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER)
+                {
+                    mode = (mode + 1) % modes;
+                    System.out.println("Changed to mode " + mode);
+                    return true;
+                } else if(keycode == Input.Keys.MINUS || keycode == Input.Keys.BACKSPACE)
+                {
+                    mode = (mode + modes - 1) % modes;
+                    System.out.println("Changed to mode " + mode);
+                    return true;
+                }
+
+                return false;
+            }
+        };
+        Gdx.input.setInputProcessor(input);
+    }
+
+//    public void update() {
+//        switch (mode) {
+//            case 0: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(hashFloat(i, i) * 256 + 256)]++;
+////                    amounts[Noise.fastFloor(NumberTools.formCurvedFloat(diver.nextLong()) * 256 + 256)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 8)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 1: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(twist(NumberTools.formCurvedFloat(whisker.nextLong())) * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 2: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(twist(NumberTools.formDouble(whisker.nextLong()) *
+//                            NumberTools.formDouble(whisker.nextLong()) - NumberTools.formDouble(whisker.nextLong()) *
+//                            NumberTools.formDouble(whisker.nextLong())) * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 3: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+//                long state;
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    state = whisker.nextLong();
+//                    amounts[Noise.fastFloor((NumberTools.formFloat((int) state) * 0.5 +
+//                            (NumberTools.formFloat((int) (state >>> 20)) + NumberTools.formFloat((int) (state >>> 41))) * 0.25) * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 4: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                bias.distribution = RandomBias.EXP_TRI;
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(bias.biasedDouble(0.6, 512.0))]++;
+//                    //amounts[Noise.fastFloor(Math.nextAfter(random.biasedDouble(0.5, 512.0), 0.0))]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 5: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                bias.distribution = RandomBias.BATHTUB_TRUNCATED;
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(bias.biasedDouble(0.6, 512.0))]++;
+//                    //amounts[Noise.fastFloor(Math.nextAfter(random.biasedDouble(0.5, 512.0), 0.0))]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 8)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 6: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                edit.setCentrality(200);
+//                edit.setExpected(0.75);
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(edit.nextDouble(512.0))]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 7: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                edit.setCentrality(-200);
+//                edit.setExpected(0.75);
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(edit.nextDouble(512.0))]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 8: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+////                random.setCentrality(50);
+////                random.setExpected(0.6);
+//                long centrality = NumberTools.doubleToLongBits(1.625) & 0xfffffffffffffL;
+//                double offset = 0.15, range = 0.6;
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(((whisker.nextLong() & 0xfffffffffffffL) * 0x1p-54 + offset + range * ((centrality > (whisker.nextLong() & 0xfffffffffffffL) ?
+//                            ((whisker.nextLong() & 0xfffffffffffffL) - (whisker.nextLong() & 0xfffffffffffffL)) * 0x1p-53 + 0.5 :
+//                            twist(((whisker.nextLong() & 0xfffffffffffffL) - (whisker.nextLong() & 0xfffffffffffffL)) * 0x1p-52)))) * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 9: {
+//                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+//                //DiverRNG diver = new DiverRNG();
+////                random.setCentrality(50);
+////                random.setExpected(0.6);
+//                long centrality = NumberTools.doubleToLongBits(1.375) & 0xfffffffffffffL;
+//                double offset = 0.15, range = 0.6;
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[Noise.fastFloor(((whisker.nextLong() & 0xfffffffffffffL) * 0x1p-54 + offset + range * ((centrality > (whisker.nextLong() & 0xfffffffffffffL) ?
+//                            ((whisker.nextLong() & 0xfffffffffffffL) - (whisker.nextLong() & 0xfffffffffffffL)) * 0x1p-53 + 0.5 :
+//                            twist(((whisker.nextLong() & 0xfffffffffffffL) - (whisker.nextLong() & 0xfffffffffffffL)) * 0x1p-52)))) * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0 ? -0x1.c98066p126F : -0x1.d08864p126F;
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 10: {
+//                float s = (float) Math.exp(Math.sin((System.currentTimeMillis() & 0xFFFF) * 0x1p-9) * 2);
+//                float t = 0.5f;
+//                Gdx.graphics.setTitle("s=" + s + ", t=" + t);
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x100000; i++) {
+//                    amounts[(int) (MathExtras.barronSpline(whisker.nextFloat(), s, t) * 511.999)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 5)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 11: {
+//                float s = 8;
+//                float t = (float) Math.sin((System.currentTimeMillis() & 0xFFFF) * 0x1p-9) * 0.5f + 0.5f;
+//                Gdx.graphics.setTitle("s=" + s + ", t=" + t);
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x100000; i++) {
+//                    amounts[(int) (MathExtras.barronSpline(whisker.nextFloat(), s, t) * 511.999)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 5)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//
+////            case 10: {
+////                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+////                //DiverRNG diver = new DiverRNG();
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[(int) (diver.nextFloat() * 512)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////            }
+////            break;
+////            case 11: {
+////                Gdx.graphics.setTitle("Math Visualizer: Mode " + mode);
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[(int) (MathUtils.random() * 512)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////            }
+////            break;
+//            case 12: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " RandomXS128.nextFloat() * 512");
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[(int) (xs128.nextFloat() * 512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 13: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " DiverRNG, random.nextInt(0x200)");
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[whisker.nextInt(512)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 14:
+//            case 59: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " nextGaussian()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = nextGaussian() * 64.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " XSP, mult128 & 0x1FFL");
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[(int) ((xsp.nextLongMult(0x1800000000000000L)) & 0x1FFL)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " MathUtils.random(0x1FF)");
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[MathUtils.random(0x1FF)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 15: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " erf(probit)");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = probitInverse(MathExtras.probit(nextExclusiveDouble())) * 511.0;
+////                    double d = erf(MathExtras.probit(nextExclusiveDouble()) / ROOT_2) * 255.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//
+//            }
+//            break;
+//            case 60: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " probit");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = MathExtras.probit(nextExclusiveDouble()) * 64.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " GaussianDistribution, clamped [-4,4]");
+////                for (int i = 0; i < 0x100000; i++) {
+////                    amounts[Noise.fastFloor(MathUtils.clamp(GaussianDistribution.instance.nextDouble(rng), -0x3.FCp0, 0x3.FCp0) * 64 + 256)]++;
+//////                    amounts[MathUtils.round(MathUtils.clamp(fastGaussian() * 64f + 256f, 0f, 511f))]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = Math.max(0, 519 - (amounts[i] >> 5)); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+//            }
+//            break;
+//            case 16:
+//            case 61: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " langeBoxMuller()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = langeBoxMuller(256, 64.0);
+////                    if (d >= 0 && d < 512)
+//                    amounts[(int) d & 511]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " probit cubed");
+////                for (int i = 0; i < 0x40000; i++) {
+////                    double d = Math.cbrt(MathExtras.probit(nextExclusiveDouble()));
+////                    d = d * 64.0 + 256.0;
+////                    if (d >= 0 && d < 512)
+////                        amounts[(int) d]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = Math.max(0, 519 - (amounts[i] >> 3)); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " editedCurve");
+////                for (int i = 0; i < 0x50000; i++) {
+////                    float f = editedCurve() * 64f + 256f;
+////                    if(f >= 0 && f < 512)
+////                        amounts[MathUtils.floor(f)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = Math.max(0, 519 - (amounts[i] >> 3)); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " XSP, traditional & 0x1FFL");
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[(int) ((xsp.nextLong(0x1800000000000000L)) & 0x1FFL)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " DiverRNG, random.nextLong(0x1000000000000000L) & 0x1FFL");
+////                //DiverRNG diver = new DiverRNG();
+////                for (int i = 0; i < 0x1000000; i++) {
+////                    amounts[(int) ((random.nextLong(0x1000000000000000L)) & 0x1FFL)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 17:
+//            case 62: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " nextGaussianCountX3()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = nextGaussianCountX3() * 64.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 18: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " RandomXS128, random.nextLong(0x1800000000000000L) & 0x1FFL");
+//                for (int i = 0; i < 0x1000000; i++) {
+//                    amounts[(int) ((xs128.nextLong(0x1800000000000000L)) & 0x1FFL)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 19: {
+//                long size = (System.nanoTime() >>> 28 & 0xfff) + 1L;
+//                Gdx.graphics.setTitle("Halton[striding 1](2,3) sequence, first " + size + " points");
+//                int x, y, a = 421;
+//                for (int i = 0; i < size; i++) {
+//                    //a = determinePositive16(a);
+//                    a++;
+//                    x = (int) (VanDerCorputQRNG.determine2(a) * 510) + 1;
+//                    y = (int) (VanDerCorputQRNG.determine(3, a) * 510) + 1;
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + i);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+//                x = (int) (VanDerCorputQRNG.determine2(a) * 510) + 1;
+//                y = (int) (VanDerCorputQRNG.determine(3, a) * 510) + 1;
+//                layers.backgrounds[x + 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y + 1] = -0x1.794bfep125F;
+//                layers.backgrounds[x - 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y - 1] = -0x1.794bfep125F;
+//
+//            }
+//            break;
+//            case 20: {
+//                long size = (System.nanoTime() >>> 28 & 0xfff) + 1L;
+//                Gdx.graphics.setTitle("Halton[striding 1](2,39) sequence, first " + size + " points");
+//                int x, y, a = 421;
+//                for (int i = 0; i < size; i++) {
+////                    a = determinePositive16(a);
+//                    a++;
+//                    x = (int) (VanDerCorputQRNG.determine2(a) * 510) + 1;
+//                    y = (int) (VanDerCorputQRNG.determine(39, a) * 510) + 1;
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + i);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+//                x = (int) (VanDerCorputQRNG.determine2(a) * 510) + 1;
+//                y = (int) (VanDerCorputQRNG.determine(39, a) * 510) + 1;
+//                layers.backgrounds[x + 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y + 1] = -0x1.794bfep125F;
+//                layers.backgrounds[x - 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y - 1] = -0x1.794bfep125F;
+//
+//            }
+//            break;
+//            // from http://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/
+//            // this works much better than I had previously found, since the LFSR I was using wasn't being advanced
+//            // correctly, and this caused a pattern in the output because there was a pattern in the input.
+//            // Notably, with very large indices this still doesn't get collisions, but Halton does.
+//            case 21: {
+//                long size = 0x1000L;//(System.nanoTime() >>> 28 & 0xfff) + 1L;
+//                Gdx.graphics.setTitle("Roberts sequence, first " + size + " points");
+//                int x, y, a = 1;
+////                double p, q;
+//
+//                for (int i = 0; i < size; i++) {
+//                    //1.32471795724474602596 0.7548776662466927 0.5698402909980532
+////                    a = determinePositive16(a);
+//                    a++;
+//                    x = (a * 0xC13FA9A9) >>> 23;
+//                    y = (a * 0x91E10DA5) >>> 23;
+//
+////                    p = 0.5 + a * 0.7548776662466927;
+////                    q = 0.5 + a * 0.5698402909980532;
+////                    x = (int) ((p - (int)p) * 512);
+////                    y = (int) ((q - (int)q) * 512);
+////                    a = GreasedRegion.disperseBits((int) (VanDerCorputQRNG.altDetermine(7L, i) * 0x40000));
+////                    x = a & 0x1ff;
+////                    y = a >>> 16 & 0x1ff;
+//
+////                    a = GreasedRegion.disperseBits((int)(VanDerCorputQRNG.altDetermine(7L, i) * 0x4000));
+////                    x = a & 0x7f;
+////                    y = a >>> 16 & 0x7f;
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + i);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+////                x = (a * 0xC13FA9A9) >>> 23;
+////                y = (a * 0x91E10DA5) >>> 23;
+////                for (int i = 0; i < 512; i++) {
+////                    layers.backgrounds[i][y] = -0x1.794bfep125F;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    layers.backgrounds[x][i] = -0x1.794bfep125F;
+////                }
+//
+////                layers.backgrounds[x+1][y] = -0x1.794bfep125F;
+////                layers.backgrounds[x][y+1] = -0x1.794bfep125F;
+////                layers.backgrounds[x-1][y] = -0x1.794bfep125F;
+////                layers.backgrounds[x][y-1] = -0x1.794bfep125F;
+//            }
+//            break;
+//            case 22: {
+//                long size = 0x1000L;//(System.nanoTime() >>> 28 & 0xfff) + 1L;
+//                Gdx.graphics.setTitle("Jittered Roberts sequence, first " + size + " points");
+//                int x, y, a = 1, z;
+//                for (int i = 0; i < size; i++) {
+//                    //1.32471795724474602596 0.7548776662466927 0.5698402909980532
+//                    //0x5320B74F 0xC13FA9A9 0x91E10DA5
+//                    //0x5320B74ECA44ADACL 0xC13FA9A902A6328FL 0x91E10DA5C79E7B1DL
+//                    // 0x9E3779B97F4A7C15L
+//                    //a = determinePositive16(a);
+////                    x = (int) (0x8000000000000000L + a * 0xC13FA9A902A6328FL >>> 55);
+////                    y = (int) (0x8000000000000000L + a * 0x91E10DA5C79E7B1DL >>> 55);
+//                    a++;
+//                    x = (a * 0xC13FA9A9);
+//                    y = (a * 0x91E10DA5);
+//                    z = (a * 0x9E3779B9);
+//                    x = (x >>> 23) + (z >>> 29 & 6) - (z >>> 25 & 6) & 511;
+//                    y = (y >>> 23) + (z >>> 27 & 6) - (z >>> 23 & 6) & 511;
+//
+////                    a = GreasedRegion.disperseBits((int) (VanDerCorputQRNG.altDetermine(7L, i) * 0x40000));
+////                    x = a & 0x1ff;
+////                    y = a >>> 16 & 0x1ff;
+//
+////                    a = GreasedRegion.disperseBits((int)(VanDerCorputQRNG.altDetermine(7L, i) * 0x4000));
+////                    x = a & 0x7f;
+////                    y = a >>> 16 & 0x7f;
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + a);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+//                //0xD1B54A32D192ED03L, 0xABC98388FB8FAC03L, 0x8CB92BA72F3D8DD7L
+//
+////                x = (a * 0xC13FA9A9);
+////                y = (a * 0x91E10DA5);
+////                z = (a * 0x9E3779B9);
+////                x = (x >>> 23) + (z >>> 29 & 6) - (z >>> 25 & 6) & 511;
+////                y = (y >>> 23) + (z >>> 27 & 6) - (z >>> 23 & 6) & 511;
+////                for (int i = 0; i < 512; i++) {
+////                    layers.backgrounds[i][y] = -0x1.794bfep125F;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    layers.backgrounds[x][i] = -0x1.794bfep125F;
+////                }
+//
+//
+////                if(x < 511) layers.backgrounds[x+1][y] = -0x1.794bfep125F;
+////                if(y < 511) layers.backgrounds[x][y+1] = -0x1.794bfep125F;
+////                if(x > 0) layers.backgrounds[x-1][y] = -0x1.794bfep125F;
+////                if(y > 0) layers.backgrounds[x][y-1] = -0x1.794bfep125F;
+//
+//            }
+//            break;
+//            case 23: {
+//                long size = (System.nanoTime() >>> 22 & 0xfff) + 1L;
+////                final long size = 128;
+//                Gdx.graphics.setTitle("Halton[Striding 1](ROOT2,ROOT3) sequence, first " + size + " points");
+//                int x, y, a = 421;
+//                double ROOT2 = Math.sqrt(2), ROOT3 = Math.sqrt(3);
+//                for (int i = 0; i < size; i++) {
+//                    a++;
+//                    x = (int) (vdc(ROOT2, a) * 510) + 1;
+//                    y = (int) (vdc(ROOT3, a) * 510) + 1;
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + i);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+//                x = (int) (vdc(ROOT2, a) * 510) + 1;
+//                y = (int) (vdc(ROOT3, a) * 510) + 1;
+//                layers.backgrounds[x + 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y + 1] = -0x1.794bfep125F;
+//                layers.backgrounds[x - 1][y] = -0x1.794bfep125F;
+//                layers.backgrounds[x][y - 1] = -0x1.794bfep125F;
+//            }
+//            break;
+//
+////            case 23: {
+////                //long size = (System.nanoTime() >>> 22 & 0xfff) + 1L;
+////                final long size = 128;
+////                Gdx.graphics.setTitle("Haltoid(777) sequence, first " + size + " points");
+////                //int a, x, y, p2 = 777 * 0x2C9277B5 | 1;
+////                //int lfsr = 7;
+////                // (lfsr = (lfsr >>> 1 ^ (-(lfsr & 1) & 0x3802))) // 0x20400 is 18-bit // 0xD008 is 16-bit // 0x3802 is 14-bit
+////                int x, y;
+////                Coord c;
+////                for (int i = 0; i < size; i++) {
+//////                    a = GreasedRegion.disperseBits(Integer.reverse(p2 * (i + 1))); //^ 0xAC564B05
+//////                    x = a >>> 7 & 0x1ff;
+//////                    y = a >>> 23 & 0x1ff;
+////                    c = VanDerCorputQRNG.haltoid(777, 510, 510, 1, 1, i);
+////                    x = c.x;
+////                    y = c.y;
+//////                    x = a >>> 9 & 0x7f;
+//////                    y = a >>> 25 & 0x7f;
+//////                    if(layers.backgrounds[x][y] != 0f)
+//////                    {
+//////                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//////                        System.out.println("Overlap on index " + i);
+//////                    }
+//////                    else
+////                    final float color = SColor.floatGetHSV(i * 0x1p-7f, 1f - i * 0x0.3p-7f, 0.7f, 1f);
+////                    layers.backgrounds[x][y] = color;
+////                    layers.backgrounds[x + 1][y] = color;
+////                    layers.backgrounds[x - 1][y] = color;
+////                    layers.backgrounds[x][y + 1] = color;
+////                    layers.backgrounds[x][y - 1] = color;
+////                }
+////            }
+////            break;
+//            case 24: {
+//                Arrays.fill(amounts, 0);
+//                long ctr = (System.nanoTime() >>> 24), xx, yy;
+//                Gdx.graphics.setTitle("ClassicNoise 2D hash at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                for (int x = 0; x < 512; x++) {
+//                    xx = x + ctr;
+//                    for (int y = 0; y < 512; y++) {
+//                        yy = y + ctr;
+//                        //amounts[(int)((((seed = (((1234567L * (0x632BE59BD9B4E019L + (xx << 23))) ^ 0x9E3779B97F4A7C15L) * (0xC6BC279692B5CC83L + (yy << 23)))) ^ seed >>> 27 ^ xx + yy) * 0xAEF17502108EF2D9L)
+//                        //        >>> 55)]++;
+//                        amounts[HastyPointHash.hash256(xx, yy, seed)]++;
+//                        //amounts[((int) (((seed = 1234567L ^ 0xB4C4D * xx ^ 0xEE2C3 * yy) ^ seed >>> 13) * seed) >>> 24)]++;
+//                    }
+//                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = 519 - (amounts[i>>2] >> 4); j < 520; j++) {
+////                        layers.backgrounds[i][j] = color;
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//                double[] angle = new double[2];
+//                int x, y;
+//                float color;
+//                for (int t = 0; t < 256; t++) {
+////                    angle = SeededNoise.phiGrad2[t];
+//                    angle[0] = MathUtils.cosDeg(t * 1.40625f);
+//                    angle[1] = MathUtils.sinDeg(t * 1.40625f);
+//                    color = (t & 4) == 4
+//                            ? -0x1.c98066p126F
+//                            : -0x1.d08864p126F;
+//                    for (int j = amounts[t] >> 3 & -4; j >= 128; j -= 4) {
+//                        x = Noise.fastFloor(angle[0] * j + 260);
+//                        y = Noise.fastFloor(angle[1] * j + 260);
+//                        layers.backgrounds[x][y] = color;
+//                        layers.backgrounds[x + 1][y] = color;
+//                        layers.backgrounds[x - 1][y] = color;
+//                        layers.backgrounds[x][y + 1] = color;
+//                        layers.backgrounds[x][y - 1] = color;
+////                        layers.backgrounds[x+1][y+1] = color;
+////                        layers.backgrounds[x-1][y-1] = color;
+////                        layers.backgrounds[x-1][y+1] = color;
+////                        layers.backgrounds[x+1][y-1] = color;
+//                    }
+//                    for (int j = Math.min(amounts[t] >> 3 & -4, 128); j >= 32; j -= 4) {
+//                        x = Noise.fastFloor(angle[0] * j + 260);
+//                        y = Noise.fastFloor(angle[1] * j + 260);
+//                        layers.backgrounds[x][y] = color;
+////                        layers.backgrounds[x+1][y] = color;
+////                        layers.backgrounds[x-1][y] = color;
+////                        layers.backgrounds[x][y+1] = color;
+////                        layers.backgrounds[x][y-1] = color;
+//                    }
+//                }
+//            }
+//            break;
+//            case 25: {
+//                Gdx.graphics.setTitle("swayAngleRandomized() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                float theta = NumberTools.swayAngleRandomized(9999L, TimeUtils.timeSinceMillis(startTime) * 0x3p-11f);
+//                float c = MathUtils.cos(theta), s = MathUtils.sin(theta);
+//                int x, y;
+//                float color;
+//                color = SColor.FLOAT_BLACK;
+//                for (int j = 150; j >= 1; j -= 4) {
+//                    x = Noise.fastFloor(c * j + 260);
+//                    y = Noise.fastFloor(s * j + 260);
+//                    layers.backgrounds[x][y] = color;
+//                    layers.backgrounds[x + 1][y] = color;
+//                    layers.backgrounds[x - 1][y] = color;
+//                    layers.backgrounds[x][y + 1] = color;
+//                    layers.backgrounds[x][y - 1] = color;
+//                    layers.backgrounds[x + 1][y + 1] = color;
+//                    layers.backgrounds[x - 1][y - 1] = color;
+//                    layers.backgrounds[x - 1][y + 1] = color;
+//                    layers.backgrounds[x + 1][y - 1] = color;
+//                }
+////                for (int j = 128; j >= 32; j -= 4) {
+////                    x = Noise.fastFloor(c * j + 260);
+////                    y = Noise.fastFloor(s * j + 260);
+////                    layers.backgrounds[x][y] = color;
+//////                        layers.backgrounds[x+1][y] = color;
+//////                        layers.backgrounds[x-1][y] = color;
+//////                        layers.backgrounds[x][y+1] = color;
+//////                        layers.backgrounds[x][y-1] = color;
+////                }
+//            }
+//            break;
+//            case 26: {
+//                Gdx.graphics.setTitle("insideBallRejection at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                int x, y;
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 100000; j++) {
+//                    insideBallRejection(circleCoord);
+//                    x = Noise.fastFloor(circleCoord[0] * 250 + 260);
+//                    y = Noise.fastFloor(circleCoord[1] * 250 + 260);
+//                    layers.backgrounds[x][y] = color;
+//                }
+//            }
+//            break;
+//            case 27: {
+//                Gdx.graphics.setTitle("insideBallBoxMuller at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                int x, y;
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 100000; j++) {
+//                    insideBallBoxMuller(circleCoord);
+//                    x = Noise.fastFloor(circleCoord[0] * 250 + 260);
+//                    y = Noise.fastFloor(circleCoord[1] * 250 + 260);
+//                    layers.backgrounds[x][y] = color;
+//                }
+//            }
+//            break;
+//            case 28: {
+//                Gdx.graphics.setTitle("insideBallBoxMullerFast at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                int x, y;
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 100000; j++) {
+//                    insideBallBoxMullerFast(circleCoord);
+//                    x = Noise.fastFloor(circleCoord[0] * 250 + 260);
+//                    y = Noise.fastFloor(circleCoord[1] * 250 + 260);
+//                    layers.backgrounds[x][y] = color;
+//                }
+//            }
+//            break;
+//            case 29: {
+////                Gdx.graphics.setTitle("Weird color thing at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                int x, y;
+////                float co, cg, color;
+////                final float luma = NumberTools.swayTight(TimeUtils.timeSinceMillis(startTime) * 0x1.2p-11f);
+////                for (int j = 0; j < 100000; j++) {
+//////                    final long t = diver.nextLong();
+//////                    final float mag = ((t & 0xFFFFFFL) * 0x1.0p-25f) + ((t >>> 40) * 0x1.0p-25f),
+////                    //final float mag = (float) Math.sqrt(1.0f - diver.nextFloat()), angle = diver.nextFloat() * MathUtils.PI2;
+////                    // + (0x1.0p0f - ((s & 0xFFFFFFL) * 0x1.0p-24f) * ((s >>> 40) * 0x1.0p-24f))) * 0.5f;
+////                    //warm = NumberTools.cos(angle) * mag;
+////                    //mild = NumberTools.sin(angle) * mag;
+////                    cg = (diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat()
+////                            - diver.nextFloat() - diver.nextFloat() - diver.nextFloat() - diver.nextFloat() - diver.nextFloat() - diver.nextFloat()) * 0.17f % 1f; // -1 to 1, curved random
+////                    co = (diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat() + diver.nextFloat()
+////                                    - diver.nextFloat() - diver.nextFloat()- diver.nextFloat() - diver.nextFloat() - diver.nextFloat() - diver.nextFloat()) * 0.17f % 1f; // -1 to 1, curved random
+//////                    mild = Math.signum(mild) * (float) Math.pow(Math.abs(mild), 1.05);
+//////                    warm = Math.signum(warm) * (float) Math.pow(Math.abs(warm), 0.8);
+//////                    if (mild > 0 && warm < 0) warm += mild * 1.666f;
+//////                    else if (mild < -0.6) warm *= 0.4f - mild;
+////                    color = SColor.floatGetYCoCg(luma, co, cg, 1f);
+////                    co = SColor.chrominanceOrange(color);
+////                    cg = SColor.chrominanceGreen(color);
+////                    x = Noise.fastFloor(co * 250 + 260);
+////                    y = Noise.fastFloor(cg * 250 + 260);
+////                    layers.backgrounds[x][y] = color;
+////                }
+//                Gdx.graphics.setTitle("insideBallExponential at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                int x, y;
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 100000; j++) {
+//                    insideBallExponential(circleCoord);
+//                    x = Noise.fastFloor(circleCoord[0] * 250 + 260);
+//                    y = Noise.fastFloor(circleCoord[1] * 250 + 260);
+//                    layers.backgrounds[x][y] = color;
+//                }
+//            }
+//            break;
+//            case 30: {
+//                Gdx.graphics.setTitle("OnSphereTrig at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                float x, y;
+//                //final float luma = NumberTools.swayTight(TimeUtils.timeSinceMillis(startTime) * 0x1.2p-11f);
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 100000; j++) {
+//                    onSphereTrig(circleCoord);
+//                    x = (circleCoord[0] * 250 + 260);
+//                    y = (circleCoord[1] * 250 + 260);
+//                    layers.backgrounds[x][y] = color;
+////                    layers.backgrounds[x][y] = SColor.floatGetYCwCm(luma, (float)circleCoord[0], (float)circleCoord[1], 1f);
+//                }
+//            }
+//            break;
+//            case 31: {
+//                Gdx.graphics.setTitle("Sine frequencies");
+//                float p = MathUtils.PI;
+//                if ((TimeUtils.timeSinceMillis(startTime) & 512L) == 0L) {
+//                    for (int i = 1; i <= 0x400000; i++, p = (p + 1.6180339887498949f) % MathUtils.PI2) {
+////                    amounts[MathUtils.round(MathUtils.sinDeg(p) * 255f + 256f)]++;           // libGDX's LUT way
+//                        amounts[MathUtils.round((NumberTools.sin(p)) * 255f + 256f)]++;   // SquidLib's no-LUT way
+//                    }
+//                } else {
+//                    for (int i = 1; i <= 0x400000; i++, p = (p + 1.6180339887498949f) % MathUtils.PI2) {
+//                        amounts[MathUtils.round(MathUtils.sin(p) * 255f + 256f)]++;           // libGDX's LUT way
+////                    amounts[MathUtils.round(minimaxSin(p) * 255f + 256f)]++;           // libGDX's LUT way
+////                        amounts[MathUtils.round((NumberTools.sinDegrees(p)) * 255f + 256f)]++;   // SquidLib's no-LUT way
+//                    }
+//
+//                }
+////                float q = 0.6180339887498949f;
+////                for (int i = 1; i <= 0x1000000; i++, p = (p + 1.6180339887498949f) % 360f, q = (q + MathUtils.PI) % 360f) {
+////                    amounts[MathUtils.round((NumberTools.sinDegrees(p) + NumberTools.sinDegrees(q)) * 255f * 0.5f + 256f)]++;   // SquidLib's no-LUT way
+//
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >>> 8)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 32: {
+//                Gdx.graphics.setTitle("atan2_ random, uniform points at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    amounts[(int) (NumberTools.atan2_(whisker.nextFloat() - 0.5f,
+//                            whisker.nextFloat() - 0.5f) * 512f)]++;   // SquidLib's no-LUT way
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 33: {
+//                Gdx.graphics.setTitle("atan2_ random, first quadrant points at " + Gdx.graphics.getFramesPerSecond());
+////                Gdx.graphics.setTitle("atan2_ random, triangular points at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    amounts[(int) (NumberTools.atan2_(whisker.nextFloat() * 0.5f, whisker.nextFloat() * 0.5f) * 2047.99f)]++;
+////                    long r = DiverRNG.randomize(i);
+////                    amounts[(int) (NumberTools.atan2_((r & 0xFFFF) - (r >>> 16 & 0xFFFF),
+////                            (r >>> 32 & 0xFFFF) - (r >>> 48 & 0xFFFF)) * 512f)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 34: {
+//                Gdx.graphics.setTitle("atan2_ random, less-biased, inverted triangular at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    long r = whisker.nextLong();
+//                    double a = (((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13,
+//                            b = (((r >>> 24 & 0xFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13;
+//                    amounts[(int) (NumberTools.atan2_(Math.cbrt(a),
+//                            Math.cbrt(b)) * 385.0 + (whisker.nextLong() & 127))]++;
+////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 35: {
+//                Gdx.graphics.setTitle("atan2_ random, biased-toward-center, inverted triangular at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    long r = whisker.nextLong();
+//                    double a = (((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13,
+//                            b = (((r >>> 24 & 0xFFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0xBFF.8p0) * 0x1p-13;
+//                    amounts[(int) (NumberTools.atan2_(Math.cbrt(a),
+//                            Math.cbrt(b)) * 385.0 + (whisker.nextLong() & 127))]++;
+////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 36: {
+//                Gdx.graphics.setTitle("atan2_ random, biased-toward-extreme at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    long r = whisker.nextLong();
+//                    double a = (((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13,
+//                            b = (((r >>> 24 & 0xFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0x3FF.8p0) * 0x1p-13;
+//                    amounts[(int) (NumberTools.atan2_(Math.cbrt(a),
+//                            Math.cbrt(b)) * 385.0 + (whisker.nextLong() & 0x7F))]++;
+////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 37: {
+//                float tm = (TimeUtils.timeSinceMillis(startTime) * 7 & 0xFFFF) * 0x1p-17f;
+//                Gdx.graphics.setTitle("atan2_ random, bias value " + tm + ", at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    long r = whisker.nextLong();
+//                    amounts[(int) ((NumberTools.sin_((r & 0xFFFL) * 0x1p-12f) * tm
+//                            + ((r >>> 16 & 0xFFFL) - (r >>> 28 & 0xFFFL) + (r >>> 40 & 0xFFFL) - (r >>> 52)) * 0x1p-13f * (0.5f - tm)
+////                    + (NumberTools.asin_((r >>> 32 & 0xFFFF) * 0x1p-16f) - NumberTools.asin_((r >>> 48) * 0x1p-16f)) * (2f - tm)
+//                            + 0.5f) * 511f)]++;
+//                }
+////                long tm = (TimeUtils.timeSinceMillis(startTime) * 7 & 0xFFFF) - 0x8000;
+////                Gdx.graphics.setTitle("atan2_ random, bias value " + tm + ", at " + Gdx.graphics.getFramesPerSecond());
+////                for (int i = 1; i <= 0x100000; i++) {
+////                    long r = diver.nextLong();
+////                    long a = ((r & 0xFF) - (r >>> 8 & 0xFF)) * ((r >>> 16 & 0xFF) - (r >>> 24 & 0xFF)),
+////                            b = ((((r >>> 32 & 0xFF) - (r >>> 40 & 0xFF)) * ((r >>> 48 & 0xFF) - (r >>> 56 & 0xFF))) + tm);
+////                    amounts[(int) (NumberTools.atan2_(a, b) * 385.0 + (diver.nextLong() & 127))]++;
+//////                    amounts[(int) (NumberTools.atan2_(Math.cbrt(a),
+//////                            Math.cbrt(b)) * 384.0 +
+//////                            ((DiverRNG.determine(r & 0xFFFFFFFFL) & 127) +
+//////                                    (DiverRNG.determine(r >>> 32) & 127)
+//////                                    & 127) + 0.5)]++;
+//////                    amounts[(int) (NumberTools.atan2_(a,
+//////                            b) * 448.0 + (DiverRNG.determine(r) & 63) + 0.5)]++;
+//////                    amounts[(int) (NumberTools.atan2_(Math.cbrt(a),
+//////                            Math.cbrt(b)) * 384.0 + (r >>> 48 & 0x7F) + 0.5)]++;
+//////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+//////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+////                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 38: {
+//                long tm = (TimeUtils.timeSinceMillis(startTime) * 17 & 0x1FFFF) - 0x10000;
+//                tweak.setCentrality(tm);
+//                Gdx.graphics.setTitle("TweakRNG, centrality " + tm + ", at " + Gdx.graphics.getFramesPerSecond());
+//                for (int i = 1; i <= 0x100000; i++) {
+//                    amounts[tweak.next(9)]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] / 50)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+////                Gdx.graphics.setTitle("atan2_ random, biased-toward-extreme, Gudermannian at " + Gdx.graphics.getFramesPerSecond());
+////                for (int i = 1; i <= 0x200000; i++) {
+////                    long r = DiverRNG.randomize(i);
+//////                    long a = ((0x1000 + (r & 0xFFF) - (r >>> 12 & 0xFFF) & 0xFFF) - 0x800),
+//////                            b = ((0x1000 + (r >>> 24 & 0xFFF) - (r >>> 36 & 0xFFF) & 0xFFF) - 0x400);
+//////                    double a = (((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13,
+//////                            b = (((r >>> 24 & 0xFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0x3FF.8p0) * 0x1p-13;
+////                    double a = Math.expm1((((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-16),
+////                            b = Math.expm1((((r >>> 24 & 0xFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0x3FF.8p0) * 0x1p-16);
+////                    amounts[(int)(NumberTools.atan2_(Math.asin(a / (a + 2.0)),
+////                            NumberTools.asin(b / (b + 2.0))) * 385.0 + (r >>> 48 & 0x7F))]++;
+//////                    amounts[(int)(NumberTools.atan2_(icbrt(a),
+//////                            icbrt(b)) * 384.0 + (r >>> 48 & 0x7F) + 0.5)]++;
+//////                    amounts[(int)(NumberTools.atan2_(a*0.6042181313 + 0.4531635984,
+//////                            b*0.6042181313 + 0.4531635984) * 384.0 + (r >>> 48 & 0x7F) + 0.5)]++;
+//////                    amounts[(int)(NumberTools.atan2_(Math.cbrt(a),
+//////                            Math.cbrt(b)) * 384.0 + (r >>> 48 & 0x7F) + 0.5)]++;
+//////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+//////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = Math.max(0, 520 - (amounts[i] / 100)); j < 520; j++) {
+////                        layers.backgrounds[i+8][j] = color;
+////                    }
+////                }
+////                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+////                    for (int i = 0; i < jj + 2; i++) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////            }
+////                Gdx.graphics.setTitle("atan2_ random, biased-toward-extreme, inverted triangular points, Gudermannian");
+////                for (int i = 1; i <= 0x200000; i++) {
+////                    long r = DiverRNG.randomize(i);
+////                    double a = Math.expm1((((r & 0xFFF) + (r >>> 12 & 0xFFF) & 0xFFF) - 0x7FF.8p0) * 0x1p-13),
+////                            b = Math.expm1((((r >>> 24 & 0xFFF) + (r >>> 36 & 0xFFF) & 0xFFF) - 0x3FF.8p0) * 0x1p-13);
+////                    amounts[(int)(NumberTools.atan2_(NumberTools.asin(a / (a + 2.0)),
+////                            NumberTools.asin(b / (b + 2.0))) * 385.0 + (r >>> 48 & 0x7F))]++;
+//////                    amounts[(int)(NumberTools.atan2_((r & 0xFF) + (r >>> 8 & 0xFF) - (r >>> 16 & 0xFF) - (r >>> 24 & 0xFF),
+//////                            (r >>> 32 & 0xFF) + (r >>> 40 & 0xFF) - (r >>> 48 & 0xFF) - (r >>> 56)) * 512f)]++;
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    float color = (i & 63) == 0
+////                            ? -0x1.c98066p126F // CW Azure
+////                            : -0x1.d08864p126F; // CW Sapphire
+////                    for (int j = Math.max(0, 520 - (amounts[i] / 100)); j < 520; j++) {
+////                        layers.backgrounds[i+8][j] = color;
+////                    }
+////                }
+////                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+////                    for (int i = 0; i < jj + 2; i++) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////            }
+////        break;
+//            case 39: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, asin() absolute error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += Math.abs(Math.asin((i - 25600) / 25600.0) - NumberTools.asin((i - 25600) / 25600f));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * 100.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 40: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, acos() absolute error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += Math.abs(Math.acos((i - 25600) / 25600.0) - NumberTools.acos((i - 25600) / 25600f));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * 100.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 41: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, sin() absolute error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += Math.abs(Math.sin(((i - 25600) / 12800.0) * Math.PI) - MathUtils.sin(((i - 25600) / 12800f) * MathUtils.PI));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * Math.PI * 200.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 42: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, cos() absolute error");
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += Math.abs(Math.cos(((i - 25600) / 12800.0) * Math.PI) - MathUtils.cos(((i - 25600) / 12800f) * MathUtils.PI));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * Math.PI * 200.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 43: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, asin() relative error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += (Math.asin((i - 25600) / 25600.0) - NumberTools.asin((i - 25600) / 25600f));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * 100.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 44: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, acos() relative error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += (Math.acos((i - 25600) / 25600.0) - NumberTools.acos((i - 25600) / 25600f));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * 100.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 45: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, sin() relative error");
+//
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += (Math.sin(((i - 25600) / 12800.0) * Math.PI) - MathUtils.sin(((i - 25600) / 12800f) * MathUtils.PI));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * Math.PI * 200.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 46: {
+//                Gdx.graphics.setTitle("Math vs. MathUtils, cos() relative error");
+//                for (int i = 0; i < 51200; i++) {
+//                    dAmounts[i / 100] += (Math.cos(((i - 25600) / 12800.0) * Math.PI) - MathUtils.cos(((i - 25600) / 12800f) * MathUtils.PI));
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (int) Math.round(dAmounts[i] * Math.PI * 200.0)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int j = 510, jj = 0; j >= 0; j -= 10, jj = (jj + 1) % 5) {
+//                    for (int i = 0; i < jj + 2; i++) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 47: {
+//                // thanks to Mitchell Spector, https://math.stackexchange.com/a/1860731
+//                Gdx.graphics.setTitle("Spiral Numbering Thing, from position");
+//                for (int x = -8; x < 8; x++) {
+//                    for (int y = -8; y < 8; y++) {
+//                        int m, sign, g;
+//                        if ((x + (x >> 31) ^ x >> 31) >= (y + (y >> 31) ^ y >> 31)) {
+//                            m = -x;
+//                            sign = -1;
+//                        } else {
+//                            m = y;
+//                            sign = 0;
+//                        }
+//                        g = 4 * m * m + ((m >= 0) ? y + x : (m + m + y - x + sign ^ sign));
+//                        float color = SColor.floatGetI(g, g, g);
+//                        for (int a = 0; a < 32; a++) {
+//                            for (int b = 0; b < 32; b++) {
+//                                layers.backgrounds[256 + (x << 5) + a][256 + (y << 5) + b] = color;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            break;
+//            case 48: {
+//                Gdx.graphics.setTitle("Spiral Testing Thing, from index");
+//                // thanks to Jonathan M, https://stackoverflow.com/a/20591835
+//                for (int root = 0; root < 16; ++root) {
+//                    for (int index = root * root, limit = index + root + root + 1; index < limit; index++) {
+////                        if ((index & 1) != 0) continue; //checkerboard
+//                        final int sign = -(root & 1);
+//                        final int big = (root * (root + 1)) - index << 1;
+//                        final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+//                        final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+//                        // do stuff with x and y
+//                        int c = (int)(index - (System.currentTimeMillis() >>> 4) & 255);
+//                        float color = SColor.floatGetI(c, c, c);
+//                        for (int a = 0; a < 32; a++) {
+//                            for (int b = 0; b < 32; b++) {
+//                                layers.backgrounds[256 + (x << 5) + a][256 + (y << 5) + b] = color;
+//                            }
+//                        }
+//                    }
+//                }
+////                Gdx.graphics.setTitle("Spiral Numbering Thing, from index");
+////                for (int g = 0; g < 256; g++) {
+////                    final int root = (int) (Math.sqrt(g));
+////                    final int sign = -(root & 1);
+////                    final int big = (root * (root + 1)) - g << 1;
+////                    final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+////                    final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+////                    float color = SColor.floatGetI(g, g, g);
+////                    for (int a = 0; a < 32; a++) {
+////                        for (int b = 0; b < 32; b++) {
+////                            layers.backgrounds[256 + (x << 5) + a][256 + (y << 5) + b] = color;
+////                        }
+////                    }
+////                }
+//            }
+//            break;
+//            case 49: {
+//                Gdx.graphics.setTitle("Jitter Test at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                int x, y;
+//                long r = whisker.nextLong(), s = whisker.nextLong();
+//                float color = SColor.FLOAT_BLACK;
+//                for (int j = 0; j < 10000; j++) {
+////                    x = Noise.fastFloor(Math.cbrt(((short)r) * ((short)(r >>> 16)) * 0x1p-32) * 250 + 260);
+////                    y = Noise.fastFloor(Math.cbrt(((short)(r>>>32)) * ((short)(r >>> 48)) * 0x1p-32) * 250 + 260);
+//                    x = ((int) ((Long.bitCount(r += 0xC13FA9A902A633EBL) - Long.bitCount(r += 0xC13FA9A902A633EBL) + (int) (r += 0xC13FA9A902A633EBL) * 0x1.4p-30) * 4 + 256) & 511) + 4;
+//                    y = ((int) ((Long.bitCount(s += 0x9E3779B97F4C0401L) - Long.bitCount(s += 0x9E3779B97F4C0401L) + (int) (s += 0x9E3779B97F4C0401L) * 0x1.4p-30) * 4 + 256) & 511) + 4;
+//                    // 0xC13FA9A902A6328FL 0x9E3779B97F4A7C15L
+//                    // changed to (bit counts are better)
+//                    // 0xC13FA9A902A633EBL 0x9E3779B97F4C0401L
+//                    layers.backgrounds[x][y] = color;
+//                }
+//            }
+//            break;
+//            case 50: {
+//                Gdx.graphics.setTitle("Indexed Blue Noise Points at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                long size = (System.nanoTime() >>> 20 & 0xfff) + 1L;
+//                int x, y;
+//                for (int i = 0; i < size; i++) {
+//                    BlueNoise.indexedBlueNoisePoint(circleCoord, i, 1.0);
+//                    x = (int) (circleCoord[0] * 512);
+//                    y = (int) (circleCoord[1] * 512);
+//                    if (layers.backgrounds[x][y] != 0f) {
+//                        layers.backgrounds[x][y] = -0x1.7677e8p125F;
+//                        System.out.println("Overlap on index " + i);
+//                    } else
+//                        layers.backgrounds[x][y] = SColor.FLOAT_BLACK;
+//                }
+//            }
+//            break;
+//            case 51: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " Whisker, bits of 2.0*(nextDouble()-0.5) at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                for (int i = 0; i < 0x10000; i++) {
+//                    long bits = Double.doubleToLongBits(2.0*(whisker.nextDouble()-0.5));
+//                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+//                        if (1L == (bits >>> j & 1L))
+//                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+//                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+//                    }
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    if ((i & 7) == 3) {
+//                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+//                        }
+//                    } else {
+//                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of inclusiveDouble() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    long bits = Double.doubleToLongBits(inclusiveDouble());
+////                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+////                        if (1L == (bits >>> j & 1L))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of differentNextExclusiveDouble()");
+////                //DiverRNG diver = new DiverRNG();
+////                for (int i = 0; i < 0x10000; i++) {
+////                    long bits = Double.doubleToLongBits(((xs128.nextLong() >>> 11) + 1L) * 1.1102230246251564E-16);
+////                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+////                        if (1L == (bits >>> j & 1L))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 52: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " Whisker, bits of nextExclusiveSignedDouble() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                for (int i = 0; i < 0x10000; i++) {
+//                    long bits = Double.doubleToLongBits(nextExclusiveSignedDouble());
+//                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+//                        if (1L == (bits >>> j & 1L))
+//                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+//                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+//                    }
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    if ((i & 7) == 3) {
+//                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+//                        }
+//                    } else {
+//                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of inclusiveDouble2() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    long bits = Double.doubleToLongBits(inclusiveDouble2());
+////                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+////                        if (1L == (bits >>> j & 1L))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of nextExclusiveDouble() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    long bits = Double.doubleToLongBits(nextExclusiveDouble());
+////                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+////                        if (1L == (bits >>> j & 1L))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 53: {
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of nextExclusiveDoubleNoCTZ()");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    long bits = Double.doubleToLongBits(nextExclusiveDoubleNoCTZ());
+////                    for (int j = 0, jj = 504; j < 64; j++, jj -= 8) {
+////                        if (1L == (bits >>> j & 1L))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+////            }
+//
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of nextExclusiveFloat() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    int bits = Float.floatToIntBits(nextExclusiveFloat());
+////                    for (int j = 0, jj = 504 - 128; j < 32; j++, jj -= 8) {
+////                        if (1 == (bits >>> j & 1))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " Whisker, bits of 2f*(nextFloat()-0.5f) at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                //DiverRNG diver = new DiverRNG();
+//                for (int i = 0; i < 0x10000; i++) {
+//                    int bits = Float.floatToIntBits(2f * (whisker.nextFloat() - 0.5f));
+//                    for (int j = 0, jj = 504 - 128; j < 32; j++, jj -= 8) {
+//                        if (1 == (bits >>> j & 1))
+//                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+//                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+//                    }
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    if ((i & 7) == 3) {
+//                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+//                        }
+//                    } else {
+//                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of nextFloat() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                //DiverRNG diver = new DiverRNG();
+////                for (int i = 0; i < 0x10000; i++) {
+////                    int bits = Float.floatToIntBits(xs128.nextFloat());
+////                    for (int j = 0, jj = 504 - 128; j < 32; j++, jj -= 8) {
+////                        if (1 == (bits >>> j & 1))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 54: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " Whisker, bits of nextExclusiveSignedFloat() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+//                for (int i = 0; i < 0x10000; i++) {
+//                    int bits = Float.floatToIntBits(nextExclusiveSignedFloat());
+//                    for (int j = 0, jj = 504 - 128; j < 32; j++, jj -= 8) {
+//                        if (1 == (bits >>> j & 1))
+//                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+//                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+//                    }
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    if ((i & 7) == 3) {
+//                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+//                        }
+//                    } else {
+//                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+//                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+////                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+////                        " RandomXS128, bits of inclusiveFloat2() at " + Gdx.graphics.getFramesPerSecond() + " FPS");
+////                for (int i = 0; i < 0x10000; i++) {
+////                    int bits = Float.floatToIntBits(inclusiveFloat2());
+////                    for (int j = 0, jj = 504 - 128; j < 32; j++, jj -= 8) {
+////                        if (1 == (bits >>> j & 1))
+////                            amounts[jj] = amounts[jj + 1] = amounts[jj + 2] = amounts[jj + 3]
+////                                    = amounts[jj + 4] = amounts[jj + 5] = ++amounts[jj + 6];
+////                    }
+////                }
+////                for (int i = 0; i < 512; i++) {
+////                    if ((i & 7) == 3) {
+////                        for (int j = 510 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.c98066p126F;
+////                        }
+////                    } else {
+////                        for (int j = 519 - (amounts[i] >> 8); j < 520; j++) {
+////                            layers.backgrounds[i][j] = -0x1.d08864p126F;
+////                        }
+////                    }
+////                }
+////                for (int i = 0; i < 10; i++) {
+////                    for (int j = 8; j < 520; j += 32) {
+////                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+////                    }
+////                }
+//            }
+//            break;
+//            case 55: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " cbrt lines");
+//                for (int i = 0; i < 512; i++) {
+//                    float in = (i - 255);
+//                    double m = Math.cbrt(in);
+//                    if (m >= -15 && m <= 15)
+//                        layers.backgrounds[i][(int) (m * 16 + 255)] = -0x1.d08864p126F;
+//                    float a = MathExtras.cbrt(in);
+//                    if (a >= -15 && a <= 15)
+//                        layers.backgrounds[i][(int) (a * 16 + 255)] = -0x1.6a9704p125F;
+//                    float s = cbrtShape(in);
+//                    if (s >= -15 && s <= 15)
+//                        layers.backgrounds[i][(int) (s * 16 + 255)] = -0x1.30012cp125F;
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 56:
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " gaussian bits");
+//                for (int i = 0; i < 0x2000; i++) {
+////                    long bits = diver.nextLong(), expo = 997L + Long.bitCount(bits) << 52;
+////                    double d = NumberTools.longBitsToDouble((bits & ~0x7FF0_0000_0000_0000L) | expo) * 64.0 + 256.0;
+////                    double d = (diver.nextLong() >>> 12) / NumberTools.longBitsToDouble(((diver.nextLong() & 0xB00F_FFFF_FFFF_FFFFL) | 0x4340_0000_0000_0000L)) * 64.0 + 256.0;
+//                    long d = (Double.doubleToLongBits(nextGaussian()) >>> 52 & 0x7FFL) - 0x300L;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 3)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//                break;
+//            case 57:{
+//                if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) kd.setA(kd.getA() + 0.1);
+//                if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) kd.setA(kd.getA() - 0.1);
+//                if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) kd.setB(kd.getB() + 0.1);
+//                if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) kd.setB(kd.getB() - 0.1);
+//                double avg = 0.0, curr;
+//                for (int i = 0; i < 0x100000; i++) {
+//                    amounts[Noise.fastFloor((curr = kd.nextDouble(rng)) * 512)]++;
+//                    avg += curr;
+//                }
+//                avg *= 0x1p-20;
+//                Gdx.graphics.setTitle(
+//                        String.format("Kumaraswamy; a=%1.4f, b=%1.4f, mean=%1.4f, avg=%1.4f", kd.getA(), kd.getB(), kd.getMean(), avg)
+//                );
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 4)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//                break;
+//            }
+//            case 58: {
+//                Gdx.graphics.setTitle("Hilbert Blue Thing, from position");
+//                final int shift = 56;// (int)(System.currentTimeMillis() >>> 11 & 7) + 1;
+//                final long mul = PhantomNoise.goldenLong[0][0] + 2L, inc = 0L;//(System.currentTimeMillis() >>> 3) << 53;
+//                for (int x = 0; x < 256; x++) {
+//                    for (int y = 0; y < 256; y++) {
+//                        int index;
+////                        double inc = (Math.PI - Math.E), t;// 0.6180339887498949 , 1.6180339887498949
+//                        int bright;
+//                        float color;
+//                        index = CoordPacker.posToHilbert(x, y);
+//                        bright = (int) ((index * mul + inc) >>> shift & 255);
+//                        color = SColor.floatGetI(bright, bright, bright);
+//                        layers.backgrounds[y][511 - x] = color;
+//                        index += 256;
+//                        bright = (int) ((index * mul + inc) >>> shift & 255);
+//                        color = SColor.floatGetI(bright, bright, bright);
+//                        layers.backgrounds[x][y] = color;
+//                        index += 256;
+//                        bright = (int) ((index * mul + inc) >>> shift & 255);
+//                        color = SColor.floatGetI(bright, bright, bright);
+//                        layers.backgrounds[x + 256][y] = color;
+//                        index += 256;
+//                        bright = (int) ((index * mul + inc) >>> shift & 255);
+//                        color = SColor.floatGetI(bright, bright, bright);
+//                        layers.backgrounds[511 - y][256 + x] = color;
+//                    }
+//                }
+////                for (int i = 0; i < 256;) {
+////                    if(amounts[i] != 1024) break;
+////                    if(++i == 256) {
+////                        System.out.println("WORKING INC: " + inc);
+////                        Gdx.app.exit();
+////                    }
+////                }
+//
+////                // thanks to Jonathan M, https://stackoverflow.com/a/20591835
+////                Gdx.graphics.setTitle("Spiral Blue Thing, from index");
+////                for (int index = 0; index < 0x40000; ++index) {
+////                    double t = 0.5 + index * 0.6180339887498949;
+////                    float bright = (float) (t - (long)t);
+////
+////                    int root = (int)Math.sqrt(index);
+////                    final int sign = -(root & 1);
+////                    final int big = (root * (root + 1)) - index << 1;
+////                    final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+////                    final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+////
+////                    float color = SColor.floatGet(bright, bright, bright, 1f);
+////                    layers.backgrounds[256 + x][256 + y] = color;
+////                }
+////                }
+////                Gdx.graphics.setTitle("Spiral Numbering Thing, from index");
+////                for (int g = 0; g < 256; g++) {
+////                    final int root = (int) (Math.sqrt(g));
+////                    final int sign = -(root & 1);
+////                    final int big = (root * (root + 1)) - g << 1;
+////                    final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+////                    final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+////                    float color = SColor.floatGetI(g, g, g);
+////                    for (int a = 0; a < 32; a++) {
+////                        for (int b = 0; b < 32; b++) {
+////                            layers.backgrounds[256 + (x << 5) + a][256 + (y << 5) + b] = color;
+////                        }
+////                    }
+////                }
+//            }
+//            break;
+//            case 63: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " logitGaussian()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = logitGaussian() * 64.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 64: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " cauchian()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    //((System.currentTimeMillis() >>> 4 & 255L) + 64L)
+//                    double d = cauchian() * (202.0/256.0) * 64.0 + 256.0; // 0x1.94p-1 is
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//            case 65: {
+//                Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() +
+//                        " fastLogitGaussian()");
+//                for (int i = 0; i < 0x500000; i++) {
+//                    double d = fastLogitGaussian() * 64.0 + 256.0;
+//                    if (d >= 0 && d < 512)
+//                        amounts[(int) d]++;
+//                }
+//                for (int i = 0; i < 512; i++) {
+//                    float color = (i & 63) == 0
+//                            ? -0x1.c98066p126F // CW Azure
+//                            : -0x1.d08864p126F; // CW Sapphire
+//                    for (int j = Math.max(0, 519 - (amounts[i] >> 7)); j < 520; j++) {
+//                        layers.backgrounds[i][j] = color;
+//                    }
+//                }
+//                for (int i = 0; i < 10; i++) {
+//                    for (int j = 8; j < 520; j += 32) {
+//                        layers.backgrounds[i][j] = -0x1.7677e8p125F;
+//                    }
+//                }
+//            }
+//            break;
+//
+//        }
+//    }
+/*
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x10000; i++) {
+
+        }
+        renderer.end();
+ */
+    private void sphereTrigMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x20000; i++) {
+            onSphereTrig(circleCoord);
+            renderer.color(black);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphereGaussianMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x20000; i++) {
+            onSphereGaussian(circleCoord);
+            renderer.color(black);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    @Override
+    public void render() {
+        ScreenUtils.clear(1f, 1f, 1f, 1f);
+        camera.update();
+        Arrays.fill(amounts, 0);
+        Arrays.fill(dAmounts, 0.0);
+        switch (mode) {
+            case 0: sphereTrigMode();
+            break;
+            case 1: sphereGaussianMode();
+            break;
+        }
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        font.draw(batch, String.format("Math stuff at %d FPS",
+                        Gdx.graphics.getFramesPerSecond()),
+                64, 500+22, 256+128, Align.center, true);
+//        font.draw(batch, "Lower parameters A/B/C by holding a, b, or c;\nhold Shift and A/B/C to raise.", 64, 500-5, 256+128, Align.center, true);
+//        font.draw(batch, "a – lambda; should be greater than 0.0", 64, 500-32, 256+128, Align.center, true);
+        batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        viewport.update(width, height, true);
+        viewport.apply(true);
+    }
+
+    private double twist(double input) {
+        return (input = input * 0.5 + 1.0) - (int)input;
+    }
+    private float twist(float input) {
+        return (input = input * 0.5f + 1.0f) - (int)input;
+    }
+
+    public void insideBallRejection(final double[] vector)
+    {
+        double v1, v2, v3;
+        do {
+            v1 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            v2 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            v3 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+        } while (v1 * v1 + v2 * v2 + v3 * v3 > 1);
+        vector[0] = v1;
+        vector[1] = v2;
+    }
+    public final float fastGaussian()
+    {
+        long a = whisker.nextLong(), b = whisker.nextLong();
+        a = (a & 0x0003FF003FF003FFL) +     ((a & 0x0FFC00FFC00FFC00L) >>> 10);
+        b = (b & 0x0003FF003FF003FFL) +     ((b & 0x0FFC00FFC00FFC00L) >>> 10);
+        a = (a & 0x000000007FF007FFL) +     ((a & 0x0007FF0000000000L) >>> 40);
+        b = (b & 0x000000007FF007FFL) +     ((b & 0x0007FF0000000000L) >>> 40);
+        return (((a & 0x0000000000000FFFL) + ((a & 0x000000007FF00000L) >>> 20))
+                - ((b & 0x0000000000000FFFL) + ((b & 0x000000007FF00000L) >>> 20))) * (0x1p-10f);
+    }
+
+    /**
+     * Error function from Abramowitz and Stegun, 1964; equation 7.1.27 .
+     * See <a href="https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions">Wikipedia</a>.
+     * @param x any finite double
+     * @return a double between -1 and 1, inclusive
+     */
+    public double erf(final double x) {
+        final double a1 = 0.0705230784, a2 = 0.0422820123, a3 = 0.0092705272, a4 = 0.0001520143, a5 = 0.0002765672, a6 = 0.0000430638;
+        final double sign = Math.signum(x), y1 = sign * x, y2 = y1 * y1, y3 = y1 * y2, y4 = y2 * y2, y5 = y2 * y3, y6 = y3 * y3;
+        double n = 1.0 + a1 * y1 + a2 * y2 + a3 * y3 + a4 * y4 + a5 * y5 + a6 * y6;
+        n *= n;
+        n *= n;
+        n *= n;
+        return sign * (1.0 - 1.0 / (n * n));
+    }
+
+    /**
+     * Inverse to the probit function; equivalent to scaled erf(x) from Abramowitz and Stegun, 1964; equation 7.1.27 .
+     * See <a href="https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions">Wikipedia</a>.
+     * @param x any finite double
+     * @return a double between 0 and 1, inclusive
+     */
+    public double probitInverse(final double x) {
+        final double a1 = 0.0705230784, a2 = 0.0422820123, a3 = 0.0092705272, a4 = 0.0001520143, a5 = 0.0002765672, a6 = 0.0000430638;
+        final double sign = Math.signum(x), y1 = sign * x * 0.7071067811865475, y2 = y1 * y1, y3 = y1 * y2, y4 = y2 * y2, y5 = y2 * y3, y6 = y3 * y3;
+        double n = 1.0 + a1 * y1 + a2 * y2 + a3 * y3 + a4 * y4 + a5 * y5 + a6 * y6;
+        n *= n;
+        n *= n;
+        n *= n;
+        return sign * (0.5 - 0.5 / (n * n)) + 0.5;
+    }
+
+    public final float editedCurve()
+    {
+        long r = whisker.nextLong(), s = whisker.nextLong();
+        return ((r >>> 56) - (r >>> 48 & 255) + (r >>> 40 & 255) - (r >>> 32 & 255) + (r >>> 24 & 255) - (r >>> 16 & 255) + (r >>> 8 & 255) - (r & 255)) * 0x1p-8f
+                + ((s >>> 48) - (s >>> 32 & 65535) + (s >>> 16 & 65535) - (s & 65535)) * 0x1p-16f;
+//        final long r = diver.nextLong(), s = diver.nextLong();
+//        return (((r & 0xFFFFFFL) + (r >>> 40)) * 0x1p-25f + (1.0f - ((s & 0xFFFFFFL) * 0x1p-24f) * ((s >>> 40) * 0x1p-24f))) * 0.5f;
+
+//        return 0.1f * (diver.nextFloat() + diver.nextFloat() + diver.nextFloat()
+//                + diver.nextFloat() + diver.nextFloat() + diver.nextFloat())
+//                + 0.2f * ((1f - diver.nextFloat() * diver.nextFloat()) + (1f - diver.nextFloat() * diver.nextFloat()));
+
+//                - (s & 0xFFFFFFL) - (r >>> 20 & 0xFFFFFFL) - (s >>> 26 & 0xFFFFFFL) - (t >>> 40) - (t >>> 13 & 0xFFFFFFL)
+//        return  ((r & 0xFFFFFFL) + (r >>> 20 & 0xFFFFFFL) + (s >>> 40)
+//                - (s & 0xFFFFFFL) - (s >>> 20 & 0xFFFFFFL) - (r >>> 40)
+//        ) * 0x1p-26f;
+//        return ((r & 0xFFFFFFL) * 0x1p-23f - ((s & 0xFFFFFFL) * 0x1p-23f)) * ((r >> 40) * 0x1p-23f) * ((s >> 40) * 0x1p-23f);
+    }
+
+    public final double nextGaussian() {
+        return whisker.nextGaussian();
+    }
+
+    /**
+     * <a href="https://marc-b-reynolds.github.io/distribution/2021/03/18/CheapGaussianApprox.html">Credit to Marc B.
+     * Reynolds</a>. This version probably could be optimized to minimize maximum error, but I don't really know how.
+     * The multiplier was very carefully chosen so the highest and lowest possible results are equally far from 0.
+     * @return a normal-distributed double with standard deviation 1.0, actually ranging from -7.929080009460449 to 7.929080009460449
+     */
+    private double nextGaussianCountX3(){
+        long u = whisker.nextLong(), c = Long.bitCount(u) - 32L << 32;
+        u *= 0xC6AC29E4C6AC29E5L;
+        return 0x1.fb760cp-35 * (c + (u & 0xFFFFFFFFL) - (u >>> 32));
+    }
+
+    private double logitGaussian() {
+        final double p = nextExclusiveDouble();
+        return Math.log(p / (1.0 - p)) * 0.6266570686577501;
+    }
+
+    /**
+     * Flawed, but maybe could be made to work somehow. Credit to
+     * <a href="https://tech.ebayinc.com/engineering/fast-approximate-logarithms-part-i-the-basics/">eBay Tech</a> and
+     * <a href="https://gist.github.com/Jacajack/3397dbb8ff22a27dd47c832998edd608">this Gist by Jacajack</a>.
+     * @return a very rough approximation of a logistic distributed variable
+     */
+    private double fastLogitGaussian() {
+        final double p = nextExclusiveDouble(), d = p / (1.0 - p);
+        // Extract exponent and mantissa
+        long xi = BitConversion.doubleToLongBits(d);
+        long ei = ( ( xi >>> 52 ) & 0x7ffL ) - 1023L; // Exponent
+        long mi = xi & 0x000FFFFFFFFFFFFFL;           // Mantissa
+
+        // Real mantissa value
+        double mf = 1.0 + mi * ( 1.0 / 0x000FFFFFFFFFFFFFL );
+
+        // Denormal numbers (optional)
+        if ( ei == -1023 ) mf = mi * (1.0 / 0x000FFFFFFFFFFFFFL);
+
+        return (ei + (-0.344845 * mf + 2.024658) * mf - 1.674873) * 0.43436558031807954;
+    }
+
+    private double inclusiveDouble() {
+        // the simplest, dumbest way of getting a double in [0.0,1.0]
+//        return (MathUtils.random.nextLong()|0x8000000000000000L) * 0x1p-63 + 1.0;
+        // generate a bounded long between 0 and 0x1p53 inclusive, then multiply by 0x1p-53
+        final long rand = MathUtils.random.nextLong();
+        final long bound = 0x20000000000001L;
+        final long randLow = rand & 0xFFFFFFFFL;
+        final long randHigh = (rand >>> 32);
+        final long boundHigh = (bound >>> 32);
+        return ((randLow * boundHigh >>> 32) + randHigh * boundHigh) * 0x1p-53;
+    }
+
+    private double inclusiveDouble2() {
+        //make sure to flip the "more magic" switch before operating ;)
+        final long bits = whisker.nextLong();
+        //generates an exclusive double normally, then adds 0x1p-12 to intentionally incur precision loss, and subtracts
+        //0x1p-12 to bring it back to the [0.0,1.0] range. rounding the lowest exclusive value, 0x1p-65, takes it to 0.0
+        //while the highest exclusive value, 0x1.fffffffffffffp-1, gets rounded to 1.0 . the mantissa bits are fair!
+        return NumberUtils.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52 | bits >>> 12) + 0x1p-12 - 0x1p-12;
+    }
+    public float inclusiveFloat2 () {
+        final long bits = whisker.nextLong();
+        return NumberUtils.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23 | (int)(bits >>> 41)) + 0x1p-22f - 0x1p-22f;
+    }
+
+    /**
+     * Returns the tangent in turns, using a Padé approximant.
+     * Based on <a href="https://math.stackexchange.com/a/4453027">this Stack Exchange answer</a>.
+     *
+     * @param turns an angle in turns, where 0 to 1 is one rotation
+     * @return a double approximation of tan()
+     */
+    public static double tanTurns(double turns) {
+        turns += turns;
+        turns += 0.5;
+        turns -= Math.floor(turns);
+        turns -= 0.5;
+        turns *= Math.PI;
+        final double x2 = turns * turns, x4 = x2 * x2;
+        return turns * ((0.0010582010582010583) * x4 - (0.1111111111111111) * x2 + 1.0)
+                / ((0.015873015873015872) * x4 - (0.4444444444444444) * x2 + 1.0);
+    }
+
+    public double cauchian() {
+        double u = nextExclusiveDouble() - 0.5;
+        double turns = u + 0.5;
+        turns -= (int)(turns);
+        turns -= 0.5;
+        turns *= Math.PI;
+        final double x2 = turns * turns, x4 = x2 * x2;
+        return turns * ((0.0010582010582010583) * x4 - (0.1111111111111111) * x2 + 1.0)
+                / ((0.015873015873015872) * x4 - (0.4444444444444444) * x2 + 1.0);
+    }
+
+
+    public void insideBallBoxMuller(final double[] vector)
+    {
+        double mag = 0.0;
+        double v1, v2, v3, s;
+        do {
+            v1 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            v2 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            v3 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            s = v1 * v1 + v2 * v2 + v3 * v3;
+        } while (s > 1 || s == 0);
+        double multiplier = Math.sqrt(-2 * Math.log(s) / s);
+        mag += (vector[0] = (v1 *= multiplier)) * (v1);
+        mag += (vector[1] = (v2 *= multiplier)) * (v2);
+        mag += (v3 *= multiplier) * (v3);
+        if(mag == 0.0)
+        {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        }
+        else
+            mag = Math.cbrt(whisker.nextDouble()) / Math.sqrt(mag);
+        vector[0] *= mag;
+        vector[1] *= mag;
+    }
+    public void insideBallBoxMullerFast(final double[] vector)
+    {
+        double v1 = fastGaussian(), v2 = fastGaussian(), v3 = fastGaussian();
+        double mag = (vector[0] = v1) * v1 + (vector[1] = v2) * v2 + v3 * v3;
+        if(mag == 0.0)
+        {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        }
+        else
+            mag = Math.cbrt(whisker.nextDouble()) / Math.sqrt(mag);
+        vector[0] *= mag;
+        vector[1] *= mag;
+    }
+    public void insideBallExponential(final double[] vector)
+    {
+        double v1 = nextGaussian(), v2 = nextGaussian(), v3 = nextGaussian();
+        double mag = v1 * v1 + v2 * v2 + v3 * v3 - 2.0 * Math.log(whisker.nextDouble());
+        if(mag == 0.0)
+        {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        }
+        else
+            mag = 1.0 / Math.sqrt(mag);
+        vector[0] = v1 * mag;
+        vector[1] = v2 * mag;
+    }
+    public void insideBallExponentialFast(final double[] vector) {
+        double v1 = fastGaussian(), v2 = fastGaussian(), v3 = fastGaussian();//, sq = diver.nextDouble() * diver.nextDouble();
+//        double mag = v1 * v1 + v2 * v2 + v3 * v3 + 1.0 / (1.0 - diver.nextDouble() * diver.nextDouble()) - 0.25;
+        double mag = v1 * v1 + v2 * v2 + v3 * v3 - 2.0 * Math.log(whisker.nextDouble());
+        if (mag == 0.0) {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        } else
+            mag = 1.0 / Math.sqrt(mag);
+        //if (Math.abs(v3 * mag) < 0.1)
+        {
+            vector[0] = v1 * mag;
+            vector[1] = v2 * mag;
+        }
+    }
+    public void onSphereTrig(final float[] vector)
+    {
+        float theta = whisker.nextExclusiveFloat();
+        float d = whisker.nextExclusiveSignedFloat();
+        float phi = TrigTools.acosTurns(d);
+        float sinPhi = TrigTools.sinTurns(phi);
+
+        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
+        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
+        //vector[2] = TrigTools.cosTurns(phi);
+    }
+    public void onSphereGaussian(final float[] vector)
+    {
+        float x = (float) whisker.nextGaussian();
+        float y = (float) whisker.nextGaussian();
+        float z = (float) whisker.nextGaussian();
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+//        z *= mag;
+        vector[0] = x;
+        vector[1] = y;
+        //vector[2] = z;
+    }
+    public void insideCircleBoxMuller(final double[] vector)
+    {
+        double mag = 0.0;
+        double v1, v2, s;
+        do {
+            v1 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            v2 = 2 * whisker.nextDouble() - 1; // between -1 and 1
+            s = v1 * v1 + v2 * v2;
+        } while (s > 1 || s == 0);
+        double multiplier = Math.sqrt(-2 * Math.log(s) / s);
+        mag += (vector[0] = (v1 *= multiplier)) * (v1);
+        mag += (vector[1] = (v2 *= multiplier)) * (v2);
+        //mag += -2.0 * Math.log(diver.nextDouble());
+        if(mag == 0)
+        {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        }
+        else
+            mag = Math.sqrt(whisker.nextDouble()) / Math.sqrt(mag);
+        vector[0] *= mag;
+        vector[1] *= mag;
+    }
+    public void insideCircleBoxMullerFast(final double[] vector)
+    {
+        double mag = 0.0;
+        double v1 = fastGaussian(), v2 = fastGaussian();
+        mag += (vector[0] = v1) * v1;
+        mag += (vector[1] = v2) * v2;
+        if(mag == 0)
+        {
+            vector[0] = 0.0;
+            vector[1] = 0.0;
+            return;
+        }
+        else
+            mag = Math.sqrt(whisker.nextDouble()) / Math.sqrt(mag);
+        vector[0] *= mag;
+        vector[1] *= mag;
+    }
+
+    /**
+     * Ported by jmelange/terefang from Mersenne Twiser code; the only difference here
+     * is where variance is applied.
+     * @param mean the center value or average
+     * @param variance how far from the mean values should spread
+     * @return a normal-distributed value with the given mean and variance
+     */
+    public double langeBoxMuller(final double mean, final double variance)
+    {
+        // Return a real number from a normal (Gaussian) distribution with given
+        // mean and variance by Box-Muller method
+        double r = Math.sqrt( -2.0 * Math.log( nextExclusiveDouble() ) ) * variance;
+//        double phi = (2.0 * 3.14159265358979323846264338328) * nextExclusiveDouble();
+        return mean + r * TrigTools.cosTurns(nextExclusiveDouble()); // could use NumberTools.cos_(diver.nextDouble()) instead of Math.cos(phi)
+    }
+
+    private static class XSP {
+        private long state0;
+        public XSP()
+        {
+            state0 = (long) ((Math.random() - 0.5) * 0x10000000000000L)
+                    ^ (long) (((Math.random() - 0.5) * 2.0) * 0x8000000000000000L);
+        }
+        public long nextLong()
+        {
+//            long s1 = this.state0;
+//            final long s0 = this.state1;
+//            this.state0 = s0;
+//            s1 ^= s1 << 23;
+//            return (this.state1 = (s1 ^ s0 ^ (s1 >>> 17) ^ (s0 >>> 26))) + s0;
+
+            long z = (state0 = state0 * 0x41C64E6DL + 1L);
+            z = (z ^ z >>> 27) * 0xAEF17502108EF2D9L;
+            return (z ^ z >>> 25);
+
+//            final long s0 = state0;
+//            long s1 = state1;
+//            final long result = s0 + s1;
+//            s1 ^= s0;
+//            state0 = (s0 << 55 | s0 >>> 9) ^ s1 ^ (s1 << 14);
+//            state1 = (s1 << 36 | s1 >>> 28);
+//            return (result << 23 | result >>> 41) + s0;
+
+        }
+        public long nextLong (final long n) {
+            if (n <= 0) return 0L;
+            for (;;) {
+                final long bits = nextLong() >>> 1;
+                final long value = bits % n;
+                if (bits - value + n - 1L >= 0L) return value;
+            }
+        }
+        public long nextLongMult(long bound)
+        {
+            long rand = nextLong();
+            if (bound <= 0) return 0;
+            final long randLow = rand & 0xFFFFFFFFL;
+            final long boundLow = bound & 0xFFFFFFFFL;
+            rand >>>= 32;
+            bound >>>= 32;
+            final long z = (randLow * boundLow >>> 32);
+            long t = rand * boundLow + z;
+            final long tLow = t & 0xFFFFFFFFL;
+            t >>>= 32;
+            return rand * bound + t + (tLow + randLow * bound >> 32);
+        }
+        public long nextLongBit(long bound)
+        {
+            final long mask = -1L >>> Long.numberOfLeadingZeros(--bound|1L);
+            long x;
+            do {
+                x = nextLong() & mask;
+            } while (x > bound);
+            return x;
+
+        }
+    }
+//    private final XoRoRNG r0 = new XoRoRNG(1234567890L),
+//            r1 = new XoRoRNG(1234567890L),
+//            r2 = new XoRoRNG(1234567890L);
+//    public final long mult128(long bound)
+//    {
+//        long rand = r0.nextLong();
+//        if (bound <= 0) return 0;
+//        final long randLow = rand & 0xFFFFFFFFL;
+//        final long boundLow = bound & 0xFFFFFFFFL;
+//        rand >>>= 32;
+//        bound >>>= 32;
+//        final long z = (randLow * boundLow >>> 32);
+//        long t = rand * boundLow + z;
+//        final long tLow = t & 0xFFFFFFFFL;
+//        t >>>= 32;
+//        return rand * bound + t + (tLow + randLow * bound >> 32);
+//    }
+//    public final long bitmask(long bound)
+//    {
+//        final long mask = -1L >>> Long.numberOfLeadingZeros(--bound|1L);
+//        long x;
+//        do {
+//            x = r2.nextLong() & mask;
+//        } while (x > bound);
+//        return x;
+//    }
+//    public final long traditional(final long bound)
+//    {
+//        if (bound <= 0) return 0L;
+//        for (;;) {
+//            final long bits = r1.nextLong() & 0x7FFFFFFFFFFFFFFFL;
+//            final long value = bits % bound;
+//            if (bits - value + bound - 1L >= 0L) return value;
+//        }
+//    }
+
+    public static int determinePositive16(final int state)
+    {
+        return state >>> 1 ^ (-(state & 1) & 0xB400);
+    }
+
+    public static int serpentinePair(int x, int y) {
+        return (x >= y) ? (((x & 1) == 1) ? x * x + y : x * (x + 2) - y) : (((y & 1) == 1) ? y * (y + 2) - x : y * y + x);
+    }
+
+    /**
+     * This is a simplified version of <a href="https://allendowney.com/research/rand/">this
+     * algorithm by Allen Downey</a>. This version can return double values between 2.710505431213761E-20 and
+     * 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex notation. It cannot return 0 or 1. It has much
+     * more uniform bit distribution across its mantissa/significand bits than {@link Random#nextDouble()}. Where Random
+     * is less likely to produce a "1" bit for its lowest 5 bits of mantissa (the least significant bits numerically,
+     * but potentially important for some uses), with the least significant bit produced half as often as the most
+     * significant bit in the mantissa, this has approximately the same likelihood of producing a "1" bit for any
+     * positions in the mantissa.
+     * @return a random uniform double between 0 and 1 (both exclusive, unlike most nextDouble() implementations)
+     */
+    public double nextExclusiveDouble(){
+        final long bits = whisker.nextLong();
+        return NumberUtils.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52 | bits >>> 12);
+    }
+
+    /**
+     * This version was adapted from jdkgdxds' code for ShaiRandom to use (it's in C# and targets older versions, so it
+     * doesn't have the luxury of Long.numberOfTrailingZeros() ). CTZ is the count trailing zeros instruction that
+     * Long.numberOfTrailingZeros() compiles to.
+     * @return a random uniform double between 0 and 1 (both exclusive, unlike most nextDouble() implementations)
+     */
+    public static double nextExclusiveDoubleNoCTZ(){
+        final long bits = MathUtils.random.nextLong();
+        return Double.longBitsToDouble((0x7C10000000000000L + (Double.doubleToRawLongBits(0x80000000000003FFL | bits) & 0xFFF0000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+//        return NumberUtils.longBitsToDouble((0x7C10000000000000L + (NumberUtils.doubleToLongBits(0x8000000000000001L | bits) & 0xFFF0000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+    }
+    /**
+     * This is a simplified version of <a href="https://allendowney.com/research/rand/">this
+     * algorithm by Allen Downey</a>. This version can return double values between 2.7105054E-20 to 0.99999994, or
+     * 0x1.0p-65 to 0x1.fffffep-1 in hex notation. It cannot return 0 or 1. It has much
+     * more uniform bit distribution across its mantissa/significand bits than {@link Random#nextDouble()}. Where Random
+     * is less likely to produce a "1" bit for its lowest 5 bits of mantissa (the least significant bits numerically,
+     * but potentially important for some uses), with the least significant bit produced half as often as the most
+     * significant bit in the mantissa, this has approximately the same likelihood of producing a "1" bit for any
+     * positions in the mantissa.
+     * @return a random uniform double between 0 and 1 (both exclusive, unlike most nextDouble() implementations)
+     */
+    public float nextExclusiveFloat(){
+        final long bits = whisker.nextLong();
+        return NumberUtils.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23 | (int)(bits >>> 41));
+    }
+
+    /**
+     * Gets a random double that may be positive or negative, but cannot be 0, and always has a magnitude less than 1.
+     * <br>
+     * This is a modified version of <a href="https://allendowney.com/research/rand/">this
+     * algorithm by Allen Downey</a>. This version can return double values between -0.9999999999999999 and
+     * -5.421010862427522E-20, as well as between 2.710505431213761E-20 and 0.9999999999999999, or -0x1.fffffffffffffp-1
+     * to -0x1.0p-64 as well as between 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex notation. It cannot return -1, 0 or 1.
+     * It has much more uniform bit distribution across its mantissa/significand bits than {@link Random#nextDouble()},
+     * especially when the result of nextDouble() is expanded to the -1.0 to 1.0 range (such as with
+     * {@code 2.0 * (nextDouble() - 0.5)}). Where the given example code is unable to produce a "1" bit for its lowest
+     * bit of mantissa (the least significant bits numerically, but potentially important for some uses), this has
+     * approximately the same likelihood of producing a "1" bit for any positions in the mantissa, and also equal odds
+     * for the sign bit.
+     * @return a random uniform double between -1 and 1 with a tiny hole around 0 (all exclusive)
+     */
+    public double nextExclusiveSignedDouble(){
+        final long bits = whisker.nextLong();
+        return NumberUtils.longBitsToDouble(1022L - Long.numberOfLeadingZeros(bits) << 52 | ((bits << 63 | bits >>> 1) & 0x800FFFFFFFFFFFFFL));
+    }
+
+    /**
+     * Gets a random float that may be positive or negative, but cannot be 0, and always has a magnitude less than 1.
+     * <br>
+     * This is a modified version of <a href="https://allendowney.com/research/rand/">this
+     * algorithm by Allen Downey</a>. This version can return double values between -0.99999994 and -1.1641532E-10, as
+     * well as between 2.7105054E-20 and 0.99999994, or -0x1.fffffep-1 to -0x1.0p-33 as well as between 0x1.0p-65 and
+     * 0x1.fffffep-1 in hex notation. It cannot return -1, 0 or 1. It has much more uniform bit distribution across its
+     * mantissa/significand bits than {@link Random#nextDouble()}, especially when the result of nextDouble() is
+     * expanded to the -1.0 to 1.0 range (such as with {@code 2.0 * (nextDouble() - 0.5)}). Where the given example code
+     * is unable to produce a "1" bit for its lowest bit of mantissa (the least significant bits numerically, but
+     * potentially important for some uses), this has approximately the same likelihood of producing a "1" bit for any
+     * positions in the mantissa, and also equal odds for the sign bit.
+     * @return a random uniform double between -1 and 1 with a tiny hole around 0 (all exclusive)
+     */
+    public float nextExclusiveSignedFloat(){
+        final long bits = whisker.nextLong();
+        return NumberUtils.intBitsToFloat(126 - Long.numberOfLeadingZeros(bits) << 23 | ((int)bits & 0x807FFFFF));
+    }
+
+    public static float hashFloat(float x, float y) {
+        long state = 0xC13FA9A902A6328FL * NumberUtils.floatToIntBits(x) + 0x91E10DA5C79E7B1DL * NumberUtils.floatToIntBits(y);
+        return ((((state = ((state ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5CC83L)) ^ state >>> 27) * 0xAEF17502108EF2D9L) >> 40) * 0x1p-23f;
+    }
+    private double acbrt(double r)
+    {
+        double a = 1.4774329094 - 0.8414323527/(r+0.7387320679),
+                //a = 0.6042181313 * r + 0.4531635984,
+                a3 = a * a * a, a3r = a3 + r;
+        //a *= ((a3r + r) / (a3 + a3r));
+        return a * ((a3r + r) / (a3 + a3r));
+    }
+
+    private float cbrtShape(float x){
+        final int i = BitConversion.floatToRawIntBits(x);
+        return BitConversion.intBitsToFloat(((i & 0x7FFFFFFF) - 0x3F800000) / 3 + 0x3F800000 | (i & 0x80000000));
+    }
+    public static double vdc(double base, int index)
+    {
+        //0.7548776662466927, 0.5698402909980532
+        double n = (index+1 & 0x7fffffff);
+        base += 0.6180339887498949;
+        base *= 0.6180339887498949;
+        base -= (int)base;
+        double res = 0.0;
+        while (n >= 1) {
+            res += (n *= base);
+            base += 0.6180339887498949;
+            base *= 0.6180339887498949;
+            base -= (int) base;
+        }
+        return res - (int)res;
+    }
+
+    public static void main (String[] arg) {
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
+        config.setResizable(false);
+        config.setWindowedMode(512, 520);
+        new Lwjgl3Application(new SphereVisualizer(), config);
+    }
+
+}
