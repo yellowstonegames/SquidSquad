@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**
@@ -200,7 +199,7 @@ public final class RotationTools {
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
      */
     public static float[] randomRotation2D(long seed) {
-        final int index = (int)(Hasher.randomize2(seed) >>> 50);
+        final int index = (int)(Hasher.randomize2(seed) >>> -TrigTools.SIN_BITS);
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
@@ -214,7 +213,7 @@ public final class RotationTools {
      * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
      */
     public static float[] randomRotation3D(long seed) {
-        final int index = (int)((seed = Hasher.randomize2(seed)) >>> 50);
+        final int index = (int)((seed = Hasher.randomize2(seed)) >>> -TrigTools.SIN_BITS);
         float x = (float) Ziggurat.normal(Hasher.randomize2(++seed));
         float y = (float) Ziggurat.normal(Hasher.randomize2(++seed));
         float z = (float) Ziggurat.normal(Hasher.randomize2(++seed));
@@ -334,7 +333,7 @@ public final class RotationTools {
      * @return a newly-allocated 4-element double array, meant as effectively a 2D rotation matrix
      */
     public static double[] randomRotation2DD(long seed) {
-        final int index = (int)(Hasher.randomize2(seed) >>> 50);
+        final int index = (int)(Hasher.randomize2(seed) >>> -TrigTools.SIN_BITS);
         final double s = TrigTools.SIN_TABLE[index];
         final double c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new double[]{c, s, -s, c};
@@ -348,7 +347,7 @@ public final class RotationTools {
      * @return a newly-allocated 9-element double array, meant as effectively a 3D rotation matrix
      */
     public static double[] randomRotation3DD(long seed) {
-        final int index = (int)((seed = Hasher.randomize2(seed)) >>> 50);
+        final int index = (int)((seed = Hasher.randomize2(seed)) >>> -TrigTools.SIN_BITS);
         double x = Ziggurat.normal(Hasher.randomize2(++seed));
         double y = Ziggurat.normal(Hasher.randomize2(++seed));
         double z = Ziggurat.normal(Hasher.randomize2(++seed));

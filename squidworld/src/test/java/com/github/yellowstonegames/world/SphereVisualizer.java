@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.grid.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
