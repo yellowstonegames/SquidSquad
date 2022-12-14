@@ -38,7 +38,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.RotationTools;
@@ -51,7 +50,7 @@ import java.util.Random;
  */
 public class SphereVisualizer extends ApplicationAdapter {
     private int mode = 0;
-    private int modes = 3;
+    private int modes = 4;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -2255,6 +2254,26 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void spherePairMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x8000; i++) {
+            onSphereGaussian(circleCoord);
+            renderer.color(black);
+            renderer.vertex(circleCoord[0] * 125 + 260 - 126, circleCoord[1] * 125 + 260, 0);
+        }
+        for (int i = 0; i < 0x8000; i++) {
+            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
+            renderer.color(black);
+            renderer.vertex(circleCoord[0] * 125 + 260 + 126, circleCoord[1] * 125 + 260, 0);
+            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
+                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
+                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
+        }
+        renderer.end();
+
+    }
+
     @Override
     public void render() {
         ScreenUtils.clear(1f, 1f, 1f, 1f);
@@ -2267,6 +2286,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 1: sphereGaussianMode();
             break;
             case 2: sphereRotationMode();
+            break;
+            case 3: spherePairMode();
             break;
         }
         batch.setProjectionMatrix(camera.combined);
