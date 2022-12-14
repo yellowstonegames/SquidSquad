@@ -61,12 +61,13 @@ public class SphereVisualizer extends ApplicationAdapter {
     private double[] dAmounts = new double[512];
     private long seed = 1L;
     private long startTime;
-    private float[] circleCoord = new float[3];
+    private double[] circleCoord = new double[3];
     private WhiskerRandom whisker = new WhiskerRandom(seed);
     private final float black = Color.BLACK.toFloatBits();
     private final float blue = Color.BLUE.toFloatBits();
     private final float cyan = Color.CYAN.toFloatBits();
     private final float red = Color.RED.toFloatBits();
+    private final float smoke = Color.toFloatBits(0f, 0f, 0f, 0.25f);
 
     @Override
     public void create() {
@@ -95,6 +96,8 @@ public class SphereVisualizer extends ApplicationAdapter {
                     System.out.println("Changed to mode " + mode);
                     return true;
                 }
+                if(keycode == Input.Keys.ESCAPE)
+                    Gdx.app.exit();
 
                 return false;
             }
@@ -2223,7 +2226,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 0x20000; i++) {
             onSphereTrig(circleCoord);
             renderer.color(black);
-            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -2233,23 +2236,23 @@ public class SphereVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 0x20000; i++) {
             onSphereGaussian(circleCoord);
             renderer.color(black);
-            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
         }
         renderer.end();
     }
 
-    private static final float[] pole = {-1f, 0, 0};
+    private static final double[] pole = {-1.0, 0, 0};
 
     private void sphereRotationMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < 0x20000; i++) {
             circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
-            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
+            RotationTools.rotate(pole, RotationTools.randomRotation3DD(++seed, RotationTools.randomRotation2DD(-100000000000L - seed)), circleCoord);
             renderer.color(black);
-            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
-            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
-                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
-                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
+            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
+//            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
+//                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
+//                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
         }
         renderer.end();
     }
@@ -2258,17 +2261,17 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < 0x8000; i++) {
             onSphereGaussian(circleCoord);
-            renderer.color(black);
-            renderer.vertex(circleCoord[0] * 125 + 260 - 126, circleCoord[1] * 125 + 260, 0);
+            renderer.color(smoke);
+            renderer.vertex((float) circleCoord[0] * 125 + 260 - 126, (float) circleCoord[1] * 125 + 260, 0);
         }
         for (int i = 0; i < 0x8000; i++) {
-            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
-            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
-            renderer.color(black);
-            renderer.vertex(circleCoord[0] * 125 + 260 + 126, circleCoord[1] * 125 + 260, 0);
-            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
-                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
-                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
+            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0.0;
+            RotationTools.rotate(pole, RotationTools.randomRotation3DD(++seed, RotationTools.randomRotation2DD(-100000000000L - seed)), circleCoord);
+            renderer.color(smoke);
+            renderer.vertex((float) circleCoord[0] * 125 + 260 + 126, (float) circleCoord[1] * 125 + 260, 0);
+//            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
+//                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
+//                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
         }
         renderer.end();
 
@@ -2292,8 +2295,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        font.draw(batch, String.format("Math stuff at %d FPS",
-                        Gdx.graphics.getFramesPerSecond()),
+        font.draw(batch, String.format("Mode %d at %d FPS",
+                        mode, Gdx.graphics.getFramesPerSecond()),
                 64, 500+22, 256+128, Align.center, true);
 //        font.draw(batch, "Lower parameters A/B/C by holding a, b, or c;\nhold Shift and A/B/C to raise.", 64, 500-5, 256+128, Align.center, true);
 //        font.draw(batch, "a – lambda; should be greater than 0.0", 64, 500-32, 256+128, Align.center, true);
@@ -2556,24 +2559,24 @@ public class SphereVisualizer extends ApplicationAdapter {
             vector[1] = v2 * mag;
         }
     }
-    public void onSphereTrig(final float[] vector)
+    public void onSphereTrig(final double[] vector)
     {
-        float theta = whisker.nextExclusiveFloat();
-        float d = whisker.nextExclusiveSignedFloat();
-        float phi = TrigTools.acosTurns(d);
-        float sinPhi = TrigTools.sinTurns(phi);
+        double theta = whisker.nextExclusiveDouble();
+        double d = whisker.nextExclusiveSignedDouble();
+        double phi = TrigTools.acosTurns(d);
+        double sinPhi = TrigTools.sinTurns(phi);
 
         vector[0] = TrigTools.cosTurns(theta) * sinPhi;
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         //vector[2] = TrigTools.cosTurns(phi);
     }
-    public void onSphereGaussian(final float[] vector)
+    public void onSphereGaussian(final double[] vector)
     {
-        float x = (float) whisker.nextGaussian();
-        float y = (float) whisker.nextGaussian();
-        float z = (float) whisker.nextGaussian();
+        double x = whisker.nextGaussian();
+        double y = whisker.nextGaussian();
+        double z = whisker.nextGaussian();
 
-        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        final double mag = 1.0 / Math.sqrt(x * x + y * y + z * z);
         x *= mag;
         y *= mag;
 //        z *= mag;
