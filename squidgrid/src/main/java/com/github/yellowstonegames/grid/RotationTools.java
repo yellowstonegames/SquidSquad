@@ -206,4 +206,29 @@ public final class RotationTools {
     public static float[] randomRotation5D(long seed, float[] rotation4D) {
         return rotateStep(seed, rotation4D, 5);
     }
+    
+    /**
+     * Creates a new 1D float array that can be used as a 6D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
+     */
+    public static float[] randomRotation6D(long seed) {
+        return rotateStep(seed, randomRotation5D(seed - 6), 6);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 6D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
+     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 5D rotation matrix to avoid redoing
+     * any generation work already done for 5D. There will probably be some correlation between the appearance of the 5D
+     * rotation this will build upon and the 6D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
+     */
+    public static float[] randomRotation6D(long seed, float[] rotation5D) {
+        return rotateStep(seed, rotation5D, 6);
+    }
 }
