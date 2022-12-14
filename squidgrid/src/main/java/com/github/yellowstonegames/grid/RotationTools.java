@@ -156,4 +156,27 @@ public final class RotationTools {
                 cxy    - s * yy, sxy    + c * yy, yz,
                 c * xz - s * yz, s * xz + c * yz, zz};
     }
+
+    /**
+     * Creates a new 1D float array that can be used as a 4D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation4D(long seed) {
+        return rotateStep(seed, randomRotation3D(seed - 4), 4);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 4D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
+     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
+     * that work.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation4D(long seed, float[] rotation3D) {
+        return rotateStep(seed, rotation3D, 4);
+    }
 }

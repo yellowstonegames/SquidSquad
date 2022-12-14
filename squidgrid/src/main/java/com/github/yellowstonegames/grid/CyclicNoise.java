@@ -86,9 +86,9 @@ float cyclicNoise(vec3 p){
     protected final float gain = 0.6f;
     protected long seed;
     // TODO: Update this when we can handle more rotation types
-    protected float[][] rotations = new float[2][];
-    protected float[][] inputs = new float[][]{new float[2], new float[3]};
-    protected float[][] outputs = new float[][]{new float[2], new float[3]};
+    protected float[][] rotations = new float[3][];
+    protected float[][] inputs = new float[][]{new float[2], new float[3], new float[4]};
+    protected float[][] outputs = new float[][]{new float[2], new float[3], new float[4]};
     public CyclicNoise() {
         this(3);
     }
@@ -121,6 +121,7 @@ float cyclicNoise(vec3 p){
         this.seed = seed;
         rotations[0] = RotationTools.randomRotation2D(seed);
         rotations[1] = RotationTools.randomRotation3D(seed);
+        rotations[2] = RotationTools.randomRotation4D(seed, rotations[1]);
     }
 
     public float getNoise(float x, float y) {
@@ -227,15 +228,16 @@ float cyclicNoise(vec3 p){
             zz = TrigTools.sin((z-2) * warpTrk) * warp;
             ww = TrigTools.sin((w-2) * warpTrk) * warp;
 
-            x += ww;
-            y += xx;
-            z += yy;
-            w += zz;
-
-            xx = Noise.rotateX4D(x, y, z, w);
-            yy = Noise.rotateY4D(x, y, z, w);
-            zz = Noise.rotateZ4D(x, y, z, w);
-            ww = Noise.rotateW4D(x, y, z, w);
+            inputs[2][0] = x + ww;
+            inputs[2][1] = y + xx;
+            inputs[2][2] = z + yy;
+            inputs[2][3] = w + zz;
+            Arrays.fill(outputs[2], 0f);
+            RotationTools.rotate(inputs[2], rotations[2], outputs[2]);
+            xx = outputs[2][0];
+            yy = outputs[2][1];
+            zz = outputs[2][2];
+            ww = outputs[2][3];
 
             int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
             int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
