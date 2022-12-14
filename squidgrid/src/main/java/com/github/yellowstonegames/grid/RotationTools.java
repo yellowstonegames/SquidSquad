@@ -172,11 +172,38 @@ public final class RotationTools {
      * Creates a new 1D float array that can be used as a 4D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
      * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
-     * that work.
+     * any generation work already done for 3D. There will probably be some correlation between the appearance of the 3D
+     * rotation this will build upon and the 4D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
      * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
      * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
      */
     public static float[] randomRotation4D(long seed, float[] rotation3D) {
         return rotateStep(seed, rotation3D, 4);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 5D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
+     */
+    public static float[] randomRotation5D(long seed) {
+        return rotateStep(seed, randomRotation4D(seed - 5), 5);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 5D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
+     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 4D rotation matrix to avoid redoing
+     * any generation work already done for 4D. There will probably be some correlation between the appearance of the 4D
+     * rotation this will build upon and the 5D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
+     */
+    public static float[] randomRotation5D(long seed, float[] rotation4D) {
+        return rotateStep(seed, rotation4D, 5);
     }
 }

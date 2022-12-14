@@ -86,9 +86,9 @@ float cyclicNoise(vec3 p){
     protected final float gain = 0.6f;
     protected long seed;
     // TODO: Update this when we can handle more rotation types
-    protected float[][] rotations = new float[3][];
-    protected float[][] inputs = new float[][]{new float[2], new float[3], new float[4]};
-    protected float[][] outputs = new float[][]{new float[2], new float[3], new float[4]};
+    protected float[][] rotations = new float[4][];
+    protected float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5]};
+    protected float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5]};
     public CyclicNoise() {
         this(3);
     }
@@ -122,6 +122,7 @@ float cyclicNoise(vec3 p){
         rotations[0] = RotationTools.randomRotation2D(seed);
         rotations[1] = RotationTools.randomRotation3D(seed);
         rotations[2] = RotationTools.randomRotation4D(seed, rotations[1]);
+        rotations[3] = RotationTools.randomRotation5D(seed, rotations[2]);
     }
 
     public float getNoise(float x, float y) {
@@ -280,17 +281,18 @@ float cyclicNoise(vec3 p){
             ww = TrigTools.sin((w-2) * warpTrk) * warp;
             uu = TrigTools.sin((u-2) * warpTrk) * warp;
 
-            x += uu;
-            y += xx;
-            z += yy;
-            w += zz;
-            u += ww;
-
-            xx = Noise.rotateX5D(x, y, z, w, u);
-            yy = Noise.rotateY5D(x, y, z, w, u);
-            zz = Noise.rotateZ5D(x, y, z, w, u);
-            ww = Noise.rotateW5D(x, y, z, w, u);
-            uu = Noise.rotateU5D(x, y, z, w, u);
+            inputs[3][0] = x + uu;
+            inputs[3][1] = y + xx;
+            inputs[3][2] = z + yy;
+            inputs[3][3] = w + zz;
+            inputs[3][4] = u + ww;
+            Arrays.fill(outputs[3], 0f);
+            RotationTools.rotate(inputs[3], rotations[3], outputs[3]);
+            xx = outputs[3][0];
+            yy = outputs[3][1];
+            zz = outputs[3][2];
+            ww = outputs[3][3];
+            uu = outputs[3][4];
 
             int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
             int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
