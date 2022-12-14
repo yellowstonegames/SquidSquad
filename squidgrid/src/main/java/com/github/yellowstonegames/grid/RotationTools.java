@@ -55,6 +55,24 @@ public final class RotationTools {
     }
 
     /**
+     * Multiplies two square matrices with side length {@code side}, and stores the result in {@code out}. The inputs
+     * {@code lf} and {@code rt} are 1D float arrays treated as row-major matrices.
+     * @param lf the left input matrix, as row-major
+     * @param rt the right input matrix, as row-major
+     * @param out will be modified; this is where the output is summed into, and it is not cleared beforehand
+     * @param side side length of each input matrix and the output matrix
+     */
+    public static void matrixMultiply(float[] lf, float[] rt, float[] out, int side) {
+        for (int r = 0, o = 0; r < side; r++) {
+            for (int c = 0; c < side; c++, o++) {
+                for (int i = 0; i < side; i++) {
+                    out[o] += lf[r * side + i] * rt[c + side * i];
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
      * {@link Hasher#randomize2(long)} and {@link TrigTools#SIN_TABLE}.
@@ -93,9 +111,10 @@ public final class RotationTools {
 
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final float sxy = s * xy, cxy = c * xy;
         return new float[]{
-                c * xx - s * xy, s * xx + c * xy, xz,
-                c * xy - s * yy, s * xy + c * yy, yz,
+                c * xx - sxy   , s * xx + cxy   , xz,
+                cxy    - s * yy, sxy    + c * yy, yz,
                 c * xz - s * yz, s * xz + c * yz, zz};
     }
 }
