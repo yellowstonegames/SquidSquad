@@ -46,8 +46,9 @@ public final class RotationTools {
      * @param output the output vector of length {@code m}
      */
     public static void rotate(float[] input, float[] rotation, float[] output) {
-        for (int r = 0; r < output.length; r++) {
-            for (int c = 0, m = 0; c < input.length; c++) {
+        int m = 0;
+        for (int r = 0; r < input.length; r++) {
+            for (int c = 0; c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
@@ -62,11 +63,13 @@ public final class RotationTools {
      * @param side side length of each input matrix and the output matrix
      */
     public static void matrixMultiply(float[] lf, float[] rt, float[] out, int side) {
-        for (int r = 0, o = 0; r < side; r++) {
-            for (int c = 0; c < side; c++, o++) {
+        int o = 0;
+        for (int r = 0; r < side; r++) {
+            for (int c = 0; c < side; c++) {
                 for (int i = 0; i < side; i++) {
-                    out[o] += lf[r * side + i] * rt[c + side * i];
+                    out[o] += lf[r * side + i] * rt[side * i + c];
                 }
+                ++o;
             }
         }
     }
@@ -88,7 +91,7 @@ public final class RotationTools {
             System.arraycopy(small, i * smallSize, large, i * targetSize, smallSize);
         }
 //        large[0] = 1;
-        large[squareSize - 1] = 1;
+        large[squareSize - 1] = 1f;
         seed = Hasher.randomize2(seed + squareSize);
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {

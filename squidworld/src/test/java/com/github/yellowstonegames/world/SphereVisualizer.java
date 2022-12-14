@@ -61,7 +61,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private double[] dAmounts = new double[512];
     private long seed = 1L;
     private long startTime;
-    private double[] circleCoord = new double[3];
+    private float[] circleCoord = new float[3];
     private WhiskerRandom whisker = new WhiskerRandom(seed);
     private final float black = Color.BLACK.toFloatBits();
     private final float blue = Color.BLUE.toFloatBits();
@@ -2223,33 +2223,39 @@ public class SphereVisualizer extends ApplicationAdapter {
  */
     private void sphereTrigMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x20000; i++) {
+        for (int i = 0; i < 0x10000; i++) {
             onSphereTrig(circleCoord);
             renderer.color(black);
-            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
         }
         renderer.end();
     }
 
     private void sphereGaussianMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x20000; i++) {
+        for (int i = 0; i < 0x10000; i++) {
             onSphereGaussian(circleCoord);
             renderer.color(black);
-            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
         }
         renderer.end();
     }
 
-    private static final double[] pole = {-1.0, 0, 0};
+//    private static final float[] pole = {0, 0, 1};
+    private static final float[] pole = {MathTools.ROOT2_INVERSE, 0, MathTools.ROOT2_INVERSE};
+//    private static final float[] pole = {1f/MathTools.ROOT3, 1f/MathTools.ROOT3, 1f/MathTools.ROOT3};
 
+    private static short time = 0;
     private void sphereRotationMode() {
+        time++;
+        pole[0] = TrigTools.cosDeg(time);
+        pole[2] = TrigTools.sinDeg(time);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x20000; i++) {
+        for (int i = 0; i < 0x10000; i++) {
             circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
-            RotationTools.rotate(pole, RotationTools.randomRotation3DD(++seed, RotationTools.randomRotation2DD(-100000000000L - seed)), circleCoord);
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
             renderer.color(black);
-            renderer.vertex((float) circleCoord[0] * 250 + 260, (float) circleCoord[1] * 250 + 260, 0);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[2] * 250 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
 //                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
 //                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
@@ -2262,13 +2268,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 0x8000; i++) {
             onSphereGaussian(circleCoord);
             renderer.color(smoke);
-            renderer.vertex((float) circleCoord[0] * 125 + 260 - 126, (float) circleCoord[1] * 125 + 260, 0);
+            renderer.vertex(circleCoord[0] * 125 + 260 - 126, circleCoord[1] * 125 + 260, 0);
         }
         for (int i = 0; i < 0x8000; i++) {
-            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0.0;
-            RotationTools.rotate(pole, RotationTools.randomRotation3DD(++seed, RotationTools.randomRotation2DD(-100000000000L - seed)), circleCoord);
+            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), circleCoord);
             renderer.color(smoke);
-            renderer.vertex((float) circleCoord[0] * 125 + 260 + 126, (float) circleCoord[1] * 125 + 260, 0);
+            renderer.vertex(circleCoord[0] * 125 + 260 + 126, circleCoord[1] * 125 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
 //                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
 //                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
@@ -2559,24 +2565,24 @@ public class SphereVisualizer extends ApplicationAdapter {
             vector[1] = v2 * mag;
         }
     }
-    public void onSphereTrig(final double[] vector)
+    public void onSphereTrig(final float[] vector)
     {
-        double theta = whisker.nextExclusiveDouble();
-        double d = whisker.nextExclusiveSignedDouble();
-        double phi = TrigTools.acosTurns(d);
-        double sinPhi = TrigTools.sinTurns(phi);
+        float theta = whisker.nextExclusiveFloat();
+        float d = whisker.nextExclusiveSignedFloat();
+        float phi = TrigTools.acosTurns(d);
+        float sinPhi = TrigTools.sinTurns(phi);
 
         vector[0] = TrigTools.cosTurns(theta) * sinPhi;
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         //vector[2] = TrigTools.cosTurns(phi);
     }
-    public void onSphereGaussian(final double[] vector)
+    public void onSphereGaussian(final float[] vector)
     {
-        double x = whisker.nextGaussian();
-        double y = whisker.nextGaussian();
-        double z = whisker.nextGaussian();
+        float x = (float) whisker.nextGaussian();
+        float y = (float) whisker.nextGaussian();
+        float z = (float) whisker.nextGaussian();
 
-        final double mag = 1.0 / Math.sqrt(x * x + y * y + z * z);
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
         y *= mag;
 //        z *= mag;
