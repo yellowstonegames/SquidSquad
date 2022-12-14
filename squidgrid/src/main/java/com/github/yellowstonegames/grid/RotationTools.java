@@ -73,6 +73,45 @@ public final class RotationTools {
     }
 
     /**
+     * TODO: Does this work? This is really complicated.
+     * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
+     * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
+     * @param seed
+     * @param small
+     * @param targetSize
+     * @return
+     */
+    private static float[] rotateStep(long seed, float[] small, int targetSize) {
+        final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        float[] gauss = new float[targetSize], house = new float[squareSize], large = new float[squareSize],
+                out = new float[squareSize];
+        for (int i = 0; i < smallSize; i++) {
+            System.arraycopy(small, i * smallSize, large, i * targetSize, smallSize);
+        }
+        large[squareSize - 1] = 1;
+        seed = Hasher.randomize2(seed + squareSize);
+        float sum = 0f, t;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = t = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+            sum += t * t;
+        }
+        final float inv = MathTools.ROOT2 / (float) Math.sqrt(sum);
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] *= inv;
+        }
+        for (int row = 0, h = 0; row < targetSize; row++) {
+            for (int col = 0; col < targetSize; col++, h++) {
+                house[h] = gauss[row] * gauss[col];
+            }
+        }
+        for (int i = 0; i < targetSize; i++) {
+            house[i + targetSize * i]--;
+        }
+        matrixMultiply(house, large, out, targetSize);
+        return out;
+    }
+
+    /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
      * {@link Hasher#randomize2(long)} and {@link TrigTools#SIN_TABLE}.
