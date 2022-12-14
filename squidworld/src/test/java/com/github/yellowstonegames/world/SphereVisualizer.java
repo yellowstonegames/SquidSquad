@@ -39,6 +39,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
+import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -48,7 +49,7 @@ import java.util.Random;
  */
 public class SphereVisualizer extends ApplicationAdapter {
     private int mode = 0;
-    private int modes = 2;
+    private int modes = 3;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -59,7 +60,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private double[] dAmounts = new double[512];
     private long seed = 1L;
     private long startTime;
-    private float[] circleCoord = new float[2];
+    private float[] circleCoord = new float[3];
     private WhiskerRandom whisker = new WhiskerRandom(seed);
     private final float black = Color.BLACK.toFloatBits();
     private final float blue = Color.BLUE.toFloatBits();
@@ -2236,6 +2237,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private static final float[] pole = {0, 0, 1};
+
+    private void sphereRotationMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x20000; i++) {
+            circleCoord[0] = circleCoord[1] = 0f;
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), circleCoord);
+            renderer.color(black);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     @Override
     public void render() {
         ScreenUtils.clear(1f, 1f, 1f, 1f);
@@ -2246,6 +2260,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 0: sphereTrigMode();
             break;
             case 1: sphereGaussianMode();
+            break;
+            case 2: sphereRotationMode();
             break;
         }
         batch.setProjectionMatrix(camera.combined);
