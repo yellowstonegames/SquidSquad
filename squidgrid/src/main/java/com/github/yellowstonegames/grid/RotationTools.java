@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**
@@ -154,7 +155,7 @@ public final class RotationTools {
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
      */
     public static float[] randomRotation2D(long seed) {
-        final int index = (int)(Hasher.randomize2(seed) >>> -TrigTools.SIN_BITS);
+        final int index = (int)(Hasher.randomize2(seed) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
