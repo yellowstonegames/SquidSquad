@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**
@@ -27,7 +26,7 @@ import com.github.tommyettinger.random.Ziggurat;
  * My head hurts. Thanks to spenc on the libGDX Discord for carefully guiding me through this code.
  */
 public final class RotationTools {
-    private static final WhiskerRandom random = new WhiskerRandom(123456789L);
+//    private static final WhiskerRandom random = new WhiskerRandom(123456789L);
     /**
      * No instantiation.
      */
@@ -110,23 +109,34 @@ public final class RotationTools {
         }
         large[0] = 1;
 //        large[squareSize - 1] = 1f;
-//        seed = Hasher.randomize2(seed + squareSize);
-        random.setSeed(seed + squareSize);
+        seed = Hasher.randomize2(seed + squareSize);
+//        random.setSeed(seed + squareSize);
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {
-//            gauss[i] = t = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+            gauss[i] = t = (float) Ziggurat.normal(Hasher.randomize2(++seed));
 //            gauss[i] = t = (float) MathTools.probit(Hasher.randomize2Double(++seed));
 //            gauss[i] = t = random.nextExclusiveFloat();
-            gauss[i] = t = (float) random.nextGaussian();
+//            gauss[i] = t = random.nextExclusiveSignedFloat();
+//            gauss[i] = t = (float) random.nextGaussian();
             sum += t * t;
         }
-        final float inv = MathTools.ROOT2 / (float) Math.sqrt(sum);
+        final float inv = 1f / (float) Math.sqrt(sum);
+        sum = 0f;
+        t = 1f;
         for (int i = 0; i < targetSize; i++) {
-            gauss[i] *= inv;
+            t -= gauss[i] *= inv;
+            sum += t * t;
+            t = 0f;
+        }
+        sum = 1f / (float) Math.sqrt(sum); // reused as c
+        t = 1f;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = (t - gauss[i]) * sum;
+            t = 0f;
         }
         for (int row = 0, h = 0; row < targetSize; row++) {
             for (int col = 0; col < targetSize; col++, h++) {
-                house[h] = gauss[row] * gauss[col];
+                house[h] = 2f * gauss[row] * gauss[col];
             }
         }
         for (int i = 0; i < targetSize; i++) {
