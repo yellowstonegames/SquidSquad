@@ -35,7 +35,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.random.LineWobble;
+import com.github.tommyettinger.random.Ziggurat;
 import com.github.yellowstonegames.grid.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
@@ -2241,25 +2244,44 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
-//    private static final float[] pole = {0, 0, 1};
-    private static final float[] pole = {MathTools.ROOT2_INVERSE, 0, MathTools.ROOT2_INVERSE};
-//    private static final float[] pole = {1f/MathTools.ROOT3, 1f/MathTools.ROOT3, 1f/MathTools.ROOT3};
+//    private static final float[] pole = {1, 0, 0};
+//    private static final float[] pole = {0, MathTools.ROOT2_INVERSE, MathTools.ROOT2_INVERSE};
+    private static final float[] pole = {1f/MathTools.ROOT3, 1f/MathTools.ROOT3, 1f/MathTools.ROOT3};
 
     private static short time = 0;
     private void sphereRotationMode() {
         time++;
         pole[0] = TrigTools.cosDeg(time);
+        pole[1] = 0;
         pole[2] = TrigTools.sinDeg(time);
+//        pole[1] = (float) (LineWobble.wobble(123456789, time / 360.0));
+//        float inverse = 1f / (float) Math.sqrt(pole[1] * pole[1] + 1f);
+//        pole[0] *= inverse;
+//        pole[1] *= inverse;
+//        pole[2] *= inverse;
+//        float[] rot = {1,0,0,0,1,0,0,0,1};
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < 0x10000; i++) {
             circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
+
+//            float s = TrigTools.sinDeg(i);
+//            float c = TrigTools.cosDeg(i);
+//            rot[0] = rot[4] = c;
+//            rot[1] = s;
+//            rot[3] = -s;
+//            RotationTools.rotate(pole, rot, circleCoord);
+
             RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
             renderer.color(black);
-            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[2] * 250 + 260, 0);
+            renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
 //                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
 //                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
         }
+//        for (int i = 0; i < 520; i+= 4) {
+//            renderer.color(red);
+//            renderer.vertex(260, i, 0);
+//        }
         renderer.end();
     }
 
@@ -2270,6 +2292,10 @@ public class SphereVisualizer extends ApplicationAdapter {
             renderer.color(smoke);
             renderer.vertex(circleCoord[0] * 125 + 260 - 126, circleCoord[1] * 125 + 260, 0);
         }
+        time++;
+        pole[0] = TrigTools.cosDeg(time);
+        pole[1] = 0;
+        pole[2] = TrigTools.sinDeg(time);
         for (int i = 0; i < 0x8000; i++) {
             circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
             RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), circleCoord);
