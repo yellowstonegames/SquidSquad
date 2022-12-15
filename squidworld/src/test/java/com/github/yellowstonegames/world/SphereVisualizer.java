@@ -2223,7 +2223,7 @@ public class SphereVisualizer extends ApplicationAdapter {
  */
     private void sphereTrigMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x10000; i++) {
+        for (int i = 0; i < 0x40000; i++) {
             onSphereTrig(circleCoord);
             renderer.color(black);
             renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
@@ -2233,7 +2233,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     private void sphereGaussianMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x10000; i++) {
+        for (int i = 0; i < 0x40000; i++) {
             onSphereGaussian(circleCoord);
             renderer.color(black);
             renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
@@ -2258,7 +2258,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 //        pole[2] *= inverse;
 //        float[] rot = {1,0,0,0,1,0,0,0,1};
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x10000; i++) {
+        for (int i = 0; i < 0x40000; i++) {
             circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
 
 //            float s = TrigTools.sinDeg(i);

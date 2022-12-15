@@ -16,18 +16,22 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**
- * This has tools for matrix rotations, potentially in higher dimensions than the typical 2 or 3.
+ * This has tools for generating and applying matrix rotations, potentially in higher dimensions than the typical 2 or
+ * 3. You can use {@link #randomRotation2D(long)} to very quickly generate a single 2D rotation matrix, and to get a 3D
+ * matrix, you can either build on that 2D matrix using {@link #randomRotation3D(long, float[])} or use
+ * {@link #randomRotation3D(long)} to make a completely new one. The same follows for making a 4D rotation using a 3D
+ * one, and so on. You can apply a rotation to a vector with {@link #rotate(float[], float[], float[])}, and there's
+ * also a method to multiply square matrices in {@link #matrixMultiply(float[], float[], float[], int)}.
  * <br>
- * My head hurts. Thanks to spenc on the libGDX Discord for carefully guiding me through this code.
+ * My head hurts. Thanks to spenc on the libGDX Discord for carefully guiding me through this code, among several other
+ * people who helped a lot.
  */
 public final class RotationTools {
-//    private static final WhiskerRandom random = new WhiskerRandom(123456789L);
     /**
      * No instantiation.
      */
@@ -76,29 +80,44 @@ public final class RotationTools {
         }
     }
 
-    public static void main(String[] args) {
-        float[] pts = {.11f,.12f,.13f,.21f,.22f,.23f,.31f,.32f,.33f},
-        its = {11,12,13,21,22,23,31,32,33}, out = new float[9], vc = {11,12,13}, o3 = new float[3];
-        matrixMultiply(pts, its, out, 3);
-        for (int y = 0, m = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++, m++) {
-                System.out.printf("%5.2f, ", out[m]);
-            }
-            System.out.println();
-        }
-        rotate(vc, pts, o3);
-        for (int i = 0; i < 3; i++) {
-            System.out.printf("%5.2f ", o3[i]);
-        }
-    }
+//    public static void main(String[] args) {
+//        float[] pts = {.11f,.12f,.13f,.21f,.22f,.23f,.31f,.32f,.33f},
+//        its = {11,12,13,21,22,23,31,32,33}, out = new float[9], vc = {11,12,13}, o3 = new float[3];
+//        matrixMultiply(pts, its, out, 3);
+//        for (int y = 0, m = 0; y < 3; y++) {
+//            for (int x = 0; x < 3; x++, m++) {
+//                System.out.printf("%5.2f, ", out[m]);
+//            }
+//            System.out.println();
+//        }
+//        rotate(vc, pts, o3);
+//        for (int i = 0; i < 3; i++) {
+//            System.out.printf("%5.2f ", o3[i]);
+//        }
+//    }
 
     /**
+     *
+     * @param state change this with {@code randomize((state += 0x9E3779B97F4A7C15L))}
+     * @return
+     */
+    private static long randomize(long state) {
+        return (state = ((state = (state ^ 0xDB4F0B9175AE2165L) * 0xC6BC279692B5CC83L) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25;
+    }
+    /**
+     * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
+     * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
+     * seed, and uses the seed and some matrix operations to generate a random rotation based on {@code small}. This
+     * allocates a new {@code targetSize * targetSize}-element float array on every call and returns it. It also
+     * allocates some more temporary float arrays to work with.
+     * <br>
      * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
      * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
-     * @param seed
-     * @param small
-     * @param targetSize
-     * @return
+     *
+     * @param seed random number generator seed
+     * @param small a smaller square matrix than the result should be; must have side length {@code targetSize - 1}
+     * @param targetSize the side length of the square matrix to be returned
+     * @return a 1D float array that can be treated as a rotation matrix for inputs of size {@code targetSize}
      */
     private static float[] rotateStep(long seed, float[] small, int targetSize) {
         final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
@@ -106,19 +125,13 @@ public final class RotationTools {
                 out = new float[squareSize];
         for (int i = 0; i < smallSize; i++) {
             System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
-//            System.arraycopy(small, i * smallSize, large, i * targetSize, smallSize);
         }
         large[0] = 1;
-//        large[squareSize - 1] = 1f;
-        seed = Hasher.randomize2(seed + squareSize);
-//        random.setSeed(seed + squareSize);
+        // use Juniper's Ziggurat algorithm directly, which requires randomizing the seed
+        seed = randomize(seed + squareSize);
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {
-            gauss[i] = t = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-//            gauss[i] = t = (float) MathTools.probit(Hasher.randomize2Double(++seed));
-//            gauss[i] = t = random.nextExclusiveFloat();
-//            gauss[i] = t = random.nextExclusiveSignedFloat();
-//            gauss[i] = t = (float) random.nextGaussian();
+            gauss[i] = t = (float) Ziggurat.normal(randomize((seed += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
         final float inv = 1f / (float) Math.sqrt(sum);
@@ -150,12 +163,12 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
-     * {@link Hasher#randomize2(long)} and {@link TrigTools#SIN_TABLE}.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * {@link TrigTools#SIN_TABLE}.
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
      */
     public static float[] randomRotation2D(long seed) {
-        final int index = (int)(Hasher.randomize2(seed) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
+        final int index = (int)(randomize(seed * 0x9E3779B97F4A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
@@ -164,15 +177,15 @@ public final class RotationTools {
 //    /**
 //     * Creates a new 1D float array that can be used as a 3D rotation matrix by
 //     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-//     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
-//     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+//     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Ziggurat}.
+//     * @param seed any long; will be scrambled
 //     * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
 //     */
 //    public static float[] randomRotation3D(long seed) {
-//        final int index = (int)((seed = Hasher.randomize2(seed)) >>> -TrigTools.SIN_BITS);
-//        float x = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-//        float y = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-//        float z = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+//        final int index = (int)((seed = randomize(seed ^ 0x9E3779B97F4A7C15L)) >>> -TrigTools.SIN_BITS);
+//        float x = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
+//        float y = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
+//        float z = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
 //        float sum = x * x + y * y + z * z;
 //        final float inv = 1f / (float) Math.sqrt(sum);
 //        float t = 1f;
@@ -205,8 +218,8 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
      */
     public static float[] randomRotation3D(long seed) {
@@ -216,11 +229,11 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 2D rotation matrix to avoid redoing
+     * {@link Ziggurat}, and uses an existing 2D rotation matrix to avoid redoing
      * any generation work already done for 2D. There will probably be some correlation between the appearance of the 2D
      * rotation this will build upon and the 3D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
      */
     public static float[] randomRotation3D(long seed, float[] rotation2D) {
@@ -230,8 +243,8 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 4D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
      */
     public static float[] randomRotation4D(long seed) {
@@ -241,11 +254,11 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 4D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
+     * {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
      * any generation work already done for 3D. There will probably be some correlation between the appearance of the 3D
      * rotation this will build upon and the 4D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
      */
     public static float[] randomRotation4D(long seed, float[] rotation3D) {
@@ -255,8 +268,8 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 5D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
      */
     public static float[] randomRotation5D(long seed) {
@@ -266,11 +279,11 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 5D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 4D rotation matrix to avoid redoing
+     * {@link Ziggurat}, and uses an existing 4D rotation matrix to avoid redoing
      * any generation work already done for 4D. There will probably be some correlation between the appearance of the 4D
      * rotation this will build upon and the 5D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
      */
     public static float[] randomRotation5D(long seed, float[] rotation4D) {
@@ -280,8 +293,8 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 6D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
      */
     public static float[] randomRotation6D(long seed) {
@@ -291,11 +304,11 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 6D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Hasher#randomize2(long)} and {@link Ziggurat}, and uses an existing 5D rotation matrix to avoid redoing
+     * {@link Ziggurat}, and uses an existing 5D rotation matrix to avoid redoing
      * any generation work already done for 5D. There will probably be some correlation between the appearance of the 5D
      * rotation this will build upon and the 6D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
-     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+     * @param seed any long; will be scrambled
      * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
      */
     public static float[] randomRotation6D(long seed, float[] rotation5D) {
