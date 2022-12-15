@@ -128,7 +128,7 @@ public final class RotationTools {
             sum += t * t;
             t = 0f;
         }
-        sum = 1f / (float) Math.sqrt(sum); // reused as c
+        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as c
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
             gauss[i] = (t - gauss[i]) * sum;
@@ -136,7 +136,7 @@ public final class RotationTools {
         }
         for (int row = 0, h = 0; row < targetSize; row++) {
             for (int col = 0; col < targetSize; col++, h++) {
-                house[h] = 2f * gauss[row] * gauss[col];
+                house[h] = gauss[row] * gauss[col];
             }
         }
         for (int i = 0; i < targetSize; i++) {
@@ -160,36 +160,56 @@ public final class RotationTools {
         return new float[]{c, s, -s, c};
     }
 
+//    /**
+//     * Creates a new 1D float array that can be used as a 3D rotation matrix by
+//     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+//     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+//     * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
+//     * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
+//     */
+//    public static float[] randomRotation3D(long seed) {
+//        final int index = (int)((seed = Hasher.randomize2(seed)) >>> -TrigTools.SIN_BITS);
+//        float x = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+//        float y = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+//        float z = (float) Ziggurat.normal(Hasher.randomize2(++seed));
+//        float sum = x * x + y * y + z * z;
+//        final float inv = 1f / (float) Math.sqrt(sum);
+//        float t = 1f;
+//        sum = 0f;
+//        t -= x *= inv; sum += t * t; t = 0f;
+//        t -= y *= inv; sum += t * t; t = 0f;
+//        t -= z *= inv; sum += t * t; t = 0f;
+//
+//        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as c
+//        x = (1 - x) * sum;
+//        y = (0 - x) * sum;
+//        z = (0 - x) * sum;
+//
+//        final float xx = x * x - 1;
+//        final float yy = y * y - 1;
+//        final float zz = z * z - 1;
+//        final float xy = x * y;
+//        final float xz = x * z;
+//        final float yz = y * z;
+//
+//        final float s = TrigTools.SIN_TABLE[index];
+//        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+//        final float sxy = s * xy, cxy = c * xy;
+//        return new float[]{
+//                c * xx - sxy   , s * xx + cxy   , xz,
+//                cxy    - s * yy, sxy    + c * yy, yz,
+//                c * xz - s * yz, s * xz + c * yz, zz};
+//    }
+
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Hasher#randomize2(long)} and {@link Ziggurat}.
      * @param seed any long; will be scrambled with {@link Hasher#randomize2(long)}
      * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
      */
     public static float[] randomRotation3D(long seed) {
-        final int index = (int)((seed = Hasher.randomize2(seed)) >>> -TrigTools.SIN_BITS);
-        float x = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-        float y = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-        float z = (float) Ziggurat.normal(Hasher.randomize2(++seed));
-        final float inv = MathTools.ROOT2 / (float) Math.sqrt(x * x + y * y + z * z);
-        x *= inv;
-        y *= inv;
-        z *= inv;
-        final float xx = x * x - 1;
-        final float yy = y * y - 1;
-        final float zz = z * z - 1;
-        final float xy = x * y;
-        final float xz = x * z;
-        final float yz = y * z;
-
-        final float s = TrigTools.SIN_TABLE[index];
-        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
-        final float sxy = s * xy, cxy = c * xy;
-        return new float[]{
-                c * xx - sxy   , s * xx + cxy   , xz,
-                cxy    - s * yy, sxy    + c * yy, yz,
-                c * xz - s * yz, s * xz + c * yz, zz};
+        return rotateStep(seed, randomRotation2D(seed - 3), 3);
     }
 
     /**
