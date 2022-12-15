@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
@@ -95,6 +96,10 @@ float cyclicNoise(vec3 p){
         setOctaves(octaves);
         setSeed(0xBEEF1E57CA77L);
     }
+    public CyclicNoise(int octaves, long seed) {
+        setOctaves(octaves);
+        setSeed(seed);
+    }
 
     public int getOctaves() {
         return octaves;
@@ -116,13 +121,31 @@ float cyclicNoise(vec3 p){
         return seed;
     }
 
+    /**
+     * Sets the seed, and in doing so creates 5 new rotation matrices for different dimensions to use. Note that this
+     * may be considerably more expensive than a typical setter, because of how much it allocates.
+     * @param seed any long
+     */
     public void setSeed(long seed) {
         this.seed = seed;
         rotations[0] = RotationTools.randomRotation2D(seed);
-        rotations[1] = RotationTools.randomRotation3D(seed);
+        rotations[1] = RotationTools.randomRotation3D(seed, rotations[0]);
         rotations[2] = RotationTools.randomRotation4D(seed, rotations[1]);
         rotations[3] = RotationTools.randomRotation5D(seed, rotations[2]);
         rotations[4] = RotationTools.randomRotation6D(seed, rotations[3]);
+    }
+    public String serializeToString() {
+        return "`" + seed + '~' + octaves + '`';
+    }
+
+    public static CyclicNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 5)
+            return null;
+        int pos;
+        int seed =   DigitTools.intFromDec(data, 1, pos = data.indexOf('~'));
+        int octaves =     DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+
+        return new CyclicNoise(seed, octaves);
     }
 
     public float getNoise(float x, float y) {
