@@ -54,6 +54,7 @@ public final class JsonGrid {
         registerNoise(json);
         registerPhantomNoise(json);
         registerTaffyNoise(json);
+        registerFlanNoise(json);
     }
 
     /**

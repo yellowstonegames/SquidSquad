@@ -245,6 +245,21 @@ public class JsonGridTest {
         System.out.println();
     }
 
+    @Test
+    public void testFlanNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerFlanNoise(json);
+        FlanNoise noise, noise2;
+        noise = new FlanNoise(-123L, 4, 0.625f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(FlanNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        float[] args = {-123f, 0.4f, 0.625f, -1.12f};
+        Assert.assertEquals(noise.getNoise(args), noise2.getNoise(args), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
     public static class IGI implements IGridIdentified {
         public final int id;
         public Coord position;

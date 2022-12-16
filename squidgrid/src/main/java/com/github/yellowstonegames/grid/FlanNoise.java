@@ -69,12 +69,13 @@ public class FlanNoise {
 //    }
 
     public long seed;
-    public final int dim, vc;
+    public final int dim;
     public final float sharpness;
-    protected float inverse;
-    protected final float[] points;
-    protected final float[][] vertices;
     public final int detail;
+    protected transient final int vc;
+    protected transient float inverse;
+    protected transient final float[] points;
+    protected transient final float[][] vertices;
 
     public FlanNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -183,7 +184,7 @@ public class FlanNoise {
     }
 
     public String serializeToString() {
-        return "`" + seed + '~' + dim + '~' + detail + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
+        return "`" + seed + '~' + dim + '~' + detail + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
     public static FlanNoise deserializeFromString(String data) {
@@ -195,7 +196,7 @@ public class FlanNoise {
         int detail =  DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
 
-        return new FlanNoise(seed, dim, sharp, detail);
+        return new FlanNoise(seed, dim, 0.625f / sharp, detail);
     }
 
     public float getNoise(float... args) {
@@ -226,5 +227,31 @@ public class FlanNoise {
 //        return (barronSpline(result, sharpness, 0.5f) - 0.5f) * 2f;
 //        return TrigTools.sinTurns(result * inverse);
 //        return result / (((sharpness - 1f) * (1f - Math.abs(result))) + 1.0000001f);
+    }
+
+    public String toString() {
+        return "FlanNoise in " + dim +"D with seed " + seed + ", detail " + detail + ", and sharpness " + (0.625f/sharpness);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FlanNoise flanNoise = (FlanNoise) o;
+
+        if (seed != flanNoise.seed) return false;
+        if (dim != flanNoise.dim) return false;
+        if (Float.compare(flanNoise.sharpness, sharpness) != 0) return false;
+        return detail == flanNoise.detail;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (seed ^ (seed >>> 32));
+        result = 31 * result + dim;
+        result = 31 * result + (sharpness != +0.0f ? BitConversion.floatToIntBits(sharpness) : 0);
+        result = 31 * result + detail;
+        return result;
     }
 }
