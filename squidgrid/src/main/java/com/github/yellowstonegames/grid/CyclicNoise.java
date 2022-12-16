@@ -86,9 +86,9 @@ float cyclicNoise(vec3 p){
     protected final float lacunarity = 1.6f;
     protected final float gain = 0.6f;
     protected long seed;
-    protected float[][] rotations = new float[5][];
-    protected float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
-    protected float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
+    protected transient float[][][] rotations = new float[5][4][];
+    protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
+    protected transient float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     public CyclicNoise() {
         this(3);
     }
@@ -128,11 +128,13 @@ float cyclicNoise(vec3 p){
      */
     public void setSeed(long seed) {
         this.seed = seed;
-        rotations[0] = RotationTools.randomRotation2D(seed);
-        rotations[1] = RotationTools.randomRotation3D(seed, rotations[0]);
-        rotations[2] = RotationTools.randomRotation4D(seed, rotations[1]);
-        rotations[3] = RotationTools.randomRotation5D(seed, rotations[2]);
-        rotations[4] = RotationTools.randomRotation6D(seed, rotations[3]);
+        for (int i = 0; i < 4; i++) {
+            rotations[0][i] = RotationTools.randomRotation2D(seed);
+            rotations[1][i] = RotationTools.randomRotation3D(seed, rotations[0][i]);
+            rotations[2][i] = RotationTools.randomRotation4D(seed, rotations[1][i]);
+            rotations[3][i] = RotationTools.randomRotation5D(seed, rotations[2][i]);
+            rotations[4][i] = RotationTools.randomRotation6D(seed, rotations[3][i]);
+        }
     }
     public String serializeToString() {
         return "`" + seed + '~' + octaves + '`';
@@ -165,7 +167,7 @@ float cyclicNoise(vec3 p){
             inputs[0][0] = x + yy;
             inputs[0][1] = y + xx;
             Arrays.fill(outputs[0], 0f);
-            RotationTools.rotate(inputs[0], rotations[0], outputs[0]);
+            RotationTools.rotate(inputs[0], rotations[0][i & 3], outputs[0]);
             xx = outputs[0][0];
             yy = outputs[0][1];
 
@@ -210,7 +212,7 @@ float cyclicNoise(vec3 p){
             inputs[1][1] = y + xx;
             inputs[1][2] = z + yy;
             Arrays.fill(outputs[1], 0f);
-            RotationTools.rotate(inputs[1], rotations[1], outputs[1]);
+            RotationTools.rotate(inputs[1], rotations[1][i & 3], outputs[1]);
             xx = outputs[1][0];
             yy = outputs[1][1];
             zz = outputs[1][2];
@@ -257,7 +259,7 @@ float cyclicNoise(vec3 p){
             inputs[2][2] = z + yy;
             inputs[2][3] = w + zz;
             Arrays.fill(outputs[2], 0f);
-            RotationTools.rotate(inputs[2], rotations[2], outputs[2]);
+            RotationTools.rotate(inputs[2], rotations[2][i & 3], outputs[2]);
             xx = outputs[2][0];
             yy = outputs[2][1];
             zz = outputs[2][2];
@@ -310,7 +312,7 @@ float cyclicNoise(vec3 p){
             inputs[3][3] = w + zz;
             inputs[3][4] = u + ww;
             Arrays.fill(outputs[3], 0f);
-            RotationTools.rotate(inputs[3], rotations[3], outputs[3]);
+            RotationTools.rotate(inputs[3], rotations[3][i & 3], outputs[3]);
             xx = outputs[3][0];
             yy = outputs[3][1];
             zz = outputs[3][2];
@@ -375,7 +377,7 @@ float cyclicNoise(vec3 p){
             inputs[4][4] = u + ww;
             inputs[4][5] = v + uu;
             Arrays.fill(outputs[4], 0f);
-            RotationTools.rotate(inputs[4], rotations[4], outputs[4]);
+            RotationTools.rotate(inputs[4], rotations[4][i & 3], outputs[4]);
             xx = outputs[4][0];
             yy = outputs[4][1];
             zz = outputs[4][2];
