@@ -160,4 +160,27 @@ public class SorbetNoise {
         return noise * total;
     }
     private static final float radToIndex = TABLE_SIZE / PI2;
+
+    @Override
+    public String toString() {
+        return "SorbetNoise with seed: " + seed + ", octaves:" + octaves;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SorbetNoise that = (SorbetNoise) o;
+
+        if (octaves != that.octaves) return false;
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = octaves;
+        result = 31 * result + seed;
+        return result;
+    }
 }
