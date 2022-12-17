@@ -176,7 +176,9 @@ public final class JsonGrid {
                         json.setWriter(writer);
                         json.writeValue(k);
                         writer.write(':');
-                        json.writeValue(e.getValue());
+                        String v = json.toJson(e.getValue());
+                        json.setWriter(writer);
+                        json.writeValue(v);
                         if (es.hasNext())
                             writer.write(',');
                     } catch (IOException ignored) {
@@ -191,7 +193,7 @@ public final class JsonGrid {
             @Override
             public CoordObjectOrderedMap<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                CoordObjectOrderedMap<?> data = new CoordObjectOrderedMap<>(jsonData.size);
+                CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(jsonData.size);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
                 }
