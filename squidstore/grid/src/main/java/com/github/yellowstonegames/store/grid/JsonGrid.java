@@ -55,6 +55,8 @@ public final class JsonGrid {
         registerPhantomNoise(json);
         registerTaffyNoise(json);
         registerFlanNoise(json);
+        registerCyclicNoise(json);
+        registerSorbetNoise(json);
     }
 
     /**
@@ -460,6 +462,28 @@ public final class JsonGrid {
             public FlanNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return FlanNoise.deserializeFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers CyclicNoise with the given Json object, so CyclicNoise can be written to and read from JSON.
+     * This is a simple wrapper around CyclicNoise's built-in {@link CyclicNoise#serializeToString()} and
+     * {@link CyclicNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCyclicNoise(@Nonnull Json json) {
+        json.setSerializer(CyclicNoise.class, new Json.Serializer<CyclicNoise>() {
+            @Override
+            public void write(Json json, CyclicNoise object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public CyclicNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return CyclicNoise.deserializeFromString(jsonData.asString());
             }
         });
     }

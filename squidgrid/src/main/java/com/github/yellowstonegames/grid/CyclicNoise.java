@@ -137,17 +137,17 @@ float cyclicNoise(vec3 p){
         }
     }
     public String serializeToString() {
-        return "`" + seed + '~' + octaves + '`';
+        return "`" + octaves + '~' + seed + '`';
     }
 
     public static CyclicNoise deserializeFromString(String data) {
         if(data == null || data.length() < 5)
             return null;
         int pos;
-        int seed =   DigitTools.intFromDec(data, 1, pos = data.indexOf('~'));
-        int octaves =     DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+        int octaves =   DigitTools.intFromDec(data, 1, pos = data.indexOf('~'));
+        long seed =     DigitTools.longFromDec(data, pos+1, data.indexOf('`', pos+1));
 
-        return new CyclicNoise(seed, octaves);
+        return new CyclicNoise(octaves, seed);
     }
 
     public float getNoise(float x, float y) {
@@ -415,4 +415,27 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
     private static final float radToIndex = TABLE_SIZE / PI2;
+
+    @Override
+    public String toString() {
+        return "CyclicNoise with seed: " + seed + ", octaves:" + octaves;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CyclicNoise that = (CyclicNoise) o;
+
+        if (octaves != that.octaves) return false;
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = octaves;
+        result = 31 * result + (int) (seed ^ (seed >>> 32));
+        return result;
+    }
 }
