@@ -372,4 +372,30 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testLightingManager() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(int[][].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(Radiance.class, new RadianceSerializer());
+        kryo.register(Region.class, new RegionSerializer());
+        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(LightingManager.class, new LightingManagerSerializer());
+
+        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
+        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LightingManager data2 = kryo.readObject(input, LightingManager.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }

@@ -24,10 +24,9 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.*;
 
 /**
- * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]},
- * {@link CoordObjectOrderedMapSerializer} for {@link CoordObjectOrderedMap} to be registered,
- * {@link RegionSerializer} for {@link Region} to be registered, and {@link RadianceSerializer} for {@link Radiance} to
- * be registered.
+ * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@link CoordSerializer} for {@link Coord},
+ * {@link CoordObjectOrderedMapSerializer} for {@link CoordObjectOrderedMap}, {@link RegionSerializer} for
+ * {@link Region}, and {@link RadianceSerializer} for {@link Radiance} to be registered.
  */
 @SuppressWarnings({"unchecked"})
 public class LightingManagerSerializer extends Serializer<LightingManager> {
