@@ -31,26 +31,32 @@ public enum Radius {
 
     /**
      * In an unobstructed area the FOV would be a square.
-     *
+     * <br>
      * This is the shape that would represent movement radius in an 8-way
      * movement scheme with no additional cost for diagonal movement.
      */
     SQUARE,
     /**
      * In an unobstructed area the FOV would be a diamond.
-     *
+     * <br>
      * This is the shape that would represent movement radius in a 4-way
      * movement scheme.
      */
     DIAMOND,
     /**
      * In an unobstructed area the FOV would be a circle.
-     *
+     * <br>
      * This is the shape that would represent movement radius in an 8-way
      * movement scheme with all movement cost the same based on distance from
      * the source
      */
     CIRCLE;
+
+    /**
+     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Radius[]} objects. DO NOT
+     * MODIFY THIS ARRAY.
+     */
+    public static final Radius[] ALL = values();
 
     public float radius(Coord start, Coord end) {
         float dx = start.x - end.x;
