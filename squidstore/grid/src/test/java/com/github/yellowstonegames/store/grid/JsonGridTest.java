@@ -265,7 +265,7 @@ public class JsonGridTest {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCyclicNoise(json);
         CyclicNoise noise, noise2;
-        noise = new CyclicNoise(-123, 4);
+        noise = new CyclicNoise(-9876543210L, 4);
         String data = json.toJson(noise);
         System.out.println(data);
         noise2 = json.fromJson(CyclicNoise.class, data);

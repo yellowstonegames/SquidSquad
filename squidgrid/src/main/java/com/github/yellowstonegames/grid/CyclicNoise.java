@@ -96,7 +96,7 @@ float cyclicNoise(vec3 p){
         setOctaves(octaves);
         setSeed(0xBEEF1E57CA77L);
     }
-    public CyclicNoise(int octaves, long seed) {
+    public CyclicNoise(long seed, int octaves) {
         setOctaves(octaves);
         setSeed(seed);
     }
@@ -137,17 +137,17 @@ float cyclicNoise(vec3 p){
         }
     }
     public String serializeToString() {
-        return "`" + octaves + '~' + seed + '`';
+        return "`" + seed + '~' + octaves + '`';
     }
 
     public static CyclicNoise deserializeFromString(String data) {
         if(data == null || data.length() < 5)
             return null;
         int pos;
-        int octaves =   DigitTools.intFromDec(data, 1, pos = data.indexOf('~'));
-        long seed =     DigitTools.longFromDec(data, pos+1, data.indexOf('`', pos+1));
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int octaves = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
 
-        return new CyclicNoise(octaves, seed);
+        return new CyclicNoise(seed, octaves);
     }
 
     public float getNoise(float x, float y) {
