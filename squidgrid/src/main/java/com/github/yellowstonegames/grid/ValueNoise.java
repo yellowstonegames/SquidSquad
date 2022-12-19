@@ -16,8 +16,6 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -34,9 +32,8 @@ public class ValueNoise implements INoise {
      * How many dimensions of noise to generate; usually at least 2.
      */
     public final int dim;
-    protected transient final float[] working, points, input;
-    protected transient final float[][] vertices;
-    protected transient final long[] floors, hashFloors;
+    protected transient final float[] working, input;
+    protected transient final long[] floors;
 
     public ValueNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -46,32 +43,7 @@ public class ValueNoise implements INoise {
         dim = Math.max(2, dimension);
         input = new float[dim];
         working = new float[dim+1];
-        points = new float[dim+1];
-        vertices = new float[dim+1][dim];
-        float id = -1f / dim;
-        vertices[0][0] = 1f;
-        for (int v = 1; v <= dim; v++) {
-            vertices[v][0] = id;
-        }
-        for (int d = 1; d < dim; d++) {
-            float t = 0f;
-            for (int i = 0; i < d; i++) {
-                t += vertices[d][i] * vertices[d][i];
-            }
-            vertices[d][d] = (float) Math.sqrt(1f - t);
-            t = (id - t) / vertices[d][d];
-            for (int v = d + 1; v <= dim; v++) {
-                vertices[v][d] = t;
-            }
-        }
-        for (int v = 0; v <= dim; v++) {
-            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
-                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
-            vertices[v][0] = TrigTools.cos(theta) * dist;
-            vertices[v][1] = TrigTools.sin(theta) * dist;
-        }
         floors = new long[dim+1];
-        hashFloors = new long[dim+1];
         this.seed = seed;
     }
 
@@ -113,7 +85,7 @@ public class ValueNoise implements INoise {
                 temp *= bit + (1|-bit) * working[j];
                 hash += (floors[j] - bit) * gold[j];
             }
-            hash ^= hash * hash | 1L;
+            hash ^= hash * hash | 1L; // xqo, a xorsquare operation
             sum += temp * (hash >> 32);
         }
         return (sum * 0x1p-31f);
@@ -144,7 +116,7 @@ public class ValueNoise implements INoise {
             temp *= bit + (1|-bit) * y;
             hash += (floors[1] - bit) * gold[1];
 
-            hash ^= hash * hash | 1L;
+            hash ^= hash * hash | 1L; // xqo, a xorsquare operation
             sum += temp * (hash >> 32);
         }
         return (sum * 0x1p-31f);
