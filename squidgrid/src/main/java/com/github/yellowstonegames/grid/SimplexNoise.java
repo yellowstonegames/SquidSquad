@@ -47,6 +47,8 @@
  */
 package com.github.yellowstonegames.grid;
 
+import com.github.yellowstonegames.core.DigitTools;
+
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.grid.LongPointHash.hash256;
 import static com.github.yellowstonegames.grid.Noise.GRADIENTS_2D;
@@ -808,5 +810,33 @@ public class SimplexNoise implements INoise {
     @Override
     public long getSeed() {
         return seed;
+    }
+
+    public String serializeString() {
+        return "`" + seed + "`";
+    }
+
+    public static SimplexNoise deserializeString(String data) {
+        return new SimplexNoise(DigitTools.longFromDec(data, 1, data.length() - 1));
+    }
+
+    @Override
+    public String toString() {
+        return "SimplexNoise{seed=" + seed + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimplexNoise that = (SimplexNoise) o;
+
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (seed ^ (seed >>> 32));
     }
 }
