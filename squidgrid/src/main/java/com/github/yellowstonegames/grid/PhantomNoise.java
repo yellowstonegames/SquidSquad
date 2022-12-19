@@ -22,6 +22,8 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 
+import java.util.Arrays;
+
 /**
  * Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly
  * high. If you know what dimension of noise you need, and it's covered by {@link Noise} (meaning it's 2D, 3D, 4D, 5D,
@@ -56,7 +58,7 @@ import com.github.tommyettinger.digital.TrigTools;
  * PhantomNoise (or Perlin noise like {@link Noise#PERLIN}, somewhat surprisingly), with the "curse" affecting the
  * density of information in higher-dimensional space.
  */
-public class PhantomNoise {
+public class PhantomNoise implements INoise {
     /**
      * Effectively, this contains the seed for the noise.
      */
@@ -71,7 +73,7 @@ public class PhantomNoise {
      */
     public final float sharpness;
     protected float inverse;
-    protected final float[] working, points;
+    protected final float[] working, points, input;
     protected final float[][] vertices;
     protected final int[] floors, hashFloors;
 
@@ -86,6 +88,7 @@ public class PhantomNoise {
     public PhantomNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
         this.sharpness = sharpness;
+        input = new float[dim];
         working = new float[dim+1];
         points = new float[dim+1];
         vertices = new float[dim+1][dim];
@@ -270,6 +273,91 @@ public class PhantomNoise {
             }
             System.out.println(';');
         }
+    }
+
+    @Override
+    public int getMinDimension() {
+        return dim;
+    }
+
+    @Override
+    public int getMaxDimension() {
+        return dim;
+    }
+
+    @Override
+    public boolean canUseSeed() {
+        return false;
+    }
+
+    @Override
+    public long getSeed() {
+        return hasher.seed;
+    }
+
+    @Override
+    public float getNoise(float x, float y) {
+        if(dim > 2) Arrays.fill(input, 2, input.length, 0f);
+        if(dim >= 2) {
+            input[0] = x;
+            input[1] = y;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 2D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z) {
+        if(dim > 3) Arrays.fill(input, 3, input.length, 0f);
+        if(dim >= 3) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 3D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w) {
+        if(dim > 4) Arrays.fill(input, 4, input.length, 0f);
+        if(dim >= 4) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 4D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        if(dim > 5) Arrays.fill(input, 5, input.length, 0f);
+        if(dim >= 5) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 5D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        if(dim > 6) Arrays.fill(input, 6, input.length, 0f);
+        if(dim >= 6) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            input[5] = v;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
 
     public static final PhantomNoise instance2D = new PhantomNoise(QuasiRandomTools.goldenLong[2][0], 2);
