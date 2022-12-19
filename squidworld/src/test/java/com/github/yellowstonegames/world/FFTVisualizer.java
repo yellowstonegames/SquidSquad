@@ -39,12 +39,13 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
+    private final ValueNoise[] vals = new ValueNoise[7];
     private final CyclicNoise cyclic = new CyclicNoise();
     private final SorbetNoise sorbet = new SorbetNoise();
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 18;
-    private int mode = 17;
+    private static final int MODE_LIMIT = 19;
+    private int mode = 18;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -135,6 +136,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(noise.getSeed() + ~i * 55555555L, 2 + i);
             taffies[i] = new TaffyNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
             flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
+            vals[i] = new ValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -178,6 +180,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(s);
                             flans[i].setSeed(s);
+                            vals[i].setSeed(s);
                             sorbet.seed = s;
                             cyclic.setSeed(s);
                         }
@@ -192,6 +195,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(s);
                             flans[i].setSeed(s);
+                            vals[i].setSeed(s);
                             sorbet.seed = s;
                             cyclic.setSeed(s);
                         }
@@ -1365,6 +1369,86 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
 
+            }
+        } else if(mode == 18) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = (c+x)*fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = (c+y)*fr;
+                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        xx = x * 0.5f * fr;
+                        points[dim][0] = cc + xx;
+                        points[dim][1] = xx - cc;
+                        for (int y = 0; y < height; y++) {
+                            yy = y * 0.5f * fr;
+                            points[dim][2] = yy - cc;
+                            points[dim][3] = cc - yy;
+                            points[dim][4] = xx + yy;
+                            points[dim][5] = yy - xx;
+                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
             }
         }
 
