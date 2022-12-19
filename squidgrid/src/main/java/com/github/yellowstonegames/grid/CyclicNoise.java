@@ -27,11 +27,12 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 /**
  * A periodic type of continuous noise that looks good when frequencies are low, and rather bad when frequencies are
  * high. From <a href="https://www.shadertoy.com/view/3tcyD7">this ShaderToy by jeyko</a>, based on
- * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>.
+ * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. It's hard to tell, but it seems like
+ * this might be rather fast, especially when more octaves or a higher dimension are needed.
  */
 @Beta
-public class CyclicNoise {
-    /*
+public class CyclicNoise implements INoise {
+    /* // Mostly the original GLSL code, with few changes, for comparison and archival purposes.
 // From https://www.shadertoy.com/view/3tcyD7 by jeyko, based on https://www.shadertoy.com/view/wl3czN by nimitz
 float cyclicNoise(vec3 p){
     float noise = 0.;
@@ -84,7 +85,7 @@ float cyclicNoise(vec3 p){
     protected int octaves;
     protected float total = 1f, start = 1f;
     protected final float lacunarity = 1.6f;
-    protected final float gain = 0.6f;
+    protected final float gain = 0.625f;
     protected long seed;
     protected transient float[][][] rotations = new float[5][4][];
     protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
@@ -117,15 +118,22 @@ float cyclicNoise(vec3 p){
         total = 1f / total;
     }
 
+    @Override
+    public boolean canUseSeed() {
+        return false;
+    }
+
+    @Override
     public long getSeed() {
         return seed;
     }
 
     /**
-     * Sets the seed, and in doing so creates 5 new rotation matrices for different dimensions to use. Note that this
+     * Sets the seed, and in doing so creates 20 new rotation matrices for different dimensions to use. Note that this
      * may be considerably more expensive than a typical setter, because of how much it allocates.
      * @param seed any long
      */
+    @Override
     public void setSeed(long seed) {
         this.seed = seed;
         for (int i = 0; i < 4; i++) {
@@ -150,6 +158,7 @@ float cyclicNoise(vec3 p){
         return new CyclicNoise(seed, octaves);
     }
 
+    @Override
     public float getNoise(float x, float y) {
         float noise = 0f;
 
@@ -189,6 +198,7 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
+    @Override
     public float getNoise(float x, float y, float z) {
         float noise = 0f;
 
@@ -238,6 +248,7 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w) {
         float noise = 0f;
 
@@ -289,6 +300,7 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w, float u) {
         float noise = 0f;
 
@@ -346,6 +358,7 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         float noise = 0f;
 
@@ -438,4 +451,16 @@ float cyclicNoise(vec3 p){
         result = 31 * result + (int) (seed ^ (seed >>> 32));
         return result;
     }
+
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    @Override
+    public int getMaxDimension() {
+        return 6;
+    }
+
+
 }
