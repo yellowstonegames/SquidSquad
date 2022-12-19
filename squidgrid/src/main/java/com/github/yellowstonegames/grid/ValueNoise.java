@@ -23,8 +23,6 @@ import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * Arbitrary-dimensional continuous noise that always looks very blocky.
- * <br>
- * This does not work currently.
  */
 @Beta
 public class ValueNoise implements INoise {
@@ -95,13 +93,13 @@ public class ValueNoise implements INoise {
         return noise(args.length, args);
     }
 
-    protected float noise(int dim, float... working) {
+    protected float noise(int dim, float... args) {
         final long[] gold = QuasiRandomTools.goldenLong[dim];
         final long hashSeed = gold[dim] * seed;
         long hash;
         for (int i = 0; i < dim; i++) {
-            floors[i] = working[i] >= 0f ? (long) working[i] : (long) working[i] - 1L;
-            working[i] -= floors[i];
+            floors[i] = args[i] >= 0f ? (long) args[i] : (long) args[i] - 1L;
+            working[i] = args[i] - floors[i];
             working[i] *= working[i] * (3f - 2f * working[i]);
         }
         float sum = 0f, temp;
@@ -115,7 +113,8 @@ public class ValueNoise implements INoise {
                 temp *= bit + (1|-bit) * working[j];
                 hash += (floors[j] - bit) * gold[j];
             }
-            sum += temp * (hash >> 48 ^ hash >>> 32);
+            hash ^= hash * hash | 1L;
+            sum += temp * (hash >> 32);
         }
         return (sum * 0x1p-31f);
     }
@@ -145,7 +144,8 @@ public class ValueNoise implements INoise {
             temp *= bit + (1|-bit) * y;
             hash += (floors[1] - bit) * gold[1];
 
-            sum += temp * (hash >>> 48 ^ hash >>> 32);
+            hash ^= hash * hash | 1L;
+            sum += temp * (hash >> 32);
         }
         return (sum * 0x1p-31f);
     }
