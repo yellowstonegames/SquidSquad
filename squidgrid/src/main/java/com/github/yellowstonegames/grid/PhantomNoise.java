@@ -73,9 +73,9 @@ public class PhantomNoise implements INoise {
      */
     public final float sharpness;
     protected float inverse;
-    protected final float[] working, points, input;
-    protected final float[][] vertices;
-    protected final int[] floors, hashFloors;
+    protected transient final float[] working, points, input;
+    protected transient final float[][] vertices;
+    protected transient final int[] floors, hashFloors;
 
     public PhantomNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -277,7 +277,7 @@ public class PhantomNoise implements INoise {
 
     @Override
     public int getMinDimension() {
-        return dim;
+        return 2;
     }
 
     @Override

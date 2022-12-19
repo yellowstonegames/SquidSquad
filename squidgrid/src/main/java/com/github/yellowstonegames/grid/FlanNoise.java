@@ -22,6 +22,8 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
+import java.util.Arrays;
+
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
  * for higher-dimensional output (4 and up, in particular). FlanNoise doesn't slow down as rapidly as other forms of
@@ -29,7 +31,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * dimensions, but it can be set higher independently of fractal octaves.
  */
 @Beta
-public class FlanNoise {
+public class FlanNoise implements INoise {
 //    /**
 //     * Generates a balanced wobbly line by shrinking sections of a sine wave, with an equal amount shrunken from the
 //     * negative side as the positive side. Fills the generated data into result, which must have length 16384 (0x4000).
@@ -74,7 +76,7 @@ public class FlanNoise {
     public final int detail;
     protected transient final int vc;
     protected transient float inverse;
-    protected transient final float[] points;
+    protected transient final float[] points, input;
     protected transient final float[][] vertices;
 
     public FlanNoise() {
@@ -94,6 +96,7 @@ public class FlanNoise {
         this.detail = detail;
         vc = dim * detail;
         points = new float[vc];
+        input = new float[dim];
         vertices = new float[vc][dim];
         this.seed = seed;
         for (int v = 0; v < vc; v++) {
@@ -179,6 +182,7 @@ public class FlanNoise {
     }
     //LineWobble.generateSplineLookupTable((int)(seed ^ seed >>> 32), 0x4000, 64, 1, 1f, 0.5f);
 
+    @Override
     public void setSeed(long seed) {
         this.seed = seed;
     }
@@ -254,4 +258,91 @@ public class FlanNoise {
         result = 31 * result + detail;
         return result;
     }
+
+
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    @Override
+    public int getMaxDimension() {
+        return dim;
+    }
+
+    @Override
+    public boolean canUseSeed() {
+        return false;
+    }
+
+    @Override
+    public long getSeed() {
+        return seed;
+    }
+
+    @Override
+    public float getNoise(float x, float y) {
+        if(dim > 2) Arrays.fill(input, 2, input.length, 0f);
+        if(dim >= 2) {
+            input[0] = x;
+            input[1] = y;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 2D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z) {
+        if(dim > 3) Arrays.fill(input, 3, input.length, 0f);
+        if(dim >= 3) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 3D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w) {
+        if(dim > 4) Arrays.fill(input, 4, input.length, 0f);
+        if(dim >= 4) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 4D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        if(dim > 5) Arrays.fill(input, 5, input.length, 0f);
+        if(dim >= 5) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 5D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        if(dim > 6) Arrays.fill(input, 6, input.length, 0f);
+        if(dim >= 6) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            input[5] = v;
+            return getNoise(input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
+    }
+
 }
