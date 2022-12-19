@@ -137,7 +137,7 @@ public class PhantomNoise implements INoise {
 
     }
 
-    protected float valueNoise() {
+    protected float valueNoise(int dim) {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
             floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
@@ -154,7 +154,7 @@ public class PhantomNoise implements INoise {
                 temp *= bit + (1|-bit) * working[j];
                 hashFloors[j] = floors[j] - bit;
             }
-            sum += temp * hasher.hash(hashFloors);
+            sum += temp * hasher.hash(hashFloors, dim + 1);
         }
         return (sum * 0x1p-32f + 0.5f);
     }
@@ -179,12 +179,15 @@ public class PhantomNoise implements INoise {
             temp *= bit + (1|-bit) * working[1];
             hashFloors[1] = floors[1] - bit;
             
-            sum += temp * hasher.hash(hashFloors);
+            sum += temp * hasher.hash(hashFloors, 3);
         }
         return (sum * 0x1p-32f + 0.5f);
     }
     
     public float getNoise(float... args) {
+        return noise(args.length, args);
+    }
+    public float noise(int used, float... args) {
         for (int v = 0; v <= dim; v++) {
             points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
@@ -201,7 +204,7 @@ public class PhantomNoise implements INoise {
                 working[j] = points[d];
             }
             working[0] += warp;
-            warp = valueNoise();
+            warp = valueNoise(used);
             result += warp;
             working[dim] += -0.423310825130748f; // e - pi
         }
@@ -297,57 +300,50 @@ public class PhantomNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        if(dim > 2) Arrays.fill(input, 2, input.length, 0f);
         if(dim >= 2) {
-            input[0] = x;
-            input[1] = y;
-            return getNoise(input);
+            return getNoise2D(x, y);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 2D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        if(dim > 3) Arrays.fill(input, 3, input.length, 0f);
         if(dim >= 3) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
-            return getNoise(input);
+            return noise(3, input);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 3D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        if(dim > 4) Arrays.fill(input, 4, input.length, 0f);
         if(dim >= 4) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
             input[3] = w;
-            return getNoise(input);
+            return noise(4, input);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 4D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        if(dim > 5) Arrays.fill(input, 5, input.length, 0f);
         if(dim >= 5) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
             input[3] = w;
             input[4] = u;
-            return getNoise(input);
+            return noise(5, input);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 5D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        if(dim > 6) Arrays.fill(input, 6, input.length, 0f);
         if(dim >= 6) {
             input[0] = x;
             input[1] = y;
@@ -355,7 +351,7 @@ public class PhantomNoise implements INoise {
             input[3] = w;
             input[4] = u;
             input[5] = v;
-            return getNoise(input);
+            return noise(6, input);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
