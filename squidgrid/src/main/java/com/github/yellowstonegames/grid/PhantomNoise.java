@@ -22,8 +22,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 
-import java.util.Arrays;
-
 /**
  * Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly
  * high. If you know what dimension of noise you need, and it's covered by {@link Noise} (meaning it's 2D, 3D, 4D, 5D,

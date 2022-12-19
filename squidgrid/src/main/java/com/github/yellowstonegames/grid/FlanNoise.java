@@ -344,5 +344,4 @@ public class FlanNoise implements INoise {
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
-
 }

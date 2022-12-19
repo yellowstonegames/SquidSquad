@@ -39,13 +39,13 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * arbitrarily-high dimensions.
  */
 @Beta
-public class TaffyNoise {
+public class TaffyNoise implements INoise {
     public long seed;
     public final int dim;
     public final float sharpness;
     protected float inverse, lesserInverse;
-    protected final float[] working, points;
-    protected final float[][] vertices;
+    protected transient final float[] working, points, input;
+    protected transient final float[][] vertices;
 
     public TaffyNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -60,6 +60,7 @@ public class TaffyNoise {
         this.sharpness = 1f / sharpness;
         working = new float[dim+1];
         points = new float[dim+1];
+        input = new float[dim];
         vertices = new float[dim+1][dim];
         inverse = 1f / (dim + 1f);
         lesserInverse = 1f / (dim + 4f);
@@ -124,6 +125,10 @@ public class TaffyNoise {
     }
 
     protected float valueNoise() {
+        return valueNoise(dim);
+    }
+
+    protected float valueNoise(int dim) {
         int s = (int)(seed ^ seed >>> 32 ^ BitConversion.floatToRawIntBits(working[dim]));
         float sum = 0f;
         for (int i = 0, j = 1; i < dim; i++, j++) {
@@ -162,6 +167,10 @@ public class TaffyNoise {
     }
 
     public float getNoise(float... args) {
+        return noise(args.length, args);
+    }
+
+    public float noise(int dim, float... args) {
         for (int v = 0; v <= dim; v++) {
             points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
@@ -178,7 +187,7 @@ public class TaffyNoise {
                 working[j] = points[d];
             }
             working[0] += warp;
-            warp = valueNoise();
+            warp = valueNoise(dim);
             result += warp;
             working[dim] += -0.423310825130748f; // e - pi
         }
@@ -218,5 +227,78 @@ public class TaffyNoise {
         if (seed != that.seed) return false;
         if (dim != that.dim) return false;
         return Float.compare(that.sharpness, sharpness) == 0;
+    }
+
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    @Override
+    public int getMaxDimension() {
+        return dim;
+    }
+
+    @Override
+    public boolean canUseSeed() {
+        return false;
+    }
+
+    @Override
+    public float getNoise(float x, float y) {
+        if(dim >= 2) {
+            return getNoise2D(x, y);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 2D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z) {
+        if(dim >= 3) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            return noise(3, input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 3D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w) {
+        if(dim >= 4) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            return noise(4, input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 4D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        if(dim >= 5) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            return noise(5, input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 5D noise.");
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        if(dim >= 6) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            input[5] = v;
+            return noise(6, input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
 }
