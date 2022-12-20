@@ -65,11 +65,27 @@ public class NoiseWrapper implements INoise {
         this.mode = mode;
     }
 
+    public int getFractalType() {
+        return mode;
+    }
+
+    public void setFractalType(int mode) {
+        this.mode = mode;
+    }
+
     public int getOctaves() {
         return octaves;
     }
 
     public void setOctaves(int octaves) {
+        this.octaves = Math.max(1, octaves);
+    }
+
+    public int getFractalOctaves() {
+        return octaves;
+    }
+
+    public void setFractalOctaves(int octaves) {
         this.octaves = Math.max(1, octaves);
     }
 

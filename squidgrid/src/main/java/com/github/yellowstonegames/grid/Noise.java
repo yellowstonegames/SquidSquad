@@ -86,7 +86,7 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
  *     _FRACTAL versions) need higher frequencies to look comparable to other noise types.</li>
  * </ul>
  */
-public class Noise {
+public class Noise implements INoise {
     /**
      * Simple, very fast but very low-quality noise that forms a grid of squares, with their values blending at shared
      * edges somewhat.
@@ -665,7 +665,7 @@ public class Noise {
     /**
      * @return Returns the seed used by this object
      */
-    public int getSeed() {
+    public long getSeed() {
         return seed;
     }
 
@@ -1018,6 +1018,27 @@ public class Noise {
      */
     public IPointHash getPointHash() {
         return pointHash;
+    }
+
+
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    @Override
+    public int getMaxDimension() {
+        return 6;
+    }
+
+    @Override
+    public boolean canUseSeed() {
+        return true;
+    }
+
+    @Override
+    public void setSeed(long seed) {
+        this.seed = (int)(seed ^ seed >>> 32);
     }
 
     public double getNoise(double x, double y) {
