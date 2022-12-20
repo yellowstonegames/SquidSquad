@@ -121,16 +121,18 @@ public final class RotationTools {
      */
     private static float[] rotateStep(long seed, float[] small, int targetSize) {
         final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        // might be able to get rid of these allocations by holding onto some space...
         float[] gauss = new float[targetSize], house = new float[squareSize], large = new float[squareSize],
                 out = new float[squareSize];
         for (int i = 0; i < smallSize; i++) {
+            // copy the small matrix into the bottom right corner of the large matrix
             System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
         }
         large[0] = 1;
-        // use Juniper's Ziggurat algorithm directly, which requires randomizing the seed
         seed = randomize(seed + squareSize);
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {
+            // use Juniper's Ziggurat algorithm to generate Gaussians directly, which requires randomizing the seed
             gauss[i] = t = (float) Ziggurat.normal(randomize((seed += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
@@ -142,7 +144,7 @@ public final class RotationTools {
             sum += t * t;
             t = 0f;
         }
-        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as c
+        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
             gauss[i] = (t - gauss[i]) * sum;
