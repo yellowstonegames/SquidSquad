@@ -18,8 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
 
-import static com.github.yellowstonegames.grid.Noise.rotateX2D;
-import static com.github.yellowstonegames.grid.Noise.rotateY2D;
+import static com.github.yellowstonegames.grid.Noise.*;
 
 public class NoiseWrapper implements INoise {
     public INoise wrapped;
@@ -109,7 +108,12 @@ public class NoiseWrapper implements INoise {
 
     @Override
     public float getNoise(float x, float y, float z) {
-        return wrapped.getNoise(x, y, z);
+        switch (mode) {
+            default: return fbm(x, y, z, seed);
+            case 1: return billow(x, y, z, seed);
+            case 2: return ridged(x, y, z, seed);
+            case 3: return warp(x, y, z, seed);
+        }
     }
 
     @Override
@@ -152,7 +156,13 @@ public class NoiseWrapper implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
-        return wrapped.getNoiseWithSeed(x, y, z, seed);
+        switch (mode) {
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
+        }
     }
 
     @Override
@@ -169,7 +179,6 @@ public class NoiseWrapper implements INoise {
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         return wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed);
     }
-
 
     protected float fbm(float x, float y, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, seed);
@@ -246,6 +255,96 @@ public class NoiseWrapper implements INoise {
 
             amp *= 0.5f;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, seed + i)) * amp;
+        }
+
+        return sum * ((1 << octaves) - 1);
+    }
+
+    protected float fbm(float x, float y, float z, long seed) {
+        float sum = wrapped.getNoiseWithSeed(x, y, z, seed);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+
+            amp *= 0.5f;
+            sum += wrapped.getNoiseWithSeed(x, y, z, seed + i) * amp;
+        }
+
+        return sum / ((1 << octaves) - 1);
+    }
+    protected float billow(float x, float y, float z, long seed) {
+        float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+
+            amp *= 0.5f;
+            sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i)) * 2 - 1) * amp;
+        }
+
+        return sum * ((1 << octaves) - 1);
+    }
+
+    protected float ridged(float x, float y, float z, long seed) {
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    protected float warp(float x, float y, float z, long seed) {
+        float latest = wrapped.getNoiseWithSeed(x, y, z, seed);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
+
+            amp *= 0.5f;
+            sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, seed + i)) * amp;
         }
 
         return sum * ((1 << octaves) - 1);
