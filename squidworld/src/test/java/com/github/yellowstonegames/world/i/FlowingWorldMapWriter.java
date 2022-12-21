@@ -19,10 +19,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.CyclicNoise;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.SimplexNoise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -232,16 +229,17 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
 //        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
-        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 33709ms and 45305ms
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
 
-        fn.setInterpolation(Noise.HERMITE);
+//        fn.setInterpolation(Noise.HERMITE);
 
-        cycling = new Noise3DCycling(new SimplexNoise(seed));
+//        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
+//        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
+        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
 
 //        terrainBasicNoise.setMutation(1.618f);
         
