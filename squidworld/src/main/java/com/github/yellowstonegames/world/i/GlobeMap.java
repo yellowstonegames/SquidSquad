@@ -38,7 +38,8 @@ import java.util.Arrays;
  */
 public class GlobeMap extends WorldMapGenerator {
 
-    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.6f, heatFreq = 3.7f, moistureFreq = 3.9f, otherFreq = 4.8f;
+    protected static final float terrainFreq = 1.7f, terrainLayeredFreq = 1.3f, heatFreq = 2.4f, moistureFreq = 2.8f, otherFreq = 4.6f;
+//    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.6f, heatFreq = 3.7f, moistureFreq = 3.9f, otherFreq = 4.8f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
@@ -158,13 +159,13 @@ public class GlobeMap extends WorldMapGenerator {
         terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 10));
         terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 1L, terrainLayeredFreq,
-                Noise.FBM, 1);
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
         heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 11L, heatFreq,
-                Noise.FBM, 1);
-        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 11L, moistureFreq,
-                Noise.FBM, 1);
-        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
-                Noise.DOMAIN_WARP, (int) (0.5f + octaveMultiplier * 6));
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 111L, moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 1111L, otherFreq,
+                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 4));
     }
 
     /**
@@ -204,13 +205,13 @@ public class GlobeMap extends WorldMapGenerator {
         this.terrainRidged = new NoiseWrapper(terrainRidgedNoise, terrainRidgedNoise.getSeed(), terrainFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 10));
         this.terrainBasic = new NoiseWrapper(terrainBasicNoise, terrainBasicNoise.getSeed() ^ 1L, terrainLayeredFreq,
-                Noise.FBM, 1);
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
         this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed() ^ 11L, heatFreq,
-                Noise.FBM, 1);
-        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed() ^ 11L, moistureFreq,
-                Noise.FBM, 1);
-        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed(), otherFreq,
-                Noise.DOMAIN_WARP, (int) (0.5f + octaveMultiplier * 6));
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed() ^ 111L, moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed() ^ 1111L, otherFreq,
+                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 4));
     }
 
     /**

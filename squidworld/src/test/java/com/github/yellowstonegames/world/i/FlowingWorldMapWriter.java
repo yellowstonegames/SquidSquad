@@ -22,6 +22,7 @@ import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.SimplexNoise;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -231,7 +232,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
 //        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
-        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between
+        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 33709ms and 45305ms
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
@@ -240,7 +241,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         fn.setInterpolation(Noise.HERMITE);
 
-        cycling = new Noise3DCycling(new CyclicNoise(seed, 3));
+        cycling = new Noise3DCycling(new SimplexNoise(seed));
 
 //        terrainBasicNoise.setMutation(1.618f);
         
