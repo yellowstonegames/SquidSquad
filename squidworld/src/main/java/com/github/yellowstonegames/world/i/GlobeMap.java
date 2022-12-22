@@ -38,7 +38,8 @@ import java.util.Arrays;
  */
 public class GlobeMap extends WorldMapGenerator {
 
-    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.8f, heatFreq = 2.2f, moistureFreq = 2.3f, otherFreq = 4.6f;
+    protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
+//    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.8f, heatFreq = 2.2f, moistureFreq = 2.3f, otherFreq = 4.6f;
 //    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.6f, heatFreq = 3.7f, moistureFreq = 3.9f, otherFreq = 4.8f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,

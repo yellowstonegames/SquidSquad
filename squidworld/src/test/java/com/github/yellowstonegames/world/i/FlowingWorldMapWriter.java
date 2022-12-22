@@ -191,8 +191,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingPear/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
-        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingFoam/";
+        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
@@ -240,7 +240,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-        cycling = new Noise3DCycling(new Noise((int) seed, 0.5f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 //        terrainBasicNoise.setMutation(1.618f);
         

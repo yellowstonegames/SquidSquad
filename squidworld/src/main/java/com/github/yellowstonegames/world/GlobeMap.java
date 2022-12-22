@@ -33,8 +33,10 @@ import java.util.Arrays;
  * viewed from afar</a>
  */
 public class GlobeMap extends WorldMapGenerator {
-
-    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.6f, heatFreq = 3.7f, moistureFreq = 3.9f, otherFreq = 4.8f;
+// From i/ :
+    protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
+// Original values:
+//    protected static final float terrainFreq = 2.2f, terrainLayeredFreq = 1.6f, heatFreq = 3.7f, moistureFreq = 3.9f, otherFreq = 4.8f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
@@ -154,28 +156,28 @@ public class GlobeMap extends WorldMapGenerator {
         terrainRidged = new Noise(noiseGenerator);
         terrainRidged.setFrequency(terrainRidged.getFrequency() * terrainFreq);
         terrainRidged.setNoiseType(terrainRidged.getNoiseType() | 1);
-        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
+        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
         terrainRidged.setFractalType(Noise.RIDGED_MULTI);
 
         terrainBasic = new Noise(noiseGenerator);
         terrainBasic.setFrequency(terrainBasic.getFrequency() * terrainLayeredFreq);
         terrainBasic.setNoiseType(terrainBasic.getNoiseType() | 1);
-        terrainBasic.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 8));
+        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
 
         heat = new Noise(noiseGenerator);
         heat.setFrequency(heat.getFrequency() * heatFreq);
         heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 3));
+        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
 
         moisture = new Noise(noiseGenerator);
         moisture.setFrequency(moisture.getFrequency() * moistureFreq);
         moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves(1);//(int) (0.5f + octaveMultiplier * 4));
+        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
 
         otherRidged = new Noise(noiseGenerator);
         otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
         otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
+        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 5));
         otherRidged.setFractalType(Noise.RIDGED_MULTI);
     }
 
@@ -216,28 +218,29 @@ public class GlobeMap extends WorldMapGenerator {
         terrainRidged = terrainRidgedNoise;
         terrainRidged.setFrequency(terrainRidged.getFrequency() * terrainFreq);
         terrainRidged.setNoiseType(terrainRidged.getNoiseType() | 1);
-        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
+        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
         terrainRidged.setFractalType(Noise.RIDGED_MULTI);
 
         terrainBasic = terrainBasicNoise;
         terrainBasic.setFrequency(terrainBasic.getFrequency() * terrainLayeredFreq);
         terrainBasic.setNoiseType(terrainBasic.getNoiseType() | 1);
-        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
+        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+        terrainBasic.setFractalType(Noise.FBM);
 
         heat = heatNoise;
         heat.setFrequency(heat.getFrequency() * heatFreq);
         heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
+        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
 
         moisture = moistureNoise;
         moisture.setFrequency(moisture.getFrequency() * moistureFreq);
         moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
+        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
 
         otherRidged = otherRidgedNoise;
         otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
         otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
+        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 5));
         otherRidged.setFractalType(Noise.RIDGED_MULTI);
     }
 

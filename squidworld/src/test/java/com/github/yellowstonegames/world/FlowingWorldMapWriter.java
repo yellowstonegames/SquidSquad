@@ -112,14 +112,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 2f, Noise.FLAN_FRACTAL, 1);    // between 50908ms and 52215ms
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
 //        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
-        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
+//        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
+        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 1);   //
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
 
-        fn.setInterpolation(Noise.HERMITE);
+//        fn.setInterpolation(Noise.HERMITE);
 
         Noise terrainRidgedNoise = new Noise(fn) {
             @Override
