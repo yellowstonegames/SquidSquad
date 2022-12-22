@@ -14,7 +14,9 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -177,6 +179,29 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             return noise.getNoiseWithSeed(x, y, z, w, u, v, seed);
         }
     }
+    /**
+     * A generalization on bias and gain functions that can represent both; this version is branch-less and
+     * is adapted so its inputs and outputs are on the -1 to 1 range, instead of 0 to 1.
+     * This is based on <a href="https://arxiv.org/abs/2010.09714">this micro-paper</a> by Jon Barron, which
+     * generalizes the earlier bias and gain rational functions by Schlick. The second and final page of the
+     * paper has useful graphs of what the s (shape) and t (turning point) parameters do; shape should be 0
+     * or greater, while turning must be between 0 and 1, inclusive. This effectively combines two different
+     * curving functions so that they continue into each other when x equals turning. The shape parameter will
+     * cause this to imitate "smoothstep-like" splines when greater than 1 (where the values ease into their
+     * starting and ending levels), or to be the inverse when less than 1 (where values start like square
+     * root does, taking off very quickly, but also end like square does, landing abruptly at the ending
+     * level). You should only give x values between -1 and 1, inclusive.
+     *
+     * @param x       a noise value or progress through the spline, from -1 to 1, inclusive
+     * @param shape   must be greater than or equal to 0; values greater than 1 are "normal interpolations"
+     * @param turning a value between -1.0 and 1.0, inclusive, where the shape changes; often 0.0
+     * @return a float between -1 and 1, inclusive
+     */
+    public static float noiseSpline(float x, final float shape, float turning) {
+        final float d = (turning += 0.5f) - (x = x * 0.5f + 0.5f);
+        final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
+        return (((turning * n - f) * (x + f)) / (Float.MIN_NORMAL - f + (x + shape * d) * n) - f - 0.5f) * 2f;
+    }
 
     public Noise3DCycling cycling;
     @Override
@@ -186,13 +211,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/Foam/";
 //        path = "out/worldsAnimated/" + date + "/Classic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingPear/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingFoam/";
-        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexCentral/";
+        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexOuter/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
@@ -240,7 +267,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+        cycling = new Noise3DCycling(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
+                f -> noiseSpline(f, 1.2f, 0f))); // between ms and ms
+//                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
+//        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 //        terrainBasicNoise.setMutation(1.618f);
         
@@ -360,7 +390,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world.seedB = world.rng.getStateB();
 //        wmv.generate(0.9f, wmv.world.heatModifier);
         wmv.generate(
-                (float) (1.0 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
+                (float) (0.98 + formCurvedDouble(world.seedA * 0x123456789ABCDEFL ^ world.seedB) * 0.1875),
                 (float) (1.0625 + Hasher.randomize1Double(world.seedB * 0x123456789ABL ^ world.seedA) * 0.375));
         ttg = System.currentTimeMillis() - startTime;
     }
