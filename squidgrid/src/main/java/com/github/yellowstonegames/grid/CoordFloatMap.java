@@ -26,7 +26,9 @@ import java.util.Collection;
 /**
  * A variant on jdkgdxds' {@link ObjectFloatMap} class that only uses Coord keys, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
- * the maximum values for Coord x and y.
+ * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
+ * should use a normal {@link ObjectFloatMap} instead, since some optimizations here require Coord keys to be in the
+ * pool.
  * <br>
  * You can create a CoordFloatMap with {@link #fromArray2D(float[][], float, float)} if you have a 2D float array and
  * want to get the positions within some range.
@@ -88,8 +90,7 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
      * {@link #CoordFloatMap(Coord[], float[])}, which takes all keys and then all values.
-     * This needs all keys to have the same type, because it gets a generic type from the
-     * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
+     * All values must be some type of boxed Number, such as {@link Integer}
      * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
      * have Coord as their type or values that aren't {@code Number}s have that entry skipped.
      *

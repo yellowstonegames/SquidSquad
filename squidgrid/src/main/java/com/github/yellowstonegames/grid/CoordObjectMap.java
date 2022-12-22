@@ -26,7 +26,9 @@ import java.util.Map;
 /**
  * A variant on jdkgdxds' {@link ObjectObjectMap} class that only uses Coord keys, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
- * the maximum values for Coord x and y.
+ * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
+ * should use a normal {@link ObjectObjectMap} instead, since some optimizations here require Coord keys to be in the
+ * pool.
  */
 @NotNullDefault
 public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
@@ -70,7 +72,7 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
 
     /**
      * Constructs a single-entry map given one key and one value.
-     * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+     * This is mostly useful as an optimization for {@link #with(Coord, Object, Object...)}
      * when there's no "rest" of the keys or values.
      * @param key0 the first and only key
      * @param value0 the first and only value
@@ -87,12 +89,12 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
      * {@link #CoordObjectMap(Coord[], Object[])}, which takes all keys and then all values.
-     * This needs all keys to have the same type and all values to have the same type, because
-     * it gets those types from the first key parameter and first value parameter. Any keys that don't
-     * have K as their type or values that don't have V as their type have that entry skipped.
+     * This needs all keys to be Coord and all values to have the same type, because it gets
+     * the value type from the first value parameter. Any keys that don't
+     * have Coord as their type or values that don't have V as their type have that entry skipped.
      * @param key0 the first key; will be used to determine the type of all keys
      * @param value0 the first value; will be used to determine the type of all values
-     * @param rest an array or varargs of alternating K, V, K, V... elements
+     * @param rest an array or varargs of alternating Coord, V, Coord, V... elements
      * @param <V> the type of values, inferred from value0
      * @return a new map containing the given keys and values
      */

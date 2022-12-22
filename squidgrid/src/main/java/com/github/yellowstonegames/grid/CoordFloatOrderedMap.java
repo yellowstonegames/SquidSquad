@@ -28,7 +28,9 @@ import java.util.Collection;
 /**
  * A variant on jdkgdxds' {@link ObjectFloatOrderedMap} class that only uses Coord keys, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
- * the maximum values for Coord x and y.
+ * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
+ * should use a normal {@link ObjectFloatOrderedMap} instead, since some optimizations here require Coord keys to be in
+ * the pool.
  * <br>
  * A potential use for this class is to sort Coord positions by float values, such as the {@code float[][]} maps
  * produced by {@link FOV}. Since those have a logical start point for iteration wherever a light source is, and a light
@@ -101,8 +103,7 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
      * {@link #CoordFloatOrderedMap(Coord[], float[])}, which takes all keys and then all values.
-     * This needs all keys to have the same type, because it gets a generic type from the
-     * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
+     * All values must be some type of boxed Number, such as {@link Integer}
      * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
      * have Coord as their type or values that aren't {@code Number}s have that entry skipped.
      *

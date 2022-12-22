@@ -239,7 +239,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
-        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
+//        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
+        cycling = new Noise3DCycling(new Noise((int) seed, 0.5f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 //        terrainBasicNoise.setMutation(1.618f);
         
@@ -381,8 +382,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                cycling.s = TrigTools.sinTurns(angle) * 0.3125f;
-                cycling.c = TrigTools.cosTurns(angle) * 0.3125f;
+                cycling.s = TrigTools.sinTurns(angle) * 0.4f;// 0.3125f;
+                cycling.c = TrigTools.cosTurns(angle) * 0.4f;// 0.3125f;
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);

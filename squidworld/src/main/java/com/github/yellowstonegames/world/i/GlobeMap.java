@@ -165,7 +165,7 @@ public class GlobeMap extends WorldMapGenerator {
         moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 111L, moistureFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
         otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 1111L, otherFreq,
-                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 4));
+                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 5));
     }
 
     /**
@@ -209,9 +209,9 @@ public class GlobeMap extends WorldMapGenerator {
         this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed() ^ 11L, heatFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
         this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed() ^ 111L, moistureFreq,
-                Noise.FBM, (int) (0.5f + octaveMultiplier * 2f));
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
         this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed() ^ 1111L, otherFreq,
-                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 4));
+                Noise.BILLOW, (int) (0.5f + octaveMultiplier * 5f));
     }
 
     /**

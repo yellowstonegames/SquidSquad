@@ -25,7 +25,9 @@ import java.util.Collection;
 /**
  * A variant on jdkgdxds' {@link ObjectOrderedSet} class that only holds Coord items, and can do so more efficiently.
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
- * the maximum values for Coord x and y.
+ * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
+ * should use a normal {@link ObjectOrderedSet} instead, since some optimizations here require Coord items to be in the
+ * pool.
  */
 @NotNullDefault
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
