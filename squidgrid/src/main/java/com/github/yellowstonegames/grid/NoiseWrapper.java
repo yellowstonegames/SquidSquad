@@ -289,7 +289,7 @@ public class NoiseWrapper implements INoise {
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     protected float ridged(float x, float y, long seed) {
@@ -330,7 +330,7 @@ public class NoiseWrapper implements INoise {
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, seed + i)) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     // 3D
@@ -375,7 +375,7 @@ public class NoiseWrapper implements INoise {
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     protected float ridged(float x, float y, float z, long seed) {
@@ -422,7 +422,7 @@ public class NoiseWrapper implements INoise {
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, seed + i)) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     // 4D
@@ -471,7 +471,7 @@ public class NoiseWrapper implements INoise {
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     protected float ridged(float x, float y, float z, float w, long seed) {
@@ -523,7 +523,7 @@ public class NoiseWrapper implements INoise {
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, seed + i)) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     // 5D
@@ -576,7 +576,7 @@ public class NoiseWrapper implements INoise {
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     protected float ridged(float x, float y, float z, float w, float u, long seed) {
@@ -633,7 +633,7 @@ public class NoiseWrapper implements INoise {
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, seed + i)) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     // 5D
@@ -690,7 +690,7 @@ public class NoiseWrapper implements INoise {
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
     protected float ridged(float x, float y, float z, float w, float u, float v, long seed) {
@@ -752,7 +752,7 @@ public class NoiseWrapper implements INoise {
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, v + f, seed + i)) * amp;
         }
 
-        return sum * ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
 
 }
