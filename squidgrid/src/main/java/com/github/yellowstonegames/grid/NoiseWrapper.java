@@ -270,7 +270,7 @@ public class NoiseWrapper implements INoise {
             sum += wrapped.getNoiseWithSeed(x, y, seed + i) * amp;
         }
 
-        return sum / ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
     protected float billow(float x, float y, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, seed)) * 2 - 1;
@@ -354,7 +354,7 @@ public class NoiseWrapper implements INoise {
             sum += wrapped.getNoiseWithSeed(x, y, z, seed + i) * amp;
         }
 
-        return sum / ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
     protected float billow(float x, float y, float z, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)) * 2 - 1;
@@ -448,7 +448,7 @@ public class NoiseWrapper implements INoise {
             sum += wrapped.getNoiseWithSeed(x, y, z, w, seed + i) * amp;
         }
 
-        return sum / ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
     protected float billow(float x, float y, float z, float w, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed)) * 2 - 1;
@@ -551,7 +551,7 @@ public class NoiseWrapper implements INoise {
             sum += wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i) * amp;
         }
 
-        return sum / ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
     protected float billow(float x, float y, float z, float w, float u, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed)) * 2 - 1;
@@ -663,7 +663,7 @@ public class NoiseWrapper implements INoise {
             sum += wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i) * amp;
         }
 
-        return sum / ((1 << octaves) - 1);
+        return sum / (amp * ((1 << octaves) - 1));
     }
     protected float billow(float x, float y, float z, float w, float u, float v, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed)) * 2 - 1;
