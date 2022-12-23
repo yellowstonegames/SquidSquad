@@ -293,11 +293,11 @@ public class NoiseWrapper implements INoise {
     }
 
     protected float ridged(float x, float y, long seed) {
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, seed + i));
-            correction += (exp *= 0.5f);
             sum += spike * exp;
+            correction += (exp *= 0.5f);
             if(fractalSpiral){
                 final float x2 = rotateX2D(x, y);
                 final float y2 = rotateY2D(x, y);
@@ -306,7 +306,7 @@ public class NoiseWrapper implements INoise {
             x *= 2f;
             y *= 2f;
         }
-        return sum * 2f / correction - 1f;
+        return sum / correction - 1f;
     }
 
     protected float warp(float x, float y, long seed) {
@@ -379,11 +379,11 @@ public class NoiseWrapper implements INoise {
     }
 
     protected float ridged(float x, float y, float z, long seed) {
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i));
-            correction += (exp *= 0.5f);
             sum += spike * exp;
+            correction += (exp *= 0.5f);
             if(fractalSpiral){
                 final float x2 = rotateX3D(x, y, z);
                 final float y2 = rotateY3D(x, y, z);
@@ -394,7 +394,7 @@ public class NoiseWrapper implements INoise {
             y *= 2f;
             z *= 2f;
         }
-        return sum * 2f / correction - 1f;
+        return sum / correction - 1f;
     }
 
     protected float warp(float x, float y, float z, long seed) {
@@ -475,11 +475,11 @@ public class NoiseWrapper implements INoise {
     }
 
     protected float ridged(float x, float y, float z, float w, long seed) {
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed + i));
-            correction += (exp *= 0.5f);
             sum += spike * exp;
+            correction += (exp *= 0.5f);
             if(fractalSpiral){
                 final float x2 = rotateX4D(x, y, z, w);
                 final float y2 = rotateY4D(x, y, z, w);
@@ -492,7 +492,7 @@ public class NoiseWrapper implements INoise {
             z *= 2f;
             w *= 2f;
         }
-        return sum * 2f / correction - 1f;
+        return sum / correction - 1f;
     }
 
     protected float warp(float x, float y, float z, float w, long seed) {
@@ -580,11 +580,11 @@ public class NoiseWrapper implements INoise {
     }
 
     protected float ridged(float x, float y, float z, float w, float u, long seed) {
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i));
-            correction += (exp *= 0.5f);
             sum += spike * exp;
+            correction += (exp *= 0.5f);
             if(fractalSpiral){
                 final float x2 = rotateX5D(x, y, z, w, u);
                 final float y2 = rotateY5D(x, y, z, w, u);
@@ -599,7 +599,7 @@ public class NoiseWrapper implements INoise {
             w *= 2f;
             u *= 2f;
         }
-        return sum * 2f / correction - 1f;
+        return sum / correction - 1f;
     }
 
     protected float warp(float x, float y, float z, float w, float u, long seed) {
@@ -694,11 +694,11 @@ public class NoiseWrapper implements INoise {
     }
 
     protected float ridged(float x, float y, float z, float w, float u, float v, long seed) {
-        float sum = 0f, exp = 2f, correction = 0f, spike;
+        float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i));
-            correction += (exp *= 0.5f);
             sum += spike * exp;
+            correction += (exp *= 0.5f);
             if(fractalSpiral){
                 final float x2 = rotateX6D(x, y, z, w, u, v);
                 final float y2 = rotateY6D(x, y, z, w, u, v);
@@ -715,7 +715,7 @@ public class NoiseWrapper implements INoise {
             u *= 2f;
             v *= 2f;
         }
-        return sum * 2f / correction - 1f;
+        return sum / correction - 1f;
     }
 
     protected float warp(float x, float y, float z, float w, float u, float v, long seed) {
