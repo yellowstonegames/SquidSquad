@@ -217,9 +217,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingFoam/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
+        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexCentral/";
-        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexOuter/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexOuter/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
@@ -267,10 +267,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-        cycling = new Noise3DCycling(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
-                f -> noiseSpline(f, 1.2f, 0f))); // between ms and ms
+//        cycling = new Noise3DCycling(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
+//                f -> noiseSpline(f, 1.2f, 0f))); // between ms and ms
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
-//        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 //        terrainBasicNoise.setMutation(1.618f);
         
@@ -412,8 +412,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                cycling.s = TrigTools.sinTurns(angle) * 0.4f;// 0.3125f;
-                cycling.c = TrigTools.cosTurns(angle) * 0.4f;// 0.3125f;
+                cycling.s = TrigTools.sinTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
+                cycling.c = TrigTools.cosTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
