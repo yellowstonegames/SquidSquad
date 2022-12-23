@@ -29,10 +29,10 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseComparison extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 2);
-    private Noise bare = new Noise(noise);
-    private NoiseWrapper wrap = new NoiseWrapper(bare, 1, 1, Noise.FBM, 1);
-    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
+    private Noise bare = new Noise(1, 1, Noise.CUBIC_FRACTAL, 1);
+    private NoiseWrapper wrap = new NoiseWrapper(bare, 1, 0.0625f, Noise.FBM, 1);
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
     private ImmediateModeRenderer20 renderer;
@@ -68,12 +68,14 @@ public class NoiseComparison extends ApplicationAdapter {
         view = new ScreenViewport();
 
         bare.setFractalOctaves(1);
+        noise.setFractalOctaves(octaves);
+        wrap.setFractalOctaves(octaves);
 
         noise.setPointHash(pointHashes[hashIndex]);
         bare.setPointHash(pointHashes[hashIndex]);
 
-        noise.setFractalType(Noise.RIDGED_MULTI);
-        wrap.setFractalType(Noise.RIDGED_MULTI);
+        noise.setFractalType(Noise.DOMAIN_WARP);
+        wrap.setFractalType(Noise.DOMAIN_WARP);
 
         noise.setInterpolation(Noise.QUINTIC);
         bare.setInterpolation(Noise.QUINTIC);
@@ -117,7 +119,7 @@ public class NoiseComparison extends ApplicationAdapter {
 //                        noise.setFrequency(NumberTools.sin(freq += 0.125f) * 0.25f + 0.25f + 0x1p-7f);
 //                        noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
                         noise.setFrequency(freq *= (UIUtils.shift() ? 1.25f : 0.8f));
-                        bare.setFrequency(noise.getFrequency());
+                        wrap.setFrequency(noise.getFrequency());
                         break;
                     case R: // fRactal type
                         noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
@@ -130,19 +132,14 @@ public class NoiseComparison extends ApplicationAdapter {
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
                         wrap.setFractalOctaves(noise.getFractalOctaves());
-                        System.out.printf("noise.getFractalOctaves(): %d\n", noise.getFractalOctaves());
-                        System.out.printf("wrap.getFractalOctaves(): %d\n", wrap.getFractalOctaves());
                         break;
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         wrap.setFractalOctaves(noise.getFractalOctaves());
-                        System.out.printf("noise.getFractalOctaves(): %d\n", noise.getFractalOctaves());
-                        System.out.printf("wrap.getFractalOctaves(): %d\n", wrap.getFractalOctaves());
                         break;
                     case COMMA: // sharpness
                         noise.setSharpness((float)Math.pow(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.5f, 3f));
                         bare.setSharpness(noise.getSharpness());
-                        System.out.println(noise.getSharpness());
                         break;
                     case K: // sKip
                         ctr += 1000;
