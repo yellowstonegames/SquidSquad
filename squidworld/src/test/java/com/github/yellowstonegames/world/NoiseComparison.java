@@ -2,6 +2,7 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -19,6 +20,7 @@ import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
@@ -31,7 +33,16 @@ public class NoiseComparison extends ApplicationAdapter {
 
     private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
     private Noise bare = new Noise(1, 1, Noise.CUBIC_FRACTAL, 1);
-    private NoiseWrapper wrap = new NoiseWrapper(bare, 1, 0.0625f, Noise.FBM, 1);
+    private final float[] args = {
+            1f,   // 0, spline shape
+            0f,   // 1, spline turning
+//            2f,   // 2, maelstrom exponent
+//            4f/3f,// 3, maelstrom mul
+//            1.25f,// 4, maelstrom sub
+    };
+    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
+    private NoiseAdjustment adj = new NoiseAdjustment(bare, fff);
+    private NoiseWrapper wrap = new NoiseWrapper(adj, 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 1f;
@@ -116,8 +127,6 @@ public class NoiseComparison extends ApplicationAdapter {
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
                     case F: // frequency
-//                        noise.setFrequency(NumberTools.sin(freq += 0.125f) * 0.25f + 0.25f + 0x1p-7f);
-//                        noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
                         noise.setFrequency(freq *= (UIUtils.shift() ? 1.25f : 0.8f));
                         wrap.setFrequency(noise.getFrequency());
                         break;
@@ -141,6 +150,24 @@ public class NoiseComparison extends ApplicationAdapter {
                         noise.setSharpness((float)Math.pow(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.5f, 3f));
                         bare.setSharpness(noise.getSharpness());
                         break;
+                    case NUM_0:
+                    case NUMPAD_0:
+                        args[0] = Math.max(args[0] + (UIUtils.shift() ? 0.01f : -0.01f), 0.001f);
+                        break;
+                    case NUM_1:
+                    case NUMPAD_1:
+                        args[1] = Math.min(Math.max(args[1] + (UIUtils.shift() ? 0.01f : -0.01f), -1f), 1f);
+                        break;
+//                    case NUM_2:
+//                    case NUMPAD_2:
+//                    {
+//                        args[2] = Math.max(args[2] + (UIUtils.shift() ? 0.01f : -0.01f), 0.001f);
+//                        float lo = 1f / args[2];
+//                        float halfDiff = 0.5f * (args[2] - lo);
+//                        args[4] = halfDiff - args[2];
+//                        args[3] = 1f / halfDiff;
+//                    }
+//                        break;
                     case K: // sKip
                         ctr += 1000;
                         break;
