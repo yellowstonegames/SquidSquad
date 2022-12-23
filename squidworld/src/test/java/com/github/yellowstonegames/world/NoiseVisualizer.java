@@ -238,7 +238,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         break;
                     case F: // frequency
 //                        noise.setFrequency(NumberTools.sin(freq += 0.125f) * 0.25f + 0.25f + 0x1p-7f);
-                        noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
+//                        noise.setFrequency((float) Math.exp((System.currentTimeMillis() >>> 9 & 7) - 5));
+                        noise.setFrequency(freq *= (UIUtils.shift() ? 1.25f : 0.8f));
                         break;
                     case R: // fRactal type
                         noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
