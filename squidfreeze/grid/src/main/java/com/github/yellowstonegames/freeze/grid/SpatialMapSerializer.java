@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.github.yellowstonegames.grid.SpatialMap;
 
@@ -24,14 +25,24 @@ import com.github.yellowstonegames.grid.SpatialMap;
  * Serializer for {@link SpatialMap}; needs the type of the SpatialMap's values registered.
  */
 @SuppressWarnings("rawtypes")
-public class SpatialMapSerializer extends CollectionSerializer<SpatialMap> {
+public class SpatialMapSerializer extends CollectionSerializer<SpatialMap<?>> {
     public SpatialMapSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public SpatialMap copy(Kryo kryo, SpatialMap original) {
-        return new SpatialMap(original);
+    protected SpatialMap<?> create(Kryo kryo, Input input, Class<? extends SpatialMap<?>> type, int size) {
+        return new SpatialMap<>(size);
+    }
+
+    @Override
+    protected SpatialMap<?> createCopy(Kryo kryo, SpatialMap<?> original) {
+        return new SpatialMap<>(original.size());
+    }
+
+    @Override
+    public SpatialMap<?> copy(Kryo kryo, SpatialMap<?> original) {
+        return new SpatialMap<>(original);
     }
 }

@@ -35,15 +35,16 @@ public class CyclicNoiseSerializer extends Serializer<CyclicNoise> {
     public void write(final Kryo kryo, final Output output, final CyclicNoise data) {
         output.writeLong(data.getSeed());
         output.writeInt(data.getOctaves(), true);
+        output.writeFloat(data.getFrequency());
     }
 
     @Override
     public CyclicNoise read(final Kryo kryo, final Input input, final Class<? extends CyclicNoise> dataClass) {
-        return new CyclicNoise(input.readLong(), input.readInt(true));
+        return new CyclicNoise(input.readLong(), input.readInt(true), input.readFloat());
     }
 
     @Override
     public CyclicNoise copy(Kryo kryo, CyclicNoise original) {
-        return new CyclicNoise(original.getSeed(), original.getOctaves());
+        return new CyclicNoise(original.getSeed(), original.getOctaves(), original.getFrequency());
     }
 }
