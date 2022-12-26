@@ -14,18 +14,16 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
-import com.github.yellowstonegames.world.i.GlobeMap;
 import com.github.yellowstonegames.world.WorldMapGenerator;
 import com.github.yellowstonegames.world.WorldMapView;
 
@@ -40,8 +38,10 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 240;
-    private static final int LIMIT = 3;
+    private static final int FRAMES = 80;
+    private static final int LIMIT = 1;
+//    private static final int FRAMES = 240;
+//    private static final int LIMIT = 3;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -66,12 +66,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private PixmapIO.PNG pngWriter;
 
     private String date, path;
-    private float mutationA, mutationB;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
 
     public static class Noise3DCycling implements INoise {
         public INoise noise;
         public float c, s;
+        public long seedCache = -1234567890L;
         public Noise3DCycling(){
             noise = new Noise();
         }
@@ -161,6 +161,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         @Override
         public float getNoiseWithSeed(float x, float y, float z, long seed) {
+            if(seed != seedCache)
+            {
+                System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, s, c, seed);
+                seed = seedCache;
+            }
             return noise.getNoiseWithSeed(x, y, z, s, c, seed);
         }
 
@@ -404,7 +409,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                     }
                 }
 //                pngWriter.write(Gdx.files.local(path + name + "_frames/frame_" + i + ".png"), pm[i]);
-                if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
+                if(FRAMES >= 10)
+                    if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
 
 //                if (i % 18 == 17)
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");

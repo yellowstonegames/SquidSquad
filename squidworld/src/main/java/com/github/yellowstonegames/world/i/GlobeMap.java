@@ -159,13 +159,13 @@ public class GlobeMap extends WorldMapGenerator {
 
         terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8));
-        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 1L, terrainLayeredFreq,
+        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
-        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 11L, heatFreq,
+        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
-        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 111L, moistureFreq,
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
-        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed() ^ 1111L, otherFreq,
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5));
     }
 
@@ -205,13 +205,13 @@ public class GlobeMap extends WorldMapGenerator {
 
         this.terrainRidged = new NoiseWrapper(terrainRidgedNoise, terrainRidgedNoise.getSeed(), terrainFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8));
-        this.terrainBasic = new NoiseWrapper(terrainBasicNoise, terrainBasicNoise.getSeed() ^ 1L, terrainLayeredFreq,
+        this.terrainBasic = new NoiseWrapper(terrainBasicNoise, terrainBasicNoise.getSeed(), terrainLayeredFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
-        this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed() ^ 11L, heatFreq,
+        this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed(), heatFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
-        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed() ^ 111L, moistureFreq,
+        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed(), moistureFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
-        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed() ^ 1111L, otherFreq,
+        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed(), otherFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5f));
     }
 

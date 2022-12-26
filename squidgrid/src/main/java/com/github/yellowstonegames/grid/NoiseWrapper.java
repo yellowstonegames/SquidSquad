@@ -134,53 +134,59 @@ public class NoiseWrapper implements INoise {
         return wrapped.canUseSeed();
     }
 
+
     @Override
     public float getNoise(float x, float y) {
         switch (mode) {
-            default: return fbm(x, y, seed);
-            case 1: return billow(x, y, seed);
-            case 2: return ridged(x, y, seed);
-            case 3: return warp(x, y, seed);
+            default:
+            case 0: return fbm(x * frequency, y * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, seed);
         }
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
         switch (mode) {
-            default: return fbm(x, y, z, seed);
-            case 1: return billow(x, y, z, seed);
-            case 2: return ridged(x, y, z, seed);
-            case 3: return warp(x, y, z, seed);
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
         }
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
         switch (mode) {
-            default: return fbm(x, y, z, w, seed);
-            case 1: return billow(x, y, z, w, seed);
-            case 2: return ridged(x, y, z, w, seed);
-            case 3: return warp(x, y, z, w, seed);
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, seed);
         }
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
         switch (mode) {
-            default: return fbm(x, y, z, w, u, seed);
-            case 1: return billow(x, y, z, w, u, seed);
-            case 2: return ridged(x, y, z, w, u, seed);
-            case 3: return warp(x, y, z, w, u, seed);
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
         }
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         switch (mode) {
-            default: return fbm(x, y, z, w, u, v, seed);
-            case 1: return billow(x, y, z, w, u, v, seed);
-            case 2: return ridged(x, y, z, w, u, v, seed);
-            case 3: return warp(x, y, z, w, u, v, seed);
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
         }
     }
 
