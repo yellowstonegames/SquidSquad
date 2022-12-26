@@ -83,7 +83,7 @@ float cyclicNoise(vec3 p){
      */
 
     protected int octaves;
-    protected float total = 1f, start = 1f, frequency = 1.5f;
+    protected float total = 1f, start = 1f, frequency = 2f;
     protected final float lacunarity = 1.6f;
     protected final float gain = 0.625f;
     protected long seed;
@@ -158,12 +158,6 @@ float cyclicNoise(vec3 p){
             rotations[2][i] = RotationTools.randomRotation4D(seed, rotations[1][i]);
             rotations[3][i] = RotationTools.randomRotation5D(seed, rotations[2][i]);
             rotations[4][i] = RotationTools.randomRotation6D(seed, rotations[3][i]);
-            for (int j = 0; j < 5; j++) {
-                final float[] r = rotations[j][i];
-                for (int k = 0; k < r.length; k++) {
-                    r[k] *= frequency;
-                }
-            }
         }
     }
 
@@ -205,6 +199,9 @@ float cyclicNoise(vec3 p){
         float warpTrk = 1.2f;
         final float warpTrkGain = 1.5f;
 
+        x *= frequency;
+        y *= frequency;
+
         float xx, yy;
         for (int i = 0; i < octaves; i++) {
             xx = TrigTools.sin((x-2) * warpTrk) * warp;
@@ -245,15 +242,15 @@ float cyclicNoise(vec3 p){
         float warpTrk = 1.2f;
         final float warpTrkGain = 1.5f;
 
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+
         float xx, yy, zz;
         for (int i = 0; i < octaves; i++) {
             xx = TrigTools.sin((x-2) * warpTrk) * warp;
             yy = TrigTools.sin((y-2) * warpTrk) * warp;
             zz = TrigTools.sin((z-2) * warpTrk) * warp;
-
-            x += zz;
-            y += xx;
-            z += yy;
 
             inputs[1][0] = x + zz;
             inputs[1][1] = y + xx;
@@ -294,6 +291,11 @@ float cyclicNoise(vec3 p){
         final float warp = 0.3f;
         float warpTrk = 1.2f;
         final float warpTrkGain = 1.5f;
+
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
 
         float xx, yy, zz, ww;
         for (int i = 0; i < octaves; i++) {
@@ -346,6 +348,12 @@ float cyclicNoise(vec3 p){
         final float warp = 0.3f;
         float warpTrk = 1.2f;
         final float warpTrkGain = 1.5f;
+
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
 
         float xx, yy, zz, ww, uu;
         for (int i = 0; i < octaves; i++) {
@@ -405,6 +413,13 @@ float cyclicNoise(vec3 p){
         float warpTrk = 1.2f;
         final float warpTrkGain = 1.5f;
 
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+        v *= frequency;
+
         float xx, yy, zz, ww, uu, vv;
         for (int i = 0; i < octaves; i++) {
             xx = TrigTools.sin((x-2) * warpTrk) * warp;
@@ -414,12 +429,6 @@ float cyclicNoise(vec3 p){
             uu = TrigTools.sin((u-2) * warpTrk) * warp;
             vv = TrigTools.sin((v-2) * warpTrk) * warp;
 
-            x += vv;
-            y += xx;
-            z += yy;
-            w += zz;
-            u += ww;
-            v += uu;
             inputs[4][0] = x + vv;
             inputs[4][1] = y + xx;
             inputs[4][2] = z + yy;
