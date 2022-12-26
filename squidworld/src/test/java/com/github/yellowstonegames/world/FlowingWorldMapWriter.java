@@ -35,10 +35,10 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 80;
-    private static final int LIMIT = 1;
-//    private static final int FRAMES = 240;
-//    private static final int LIMIT = 3;
+//    private static final int FRAMES = 4;
+//    private static final int LIMIT = 1;
+    private static final int FRAMES = 240;
+    private static final int LIMIT = 3;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -125,7 +125,6 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        fn.setInterpolation(Noise.HERMITE);
 
         Noise terrainRidgedNoise = new Noise(fn) {
-            private long seedCache = -1234567890L;
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -133,16 +132,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                if(seed != seedCache)
-                {
-                    System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, mutationA, mutationB, seed);
-                    seed = seedCache;
-                }
-
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         }, terrainBasicNoise = new Noise(fn) {
-            private long seedCache = -1234567890L;
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -150,16 +142,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                if(seed != seedCache)
-                {
-                    System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, mutationA, mutationB, seed);
-                    seed = seedCache;
-                }
-
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         }, heatNoise = new Noise(fn) {
-            private long seedCache = -1234567890L;
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -167,16 +152,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                if(seed != seedCache)
-                {
-                    System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, mutationA, mutationB, seed);
-                    seed = seedCache;
-                }
-
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         }, moistureNoise = new Noise(fn) {
-            private long seedCache = -1234567890L;
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -184,16 +162,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                if(seed != seedCache)
-                {
-                    System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, mutationA, mutationB, seed);
-                    seed = seedCache;
-                }
-
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         }, otherRidgedNoise = new Noise(fn) {
-            private long seedCache = -1234567890L;
             @Override
             public float getNoise(float x, float y, float z) {
                 return getNoise(x, y, z, mutationA, mutationB);
@@ -201,12 +172,6 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                if(seed != seedCache)
-                {
-                    System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, mutationA, mutationB, seed);
-                    seed = seedCache;
-                }
-
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
         };

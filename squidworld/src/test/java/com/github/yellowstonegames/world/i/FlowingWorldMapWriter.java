@@ -19,6 +19,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
+import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
@@ -34,14 +35,23 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 
 /**
  * Writes one or more spinning globes to the out/ folder.
+ *
+ * This has different behavior from the old FlowingWorldMapWriter, before the switch to using an INoise that gets passed
+ * to NoiseWrapper s in the world map code. For reference purposes, the reason old globes look more "agitated" is
+ * because they affected the two "change coordinates" in dimensions w and u like the spatial coordinates in x, y, and z;
+ * that is, when spatial coordinates had high detail, they also changed very aggressively with small-scale shifts. Here,
+ * w and u are not treated like x, y, and z, which took some effort to finally notice. Because the NoiseWrapper handles
+ * the change to its coordinates, and NoiseWrapper only knows about x, y, and z, the w and u values that our custom
+ * INoise introduces aren't visible to the NoiseWrapper. This ends up looking a lot better, so I'm not complaining, but
+ * it is something to be aware of.
  */
 public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 
-    private static final int FRAMES = 80;
-    private static final int LIMIT = 1;
-//    private static final int FRAMES = 240;
-//    private static final int LIMIT = 3;
+//    private static final int FRAMES = 4;
+//    private static final int LIMIT = 1;
+    private static final int FRAMES = 240;
+    private static final int LIMIT = 3;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -68,15 +78,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private String date, path;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
 
-    public static class Noise3DCycling implements INoise {
+    public static class Noise3DFrom5D implements INoise {
         public INoise noise;
         public float c, s;
-        public long seedCache = -1234567890L;
-        public Noise3DCycling(){
+//        public long seedCache = -1234567890L;
+        public Noise3DFrom5D(){
             noise = new Noise();
         }
 
-        public Noise3DCycling(INoise iNoise) {
+        public Noise3DFrom5D(INoise iNoise) {
             this.noise = iNoise;
         }
 
@@ -161,11 +171,6 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         @Override
         public float getNoiseWithSeed(float x, float y, float z, long seed) {
-            if(seed != seedCache)
-            {
-                System.out.printf("x %f, y %f, z %f, s %f, c %f, seed %016X\n", x, y, z, s, c, seed);
-                seed = seedCache;
-            }
             return noise.getNoiseWithSeed(x, y, z, s, c, seed);
         }
 
@@ -185,7 +190,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
     }
 
-    public Noise3DCycling cycling;
+    public Noise3DFrom5D iNoise;
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
@@ -199,7 +204,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingFoam/";
-        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
+        path = "out/worldsAnimated/i/" + date + "/FlowingCyclic/";
+//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexCentral/";
 //        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexOuter/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
@@ -246,13 +252,14 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.HERMITE);
 
-//        cycling = new Noise3DCycling(new SimplexNoise(seed)); // between 33709ms and 45305ms
-//        cycling = new Noise3DCycling(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
-//        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-//        cycling = new Noise3DCycling(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
+//        cycling = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
+        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3)); // between ms and ms
+//        cycling = new Noise3DFrom5D(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
+//        cycling = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
+//        cycling = new Noise3DFrom5D(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
 //                f -> INoise.noiseSpline(f, 1.2f, 0f))); // between ms and ms
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
-        cycling = new Noise3DCycling(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+//        cycling = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 //
 //        terrainBasicNoise.setMutation(1.618f);
         
@@ -320,7 +327,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new GlobeMap(seed, width, height, terrainBasicNoise, 1f);
-        world = new GlobeMap(seed, width, height, cycling, 0.75f);
+        world = new GlobeMap(seed, width, height, iNoise, 0.75f);
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
@@ -394,8 +401,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                cycling.s = TrigTools.sinTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
-                cycling.c = TrigTools.cosTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
+                iNoise.s = TrigTools.sinTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
+                iNoise.c = TrigTools.cosTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
