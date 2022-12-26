@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 
@@ -24,15 +25,19 @@ import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
  * Serializer for {@link CoordObjectOrderedMap}; needs {@link CoordSerializer} registered for Coord, and a serializer
  * registered for whatever Object type the Map has for its values.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOrderedMap> {
+public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOrderedMap<?>> {
     public CoordObjectOrderedMapSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public CoordObjectOrderedMap copy(Kryo kryo, CoordObjectOrderedMap original) {
-        return new CoordObjectOrderedMap(original);
+    protected CoordObjectOrderedMap<?> create(Kryo kryo, Input input, Class<? extends CoordObjectOrderedMap<?>> type, int size) {
+        return new CoordObjectOrderedMap<>(size);
+    }
+
+    @Override
+    protected CoordObjectOrderedMap<?> createCopy(Kryo kryo, CoordObjectOrderedMap<?> original) {
+        return new CoordObjectOrderedMap<>(original.size());
     }
 }

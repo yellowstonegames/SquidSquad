@@ -30,7 +30,7 @@ import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 public class CoordFloatOrderedMapSerializer extends Serializer<CoordFloatOrderedMap> {
 
     public CoordFloatOrderedMapSerializer() {
-        setAcceptsNull(true);
+        setAcceptsNull(false);
     }
 
     @Override
@@ -53,13 +53,8 @@ public class CoordFloatOrderedMapSerializer extends Serializer<CoordFloatOrdered
         return data;
     }
 
-    @SuppressWarnings({"rawtypes"})
     @Override
     public CoordFloatOrderedMap copy(Kryo kryo, CoordFloatOrderedMap original) {
-        CoordFloatOrderedMap map = new CoordFloatOrderedMap(original.size(), original.getLoadFactor());
-        for (CoordFloatOrderedMap.Entry ent : original) {
-            map.put((Coord) ent.key, ent.value);
-        }
-        return map;
+        return new CoordFloatOrderedMap(original);
     }
 }

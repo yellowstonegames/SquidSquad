@@ -17,7 +17,9 @@
 package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.yellowstonegames.grid.CoordSet;
 import com.github.yellowstonegames.grid.CoordSet;
 
 /**
@@ -30,7 +32,12 @@ public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
     }
 
     @Override
-    public CoordSet copy(Kryo kryo, CoordSet original) {
-        return new CoordSet(original);
+    protected CoordSet create(Kryo kryo, Input input, Class<? extends CoordSet> type, int size) {
+        return new CoordSet(size);
+    }
+
+    @Override
+    protected CoordSet createCopy(Kryo kryo, CoordSet original) {
+        return new CoordSet(original.size());
     }
 }

@@ -30,7 +30,7 @@ import com.github.yellowstonegames.grid.CoordFloatMap;
 public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
 
     public CoordFloatMapSerializer() {
-        setAcceptsNull(true);
+        setAcceptsNull(false);
     }
 
     @Override
@@ -56,10 +56,6 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
     @SuppressWarnings({"rawtypes"})
     @Override
     public CoordFloatMap copy(Kryo kryo, CoordFloatMap original) {
-        CoordFloatMap map = new CoordFloatMap(original.size(), original.getLoadFactor());
-        for (CoordFloatMap.Entry ent : original) {
-            map.put((Coord) ent.key, ent.value);
-        }
-        return map;
+        return new CoordFloatMap(original);
     }
 }
