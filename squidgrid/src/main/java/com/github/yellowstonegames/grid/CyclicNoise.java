@@ -83,7 +83,7 @@ float cyclicNoise(vec3 p){
      */
 
     protected int octaves;
-    protected float total = 1f, start = 1f;
+    protected float total = 1f, start = 1f, frequency = 1.5f;
     protected final float lacunarity = 1.6f;
     protected final float gain = 0.625f;
     protected long seed;
@@ -97,9 +97,15 @@ float cyclicNoise(vec3 p){
         setOctaves(octaves);
         setSeed(0xBEEF1E57CA77L);
     }
+
     public CyclicNoise(long seed, int octaves) {
         setOctaves(octaves);
         setSeed(seed);
+    }
+
+    public CyclicNoise(long seed, int octaves, float frequency) {
+        setOctaves(octaves);
+        setSeed(seed, frequency);
     }
 
     public int getOctaves() {
@@ -135,17 +141,47 @@ float cyclicNoise(vec3 p){
      */
     @Override
     public void setSeed(long seed) {
+        setSeed(seed, frequency);
+    }
+    /**
+     * Sets the seed, and in doing so creates 20 new rotation matrices for different dimensions to use. Note that this
+     * may be considerably more expensive than a typical setter, because of how much it allocates.
+     * @param seed any long
+     * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
+     */
+    public void setSeed(long seed, float frequency) {
         this.seed = seed;
+        this.frequency = frequency;
         for (int i = 0; i < 4; i++) {
             rotations[0][i] = RotationTools.randomRotation2D(seed);
             rotations[1][i] = RotationTools.randomRotation3D(seed, rotations[0][i]);
             rotations[2][i] = RotationTools.randomRotation4D(seed, rotations[1][i]);
             rotations[3][i] = RotationTools.randomRotation5D(seed, rotations[2][i]);
             rotations[4][i] = RotationTools.randomRotation6D(seed, rotations[3][i]);
+            for (int j = 0; j < 5; j++) {
+                final float[] r = rotations[j][i];
+                for (int k = 0; k < r.length; k++) {
+                    r[k] *= frequency;
+                }
+            }
         }
     }
+
+    public float getFrequency() {
+        return frequency;
+    }
+
+    /**
+     * Sets the frequency; note that this works by setting the seed with {@link #setSeed(long, float)}, so if you want
+     * to change both seed and frequency, use that method instead.
+     * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
+     */
+    public void setFrequency(float frequency) {
+        setSeed(seed, frequency);
+    }
+
     public String serializeToString() {
-        return "`" + seed + '~' + octaves + '`';
+        return "`" + seed + '~' + octaves + '~' + frequency + '`';
     }
 
     public static CyclicNoise deserializeFromString(String data) {
@@ -153,9 +189,10 @@ float cyclicNoise(vec3 p){
             return null;
         int pos;
         long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
-        int octaves = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+        int octaves = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float freq  = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
 
-        return new CyclicNoise(seed, octaves);
+        return new CyclicNoise(seed, octaves, freq);
     }
 
     @Override
@@ -431,7 +468,7 @@ float cyclicNoise(vec3 p){
 
     @Override
     public String toString() {
-        return "CyclicNoise with seed: " + seed + ", octaves:" + octaves;
+        return "CyclicNoise with seed: " + seed + ", octaves:" + octaves + ", frequency: " + frequency;
     }
 
     @Override
@@ -442,12 +479,14 @@ float cyclicNoise(vec3 p){
         CyclicNoise that = (CyclicNoise) o;
 
         if (octaves != that.octaves) return false;
+        if (Float.compare(that.frequency, frequency) != 0) return false;
         return seed == that.seed;
     }
 
     @Override
     public int hashCode() {
         int result = octaves;
+        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
         result = 31 * result + (int) (seed ^ (seed >>> 32));
         return result;
     }

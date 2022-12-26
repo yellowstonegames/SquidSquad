@@ -253,7 +253,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        fn.setInterpolation(Noise.HERMITE);
 
 //        cycling = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
-        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3)); // between ms and ms
+        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 1.5f)); // between ms and ms
 //        cycling = new Noise3DFrom5D(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        cycling = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
 //        cycling = new Noise3DFrom5D(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
