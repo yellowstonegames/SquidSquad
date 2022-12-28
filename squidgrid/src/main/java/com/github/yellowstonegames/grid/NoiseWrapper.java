@@ -147,6 +147,45 @@ public class NoiseWrapper implements INoise {
         return wrapped.canUseSeed();
     }
 
+    @Override
+    public String toString() {
+        return "NoiseWrapper{" +
+                "wrapped=" + wrapped +
+                ", seed=" + seed +
+                ", frequency=" + frequency +
+                ", mode=" + mode +
+                ", octaves=" + octaves +
+                ", fractalSpiral=" + fractalSpiral +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NoiseWrapper that = (NoiseWrapper) o;
+
+        if (seed != that.seed) return false;
+        if (Float.compare(that.frequency, frequency) != 0) return false;
+        if (mode != that.mode) return false;
+        if (octaves != that.octaves) return false;
+        if (fractalSpiral != that.fractalSpiral) return false;
+        return wrapped.equals(that.wrapped);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = wrapped.hashCode();
+        result = 31 * result + (int) (seed ^ (seed >>> 32));
+        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
+        result = 31 * result + mode;
+        result = 31 * result + octaves;
+        result = 31 * result + (fractalSpiral ? 1 : 0);
+        return result;
+    }
+
+    // The big part.
 
     @Override
     public float getNoise(float x, float y) {

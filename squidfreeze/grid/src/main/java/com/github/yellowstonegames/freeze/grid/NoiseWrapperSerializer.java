@@ -37,8 +37,8 @@ public class NoiseWrapperSerializer extends Serializer<NoiseWrapper> {
         kryo.writeClassAndObject(output, data.getWrapped());
         output.writeLong(data.getSeed());
         output.writeFloat(data.getFrequency());
-        output.writeInt(data.getFractalOctaves(), true);
         output.writeInt(data.getFractalType(), true);
+        output.writeInt(data.getFractalOctaves(), true);
         output.writeBoolean(data.isFractalSpiral());
     }
 
