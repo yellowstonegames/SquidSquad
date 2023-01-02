@@ -66,6 +66,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoord(@NonNull Json json) {
+        json.addClassTag("Coor", Coord.class);
         json.setSerializer(Coord.class, new Json.Serializer<Coord>() {
             @Override
             public void write(Json json, Coord object, Class knownType) {
@@ -91,6 +92,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerRegion(@NonNull Json json) {
+        json.addClassTag("Regi", Region.class);
         json.setSerializer(Region.class, new Json.Serializer<Region>() {
             @Override
             public void write(Json json, Region object, Class knownType) {
@@ -112,6 +114,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordObjectMap(@NonNull Json json) {
+        json.addClassTag("CoM", CoordObjectMap.class);
         registerCoord(json);
         json.setSerializer(CoordObjectMap.class, new Json.Serializer<CoordObjectMap>() {
             @Override
@@ -153,6 +156,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordObjectOrderedMap(@NonNull Json json) {
+        json.addClassTag("CoOM", CoordObjectOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordObjectOrderedMap.class, new Json.Serializer<CoordObjectOrderedMap>() {
             @Override
@@ -194,6 +198,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordFloatMap(@NonNull Json json) {
+        json.addClassTag("CfM", CoordFloatMap.class);
         registerCoord(json);
         json.setSerializer(CoordFloatMap.class, new Json.Serializer<CoordFloatMap>() {
             @Override
@@ -242,6 +247,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordFloatOrderedMap(@NonNull Json json) {
+        json.addClassTag("CfOM", CoordFloatOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordFloatOrderedMap.class, new Json.Serializer<CoordFloatOrderedMap>() {
             @Override
@@ -290,6 +296,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordSet(@NonNull Json json) {
+        json.addClassTag("CS", CoordSet.class);
         registerCoord(json);
         json.setSerializer(CoordSet.class, new Json.Serializer<CoordSet>() {
             @Override
@@ -320,6 +327,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCoordOrderedSet(@NonNull Json json) {
+        json.addClassTag("COS", CoordOrderedSet.class);
         registerCoord(json);
         json.setSerializer(CoordOrderedSet.class, new Json.Serializer<CoordOrderedSet>() {
             @Override
@@ -351,6 +359,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerRadiance(@NonNull Json json) {
+        json.addClassTag("Radi", Radiance.class);
         json.setSerializer(Radiance.class, new Json.Serializer<Radiance>() {
             @Override
             public void write(Json json, Radiance object, Class knownType) {
@@ -375,6 +384,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerNoise(@NonNull Json json) {
+        json.addClassTag("Nois", Noise.class);
         json.setSerializer(Noise.class, new Json.Serializer<Noise>() {
             @Override
             public void write(Json json, Noise object, Class knownType) {
@@ -397,6 +407,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerPhantomNoise(@NonNull Json json) {
+        json.addClassTag("PhaN", PhantomNoise.class);
         json.setSerializer(PhantomNoise.class, new Json.Serializer<PhantomNoise>() {
             @Override
             public void write(Json json, PhantomNoise object, Class knownType) {
@@ -419,6 +430,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerTaffyNoise(@NonNull Json json) {
+        json.addClassTag("TafN", TaffyNoise.class);
         json.setSerializer(TaffyNoise.class, new Json.Serializer<TaffyNoise>() {
             @Override
             public void write(Json json, TaffyNoise object, Class knownType) {
@@ -441,6 +453,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerFlanNoise(@NonNull Json json) {
+        json.addClassTag("FlaN", FlanNoise.class);
         json.setSerializer(FlanNoise.class, new Json.Serializer<FlanNoise>() {
             @Override
             public void write(Json json, FlanNoise object, Class knownType) {
@@ -463,6 +476,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerCyclicNoise(@NonNull Json json) {
+        json.addClassTag("CycN", CyclicNoise.class);
         json.setSerializer(CyclicNoise.class, new Json.Serializer<CyclicNoise>() {
             @Override
             public void write(Json json, CyclicNoise object, Class knownType) {
@@ -485,6 +499,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerSorbetNoise(@NonNull Json json) {
+        json.addClassTag("SorN", SorbetNoise.class);
         json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
             @Override
             public void write(Json json, SorbetNoise object, Class knownType) {
@@ -506,6 +521,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerSpatialMap(@NonNull Json json) {
+        json.addClassTag("SpaM", SpatialMap.class);
         registerCoordObjectOrderedMap(json);
         JsonSupport.registerIntObjectOrderedMap(json);
         json.setSerializer(SpatialMap.class, new Json.Serializer<SpatialMap>() {
@@ -538,6 +554,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLightingManager(@NonNull Json json) {
+        json.addClassTag("LiMa", LightingManager.class);
         registerRegion(json);
         registerRadiance(json);
         registerCoordObjectOrderedMap(json);

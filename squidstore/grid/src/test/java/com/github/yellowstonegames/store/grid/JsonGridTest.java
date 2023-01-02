@@ -99,6 +99,7 @@ public class JsonGridTest {
             System.out.print(pair.getValue());
             System.out.print("; ");
         }
+        System.out.println();
     }
 
     @Test
@@ -120,7 +121,6 @@ public class JsonGridTest {
                 System.out.print("; ");
             }
         }
-        if("SPLIT YOUR LUNGS WITH BLOOD AND THUNDER".equals("WHY DOESN'T THIS WORK???"))
         {
             JsonGrid.registerRadiance(json);
             CoordObjectOrderedMap<Radiance> lights = new CoordObjectOrderedMap<>(
@@ -137,6 +137,7 @@ public class JsonGridTest {
                 System.out.print("; ");
             }
         }
+        System.out.println();
     }
 
     @Test
@@ -156,6 +157,7 @@ public class JsonGridTest {
             System.out.print(pair.getValue());
             System.out.print("; ");
         }
+        System.out.println();
     }
 
     @Test
@@ -175,6 +177,7 @@ public class JsonGridTest {
             System.out.print(pair.getValue());
             System.out.print("; ");
         }
+        System.out.println();
     }
 
     @Test
@@ -190,6 +193,7 @@ public class JsonGridTest {
             System.out.print(point);
             System.out.print(", ");
         }
+        System.out.println();
     }
 
     @Test
@@ -205,6 +209,7 @@ public class JsonGridTest {
             System.out.print(point);
             System.out.print(", ");
         }
+        System.out.println();
     }
 
     @Test
@@ -381,7 +386,6 @@ public class JsonGridTest {
     }
 
     @Test
-//    @Ignore("CoordObjectOrderedMap currently can't write its generic values except in specific circumstances...")
     public void testLightingManager() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerLightingManager(json);

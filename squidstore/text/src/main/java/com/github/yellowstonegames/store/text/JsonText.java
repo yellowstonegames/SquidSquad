@@ -54,6 +54,7 @@ public final class JsonText {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLanguage(@NonNull Json json) {
+        json.addClassTag("Lang", Language.class);
         JsonCore.registerPattern(json);
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
             @Override
@@ -75,6 +76,7 @@ public final class JsonText {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLanguageSentenceForm(@NonNull Json json) {
+        json.addClassTag("LaSF", Language.SentenceForm.class);
         JsonSupport.registerEnhancedRandom(json);
         registerLanguage(json);
         json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
@@ -97,6 +99,7 @@ public final class JsonText {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerTranslator(@NonNull Json json) {
+        json.addClassTag("Tran", Translator.class);
         JsonSupport.registerObjectObjectMap(json);
         registerLanguage(json);
         json.setSerializer(Translator.class, new Json.Serializer<Translator>() {

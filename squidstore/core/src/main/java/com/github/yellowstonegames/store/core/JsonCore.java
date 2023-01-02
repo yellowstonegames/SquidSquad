@@ -70,6 +70,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerChar2D(@NonNull Json json) {
+        json.addClassTag("c##", char[][].class);
         json.setSerializer(char[][].class, new Json.Serializer<char[][]>() {
             @Override
             public void write(Json json, char[][] object, Class knownType) {
@@ -107,6 +108,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerInt2D(@NonNull Json json) {
+        json.addClassTag("i##", int[][].class);
         json.setSerializer(int[][].class, new Json.Serializer<int[][]>() {
             @Override
             public void write(Json json, int[][] object, Class knownType) {
@@ -144,6 +146,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerFloat2D(@NonNull Json json) {
+        json.addClassTag("f##", float[][].class);
         json.setSerializer(float[][].class, new Json.Serializer<float[][]>() {
             @Override
             public void write(Json json, float[][] object, Class knownType) {
@@ -181,6 +184,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLong2D(@NonNull Json json) {
+        json.addClassTag("l##", long[][].class);
         json.setSerializer(long[][].class, new Json.Serializer<long[][]>() {
             @Override
             public void write(Json json, long[][] object, Class knownType) {
@@ -223,6 +227,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerDiceRule(@NonNull Json json) {
+        json.addClassTag("DiRu", Dice.Rule.class);
         json.setSerializer(Dice.Rule.class, new Json.Serializer<Dice.Rule>() {
             @Override
             public void write(Json json, Dice.Rule object, Class knownType) {
@@ -247,6 +252,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerGapShuffler(@NonNull Json json) {
+        json.addClassTag("GShu", GapShuffler.class);
         JsonSupport.registerEnhancedRandom(json);
         JsonSupport.registerObjectList(json);
         json.setSerializer(GapShuffler.class, new Json.Serializer<GapShuffler>() {
@@ -282,6 +288,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerProbabilityTable(@NonNull Json json) {
+        json.addClassTag("PTab", ProbabilityTable.class);
         JsonSupport.registerEnhancedRandom(json);
         JsonSupport.registerObjectList(json);
         JsonSupport.registerIntList(json);
@@ -325,6 +332,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerWeightedTable(@NonNull Json json) {
+        json.addClassTag("WTab", WeightedTable.class);
         json.setSerializer(WeightedTable.class, new Json.Serializer<WeightedTable>() {
             @Override
             public void write(Json json, WeightedTable object, Class knownType) {
@@ -347,6 +355,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerIntShuffler(@NonNull Json json) {
+        json.addClassTag("IShu", IntShuffler.class);
         json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
             @Override
             public void write(Json json, IntShuffler object, Class knownType) {
@@ -368,6 +377,7 @@ public final class JsonCore {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerPattern(@NonNull Json json) {
+        json.addClassTag("Patt", Pattern.class);
         json.setSerializer(Pattern.class, new Json.Serializer<Pattern>() {
             @Override
             public void write(Json json, Pattern object, Class knownType) {
