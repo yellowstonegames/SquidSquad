@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Extends {@link Sprite}, but uses an {@link Animation} of {@link TextureRegion} for its visuals and a
@@ -39,9 +39,9 @@ import javax.annotation.Nullable;
  */
 public class AnimatedGlidingSprite extends Sprite {
     public Animation<? extends TextureRegion> animation;
-    @Nonnull
+    @NonNull
     public CoordGlider location;
-    @Nonnull
+    @NonNull
     public VectorSequenceGlider smallMotion;
     /**
      * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
@@ -49,7 +49,7 @@ public class AnimatedGlidingSprite extends Sprite {
      * It is here so {@link #smallMotion} can be easily set to an empty sequence.
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
-    @Nonnull
+    @NonNull
     public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
@@ -109,16 +109,16 @@ public class AnimatedGlidingSprite extends Sprite {
         this.animation = animation;
     }
 
-    @Nonnull
+    @NonNull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(@Nonnull CoordGlider location) {
+    public void setLocation(@NonNull CoordGlider location) {
         this.location = location;
     }
 
-    @Nonnull
+    @NonNull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }

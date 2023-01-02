@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -75,22 +91,23 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
-<dd><code>C</code> - a type that contains or is otherwise associated with a <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth"><code>IGlider</code></a>, such as a <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth"><code>CoordGlider</code></a></dd>
+<dd><code>C</code> - a type that contains or is otherwise associated with a <a href="Glider.html" title="class in com.github.yellowstonegames.smooth"><code>Glider</code></a>, such as a <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth"><code>CoordGlider</code></a></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Director&lt;C&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Handles multiple objects that are each associated with an <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth"><code>IGlider</code></a>, and allows starting and stopping the gliding
- animation for all of those objects at once. This must be given a Function that can extract some form of Glider out of
- a C object; this is typically a method reference, such as to a getter. A Director has a Collection of C objects,
- often an <code>ObjectList</code> or perhaps the Values collection of an
- <code>ObjectObjectMap</code>, that it will go through and update the Glider in each C. User
- code typically calls <a href="#step()"><code>step()</code></a> every frame; this is a no-op if the Director is not playing. If the Director is
- playing, then step() calculates the amount of the glide animation that has been completed, loops over each C in the
- Collection, extracts an IGlider from each C, calls <a href="IGlider.html#setChange(float)"><code>IGlider.setChange(float)</code></a> on those Gliders with the calculated
- amount, and potentially calls <a href="#stop()"><code>stop()</code></a> if the animation has completed. You start the Director playing with
- <a href="#play()"><code>play()</code></a>, and can pause it temporarily with <a href="#pause()"><code>pause()</code></a> (you resume a paused Director with play() again),
- or stop the Director entirely with <a href="#stop()"><code>stop()</code></a> (which sets it back to the beginning of the animation).</div>
+<div class="block">Handles multiple objects that are each associated with a <a href="Glider.html" title="class in com.github.yellowstonegames.smooth"><code>Glider</code></a>, and allows starting and stopping the
+ gliding animation for all of those objects at once. This must be given a Function that can extract some form of
+ Glider out of a C object; this is typically a method reference, such as to a getter. A Director has an Iterable
+ of C objects, often an <code>ObjectList</code> or perhaps the Values collection of an
+ <code>ObjectObjectMap</code>, that it will go through and update the Glider in each C.
+ User code typically calls <a href="#step()"><code>step()</code></a> every frame; this is a no-op if the Director is not playing. If the
+ Director is playing, then step() calculates the amount of the glide animation that has been completed, loops over
+ each C in the Iterable, extracts a Glider from each C, calls <a href="Glider.html#setChange(float)"><code>Glider.setChange(float)</code></a> on those
+ Gliders with the calculated amount, and potentially calls <a href="#stop()"><code>stop()</code></a> if the animation has completed. You get the
+ Director playing with <a href="#play()"><code>play()</code></a>, and can pause it temporarily with <a href="#pause()"><code>pause()</code></a> (you resume a paused
+ Director with play() again), or stop the Director entirely with <a href="#stop()"><code>stop()</code></a> (which sets it back to the beginning
+ of the animation).</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,7 +129,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected long</code></div>
 <div class="col-second even-row-color"><code><a href="#elapsed" class="member-name-link">elapsed</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#extractor" class="member-name-link">extractor</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected boolean</code></div>
@@ -132,12 +149,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function)" class="member-name-link">Director</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function)" class="member-name-link">Director</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable)" class="member-name-link">Director</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable)" class="member-name-link">Director</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable,long)" class="member-name-link">Director</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function,java.lang.Iterable,long)" class="member-name-link">Director</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
  long&nbsp;durationMillis)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -206,8 +223,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="extractor">
 <h3>extractor</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;</span>&nbsp;<span class="element-name">extractor</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;</span>&nbsp;<span class="element-name">extractor</span></div>
 </section>
 </li>
 <li>
@@ -251,23 +267,20 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.function.Function)">
 <h3>Director</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@Nonnull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.function.Function,java.lang.Iterable)">
 <h3>Director</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@Nonnull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.function.Function,java.lang.Iterable,long)">
 <h3>Director</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@Nonnull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr>? extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;&nbsp;fun,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Director</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="Director.html" title="type parameter in Director">C</a>,<wbr><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>&gt;&nbsp;fun,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="Director.html" title="type parameter in Director">C</a>&gt;&nbsp;coll,
  long&nbsp;durationMillis)</span></div>
 </section>

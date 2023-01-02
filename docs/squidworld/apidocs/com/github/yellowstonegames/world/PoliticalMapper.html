@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -31,6 +47,7 @@ loadScripts(document, 'script');</script>
 <div class="top-nav" id="navbar-top">
 <div class="skip-nav"><a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a></div>
 <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
@@ -83,7 +100,7 @@ loadScripts(document, 'script');</script>
  the ideal residents for difficult mountainous terrain). This needs both a <a href="WorldMapGenerator.html" title="class in com.github.yellowstonegames.world"><code>WorldMapGenerator</code></a> and a
  <a href="BiomeMapper.html" title="interface in com.github.yellowstonegames.world"><code>BiomeMapper</code></a> to allocate biomes and height/moisture info. If allocating human groups only, you might want to
  decide where a faction would settle by what technologies they use regularly; a seafaring culture would have a
- <a href="PoliticalMapper.Faction.html#preferredHeight"><code>PoliticalMapper.Faction.preferredHeight</code></a> that includes 4 so they can settle on shorelines, while a horse-riding culture might
+ <a href="PoliticalMapper.Faction.html#preferredHeight"><code>PoliticalMapper.Faction.preferredHeight</code></a> that includes 4, so they can settle on shorelines, while a horse-riding culture might
  have <a href="PoliticalMapper.Faction.html#preferredBiomes"><code>PoliticalMapper.Faction.preferredBiomes</code></a> that include "Grassland" and "Savanna" so they can ride easily.
  The WorldMapGenerator is commonly a <a href="LocalMap.html" title="class in com.github.yellowstonegames.world"><code>LocalMap</code></a> for continent/area maps, or a <a href="StretchWorldMap.html" title="class in com.github.yellowstonegames.world"><code>StretchWorldMap</code></a> for a
  world map for a familiar shape for world maps, but an <a href="EllipticalWorldMap.html" title="class in com.github.yellowstonegames.world"><code>EllipticalWorldMap</code></a> or <a href="HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world"><code>HyperellipticalWorldMap</code></a>

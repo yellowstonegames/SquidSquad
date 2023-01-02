@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * This is a SplittableRandom-style generator, meant to have a tiny state
@@ -88,7 +88,7 @@ public class LightRNG extends LegacyRandom implements StatefulRandomness {
      *
      * @return a copy of this RandomnessSource
      */
-    @Nonnull
+    @NonNull
     @Override
     public LightRNG copy() {
         return new LightRNG(state);

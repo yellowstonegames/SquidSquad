@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A 2D coordinate with (constant) x and y fields. Coord objects are immutable; a single pool of Coord values, with
@@ -57,7 +57,7 @@ public class Coord {
         this.x = x;
         this.y = y;
     }
-    @Nonnull
+    @NonNull
     public static Coord get(final int x, final int y)
     {
         if(x >= -3 && y >= -3 && x < POOL.length - 3 && y < POOL[x + 3].length - 3)
@@ -609,7 +609,7 @@ public class Coord {
             return false;
         }
     }
-    @Nonnull
+    @NonNull
     private static Coord[][] POOL = new Coord[259][259];
     static {
         int width = POOL.length, height = POOL[0].length;

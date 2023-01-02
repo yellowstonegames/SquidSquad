@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -106,13 +122,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>com.badlogic.gdx.graphics.g2d.Animation&lt;? extends com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#animation" class="member-name-link">animation</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></code></div>
+<div class="col-first odd-row-color"><code>@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#location" class="member-name-link">location</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
+<div class="col-first even-row-color"><code>final @NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
 <div class="col-second even-row-color"><code><a href="#ownEmptyMotion" class="member-name-link">ownEmptyMotion</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.</div>
+</div>
+<div class="col-first odd-row-color"><code>@NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#smallMotion" class="member-name-link">smallMotion</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -159,10 +177,10 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.graphics.g2d.Animation&lt;? extends com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnimation()" class="member-name-link">getAnimation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocation()" class="member-name-link">getLocation</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSmallMotion()" class="member-name-link">getSmallMotion</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[]</code></div>
@@ -178,10 +196,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAnimation(com.badlogic.gdx.graphics.g2d.Animation)" class="member-name-link">setAnimation</a><wbr>(com.badlogic.gdx.graphics.g2d.Animation&lt;? extends com.badlogic.gdx.graphics.g2d.TextureRegion&gt;&nbsp;animation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLocation(com.github.yellowstonegames.smooth.CoordGlider)" class="member-name-link">setLocation</a><wbr>(<a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a>&nbsp;location)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLocation(com.github.yellowstonegames.smooth.CoordGlider)" class="member-name-link">setLocation</a><wbr>(@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a>&nbsp;location)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSmallMotion(com.github.yellowstonegames.smooth.VectorSequenceGlider)" class="member-name-link">setSmallMotion</a><wbr>(<a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a>&nbsp;smallMotion)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSmallMotion(com.github.yellowstonegames.smooth.VectorSequenceGlider)" class="member-name-link">setSmallMotion</a><wbr>(@Nullable <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a>&nbsp;smallMotion)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -215,19 +233,23 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="location">
 <h3>location</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></span>&nbsp;<span class="element-name">location</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></span>&nbsp;<span class="element-name">location</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="smallMotion">
 <h3>smallMotion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">smallMotion</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">smallMotion</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="ownEmptyMotion">
 <h3>ownEmptyMotion</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">ownEmptyMotion</span></div>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">@NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">ownEmptyMotion</span></div>
+<div class="block">A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
+ This is public so external code can use it, but should never be modified.
+ It is here so <a href="#smallMotion"><code>smallMotion</code></a> can be easily set to an empty sequence.
+ You can also use <code>setSmallMotion(null)</code> to stop any small motion.</div>
 </section>
 </li>
 </ul>
@@ -327,25 +349,25 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getLocation()">
 <h3>getLocation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></span>&nbsp;<span class="element-name">getLocation</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></span>&nbsp;<span class="element-name">getLocation</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setLocation(com.github.yellowstonegames.smooth.CoordGlider)">
 <h3>setLocation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLocation</span><wbr><span class="parameters">(<a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a>&nbsp;location)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLocation</span><wbr><span class="parameters">(@NonNull <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth">CoordGlider</a>&nbsp;location)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="getSmallMotion()">
 <h3>getSmallMotion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">getSmallMotion</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></span>&nbsp;<span class="element-name">getSmallMotion</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setSmallMotion(com.github.yellowstonegames.smooth.VectorSequenceGlider)">
 <h3>setSmallMotion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSmallMotion</span><wbr><span class="parameters">(<a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a>&nbsp;smallMotion)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSmallMotion</span><wbr><span class="parameters">(@Nullable <a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a>&nbsp;smallMotion)</span></div>
 </section>
 </li>
 </ul>

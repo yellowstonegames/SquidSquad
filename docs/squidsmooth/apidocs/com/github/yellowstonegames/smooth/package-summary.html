@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -88,22 +104,31 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Director.html" title="class in com.github.yellowstonegames.smooth">Director</a>&lt;C&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Handles multiple objects that are each associated with an <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth"><code>IGlider</code></a>, and allows starting and stopping the gliding
- animation for all of those objects at once.</div>
+<div class="block">Handles multiple objects that are each associated with a <a href="Glider.html" title="class in com.github.yellowstonegames.smooth"><code>Glider</code></a>, and allows starting and stopping the
+ gliding animation for all of those objects at once.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="FloatGlider.html" title="class in com.github.yellowstonegames.smooth">FloatGlider</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Allows specifying a smoothly-changing float value using any float for the start and the end, with a change
  amount that affects how far the value has changed from start to end.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GlidingSprite.html" title="class in com.github.yellowstonegames.smooth">GlidingSprite</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="FloatInterpolator.html" title="interface in com.github.yellowstonegames.smooth">FloatInterpolator</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">Allows using various ways of interpolating a float value to another float value as a first-class function.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A general-purpose group of smoothly-changing values, either float or int, using any rules for the
+ interpolations (specifiable by <a href="FloatInterpolator.html" title="interface in com.github.yellowstonegames.smooth"><code>FloatInterpolator</code></a> and <a href="IntInterpolator.html" title="interface in com.github.yellowstonegames.smooth"><code>IntInterpolator</code></a> functions).</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Glider.Changer.html" title="class in com.github.yellowstonegames.smooth">Glider.Changer</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A named variable that can change either (or both) a float and/or an int value between start and end values.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GlidingSprite.html" title="class in com.github.yellowstonegames.smooth">GlidingSprite</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Extends <code>Sprite</code>, using a normal <code>TextureRegion</code> its visuals and a <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth"><code>CoordGlider</code></a> to store its
  position.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
-<div class="block">An interface for properties that change smoothly as <a href="IGlider.html#setChange(float)"><code>IGlider.setChange(float)</code></a> is called.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IntColorGlider.html" title="class in com.github.yellowstonegames.smooth">IntColorGlider</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -111,21 +136,25 @@ loadScripts(document, 'script');</script>
  <code>DescriptiveColor</code> and in Oklab space) for the start and the end, with a change amount that affects how far a
  color has been edited from start to end.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;T extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IntInterpolator.html" title="interface in com.github.yellowstonegames.smooth">IntInterpolator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Allows using various ways of interpolating an int value to another int value as a first-class function.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Runs more than one Glider in a sequence.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Allows specifying a smoothly-changing float position using a libGDX Vector2 for the start and the end, with a change
  amount that affects how far a position has moved from start to end.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Very experimental; allows chaining a sequence of VectorGlider movements.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VectorTools.html" title="class in com.github.yellowstonegames.smooth">VectorTools</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="VectorTools.html" title="class in com.github.yellowstonegames.smooth">VectorTools</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Utilities for handling floating-point positions, to be added to as needed.</div>
 </div>
 </div>

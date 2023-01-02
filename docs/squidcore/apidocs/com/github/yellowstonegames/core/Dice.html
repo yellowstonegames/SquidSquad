@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -124,7 +140,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(long)" class="member-name-link">Dice</a><wbr>(long&nbsp;seed)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with the given seed.</div>
+<div class="block">Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with the given seed.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">Dice</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color">
@@ -132,7 +148,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.CharSequence)" class="member-name-link">Dice</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;seed)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with a hash of the
+<div class="block">Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with a hash of the
  given String seed.</div>
 </div>
 </div>
@@ -201,7 +217,7 @@ loadScripts(document, 'script');</script>
  <a href="#parseRollRule(java.lang.String)"><code>parseRollRule(String)</code></a> or <a href="#parseRollRuleInto(com.github.yellowstonegames.core.Dice.Rule,java.lang.String)"><code>parseRollRuleInto(Rule, String)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRandom</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRandom(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRandom</a><wbr>(@NonNull com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the random number generator to be used.</div>
 </div>
@@ -246,7 +262,7 @@ loadScripts(document, 'script');</script>
  next die roll this makes, and dice rolls this makes will change the state of the shared EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - an EnhancedRandom, such as <code>LaserRandom</code>; will be shared (dice rolls will change the IRNG state outside here)</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as <code>WhiskerRandom</code>; will be shared (dice rolls will change the generator's state outside here)</dd>
 </dl>
 </section>
 </li>
@@ -254,10 +270,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(long)">
 <h3>Dice</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Dice</span><wbr><span class="parameters">(long&nbsp;seed)</span></div>
-<div class="block">Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with the given seed.</div>
+<div class="block">Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with the given seed.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>seed</code> - a long to use as a seed for a new LaserRandom (can also be an int, short, or byte)</dd>
+<dd><code>seed</code> - a long to use as a seed for a new WhiskerRandom (can also be an int, short, or byte)</dd>
 </dl>
 </section>
 </li>
@@ -265,12 +281,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(java.lang.CharSequence)">
 <h3>Dice</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Dice</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;seed)</span></div>
-<div class="block">Creates a new dice roller that will use its own LaserRandom as its RNG, seeded with a hash of the
- given String seed. This can take any CharSequence, not just String, and uses <code>Hasher.dantalion</code>
- and <code>Hasher.decarabia_</code> to hash the seed.</div>
+<div class="block">Creates a new dice roller that will use its own WhiskerRandom as its RNG, seeded with a hash of the
+ given String seed. This can take any CharSequence, not just String, and uses <code>Hasher.dantalion</code>,
+ <code>Hasher.dantalion_</code>, <code>Hasher.decarabia</code>, and <code>Hasher.decarabia_</code> to hash the seed.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>seed</code> - a String or other CharSequence to use as a seed for a new LaserRandom</dd>
+<dd><code>seed</code> - a String or other CharSequence to use as a seed for a new WhiskerRandom</dd>
 </dl>
 </section>
 </li>
@@ -285,8 +301,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setRandom(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>setRandom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(@Nonnull
- com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRandom</span><wbr><span class="parameters">(@NonNull com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
 <div class="block">Sets the random number generator to be used.
 
  This method does not need to be called before using the methods of this

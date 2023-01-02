@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -42,7 +58,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -67,33 +83,37 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.github.yellowstonegames.smooth</a></div>
-<h1 title="Class SequenceGlider" class="title">Class SequenceGlider&lt;T extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;</h1>
+<h1 title="Class SequenceGlider" class="title">Class SequenceGlider</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.github.yellowstonegames.smooth.SequenceGlider&lt;T&gt;</div>
+<div class="inheritance"><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">com.github.yellowstonegames.smooth.Glider</a>
+<div class="inheritance">com.github.yellowstonegames.smooth.SequenceGlider</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>Type Parameters:</dt>
-<dd><code>T</code> - an IGlider type</dd>
-</dl>
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-</dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
 <dd><code><a href="VectorSequenceGlider.html" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Beta
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">SequenceGlider&lt;T extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>&gt;</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></span></div>
-<div class="block">Runs more than one Glider in a sequence. Meant to be subclassed with a specific Glider type for T.</div>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">SequenceGlider</span>
+<span class="extends-implements">extends <a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></span></div>
+<div class="block">Runs more than one Glider in a sequence. Each individual Glider will run one after the next, so it is
+ likely that you will want to use a sequence of all the same type of Glider (that is, all can have their "x"
+ or "color" coordinate queried and have it mean the same thing for any member of the sequence, for example).</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Nested classes/interfaces inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h2>
+<code><a href="Glider.Changer.html" title="class in com.github.yellowstonegames.smooth">Glider.Changer</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -106,25 +126,19 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="col-first even-row-color"><code>protected int</code></div>
 <div class="col-second even-row-color"><code><a href="#active" class="member-name-link">active</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><a href="#change" class="member-name-link">change</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></code></div>
-<div class="col-second even-row-color"><code><a href="#completeRunner" class="member-name-link">completeRunner</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected float[]</code></div>
 <div class="col-second odd-row-color"><code><a href="#durations" class="member-name-link">durations</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected com.badlogic.gdx.math.Interpolation</code></div>
-<div class="col-second even-row-color"><code><a href="#interpolation" class="member-name-link">interpolation</a></code></div>
+<div class="col-first even-row-color"><code>protected float</code></div>
+<div class="col-second even-row-color"><code><a href="#passed" class="member-name-link">passed</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><a href="#passed" class="member-name-link">passed</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#sequence" class="member-name-link">sequence</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="SequenceGlider.html" title="type parameter in SequenceGlider">T</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#sequence" class="member-name-link">sequence</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Fields inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h3>
+<code><a href="Glider.html#change">change</a>, <a href="Glider.html#changers">changers</a>, <a href="Glider.html#completeRunner">completeRunner</a>, <a href="Glider.html#interpolation">interpolation</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -140,9 +154,15 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">SequenceGlider</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(T%5B%5D,float%5B%5D)" class="member-name-link">SequenceGlider</a><wbr>(<a href="SequenceGlider.html" title="type parameter in SequenceGlider">T</a>[]&nbsp;gliders,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.smooth.Glider%5B%5D,float%5B%5D)" class="member-name-link">SequenceGlider</a><wbr>(<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]&nbsp;gliders,
  float[]&nbsp;lengths)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.smooth.Glider%5B%5D,float%5B%5D,com.badlogic.gdx.math.Interpolation,java.lang.Runnable)" class="member-name-link">SequenceGlider</a><wbr>(<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]&nbsp;gliders,
+ float[]&nbsp;lengths,
+ com.badlogic.gdx.math.Interpolation&nbsp;interpolation,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;completeRunner)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -161,37 +181,85 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChange()" class="member-name-link">getChange</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCompleteRunner()" class="member-name-link">getCompleteRunner</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Interpolation</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEndFloat(java.lang.String)" class="member-name-link">getEndFloat</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Looks up the <a href="Glider.Changer.html#endF"><code>end float</code></a> value for the Changer with the given <code>name</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEndInt(java.lang.String)" class="member-name-link">getEndInt</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Looks up the <a href="Glider.Changer.html#endI"><code>end int</code></a> value for the Changer with the given <code>name</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFloat(java.lang.String)" class="member-name-link">getFloat</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current float value for the Changer with the given <code>name</code> by interpolating between its start and
+ end float values.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt(java.lang.String)" class="member-name-link">getInt</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current int value for the Changer with the given <code>name</code> by interpolating between its start and
+ end int values.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull com.badlogic.gdx.math.Interpolation</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInterpolation()" class="member-name-link">getInterpolation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStartFloat(java.lang.String)" class="member-name-link">getStartFloat</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Looks up the <a href="Glider.Changer.html#startF"><code>start float</code></a> value for the Changer with the given <code>name</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStartInt(java.lang.String)" class="member-name-link">getStartInt</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Looks up the <a href="Glider.Changer.html#startI"><code>start int</code></a> value for the Changer with the given <code>name</code>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onComplete()" class="member-name-link">onComplete</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Typically called in <a href="IGlider.html#setChange(float)"><code>IGlider.setChange(float)</code></a> when change reaches at least 1.0.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setChange(float)" class="member-name-link">setChange</a><wbr>(float&nbsp;change)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCompleteRunner(java.lang.Runnable)" class="member-name-link">setCompleteRunner</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;completeRunner)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setChange(float)" class="member-name-link">setChange</a><wbr>(float&nbsp;change)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInterpolation(com.badlogic.gdx.math.Interpolation)" class="member-name-link">setInterpolation</a><wbr>(com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndFloat(java.lang.String,float)" class="member-name-link">setEndFloat</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ float&nbsp;end)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the <a href="Glider.Changer.html#endF"><code>end float</code></a> value for the Changer with the given <code>name</code> to <code>end</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndInt(java.lang.String,int)" class="member-name-link">setEndInt</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;end)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the <a href="Glider.Changer.html#endI"><code>end int</code></a> value for the Changer with the given <code>name</code> to <code>end</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInterpolation(com.badlogic.gdx.math.Interpolation)" class="member-name-link">setInterpolation</a><wbr>(@NonNull com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStartFloat(java.lang.String,float)" class="member-name-link">setStartFloat</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ float&nbsp;start)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the <a href="Glider.Changer.html#startF"><code>start float</code></a> value for the Changer with the given <code>name</code> to <code>start</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStartInt(java.lang.String,int)" class="member-name-link">setStartInt</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;start)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the <a href="Glider.Changer.html#startI"><code>start int</code></a> value for the Changer with the given <code>name</code> to <code>start</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Methods inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h3>
+<code><a href="Glider.html#addChanger(com.github.yellowstonegames.smooth.Glider.Changer)">addChanger</a>, <a href="Glider.html#addChangers(com.github.yellowstonegames.smooth.Glider.Changer...)">addChangers</a>, <a href="Glider.html#addChangers(java.util.Collection)">addChangers</a>, <a href="Glider.html#getChange()">getChange</a>, <a href="Glider.html#getCompleteRunner()">getCompleteRunner</a>, <a href="Glider.html#merge(com.github.yellowstonegames.smooth.Glider)">merge</a>, <a href="Glider.html#onComplete()">onComplete</a>, <a href="Glider.html#removeChanger(java.lang.String)">removeChanger</a>, <a href="Glider.html#resetToCurrent()">resetToCurrent</a>, <a href="Glider.html#setCompleteRunner(java.lang.Runnable)">setCompleteRunner</a></code></div>
+<div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -204,22 +272,9 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="change">
-<h3>change</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">change</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="interpolation">
-<h3>interpolation</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Interpolation</span>&nbsp;<span class="element-name">interpolation</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="sequence">
 <h3>sequence</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="SequenceGlider.html" title="type parameter in SequenceGlider">T</a> extends <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>[]</span>&nbsp;<span class="element-name">sequence</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]</span>&nbsp;<span class="element-name">sequence</span></div>
 </section>
 </li>
 <li>
@@ -240,13 +295,6 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">passed</span></div>
 </section>
 </li>
-<li>
-<section class="detail" id="completeRunner">
-<h3>completeRunner</h3>
-<div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></span>&nbsp;<span class="element-name">completeRunner</span></div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -262,10 +310,19 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(T[],float[])">
-<h3 id="&lt;init&gt;(com.github.yellowstonegames.smooth.IGlider[],float[])">SequenceGlider</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SequenceGlider</span><wbr><span class="parameters">(<a href="SequenceGlider.html" title="type parameter in SequenceGlider">T</a>[]&nbsp;gliders,
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.smooth.Glider[],float[])">
+<h3>SequenceGlider</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SequenceGlider</span><wbr><span class="parameters">(<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]&nbsp;gliders,
  float[]&nbsp;lengths)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.smooth.Glider[],float[],com.badlogic.gdx.math.Interpolation,java.lang.Runnable)">
+<h3>SequenceGlider</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SequenceGlider</span><wbr><span class="parameters">(<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a>[]&nbsp;gliders,
+ float[]&nbsp;lengths,
+ com.badlogic.gdx.math.Interpolation&nbsp;interpolation,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;completeRunner)</span></div>
 </section>
 </li>
 </ul>
@@ -277,12 +334,180 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getChange()">
-<h3>getChange</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getChange</span>()</div>
+<section class="detail" id="getFloat(java.lang.String)">
+<h3>getFloat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFloat</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getFloat(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Gets the current float value for the Changer with the given <code>name</code> by interpolating between its start and
+ end float values. The <a href="Glider.html#getInterpolation()"><code>interpolation</code></a> will be applied to <a href="Glider.html#getChange()"><code>change</code></a>
+ before it is passed to the Changer's <a href="Glider.Changer.html#interpolatorF"><code>Glider.Changer.interpolatorF</code></a>. If this cannot locate a Changer by the given
+ name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a>.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#getChange()">getChange</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getFloat(java.lang.String)">getFloat</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the current float value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getInt(java.lang.String)">
+<h3>getInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getInt(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Gets the current int value for the Changer with the given <code>name</code> by interpolating between its start and
+ end int values. The <a href="Glider.html#getInterpolation()"><code>interpolation</code></a> will be applied to <a href="Glider.html#getChange()"><code>change</code></a>
+ before it is passed to the Changer's <a href="Glider.Changer.html#interpolatorI"><code>Glider.Changer.interpolatorI</code></a>. If this cannot locate a Changer by the given
+ name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getInt(java.lang.String)">getInt</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the current int value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getStartFloat(java.lang.String)">
+<h3>getStartFloat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getStartFloat</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getStartFloat(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Looks up the <a href="Glider.Changer.html#startF"><code>start float</code></a> value for the Changer with the given <code>name</code>.
+ If this cannot locate a Changer by the given name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getStartFloat(java.lang.String)">getStartFloat</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the start float value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setStartFloat(java.lang.String,float)">
+<h3>setStartFloat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStartFloat</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ float&nbsp;start)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#setStartFloat(java.lang.String,float)">Glider</a></code></span></div>
+<div class="block">Sets the <a href="Glider.Changer.html#startF"><code>start float</code></a> value for the Changer with the given <code>name</code> to <code>start</code>.
+ If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's start float
+ value and also sets <a href="Glider.html#change"><code>Glider.change</code></a> to 0.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setStartFloat(java.lang.String,float)">setStartFloat</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dd><code>start</code> - value to use for the located Changer's start float</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEndFloat(java.lang.String)">
+<h3>getEndFloat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getEndFloat</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getEndFloat(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Looks up the <a href="Glider.Changer.html#endF"><code>end float</code></a> value for the Changer with the given <code>name</code>.
+ If this cannot locate a Changer by the given name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getEndFloat(java.lang.String)">getEndFloat</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the end float value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#NaN" title="class or interface in java.lang" class="external-link"><code>Float.NaN</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setEndFloat(java.lang.String,float)">
+<h3>setEndFloat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEndFloat</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ float&nbsp;end)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#setEndFloat(java.lang.String,float)">Glider</a></code></span></div>
+<div class="block">Sets the <a href="Glider.Changer.html#endF"><code>end float</code></a> value for the Changer with the given <code>name</code> to <code>end</code>.
+ If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's end float
+ value and also sets <a href="Glider.html#change"><code>Glider.change</code></a> to 0.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setEndFloat(java.lang.String,float)">setEndFloat</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dd><code>end</code> - value to use for the located Changer's end float</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getStartInt(java.lang.String)">
+<h3>getStartInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStartInt</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getStartInt(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Looks up the <a href="Glider.Changer.html#startI"><code>start int</code></a> value for the Changer with the given <code>name</code>.
+ If this cannot locate a Changer by the given name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getStartInt(java.lang.String)">getStartInt</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the start int value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setStartInt(java.lang.String,int)">
+<h3>setStartInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStartInt</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;start)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#setStartInt(java.lang.String,int)">Glider</a></code></span></div>
+<div class="block">Sets the <a href="Glider.Changer.html#startI"><code>start int</code></a> value for the Changer with the given <code>name</code> to <code>start</code>.
+ If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's start int
+ value and also sets <a href="Glider.html#change"><code>Glider.change</code></a> to 0.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setStartInt(java.lang.String,int)">setStartInt</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dd><code>start</code> - value to use for the located Changer's start int</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEndInt(java.lang.String)">
+<h3>getEndInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getEndInt</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#getEndInt(java.lang.String)">Glider</a></code></span></div>
+<div class="block">Looks up the <a href="Glider.Changer.html#endI"><code>end int</code></a> value for the Changer with the given <code>name</code>.
+ If this cannot locate a Changer by the given name, this returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getEndInt(java.lang.String)">getEndInt</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dt>Returns:</dt>
+<dd>the end int value of the located Changer, or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a> if lookup fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setEndInt(java.lang.String,int)">
+<h3>setEndInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEndInt</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;end)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Glider.html#setEndInt(java.lang.String,int)">Glider</a></code></span></div>
+<div class="block">Sets the <a href="Glider.Changer.html#endI"><code>end int</code></a> value for the Changer with the given <code>name</code> to <code>end</code>.
+ If this cannot locate a Changer by the given name, this does nothing. Otherwise, sets the Changer's end int
+ value and also sets <a href="Glider.html#change"><code>Glider.change</code></a> to 0.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setEndInt(java.lang.String,int)">setEndInt</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the Changer to look up</dd>
+<dd><code>end</code> - value to use for the located Changer's end int</dd>
 </dl>
 </section>
 </li>
@@ -291,59 +516,29 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <h3>setChange</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setChange</span><wbr><span class="parameters">(float&nbsp;change)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#setChange(float)">setChange</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setChange(float)">setChange</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getInterpolation()">
 <h3>getInterpolation</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Interpolation</span>&nbsp;<span class="element-name">getInterpolation</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull com.badlogic.gdx.math.Interpolation</span>&nbsp;<span class="element-name">getInterpolation</span>()</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#getInterpolation()">getInterpolation</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#getInterpolation()">getInterpolation</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setInterpolation(com.badlogic.gdx.math.Interpolation)">
 <h3>setInterpolation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setInterpolation</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setInterpolation</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#setInterpolation(com.badlogic.gdx.math.Interpolation)">setInterpolation</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="Glider.html#setInterpolation(com.badlogic.gdx.math.Interpolation)">setInterpolation</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="onComplete()">
-<h3>onComplete</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onComplete</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="IGlider.html#onComplete()">IGlider</a></code></span></div>
-<div class="block">Typically called in <a href="IGlider.html#setChange(float)"><code>IGlider.setChange(float)</code></a> when change reaches at least 1.0. The default implementation does
- nothing, but implementing classes are encouraged to have this call a user-supplied <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link"><code>Runnable</code></a>, to give the
- most flexibility to the user.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#onComplete()">onComplete</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getCompleteRunner()">
-<h3>getCompleteRunner</h3>
-<div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></span>&nbsp;<span class="element-name">getCompleteRunner</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setCompleteRunner(java.lang.Runnable)">
-<h3>setCompleteRunner</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCompleteRunner</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;completeRunner)</span></div>
 </section>
 </li>
 <li>
@@ -352,7 +547,7 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dd><code><a href="Glider.html#equals(java.lang.Object)">equals</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
 </dl>
 </section>
 </li>
@@ -362,7 +557,17 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dd><code><a href="Glider.html#hashCode()">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

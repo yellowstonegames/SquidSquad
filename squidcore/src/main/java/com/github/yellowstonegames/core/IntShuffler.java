@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.github.tommyettinger.digital.Hasher;
 
@@ -245,7 +245,7 @@ public class IntShuffler {
         return sb.append('`').toString();
     }
 
-    public static IntShuffler deserializeFromString(@Nonnull String data) {
+    public static IntShuffler deserializeFromString(@NonNull String data) {
         if(data.length() < 13) return null;
         int idx = 0;
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));

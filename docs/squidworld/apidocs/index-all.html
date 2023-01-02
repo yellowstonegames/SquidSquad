@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -27,7 +43,8 @@ loadScripts(document, 'script');</script>
 <div class="top-nav" id="navbar-top">
 <div class="skip-nav"><a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a></div>
 <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
-<li><a href="com/github/yellowstonegames/world/package-summary.html">Package</a></li>
+<li><a href="index.html">Overview</a></li>
+<li>Package</li>
 <li>Class</li>
 <li><a href="overview-tree.html">Tree</a></li>
 <li class="nav-bar-cell1-rev">Index</li>
@@ -62,7 +79,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/WorldMapView.html#alter()" class="member-name-link">alter()</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapView.html" title="class in com.github.yellowstonegames.world">WorldMapView</a></dt>
 <dd>
 <div class="block">Uses the current colors in <a href="com/github/yellowstonegames/world/WorldMapView.html#BIOME_COLOR_TABLE"><code>BIOME_COLOR_TABLE</code></a> to partly-randomize themselves, and also incorporates three
- random floats from the <code>LaserRandom</code> stored in <a href="com/github/yellowstonegames/world/WorldMapView.html#getWorld()"><code>getWorld()</code></a>.</div>
+ random floats from the <code>MizuchiRandom</code> stored in <a href="com/github/yellowstonegames/world/WorldMapView.html#getWorld()"><code>getWorld()</code></a>.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/world/PoliticalMapper.html#atlas" class="member-name-link">atlas</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/PoliticalMapper.html" title="class in com.github.yellowstonegames.world">PoliticalMapper</a></dt>
 <dd>
@@ -164,6 +181,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/package-summary.html">com.github.yellowstonegames.world</a> - package com.github.yellowstonegames.world</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/package-summary.html">com.github.yellowstonegames.world.i</a> - package com.github.yellowstonegames.world.i</dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
@@ -226,6 +245,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#edges" class="member-name-link">edges</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#edges" class="member-name-link">edges</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#edges" class="member-name-link">edges</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RotatingGlobeMap.html#edges" class="member-name-link">edges</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RotatingGlobeMap.html" title="class in com.github.yellowstonegames.world">RotatingGlobeMap</a></dt>
 <dd>&nbsp;</dd>
@@ -465,7 +486,17 @@ loadScripts(document, 'script');</script>
 <div class="block">A concrete implementation of <a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world"><code>WorldMapGenerator</code></a> that imitates an infinite-distance perspective view of a
  world, showing only one hemisphere, that should be as wide as it is tall (its outline is a circle).</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html" class="type-name-link" title="class in com.github.yellowstonegames.world.i">GlobeMap</a> - Class in <a href="com/github/yellowstonegames/world/i/package-summary.html">com.github.yellowstonegames.world.i</a></dt>
+<dd>
+<div class="block">A concrete implementation of <a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world"><code>WorldMapGenerator</code></a> that imitates an infinite-distance perspective view of a
+ world, showing only one hemisphere, that should be as wide as it is tall (its outline is a circle).</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#%3Cinit%3E()" class="member-name-link">GlobeMap()</a> - Constructor for class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E()" class="member-name-link">GlobeMap()</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
@@ -475,7 +506,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(int,int)" class="member-name-link">GlobeMap(int, int)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#%3Cinit%3E(long,int,int)" class="member-name-link">GlobeMap(long, int, int)</a> - Constructor for class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(long,int,int)" class="member-name-link">GlobeMap(long, int, int)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
@@ -485,7 +526,27 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(long,int,int,float)" class="member-name-link">GlobeMap(long, int, int, float)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.INoise,float)" class="member-name-link">GlobeMap(long, int, int, INoise, float)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.INoise,com.github.yellowstonegames.grid.INoise,com.github.yellowstonegames.grid.INoise,com.github.yellowstonegames.grid.INoise,com.github.yellowstonegames.grid.INoise,float)" class="member-name-link">GlobeMap(long, int, int, INoise, INoise, INoise, INoise, INoise, float)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.Noise)" class="member-name-link">GlobeMap(long, int, int, Noise)</a> - Constructor for class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
+ showing only one hemisphere at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.Noise)" class="member-name-link">GlobeMap(long, int, int, Noise)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
  showing only one hemisphere at a time.</div>
@@ -504,6 +565,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Copies the SpaceViewWorldMap <code>other</code> to construct a new one that is exactly the same.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#%3Cinit%3E(com.github.yellowstonegames.world.i.GlobeMap)" class="member-name-link">GlobeMap(GlobeMap)</a> - Constructor for class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>
+<div class="block">Copies the SpaceViewWorldMap <code>other</code> to construct a new one that is exactly the same.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/WorldMapGenerator.html#grassLower" class="member-name-link">grassLower</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/WorldMapGenerator.html#grassUpper" class="member-name-link">grassUpper</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></dt>
@@ -518,6 +583,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#heat" class="member-name-link">heat</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#heat" class="member-name-link">heat</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#heat" class="member-name-link">heat</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#heat" class="member-name-link">heat</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -544,6 +611,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#heatFreq" class="member-name-link">heatFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#heatFreq" class="member-name-link">heatFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#heatFreq" class="member-name-link">heatFreq</a> - Static variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#heatFreq" class="member-name-link">heatFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -648,6 +717,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
  ellipse without distortion of the sizes of features but with significant distortion of shape.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#%3Cinit%3E(long,int,int,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,com.github.yellowstonegames.grid.Noise,float,float,float)" class="member-name-link">HyperellipticalWorldMap(long, int, int, Noise, Noise, Noise, Noise, Noise, float, float, float)</a> - Constructor for class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>
+<div class="block">Constructs a concrete WorldMapGenerator for a map that can be used to display a projection of a globe onto an
+ ellipse without distortion of the sizes of features but with significant distortion of shape.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#%3Cinit%3E(com.github.yellowstonegames.world.HyperellipticalWorldMap)" class="member-name-link">HyperellipticalWorldMap(HyperellipticalWorldMap)</a> - Constructor for class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>
 <div class="block">Copies the HyperellipticalWorldMap <code>other</code> to construct a new one that is exactly the same.</div>
@@ -675,7 +749,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/WorldMapGenerator.html#landModifier" class="member-name-link">landModifier</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html#language" class="member-name-link">language</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html" title="class in com.github.yellowstonegames.world">PoliticalMapper.Faction</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">What <code>Language</code> to use to generate place names and the names of nations.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html" class="type-name-link" title="class in com.github.yellowstonegames.world">LocalMap</a> - Class in <a href="com/github/yellowstonegames/world/package-summary.html">com.github.yellowstonegames.world</a></dt>
 <dd>
 <div class="block">A concrete implementation of <a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world"><code>WorldMapGenerator</code></a> that does no projection of the map, as if the area were
@@ -753,6 +829,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#maxHeat0" class="member-name-link">maxHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#maxHeat0" class="member-name-link">maxHeat0</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#maxHeat0" class="member-name-link">maxHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RotatingGlobeMap.html#maxHeat0" class="member-name-link">maxHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RotatingGlobeMap.html" title="class in com.github.yellowstonegames.world">RotatingGlobeMap</a></dt>
@@ -768,6 +846,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#maxHeat1" class="member-name-link">maxHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#maxHeat1" class="member-name-link">maxHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#maxHeat1" class="member-name-link">maxHeat1</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#maxHeat1" class="member-name-link">maxHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -790,6 +870,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#maxWet0" class="member-name-link">maxWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#maxWet0" class="member-name-link">maxWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#maxWet0" class="member-name-link">maxWet0</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#maxWet0" class="member-name-link">maxWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -898,6 +980,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#minHeat0" class="member-name-link">minHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#minHeat0" class="member-name-link">minHeat0</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#minHeat0" class="member-name-link">minHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RotatingGlobeMap.html#minHeat0" class="member-name-link">minHeat0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RotatingGlobeMap.html" title="class in com.github.yellowstonegames.world">RotatingGlobeMap</a></dt>
@@ -913,6 +997,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#minHeat1" class="member-name-link">minHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#minHeat1" class="member-name-link">minHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#minHeat1" class="member-name-link">minHeat1</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#minHeat1" class="member-name-link">minHeat1</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -936,6 +1022,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#minWet0" class="member-name-link">minWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#minWet0" class="member-name-link">minWet0</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#minWet0" class="member-name-link">minWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RotatingGlobeMap.html#minWet0" class="member-name-link">minWet0</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RotatingGlobeMap.html" title="class in com.github.yellowstonegames.world">RotatingGlobeMap</a></dt>
@@ -951,6 +1039,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#moisture" class="member-name-link">moisture</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#moisture" class="member-name-link">moisture</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#moisture" class="member-name-link">moisture</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#moisture" class="member-name-link">moisture</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -978,6 +1068,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#moistureFreq" class="member-name-link">moistureFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#moistureFreq" class="member-name-link">moistureFreq</a> - Static variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#moistureFreq" class="member-name-link">moistureFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RoundSideWorldMap.html#moistureFreq" class="member-name-link">moistureFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RoundSideWorldMap.html" title="class in com.github.yellowstonegames.world">RoundSideWorldMap</a></dt>
@@ -990,7 +1082,10 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
 <dt><a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html#name" class="member-name-link">name</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html" title="class in com.github.yellowstonegames.world">PoliticalMapper.Faction</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The (typically longer) formal name of the Faction, such as "The United States of America" or "The Noble
+ Fiefdom of Harjalia".</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/PoliticalMapper.html#name" class="member-name-link">name</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/PoliticalMapper.html" title="class in com.github.yellowstonegames.world">PoliticalMapper</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -1003,6 +1098,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#otherFreq" class="member-name-link">otherFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#otherFreq" class="member-name-link">otherFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#otherFreq" class="member-name-link">otherFreq</a> - Static variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#otherFreq" class="member-name-link">otherFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1019,6 +1116,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#otherRidged" class="member-name-link">otherRidged</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#otherRidged" class="member-name-link">otherRidged</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#otherRidged" class="member-name-link">otherRidged</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#otherRidged" class="member-name-link">otherRidged</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1099,6 +1198,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#regenerate(int,int,int,int,float,float,long,long)" class="member-name-link">regenerate(int, int, int, int, float, float, long, long)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#regenerate(int,int,int,int,float,float,long,long)" class="member-name-link">regenerate(int, int, int, int, float, float, long, long)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#regenerate(int,int,int,int,float,float,long,long)" class="member-name-link">regenerate(int, int, int, int, float, float, long, long)</a> - Method in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#regenerate(int,int,int,int,float,float,long,long)" class="member-name-link">regenerate(int, int, int, int, float, float, long, long)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1238,7 +1339,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/WorldMapGenerator.html#shallowWaterUpper" class="member-name-link">shallowWaterUpper</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapGenerator.html" title="class in com.github.yellowstonegames.world">WorldMapGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html#shortName" class="member-name-link">shortName</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/PoliticalMapper.Faction.html" title="class in com.github.yellowstonegames.world">PoliticalMapper.Faction</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The short name of the Faction, such as "America" or "Harjalia".</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/world/WorldMapView.html#show()" class="member-name-link">show()</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/WorldMapView.html" title="class in com.github.yellowstonegames.world">WorldMapView</a></dt>
 <dd>
 <div class="block">After calling <a href="com/github/yellowstonegames/world/WorldMapView.html#generate()"><code>generate()</code></a>, you can call this to assign values to <a href="com/github/yellowstonegames/world/WorldMapView.html#getColorMap()"><code>getColorMap()</code></a> and
@@ -1336,6 +1439,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#terrainBasic" class="member-name-link">terrainBasic</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#terrainBasic" class="member-name-link">terrainBasic</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/EllipticalWorldMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/EllipticalWorldMap.html" title="class in com.github.yellowstonegames.world">EllipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
@@ -1343,6 +1448,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#terrainFreq" class="member-name-link">terrainFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1372,6 +1479,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#terrainLayeredFreq" class="member-name-link">terrainLayeredFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#terrainLayeredFreq" class="member-name-link">terrainLayeredFreq</a> - Static variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#terrainLayeredFreq" class="member-name-link">terrainLayeredFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RoundSideWorldMap.html#terrainLayeredFreq" class="member-name-link">terrainLayeredFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RoundSideWorldMap.html" title="class in com.github.yellowstonegames.world">RoundSideWorldMap</a></dt>
@@ -1379,6 +1488,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/StretchWorldMap.html#terrainLayeredFreq" class="member-name-link">terrainLayeredFreq</a> - Static variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/StretchWorldMap.html" title="class in com.github.yellowstonegames.world">StretchWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/GlobeMap.html#terrainRidged" class="member-name-link">terrainRidged</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/GlobeMap.html" title="class in com.github.yellowstonegames.world">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#terrainRidged" class="member-name-link">terrainRidged</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/TilingWorldMap.html#terrainRidged" class="member-name-link">terrainRidged</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/TilingWorldMap.html" title="class in com.github.yellowstonegames.world">TilingWorldMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1527,6 +1638,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#wrapX(int,int)" class="member-name-link">wrapX(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#wrapX(int,int)" class="member-name-link">wrapX(int, int)</a> - Method in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#wrapX(int,int)" class="member-name-link">wrapX(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/MimicWorldMap.html#wrapX(int,int)" class="member-name-link">wrapX(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/MimicWorldMap.html" title="class in com.github.yellowstonegames.world">MimicWorldMap</a></dt>
@@ -1544,6 +1657,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#wrapY(int,int)" class="member-name-link">wrapY(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#wrapY(int,int)" class="member-name-link">wrapY(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#wrapY(int,int)" class="member-name-link">wrapY(int, int)</a> - Method in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#wrapY(int,int)" class="member-name-link">wrapY(int, int)</a> - Method in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1568,6 +1683,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#xPositions" class="member-name-link">xPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#xPositions" class="member-name-link">xPositions</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#xPositions" class="member-name-link">xPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/RotatingGlobeMap.html#xPositions" class="member-name-link">xPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/RotatingGlobeMap.html" title="class in com.github.yellowstonegames.world">RotatingGlobeMap</a></dt>
@@ -1586,6 +1703,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#yPositions" class="member-name-link">yPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#yPositions" class="member-name-link">yPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#yPositions" class="member-name-link">yPositions</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#yPositions" class="member-name-link">yPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>
@@ -1631,6 +1750,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/world/HexagonalWorldMap.html#zPositions" class="member-name-link">zPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HexagonalWorldMap.html" title="class in com.github.yellowstonegames.world">HexagonalWorldMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html#zPositions" class="member-name-link">zPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/HyperellipticalWorldMap.html" title="class in com.github.yellowstonegames.world">HyperellipticalWorldMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/world/i/GlobeMap.html#zPositions" class="member-name-link">zPositions</a> - Variable in class com.github.yellowstonegames.world.i.<a href="com/github/yellowstonegames/world/i/GlobeMap.html" title="class in com.github.yellowstonegames.world.i">GlobeMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/world/LocalMap.html#zPositions" class="member-name-link">zPositions</a> - Variable in class com.github.yellowstonegames.world.<a href="com/github/yellowstonegames/world/LocalMap.html" title="class in com.github.yellowstonegames.world">LocalMap</a></dt>
 <dd>&nbsp;</dd>

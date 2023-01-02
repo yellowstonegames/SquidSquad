@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -30,7 +29,6 @@ import java.util.Map;
  * should use a normal {@link ObjectObjectMap} instead, since some optimizations here require Coord keys to be in the
  * pool.
  */
-@NotNullDefault
 public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     public CoordObjectMap() {
         super();

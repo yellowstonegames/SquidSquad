@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -87,88 +103,58 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A variant on LZSEncoding to encode byte arrays to compressed Strings, and decode them back.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ColorGradients.html" title="class in com.github.yellowstonegames.core">ColorGradients</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Static methods for handling gradients of smoothly-changing colors, typically inside of <code>IntList</code>s.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DescriptiveColor.html" title="class in com.github.yellowstonegames.core">DescriptiveColor</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A palette of predefined colors as packed Oklab ints, and tools for obtaining Oklab int colors from a description.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Dice.html" title="class in com.github.yellowstonegames.core">Dice</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Dice.html" title="class in com.github.yellowstonegames.core">Dice</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for emulating various traditional RPG-style dice rolls.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Dice.Rule.html" title="class in com.github.yellowstonegames.core">Dice.Rule</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Dice.Rule.html" title="class in com.github.yellowstonegames.core">Dice.Rule</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A rule for how to roll a particular set of dice and operations to perform on them, such as "3d6+4" to roll three
  6-sided dice and add 4 to the result.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DigitTools.html" title="class in com.github.yellowstonegames.core">DigitTools</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Utility class for converting to and from numbers and their String representations; this is mostly wrappers around
  <code>Base</code> for compatibility.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DistributedRandom.html" title="class in com.github.yellowstonegames.core">DistributedRandom</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">An EnhancedRandom that delegates to a <code>FourWheelRandom</code>, but runs it through a user-controlled
- <a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core"><code>IDistribution.SimpleDistribution</code></a> to distribute any floats, ints, or doubles as by that distribution.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;T&gt;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FullPalette.html" title="class in com.github.yellowstonegames.core">FullPalette</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A palette of many predefined colors as packed Oklab ints; this contains the full palette that is present in SquidLib
+ in its (massive) SColor class.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GapShuffler.html" title="class in com.github.yellowstonegames.core">GapShuffler</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
  quick succession; that is, there should always be a gap between the same item's occurrences.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IDistribution.html" title="interface in com.github.yellowstonegames.core">IDistribution</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
-<div class="block">A way to take an <code>EnhancedRandom</code> and get one or more random numbers from it to produce a float in some statistical
- distribution, such as Gaussian (also called the normal distribution), exponential, or various simpler schemes that
- don't have common mathematical names.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IDistribution.BathtubDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.BathtubDistribution</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">An IDistribution that produces results between 0.0 inclusive and 1.0 exclusive, but is much more likely to produce
- results near 0.0 or 1.0, further from 0.5.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IDistribution.CurvedBoundedDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.CurvedBoundedDistribution</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">An IDistribution that allows a parameter to determine how many calls to <code>EnhancedRandom.nextDouble()</code> to make and average
- whenever a double is requested.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IDistribution.ExponentialDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.ExponentialDistribution</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">An IDistribution that implements the <a href="https://en.wikipedia.org/wiki/Exponential_distribution">Exponential
- distribution</a>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IDistribution.GaussianDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.GaussianDistribution</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">On each call to getDouble(), this gets one Gaussian ("normally") distributed double value with mean 0.0 and
- standard deviation 1.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IDistribution.KumaraswamyDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.KumaraswamyDistribution</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Allows forming oddly-shaped, not-quite-symmetrical, parameterized distributions.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IDistribution.SimpleDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleDistribution</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IDistribution.SimpleSpikeDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SimpleSpikeDistribution</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A variant on SpikeDistribution that has its range shrunk and moved from <code>[-1,1)</code> to <code>[0,1)</code>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IDistribution.SpikeDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.SpikeDistribution</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">An IDistribution that produces results between -1.0 inclusive and 1.0 exclusive, but is much more likely to produce
- results near 0.0, and does not "round off" like a Gaussian curve around the midpoint.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IDistribution.UniformDistribution.html" title="class in com.github.yellowstonegames.core">IDistribution.UniformDistribution</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The simplest possible distribution; this returns every possible double in its range with approximately equal
- likelihood.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IFlawed.html" title="interface in com.github.yellowstonegames.core">IFlawed</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IFlawed.html" title="interface in com.github.yellowstonegames.core">IFlawed</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">An empty marker interface to indicate that an implementor has known or intentional issues with a key property of its
  functionality.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IIdentified.html" title="interface in com.github.yellowstonegames.core">IIdentified</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IIdentified.html" title="interface in com.github.yellowstonegames.core">IIdentified</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Allows access to an int identifier for an object, which is often but not necessarily unique.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Interpolations.html" title="class in com.github.yellowstonegames.core">Interpolations</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Interpolations.BiasGain.html" title="class in com.github.yellowstonegames.core">Interpolations.BiasGain</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A wrapper around <code>MathTools.barronSpline(float, float, float)</code> to use it
+ as an InterpolationFunction.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="Interpolations.InterpolationFunction.html" title="interface in com.github.yellowstonegames.core">Interpolations.InterpolationFunction</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">A type of function that takes a float from 0 to 1 (usually, and also usually inclusive) and returns a float that
+ is typically in the 0 to 1 range or just outside it.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">

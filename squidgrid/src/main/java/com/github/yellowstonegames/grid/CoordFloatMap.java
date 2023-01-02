@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
 /**
@@ -33,7 +32,6 @@ import java.util.Collection;
  * You can create a CoordFloatMap with {@link #fromArray2D(float[][], float, float)} if you have a 2D float array and
  * want to get the positions within some range.
  */
-@NotNullDefault
 public class CoordFloatMap extends ObjectFloatMap<Coord> {
     public CoordFloatMap() {
         super();

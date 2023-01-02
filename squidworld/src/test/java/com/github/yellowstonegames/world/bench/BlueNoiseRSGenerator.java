@@ -13,8 +13,8 @@ import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -93,7 +93,7 @@ public class BlueNoiseRSGenerator extends ApplicationAdapter {
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
     private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f){
         @Override
-        protected int place(final @Nonnull Object item) {
+        protected int place(final @NonNull Object item) {
             final Coord c = (Coord)item;
             final int x = c.x, y = c.y;
             return (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12) & mask;

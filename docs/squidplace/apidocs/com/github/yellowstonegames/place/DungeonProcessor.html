@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -208,6 +224,12 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-last even-row-color">
 <div class="block">The approximate percentage of non-room, non-cave, non-edge-of-map wall cells to try to fill with lake.</div>
 </div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#markStairsDown" class="member-name-link">markStairsDown</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#markStairsUp" class="member-name-link">markStairsUp</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><a href="#mazeFX" class="member-name-link">mazeFX</a></code></div>
 <div class="col-last odd-row-color">
@@ -267,13 +289,13 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">DungeonProcessor</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Make a DungeonProcessor with a LaserRandom using a random seed, height 40, and width 40.</div>
+<div class="block">Make a DungeonProcessor with a WhiskerRandom using a random seed, height 40, and width 40.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int)" class="member-name-link">DungeonProcessor</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
- adding features will be a LaserRandom using a random seed.</div>
+ adding features will be a WhiskerRandom using a random seed.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">DungeonProcessor</a><wbr>(int&nbsp;width,
  int&nbsp;height,
@@ -342,6 +364,17 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="block">Instructs the generator to add a winding section of corridors into a large area that can be filled without
  overwriting rooms, caves, or the edge of the map; wall cells will become either '#' or '.' and corridors will be
  overwritten.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addStairs()" class="member-name-link">addStairs</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addStairs(boolean,boolean)" class="member-name-link">addStairs</a><wbr>(boolean&nbsp;up,
+ boolean&nbsp;down)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Potentially enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addTraps(int,int)" class="member-name-link">addTraps</a><wbr>(int&nbsp;env,
@@ -649,6 +682,18 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 </section>
 </li>
 <li>
+<section class="detail" id="markStairsUp">
+<h3>markStairsUp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">markStairsUp</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="markStairsDown">
+<h3>markStairsDown</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">markStairsDown</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="rng">
 <h3>rng</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
@@ -713,7 +758,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <section class="detail" id="&lt;init&gt;()">
 <h3>DungeonProcessor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonProcessor</span>()</div>
-<div class="block">Make a DungeonProcessor with a LaserRandom using a random seed, height 40, and width 40.</div>
+<div class="block">Make a DungeonProcessor with a WhiskerRandom using a random seed, height 40, and width 40.</div>
 </section>
 </li>
 <li>
@@ -722,7 +767,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DungeonProcessor</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
 <div class="block">Make a DungeonProcessor with the given height and width; the RNG used for generating a dungeon and
- adding features will be a LaserRandom using a random seed. If width or height is greater than 256, then this will
+ adding features will be a WhiskerRandom using a random seed. If width or height is greater than 256, then this will
  expand the Coord pool from its 256x256 default so it stores a reference to each Coord that might be used in the
  creation of the dungeon (if width and height are 300 and 300, the Coord pool will be 300x300; if width and height
  are 500 and 100, the Coord pool will be 500x256 because it won't shrink below the default size of 256x256).</div>
@@ -1030,6 +1075,32 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
                    the dungeon floor is meant to be a kill screen or minefield.</dd>
 <dt>Returns:</dt>
 <dd>this DungeonGenerator; can be chained</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addStairs()">
+<h3>addStairs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></span>&nbsp;<span class="element-name">addStairs</span>()</div>
+<div class="block">Enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>this DungeonProcessor; can be chained</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addStairs(boolean,boolean)">
+<h3>addStairs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="DungeonProcessor.html" title="class in com.github.yellowstonegames.place">DungeonProcessor</a></span>&nbsp;<span class="element-name">addStairs</span><wbr><span class="parameters">(boolean&nbsp;up,
+ boolean&nbsp;down)</span></div>
+<div class="block">Potentially enables drawing stairs up, as '&lt;', and stairs down, as '&gt;', when a map is generated.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>up</code> - if true, stairs up will be marked as '&lt;'; if false, no up stairs will be marked</dd>
+<dd><code>down</code> - if true, stairs down will be marked as '&gt;'; if false, no down stairs will be marked</dd>
+<dt>Returns:</dt>
+<dd>this DungeonProcessor; can be chained</dd>
 </dl>
 </section>
 </li>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package com.github.yellowstonegames.smooth;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Allows specifying a smoothly-changing float position using a libGDX Vector2 for the start and the end, with a change
@@ -35,8 +35,8 @@ import javax.annotation.Nonnull;
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
 public class VectorGlider extends Glider {
-    protected @Nonnull Vector2 start;
-    protected @Nonnull Vector2 end;
+    protected @NonNull Vector2 start;
+    protected @NonNull Vector2 end;
 
     public VectorGlider() {
         super();
@@ -48,7 +48,7 @@ public class VectorGlider extends Glider {
      * Assigns {@link Vector2#Zero} into start and end into end; does not continue to use the reference to the parameter end, or Zero.
      * @param end will be copied into end
      */
-    public VectorGlider(@Nonnull Vector2 end) {
+    public VectorGlider(@NonNull Vector2 end) {
         super(new Changer("x", 0f, end.x), new Changer("y", 0f, end.y));
         this.start = new Vector2(0f, 0f);
         this.end = end.cpy();
@@ -59,7 +59,7 @@ public class VectorGlider extends Glider {
      * @param start will be copied into start
      * @param end will be copied into end
      */
-    public VectorGlider(@Nonnull Vector2 start, @Nonnull Vector2 end) {
+    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end) {
         super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
@@ -72,7 +72,7 @@ public class VectorGlider extends Glider {
      * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public VectorGlider(@Nonnull Vector2 start, @Nonnull Vector2 end, @Nonnull Interpolation interpolation, Runnable completeRunner) {
+    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end, @NonNull Interpolation interpolation, Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
@@ -106,24 +106,24 @@ public class VectorGlider extends Glider {
         return getFloat("y");
     }
 
-    @Nonnull
+    @NonNull
     public Vector2 getStart() {
         return start;
     }
 
-    public void setStart(@Nonnull Vector2 start) {
+    public void setStart(@NonNull Vector2 start) {
         this.start.set(start);
         setStartFloat("x", start.x);
         setStartFloat("y", start.y);
         change = 0f;
     }
 
-    @Nonnull
+    @NonNull
     public Vector2 getEnd() {
         return end;
     }
 
-    public void setEnd(@Nonnull Vector2 end) {
+    public void setEnd(@NonNull Vector2 end) {
         this.end.set(end);
         setEndFloat("x", end.x);
         setEndFloat("y", end.y);

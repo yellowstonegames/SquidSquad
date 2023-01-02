@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -1890,7 +1906,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  the cells in this to "on" and the rest to off.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dd><code>width</code> - the maximum width for the Region</dd>
 <dd><code>height</code> - the maximum height for the Region</dd>
 </dl>
@@ -1910,10 +1926,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  better speed than generating one random number per cell, although the precision is probably good enough (fraction
  is effectively rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
  <code>random</code> can be a plain <code>EnhancedRandom</code>, but will be much faster and have less potential for patterns or
- artifacts in the output if you use <code>LaserRandom</code> or another higher-quality subclass.</div>
+ artifacts in the output if you use <code>WhiskerRandom</code> or another higher-quality subclass.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>WhiskerRandom</code></dd>
 <dd><code>fraction</code> - between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps</dd>
 <dd><code>width</code> - the maximum width for the Region</dd>
 <dd><code>height</code> - the maximum height for the Region</dd>
@@ -2246,7 +2262,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  approximately half of the cells in this to "on" and the rest to off.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>WhiskerRandom</code></dd>
 <dd><code>width</code> - the width of the desired Region</dd>
 <dd><code>height</code> - the height of the desired Region</dd>
 <dt>Returns:</dt>
@@ -2269,10 +2285,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  generating one random number per cell, although the precision is probably good enough (fraction is effectively
  rounded down to the nearest multiple of 0.015625, and clamped between 0.0 and 1.0). The parameter
  <code>random</code> can be a plain <code>EnhancedRandom</code>, but will be much faster and have less potential for patterns or
- artifacts in the output if you use <code>LaserRandom</code> or another higher-quality subclass.</div>
+ artifacts in the output if you use <code>WhiskerRandom</code> or another higher-quality subclass.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>WhiskerRandom</code></dd>
 <dd><code>fraction</code> - between 0.0 and 1.0 (clamped), only considering a precision of 1/64.0 (0.015625) between steps</dd>
 <dd><code>width</code> - the maximum width for the Region</dd>
 <dd><code>height</code> - the maximum height for the Region</dd>
@@ -3205,16 +3221,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  int&nbsp;bitCount)</span></div>
 <div class="block">Generates a random 64-bit long with a number of '1' bits (Hamming weight) equal on average to bitCount.
  For example, calling this with a parameter of 32 will be equivalent to calling nextLong() on the given
- EnhancedRandom, which is recommended to be a subclass like <code>LaserRandom</code>.
+ EnhancedRandom, which is recommended to be a subclass like <code>WhiskerRandom</code>.
  Calling this with a parameter of 16 will have on average 16 of the 64 bits in the returned long set to '1',
  distributed pseudo-randomly, while a parameter of 47 will have on average 47 bits set. This can be useful for
  certain code that uses bits to represent data but needs a different ratio of set bits to unset bits than 1:1.
  <br>
  The parameter <code>random</code> can be a plain <code>EnhancedRandom</code>, but will be much faster and have less potential
- for patterns or artifacts in the output if you use <code>LaserRandom</code> or another higher-quality subclass.</div>
+ for patterns or artifacts in the output if you use <code>WhiskerRandom</code> or another higher-quality subclass.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>WhiskerRandom</code></dd>
 <dd><code>bitCount</code> - an int, only considered if between 0 and 64, that is the average number of bits to set</dd>
 <dt>Returns:</dt>
 <dd>a 64-bit long that, on average, should have bitCount bits set to 1, potentially anywhere in the long</dd>
@@ -3671,7 +3687,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>bounds</code> - this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this</dd>
-<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dt>Returns:</dt>
 <dd>this, after expanding randomly once, for chaining</dd>
 </dl>
@@ -3691,7 +3707,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dt>Parameters:</dt>
 <dd><code>bounds</code> - this Region will only expand to cells that are "on" in bounds; bounds should overlap with this</dd>
 <dd><code>volume</code> - the maximum <a href="#size()"><code>size()</code></a> this Region can reach before this stops expanding</dd>
-<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dt>Returns:</dt>
 <dd>this, after expanding randomly, for chaining</dd>
 </dl>
@@ -4045,7 +4061,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  with a randomly "damaged" one.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dd><code>fractionKept</code> - the fraction between 0.0 and 1.0 of how many cells on the outer surface of this to keep "on"</dd>
 <dt>Returns:</dt>
 <dd>this for chaining</dd>
@@ -4062,7 +4078,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  were "on" in this originally. Does not limit the count of "on" cells in the result.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dd><code>minimumDistance</code> - the minimum distance between "on" cells in the result</dd>
 <dt>Returns:</dt>
 <dd>this for chaining</dd>
@@ -4082,7 +4098,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  cells are "on"). If limit is negative, this will not restrict the count.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dd><code>minimumDistance</code> - the minimum distance between "on" cells in the result</dd>
 <dd><code>limit</code> - the maximum count of "on" cells to keep</dd>
 <dt>Returns:</dt>
@@ -4214,7 +4230,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  can be hundreds of times faster.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>LaserRandom</code></dd>
+<dd><code>rng</code> - a EnhancedRandom, or a recommended subclass like <code>WhiskerRandom</code></dd>
 <dt>Returns:</dt>
 <dd>a single randomly-chosen Coord from the "on" positions in this Region, or (-1,-1) if empty</dd>
 </dl>
@@ -4875,10 +4891,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  points without change (returning this Region), while anything less than 0.015625 (1.0/64) will empty this
  Region (using <a href="#empty()"><code>empty()</code></a>) and then return it. The parameter <code>random</code> can be a plain <code>EnhancedRandom</code>,
  but will be much faster and have less potential for patterns or artifacts in the output if you use
- <code>LaserRandom</code> or another higher-quality subclass.</div>
+ <code>WhiskerRandom</code> or another higher-quality subclass.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>LaserRandom</code></dd>
+<dd><code>random</code> - a EnhancedRandom or a recommended subclass, like <code>WhiskerRandom</code></dd>
 <dd><code>preservation</code> - the rough fraction of points to keep, between 0.0 and 1.0</dd>
 <dt>Returns:</dt>
 <dd>a randomly modified change to this Region</dd>

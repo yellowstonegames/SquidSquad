@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -55,7 +55,7 @@ public class WeightedTable {
      * returned by {@link #random(long)}.
      * @param probabilities an array or varargs of positive floats representing the weights for their own indices
      */
-    public WeightedTable(@Nonnull float... probabilities) {
+    public WeightedTable(@NonNull float... probabilities) {
         /* Begin by doing basic structural checks on the inputs. */
         if ((size = probabilities.length) == 0)
             throw new IllegalArgumentException("Array 'probabilities' given to WeightedTable must be nonempty.");

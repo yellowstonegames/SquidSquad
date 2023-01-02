@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -495,7 +511,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dd><code>width</code> - the width of the 2D array to return</dd>
 <dd><code>height</code> - the height of the 2D array to return</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd>a 2D int array containing ints from 0 (inclusive) to <code>spillerLimit</code> (exclusive)</dd>
 </dl>
@@ -514,7 +530,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dt>Parameters:</dt>
 <dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd><code>toFill</code>, after modifications</dd>
 </dl>
@@ -534,7 +550,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dt>Parameters:</dt>
 <dd><code>toFill</code> - a 2D int array that will be modified in-place and entirely replaced; its contents don't matter</dd>
 <dd><code>spillerLimit</code> - the upper exclusive bound for the values that will be present in toFill when this finishes</dd>
-<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, to generate random values during expansion</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion</dd>
 <dt>Returns:</dt>
 <dd><code>toFill</code>, after modifications</dd>
 </dl>
@@ -571,7 +587,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - an index into some biome table, WIP</dd>
-<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, can be seeded</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a MizuchiRandom, can be seeded</dd>
 <dt>Returns:</dt>
 <dd>a shuffled ObjectList that typically contains repeats of the kinds of floor that can appear here</dd>
 </dl>
@@ -600,7 +616,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - an index into some biome table, WIP</dd>
-<dd><code>rng</code> - an EnhancedRandom, such as a LaserRandom, can be seeded</dd>
+<dd><code>rng</code> - an EnhancedRandom, such as a MizuchiRandom, can be seeded</dd>
 <dt>Returns:</dt>
 <dd>a shuffled ObjectList that typically contains repeats of the kinds of terrain feature that can appear here</dd>
 </dl>

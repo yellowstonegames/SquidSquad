@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.tommyettinger.ds.annotations.NotNullDefault;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
 /**
@@ -38,7 +37,6 @@ import java.util.Collection;
  * associated with their values in the {@code float[][]}, and call {@link #sortByValue(FloatComparator)} to change the
  * keys' iteration order. There is code for this in {@link #fromArray2D(float[][], float, float)}.
  */
-@NotNullDefault
 public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     public CoordFloatOrderedMap() {
         super();

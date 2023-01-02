@@ -14,8 +14,8 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -41,14 +41,14 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
     {
         @Override
-        protected int place(@Nonnull Object item) {
+        protected int place(@NonNull Object item) {
             final int x = ((Coord)item).x, y = ((Coord)item).y;
             // Cantor pairing function
             return y + ((x + y) * (x + y + 1) >> 1) & mask;
         }
 
         @Override
-        protected boolean equate(@Nonnull Object left, @Nullable Object right) {
+        protected boolean equate(@NonNull Object left, @Nullable Object right) {
             return left == right;
         }
     };

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.DrunkenWalk;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Like {@link DrunkenWalk}, this generates orthogonally-connected paths of {@link Coord} that meander through an area;
@@ -36,11 +36,11 @@ import javax.annotation.Nonnull;
  * Created by Tommy Ettinger on 6/26/2020.
  */
 public class TwistedLine {
-    @Nonnull
+    @NonNull
     public EnhancedRandom rng;
-    @Nonnull
+    @NonNull
     public final DefaultGraph graph;
-    @Nonnull
+    @NonNull
     public final ObjectList<Coord> lastPath;
 
     public TwistedLine() {
@@ -120,7 +120,7 @@ public class TwistedLine {
         return graph.height;
     }
 
-    @Nonnull
+    @NonNull
     public EnhancedRandom getRng() {
         return rng;
     }
@@ -135,7 +135,7 @@ public class TwistedLine {
      * into another list if you want to keep its contents.
      * @return the most recent path of Coord, as an ObjectList, this found.
      */
-    @Nonnull
+    @NonNull
     public ObjectList<Coord> getLastPath() {
         return lastPath;
     }

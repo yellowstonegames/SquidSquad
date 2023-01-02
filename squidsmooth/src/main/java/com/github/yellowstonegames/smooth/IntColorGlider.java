@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package com.github.yellowstonegames.smooth;
 import com.badlogic.gdx.math.Interpolation;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Allows specifying a smoothly-changing color using an int-based color (often RGBA8888, but possibly produced by
@@ -80,7 +80,7 @@ public class IntColorGlider extends Glider {
      * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public IntColorGlider(int start, int end, @Nonnull Interpolation interpolation, @Nullable Runnable completeRunner) {
+    public IntColorGlider(int start, int end, @NonNull Interpolation interpolation, @Nullable Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
     }
 

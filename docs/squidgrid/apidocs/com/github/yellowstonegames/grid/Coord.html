@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -281,7 +297,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Enlarges the pool of cached Coords to the given width and height, and doesn't change
  a dimension if it would be reduced in size.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(int,int)" class="member-name-link">get</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -310,8 +326,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs will
- generate, but instead uses a highly-specific technique based on the Rosenberg-Strong pairing function, a Gray
- code, and two XLCG steps at the end.</div>
+ generate, but instead uses a highly-specific technique based on the
+ <a href="https://arxiv.org/abs/1706.04129">Rosenberg-Strong pairing function</a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#interpolate(com.github.yellowstonegames.grid.Coord,float)" class="member-name-link">interpolate</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;end,
@@ -380,68 +396,75 @@ loadScripts(document, 'script');</script>
 <div class="block">A static version of the current <a href="#hashCode()"><code>hashCode()</code></a> method of this class, taking x and y as parameters instead of
  requiring a Coord object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scale(int)" class="member-name-link">scale</a><wbr>(int&nbsp;i)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rosenbergStrongRandomizedHashCode(int,int)" class="member-name-link">rosenbergStrongRandomizedHashCode</a><wbr>(int&nbsp;x,
+ int&nbsp;y)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A static version of an earlier <a href="#hashCode()"><code>hashCode()</code></a> method of this class, taking x and y as parameters instead of
+ requiring a Coord object.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scale(int,int)" class="member-name-link">scale</a><wbr>(int&nbsp;i,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scale(int)" class="member-name-link">scale</a><wbr>(int&nbsp;i)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scale(int,int)" class="member-name-link">scale</a><wbr>(int&nbsp;i,
  int&nbsp;j)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setX(int)" class="member-name-link">setX</a><wbr>(int&nbsp;x)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setY(int)" class="member-name-link">setY</a><wbr>(int&nbsp;y)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setX(int)" class="member-name-link">setX</a><wbr>(int&nbsp;x)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(double)" class="member-name-link">subtract</a><wbr>(double&nbsp;operand)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setY(int)" class="member-name-link">setY</a><wbr>(int&nbsp;y)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(double)" class="member-name-link">subtract</a><wbr>(double&nbsp;operand)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Separately subtracts operand from the x and y positions of this Coord, rounding to the nearest int for each of x
  and y and producing a different Coord as their "difference."</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(int)" class="member-name-link">subtract</a><wbr>(int&nbsp;operand)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(int)" class="member-name-link">subtract</a><wbr>(int&nbsp;operand)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Separately subtracts operand from the x and y positions of this Coord, producing a different Coord as their
  "difference."</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(com.github.yellowstonegames.grid.Coord)" class="member-name-link">subtract</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;other)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subtract(com.github.yellowstonegames.grid.Coord)" class="member-name-link">subtract</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;other)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Separately subtracts the x and y positions of other from this Coord, producing a different Coord as their
  "difference."</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toGoTo(com.github.yellowstonegames.grid.Coord)" class="member-name-link">toGoTo</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toGoTo(com.github.yellowstonegames.grid.Coord)" class="member-name-link">toGoTo</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the <a href="Direction.html" title="enum class in com.github.yellowstonegames.grid"><code>Direction</code></a> needed to get to <code>target</code> from this; typically this is more useful when target
  and this are adjacent (by <a href="#isAdjacent(com.github.yellowstonegames.grid.Coord)"><code>isAdjacent(Coord)</code></a>) since that should make it possible to go to target.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(int,int)" class="member-name-link">translate</a><wbr>(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(int,int)" class="member-name-link">translate</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Takes this Coord, adds x to its x and y to its y, and returns the Coord at that position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(com.github.yellowstonegames.grid.Direction)" class="member-name-link">translate</a><wbr>(<a href="Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a>&nbsp;d)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translateCapped(int,int,int,int)" class="member-name-link">translateCapped</a><wbr>(int&nbsp;x,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(com.github.yellowstonegames.grid.Direction)" class="member-name-link">translate</a><wbr>(<a href="Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a>&nbsp;d)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translateCapped(int,int,int,int)" class="member-name-link">translateCapped</a><wbr>(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Takes this Coord, adds x to its x and y to its y, limiting x from 0 to width and limiting y from 0 to height,
  and returns the Coord at that position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xoroHashCode(int,int)" class="member-name-link">xoroHashCode</a><wbr>(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xoroHashCode(int,int)" class="member-name-link">xoroHashCode</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">An earlier hashCode() implementation used by this class, now standalone in case you want to replicate the results
  of the older code.</div>
 </div>
@@ -508,8 +531,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="get(int,int)">
 <h3>get</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(int&nbsp;x,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(int&nbsp;x,
  int&nbsp;y)</span></div>
 </section>
 </li>
@@ -524,7 +546,7 @@ loadScripts(document, 'script');</script>
  When only x is different and <code>to.x</code> is less than <code>from.x</code>, this returns 180.
  When only y is different and <code>to.y</code> is less than <code>from.y</code>, this returns 270.
  In cases between these, the angle is between those values; it cannot be 360 but it can be very close. This never
- returns a negative angle. Keep in mind, "up" depends on how your code orients the y-axis, and SquidLib generally
+ returns a negative angle. Keep in mind, "up" depends on how your code orients the y-axis, and SquidSquad generally
  defaults to positive y going toward the top of the screen, like in most textbook geometry.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -1061,11 +1083,12 @@ loadScripts(document, 'script');</script>
 <h3>hashCode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
 <div class="block">Gets the hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs will
- generate, but instead uses a highly-specific technique based on the Rosenberg-Strong pairing function, a Gray
- code, and two XLCG steps at the end. It manages to get extremely low collision rates under many circumstances,
- and very frequently manages to avoid colliding on more than 25% of Coords (making the load factor of most
- hash-based collections fine at a default of 0.75) while often having 0 collisions with some data sets.
- It does much better when Coords are in the default pooled range of -3 or greater.</div>
+ generate, but instead uses a highly-specific technique based on the
+ <a href="https://arxiv.org/abs/1706.04129">Rosenberg-Strong pairing function</a>. This technique will generally
+ return all low values before it returns high values, if small Coord components are hashed first. The bits of the
+ results will not be especially random, but they won't collide much at all, so in this case we may not want the
+ most-random hashes. It does much better when Coords are in the default pooled range of -3 or greater.
+ <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">The Rosenberg-Strong pairing function is discussed more here</a>;.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
@@ -1074,7 +1097,7 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
-<li><a href="#rosenbergStrongHashCode(int,int)"><code>A static method that gets the same result as this method without involving a Coord</code></a></li>
+<li><a href="#rosenbergStrongHashCode(int,int)"><code>A static method that gets similar but more-random results than this method without involving a Coord</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -1087,7 +1110,7 @@ loadScripts(document, 'script');</script>
 <div class="block">A specialized hashing function that is meant to pack Coord items extremely densely in hash-based Maps or Sets, at
  the expense of any random-seeming quality in the hash. This is simply the Cantor pairing function, and while it
  does not behave particularly well with negative x or negative y, it does extremely well at not wasting space or
- computation time in a hash table with Coord keys.</div>
+ computation time in a hash table with Coord keys that are very densely packed.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>an int that should, for different non-negative Coord values, be at least a little different from other hash codes</dd>
@@ -1105,9 +1128,31 @@ loadScripts(document, 'script');</script>
  Rosenberg-Strong pairing function can be written simply as <code>((x &gt;= y) ? x * (x + 2) - y : y * y + x)</code>; it
  produces sequential results for a sequence of positive points traveling in square "shells" away from the origin.
  <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">the algorithm is discussed more here</a>; the only
- changes this makes are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord), and some
+ changes made here are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - the x coordinate of the "imaginary Coord" to hash</dd>
+<dd><code>y</code> - the y coordinate of the "imaginary Coord" to hash</dd>
+<dt>Returns:</dt>
+<dd>the equivalent to the hashCode() of an "imaginary Coord"</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="rosenbergStrongRandomizedHashCode(int,int)">
+<h3>rosenbergStrongRandomizedHashCode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">rosenbergStrongRandomizedHashCode</span><wbr><span class="parameters">(int&nbsp;x,
+ int&nbsp;y)</span></div>
+<div class="block">A static version of an earlier <a href="#hashCode()"><code>hashCode()</code></a> method of this class, taking x and y as parameters instead of
+ requiring a Coord object. Like the earlier hashCode() method, this involves the close-to-optimal mathematical
+ Rosenberg-Strong pairing function to distribute x and y without overlap until they get very large. The
+ Rosenberg-Strong pairing function can be written simply as <code>((x &gt;= y) ? x * (x + 2) - y : y * y + x)</code>; it
+ produces sequential results for a sequence of positive points traveling in square "shells" away from the origin.
+ <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">the algorithm is discussed more here</a>; the only
+ changes made here are adding 3 to x and y (to account for the minimum of -3 in most cases for a Coord), and some
  finalizing steps that help randomize the upper bits of the hash code (the lower bits are quite non-random because
- they can't permit any gaps while optimizing collision rates).</div>
+ they can't permit any gaps while optimizing collision rates). This method is "Randomized" because of these final
+ steps, and they may slow it down as a hash code somewhat, but make the result more chaotic.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - the x coordinate of the "imaginary Coord" to hash</dd>

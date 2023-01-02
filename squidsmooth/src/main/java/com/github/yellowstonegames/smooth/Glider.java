@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.HolderSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
 /**
@@ -36,22 +36,22 @@ public class Glider {
      * {@link #getInt(String)}. The name is important; you look up the current value for a Changer by its name.
      */
     public static class Changer {
-        @Nonnull public final String name;
+        @NonNull public final String name;
         public float startF;
         public float endF;
         public int startI;
         public int endI;
-        @Nonnull public FloatInterpolator interpolatorF;
-        @Nonnull public IntInterpolator interpolatorI;
+        @NonNull public FloatInterpolator interpolatorF;
+        @NonNull public IntInterpolator interpolatorI;
 
-        public Changer(@Nonnull String name, float initialF){
+        public Changer(@NonNull String name, float initialF){
             this(name, initialF, initialF, FloatInterpolator.LINEAR);
         }
-        public Changer(@Nonnull String name, float startF, float endF){
+        public Changer(@NonNull String name, float startF, float endF){
             this(name, startF, endF, FloatInterpolator.LINEAR);
         }
 
-        public Changer(@Nonnull String name, float startF, float endF, @Nonnull FloatInterpolator interpolatorF) {
+        public Changer(@NonNull String name, float startF, float endF, @NonNull FloatInterpolator interpolatorF) {
             this.name = name;
             this.startF = startF;
             this.endF = endF;
@@ -59,7 +59,7 @@ public class Glider {
             this.interpolatorI = IntInterpolator.LINEAR;
         }
 
-        public Changer(@Nonnull String name, int startI, int endI, @Nonnull IntInterpolator interpolatorI) {
+        public Changer(@NonNull String name, int startI, int endI, @NonNull IntInterpolator interpolatorI) {
             this.name = name;
             this.startI = startI;
             this.endI = endI;
@@ -67,7 +67,7 @@ public class Glider {
             this.interpolatorF = FloatInterpolator.LINEAR;
         }
 
-        @Nonnull
+        @NonNull
         public String getName() {
             return name;
         }
@@ -97,9 +97,9 @@ public class Glider {
         }
     }
 
-    @Nonnull public final HolderSet<Changer, String> changers = new HolderSet<>(Changer::getName);
+    @NonNull public final HolderSet<Changer, String> changers = new HolderSet<>(Changer::getName);
     protected float change = 0f;
-    protected @Nonnull Interpolation interpolation;
+    protected @NonNull Interpolation interpolation;
     protected @Nullable Runnable completeRunner;
 
     public Glider() {
@@ -115,29 +115,29 @@ public class Glider {
         this.changers.addAll(changers);
     }
 
-    public Glider(@Nonnull Interpolation interpolation, Changer changer) {
+    public Glider(@NonNull Interpolation interpolation, Changer changer) {
         this.interpolation = interpolation;
         this.changers.add(changer);
     }
 
-    public Glider(@Nonnull Interpolation interpolation, Changer... changers) {
+    public Glider(@NonNull Interpolation interpolation, Changer... changers) {
         this.interpolation = interpolation;
         this.changers.addAll(changers);
     }
 
-    public Glider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
+    public Glider(@NonNull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.add(changer);
     }
 
-    public Glider(@Nonnull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
+    public Glider(@NonNull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.addAll(changers);
     }
 
-    public Glider(@Nonnull Glider other) {
+    public Glider(@NonNull Glider other) {
         this.change = other.change;
         this.interpolation = other.interpolation;
         this.completeRunner = other.completeRunner;
@@ -175,7 +175,7 @@ public class Glider {
      * @param other another Glider to merge into this one; will not be changed, but this may share references
      * @return this, after modifications, for chaining
      */
-    public Glider merge(final @Nonnull Glider other) {
+    public Glider merge(final @NonNull Glider other) {
         this.changers.addAll(other.changers);
         if(this.completeRunner == null) this.completeRunner = other.completeRunner;
         else if(other.completeRunner != null) this.completeRunner = () -> {
@@ -193,7 +193,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the current float value of the located Changer, or {@link Float#NaN} if lookup fails
      */
-    public float getFloat(@Nonnull String name){
+    public float getFloat(@NonNull String name){
         Changer c = changers.get(name);
         if(c == null) return Float.NaN;
         return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(change));
@@ -207,7 +207,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the current int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
      */
-    public int getInt(@Nonnull String name){
+    public int getInt(@NonNull String name){
         Changer c = changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(change));
@@ -229,7 +229,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the start float value of the located Changer, or {@link Float#NaN} if lookup fails
      */
-    public float getStartFloat(@Nonnull String name) {
+    public float getStartFloat(@NonNull String name) {
         Changer c = changers.get(name);
         if(c == null) return Float.NaN;
         return c.startF;
@@ -242,7 +242,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @param start value to use for the located Changer's start float
      */
-    public void setStartFloat(@Nonnull String name, float start) {
+    public void setStartFloat(@NonNull String name, float start) {
         Changer c = changers.get(name);
         if(c == null) return;
         c.startF = start;
@@ -255,7 +255,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the end float value of the located Changer, or {@link Float#NaN} if lookup fails
      */
-    public float getEndFloat(@Nonnull String name) {
+    public float getEndFloat(@NonNull String name) {
         Changer c = changers.get(name);
         if(c == null) return Float.NaN;
         return c.endF;
@@ -268,7 +268,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @param end value to use for the located Changer's end float
      */
-    public void setEndFloat(@Nonnull String name, float end) {
+    public void setEndFloat(@NonNull String name, float end) {
         Changer c = changers.get(name);
         if(c == null) return;
         c.endF = end;
@@ -281,7 +281,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the start int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
      */
-    public int getStartInt(@Nonnull String name) {
+    public int getStartInt(@NonNull String name) {
         Changer c = changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.startI;
@@ -294,7 +294,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @param start value to use for the located Changer's start int
      */
-    public void setStartInt(@Nonnull String name, int start) {
+    public void setStartInt(@NonNull String name, int start) {
         Changer c = changers.get(name);
         if(c == null) return;
         c.startI = start;
@@ -307,7 +307,7 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @return the end int value of the located Changer, or {@link Integer#MIN_VALUE} if lookup fails
      */
-    public int getEndInt(@Nonnull String name) {
+    public int getEndInt(@NonNull String name) {
         Changer c = changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.endI;
@@ -320,19 +320,19 @@ public class Glider {
      * @param name the name of the Changer to look up
      * @param end value to use for the located Changer's end int
      */
-    public void setEndInt(@Nonnull String name, int end) {
+    public void setEndInt(@NonNull String name, int end) {
         Changer c = changers.get(name);
         if(c == null) return;
         c.endI = end;
         change = 0f;
     }
 
-    @Nonnull
+    @NonNull
     public Interpolation getInterpolation() {
         return interpolation;
     }
 
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
+    public void setInterpolation(@NonNull Interpolation interpolation) {
         this.interpolation = interpolation;
         change = 0f;
     }

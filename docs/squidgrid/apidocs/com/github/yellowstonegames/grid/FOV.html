@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -302,26 +318,37 @@ loadScripts(document, 'script');</script>
  extending to different ranges based on the direction the light is traveling.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVSymmetrical</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVOrtho(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVOrtho</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
  float&nbsp;radius,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Calculates the Field Of View for the provided map from the given x, y
+<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
  coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVSymmetrical</a><wbr>(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
+ coordinates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -329,8 +356,39 @@ loadScripts(document, 'script');</script>
  int&nbsp;minY,
  int&nbsp;maxX,
  int&nbsp;maxY)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+ @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+ @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ int&nbsp;minX,
+ int&nbsp;minY,
+ int&nbsp;maxX,
+ int&nbsp;maxY)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;x,
+ int&nbsp;y,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this uses Ripple FOV
+ with a tightness/looseness of 2.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
@@ -489,13 +547,14 @@ loadScripts(document, 'script');</script>
  int&nbsp;startY,
  float&nbsp;radius,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</span></div>
-<div class="block">Calculates the Field Of View for the provided map from the given x, y
- coordinates. Assigns to, and returns, a light map where the values
- represent a percentage of fully lit. Always uses Shadow FOV,
- which allows this method to be static since it doesn't need to keep any
- state around, and can reuse the state the user gives it via the
- <code>light</code> parameter. The values in light are always cleared before
- this is run, because prior state can make this give incorrect results.
+<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
+ coordinates. Assigns to, and returns, a light map where the values represent a percentage of fully
+ lit. If any cell in the returned light map is greater than 0, then both the viewer can see that cell,
+ and anyone in that cell can see the viewer (if they have sufficient viewing range). Always uses Shadow
+ FOV, and can reuse the state the user gives it via the <code>light</code> parameter. The values in light
+ are always cleared before this is run, because prior state can make this give incorrect results. This
+ evaluates if the viewer and target cell can mutually see each other using a mirrored call to
+ (simplified) single-octant Shadow FOV.
  <br>
  The starting point for the calculation is considered to be at the center
  of the origin cell. Radius determinations are determined by the provided
@@ -528,7 +587,8 @@ loadScripts(document, 'script');</script>
  be static since it doesn't need to keep any state around, and can reuse the
  state the user gives it via the <code>light</code> parameter. The values in light
  are always cleared before this is run, because prior state can make this give
- incorrect results.
+ incorrect results. The given <code>resistanceMap</code> only considers cells to
+ block light if they have values of 1.0f or greater.
  <br>
  The starting point for the calculation is considered to be at the center
  of the origin cell. Radius determinations are pretty much irrelevant because
@@ -564,7 +624,8 @@ loadScripts(document, 'script');</script>
  be static since it doesn't need to keep any state around, and can reuse the
  state the user gives it via the <code>light</code> parameter. The values in light
  are always cleared before this is run, because prior state can make this give
- incorrect results.
+ incorrect results. The given <code>resistanceMap</code> only considers cells to
+ block light if they have values of 1.0f or greater.
  <br>
  The starting point for the calculation is considered to be at the center
  of the origin cell. Radius determinations are pretty much irrelevant because
@@ -576,6 +637,80 @@ loadScripts(document, 'script');</script>
 <dd><code>light</code> - the grid of cells to assign to; may have existing values, and 0.0f is used to mean "no line"</dd>
 <dd><code>startX</code> - the horizontal component of the starting location</dd>
 <dd><code>startY</code> - the vertical component of the starting location</dd>
+<dd><code>minX</code> - inclusive lowest x position to assign to or process in <code>light</code></dd>
+<dd><code>minY</code> - inclusive lowest y position to assign to or process in <code>light</code></dd>
+<dd><code>maxX</code> - exclusive highest x position to assign to or process in <code>light</code></dd>
+<dd><code>maxY</code> - exclusive highest y position to assign to or process in <code>light</code></dd>
+<dt>Returns:</dt>
+<dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int)">
+<h3>reuseLOS</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">reuseLOS</span><wbr><span class="parameters">(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+ @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY)</span></div>
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.
+ Assigns to, and returns, a light Region where the false or "off" indicates
+ "not in line of sight" and true or "on" indicated "in line of sight,"
+ though this doesn't mean a cell is actually visible if there's no light
+ in that cell. Always uses Shadow FOV, which allows this method to
+ be static since it doesn't need to keep any state around, and can reuse the
+ state the user gives it via the <code>light</code> parameter. The values in light
+ are always cleared before this is run, because prior state can make this give
+ incorrect results. The given <code>blockingMap</code> only considers cells to
+ block light if they are true or "on".
+ <br>
+ The starting point for the calculation is considered to be at the center
+ of the origin cell.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>blockingMap</code> - the grid of which cells block light ("on" cells are blocking)</dd>
+<dd><code>light</code> - the grid of cells to assign to; will be cleared before modifying</dd>
+<dd><code>startX</code> - the horizontal component of the starting location</dd>
+<dd><code>startY</code> - the vertical component of the starting location</dd>
+<dt>Returns:</dt>
+<dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int,int,int,int,int)">
+<h3>reuseLOS</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">reuseLOS</span><wbr><span class="parameters">(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+ @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ int&nbsp;minX,
+ int&nbsp;minY,
+ int&nbsp;maxX,
+ int&nbsp;maxY)</span></div>
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.
+ Assigns to, and returns, a light Region where the false or "off" indicates
+ "not in line of sight" and true or "on" indicated "in line of sight,"
+ though this doesn't mean a cell is actually visible if there's no light
+ in that cell. Always uses Shadow FOV, which allows this method to
+ be static since it doesn't need to keep any state around, and can reuse the
+ state the user gives it via the <code>light</code> parameter. The values in light
+ are always cleared before this is run, because prior state can make this give
+ incorrect results. The given <code>blockingMap</code> only considers cells to
+ block light if they are true or "on".
+ <br>
+ The starting point for the calculation is considered to be at the center
+ of the origin cell.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>blockingMap</code> - the grid of which cells block light ("on" cells are blocking)</dd>
+<dd><code>light</code> - the grid of cells to assign to; will be cleared before modifying</dd>
+<dd><code>startX</code> - the horizontal component of the starting location</dd>
+<dd><code>startY</code> - the vertical component of the starting location</dd>
+<dd><code>minX</code> - inclusive lowest x position to assign to or process in <code>light</code></dd>
+<dd><code>minY</code> - inclusive lowest y position to assign to or process in <code>light</code></dd>
+<dd><code>maxX</code> - exclusive highest x position to assign to or process in <code>light</code></dd>
+<dd><code>maxY</code> - exclusive highest y position to assign to or process in <code>light</code></dd>
 <dt>Returns:</dt>
 <dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
 </dl>
@@ -617,6 +752,42 @@ loadScripts(document, 'script');</script>
 <dd><code>span</code> - the angle in degrees that measures the full arc contained in the FOV cone</dd>
 <dt>Returns:</dt>
 <dd>the computed light grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reuseRippleFOV(float[][],float[][],int,int,float,com.github.yellowstonegames.grid.Radius)">
+<h3>reuseRippleFOV</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">reuseRippleFOV</span><wbr><span class="parameters">(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;x,
+ int&nbsp;y,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</span></div>
+<div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this uses Ripple FOV
+ with a tightness/looseness of 2. Other parameters are similar; you
+ can get a resistance map from <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a>, <code>light</code> will be modified and returned
+ (it will be overwritten, but its size should be the same as the resistance map), there's a starting x,y position,
+ a radius in cells, and a <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid"><code>Radius</code></a> enum constant to choose the distance measurement.
+ <br>
+ This method should not be used from multiple threads; it uses internal static state. You can use the Shadow FOV
+ methods instead if you need multi-threading.
+ <br>
+ Ripple is a significantly slower algorithm than Shadow, typically by more than an order of magnitude.
+ Still, unless you are making many FOV calls per frame rendered, it's unlikely to be a severe bottleneck,
+ although this is possible. <a href="Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a>, which typically makes an FOV call once per frame per Radiance,
+ should always use Shadow, but if you only calculate FOV for the player, or only when they move, then either
+ Shadow or Ripple can be suitable.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>resistanceMap</code> - probably calculated with <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a>; 1.0f blocks light, 0.0f allows it</dd>
+<dd><code>light</code> - will be overwritten! Should be initialized with the same size as <code>resistanceMap</code></dd>
+<dd><code>x</code> - starting x position to look from</dd>
+<dd><code>y</code> - starting y position to look from</dd>
+<dd><code>radius</code> - the distance to extend from the starting x,y position</dd>
+<dd><code>radiusTechnique</code> - how to measure distance; typically <a href="Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a>.</dd>
+<dt>Returns:</dt>
+<dd><code>light</code>, after writing the FOV map into it; 1.0f is fully lit and 0.0f is unseen</dd>
 </dl>
 </section>
 </li>
@@ -812,6 +983,40 @@ loadScripts(document, 'script');</script>
 <dd><code>back</code> - the range to extend when the light is more than 157.5f degrees away from angle; will be interpolated with sideBack</dd>
 <dt>Returns:</dt>
 <dd>the computed light grid (the same as <code>light</code>)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reuseFOVOrtho(float[][],float[][],int,int,float,com.github.yellowstonegames.grid.Radius)">
+<h3>reuseFOVOrtho</h3>
+<div class="member-signature"><span class="annotations">@Beta
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">reuseFOVOrtho</span><wbr><span class="parameters">(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</span></div>
+<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
+ coordinates. Assigns to, and returns, a light map where the values represent a percentage of fully
+ lit. If any cell in the returned light map is greater than 0, then both the viewer can see that cell,
+ and anyone in that cell can see the viewer (if they have sufficient viewing range). Always uses Shadow
+ FOV, and can reuse the state the user gives it via the <code>light</code> parameter. The values in light
+ are always cleared before this is run, because prior state can make this give incorrect results. This
+ evaluates if the viewer and target cell can mutually see each other using <a href="OrthoLine.html" title="class in com.github.yellowstonegames.grid"><code>OrthoLine</code></a>.
+ <br>
+ The starting point for the calculation is considered to be at the center
+ of the origin cell. Radius determinations are determined by the provided
+ RadiusStrategy.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>resistanceMap</code> - the grid of cells to calculate on; the kind made by <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a></dd>
+<dd><code>light</code> - the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"</dd>
+<dd><code>startX</code> - the horizontal component of the starting location</dd>
+<dd><code>startY</code> - the vertical component of the starting location</dd>
+<dd><code>radius</code> - the distance the light will extend to</dd>
+<dd><code>radiusTechnique</code> - provides a means to calculate the radius as desired</dd>
+<dt>Returns:</dt>
+<dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
 </dl>
 </section>
 </li>

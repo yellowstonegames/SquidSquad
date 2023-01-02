@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -187,21 +203,21 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(long)" class="member-name-link">Thesaurus</a><wbr>(long&nbsp;shuffleSeed)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with shuffleSeed.</div>
+<div class="block">Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with shuffleSeed.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(long,long)" class="member-name-link">Thesaurus</a><wbr>(long&nbsp;shuffleSeedA,
  long&nbsp;shuffleSeedB)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.</div>
+<div class="block">Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">Thesaurus</a><wbr>(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
+<div class="block">Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with the next long from
  the given EnhancedRandom.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">Thesaurus</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shuffleSeed)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with two different hashes of
+<div class="block">Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with two different hashes of
  shuffleSeed (produced by <code>Hasher.sallos</code> and <code>Hasher.sallos_</code>).</div>
 </div>
 </div>
@@ -567,11 +583,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.github.tommyettinger.random.EnhancedRandom)">
 <h3>Thesaurus</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span><wbr><span class="parameters">(com.github.tommyettinger.random.EnhancedRandom&nbsp;rng)</span></div>
-<div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with the next long from
+<div class="block">Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with the next long from
  the given EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rng</code> - an EnhancedRandom that will only be used to get one long (for seeding this class' internal LaserRandom)</dd>
+<dd><code>rng</code> - an EnhancedRandom that will only be used to get one long (for seeding this class' internal MizuchiRandom)</dd>
 </dl>
 </section>
 </li>
@@ -579,10 +595,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(long)">
 <h3>Thesaurus</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span><wbr><span class="parameters">(long&nbsp;shuffleSeed)</span></div>
-<div class="block">Constructs a new Thesaurus, seeding its internal LaserRandom (used to shuffle word order) with shuffleSeed.</div>
+<div class="block">Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with shuffleSeed.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shuffleSeed</code> - a long for seeding this class' LaserRandom</dd>
+<dd><code>shuffleSeed</code> - a long for seeding this class' MizuchiRandom</dd>
 </dl>
 </section>
 </li>
@@ -591,11 +607,11 @@ loadScripts(document, 'script');</script>
 <h3>Thesaurus</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span><wbr><span class="parameters">(long&nbsp;shuffleSeedA,
  long&nbsp;shuffleSeedB)</span></div>
-<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.</div>
+<div class="block">Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shuffleSeedA</code> - a long for seeding this class' LaserRandom</dd>
-<dd><code>shuffleSeedB</code> - a long for seeding this class' LaserRandom; if even, will be made odd by adding 1</dd>
+<dd><code>shuffleSeedA</code> - a long for seeding this class' MizuchiRandom</dd>
+<dd><code>shuffleSeedB</code> - a long for seeding this class' MizuchiRandom; if even, will be made odd by adding 1</dd>
 </dl>
 </section>
 </li>
@@ -603,7 +619,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(java.lang.String)">
 <h3>Thesaurus</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Thesaurus</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shuffleSeed)</span></div>
-<div class="block">Constructs a new Thesaurus, seeding its LaserRandom (used to shuffle word order) with two different hashes of
+<div class="block">Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with two different hashes of
  shuffleSeed (produced by <code>Hasher.sallos</code> and <code>Hasher.sallos_</code>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -643,8 +659,8 @@ loadScripts(document, 'script');</script>
  This version of refresh() is meant for cases where you know the generator this uses has two states, 128 bits.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>stateA</code> - any long; the first part of a two-state EnhancedRandom like a <code>LaserRandom</code></dd>
-<dd><code>stateB</code> - any long; the second part of a two-state EnhancedRandom like a <code>LaserRandom</code></dd>
+<dd><code>stateA</code> - any long; the first part of a two-state EnhancedRandom like a <code>MizuchiRandom</code></dd>
+<dd><code>stateB</code> - any long; the second part of a two-state EnhancedRandom like a <code>MizuchiRandom</code></dd>
 </dl>
 </section>
 </li>

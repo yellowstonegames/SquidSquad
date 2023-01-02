@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -91,64 +107,94 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerAll(com.badlogic.gdx.utils.Json)" class="member-name-link">registerAll</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerAll(com.badlogic.gdx.utils.Json)" class="member-name-link">registerAll</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers SquidGrid's classes with the given Json object, allowing it to read and write SquidGrid types.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoord(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoord</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoord(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoord</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers Coord with the given Json object, so Coord can be written to and read from JSON.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordObjectMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordObjectMap</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordFloatMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordFloatMap</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers CoordFloatMap with the given Json object, so CoordFloatMap can be written to and read from JSON.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordFloatOrderedMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordFloatOrderedMap</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers CoordFloatOrderedMap with the given Json object, so CoordFloatOrderedMap can be written to and read from JSON.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordObjectMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordObjectMap</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers CoordObjectMap with the given Json object, so CoordObjectMap can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordObjectOrderedMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordObjectOrderedMap</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordObjectOrderedMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordObjectOrderedMap</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers CoordObjectOrderedMap with the given Json object, so CoordObjectOrderedMap can be written to and read from JSON.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordOrderedSet(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordOrderedSet</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordOrderedSet(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordOrderedSet</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers CoordOrderedSet with the given Json object, so CoordOrderedSet can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordSet(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordSet</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCoordSet(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCoordSet</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers CoordSet with the given Json object, so CoordSet can be written to and read from JSON.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerLightingManager(com.badlogic.gdx.utils.Json)" class="member-name-link">registerLightingManager</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCyclicNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerCyclicNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers CyclicNoise with the given Json object, so CyclicNoise can be written to and read from JSON.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerFlanNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerFlanNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers FlanNoise with the given Json object, so FlanNoise can be written to and read from JSON.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerLightingManager(com.badlogic.gdx.utils.Json)" class="member-name-link">registerLightingManager</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerNoise</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers Noise with the given Json object, so Noise can be written to and read from JSON.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPhantomNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerPhantomNoise</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPhantomNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerPhantomNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerRadiance(com.badlogic.gdx.utils.Json)" class="member-name-link">registerRadiance</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerRadiance(com.badlogic.gdx.utils.Json)" class="member-name-link">registerRadiance</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers Radiance with the given Json object, so Radiance can be written to and read from JSON.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerRegion(com.badlogic.gdx.utils.Json)" class="member-name-link">registerRegion</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerRegion(com.badlogic.gdx.utils.Json)" class="member-name-link">registerRegion</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers Region with the given Json object, so Region can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerSpatialMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerSpatialMap</a><wbr>(com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerSorbetNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerSorbetNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers SorbetNoise with the given Json object, so SorbetNoise can be written to and read from JSON.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerSpatialMap(com.badlogic.gdx.utils.Json)" class="member-name-link">registerSpatialMap</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers SpatialMap with the given Json object, so SpatialMap can be written to and read from JSON.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerTaffyNoise(com.badlogic.gdx.utils.Json)" class="member-name-link">registerTaffyNoise</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers TaffyNoise with the given Json object, so TaffyNoise can be written to and read from JSON.</div>
 </div>
 </div>
 </div>
@@ -170,8 +216,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerAll(com.badlogic.gdx.utils.Json)">
 <h3>registerAll</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerAll</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerAll</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers SquidGrid's classes with the given Json object, allowing it to read and write SquidGrid types.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -182,8 +227,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerCoord(com.badlogic.gdx.utils.Json)">
 <h3>registerCoord</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoord</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoord</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers Coord with the given Json object, so Coord can be written to and read from JSON.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -194,8 +238,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerRegion(com.badlogic.gdx.utils.Json)">
 <h3>registerRegion</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerRegion</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerRegion</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers Region with the given Json object, so Region can be written to and read from JSON.
  This is a simple wrapper around Region's built-in <code>Region.serializeToString()</code> and
  <code>Region.deserializeFromString(String)</code> methods.</div>
@@ -208,8 +251,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerCoordObjectMap(com.badlogic.gdx.utils.Json)">
 <h3>registerCoordObjectMap</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordObjectMap</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordObjectMap</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers CoordObjectMap with the given Json object, so CoordObjectMap can be written to and read from JSON.
  This also registers Coord with the given Json object, since it is used for the keys.</div>
 <dl class="notes">
@@ -221,9 +263,32 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerCoordObjectOrderedMap(com.badlogic.gdx.utils.Json)">
 <h3>registerCoordObjectOrderedMap</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordObjectOrderedMap</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordObjectOrderedMap</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers CoordObjectOrderedMap with the given Json object, so CoordObjectOrderedMap can be written to and read from JSON.
+ This also registers Coord with the given Json object, since it is used for the keys.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerCoordFloatMap(com.badlogic.gdx.utils.Json)">
+<h3>registerCoordFloatMap</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordFloatMap</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers CoordFloatMap with the given Json object, so CoordFloatMap can be written to and read from JSON.
+ This also registers Coord with the given Json object, since it is used for the keys.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerCoordFloatOrderedMap(com.badlogic.gdx.utils.Json)">
+<h3>registerCoordFloatOrderedMap</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordFloatOrderedMap</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers CoordFloatOrderedMap with the given Json object, so CoordFloatOrderedMap can be written to and read from JSON.
  This also registers Coord with the given Json object, since it is used for the keys.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -234,8 +299,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerCoordSet(com.badlogic.gdx.utils.Json)">
 <h3>registerCoordSet</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordSet</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordSet</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers CoordSet with the given Json object, so CoordSet can be written to and read from JSON.
  This also registers Coord with the given Json object, since it is used for the items.</div>
 <dl class="notes">
@@ -247,8 +311,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerCoordOrderedSet(com.badlogic.gdx.utils.Json)">
 <h3>registerCoordOrderedSet</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordOrderedSet</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCoordOrderedSet</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers CoordOrderedSet with the given Json object, so CoordOrderedSet can be written to and read from JSON.
  This also registers Coord with the given Json object, since it is used for the items.</div>
 <dl class="notes">
@@ -260,8 +323,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerRadiance(com.badlogic.gdx.utils.Json)">
 <h3>registerRadiance</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerRadiance</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerRadiance</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers Radiance with the given Json object, so Radiance can be written to and read from JSON.
  This is a simple wrapper around Radiance's built-in <code>Radiance.serializeToString()</code> and
  <code>Radiance.deserializeFromString(String)</code> methods.</div>
@@ -274,8 +336,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerNoise(com.badlogic.gdx.utils.Json)">
 <h3>registerNoise</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerNoise</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers Noise with the given Json object, so Noise can be written to and read from JSON.
  This is a simple wrapper around Noise's built-in <code>Noise.serializeToString()</code> and
  <code>Noise.deserializeFromString(String)</code> methods.</div>
@@ -288,8 +349,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerPhantomNoise(com.badlogic.gdx.utils.Json)">
 <h3>registerPhantomNoise</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerPhantomNoise</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerPhantomNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
  This is a simple wrapper around PhantomNoise's built-in <code>PhantomNoise.serializeToString()</code> and
  <code>PhantomNoise.deserializeFromString(String)</code> methods.</div>
@@ -300,10 +360,61 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="registerTaffyNoise(com.badlogic.gdx.utils.Json)">
+<h3>registerTaffyNoise</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerTaffyNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers TaffyNoise with the given Json object, so TaffyNoise can be written to and read from JSON.
+ This is a simple wrapper around TaffyNoise's built-in <code>TaffyNoise.serializeToString()</code> and
+ <code>TaffyNoise.deserializeFromString(String)</code> methods.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerFlanNoise(com.badlogic.gdx.utils.Json)">
+<h3>registerFlanNoise</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerFlanNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers FlanNoise with the given Json object, so FlanNoise can be written to and read from JSON.
+ This is a simple wrapper around FlanNoise's built-in <code>FlanNoise.serializeToString()</code> and
+ <code>FlanNoise.deserializeFromString(String)</code> methods.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerCyclicNoise(com.badlogic.gdx.utils.Json)">
+<h3>registerCyclicNoise</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCyclicNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers CyclicNoise with the given Json object, so CyclicNoise can be written to and read from JSON.
+ This is a simple wrapper around CyclicNoise's built-in <code>CyclicNoise.serializeToString()</code> and
+ <code>CyclicNoise.deserializeFromString(String)</code> methods.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerSorbetNoise(com.badlogic.gdx.utils.Json)">
+<h3>registerSorbetNoise</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerSorbetNoise</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers SorbetNoise with the given Json object, so SorbetNoise can be written to and read from JSON.
+ This is a simple wrapper around SorbetNoise's built-in <code>SorbetNoise.serializeToString()</code> and
+ <code>SorbetNoise.deserializeFromString(String)</code> methods.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="registerSpatialMap(com.badlogic.gdx.utils.Json)">
 <h3>registerSpatialMap</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerSpatialMap</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerSpatialMap</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers SpatialMap with the given Json object, so SpatialMap can be written to and read from JSON.
  This also registers Coord, CoordObjectOrderedMap, and IntObjectOrderedMap with the given Json object.</div>
 <dl class="notes">
@@ -315,8 +426,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerLightingManager(com.badlogic.gdx.utils.Json)">
 <h3>registerLightingManager</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerLightingManager</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerLightingManager</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
 <div class="block">Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.
  This does not register a custom serializer for LightingManager, but instead allows Json to handle it and
  registers all types of field in a LightingManager in one go.</div>

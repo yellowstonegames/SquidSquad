@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -48,61 +64,211 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<h2 class="title" id="I:A">A</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#act(float)" class="member-name-link">act(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#addAction(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">addAction(Action)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>
+<div class="block">This is exactly like <code>ParallelAction.addAction(Action)</code>, but if given a null Action, it does nothing
+ instead of potentially crashing later.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#affected" class="member-name-link">affected</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">The raw list of Coords that might be affected by the explosion; may include some cells that aren't going to
+ show as exploding (it usually has some false positives), but shouldn't exclude any cells that should show as
+ such (no false negatives).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#append(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">append(Action)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>
+<div class="block">Appends a Runnable to run after the rest of the sequence.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html#apply(float)" class="member-name-link">apply(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#arcMoveInterpolation" class="member-name-link">arcMoveInterpolation</a> - Static variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>
+<div class="block">Meant to be used with <a href="com/github/yellowstonegames/glyph/GlyphGrid.html#summon(float,float,float,float,float,char,int,int,float,float,float,com.badlogic.gdx.math.Interpolation,java.lang.Runnable)"><code>GlyphGrid.summon(float, float, float, float, float, char, int, int, float, float, float, Interpolation, Runnable)</code></a>
+ as its <code>moveRunnable</code>, this makes a summoned glyph take an "arc-like" path toward the target, where it is
+ fast at the beginning and end of its motion and reaches the height of its arc at the center.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#areChildrenActing()" class="member-name-link">areChildrenActing()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Returns true if any children of this GlyphGrid currently have Actions, or false if none do.</div>
+</dd>
+</dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#backgrounds" class="member-name-link">backgrounds</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#backgrounds" class="member-name-link">backgrounds</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html#%3Cinit%3E()" class="member-name-link">BiasGain()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></dt>
+<dd>
+<div class="block">Constructs a useful default BiasGain interpolation with a smoothstep-like shape.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html#%3Cinit%3E(float,float)" class="member-name-link">BiasGain(float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></dt>
+<dd>
+<div class="block">Constructs a BiasGain interpolation with the specified (positive) shape and specified turning (between 0 and
+ 1 inclusive).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(float,float)" class="member-name-link">bump(float, float)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(float,float,float,java.lang.Runnable)" class="member-name-link">bump(float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(float,float,java.lang.Runnable)" class="member-name-link">bump(float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(com.github.yellowstonegames.grid.Direction,float)" class="member-name-link">bump(Direction, float)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(com.github.yellowstonegames.grid.Direction,float,float,java.lang.Runnable)" class="member-name-link">bump(Direction, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#bump(com.github.yellowstonegames.grid.Direction,float,java.lang.Runnable)" class="member-name-link">bump(Direction, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#burst(float,float,float,float,int,char,int,int,float,float,float,java.lang.Runnable)" class="member-name-link">burst(float, float, float, float, int, char, int, int, float, float, float, Runnable)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Adds <code>count</code> new GlyphActors at (startX, startY) in world coordinates (which should have 1 world unit equal
+ to 1 cell) using the char shown with the given startColor, and after delay seconds, starts changing color to
+ endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+ complete before running postRunnable (if it is non-null) and finally removing the GlyphActors.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#burst(float,float,float,int,char,int,int,float,float,float)" class="member-name-link">burst(float, float, float, int, char, int, int, float, float, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Adds <code>count</code> new GlyphActors at (startX, startY) in world coordinates (which should have 1 world unit equal
+ to 1 cell) using the char shown with the given startColor, and immediately starts changing color to endColor,
+ changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+ complete before finally removing the GlyphActors.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#center" class="member-name-link">center</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Normally you should set this in the constructor, and not change it later.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#choices" class="member-name-link">choices</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
+<dd>
+<div class="block">This char array contains all characters that can be used in the foreground of this effect.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">CloudAction(GlyphGrid, float, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,int%5B%5D)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int, float, float, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,com.github.tommyettinger.ds.IntList)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int, float, float, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,int%5B%5D)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,com.github.tommyettinger.ds.IntList)" class="member-name-link">CloudAction(GlyphGrid, float, Region, Coord, int, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">CloudAction(GlyphGrid, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#colors" class="member-name-link">colors</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">The default explosion colors are normal for (non-chemical, non-electrical) fire and smoke, going from orange
+ at the start to yellow, very light yellow, and then back to a different orange before going to smoke and
+ fading out to translucent and then transparent by the end.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a> - package com.github.yellowstonegames.glyph</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#conclude(java.lang.Runnable)" class="member-name-link">conclude(Runnable)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>
+<div class="block">Appends a Runnable to run at the conclusion of the sequence.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float,float)" class="member-name-link">draw(Batch, float, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#draw(com.badlogic.gdx.graphics.g2d.Batch)" class="member-name-link">draw(Batch)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Draws the entire GlyphMap at the given x,y for its lower-left corner.</div>
+<div class="block">Draws the entire GlyphGrid at its position in world units.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float,float,int,int,int,int)" class="member-name-link">draw(Batch, float, float, int, int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float)" class="member-name-link">draw(Batch, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float)" class="member-name-link">draw(Batch, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#draw(com.badlogic.gdx.graphics.g2d.Batch,int,int,int,int)" class="member-name-link">draw(Batch, int, int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Draws part of the GlyphMap at the given x,y for its lower-left corner.</div>
+<div class="block">Draws part of the GlyphGrid at its position in world units.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float,float,com.badlogic.gdx.math.Frustum)" class="member-name-link">draw(Batch, float, float, Frustum)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#draw(com.badlogic.gdx.graphics.g2d.Batch,com.badlogic.gdx.math.Frustum)" class="member-name-link">draw(Batch, Frustum)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Draws part of the GlyphMap at the given x,y for its lower-left corner.</div>
+<div class="block">Draws part of the GlyphGrid at its position in world units.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#draw(com.badlogic.gdx.graphics.g2d.Batch,com.github.tommyettinger.textra.Font)" class="member-name-link">draw(Batch, Font)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#dyeFG(int,int,int,float,float,java.lang.Runnable)" class="member-name-link">dyeFG(int, int, int, float, float, Runnable)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#extractCoord(int)" class="member-name-link">extractCoord(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#endX" class="member-name-link">endX</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#endY" class="member-name-link">endY</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">ExplosionAction(GlyphGrid, float, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for some fields.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields; this constructor allows the case where
+ an explosion is directed in a cone or sector shape.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,int%5B%5D)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int, float, float, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using fiery/smoke colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,com.github.tommyettinger.ds.IntList)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int, float, float, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using fiery/smoke colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,int%5B%5D)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using fiery/smoke colors.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,com.github.tommyettinger.ds.IntList)" class="member-name-link">ExplosionAction(GlyphGrid, float, Region, Coord, int, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using fiery/smoke colors.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">ExplosionAction(GlyphGrid, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionAction with explicit settings for some fields.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#extractCoord(int)" class="member-name-link">extractCoord(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">A convenience method that extracts the x and y components from <code>fused</code> and returns
  them as a Coord.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#extractX(int)" class="member-name-link">extractX(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#extractX(int)" class="member-name-link">extractX(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Given a fused x,y pair as an int (typically produced by <a href="com/github/yellowstonegames/glyph/GlyphMap.html#fuse(int,int)"><code>GlyphMap.fuse(int, int)</code></a>), this
+<div class="block">Given a fused x,y pair as an int (typically produced by <a href="com/github/yellowstonegames/glyph/GlyphGrid.html#fuse(int,int)"><code>GlyphGrid.fuse(int, int)</code></a>), this
  gets the x component from it, as an int.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#extractY(int)" class="member-name-link">extractY(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#extractY(int)" class="member-name-link">extractY(int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Given a fused x,y pair as an int (typically produced by <a href="com/github/yellowstonegames/glyph/GlyphMap.html#fuse(int,int)"><code>GlyphMap.fuse(int, int)</code></a>), this
+<div class="block">Given a fused x,y pair as an int (typically produced by <a href="com/github/yellowstonegames/glyph/GlyphGrid.html#fuse(int,int)"><code>GlyphGrid.fuse(int, int)</code></a>), this
  gets the y component from it, as an int.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#font" class="member-name-link">font</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#font" class="member-name-link">font</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#fuse(int,int)" class="member-name-link">fuse(int, int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#font" class="member-name-link">font</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#fuse(int,int)" class="member-name-link">fuse(int, int)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Combines the up-to-15-bit non-negative ints x and y into one non-negative result int.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#fuse(com.github.yellowstonegames.grid.Coord)" class="member-name-link">fuse(Coord)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#fuse(com.github.yellowstonegames.grid.Coord)" class="member-name-link">fuse(Coord)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Combines the up-to-15-bit non-negative x and y components of the Coord <code>xy</code> into one
  non-negative result int.</div>
@@ -110,319 +276,416 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAll()" class="member-name-link">getAll()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any Font.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllMSDF()" class="member-name-link">getAllMSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any MSDF Font.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllSDF()" class="member-name-link">getAllSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any SDF Font.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAllStandard()" class="member-name-link">getAllStandard()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a new array of Font instances, calling each getXyz() method in this class that returns any
- non-distance-field Font.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getAStarry()" class="member-name-link">getAStarry()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a square font with 45-degree angled sections, based on the
- typeface used on the Atari ST console, that should scale cleanly to many sizes.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getBitter()" class="member-name-link">getBitter()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a light-weight variable-width slab serif font with good Latin and
- Cyrillic script support, that should scale pretty well from a height of about 160 down to a height of maybe 30.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getCanada()" class="member-name-link">getCanada()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a very-legible variable-width font with strong support for Canadian
- Aboriginal Syllabic, that should scale pretty well from a height of about 86 down to a height of maybe 30.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getCascadiaMono()" class="member-name-link">getCascadiaMono()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a quirky fixed-width font with good Unicode support
- and a humanist style, that should scale cleanly to even very large sizes (using an MSDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getCozette()" class="member-name-link">getCozette()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font configured to use a cozy fixed-width bitmap font,
- <a href="https://github.com/slavfox/Cozette">Cozette by slavfox</a>.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getDejaVuSansMono()" class="member-name-link">getDejaVuSansMono()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">A nice old standby font with very broad language support, DejaVu Sans Mono is fixed-width and can be clearly
- readable but doesn't do anything unusual stylistically.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#getFont()" class="member-name-link">getFont()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#getChar()" class="member-name-link">getChar()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getGentium()" class="member-name-link">getGentium()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
- scale well from a height of about 132 down to a height of 34.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getGentiumSDF()" class="member-name-link">getGentiumSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a variable-width serif font with excellent Unicode support, that should
- scale cleanly to even very large sizes (using an SDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getGlyph()" class="member-name-link">getGlyph()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#getColor()" class="member-name-link">getColor()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#getGridHeight()" class="member-name-link">getGridHeight()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#getFont()" class="member-name-link">getFont()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#getGridHeight()" class="member-name-link">getGridHeight()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Gets how high the grid is, measured in discrete cells.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#getGridWidth()" class="member-name-link">getGridWidth()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#getGridWidth()" class="member-name-link">getGridWidth()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Gets how wide the grid is, measured in discrete cells.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIBM8x16()" class="member-name-link">getIBM8x16()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font configured to use a classic, nostalgic fixed-width bitmap font,
- IBM 8x16 from the early, oft-beloved computer line.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getInconsolata()" class="member-name-link">getInconsolata()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
- Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getInconsolataMSDF()" class="member-name-link">getInconsolataMSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">A customized version of Inconsolata LGC, a fixed-width geometric font that supports a large range of Latin,
- Greek, and Cyrillic glyphs, plus box drawing and some dingbat characters (like zodiac signs).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevka()" class="member-name-link">getIosevka()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a sans-serif geometric style.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevkaMSDF()" class="member-name-link">getIosevkaMSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a sans-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevkaSDF()" class="member-name-link">getIosevkaSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a sans-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevkaSlab()" class="member-name-link">getIosevkaSlab()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a slab-serif geometric style.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevkaSlabMSDF()" class="member-name-link">getIosevkaSlabMSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a slab-serif geometric style, that should scale cleanly to even very large sizes (using an MSDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getIosevkaSlabSDF()" class="member-name-link">getIosevkaSlabSDF()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a highly-legible fixed-width font with good Unicode support
- and a slab-serif geometric style, that should scale cleanly to fairly large sizes (using an SDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getKingthingsFoundation()" class="member-name-link">getKingthingsFoundation()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a fairly-legible variable-width ornamental/medieval font, that should
- scale pretty well from a height of about 90 down to a height of maybe 30.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getLibertinusSerif()" class="member-name-link">getLibertinusSerif()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
-<dd>
-<div class="block">Returns a Font already configured to use a variable-width serif font with good Unicode support, that should
- scale cleanly to even very large sizes (using an MSDF technique).</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getOpenSans()" class="member-name-link">getOpenSans()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">GibberishAction(GlyphGrid, float, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Returns a Font configured to use a clean variable-width font, Open Sans.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for some fields.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getOxanium()" class="member-name-link">getOxanium()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Coord,int,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Coord, int, char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Returns a Font already configured to use a variable-width "science-fiction/high-tech" font, that should
- scale pretty well down, but not up.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for some fields.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#getRgba(java.lang.String)" class="member-name-link">getRgba(String)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">This is mostly here to help ColorLookup get RGBA8888 colors from valid descriptions, or null from invalid ones.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getRobotoCondensed()" class="member-name-link">getRobotoCondensed()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Returns a Font already configured to use a very-legible condensed variable-width font with excellent Unicode
- support, that should scale pretty well from a height of about 62 down to a height of maybe 20.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getRotation()" class="member-name-link">getRotation()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getSmallMotion()" class="member-name-link">getSmallMotion()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getStandardFamily()" class="member-name-link">getStandardFamily()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, float, float, char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Returns a Font (<a href="com/github/yellowstonegames/glyph/KnownFonts.html#getGentium()"><code>getGentium()</code></a>) with a FontFamily configured so that all non-distance-field Fonts can be
- used with syntax like <code>[@Sans]</code>.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getX()" class="member-name-link">getX()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#getY()" class="member-name-link">getY()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html#getYanoneKaffeesatz()" class="member-name-link">getYanoneKaffeesatz()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,int%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, float, float, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Returns a Font already configured to use a variable-width, narrow, humanist font, that should
- scale pretty well down, but not up.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,int%5B%5D,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, float, float, int[], char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">A single <code>long</code> that a <code>Font</code> can render as a glyph with color and styles, given a location that can
- smoothly change as a <code>CoordGlider</code>.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,int,boolean,boolean,boolean,boolean,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)" class="member-name-link">GlidingGlyph(char, int, boolean, boolean, boolean, boolean, Coord, Coord, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,int,com.github.yellowstonegames.grid.Coord)" class="member-name-link">GlidingGlyph(char, int, Coord)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,int,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)" class="member-name-link">GlidingGlyph(char, int, Coord, Coord, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)" class="member-name-link">GlidingGlyph(char, Coord, Coord, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,java.lang.String)" class="member-name-link">GlidingGlyph(char, String)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,java.lang.String,com.github.yellowstonegames.grid.Coord)" class="member-name-link">GlidingGlyph(char, String, Coord)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,java.lang.String,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">GlidingGlyph(char, String, Coord, Coord)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,java.lang.String,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float)" class="member-name-link">GlidingGlyph(char, String, Coord, Coord, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(char,java.lang.String,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)" class="member-name-link">GlidingGlyph(char, String, Coord, Coord, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long)" class="member-name-link">GlidingGlyph(long)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord)" class="member-name-link">GlidingGlyph(long, Coord)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">GlidingGlyph(long, Coord, Coord)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float)" class="member-name-link">GlidingGlyph(long, Coord, Coord, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#%3Cinit%3E(long,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float,float)" class="member-name-link">GlidingGlyph(long, Coord, Coord, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#glyph" class="member-name-link">glyph</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,com.github.tommyettinger.ds.IntList)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, float, float, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">A glyph as produced by <code>Font.markupGlyph(char, String, ColorLookup)</code>, storing a char, color, and styles.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GlyphMap</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,com.github.tommyettinger.ds.IntList,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, float, float, IntList, char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Stores a sparse map of (unmoving) glyphs by their positions, as well as a dense grid of background colors, and allows
- this group of chars and colors to be drawn easily.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
+ the case where an explosion is directed in a cone or sector shape.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#%3Cinit%3E()" class="member-name-link">GlyphMap()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,int%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Constructs a bare-bones GlyphMap with size 64x64.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#%3Cinit%3E(com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphMap(Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,int%5B%5D,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, int[], char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Constructs a 64x64 GlyphMap with the specified Font.</div>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int)" class="member-name-link">GlyphMap(Font, int, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,com.github.tommyettinger.ds.IntList)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
 <dd>
-<div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,com.github.tommyettinger.ds.IntList,char%5B%5D)" class="member-name-link">GibberishAction(GlyphGrid, float, Region, Coord, int, IntList, char[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
+<dd>
+<div class="block">Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+ objects that it will use to color the explosion instead of using purple spark colors.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">GibberishAction(GlyphGrid, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#glyph" class="member-name-link">glyph</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GlyphActor</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#%3Cinit%3E()" class="member-name-link">GlyphActor()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#%3Cinit%3E(char,int,com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphActor(char, int, Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#%3Cinit%3E(char,com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphActor(char, Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#%3Cinit%3E(char,java.lang.String,com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphActor(char, String, Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#%3Cinit%3E(long,com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphActor(long, Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>
+<div class="block">Stores a sparse map of (unmoving) glyphs by their positions, as a dense grid of background colors, and potentially
+ Actors that can move around and perform Actions.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#%3Cinit%3E()" class="member-name-link">GlyphGrid()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Constructs a bare-bones GlyphGrid with size 64x64.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#%3Cinit%3E(com.github.tommyettinger.textra.Font)" class="member-name-link">GlyphGrid(Font)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Constructs a 64x64 GlyphGrid with the specified Font.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int)" class="member-name-link">GlyphGrid(Font, int, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Constructs a GlyphGrid with the specified size in cells wide and cells tall for its grid, using the specified
  Font (which will be copied).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)" class="member-name-link">GlyphMap(Font, int, int, boolean)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#%3Cinit%3E(com.github.tommyettinger.textra.Font,int,int,boolean)" class="member-name-link">GlyphGrid(Font, int, int, boolean)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
-<div class="block">Constructs a GlyphMap with the specified size in cells wide and cells tall for its grid, using the specified
+<div class="block">Constructs a GlyphGrid with the specified size in cells wide and cells tall for its grid, using the specified
  Font (which will be copied).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#gridHeight" class="member-name-link">gridHeight</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html#grid" class="member-name-link">grid</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#gridWidth" class="member-name-link">gridWidth</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GridAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
 <dd>&nbsp;</dd>
-</dl>
-<h2 class="title" id="I:K">K</h2>
-<dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/KnownFonts.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">KnownFonts</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
-<dd>
-<div class="block">Preconfigured static <code>Font</code> instances, with any important metric adjustments already applied.</div>
-</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid)" class="member-name-link">GridAction(GlyphGrid)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float)" class="member-name-link">GridAction(GlyphGrid, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region)" class="member-name-link">GridAction(GlyphGrid, float, Region)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#gridHeight" class="member-name-link">gridHeight</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#gridWidth" class="member-name-link">gridWidth</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#location" class="member-name-link">location</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E()" class="member-name-link">LenientParallelAction()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientParallelAction(Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientParallelAction(Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientParallelAction(Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientParallelAction(Action, Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientParallelAction(Action, Action, Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E()" class="member-name-link">LenientSequenceAction()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientSequenceAction(Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientSequenceAction(Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientSequenceAction(Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientSequenceAction(Action, Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">LenientSequenceAction(Action, Action, Action, Action, Action)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#lightMap" class="member-name-link">lightMap</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">The internal representation of how affected each cell is by the explosion, based on proximity to center.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#map" class="member-name-link">map</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#map" class="member-name-link">map</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>&nbsp;</dd>
-</dl>
-<h2 class="title" id="I:O">O</h2>
-<dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#ownEmptyMotion" class="member-name-link">ownEmptyMotion</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">MoreActions</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
 <dd>
-<div class="block">A VectorSequenceGlider that is empty (has no motions) and belongs to this GlidingGlyph.</div>
+<div class="block">Supplemental <code>Action</code> classes and methods to augment <code>Actions</code>.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#%3Cinit%3E()" class="member-name-link">MoreActions()</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>
+<div class="block">A wrapper around <code>MathTools.barronSpline(float, float, float)</code> to use it as an Interpolation.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientParallelAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>
+<div class="block">Just like <code>ParallelAction</code>, but if given null Action items, it ignores them.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" class="type-name-link" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a> - Class in <a href="com/github/yellowstonegames/glyph/package-summary.html">com.github.yellowstonegames.glyph</a></dt>
+<dd>
+<div class="block">Executes a number of actions one at a time.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,int,char,int)" class="member-name-link">put(int, int, char, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel()" class="member-name-link">parallel()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">parallel(Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action...)" class="member-name-link">parallel(Action...)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">parallel(Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">parallel(Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">parallel(Action, Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#parallel(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">parallel(Action, Action, Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">PulseAction(GlyphGrid, float, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int, float, float)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,int%5B%5D)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int, float, float, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,float,float,com.github.tommyettinger.ds.IntList)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int, float, float, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,int%5B%5D)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int, int[])</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,float,com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Coord,int,com.github.tommyettinger.ds.IntList)" class="member-name-link">PulseAction(GlyphGrid, float, Region, Coord, int, IntList)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#%3Cinit%3E(com.github.yellowstonegames.glyph.GlyphGrid,com.github.yellowstonegames.grid.Coord,int)" class="member-name-link">PulseAction(GlyphGrid, Coord, int)</a> - Constructor for class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#put(int,int,char,int)" class="member-name-link">put(int, int, char, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Places a character (optionally with style information) at the specified cell, using the given foreground color.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,int,int)" class="member-name-link">put(int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#put(int,int,int)" class="member-name-link">put(int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Places a character (optionally with style information) at the specified cell, using white foreground color.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,int,int,int)" class="member-name-link">put(int, int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#put(int,int,int,int)" class="member-name-link">put(int, int, int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Places a character (optionally with style information) at the specified cell, using the given foreground color.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,int,long)" class="member-name-link">put(int, int, long)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#put(int,int,long)" class="member-name-link">put(int, int, long)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Places a glyph (optionally with style information and/or color) at the specified cell.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#put(int,long)" class="member-name-link">put(int, long)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#put(int,long)" class="member-name-link">put(int, long)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Places a glyph (optionally with style information and/or color) at the specified cell (given as a fused value).</div>
 </dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#resize(int,int)" class="member-name-link">resize(int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#radius" class="member-name-link">radius</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Normally you should set this in the constructor, and not change it later.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#resize(int,int)" class="member-name-link">resize(int, int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">This should generally be called in the <code>ApplicationListener.resize(int, int)</code> or
  <code>Screen.resize(int, int)</code> method when the screen size changes.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#rotation" class="member-name-link">rotation</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html#restart()" class="member-name-link">restart()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#setFont(com.github.tommyettinger.textra.Font)" class="member-name-link">setFont(Font)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence()" class="member-name-link">sequence()</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">sequence(Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action...)" class="member-name-link">sequence(Action...)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">sequence(Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">sequence(Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">sequence(Action, Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#sequence(com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action,com.badlogic.gdx.scenes.scene2d.Action)" class="member-name-link">sequence(Action, Action, Action, Action, Action)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#setChar(char)" class="member-name-link">setChar(char)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#setColor(float,float,float,float)" class="member-name-link">setColor(float, float, float, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#setColor(int)" class="member-name-link">setColor(int)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#setColor(com.badlogic.gdx.graphics.Color)" class="member-name-link">setColor(Color)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#setFont(com.github.tommyettinger.textra.Font)" class="member-name-link">setFont(Font)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
- to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>
+ to size 1x1 (this makes some calculations much easier inside GlyphGrid).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#setFont(com.github.tommyettinger.textra.Font,boolean)" class="member-name-link">setFont(Font, boolean)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#setFont(com.github.tommyettinger.textra.Font,boolean)" class="member-name-link">setFont(Font, boolean)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>
 <div class="block">Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
- to size 1x1 (this makes some calculations much easier inside GlyphMap).</div>
+ to size 1x1 (this makes some calculations much easier inside GlyphGrid).</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setGlyph(long)" class="member-name-link">setGlyph(long)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphActor.html#setLocation(com.github.yellowstonegames.grid.Coord)" class="member-name-link">setLocation(Coord)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setLocation(com.github.yellowstonegames.smooth.CoordGlider)" class="member-name-link">setLocation(CoordGlider)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#setVisibilities(com.github.tommyettinger.function.IntIntPredicate)" class="member-name-link">setVisibilities(IntIntPredicate)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Sets the visibility of each Actor child of this GlyphGrid based on the result of a predicate called on its x,y
+ grid position (rounded from its float position).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html#shape" class="member-name-link">shape</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></dt>
+<dd>
+<div class="block">The shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
+ values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
+ start like square root does, taking off very quickly, but also end like square does, landing abruptly at
+ the ending level).</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideBy(float,float,float)" class="member-name-link">slideBy(float, float, float)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setRotation(com.github.yellowstonegames.smooth.AngleGlider)" class="member-name-link">setRotation(AngleGlider)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideBy(float,float,float,float,java.lang.Runnable)" class="member-name-link">slideBy(float, float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#setSmallMotion(com.github.yellowstonegames.smooth.VectorSequenceGlider)" class="member-name-link">setSmallMotion(VectorSequenceGlider)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideBy(float,float,float,java.lang.Runnable)" class="member-name-link">slideBy(float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/glyph/GlidingGlyph.html#smallMotion" class="member-name-link">smallMotion</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideTo(float,float,float)" class="member-name-link">slideTo(float, float, float)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideTo(float,float,float,float,java.lang.Runnable)" class="member-name-link">slideTo(float, float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#slideTo(float,float,float,java.lang.Runnable)" class="member-name-link">slideTo(float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#startX" class="member-name-link">startX</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#startY" class="member-name-link">startY</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#summon(float,float,float,float,char,int,int,float,float,float)" class="member-name-link">summon(float, float, float, float, char, int, int, float, float, float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+ using the char shown with the given startColor and startRotation, and immediately starts changing color
+ to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+ complete before removing the GlyphActor.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#summon(float,float,float,float,float,char,int,int,float,float,float,java.lang.Runnable)" class="member-name-link">summon(float, float, float, float, float, char, int, int, float, float, float, Runnable)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+ using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+ to endColor, changing position so that it ends at the world coordinates (endX, endY), taking duration seconds to
+ complete before running postRunnable (if it is non-null) and finally removing the GlyphActor.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#summon(float,float,float,float,float,char,int,int,float,float,float,com.badlogic.gdx.math.Interpolation,java.lang.Runnable)" class="member-name-link">summon(float, float, float, float, float, char, int, int, float, float, float, Interpolation, Runnable)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
+<dd>
+<div class="block">Adds a new GlyphActor at (startX, startY) in world coordinates (which should have 1 world unit equal to 1 cell)
+ using the char shown with the given startColor and startRotation, and after delay seconds, starts changing color
+ to endColor, changing position using the given Interpolation so that it ends at the world coordinates (endX,
+ endY), taking duration seconds to complete before running postRunnable (if it is non-null) and finally removing
+ the GlyphActor.</div>
+</dd>
+</dl>
+<h2 class="title" id="I:T">T</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html#turning" class="member-name-link">turning</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></dt>
+<dd>
+<div class="block">A value between 0.0 and 1.0, inclusive, where the shape changes.</div>
+</dd>
+</dl>
+<h2 class="title" id="I:U">U</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html#update(float)" class="member-name-link">update(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#update(float)" class="member-name-link">update(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Called each frame.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html#update(float)" class="member-name-link">update(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></dt>
+<dd>
+<div class="block">Called each frame.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html#update(float)" class="member-name-link">update(float)</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#useAcridColors()" class="member-name-link">useAcridColors()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Sets the colors this ExplosionAction uses to go from through various shades of yellow-green before fading.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#useElectricColors()" class="member-name-link">useElectricColors()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Sets the colors this ExplosionAction uses to go from through various shades of gray-purple before fading.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#useFieryColors()" class="member-name-link">useFieryColors()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Sets the colors this ExplosionAction uses to go from orange, to yellow, to orange, to dark gray, then fade.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#useMistyColors()" class="member-name-link">useMistyColors()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Sets the colors this ExplosionAction uses to go from through various shades of pale blue before fading.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html#useToxicColors()" class="member-name-link">useToxicColors()</a> - Method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></dt>
+<dd>
+<div class="block">Sets the colors this ExplosionAction uses to go from through various shades of vivid purple before fading.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
-<dt><a href="com/github/yellowstonegames/glyph/GlyphMap.html#viewport" class="member-name-link">viewport</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></dt>
+<dt><a href="com/github/yellowstonegames/glyph/GridAction.html#valid" class="member-name-link">valid</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/GlyphGrid.html#viewport" class="member-name-link">viewport</a> - Variable in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
+<h2 class="title" id="I:W">W</h2>
+<dl class="index">
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#wiggle(float,float)" class="member-name-link">wiggle(float, float)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#wiggle(float,float,float,java.lang.Runnable)" class="member-name-link">wiggle(float, float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/glyph/MoreActions.html#wiggle(float,float,java.lang.Runnable)" class="member-name-link">wiggle(float, float, Runnable)</a> - Static method in class com.github.yellowstonegames.glyph.<a href="com/github/yellowstonegames/glyph/MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
 </div>
 </div>
 </body>

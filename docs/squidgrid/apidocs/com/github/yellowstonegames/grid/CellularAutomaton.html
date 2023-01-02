@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -78,9 +94,9 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Various simple cellular-automata rules and the data they operate on. This has Conway's Game of Life, when you can run
  on a <a href="Region.html" title="class in com.github.yellowstonegames.grid"><code>Region</code></a> given to the constructor previously with <a href="#runGameOfLife()"><code>runGameOfLife()</code></a>; this version of Life doesn't
- wrap at the edges. It has a smoothing method that rounds off hard edges, <a href="#runBasicSmoothing()"><code>runBasicSmoothing()</code></a>. It also has a
- method that may be useful for ensuring maps are always possible to pass through by a creature moving
- orthogonally-only (Manhattan movement); this is <a href="#runDiagonalGapCleanup()"><code>runDiagonalGapCleanup()</code></a>.</div>
+ wrap at the edges. It has a smoothing method that rounds off hard edges, <a href="#runBasicSmoothing()"><code>runBasicSmoothing()</code></a>. It also has
+ two methods that may be useful for ensuring maps are always possible to pass through by a creature moving
+ orthogonally-only (Manhattan metric); these are <a href="#runDiagonalGapCleanup()"><code>runDiagonalGapCleanup()</code></a> and <a href="#runDiagonalGapWiden()"><code>runDiagonalGapWiden()</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -156,8 +172,16 @@ loadScripts(document, 'script');</script>
  neighbor cannot be accessed from shared orthogonal neighbors.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#runGameOfLife()" class="member-name-link">runGameOfLife</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#runDiagonalGapWiden()" class="member-name-link">runDiagonalGapWiden</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This takes the <a href="#current"><code>current</code></a> Region, then takes any "on" cells that have an "on" diagonal neighbor and that
+ neighbor cannot be accessed from shared orthogonal neighbors, and sets the shared orthogonal neighbors to "on."
+ That is, if a 2x2 area contains two "off" cells that are diagonally adjacent and contains two "on" cells that are
+ diagonally adjacent, this sets that whole 2x2 area to "on."</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#runGameOfLife()" class="member-name-link">runGameOfLife</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Runs one step of the simulation called Conway's Game of Life, which has relatively simple rules:
  
      Any "on" cell with fewer than two "on" neighbors becomes "off."
@@ -304,6 +328,20 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><a href="#current"><code>current</code></a> after orthogonally-inaccessible pairs of diagonal "on" cells are removed</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="runDiagonalGapWiden()">
+<h3>runDiagonalGapWiden</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">runDiagonalGapWiden</span>()</div>
+<div class="block">This takes the <a href="#current"><code>current</code></a> Region, then takes any "on" cells that have an "on" diagonal neighbor and that
+ neighbor cannot be accessed from shared orthogonal neighbors, and sets the shared orthogonal neighbors to "on."
+ That is, if a 2x2 area contains two "off" cells that are diagonally adjacent and contains two "on" cells that are
+ diagonally adjacent, this sets that whole 2x2 area to "on."</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><a href="#current"><code>current</code></a> after orthogonally-inaccessible pairs of diagonal "on" cells are widened</dd>
 </dl>
 </section>
 </li>

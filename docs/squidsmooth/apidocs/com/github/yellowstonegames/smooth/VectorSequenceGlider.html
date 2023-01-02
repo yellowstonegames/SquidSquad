@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -42,7 +58,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -70,24 +86,30 @@ loadScripts(document, 'script');</script>
 <h1 title="Class VectorSequenceGlider" class="title">Class VectorSequenceGlider</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">com.github.yellowstonegames.smooth.SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;
+<div class="inheritance"><a href="Glider.html" title="class in com.github.yellowstonegames.smooth">com.github.yellowstonegames.smooth.Glider</a>
+<div class="inheritance"><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">com.github.yellowstonegames.smooth.SequenceGlider</a>
 <div class="inheritance">com.github.yellowstonegames.smooth.VectorSequenceGlider</div>
 </div>
 </div>
+</div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Beta
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">VectorSequenceGlider</span>
-<span class="extends-implements">extends <a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;
-implements <a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></span></div>
+<span class="extends-implements">extends <a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a></span></div>
 <div class="block">Very experimental; allows chaining a sequence of VectorGlider movements.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Nested classes/interfaces inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h2>
+<code><a href="Glider.Changer.html" title="class in com.github.yellowstonegames.smooth">Glider.Changer</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -110,7 +132,10 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.github.yellowstonegames.smooth.SequenceGlider">Fields inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a></h3>
-<code><a href="SequenceGlider.html#active">active</a>, <a href="SequenceGlider.html#change">change</a>, <a href="SequenceGlider.html#completeRunner">completeRunner</a>, <a href="SequenceGlider.html#durations">durations</a>, <a href="SequenceGlider.html#interpolation">interpolation</a>, <a href="SequenceGlider.html#passed">passed</a>, <a href="SequenceGlider.html#sequence">sequence</a></code></div>
+<code><a href="SequenceGlider.html#active">active</a>, <a href="SequenceGlider.html#durations">durations</a>, <a href="SequenceGlider.html#passed">passed</a>, <a href="SequenceGlider.html#sequence">sequence</a></code></div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Fields inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h3>
+<code><a href="Glider.html#change">change</a>, <a href="Glider.html#changers">changers</a>, <a href="Glider.html#completeRunner">completeRunner</a>, <a href="Glider.html#interpolation">interpolation</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -146,35 +171,23 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copy()" class="member-name-link">copy</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChange()" class="member-name-link">getChange</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Interpolation</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInterpolation()" class="member-name-link">getInterpolation</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getX()" class="member-name-link">getX</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getY()" class="member-name-link">getY</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setChange(float)" class="member-name-link">setChange</a><wbr>(float&nbsp;change)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInterpolation(com.badlogic.gdx.math.Interpolation)" class="member-name-link">setInterpolation</a><wbr>(com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.yellowstonegames.smooth.SequenceGlider">Methods inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a></h3>
-<code><a href="SequenceGlider.html#equals(java.lang.Object)">equals</a>, <a href="SequenceGlider.html#getCompleteRunner()">getCompleteRunner</a>, <a href="SequenceGlider.html#hashCode()">hashCode</a>, <a href="SequenceGlider.html#onComplete()">onComplete</a>, <a href="SequenceGlider.html#setCompleteRunner(java.lang.Runnable)">setCompleteRunner</a></code></div>
+<code><a href="SequenceGlider.html#equals(java.lang.Object)">equals</a>, <a href="SequenceGlider.html#getEndFloat(java.lang.String)">getEndFloat</a>, <a href="SequenceGlider.html#getEndInt(java.lang.String)">getEndInt</a>, <a href="SequenceGlider.html#getFloat(java.lang.String)">getFloat</a>, <a href="SequenceGlider.html#getInt(java.lang.String)">getInt</a>, <a href="SequenceGlider.html#getInterpolation()">getInterpolation</a>, <a href="SequenceGlider.html#getStartFloat(java.lang.String)">getStartFloat</a>, <a href="SequenceGlider.html#getStartInt(java.lang.String)">getStartInt</a>, <a href="SequenceGlider.html#hashCode()">hashCode</a>, <a href="SequenceGlider.html#setChange(float)">setChange</a>, <a href="SequenceGlider.html#setEndFloat(java.lang.String,float)">setEndFloat</a>, <a href="SequenceGlider.html#setEndInt(java.lang.String,int)">setEndInt</a>, <a href="SequenceGlider.html#setInterpolation(com.badlogic.gdx.math.Interpolation)">setInterpolation</a>, <a href="SequenceGlider.html#setStartFloat(java.lang.String,float)">setStartFloat</a>, <a href="SequenceGlider.html#setStartInt(java.lang.String,int)">setStartInt</a>, <a href="SequenceGlider.html#toString()">toString</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.yellowstonegames.smooth.Glider">Methods inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="Glider.html" title="class in com.github.yellowstonegames.smooth">Glider</a></h3>
+<code><a href="Glider.html#addChanger(com.github.yellowstonegames.smooth.Glider.Changer)">addChanger</a>, <a href="Glider.html#addChangers(com.github.yellowstonegames.smooth.Glider.Changer...)">addChangers</a>, <a href="Glider.html#addChangers(java.util.Collection)">addChangers</a>, <a href="Glider.html#getChange()">getChange</a>, <a href="Glider.html#getCompleteRunner()">getCompleteRunner</a>, <a href="Glider.html#merge(com.github.yellowstonegames.smooth.Glider)">merge</a>, <a href="Glider.html#onComplete()">onComplete</a>, <a href="Glider.html#removeChanger(java.lang.String)">removeChanger</a>, <a href="Glider.html#resetToCurrent()">resetToCurrent</a>, <a href="Glider.html#setCompleteRunner(java.lang.Runnable)">setCompleteRunner</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.github.yellowstonegames.smooth.IGlider">Methods inherited from interface&nbsp;com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></h3>
-<code><a href="IGlider.html#onComplete()">onComplete</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -254,56 +267,6 @@ implements <a href="IGlider.html" title="interface in com.github.yellowstonegame
 <section class="detail" id="getY()">
 <h3>getY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getY</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getChange()">
-<h3>getChange</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getChange</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#getChange()">getChange</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="SequenceGlider.html#getChange()">getChange</a></code>&nbsp;in class&nbsp;<code><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setChange(float)">
-<h3>setChange</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setChange</span><wbr><span class="parameters">(float&nbsp;change)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#setChange(float)">setChange</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="SequenceGlider.html#setChange(float)">setChange</a></code>&nbsp;in class&nbsp;<code><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getInterpolation()">
-<h3>getInterpolation</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Interpolation</span>&nbsp;<span class="element-name">getInterpolation</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#getInterpolation()">getInterpolation</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="SequenceGlider.html#getInterpolation()">getInterpolation</a></code>&nbsp;in class&nbsp;<code><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setInterpolation(com.badlogic.gdx.math.Interpolation)">
-<h3>setInterpolation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setInterpolation</span><wbr><span class="parameters">(@Nonnull
- com.badlogic.gdx.math.Interpolation&nbsp;interpolation)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="IGlider.html#setInterpolation(com.badlogic.gdx.math.Interpolation)">setInterpolation</a></code>&nbsp;in interface&nbsp;<code><a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="SequenceGlider.html#setInterpolation(com.badlogic.gdx.math.Interpolation)">setInterpolation</a></code>&nbsp;in class&nbsp;<code><a href="SequenceGlider.html" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;<a href="VectorGlider.html" title="class in com.github.yellowstonegames.smooth">VectorGlider</a>&gt;</code></dd>
-</dl>
 </section>
 </li>
 </ul>

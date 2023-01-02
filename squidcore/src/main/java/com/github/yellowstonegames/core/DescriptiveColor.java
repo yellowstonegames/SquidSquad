@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,12 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import regexodus.MatchResult;
 import regexodus.Pattern;
 import regexodus.Replacer;
 import regexodus.Substitution;
 import regexodus.TextBuffer;
-
-import javax.annotation.Nonnull;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
@@ -2071,7 +2070,7 @@ public final class DescriptiveColor {
      * @param mixCount how many color names this will use in the returned description
      * @return a description that can be fed to {@link #describe(CharSequence)} to get a similar color
      */
-    @Nonnull
+    @NonNull
     public static String bestMatch(final int oklab, int mixCount) {
         mixCount = Math.max(1, mixCount);
         float bestDistance = Float.POSITIVE_INFINITY;

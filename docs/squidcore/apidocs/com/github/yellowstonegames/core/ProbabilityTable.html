@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -119,23 +135,27 @@ loadScripts(document, 'script');</script>
 <div class="block">The list of items that can be produced indirectly from <a href="#random()"><code>random()</code></a> (looking up values from inside
  the nested tables).</div>
 </div>
-<div class="col-first odd-row-color"><code>protected int</code></div>
-<div class="col-second odd-row-color"><code><a href="#normalTotal" class="member-name-link">normalTotal</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
-<div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final com.github.tommyettinger.ds.NumberedSet&lt;<a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#table" class="member-name-link">table</a></code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
+<div class="col-second odd-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">The random number generator; don't assign null to this, but otherwise it can be any EnhancedRandom.</div>
+</div>
+<div class="col-first even-row-color"><code>final com.github.tommyettinger.ds.NumberedSet&lt;<a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#table" class="member-name-link">table</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">The set of items that can be produced directly from <a href="#random()"><code>random()</code></a> (without additional lookups).</div>
 </div>
-<div class="col-first even-row-color"><code>protected int</code></div>
-<div class="col-second even-row-color"><code><a href="#total" class="member-name-link">total</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final com.github.tommyettinger.ds.IntList</code></div>
-<div class="col-second odd-row-color"><code><a href="#weights" class="member-name-link">weights</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><a href="#total" class="member-name-link">total</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The total of all weights.</div>
+</div>
+<div class="col-first even-row-color"><code>final com.github.tommyettinger.ds.IntList</code></div>
+<div class="col-second even-row-color"><code><a href="#weights" class="member-name-link">weights</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The list of weights associated with both <a href="#table"><code>table</code></a> and <a href="#extraTable"><code>extraTable</code></a>, with all of table first and then
+ all of extraTable.</div>
+</div>
 </div>
 </section>
 </li>
@@ -160,8 +180,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new probability table with the provided source of randomness
  used.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">ProbabilityTable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.core.ProbabilityTable)" class="member-name-link">ProbabilityTable</a><wbr>(<a href="ProbabilityTable.html" title="class in com.github.yellowstonegames.core">ProbabilityTable</a>&lt;? extends <a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;&nbsp;other)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Copy constructor.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">ProbabilityTable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;seed)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Creates a new probability table with the provided String seed used.</div>
 </div>
 </div>
@@ -322,24 +346,23 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="weights">
 <h3>weights</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntList</span>&nbsp;<span class="element-name">weights</span></div>
+<div class="block">The list of weights associated with both <a href="#table"><code>table</code></a> and <a href="#extraTable"><code>extraTable</code></a>, with all of table first and then
+ all of extraTable.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="block">The random number generator; don't assign null to this, but otherwise it can be any EnhancedRandom.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="total">
 <h3>total</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">total</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="normalTotal">
-<h3>normalTotal</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">normalTotal</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">total</span></div>
+<div class="block">The total of all weights. This is only public because <a href="#weights"><code>weights</code></a> is also public, and changes to weights
+ must be reflected here.</div>
 </section>
 </li>
 </ul>
@@ -366,6 +389,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>rng</code> - the source of randomness</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.core.ProbabilityTable)">
+<h3>ProbabilityTable</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProbabilityTable</span><wbr><span class="parameters">(<a href="ProbabilityTable.html" title="class in com.github.yellowstonegames.core">ProbabilityTable</a>&lt;? extends <a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;&nbsp;other)</span></div>
+<div class="block">Copy constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>other</code> - another ProbabilityTable; must not contain cyclical references to tables that contain themselves</dd>
 </dl>
 </section>
 </li>
@@ -404,7 +438,7 @@ loadScripts(document, 'script');</script>
 <h3>random</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a></span>&nbsp;<span class="element-name">random</span>()</div>
 <div class="block">Returns an object randomly based on assigned weights.
-
+ <br>
  Returns null if no elements have been put in the table.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -418,7 +452,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ProbabilityTable.html" title="class in com.github.yellowstonegames.core">ProbabilityTable</a>&lt;<a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&gt;</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="ProbabilityTable.html" title="type parameter in ProbabilityTable">T</a>&nbsp;item,
  int&nbsp;weight)</span></div>
 <div class="block">Adds the given item to the table.
-
+ <br>
  Weight must be greater than 0.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -520,7 +554,7 @@ loadScripts(document, 'script');</script>
  eventually terminate in a StackOverflowError if the cycles randomly repeated for too long. Only the first case
  is checked for (if the contents of this and table are equivalent, it returns without doing anything; this also
  happens if table is empty or null).
-
+ <br>
  Weight must be greater than 0.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -633,7 +667,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the current random number generator to the given EnhancedRandom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>random</code> - an EnhancedRandom, typically with a seed you want control over; for instance, a <code>LaserRandom</code></dd>
+<dd><code>random</code> - an EnhancedRandom, typically with a seed you want control over; for instance, a <code>WhiskerRandom</code></dd>
 </dl>
 </section>
 </li>

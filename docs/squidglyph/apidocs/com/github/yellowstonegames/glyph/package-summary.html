@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -66,19 +82,38 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GlidingGlyph.html" title="class in com.github.yellowstonegames.glyph">GlidingGlyph</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A single <code>long</code> that a <code>Font</code> can render as a glyph with color and styles, given a location that can
- smoothly change as a <code>CoordGlider</code>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GlyphMap.html" title="class in com.github.yellowstonegames.glyph">GlyphMap</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GlyphActor.html" title="class in com.github.yellowstonegames.glyph">GlyphActor</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GlyphGrid.html" title="class in com.github.yellowstonegames.glyph">GlyphGrid</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Stores a sparse map of (unmoving) glyphs by their positions, as well as a dense grid of background colors, and allows
- this group of chars and colors to be drawn easily.</div>
+<div class="block">Stores a sparse map of (unmoving) glyphs by their positions, as a dense grid of background colors, and potentially
+ Actors that can move around and perform Actions.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="KnownFonts.html" title="class in com.github.yellowstonegames.glyph">KnownFonts</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GridAction.html" title="class in com.github.yellowstonegames.glyph">GridAction</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GridAction.CloudAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.CloudAction</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GridAction.ExplosionAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.ExplosionAction</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GridAction.GibberishAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.GibberishAction</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GridAction.PulseAction.html" title="class in com.github.yellowstonegames.glyph">GridAction.PulseAction</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MoreActions.html" title="class in com.github.yellowstonegames.glyph">MoreActions</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Supplemental <code>Action</code> classes and methods to augment <code>Actions</code>.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MoreActions.BiasGain.html" title="class in com.github.yellowstonegames.glyph">MoreActions.BiasGain</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Preconfigured static <code>Font</code> instances, with any important metric adjustments already applied.</div>
+<div class="block">A wrapper around <code>MathTools.barronSpline(float, float, float)</code> to use it as an Interpolation.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MoreActions.LenientParallelAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientParallelAction</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Just like <code>ParallelAction</code>, but if given null Action items, it ignores them.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MoreActions.LenientSequenceAction.html" title="class in com.github.yellowstonegames.glyph">MoreActions.LenientSequenceAction</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Executes a number of actions one at a time.</div>
 </div>
 </div>
 </div>

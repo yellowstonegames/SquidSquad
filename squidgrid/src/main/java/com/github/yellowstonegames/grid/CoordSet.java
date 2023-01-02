@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.ds.annotations.NotNullDefault;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
 /**
@@ -28,7 +27,6 @@ import java.util.Collection;
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
  * should use a normal {@link ObjectSet} instead, since some optimizations here require Coord items to be in the pool.
  */
-@NotNullDefault
 public class CoordSet extends ObjectSet<Coord> {
     public CoordSet() {
         super();

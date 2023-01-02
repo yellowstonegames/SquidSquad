@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -163,6 +179,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Constructs an IntShuffler with the given exclusive upper bound and int seed.</div>
 </div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.core.IntShuffler)" class="member-name-link">IntShuffler</a><wbr>(<a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a>&nbsp;other)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -183,7 +201,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Fully copies this IntShuffler, including its current index in its sequence and internal seeds.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode(int)" class="member-name-link">encode</a><wbr>(int&nbsp;index)</code></div>
@@ -193,38 +211,45 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fuse(long,long)" class="member-name-link">fuse</a><wbr>(long&nbsp;a,
+ long&nbsp;b)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Used by the round function, this can technically be any deterministic function that takes two long inputs and
+ produces a long output.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#next()" class="member-name-link">next</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#next()" class="member-name-link">next</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the next distinct int in the sequence, or -1 if all distinct ints have been returned that are non-negative
  and less than <a href="#bound"><code>bound</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#previous()" class="member-name-link">previous</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#previous()" class="member-name-link">previous</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the previous returned int from the sequence (as yielded by <a href="#next()"><code>next()</code></a>), or -1 if next() has never been
  called (or the IntShuffler has reached the beginning from repeated calls to this method).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restart()" class="member-name-link">restart</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restart()" class="member-name-link">restart</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Starts the same sequence over from the beginning.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restart(long)" class="member-name-link">restart</a><wbr>(long&nbsp;seed)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restart(long)" class="member-name-link">restart</a><wbr>(long&nbsp;seed)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Starts the sequence over, but can change the seed (completely changing the sequence).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#round(long,long)" class="member-name-link">round</a><wbr>(long&nbsp;data,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#round(long,long)" class="member-name-link">round</a><wbr>(long&nbsp;data,
  long&nbsp;seed)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeToString()" class="member-name-link">serializeToString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeToString()" class="member-name-link">serializeToString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -337,8 +362,14 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>bound</code> - how many distinct ints this can return</dd>
-<dd><code>seed</code> - any int; will be used to get several seeds used internally</dd>
+<dd><code>seed</code> - any long; will be used to get several seeds used internally</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.github.yellowstonegames.core.IntShuffler)">
+<h3>IntShuffler</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IntShuffler</span><wbr><span class="parameters">(<a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a>&nbsp;other)</span></div>
 </section>
 </li>
 </ul>
@@ -388,14 +419,32 @@ loadScripts(document, 'script');</script>
  as the seed given in the constructor, this will use the same sequence, acting like <a href="#restart()"><code>restart()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>seed</code> - any int; will be used to get several seeds used internally</dd>
+<dd><code>seed</code> - any long; will be used to get several seeds used internally</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fuse(long,long)">
+<h3>fuse</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">fuse</span><wbr><span class="parameters">(long&nbsp;a,
+ long&nbsp;b)</span></div>
+<div class="block">Used by the round function, this can technically be any deterministic function that takes two long inputs and
+ produces a long output. It doesn't need to be "fair" at all. Other good options for this are
+ <code>Hasher.wow(long, long)</code> and potentially <code>Hasher.mum(long, long)</code> (which sometimes fails tests with a
+ random component, though any random-enough function should fail such tests occasionally).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>a</code> - any long</dd>
+<dd><code>b</code> - any long</dd>
+<dt>Returns:</dt>
+<dd>any long</dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="round(long,long)">
 <h3>round</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">round</span><wbr><span class="parameters">(long&nbsp;data,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">round</span><wbr><span class="parameters">(long&nbsp;data,
  long&nbsp;seed)</span></div>
 </section>
 </li>
@@ -417,7 +466,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="copy()">
 <h3>copy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a></span>&nbsp;<span class="element-name">copy</span>()</div>
-<div class="block">Fully copies this IntShuffler, including its current index in its sequence and internal seeds.</div>
+<div class="block">Fully copies this IntShuffler, including its current index in its sequence and internal seeds.
+ This simply returns <a href="#%3Cinit%3E(com.github.yellowstonegames.core.IntShuffler)"><code>IntShuffler(IntShuffler)</code></a> with this as the argument.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>an exact copy of this IntShuffler</dd>
@@ -433,8 +483,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="deserializeFromString(java.lang.String)">
 <h3>deserializeFromString</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a></span>&nbsp;<span class="element-name">deserializeFromString</span><wbr><span class="parameters">(@Nonnull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="IntShuffler.html" title="class in com.github.yellowstonegames.core">IntShuffler</a></span>&nbsp;<span class="element-name">deserializeFromString</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</span></div>
 </section>
 </li>
 <li>

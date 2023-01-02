@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import regexodus.Matcher;
 import regexodus.Pattern;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Class for emulating various traditional RPG-style dice rolls.
@@ -94,7 +94,7 @@ public class Dice {
      *
      * @param rng an EnhancedRandom as the source of randomness
      */
-    public void setRandom(@Nonnull EnhancedRandom rng) {
+    public void setRandom(@NonNull EnhancedRandom rng) {
         this.rng = rng;
     }
 
@@ -616,8 +616,8 @@ public class Dice {
      * {@link Dice#runRollRule(Rule)}. This avoids overhead from repeated parsing.
      */
     public static class Rule {
-        public @Nonnull String rollCode;
-        public @Nonnull IntList instructions;
+        public @NonNull String rollCode;
+        public @NonNull IntList instructions;
 
         protected Rule(){
             rollCode = "";
@@ -629,7 +629,7 @@ public class Dice {
          * See the Dice method for more info.
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRule(String)}
          */
-        public Rule(@Nonnull String rollCode){
+        public Rule(@NonNull String rollCode){
             this.rollCode = rollCode;
             instructions = new IntList(10);
             Dice.parseRollRuleInto(this, rollCode);
@@ -650,7 +650,7 @@ public class Dice {
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRuleInto(Rule, String)}
          * @return this, for chaining
          */
-        public Rule reset(@Nonnull String rollCode){
+        public Rule reset(@NonNull String rollCode){
             instructions.clear();
             Dice.parseRollRuleInto(this, rollCode);
             return this;

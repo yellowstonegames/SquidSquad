@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -95,13 +111,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>final <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></code></div>
+<div class="col-first even-row-color"><code>final @NonNull <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></code></div>
 <div class="col-second even-row-color"><code><a href="#graph" class="member-name-link">graph</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-first odd-row-color"><code>final @NonNull com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#lastPath" class="member-name-link">lastPath</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
+<div class="col-first even-row-color"><code>@NonNull com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -141,12 +157,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHeight()" class="member-name-link">getHeight</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLastPath()" class="member-name-link">getLastPath</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the last path this found, which may be empty.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull com.github.tommyettinger.random.EnhancedRandom</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRng()" class="member-name-link">getRng</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
@@ -191,22 +207,19 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">rng</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="graph">
 <h3>graph</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></span>&nbsp;<span class="element-name">graph</span></div>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">@NonNull <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></span>&nbsp;<span class="element-name">graph</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="lastPath">
 <h3>lastPath</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">lastPath</span></div>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">@NonNull com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">lastPath</span></div>
 </section>
 </li>
 </ul>
@@ -285,8 +298,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getRng()">
 <h3>getRng</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull com.github.tommyettinger.random.EnhancedRandom</span>&nbsp;<span class="element-name">getRng</span>()</div>
 </section>
 </li>
 <li>
@@ -298,8 +310,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getLastPath()">
 <h3>getLastPath</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">getLastPath</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull com.github.tommyettinger.ds.ObjectList&lt;com.github.yellowstonegames.grid.Coord&gt;</span>&nbsp;<span class="element-name">getLastPath</span>()</div>
 <div class="block">Gets the last path this found, which may be empty. This returns the same reference to any path this produces,
  and the path is cleared when a new twisted line is requested. You probably want to copy the contents of this path
  into another list if you want to keep its contents.</div>

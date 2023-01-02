@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -213,7 +229,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- float[][]&nbsp;resistanceMap)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -223,7 +239,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- float[][]&nbsp;resistanceMap,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
@@ -236,7 +252,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- float[][]&nbsp;resistanceMap)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -247,7 +263,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- float[][]&nbsp;resistanceMap,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
@@ -255,17 +271,17 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  <code>buffer</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)" class="member-name-link">isReachable</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- float[][]&nbsp;resistanceMap)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)" class="member-name-link">isReachable</a><wbr>(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">isReachable</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- float[][]&nbsp;resistanceMap,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">isReachable</a><wbr>(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
@@ -361,7 +377,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- float[][]&nbsp;resistanceMap)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -371,8 +387,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- float[][]&nbsp;resistanceMap,
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -384,7 +400,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- float[][]&nbsp;resistanceMap)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.</div>
@@ -395,26 +411,26 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- float[][]&nbsp;resistanceMap,
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)" class="member-name-link">reachable</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- float[][]&nbsp;resistanceMap)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D)" class="member-name-link">reachable</a><wbr>(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">reachable</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- float[][]&nbsp;resistanceMap,
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float%5B%5D%5B%5D,com.github.tommyettinger.ds.ObjectList)" class="member-name-link">reachable</a><wbr>(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -426,8 +442,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- float[][]&nbsp;resistanceMap,
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -691,14 +707,10 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <li>
 <section class="detail" id="reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][],com.github.tommyettinger.ds.ObjectList)">
 <h3>reachable</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reachable</span><wbr><span class="parameters">(@Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- @Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- @Nonnull
- float[][]&nbsp;resistanceMap,
- @Nullable
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reachable</span><wbr><span class="parameters">(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
@@ -725,10 +737,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- @Nonnull
- float[][]&nbsp;resistanceMap,
- @Nullable
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance
@@ -758,10 +768,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- @Nonnull
- float[][]&nbsp;resistanceMap,
- @Nullable
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. The <code>maxLength</code> is measured using Chebyshev distance, where diagonally adjacent cells are
@@ -794,10 +802,8 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- @Nonnull
- float[][]&nbsp;resistanceMap,
- @Nullable
- com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
+ @Nullable com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
  <code>buffer</code>. The <code>maxLength</code> is measured using Euclidean distance, where diagonally adjacent cells are
@@ -825,12 +831,9 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <li>
 <section class="detail" id="reachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][])">
 <h3>reachable</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reachable</span><wbr><span class="parameters">(@Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- @Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reachable</span><wbr><span class="parameters">(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
  be null; it can be initialized in the same way as FOV's resistance maps can with
@@ -853,8 +856,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
  be null; it can be initialized in the same way as FOV's resistance maps can with
@@ -880,8 +882,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.
  <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance maps can with
@@ -1097,12 +1098,9 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <li>
 <section class="detail" id="isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][],com.github.tommyettinger.ds.ObjectList)">
 <h3>isReachable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReachable</span><wbr><span class="parameters">(@Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- @Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- @Nonnull
- float[][]&nbsp;resistanceMap,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReachable</span><wbr><span class="parameters">(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1171,8 +1169,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- @Nonnull
- float[][]&nbsp;resistanceMap,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1205,8 +1202,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- @Nonnull
- float[][]&nbsp;resistanceMap,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap,
  com.github.tommyettinger.ds.ObjectList&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;buffer)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
@@ -1237,12 +1233,9 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
 <li>
 <section class="detail" id="isReachable(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,float[][])">
 <h3>isReachable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReachable</span><wbr><span class="parameters">(@Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
- @Nonnull
- <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReachable</span><wbr><span class="parameters">(@NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;start,
+ @NonNull <a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;target,
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code> to determine whether
  the line of sight is obstructed, without storing the line of points along the way. <code>resistanceMap</code> must not
  be null; it can be initialized in the same way as FOV's resistance maps can with
@@ -1267,8 +1260,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;startY,
  int&nbsp;targetX,
  int&nbsp;targetY,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.
  <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance maps can with
@@ -1296,8 +1288,7 @@ implements <a href="LineDrawer.html" title="interface in com.github.yellowstoneg
  int&nbsp;targetX,
  int&nbsp;targetY,
  int&nbsp;maxLength,
- @Nonnull
- float[][]&nbsp;resistanceMap)</span></div>
+ @org.checkerframework.checker.nullness.qual.NonNull float[][]&nbsp;resistanceMap)</span></div>
 <div class="block">Checks whether the starting point can see the target point, using the <code>maxLength</code> and <code>resistanceMap</code>
  to determine whether the line of sight is obstructed, without storing the line of points along the way.
  <code>resistanceMap</code> must not be null; it can be initialized in the same way as FOV's resistance maps can with

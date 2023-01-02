@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.digital.Hasher;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Arrays;
 
 /**
@@ -45,7 +45,7 @@ public class WaveFunctionCollapse {
     private int[] stack;
     private int stacksize;
 
-    @Nonnull public EnhancedRandom random;
+    @NonNull public EnhancedRandom random;
     private int targetWidth, targetHeight, totalOptions;
     private boolean periodic;
 
@@ -75,7 +75,7 @@ public class WaveFunctionCollapse {
      * @param width the width of the output 2D array to produce
      * @param height the height of the output 2D array to produce
      */
-    public WaveFunctionCollapse(@Nonnull int[][] itemGrid, int order, int width, int height, EnhancedRandom random){
+    public WaveFunctionCollapse(@NonNull int[][] itemGrid, int order, int width, int height, EnhancedRandom random){
         this(itemGrid, order, width, height, random, true, false, 1, 0);
     }
     /**
@@ -99,7 +99,7 @@ public class WaveFunctionCollapse {
      * @param symmetry the level of symmetry to consider when imitating areas; between 1 and 8, inclusive, but usually 1
      * @param ground not sure what this does, to be honest; should usually be 0
      */
-    public WaveFunctionCollapse(@Nonnull int[][] itemGrid, int order, int width, int height, EnhancedRandom random,
+    public WaveFunctionCollapse(@NonNull int[][] itemGrid, int order, int width, int height, EnhancedRandom random,
                                 boolean periodicInput, boolean periodicOutput, int symmetry, int ground)
     {
         targetWidth = width;
@@ -128,12 +128,12 @@ public class WaveFunctionCollapse {
 
         ObjectIntOrderedMap<int[]> weights = new ObjectIntOrderedMap<int[]>(){
             @Override
-            protected int place(@Nonnull Object item) {
+            protected int place(@NonNull Object item) {
                 return item instanceof int[] ? Hasher.focalor.hash((int[])item) & mask : super.place(item);
             }
 
             @Override
-            protected int locateKey(@Nonnull Object key) {
+            protected int locateKey(@NonNull Object key) {
                 if(key instanceof int[])
                 {
                     Object[] keyTable = this.keyTable;

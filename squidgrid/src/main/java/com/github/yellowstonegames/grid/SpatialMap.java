@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.*;
 
 /**
@@ -58,7 +58,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         idMap = new IntObjectOrderedMap<>(other.idMap);
     }
 
-    public boolean add(@Nonnull V value){
+    public boolean add(@NonNull V value){
         Coord pos = value.getCoordPosition();
         int id = value.getIdentifier();
         if(idMap.containsKey(id)){

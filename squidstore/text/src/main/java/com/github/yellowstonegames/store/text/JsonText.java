@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.*;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 @SuppressWarnings("rawtypes")
 public final class JsonText {
@@ -36,7 +36,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidText types.
      */
-    public static void registerAll(@Nonnull Json json) {
+    public static void registerAll(@NonNull Json json) {
         registerLanguage(json);
         registerLanguageSentenceForm(json);
         registerTranslator(json);
@@ -53,7 +53,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLanguage(@Nonnull Json json) {
+    public static void registerLanguage(@NonNull Json json) {
         JsonCore.registerPattern(json);
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
             @Override
@@ -74,7 +74,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLanguageSentenceForm(@Nonnull Json json) {
+    public static void registerLanguageSentenceForm(@NonNull Json json) {
         JsonSupport.registerEnhancedRandom(json);
         registerLanguage(json);
         json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
@@ -96,7 +96,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerTranslator(@Nonnull Json json) {
+    public static void registerTranslator(@NonNull Json json) {
         JsonSupport.registerObjectObjectMap(json);
         registerLanguage(json);
         json.setSerializer(Translator.class, new Json.Serializer<Translator>() {

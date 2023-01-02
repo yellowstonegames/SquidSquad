@@ -13,8 +13,8 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Coord;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -95,13 +95,13 @@ public class BlueNoiseMulGenerator extends ApplicationAdapter {
       // It may also make it collide less, but the computation is much simpler here than the default.
       // This makes a roughly 3x difference in runtime. (!)
         @Override
-        protected int place(final @Nonnull Object item) {
+        protected int place(final @NonNull Object item) {
             final Coord c = (Coord) item;
             return c.x * 0x7587 + c.y * 0x6A89 & mask;
         }
 
         @Override
-        protected boolean equate(@Nonnull Object left, @Nullable Object right) {
+        protected boolean equate(@NonNull Object left, @Nullable Object right) {
             return left == right;
         }
     };

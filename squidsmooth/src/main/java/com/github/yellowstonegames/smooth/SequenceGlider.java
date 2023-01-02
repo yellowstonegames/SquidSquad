@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 
 /**
@@ -63,28 +63,28 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public float getFloat(@Nonnull String name) {
+    public float getFloat(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
-    public int getInt(@Nonnull String name) {
+    public int getInt(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
-    public float getStartFloat(@Nonnull String name) {
+    public float getStartFloat(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.startF;
     }
 
     @Override
-    public void setStartFloat(@Nonnull String name, float start) {
+    public void setStartFloat(@NonNull String name, float start) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.startF = start;
@@ -93,14 +93,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public float getEndFloat(@Nonnull String name) {
+    public float getEndFloat(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.endF;
     }
 
     @Override
-    public void setEndFloat(@Nonnull String name, float end) {
+    public void setEndFloat(@NonNull String name, float end) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.endF = end;
@@ -109,14 +109,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public int getStartInt(@Nonnull String name) {
+    public int getStartInt(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.startI;
     }
 
     @Override
-    public void setStartInt(@Nonnull String name, int start) {
+    public void setStartInt(@NonNull String name, int start) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.startI = start;
@@ -125,14 +125,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public int getEndInt(@Nonnull String name) {
+    public int getEndInt(@NonNull String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.endI;
     }
 
     @Override
-    public void setEndInt(@Nonnull String name, int end) {
+    public void setEndInt(@NonNull String name, int end) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.endI = end;
@@ -158,13 +158,13 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Interpolation getInterpolation() {
         return interpolation;
     }
 
     @Override
-    public void setInterpolation(@Nonnull Interpolation interpolation) {
+    public void setInterpolation(@NonNull Interpolation interpolation) {
         super.setInterpolation(interpolation);
         active = 0;
         passed = 0f;

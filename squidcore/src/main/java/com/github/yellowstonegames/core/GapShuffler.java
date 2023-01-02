@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.digital.Hasher;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -37,8 +37,8 @@ import java.util.Iterator;
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
 public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
-    public @Nonnull EnhancedRandom random;
-    protected @Nonnull ObjectList<T> elements;
+    public @NonNull EnhancedRandom random;
+    protected @NonNull ObjectList<T> elements;
     protected int index;
     protected GapShuffler() {
         random = new TricycleRandom();

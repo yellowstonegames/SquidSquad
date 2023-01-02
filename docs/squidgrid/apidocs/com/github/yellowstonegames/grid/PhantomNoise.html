@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -73,9 +89,14 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.grid.PhantomNoise</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PhantomNoise</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></span></div>
 <div class="block">Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly
  high. If you know what dimension of noise you need, and it's covered by <a href="Noise.html" title="class in com.github.yellowstonegames.grid"><code>Noise</code></a> (meaning it's 2D, 3D, 4D, 5D,
  or 6D noise), then using Noise with the <a href="Noise.html#FOAM"><code>Noise.FOAM</code></a> noise type will give you a significantly faster version of
@@ -122,6 +143,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>final int</code></div>
 <div class="col-second even-row-color"><code><a href="#dim" class="member-name-link">dim</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">How many dimensions of noise to generate; usually at least 2.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected final int[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#floors" class="member-name-link">floors</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>final com.github.tommyettinger.digital.Hasher</code></div>
+<div class="col-second even-row-color"><code><a href="#hasher" class="member-name-link">hasher</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Effectively, this contains the seed for the noise.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected final int[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#hashFloors" class="member-name-link">hashFloors</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected final float[]</code></div>
+<div class="col-second even-row-color"><code><a href="#input" class="member-name-link">input</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#instance2D" class="member-name-link">instance2D</a></code></div>
@@ -144,8 +181,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final <a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#instance8D" class="member-name-link">instance8D</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected float</code></div>
+<div class="col-second even-row-color"><code><a href="#inverse" class="member-name-link">inverse</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected final float[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#points" class="member-name-link">points</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>final float</code></div>
 <div class="col-second even-row-color"><code><a href="#sharpness" class="member-name-link">sharpness</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">This should go up linearly with dimension, typically, and is usually 0.825 times <a href="#dim"><code>dim</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected final float[][]</code></div>
+<div class="col-second odd-row-color"><code><a href="#vertices" class="member-name-link">vertices</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected final float[]</code></div>
+<div class="col-second even-row-color"><code><a href="#working" class="member-name-link">working</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -181,26 +232,93 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canUseSeed()" class="member-name-link">canUseSeed</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if this generator can be seeded with <a href="INoise.html#setSeed(long)"><code>INoise.setSeed(long)</code></a> (and if so, retrieved with
+ <a href="INoise.html#getSeed()"><code>INoise.getSeed()</code></a>).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PhantomNoise.html" title="class in com.github.yellowstonegames.grid">PhantomNoise</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeFromString(java.lang.String)" class="member-name-link">deserializeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxDimension()" class="member-name-link">getMaxDimension</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the maximum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+ surfaces, or 6 for one that is defined up to the highest dimension this interface knows about (6D).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinDimension()" class="member-name-link">getMinDimension</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the minimum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+ surfaces, or 3 for one that is only defined for 3D or higher-dimensional spaces.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float...)" class="member-name-link">getNoise</a><wbr>(float...&nbsp;args)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float...)" class="member-name-link">getNoise</a><wbr>(float...&nbsp;args)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+ float&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets 2D noise with a default or pre-set seed.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets 3D noise with a default or pre-set seed.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets 4D noise with a default or pre-set seed.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets 5D noise with a default or pre-set seed.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets 6D noise with a default or pre-set seed.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise2D(float,float)" class="member-name-link">getNoise2D</a><wbr>(float&nbsp;x,
  float&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSeed()" class="member-name-link">getSeed</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current seed of the generator, as a long even if the seed is stored internally as an int.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#noise(int,float...)" class="member-name-link">noise</a><wbr>(int&nbsp;used,
+ float...&nbsp;args)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeToString()" class="member-name-link">serializeToString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#valueNoise()" class="member-name-link">valueNoise</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#valueNoise(int)" class="member-name-link">valueNoise</a><wbr>(int&nbsp;dim)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected double</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#valueNoise2D()" class="member-name-link">valueNoise2D</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -209,6 +327,9 @@ loadScripts(document, 'script');</script>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.yellowstonegames.grid.INoise">Methods inherited from interface&nbsp;com.github.yellowstonegames.grid.<a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></h3>
+<code><a href="INoise.html#getNoiseWithSeed(float,float,float,float,float,float,long)">getNoiseWithSeed</a>, <a href="INoise.html#getNoiseWithSeed(float,float,float,float,float,long)">getNoiseWithSeed</a>, <a href="INoise.html#getNoiseWithSeed(float,float,float,float,long)">getNoiseWithSeed</a>, <a href="INoise.html#getNoiseWithSeed(float,float,float,long)">getNoiseWithSeed</a>, <a href="INoise.html#getNoiseWithSeed(float,float,long)">getNoiseWithSeed</a>, <a href="INoise.html#setSeed(long)">setSeed</a></code></div>
 </section>
 </li>
 </ul>
@@ -221,15 +342,67 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="hasher">
+<h3>hasher</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.github.tommyettinger.digital.Hasher</span>&nbsp;<span class="element-name">hasher</span></div>
+<div class="block">Effectively, this contains the seed for the noise.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="dim">
 <h3>dim</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">dim</span></div>
+<div class="block">How many dimensions of noise to generate; usually at least 2.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="sharpness">
 <h3>sharpness</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">sharpness</span></div>
+<div class="block">This should go up linearly with dimension, typically, and is usually 0.825 times <a href="#dim"><code>dim</code></a>.
+ It can be raised to make the noise more starkly black and white, or lowered to have more mid-gray values.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="inverse">
+<h3>inverse</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">inverse</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="working">
+<h3>working</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">working</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="points">
+<h3>points</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">points</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="input">
+<h3>input</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">input</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="vertices">
+<h3>vertices</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">vertices</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="floors">
+<h3>floors</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">floors</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="hashFloors">
+<h3>hashFloors</h3>
+<div class="member-signature"><span class="modifiers">protected final transient</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">hashFloors</span></div>
 </section>
 </li>
 <li>
@@ -324,21 +497,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="valueNoise()">
+<section class="detail" id="valueNoise(int)">
 <h3>valueNoise</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">valueNoise</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">valueNoise</span><wbr><span class="parameters">(int&nbsp;dim)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="valueNoise2D()">
 <h3>valueNoise2D</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">valueNoise2D</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">valueNoise2D</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getNoise(float...)">
 <h3>getNoise</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float...&nbsp;args)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="noise(int,float...)">
+<h3>noise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">noise</span><wbr><span class="parameters">(int&nbsp;used,
+ float...&nbsp;args)</span></div>
 </section>
 </li>
 <li>
@@ -355,6 +535,178 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMinDimension()">
+<h3>getMinDimension</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMinDimension</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getMinDimension()">INoise</a></code></span></div>
+<div class="block">Gets the minimum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+ surfaces, or 3 for one that is only defined for 3D or higher-dimensional spaces.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getMinDimension()">getMinDimension</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Returns:</dt>
+<dd>the minimum supported dimension, from 2 to 6 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxDimension()">
+<h3>getMaxDimension</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxDimension</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getMaxDimension()">INoise</a></code></span></div>
+<div class="block">Gets the maximum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+ surfaces, or 6 for one that is defined up to the highest dimension this interface knows about (6D).</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getMaxDimension()">getMaxDimension</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Returns:</dt>
+<dd>the maximum supported dimension, from 2 to 6 inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canUseSeed()">
+<h3>canUseSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canUseSeed</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#canUseSeed()">INoise</a></code></span></div>
+<div class="block">Returns true if this generator can be seeded with <a href="INoise.html#setSeed(long)"><code>INoise.setSeed(long)</code></a> (and if so, retrieved with
+ <a href="INoise.html#getSeed()"><code>INoise.getSeed()</code></a>).</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#canUseSeed()">canUseSeed</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Returns:</dt>
+<dd>true if <a href="INoise.html#setSeed(long)"><code>INoise.setSeed(long)</code></a> and <a href="INoise.html#getSeed()"><code>INoise.getSeed()</code></a> are supported, false if either isn't supported</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSeed()">
+<h3>getSeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getSeed</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getSeed()">INoise</a></code></span></div>
+<div class="block">Gets the current seed of the generator, as a long even if the seed is stored internally as an int.
+ If <a href="INoise.html#canUseSeed()"><code>INoise.canUseSeed()</code></a> returns true, this must be implemented, but if canUseSeed() returns false, this is
+ permitted to either still be implemented (but typically only if it is time- or space-intensive to call getSeed())
+ or to throw an <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link"><code>UnsupportedOperationException</code></a>.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getSeed()">getSeed</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Returns:</dt>
+<dd>the current seed, as a long</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getNoise(float,float)">INoise</a></code></span></div>
+<div class="block">Gets 2D noise with a default or pre-set seed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getNoise(float,float)">getNoise</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position; can be any finite float</dd>
+<dd><code>y</code> - y position; can be any finite float</dd>
+<dt>Returns:</dt>
+<dd>a noise value between -1.0f and 1.0f, both inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getNoise(float,float,float)">INoise</a></code></span></div>
+<div class="block">Gets 3D noise with a default or pre-set seed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getNoise(float,float,float)">getNoise</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position; can be any finite float</dd>
+<dd><code>y</code> - y position; can be any finite float</dd>
+<dd><code>z</code> - z position; can be any finite float</dd>
+<dt>Returns:</dt>
+<dd>a noise value between -1.0f and 1.0f, both inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getNoise(float,float,float,float)">INoise</a></code></span></div>
+<div class="block">Gets 4D noise with a default or pre-set seed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getNoise(float,float,float,float)">getNoise</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position; can be any finite float</dd>
+<dd><code>y</code> - y position; can be any finite float</dd>
+<dd><code>z</code> - z position; can be any finite float</dd>
+<dd><code>w</code> - w position; can be any finite float</dd>
+<dt>Returns:</dt>
+<dd>a noise value between -1.0f and 1.0f, both inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getNoise(float,float,float,float,float)">INoise</a></code></span></div>
+<div class="block">Gets 5D noise with a default or pre-set seed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getNoise(float,float,float,float,float)">getNoise</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position; can be any finite float</dd>
+<dd><code>y</code> - y position; can be any finite float</dd>
+<dd><code>z</code> - z position; can be any finite float</dd>
+<dd><code>w</code> - w position; can be any finite float</dd>
+<dd><code>u</code> - u position; can be any finite float</dd>
+<dt>Returns:</dt>
+<dd>a noise value between -1.0f and 1.0f, both inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNoise(float,float,float,float,float,float)">
+<h3>getNoise</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNoise</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;z,
+ float&nbsp;w,
+ float&nbsp;u,
+ float&nbsp;v)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#getNoise(float,float,float,float,float,float)">INoise</a></code></span></div>
+<div class="block">Gets 6D noise with a default or pre-set seed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#getNoise(float,float,float,float,float,float)">getNoise</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>x</code> - x position; can be any finite float</dd>
+<dd><code>y</code> - y position; can be any finite float</dd>
+<dd><code>z</code> - z position; can be any finite float</dd>
+<dd><code>w</code> - w position; can be any finite float</dd>
+<dd><code>u</code> - u position; can be any finite float</dd>
+<dd><code>v</code> - v position; can be any finite float</dd>
+<dt>Returns:</dt>
+<dd>a noise value between -1.0f and 1.0f, both inclusive</dd>
 </dl>
 </section>
 </li>

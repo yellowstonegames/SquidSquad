@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.old.v300.*;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 @SuppressWarnings("rawtypes")
 public final class JsonOld {
@@ -33,7 +33,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidOld types.
      */
-    public static void registerAll(@Nonnull Json json) {
+    public static void registerAll(@NonNull Json json) {
         registerLightRNG(json);
         registerDiverRNG(json);
         registerGWTRNG(json);
@@ -49,7 +49,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLightRNG(@Nonnull Json json) {
+    public static void registerLightRNG(@NonNull Json json) {
         json.addClassTag("LigR", LightRNG.class);
         json.setSerializer(LightRNG.class, new Json.Serializer<LightRNG>() {
             @Override
@@ -73,7 +73,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDiverRNG(@Nonnull Json json) {
+    public static void registerDiverRNG(@NonNull Json json) {
         json.addClassTag("DivR", DiverRNG.class);
         json.setSerializer(DiverRNG.class, new Json.Serializer<DiverRNG>() {
             @Override
@@ -97,7 +97,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerGWTRNG(@Nonnull Json json) {
+    public static void registerGWTRNG(@NonNull Json json) {
         json.addClassTag("GWTR", GWTRNG.class);
         json.setSerializer(GWTRNG.class, new Json.Serializer<GWTRNG>() {
             @Override
@@ -121,7 +121,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLinnormRNG(@Nonnull Json json) {
+    public static void registerLinnormRNG(@NonNull Json json) {
         json.addClassTag("LinR", LinnormRNG.class);
         json.setSerializer(LinnormRNG.class, new Json.Serializer<LinnormRNG>() {
             @Override
@@ -145,7 +145,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSilkRNG(@Nonnull Json json) {
+    public static void registerSilkRNG(@NonNull Json json) {
         json.addClassTag("SilR", SilkRNG.class);
         json.setSerializer(SilkRNG.class, new Json.Serializer<SilkRNG>() {
             @Override
@@ -169,7 +169,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerThrustAltRNG(@Nonnull Json json) {
+    public static void registerThrustAltRNG(@NonNull Json json) {
         json.addClassTag("ThAR", ThrustAltRNG.class);
         json.setSerializer(ThrustAltRNG.class, new Json.Serializer<ThrustAltRNG>() {
             @Override
@@ -193,7 +193,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLongPeriodRNG(@Nonnull Json json) {
+    public static void registerLongPeriodRNG(@NonNull Json json) {
         json.addClassTag("LPeR", LongPeriodRNG.class);
         json.setSerializer(LongPeriodRNG.class, new Json.Serializer<LongPeriodRNG>() {
             @Override
@@ -227,7 +227,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerXoshiroStarPhi32RNG(@Nonnull Json json) {
+    public static void registerXoshiroStarPhi32RNG(@NonNull Json json) {
         json.addClassTag("XSPR", XoshiroStarPhi32RNG.class);
         json.setSerializer(XoshiroStarPhi32RNG.class, new Json.Serializer<XoshiroStarPhi32RNG>() {
             @Override

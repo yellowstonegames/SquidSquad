@@ -23,8 +23,8 @@ import com.github.yellowstonegames.smooth.AngleGlider;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.VectorSequenceGlider;
 import com.github.tommyettinger.textra.Font;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A single {@code long} that a {@link Font} can render as a glyph with color and styles, given a location that can
@@ -34,11 +34,11 @@ import javax.annotation.Nullable;
  * Font markup (see {@link Font#markupGlyph(char, String, ColorLookup)}), or as a char and several optional parameters.
  */
 public class GlidingGlyph {
-    @Nonnull
+    @NonNull
     public CoordGlider location;
-    @Nonnull
+    @NonNull
     public AngleGlider rotation;
-    @Nonnull
+    @NonNull
     public VectorSequenceGlider smallMotion;
 
     /**
@@ -52,7 +52,7 @@ public class GlidingGlyph {
      * It is here so {@link #smallMotion} can be easily set to an empty sequence.
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
-    @Nonnull
+    @NonNull
     public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private GlidingGlyph() {
@@ -157,21 +157,21 @@ public class GlidingGlyph {
         return location.getY() + smallMotion.getY();
     }
 
-    @Nonnull
+    @NonNull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(@Nonnull CoordGlider location) {
+    public void setLocation(@NonNull CoordGlider location) {
         this.location = location;
     }
 
-    @Nonnull
+    @NonNull
     public AngleGlider getRotation() {
         return rotation;
     }
 
-    public void setRotation(@Nonnull AngleGlider rotation) {
+    public void setRotation(@NonNull AngleGlider rotation) {
         this.rotation = rotation;
     }
 
@@ -186,7 +186,7 @@ public class GlidingGlyph {
     public void draw(Batch batch, Font font){
         font.drawGlyph(batch, glyph, getX(), getY(), rotation.getAngle());
     }
-    @Nonnull
+    @NonNull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }

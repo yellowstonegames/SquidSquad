@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -53,16 +69,22 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="AngleGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">AngleGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="CoordGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">CoordGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
 <li class="circle">com.github.yellowstonegames.smooth.<a href="Director.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">Director</a>&lt;C&gt;</li>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="FloatGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">FloatGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="IntColorGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">IntColorGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="SequenceGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>&lt;T&gt; (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)
+<li class="circle">com.github.yellowstonegames.smooth.<a href="Glider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">Glider</a>
 <ul>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="VectorSequenceGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="AngleGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">AngleGlider</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="CoordGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">CoordGlider</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="FloatGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">FloatGlider</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="IntColorGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">IntColorGlider</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="SequenceGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">SequenceGlider</a>
+<ul>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="VectorSequenceGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">VectorSequenceGlider</a></li>
 </ul>
 </li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="VectorGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">VectorGlider</a></li>
+</ul>
+</li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="Glider.Changer.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">Glider.Changer</a></li>
 <li class="circle">com.badlogic.gdx.graphics.g2d.TextureRegion
 <ul>
 <li class="circle">com.badlogic.gdx.graphics.g2d.Sprite
@@ -73,7 +95,6 @@ loadScripts(document, 'script');</script>
 </li>
 </ul>
 </li>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="VectorGlider.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">VectorGlider</a> (implements com.github.yellowstonegames.smooth.<a href="IGlider.html" title="interface in com.github.yellowstonegames.smooth">IGlider</a>)</li>
 <li class="circle">com.github.yellowstonegames.smooth.<a href="VectorTools.html" class="type-name-link" title="class in com.github.yellowstonegames.smooth">VectorTools</a></li>
 </ul>
 </li>
@@ -82,7 +103,8 @@ loadScripts(document, 'script');</script>
 <section class="hierarchy">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
-<li class="circle">com.github.yellowstonegames.smooth.<a href="IGlider.html" class="type-name-link" title="interface in com.github.yellowstonegames.smooth">IGlider</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="FloatInterpolator.html" class="type-name-link" title="interface in com.github.yellowstonegames.smooth">FloatInterpolator</a></li>
+<li class="circle">com.github.yellowstonegames.smooth.<a href="IntInterpolator.html" class="type-name-link" title="interface in com.github.yellowstonegames.smooth">IntInterpolator</a></li>
 </ul>
 </section>
 </main>

@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright (c) 2023 See AUTHORS file.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -58,13 +74,23 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/BlueNoise.html" title="class in com.github.yellowstonegames.grid">BlueNoise</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Provides access to precalculated tiling planes of 2D blue noise, that is, noise without high-frequency components,
+ as well as seeded mixes of different blue noise planes that make it have even fewer patterns.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/BresenhamLine.html" title="class in com.github.yellowstonegames.grid">BresenhamLine</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Provides a means to generate Bresenham lines in 2D.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/CellularAutomaton.html" title="class in com.github.yellowstonegames.grid">CellularAutomaton</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/CellularAutomaton.html" title="class in com.github.yellowstonegames.grid">CellularAutomaton</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Various simple cellular-automata rules and the data they operate on.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/ConvChain.html" title="class in com.github.yellowstonegames.grid">ConvChain</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A class that imitates patterns in an existing <a href="com/github/yellowstonegames/grid/Region.html" title="class in com.github.yellowstonegames.grid"><code>Region</code></a> and uses it to fill another Region so it has a
+ similar visual style.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -94,14 +120,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A variant on jdkgdxds' <code>ObjectSet</code> class that only holds Coord items, and can do so more efficiently.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/github/yellowstonegames/grid/Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/CyclicNoise.html" title="class in com.github.yellowstonegames.grid">CyclicNoise</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A periodic type of continuous noise that looks good when frequencies are low, and rather bad when frequencies are
+ high.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/yellowstonegames/grid/Direction.html" title="enum class in com.github.yellowstonegames.grid">Direction</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Represents the eight grid directions and the deltaX, deltaY values associated
  with those directions.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/DrunkenWalk.html" title="class in com.github.yellowstonegames.grid">DrunkenWalk</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/FlanNoise.html" title="class in com.github.yellowstonegames.grid">FlanNoise</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A variant on <a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid"><code>PhantomNoise</code></a> that also produces arbitrary-dimensional continuous noise, but that is optimized
+ for higher-dimensional output (4 and up, in particular).</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/FlawedPointHash.html" title="interface in com.github.yellowstonegames.grid">FlawedPointHash</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
@@ -133,22 +169,28 @@ loadScripts(document, 'script');</script>
 <div class="block">Produces hashes that show strong bias on one axis (usually the later axes matter more) and have nice-looking
  patterns of dots.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/FlawedPointHash.SquishedCubeHash.html" title="class in com.github.yellowstonegames.grid">FlawedPointHash.SquishedCubeHash</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Like CubeHash, but with a squished Z axis in 3D.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/FOV.html" title="class in com.github.yellowstonegames.grid">FOV</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">This class provides methods for calculating Field of View in grids.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/HilbertCurve.html" title="class in com.github.yellowstonegames.grid">HilbertCurve</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Calculates and stores 2D and optionally 3D Hilbert Curves up to a reasonable size.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Combines IGridPositioned and IIdentified for objects that have a Coord position and an int identifier.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/IGridPositioned.html" title="interface in com.github.yellowstonegames.grid">IGridPositioned</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/IGridPositioned.html" title="interface in com.github.yellowstonegames.grid">IGridPositioned</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Allows getting and setting the position of an object, as a Coord.</div>
 </div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/yellowstonegames/grid/INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/IntPointHash.html" title="class in com.github.yellowstonegames.grid">IntPointHash</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A group of similar methods for getting hashes of points based on int coordinates in 2, 3, 4, or 6 dimensions and
@@ -205,6 +247,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Simple container class that holds 3 floats.</div>
 </div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/NoiseAdjustment.html" title="class in com.github.yellowstonegames.grid">NoiseAdjustment</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/NoiseWrapper.html" title="class in com.github.yellowstonegames.grid">NoiseWrapper</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/OrthoLine.html" title="class in com.github.yellowstonegames.grid">OrthoLine</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
@@ -234,12 +280,34 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/SpatialMap.html" title="class in com.github.yellowstonegames.grid">SpatialMap</a>&lt;<a href="com/github/yellowstonegames/grid/SpatialMap.html" title="type parameter in SpatialMap">V</a> extends <a href="com/github/yellowstonegames/grid/IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a>&gt;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/RotationTools.html" title="class in com.github.yellowstonegames.grid">RotationTools</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">A type of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.</div>
+<div class="block">This has tools for generating and applying matrix rotations, potentially in higher dimensions than the typical 2 or
+ 3.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/SimplexNoise.html" title="class in com.github.yellowstonegames.grid">SimplexNoise</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Simplex noise functions, in 2D, 3D, 4D, 5D, and 6D.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A mix of <a href="com/github/yellowstonegames/grid/CyclicNoise.html" title="class in com.github.yellowstonegames.grid"><code>CyclicNoise</code></a> with value noise; much less periodic than CyclicNoise alone.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/SpatialMap.html" title="class in com.github.yellowstonegames.grid">SpatialMap</a>&lt;<a href="com/github/yellowstonegames/grid/SpatialMap.html" title="type parameter in SpatialMap">V</a> extends <a href="com/github/yellowstonegames/grid/IGridIdentified.html" title="interface in com.github.yellowstonegames.grid">IGridIdentified</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A kind of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/TaffyNoise.html" title="class in com.github.yellowstonegames.grid">TaffyNoise</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A variant on <a href="com/github/yellowstonegames/grid/PhantomNoise.html" title="class in com.github.yellowstonegames.grid"><code>PhantomNoise</code></a> that also produces arbitrary-dimensional continuous noise, but that is optimized
+ for higher-dimensional output (4 and up, in particular).</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/ValueNoise.html" title="class in com.github.yellowstonegames.grid">ValueNoise</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Arbitrary-dimensional continuous noise that always looks very blocky.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/yellowstonegames/grid/WaveFunctionCollapse.html" title="class in com.github.yellowstonegames.grid">WaveFunctionCollapse</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A port of WaveFunctionCollapse by ExUtumno/mxgmn; takes a single sample of a grid to imitate and produces one or more
  grids of requested sizes that have a similar layout of cells to the sample.</div>
 </div>
