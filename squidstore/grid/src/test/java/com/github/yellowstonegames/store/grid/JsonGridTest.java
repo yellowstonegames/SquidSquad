@@ -381,7 +381,7 @@ public class JsonGridTest {
     }
 
     @Test
-    @Ignore("CoordObjectOrderedMap currently can't write its generic values except in specific circumstances...")
+//    @Ignore("CoordObjectOrderedMap currently can't write its generic values except in specific circumstances...")
     public void testLightingManager() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerLightingManager(json);
@@ -390,6 +390,9 @@ public class JsonGridTest {
         String data = json.toJson(lm);
         System.out.println(data);
         LightingManager lm2 = json.fromJson(LightingManager.class, data);
+        System.out.println();
+        System.out.println(lm.lights);
+        System.out.println(lm2.lights);
         Assert.assertEquals(lm, lm2);
     }
 

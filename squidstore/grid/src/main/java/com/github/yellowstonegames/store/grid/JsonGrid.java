@@ -116,27 +116,20 @@ public final class JsonGrid {
         json.setSerializer(CoordObjectMap.class, new Json.Serializer<CoordObjectMap>() {
             @Override
             public void write(Json json, CoordObjectMap object, Class knownType) {
-                Writer writer = json.getWriter();
+                JsonWriter writer = json.getWriter();
                 try {
-                    writer.write('{');
+                    writer.object();
                 } catch (IOException ignored) {
                 }
                 Iterator<Map.Entry<Coord, ?>> es = new CoordObjectMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     Map.Entry<Coord, ?> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue());
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), null);
                 }
                 try {
-                    writer.write('}');
+                    writer.pop();
                 } catch (IOException ignored) {
                 }
             }
@@ -172,13 +165,9 @@ public final class JsonGrid {
                 Iterator<Map.Entry<Coord, ?>> es = new CoordObjectOrderedMap.OrderedMapEntries<>(object).iterator();
                 while (es.hasNext()) {
                     Map.Entry<Coord, ?> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey(), Coord.class);
-                        json.setWriter(writer);
-                        writer.name(k);
-                        json.writeValue(e.getValue(), null);
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), null);
                 }
                 try {
                     writer.pop();
@@ -365,13 +354,15 @@ public final class JsonGrid {
         json.setSerializer(Radiance.class, new Json.Serializer<Radiance>() {
             @Override
             public void write(Json json, Radiance object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(Radiance.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public Radiance read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Radiance.deserializeFromString(jsonData.asString());
+                return Radiance.deserializeFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -552,6 +543,5 @@ public final class JsonGrid {
         registerCoordObjectOrderedMap(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
-        json.setElementType(LightingManager.class, "lights", Radiance.class);
     }
 }
