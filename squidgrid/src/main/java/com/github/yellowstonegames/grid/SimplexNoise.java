@@ -376,16 +376,18 @@ public class SimplexNoise implements INoise {
         }
         else n4 = 0;
 
-        // debug code, for finding what constant should be used for 14.75
+        t = (n0 + n1 + n2 + n3 + n4) * 24f;
+        return t / (1f + Math.abs(t));
+    }
+    // debug code, for finding what constant should be used for 14.75
 //        final float ret =  (n0 + n1 + n2 + n3 + n4) * (14.7279);
 //        if(ret < -1 || ret > 1) {
 //            System.out.println(ret + " is out of bounds! seed=" + seed + ", x=" + x + ", y=" + y + ", z=" + z + ", w=" + w);
 //            return ret * -0.5f;
 //        }
 //        return ret;
-        // normal return code
-        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-    }
+    // normal return code
+//        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
 
     /**
      * Thanks to Mark A. Ropper for
@@ -540,7 +542,8 @@ public class SimplexNoise implements INoise {
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
 
-        return  (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
+        t = (n0 + n1 + n2 + n3 + n4 + n5) * 48f;
+        return t / (1f + Math.abs(t));
     }
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0;
 //        if(t < -1.0) {
@@ -752,8 +755,10 @@ public class SimplexNoise implements INoise {
                     gradient6DLUT[hash + 3] * w6 + gradient6DLUT[hash + 4] * u6 + gradient6DLUT[hash + 5] * v6);
         }
 
-        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
+        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 144f;
+        return t / (1f + Math.abs(t));
     }
+//        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
 
     @Override
     public int getMinDimension() {
