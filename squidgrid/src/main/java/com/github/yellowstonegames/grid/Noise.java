@@ -1214,7 +1214,6 @@ public class Noise implements INoise {
         return t * t * (3 - 2 * t);
     }
 
-
     protected static float quinticInterpolator(float t) {
         return t * t * t * (t * (t * 6 - 15) + 10);
     }

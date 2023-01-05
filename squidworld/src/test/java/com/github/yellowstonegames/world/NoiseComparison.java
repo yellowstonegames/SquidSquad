@@ -31,8 +31,8 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseComparison extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CUBIC_FRACTAL, 1);
-    private Noise bare = new Noise(1, 1, Noise.CUBIC_FRACTAL, 1);
+    private Noise noise = new Noise(1, 0.0625f, Noise.SIMPLEX_FRACTAL, 1);
+    private Noise bare = new Noise(1, 1, Noise.SIMPLEX_FRACTAL, 1);
     private final float[] args = {
             1f,   // 0, spline shape
             0f,   // 1, spline turning
@@ -40,12 +40,23 @@ public class NoiseComparison extends ApplicationAdapter {
 //            4f/3f,// 3, maelstrom mul
 //            1.25f,// 4, maelstrom sub
     };
-    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
+//    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
+//    private FloatToFloatFunction fff = (f) -> (TrigTools.cos(f * 4f * TrigTools.PI2) > 0.9f) ? f < 0.1f ? 1f : 0.5f : -0.2f;
+    private FloatToFloatFunction fff = (f) -> MathTools.clamp((TrigTools.cos(f * 20) - 0.7f) * 4f, -0.6f, 1f - Math.abs(f));
+//    private FloatToFloatFunction fff = (f) -> {
+//        if(f > 0.7f && f < 0.8f) return TrigTools.cos((f - 0.75f) * 9f * TrigTools.PI2);
+//        if(f > 0.4f && f < 0.5f) return TrigTools.cos((f - 0.45f) * 9f * TrigTools.PI2);
+//        if(f > 0.1f && f < 0.2f) return TrigTools.cos((f - 0.15f) * 9f * TrigTools.PI2);
+//        if(f > -.2f && f < -.1f) return TrigTools.cos((f + 0.15f) * 9f * TrigTools.PI2);
+//        if(f > -.5f && f < -.4f) return TrigTools.cos((f + 0.45f) * 9f * TrigTools.PI2);
+//        if(f > -.8f && f < -.7f) return TrigTools.cos((f + 0.75f) * 9f * TrigTools.PI2);
+//        return -1f;
+//    };
     private NoiseAdjustment adj = new NoiseAdjustment(bare, fff);
     private NoiseWrapper wrap = new NoiseWrapper(adj, 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
-    private int octaves = 2;
-    private float freq = 1f;
+    private int octaves = 1;
+    private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;
     
     private LongPointHash ph = new LongPointHash();
