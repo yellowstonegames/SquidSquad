@@ -175,13 +175,22 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hue = 0.45f; // bright green
 //                            float hue = 0.425f; // Brazil green
 //                            float hue = 0.08f; // bright red
-                            float hueBase = 0.675f; // a slightly violet-ish blue
-                            float hueHigh = 0.15f; // apricot
+
+//                            float hueBase = 0.675f; // a slightly violet-ish blue
+//                            float hueHigh = 0.15f; // apricot
+//                            float hueBase = 0.11f; // embers
+//                            float hueHigh = 0.2f; // orange glow
+                            float hueBase = 0.575f; // blue-cyan
+                            float hueHigh = 0.45f; // bright green
 //                            float hueHigh = 0.27f; // gold
-                            int hiLo = Math.round(MathTools.square((MathTools.swayTight(i * 0x1p-6f + 1f))));
+                            int hiLo = Math.round(
+//                                    MathTools.square(
+                                            (MathTools.swayTight(i * 0x1p-6f + 0.5f))
+//                                    )
+                            );
                             gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
-                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // red to gold
+                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // hueBase to hueHigh
 //                                            hiLo * 0.19f + hue, // red to gold
 //                                            (i & 255) * 0x1p-12f - 0x1p-5f + hue, // small hue variation
 //                                            (i & 255) * 0x1p-11f - 0x3p-7f + hue, // smallish hue variation
@@ -193,13 +202,16 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            1f - (i + 90 & 255) * 0x1p-13f,
 //                                            1f - (i & 255) * 0x1p-13f,
                                             1f,
-                                            hiLo == 1 && i < 160 ? 0.5f + (i * 0x1p-9f) :
+//                                            hiLo == 1 && i < 160 ? 0.5f + (i * 0x1p-9f) :
 //                                            hiLo == 1 && i < 160 ? 0.6f + (i * 0x1p-9f) :
-                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
+
+//                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.4f), // biased
+                                            MathTools.barronSpline(i * 0x1p-8f, 1.5f, 0.7f) * 0.85f + 0.05f, // biased
 //                                            (i * i * 0x1p-16f), //very dark
 //                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
+//                                            0.55f + TrigTools.cosTurns(i * 0x1p-9f) * -0.35f, // light, from 0.2f to 0.9f
 //                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
                                             1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));

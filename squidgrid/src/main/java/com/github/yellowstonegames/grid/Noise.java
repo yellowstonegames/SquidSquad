@@ -8094,7 +8094,9 @@ public class Noise implements INoise {
         float xs = x - (float) x1;
         float ys = y - (float) y1;
 
-        float e = (float)Math.pow(4.0f * sharpness,
+        float e =
+                (sharpness *
+//                (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(phCoord2D(seed, x0, y0), phCoord2D(seed, x1, y0), phCoord2D(seed, x2, y0), phCoord2D(seed, x3, y0),
@@ -8107,7 +8109,8 @@ public class Noise implements INoise {
                         xs),
                 ys)
         );
-        return (e - 1.0f) / (e + 1.0f);
+        return e / (1f + Math.abs(e));
+//        return (e - 1.0f) / (e + 1.0f);
 //                * CUBIC_2D_BOUNDING;
     }
 
@@ -8249,7 +8252,8 @@ public class Noise implements INoise {
         float zs = z - (float) z1;
 
         float e =
-                (float)Math.pow(4.0f * sharpness,
+                (sharpness *
+//                (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(
@@ -8277,8 +8281,9 @@ public class Noise implements INoise {
                         cubicLerp(phCoord3D(seed, x0, y3, z3), phCoord3D(seed, x1, y3, z3), phCoord3D(seed, x2, y3, z3), phCoord3D(seed, x3, y3, z3), xs),
                         ys),
                 zs)
-        );
-        return (e - 1.0f) / (e + 1.0f);
+                );
+        return e / (1f + Math.abs(e));
+//        return (e - 1.0f) / (e + 1.0f);
 
 //        ;
 //        return TrigTools.sinTurns(e);
@@ -8432,7 +8437,9 @@ public class Noise implements INoise {
         float zs = z - (float) z1;
         float ws = w - (float) w1;
 
-        float e = (float)Math.pow(4.0f * sharpness,
+        float e =
+                (sharpness *
+//                (float)Math.pow(4.0f * sharpness,
 //        return
                 cubicLerp(
                 cubicLerp(
@@ -8541,7 +8548,8 @@ public class Noise implements INoise {
                         zs),
                 ws)
         );
-        return (e - 1.0f) / (e + 1.0f);
+        return e / (1f + Math.abs(e));
+//        return (e - 1.0f) / (e + 1.0f);
 //                * CUBIC_4D_BOUNDING;
     }
 
