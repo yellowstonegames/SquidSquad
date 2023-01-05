@@ -6703,19 +6703,19 @@ public class Noise implements INoise {
 
         float n = 0f;
 
-        t = 0.5f - x0 * x0 - y0 * y0;
+        t = LIMIT2 - x0 * x0 - y0 * y0;
         if (t >= 0) {
             t *= t;
             n += t * t * gradCoord2D(seed, i, j, x0, y0);
         }
 
-        t = 0.5f - x1 * x1 - y1 * y1;
+        t = LIMIT2 - x1 * x1 - y1 * y1;
         if (t > 0) {
             t *= t;
             n += t * t * gradCoord2D(seed, i + i1, j + j1, x1, y1);
         }
 
-        t = 0.5f - x2 * x2 - y2 * y2;
+        t = LIMIT2 - x2 * x2 - y2 * y2;
         if (t > 0)  {
             t *= t;
             n += t * t * gradCoord2D(seed, i + 1, j + 1, x2, y2);
@@ -7095,25 +7095,25 @@ public class Noise implements INoise {
 
         float n = 0;
 
-        t = 0.6f - x0 * x0 - y0 * y0 - z0 * z0;
+        t = LIMIT3 - x0 * x0 - y0 * y0 - z0 * z0;
         if (t > 0) {
             t *= t;
             n += t * t * gradCoord3D(seed, i, j, k, x0, y0, z0);
         }
 
-        t = 0.6f - x1 * x1 - y1 * y1 - z1 * z1;
+        t = LIMIT3 - x1 * x1 - y1 * y1 - z1 * z1;
         if (t > 0) {
             t *= t;
             n += t * t * gradCoord3D(seed, i + i1, j + j1, k + k1, x1, y1, z1);
         }
 
-        t = 0.6f - x2 * x2 - y2 * y2 - z2 * z2;
+        t = LIMIT3 - x2 * x2 - y2 * y2 - z2 * z2;
         if (t > 0) {
             t *= t;
             n += t * t * gradCoord3D(seed, i + i2, j + j2, k + k2, x2, y2, z2);
         }
 
-        t = 0.6f - x3 * x3 - y3 * y3 - z3 * z3;
+        t = LIMIT3 - x3 * x3 - y3 * y3 - z3 * z3;
         if (t > 0)  {
             t *= t;
             n += t * t * gradCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
@@ -7344,7 +7344,9 @@ public class Noise implements INoise {
         }
         else t4 = 0;
 
-        return (t0 + t1 + t2 + t3 + t4) * 14.7279f;
+//        float n = (t0 + t1 + t2 + t3 + t4) * 14.7279f;
+        float n = (t0 + t1 + t2 + t3 + t4) * 24f;
+        return n / (1f + Math.abs(n));
     }
     
     // 5D Simplex
@@ -7626,7 +7628,9 @@ public class Noise implements INoise {
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
 
-        return  (n0 + n1 + n2 + n3 + n4 + n5) * 10f;
+//        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 10f;
+        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 48f;
+        return n / (1f + Math.abs(n));
     }
 
     // 6D Simplex
@@ -7958,7 +7962,9 @@ public class Noise implements INoise {
             n6 *= n6 * gradCoord6D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, g + 1, x6, y6, z6, w6, u6, v6);
         }
 
-        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
+//        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
+        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 144f;
+        return n / (1f + Math.abs(n));
     }
 
     // Cubic Noise
@@ -9732,21 +9738,25 @@ public class Noise implements INoise {
     public static final float F2f = 0.3660254f;
     public static final float G2f = 0.21132487f;
     public static final float H2f = 0.42264974f;
+    public static final float LIMIT2 = 0.5f;
 
     public static final float F3f = 0.33333334f;
     public static final float G3f = 0.16666667f;
+    public static final float LIMIT3 = 0.6f;
 
     public static final float F4f = (float) ((2.23606797 - 1.0) / 4.0);
     public static final float G4f = (float) ((5.0 - 2.23606797) / 20.0);
-    public static final float LIMIT4 = 0.62f;
+    public static final float LIMIT4 = 0.6f;
 
     private static final float F5 = (float) ((Math.sqrt(6.0) - 1.0) / 5.0);
     private static final float G5 = (float) ((6.0 - Math.sqrt(6.0)) / 30.0);
-    private static final float LIMIT5 = 0.7f;
+    private static final float LIMIT5 = 0.61f;
+//    private static final float LIMIT5 = 0.7f;
 
     private static final float F6 = (float) ((Math.sqrt(7.0) - 1.0) / 6.0);
     private static final float G6 = F6 / (1f + 6f * F6);
-    private static final float LIMIT6 = 0.8375f;
+    private static final float LIMIT6 = 0.62f;
+//    private static final float LIMIT6 = 0.8375f;
 
     /**
      * Simple container class that holds 2 floats.
