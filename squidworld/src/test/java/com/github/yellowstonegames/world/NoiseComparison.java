@@ -107,9 +107,11 @@ public class NoiseComparison extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case P: //pause
+                    case SPACE:
                         keepGoing = !keepGoing;
                     case C:
-                        ctr++;
+                        if(UIUtils.shift())ctr--;
+                        else ctr++;
                         break;
                     case E: //earlier seed
                         noise.setSeed(noise.getSeed() - 1);
@@ -285,13 +287,13 @@ public class NoiseComparison extends ApplicationAdapter {
     @Override
     public void render() {
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        // standard clear the background routine for libGDX
+        ScreenUtils.clear(0f, 0f, 0f, 1f);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
         if (keepGoing) {
-            // standard clear the background routine for libGDX
-            ScreenUtils.clear(0f, 0f, 0f, 1f);
             ctr++;
-            putMap();
         }
+        putMap();
     }
 
     @Override
