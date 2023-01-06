@@ -26,16 +26,11 @@ import com.github.yellowstonegames.grid.NoiseWrapper;
 /**
  * A concrete implementation of {@link WorldMapGenerator} that distorts the map as it nears the poles, expanding the
  * smaller-diameter latitude lines in extreme north and south regions so they take up the same space as the equator.
- * Like all of the WorldMapGenerator implementations, this generator allows configuring a {@link Noise}, which is
- * used for most of the generation. This type of map is ideal for projecting onto a 3D
- * sphere, which could squash the poles to counteract the stretch this does. You might also want to produce an oval
- * map that more-accurately represents the changes in the diameter of a latitude line on a spherical world; you
- * should use {@link EllipticalWorldMap} for this.
- * {@link HyperellipticalWorldMap} is also a nice option because it can project onto a shape between a
- * rectangle (like this class) and an ellipse (like EllipticalWorldMap), with all-round sides.
- * <a href="http://yellowstonegames.github.io/SquidLib/SphereWorld.png" >Example map</a>.
+ * Like all the WorldMapGenerator implementations, this generator allows configuring an {@link INoise}, which is
+ * used for most of the generation. This type of map is also called the plate carrée projection, geographic projection,
+ * or plane chart; it directly maps latitude to y and the longitude to x.
  */
-public class StretchWorldMap extends WorldMapGenerator {
+public class LatLonWorldMap extends WorldMapGenerator {
     protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
     //    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
@@ -54,10 +49,10 @@ public class StretchWorldMap extends WorldMapGenerator {
      * have significantly-exaggerated-in-size features while the equator is not distorted.
      * Always makes a 256x128 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link StretchWorldMap#StretchWorldMap(long, int, int, INoise, float)}, then this would be the
+     * If you were using {@link LatLonWorldMap#LatLonWorldMap(long, int, int, INoise, float)}, then this would be the
      * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, new Noise(DEFAULT_NOISE), 1f}.
      */
-    public StretchWorldMap() {
+    public LatLonWorldMap() {
         this(0x1337BABE1337D00DL, 256, 128, new Noise(DEFAULT_NOISE), 1f);
     }
 
@@ -73,7 +68,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapWidth  the width of the map(s) to generate; cannot be changed later
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
-    public StretchWorldMap(int mapWidth, int mapHeight) {
+    public LatLonWorldMap(int mapWidth, int mapHeight) {
         this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
@@ -90,7 +85,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight) {
+    public LatLonWorldMap(long initialSeed, int mapWidth, int mapHeight) {
         this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
@@ -108,7 +103,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
+    public LatLonWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
         this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
@@ -126,7 +121,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
+    public LatLonWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
@@ -153,7 +148,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
+    public LatLonWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
         yPositions = new float[width][height];
@@ -192,7 +187,7 @@ public class StretchWorldMap extends WorldMapGenerator {
     @Override
     public Coord project(float latitude, float longitude) {
         int x = (int) ((((longitude - getCenterLongitude()) + TrigTools.PI2 + TrigTools.PI) % TrigTools.PI2) * TrigTools.PI_INVERSE * 0.5f * width),
-                y = (int) ((TrigTools.sin(latitude) * 0.5f + 0.5f) * height);
+                y = (int) ((latitude * TrigTools.PI_INVERSE + 0.5f) % 1f * height);
         return Coord.get(
                 wrapX(x, y),
                 wrapY(x, y));
@@ -204,7 +199,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      *
      * @param other a StretchWorldMap to copy
      */
-    public StretchWorldMap(StretchWorldMap other) {
+    public LatLonWorldMap(LatLonWorldMap other) {
         super(other);
         terrainRidged = other.terrainRidged;
         terrainBasic = other.terrainBasic;
@@ -252,23 +247,29 @@ public class StretchWorldMap extends WorldMapGenerator {
         float p,
                 ps, pc,
                 qs, qc,
-                h, temp,
-                i_w = 6.283185307179586f / width, i_h = 2f / (height + 2f),//(3.141592653589793f) / (height+2f),
-                xPos = startX, yPos, i_uw = usedWidth / (float) width, i_uh = usedHeight * i_h / (height + 2f);
-        final float[] trigTable = new float[width << 1];
-        for (int x = 0; x < width; x++, xPos += i_uw) {
-            p = xPos * i_w + centerLongitude + TrigTools.PI;
-            // 0.7978845608028654f 1.2533141373155001f
-            trigTable[x << 1] = TrigTools.sin(p);// * 1.2533141373155001f;
-            trigTable[x << 1 | 1] = TrigTools.cos(p);// * 0.7978845608028654f;
-        }
-        yPos = startY * i_h + i_uh;
+                h, temp, yPos, xPos,
+                i_uw = usedWidth / (float) width,
+                i_uh = usedHeight / (height + 2f),
+                th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
+                rx = width * 0.25f - 0.5f, irx = 1f / rx, hw = width * 0.5f,
+                ry = height * 0.5f, iry = 1f / ry;
+
+        yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            qs = -1 + yPos;//-1.5707963267948966f + yPos;
-            qc = TrigTools.cos(TrigTools.asin(qs));
-            for (int x = 0, xt = 0; x < width; x++) {
-                ps = trigTable[xt++] * qc;//TrigTools.sin(p);
-                pc = trigTable[xt++] * qc;//TrigTools.cos(p);
+            thx = ((yPos) * iry) * TrigTools.HALF_PI;
+//            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+            thy = thx * 2f;
+            lat = ((thy + TrigTools.sin(thy)) * ipi) * TrigTools.HALF_PI;
+
+            qc = TrigTools.cos(lat);
+            qs = TrigTools.sin(lat);
+
+            xPos = startX;
+            for (int x = 0; x < width; x++, xPos += i_uw) {
+                th = (TrigTools.HALF_PI * irx * (xPos - hw) + TrigTools.PI) % TrigTools.PI2 - TrigTools.PI;
+                th += centerLongitude;
+                ps = TrigTools.sin(th) * qc;
+                pc = TrigTools.cos(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
@@ -301,13 +302,14 @@ public class StretchWorldMap extends WorldMapGenerator {
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),
                 wetDiff = 1f / (maxWet0 - minWet0),
-                hMod;
-        yPos = startY * i_h + i_uh;
+                hMod,
+                halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
+        yPos = startY + i_uh;
         ps = Float.POSITIVE_INFINITY;
         pc = Float.NEGATIVE_INFINITY;
 
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            temp = Math.abs(yPos - 1f);
+            temp = Math.abs(yPos - halfHeight) * i_half;
             temp *= (2.4f - temp);
             temp = 2.2f - temp;
             for (int x = 0; x < width; x++) {
