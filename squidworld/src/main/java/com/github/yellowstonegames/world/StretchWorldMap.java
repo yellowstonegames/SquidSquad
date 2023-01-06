@@ -19,7 +19,9 @@ package com.github.yellowstonegames.world;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 
 /**
  * A concrete implementation of {@link WorldMapGenerator} that distorts the map as it nears the poles, expanding the
@@ -34,13 +36,13 @@ import com.github.yellowstonegames.grid.Noise;
  * <a href="http://yellowstonegames.github.io/SquidLib/SphereWorld.png" >Example map</a>.
  */
 public class StretchWorldMap extends WorldMapGenerator {
-
-    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
+    protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
+    //    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
-    public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
+    public final NoiseWrapper terrainRidged, heat, moisture, otherRidged, terrainBasic;
     public final float[][] xPositions,
             yPositions,
             zPositions;
@@ -52,11 +54,11 @@ public class StretchWorldMap extends WorldMapGenerator {
      * have significantly-exaggerated-in-size features while the equator is not distorted.
      * Always makes a 256x128 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link StretchWorldMap#StretchWorldMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f}.
+     * If you were using {@link StretchWorldMap#StretchWorldMap(long, int, int, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, new Noise(DEFAULT_NOISE), 1f}.
      */
     public StretchWorldMap() {
-        this(0x1337BABE1337D00DL, 256, 128, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, 256, 128, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -72,7 +74,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public StretchWorldMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -89,7 +91,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -107,7 +109,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -124,7 +126,7 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
@@ -151,39 +153,22 @@ public class StretchWorldMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise#instance}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
+    public StretchWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
         yPositions = new float[width][height];
         zPositions = new float[width][height];
 
-
-        terrain = new Noise(noiseGenerator);
-        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-        terrain.setNoiseType(terrain.getNoiseType() | 1);
-        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
-        terrain.setFractalType(Noise.RIDGED_MULTI);
-
-        terrainLayered = new Noise(noiseGenerator);
-        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-        terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
-        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-
-        heat = new Noise(noiseGenerator);
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
-
-        moisture = new Noise(noiseGenerator);
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
-
-        otherRidged = new Noise(noiseGenerator);
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8)); // was 10
+        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3)); // was 8
+        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 3
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
     }
 
     @Override
@@ -221,8 +206,8 @@ public class StretchWorldMap extends WorldMapGenerator {
      */
     public StretchWorldMap(StretchWorldMap other) {
         super(other);
-        terrain = other.terrain;
-        terrainLayered = other.terrainLayered;
+        terrainRidged = other.terrainRidged;
+        terrainBasic = other.terrainBasic;
         heat = other.heat;
         moisture = other.moisture;
         otherRidged = other.otherRidged;
@@ -287,8 +272,8 @@ public class StretchWorldMap extends WorldMapGenerator {
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
-                heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
+                                terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                         ps, qs, seedA) + landModifier - 1f);
                 heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
