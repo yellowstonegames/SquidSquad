@@ -180,8 +180,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hueHigh = 0.15f; // apricot
 //                            float hueBase = 0.11f; // embers
 //                            float hueHigh = 0.2f; // orange glow
-                            float hueBase = 0.575f; // blue-cyan
-                            float hueHigh = 0.45f; // bright green
+//                            float hueBase = 0.575f; // blue-cyan
+//                            float hueHigh = 0.45f; // bright green
+                            float hueBase = 0.45f; // bright green
+                            float hueHigh = 0.425f; // Brazil green
 //                            float hueHigh = 0.27f; // gold
                             int hiLo = Math.round(
 //                                    MathTools.square(
@@ -208,7 +210,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
 //                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.4f), // biased
-                                            MathTools.barronSpline(i * 0x1p-8f, 1.5f, 0.7f) * 0.85f + 0.05f, // biased
+//                                            MathTools.barronSpline(i * 0x1p-8f, 1.5f, 0.7f) * 0.85f + 0.05f, // biased
+                                            MathTools.square(MathTools.barronSpline(i * 0x1p-8f, 0.8f, 0.6f) - 0.3f) * 1.95f, // biased
 //                                            (i * i * 0x1p-16f), //very dark
 //                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
 //                                            0.55f + TrigTools.cosTurns(i * 0x1p-9f) * -0.35f, // light, from 0.2f to 0.9f
@@ -244,6 +247,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case M:
                     case MINUS:
                         noise.setNoiseType((noise.getNoiseType() + 17) % 18);
+                        break;
+                    case U:
+                        noise.setMutation(noise.getMutation() + (UIUtils.shift() ? noise.getFrequency() : -noise.getFrequency()));
                         break;
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
@@ -317,7 +323,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
             case 2:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x, y, ctr, 0x1p-4f * (x + y - ctr)));
+                        bright = basicPrepare(noise.getConfiguredNoise(x, y, ctr, noise.getMutation()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }

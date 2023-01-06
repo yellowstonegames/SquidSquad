@@ -280,12 +280,8 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long s) {
-            x &= mask;
-            y &= mask;
-            x *= x * 0xC13FA9A902A6328FL;
-            y *= y * 0x91E10DA5C79E7B1DL;
-            x &= mask;
-            y &= mask;
+            x = x * x * 0xC13FA9A902A6328FL & mask;
+            y = y * y * 0x91E10DA5C79E7B1DL & mask;
             long t;
             if (x < y) {
                 t = x;
@@ -299,17 +295,11 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long z, long s) {
-            // mask is a power of two minus 1, if larger, the cube of mirrors is larger.
-            x &= mask;
-            y &= mask;
-            z &= mask;
             // some randomizing, not great, doesn't need to be
-            x *= x * 0xD1B54A32D192ED03L;
-            y *= y * 0xABC98388FB8FAC03L;
-            z *= z * 0x8CB92BA72F3D8DD7L;
-            x &= mask;
-            y &= mask;
-            z &= mask;
+            // the mask is a power of two minus 1, if larger, the cube of mirrors is larger.
+            x = x * x * 0xD1B54A32D192ED03L & mask;
+            y = y * y * 0xABC98388FB8FAC03L & mask;
+            z = z * z * 0x8CB92BA72F3D8DD7L & mask;
             long t;
             // transpose part
             if (x < y) {
@@ -327,7 +317,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
                 y = z;
                 z = t;
             }
-            // not actually sure why this works. It does incorporate all of the states into the result.
+            // not actually sure why this works. It does incorporate all the states into the result.
             x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + z);
             y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
             z = (z + 0x9E3779B97F4A7C15L ^ z) * (y + x);
@@ -336,7 +326,49 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long z, long w, long s) {
-            return hashLongs(x, hashLongs(y, hashLongs(z, w, s), s), s);
+            x = x * x * 0xDB4F0B9175AE2165L & mask;
+            y = y * y * 0xBBE0563303A4615FL & mask;
+            z = z * z * 0xA0F2EC75A1FE1575L & mask;
+            w = w * w * 0x89E182857D9ED689L & mask;
+            long t;
+            // transpose part
+            if (x < y) {
+                t = x;
+                x = y;
+                y = t;
+            }
+            if(x < z){
+                t = x;
+                x = z;
+                z = t;
+            }
+            if(y < z){
+                t = y;
+                y = z;
+                z = t;
+            }
+            if (x < w) {
+                t = x;
+                x = w;
+                w = t;
+            }
+            if(y < w){
+                t = y;
+                y = w;
+                w = t;
+            }
+            if(z < w){
+                t = z;
+                z = w;
+                w = t;
+            }
+            // not actually sure why this works. It does incorporate all the states into the result.
+            x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + w);
+            y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
+            z = (z + 0x9E3779B97F4A7C15L ^ z) * (y + x);
+            w = (w + 0x9E3779B97F4A7C15L ^ w) * (z + y);
+            s = (s + 0x9E3779B97F4A7C15L ^ s) * (w + z);
+            return s;
         }
 
         public long hashLongs(long x, long y, long z, long w, long u, long s) {
@@ -374,7 +406,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
     }
 
     /**
-     * Like CubeHash, but with a squished Z axis in 3D.
+     * Like CubeHash, but with a squished Z axis in 3D and 4D, as well as a squashed W axis in 4D.
      */
     class SquishedCubeHash extends LongImpl implements FlawedPointHash {
         private int size = 6;
@@ -405,12 +437,8 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long s) {
-            x &= mask;
-            y &= mask;
-            x *= x * 0xC13FA9A902A6328FL;
-            y *= y * 0x91E10DA5C79E7B1DL;
-            x &= mask;
-            y &= mask;
+            x = x * x * 0xC13FA9A902A6328FL & mask;
+            y = y * y * 0x91E10DA5C79E7B1DL & mask;
             long t;
             if (x < y) {
                 t = x;
@@ -424,17 +452,11 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long z, long s) {
-            z += z;
+//            z += z;
 
-            x &= mask;
-            y &= mask;
-            z &= mask;
-            x *= x * 0xD1B54A32D192ED03L;
-            y *= y * 0xABC98388FB8FAC03L;
-            z *= z * 0x8CB92BA72F3D8DD7L;
-            x = x & mask;
-            y = y & mask;
-            z = z & mask;
+            x = x * x * 0xD1B54A32D192ED03L & mask;
+            y = y * y * 0xABC98388FB8FAC03L & mask;
+            z = z * z * 0x8CB92BA72F3D8DD7L & mask >>> 1;
             long t;
             if (x < y) {
                 t = x;
@@ -459,7 +481,49 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public long hashLongs(long x, long y, long z, long w, long s) {
-            return hashLongs(x, hashLongs(y, hashLongs(z, w, s), s), s);
+            x = x * x * 0xDB4F0B9175AE2165L & mask;
+            y = y * y * 0xBBE0563303A4615FL & mask;
+            z = z * z * 0xA0F2EC75A1FE1575L & mask >>> 1;
+            w = w * w * 0x89E182857D9ED689L & mask >>> 1;
+            long t;
+            // transpose part
+            if (x < y) {
+                t = x;
+                x = y;
+                y = t;
+            }
+            if(x < z){
+                t = x;
+                x = z;
+                z = t;
+            }
+            if(y < z){
+                t = y;
+                y = z;
+                z = t;
+            }
+            if (x < w) {
+                t = x;
+                x = w;
+                w = t;
+            }
+            if(y < w){
+                t = y;
+                y = w;
+                w = t;
+            }
+            if(z < w){
+                t = z;
+                z = w;
+                w = t;
+            }
+            // not actually sure why this works. It does incorporate all the states into the result.
+            x = (x + 0x9E3779B97F4A7C15L ^ x) * (s + w);
+            y = (y + 0x9E3779B97F4A7C15L ^ y) * (x + s);
+            z = (z + 0x9E3779B97F4A7C15L ^ z) * (y + x);
+            w = (w + 0x9E3779B97F4A7C15L ^ w) * (z + y);
+            s = (s + 0x9E3779B97F4A7C15L ^ s) * (w + z);
+            return s;
         }
 
         public long hashLongs(long x, long y, long z, long w, long u, long s) {
