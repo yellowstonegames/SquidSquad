@@ -27,12 +27,12 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-//    private static final int width = 1920, height = 1080;
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
-    private static final int width = 2048, height = 1024; // mimic, elliptical
+//    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
@@ -42,15 +42,14 @@ public class WorldMapWriter extends ApplicationAdapter {
     private static final int LIMIT = 10;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
-    private static final boolean SEEDY = false;
+
     private int baseSeed = 1234567890;
     private final int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
     {
-        if(SEEDY) return String.valueOf(++baseSeed);
-        else return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
+        return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
     }
 
     private Pixmap pm;
@@ -92,7 +91,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
 //        path = "out/worlds/" + date + "/HyperellipseFoam/";
-        path = "out/worlds/" + date + "/EquirectangularFoam/";
+        path = "out/worlds/" + date + "/EllipseFoam/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -121,13 +120,14 @@ public class WorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        final Noise terrainNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1) {
-            @Override
-            public float getConfiguredNoise(float x, float y, float z) {
-                return MathTools.cbrt(super.getConfiguredNoise(x, y, z));
-            }
-        };
-        
+        final Noise terrainNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        {
+//            @Override
+//            public float getConfiguredNoise(float x, float y, float z) {
+//                return MathTools.cbrt(super.getConfiguredNoise(x, y, z));
+//            }
+//        };
+
         final Noise terrainLayeredNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 
         final Noise heatNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
@@ -143,34 +143,6 @@ public class WorldMapWriter extends ApplicationAdapter {
 
         noise.setInterpolation(Noise.QUINTIC);
 
-        if(SEEDY) {
-            noise.setPointHash(new IPointHash.IntImpl() {
-                @Override
-                public int hashWithState(int x, int y, int state) {
-                    return (int) (0xC13FA9A902A6328FL * x + 0x91E10DA5C79E7B1DL * y + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int state) {
-                    return (int) (0xD1B54A32D192ED03L * x + 0xABC98388FB8FAC03L * y + 0x8CB92BA72F3D8DD7L * z + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int state) {
-                    return (int) (0xDB4F0B9175AE2165L * x + 0xBBE0563303A4615FL * y + 0xA0F2EC75A1FE1575L * z + 0x89E182857D9ED689L * w + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int u, int state) {
-                    return (int) (0xE19B01AA9D42C633L * x + 0xC6D1D6C8ED0C9631L * y + 0xAF36D01EF7518DBBL * z + 0x9A69443F36F710E7L * w + 0x881403B9339BD42DL * u + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
-                    return (int) (0xE60E2B722B53AEEBL * x + 0xCEBD76D9EDB6A8EFL * y + 0xB9C9AA3A51D00B65L * z + 0xA6F5777F6F88983FL * w + 0x9609C71EB7D03F7BL * u + 0x86D516E50B04AB1BL * v + 0x9E3779B97F4A7C15L * state);
-                }
-            });
-        }
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);
 //        else
@@ -184,8 +156,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
+        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
@@ -226,12 +198,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        if(ALIEN_COLORS) {
 //            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
 //        }
-        if(SEEDY){
-            wmv.generate(1.0f, 1.3f);
-        }
-        else {
-            wmv.generate(0.9f, 1.3f);
-        }
+        wmv.generate(0.9f, 1.3f);
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -240,9 +207,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         String name = makeName(thesaurus);
         while (Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
-        long hash;
-        if (SEEDY) hash = baseSeed;
-        else hash = Hasher.balam.hash64(name);
+        long hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);

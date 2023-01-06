@@ -304,14 +304,14 @@ public class MimicWorldMap extends EllipticalWorldMap {
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
                 if (earth.contains(x, y)) {
-                    h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                    h = MathTools.swayTight(terrainBasic.getNoiseWithSeed(pc + terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                             ps, qs, seedA)) * 0.85f;
                     if (coast.contains(x, y))
                         h += 0.05f;
                     else
                         h += 0.15f;
                 } else {
-                    h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(pc + terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                    h = MathTools.swayTight(terrainBasic.getNoiseWithSeed(pc + terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                             ps, qs, seedA)) * -0.9f;
                     if (shallow.contains(x, y))
                         h = (h - 0.08f) * 0.375f;
