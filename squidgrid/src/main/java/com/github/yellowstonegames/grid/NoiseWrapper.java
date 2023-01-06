@@ -29,10 +29,17 @@ public class NoiseWrapper implements INoise {
     public boolean fractalSpiral = false;
 
     public NoiseWrapper() {
-        this(new SimplexNoise(123L), 123L, 0.03125f, 0, 1, false);
+        this(new SimplexNoise(123L), 123L, 0.03125f, FBM, 1, false);
 
     }
 
+    public NoiseWrapper(INoise toWrap){
+        this(toWrap, toWrap.canUseSeed() ? toWrap.getSeed() : 123L, 0.03125f, FBM, 1, false);
+    }
+
+    public NoiseWrapper(INoise toWrap, float frequency, int mode, int octaves){
+        this(toWrap, toWrap.canUseSeed() ? toWrap.getSeed() : 123L, frequency, mode, octaves, false);
+    }
     public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves){
         this(toWrap, seed, frequency, mode, octaves, false);
     }

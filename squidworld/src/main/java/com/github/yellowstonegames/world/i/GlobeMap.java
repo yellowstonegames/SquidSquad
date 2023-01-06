@@ -57,10 +57,10 @@ public class GlobeMap extends WorldMapGenerator {
      * Always makes a 100x100 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
      * If you were using {@link GlobeMap#GlobeMap(long, int, int, INoise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f}.
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f}.
      */
     public GlobeMap() {
-        this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -75,7 +75,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public GlobeMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -91,7 +91,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public GlobeMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -108,7 +108,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public GlobeMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -124,7 +124,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 

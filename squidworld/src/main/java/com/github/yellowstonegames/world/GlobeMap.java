@@ -18,7 +18,9 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 
 import java.util.Arrays;
 
@@ -41,7 +43,7 @@ public class GlobeMap extends WorldMapGenerator {
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
-    public final Noise terrainRidged, heat, moisture, otherRidged, terrainBasic;
+    public final NoiseWrapper terrainRidged, heat, moisture, otherRidged, terrainBasic;
     public final float[][] xPositions,
             yPositions,
             zPositions;
@@ -52,11 +54,11 @@ public class GlobeMap extends WorldMapGenerator {
      * showing only one hemisphere at a time.
      * Always makes a 100x100 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link GlobeMap#GlobeMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f}.
+     * If you were using {@link GlobeMap#GlobeMap(long, int, int, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f}.
      */
     public GlobeMap() {
-        this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -71,7 +73,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public GlobeMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -87,7 +89,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public GlobeMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -104,7 +106,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public GlobeMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -120,7 +122,7 @@ public class GlobeMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
@@ -146,39 +148,23 @@ public class GlobeMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
+    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
         yPositions = new float[width][height];
         zPositions = new float[width][height];
         edges = new int[height << 1];
 
-        terrainRidged = new Noise(noiseGenerator);
-        terrainRidged.setFrequency(terrainRidged.getFrequency() * terrainFreq);
-        terrainRidged.setNoiseType(terrainRidged.getNoiseType() | 1);
-        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-        terrainRidged.setFractalType(Noise.RIDGED_MULTI);
-
-        terrainBasic = new Noise(noiseGenerator);
-        terrainBasic.setFrequency(terrainBasic.getFrequency() * terrainLayeredFreq);
-        terrainBasic.setNoiseType(terrainBasic.getNoiseType() | 1);
-        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
-
-        heat = new Noise(noiseGenerator);
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
-
-        moisture = new Noise(noiseGenerator);
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
-
-        otherRidged = new Noise(noiseGenerator);
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 5));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8));
+        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5));
     }
 
     /**
@@ -207,41 +193,24 @@ public class GlobeMap extends WorldMapGenerator {
      * @param otherRidgedNoise a Noise generator (or subclass) that will be used to generate ridges
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainRidgedNoise, Noise terrainBasicNoise,
-                    Noise heatNoise, Noise moistureNoise, Noise otherRidgedNoise, float octaveMultiplier) {
+    public GlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise terrainRidgedNoise, INoise terrainBasicNoise,
+                    INoise heatNoise, INoise moistureNoise, INoise otherRidgedNoise, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
         yPositions = new float[width][height];
         zPositions = new float[width][height];
         edges = new int[height << 1];
 
-        terrainRidged = terrainRidgedNoise;
-        terrainRidged.setFrequency(terrainRidged.getFrequency() * terrainFreq);
-        terrainRidged.setNoiseType(terrainRidged.getNoiseType() | 1);
-        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-        terrainRidged.setFractalType(Noise.RIDGED_MULTI);
-
-        terrainBasic = terrainBasicNoise;
-        terrainBasic.setFrequency(terrainBasic.getFrequency() * terrainLayeredFreq);
-        terrainBasic.setNoiseType(terrainBasic.getNoiseType() | 1);
-        terrainBasic.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
-        terrainBasic.setFractalType(Noise.FBM);
-
-        heat = heatNoise;
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
-
-        moisture = moistureNoise;
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 2));
-
-        otherRidged = otherRidgedNoise;
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 5));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        this.terrainRidged = new NoiseWrapper(terrainRidgedNoise, terrainRidgedNoise.getSeed(), terrainFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8));
+        this.terrainBasic = new NoiseWrapper(terrainBasicNoise, terrainBasicNoise.getSeed(), terrainLayeredFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5f));
     }
 
     /**
@@ -356,10 +325,6 @@ public class GlobeMap extends WorldMapGenerator {
                 heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
                                 terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                         ps, qs, seedA) + landModifier - 1f);
-//                    heightData[x][y] = (h = terrain4D.getNoiseWithSeed(pc, ps, qs,
-//                            (terrainLayered.getNoiseWithSeed(pc, ps, qs, seedB - seedA)
-//                                    + terrain.getNoiseWithSeed(pc, ps, qs, seedC - seedB)) * 0.5f,
-//                            seedA) * landModifier);
                 heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
                         , qs, seedB));
