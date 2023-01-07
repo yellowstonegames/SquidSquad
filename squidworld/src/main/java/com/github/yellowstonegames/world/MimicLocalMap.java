@@ -227,16 +227,16 @@ public class MimicLocalMap extends LocalMap {
                 zPositions[x][y] = 0f;
 
                 if (earth.contains(x, y)) {
-                    h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(xPos +
-                                    terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
+                    h = MathTools.swayTight(terrainBasic.getNoiseWithSeed(xPos +
+                                    terrainRidged.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
                             yPos, seedA)) * 0.85f;
                     if (coast.contains(x, y))
                         h += 0.05f;
                     else
                         h += 0.15f;
                 } else {
-                    h = MathTools.swayTight(terrainLayered.getNoiseWithSeed(xPos +
-                                    terrain.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
+                    h = MathTools.swayTight(terrainBasic.getNoiseWithSeed(xPos +
+                                    terrainRidged.getNoiseWithSeed(xPos, yPos, seedB - seedA) * 0.5f,
                             yPos, seedA)) * -0.9f;
                     if (shallow.contains(x, y))
                         h = (h - 0.08f) * 0.375f;

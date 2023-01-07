@@ -69,30 +69,17 @@ public class WorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/Sphere/";
-//        path = "out/worldsAnimated/" + date + "/SphereQuilt/";
-//        path = "out/worldsAnimated/" + date + "/SphereQuilt/";
-//        path = "out/worldsAnimated/" + date + "/SphereExpo/";
-//        path = "out/worldsAnimated/" + date + "/Ellipse/";
-//        path = "out/worldsAnimated/" + date + "/EllipseExpo/";
-//        path = "out/worldsAnimated/" + date + "/Mimic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceView/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
 //        path = "out/worlds/" + date + "/EllipseFoam/";
 //        path = "out/worlds/" + date + "/EllipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
-        path = "out/worlds/" + date + "/HexagonFoam/";
 //        path = "out/worlds/" + date + "/HyperellipseFoam/";
 //        path = "out/worlds/" + date + "/EllipseFoam/";
+//        path = "out/worlds/" + date + "/HexagonFoam/";
+//        path = "out/worlds/" + date + "/HexagonTaffy/";
+//        path = "out/worlds/" + date + "/HexagonSimplex2/";
+        path = "out/worlds/" + date + "/LocalSimplex2/";
+//        path = "out/worlds/" + date + "/LocalFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
 
@@ -110,26 +97,13 @@ public class WorldMapWriter extends ApplicationAdapter {
         
         thesaurus = new Thesaurus(rng);
 
-        final Noise terrainNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-//        {
-//            @Override
-//            public float getConfiguredNoise(float x, float y, float z) {
-//                return MathTools.cbrt(super.getConfiguredNoise(x, y, z));
-//            }
-//        };
-
-        final Noise terrainLayeredNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-
-        final Noise heatNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        final Noise moistureNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        final Noise otherRidgedNoise = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-
-//        Noise fn = new Noise((int) seed, 1f, Noise.TAFFY_FRACTAL, 1);
+//        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
+        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
-        noise = terrainNoise;
+//        fn.setFractalType(Noise.DOMAIN_WARP);
+        noise = fn;
 
         noise.setInterpolation(Noise.QUINTIC);
 
@@ -146,7 +120,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
