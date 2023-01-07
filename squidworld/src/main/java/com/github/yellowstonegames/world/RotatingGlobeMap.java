@@ -18,6 +18,7 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 
 import java.util.Arrays;
@@ -55,11 +56,11 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * showing only one hemisphere at a time.
      * Always makes a 100x100 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link RotatingGlobeMap#RotatingGlobeMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f}.
+     * If you were using {@link RotatingGlobeMap#RotatingGlobeMap(long, int, int, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f}.
      */
     public RotatingGlobeMap() {
-        this(0x1337BABE1337D00DL, 100, 100, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, 100, 100, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -74,7 +75,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public RotatingGlobeMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -90,7 +91,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -107,7 +108,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -123,7 +124,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
@@ -131,7 +132,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * Constructs a concrete WorldMapGenerator for a map that can be used to view a spherical world from space,
      * showing only one hemisphere at a time.
      * Takes an initial seed, the width/height of the map, and parameters for noise
-     * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
+     * generation (an {@link INoise} implementation, which is usually {@link Noise#instance}, and a
      * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
      * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
      * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
@@ -149,7 +150,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
+    public RotatingGlobeMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[mapWidth][mapHeight];
         yPositions = new float[mapWidth][mapHeight];
@@ -160,7 +161,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
 
     /**
      * Copies the RotatingGlobeMap {@code other} to construct a new one that is exactly the same. References will only
-     * be shared to Noise classes.
+     * be shared to INoise classes.
      *
      * @param other a RotatingGlobeMap to copy
      */

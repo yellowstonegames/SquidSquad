@@ -197,7 +197,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 3)); // was 8
         heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
-                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 3
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 5)); // was 3, then 2
         moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
         otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
