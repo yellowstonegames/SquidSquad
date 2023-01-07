@@ -19,7 +19,9 @@ package com.github.yellowstonegames.world;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 
 import java.util.Arrays;
 
@@ -38,13 +40,13 @@ import java.util.Arrays;
  * <a href="https://yellowstonegames.github.io/SquidLib/HyperellipseWorld.png">Example map</a>.
  */
 public class HyperellipticalWorldMap extends WorldMapGenerator {
-
-    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
+    protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
+    //    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
     protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
-    public final Noise terrain, heat, moisture, otherRidged, terrainLayered;
+    public final NoiseWrapper terrainRidged, heat, moisture, otherRidged, terrainBasic;
     public final float[][] xPositions,
             yPositions,
             zPositions;
@@ -58,12 +60,12 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * ellipse without distortion of the sizes of features but with significant distortion of shape.
      * Always makes a 200x100 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link HyperellipticalWorldMap#HyperellipticalWorldMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f}.
+     * If you were using {@link HyperellipticalWorldMap#HyperellipticalWorldMap(long, int, int, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 200, 100, new Noise(DEFAULT_NOISE), 1f}.
      * <a href="http://yellowstonegames.github.io/SquidLib/HyperellipseWorld.png" >Example map, showing special shape</a>
      */
     public HyperellipticalWorldMap() {
-        this(0x1337BABE1337D00DL, 200, 100, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, 200, 100, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -78,7 +80,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public HyperellipticalWorldMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -94,7 +96,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -111,7 +113,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, float octaveMultiplier) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -128,7 +130,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
      */
-    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator) {
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1f);
     }
 
@@ -154,7 +156,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator, float octaveMultiplier) {
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator, float octaveMultiplier) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, octaveMultiplier, 0.0625f, 2.5f);
     }
 
@@ -182,7 +184,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param alpha            one of the Tobler parameters;  0.0625f is the default and this can range from 0f to 1f at least
      * @param kappa            one of the Tobler parameters; 2.5f is the default but 2f-5f range values are also often used
      */
-    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise noiseGenerator,
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator,
                                    float octaveMultiplier, float alpha, float kappa) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
@@ -190,32 +192,16 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         zPositions = new float[width][height];
         edges = new int[height << 1];
 
-        terrain = new Noise(noiseGenerator);
-        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-        terrain.setNoiseType(terrain.getNoiseType() | 1);
-        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
-        terrain.setFractalType(Noise.RIDGED_MULTI);
-
-        terrainLayered = new Noise(noiseGenerator);
-        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-        terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
-        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-
-        heat = new Noise(noiseGenerator);
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
-
-        moisture = new Noise(noiseGenerator);
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
-
-        otherRidged = new Noise(noiseGenerator);
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8)); // was 10
+        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3)); // was 8
+        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 3
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
 
         this.alpha = alpha;
         this.kappa = kappa;
@@ -243,8 +229,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
-     * @param terrainNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
-     * @param terrainLayeredNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param terrainRidgedNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
+     * @param terrainBasicNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param heatNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param moistureNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
      * @param otherRidgedNoise     an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -252,7 +238,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param alpha            one of the Tobler parameters;  0.0625f is the default and this can range from 0f to 1f at least
      * @param kappa            one of the Tobler parameters; 2.5f is the default but 2f-5f range values are also often used
      */
-    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainNoise, Noise terrainLayeredNoise,
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainRidgedNoise, Noise terrainBasicNoise,
                                    Noise heatNoise, Noise moistureNoise, Noise otherRidgedNoise,
                                    float octaveMultiplier, float alpha, float kappa) {
         super(initialSeed, mapWidth, mapHeight);
@@ -261,32 +247,16 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         zPositions = new float[width][height];
         edges = new int[height << 1];
 
-        terrain = terrainNoise;
-        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-        terrain.setNoiseType(terrain.getNoiseType() | 1);
-        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
-        terrain.setFractalType(Noise.RIDGED_MULTI);
-
-        terrainLayered = terrainLayeredNoise;
-        terrainLayered.setFrequency(terrainLayered.getFrequency() * terrainLayeredFreq * 0.325f);
-        terrainLayered.setNoiseType(terrainLayered.getNoiseType() | 1);
-        terrainLayered.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-
-        heat = heatNoise;
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
-
-        moisture = moistureNoise;
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
-
-        otherRidged = otherRidgedNoise;
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        this.terrainRidged = new NoiseWrapper(terrainRidgedNoise, terrainRidgedNoise.getSeed(), terrainFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8));
+        this.terrainBasic = new NoiseWrapper(terrainBasicNoise, terrainBasicNoise.getSeed(), terrainLayeredFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3));
+        this.heat = new NoiseWrapper(heatNoise, heatNoise.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        this.moisture = new NoiseWrapper(moistureNoise, moistureNoise.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2));
+        this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5f));
 
         this.alpha = alpha;
         this.kappa = kappa;
@@ -303,8 +273,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      */
     public HyperellipticalWorldMap(HyperellipticalWorldMap other) {
         super(other);
-        terrain = other.terrain;
-        terrainLayered = other.terrainLayered;
+        terrainRidged = other.terrainRidged;
+        terrainBasic = other.terrainBasic;
         heat = other.heat;
         moisture = other.moisture;
         otherRidged = other.otherRidged;
@@ -434,8 +404,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
-                heightData[x][y] = (h = terrainLayered.getNoiseWithSeed(pc +
-                                terrain.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
+                                terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                         ps, qs, seedA) + landModifier - 1f);
                 heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)

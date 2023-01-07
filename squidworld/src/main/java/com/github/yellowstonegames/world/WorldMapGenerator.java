@@ -373,12 +373,10 @@ public abstract class WorldMapGenerator {
         zoomStartX = Math.min(Math.max(
                 (zoomStartX + zoomCenterX - (width >> 1) << zoomAmount),
                 width >> 1), (width << zoom + zoomAmount) - (width >> 1));
-//        int oldZoomY = zoomStartY;
         zoomStartY = Math.min(Math.max(
                 (zoomStartY + zoomCenterY - (height >> 1) << zoomAmount),
                 height >> 1), (height << zoom + zoomAmount) - (height >> 1));
-//        System.out.printf("zoomIn, zoomStartX: %d, zoomStartY: %d, oldZoomY: %d, unedited: %d, upperCap: %d\n", zoomStartX, zoomStartY,
-//                oldZoomY, (oldZoomY + zoomCenterY - (height >> 1) << zoomAmount), (height << zoom + zoomAmount) - (height >> 1));
+
         zoom += zoomAmount;
         if(startCacheX.isEmpty())
         {
@@ -392,7 +390,6 @@ public abstract class WorldMapGenerator {
                     0), height - (height >> zoom)));
         }
         regenerate(startX = (zoomStartX >> zoom) - (width >> 1 + zoom), startY = (zoomStartY >> zoom) - (height >> 1 + zoom),
-                //startCacheX.peek(), startCacheY.peek(),
                 usedWidth = width >> zoom, usedHeight = height >> zoom,
                 landModifier, heatModifier, cacheA, cacheB);
         rng.setState(cacheA, cacheB);

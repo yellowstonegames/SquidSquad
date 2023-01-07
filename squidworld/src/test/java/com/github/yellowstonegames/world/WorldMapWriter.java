@@ -90,24 +90,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/EllipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
-//        path = "out/worlds/" + date + "/HyperellipseFoam/";
-        path = "out/worlds/" + date + "/EllipseFoam/";
+        path = "out/worlds/" + date + "/HyperellipseFoam/";
+//        path = "out/worlds/" + date + "/EllipseFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
-//        path = "out/worldsAnimated/" + date + "/Sphere_Classic/";
-//        path = "out/worldsAnimated/" + date + "/Hyperellipse/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseExpo/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseQuilt/";
-//        path = "out/worldsAnimated/" + date + "/Tiling/";
-//        path = "out/worldsAnimated/" + date + "/RoundSide/";
-//        path = "out/worldsAnimated/" + date + "/Local/";
-//        path = "out/worldsAnimated/" + date + "/LocalSquat/";
-//        path = "out/worldsAnimated/" + date + "/LocalMimic/";
-//        path = "out/worldsAnimated/" + date + "/EllipseHammer/";
-        
+
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
@@ -158,7 +145,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
