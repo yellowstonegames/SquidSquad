@@ -16,6 +16,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.IPointHash;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -27,13 +28,13 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-    private static final int width = 1920, height = 1080;
+//    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-//    private static final int width = 256, height = 256; // space view
+    private static final int width = 128, height = 128; // space view, MimicLocal
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
@@ -78,7 +79,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/HexagonFoam/";
 //        path = "out/worlds/" + date + "/HexagonTaffy/";
 //        path = "out/worlds/" + date + "/HexagonSimplex2/";
-        path = "out/worlds/" + date + "/LocalSimplex2/";
+//        path = "out/worlds/" + date + "/LocalSimplex2/";
+        path = "out/worlds/" + date + "/MimicLocalSimplex2/";
 //        path = "out/worlds/" + date + "/LocalFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
@@ -120,7 +122,9 @@ public class WorldMapWriter extends ApplicationAdapter {
         
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
+        world = new MimicLocalMap(seed, noise, 2f);
+        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+//        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);

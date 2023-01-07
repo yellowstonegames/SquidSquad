@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.Region;
 
@@ -36,11 +37,11 @@ public class MimicLocalMap extends LocalMap {
      * Constructs a concrete WorldMapGenerator for a map that should look like Australia, without projecting the
      * land positions or changing heat by latitude. Always makes a 256x256 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
-     * If you were using {@link MimicLocalMap#MimicLocalMap(long, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, DEFAULT_NOISE, 1f}.
+     * If you were using {@link MimicLocalMap#MimicLocalMap(long, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, new Noise(DEFAULT_NOISE), 1f}.
      */
     public MimicLocalMap() {
-        this(0x1337BABE1337D00DL, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -53,7 +54,7 @@ public class MimicLocalMap extends LocalMap {
      * @param toMimic the world map to imitate, as a Region with land as "on"; the height and width will be copied
      */
     public MimicLocalMap(Region toMimic) {
-        this(0x1337BABE1337D00DL, toMimic, DEFAULT_NOISE, 1f);
+        this(0x1337BABE1337D00DL, toMimic, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -68,7 +69,7 @@ public class MimicLocalMap extends LocalMap {
      * @param toMimic     the world map to imitate, as a Region with land as "on"; the height and width will be copied
      */
     public MimicLocalMap(long initialSeed, Region toMimic) {
-        this(initialSeed, toMimic, DEFAULT_NOISE, 1f);
+        this(initialSeed, toMimic, new Noise(DEFAULT_NOISE), 1f);
     }
 
     /**
@@ -85,7 +86,7 @@ public class MimicLocalMap extends LocalMap {
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
     public MimicLocalMap(long initialSeed, Region toMimic, float octaveMultiplier) {
-        this(initialSeed, toMimic, DEFAULT_NOISE, octaveMultiplier);
+        this(initialSeed, toMimic, new Noise(DEFAULT_NOISE), octaveMultiplier);
     }
 
     /**
@@ -104,7 +105,7 @@ public class MimicLocalMap extends LocalMap {
      * @param toMimic        the world map to imitate, as a Region with land as "on"; the height and width will be copied
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
      */
-    public MimicLocalMap(long initialSeed, Region toMimic, Noise noiseGenerator) {
+    public MimicLocalMap(long initialSeed, Region toMimic, INoise noiseGenerator) {
         this(initialSeed, toMimic, noiseGenerator, 1f);
     }
 
@@ -129,7 +130,7 @@ public class MimicLocalMap extends LocalMap {
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise} or {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
      */
-    public MimicLocalMap(long initialSeed, Region toMimic, Noise noiseGenerator, float octaveMultiplier) {
+    public MimicLocalMap(long initialSeed, Region toMimic, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, toMimic.width, toMimic.height, noiseGenerator, octaveMultiplier);
         earth = toMimic;
         earthOriginal = earth.copy();
@@ -142,8 +143,10 @@ public class MimicLocalMap extends LocalMap {
      * with {@link Region#decompress(String)}. By using Region's compression, this takes up a lot less
      * room than it would with most text-based formats, and even beats uncompressed binary storage of the map by a
      * factor of 9.4f. The map data won't change here, so this should stay compatible.
+     * <br>
+     * This was flipped vertically early in 2023, to match changes much earlier in squidgrid.
      */
-    public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮱ᅨ䄢īФࢰࡠ⁀傠אୠ↡\u009A̴ǈర߀ᙠḪ͞ń䅡抠䅡*ۄHԨࡁူـူ※ɞ䃉値ㄸ磰ሢ刡䑂曨ໄͨĨҸިʲ₰ᆰɭপ恨⠼怴\u202E悘″ₐ⁀⫀\u0080᥀\u0D49ᾇ䃸䁙ԩaဩ㞽硑乌䂉怺\u16FE⠧Ф䨠憐吨䁤⁓倰⠭㟳∠攡È䀤⁝〹濇䃥ᥨᄡ\u0B00ᕔṀذࠡ吠Ց㈢檲䂔›l⩠䐤䨡ሰ碠⩈㎺䴥hƬȢ℡♬㱠ᵀരೈdВÈ棵䓠ɀېŨڐ∣䤠梠╠\u0AA9\u1AD9栦䐢听ጡ䒠杔྄╻ඌ璶濟Ở俢㛾╚h䁉ྨËÆ㰯⟠淎ɀϴˈⱽ•ᠭ⩨\u243ChȚƞ㱀ǳ͢ð䂇፭䇁K်ࠢ䘡灳વ敁⑬⇪喑㠡㎺掲ਣ⒳ਲ峸ϥ═呷‴䠠䉤籠ጰڢ䲡㰳䕴Ǐ!‧ࠧᨡᒠрைћᦒ娰ڥá)⁖R棨款௩ૄ滕■◐䀫瀹痖㨨֪䐣無c⁖ິŶ恕 䠪⤩剷ဦȦ㨈㇀ψڒè䀤\u1AE8òŪⱀƼޅ⩧ଽ\u20FA®摆ὦሡ窠\u0EBAࠤ爡奷⇡ᖒ\u009B䀤Č灉穜汨ਁᆀ䄨Ý䅹\u20C0ɢ͡㋎㺮\u0A80䆽ჍҪވ⦬ᰢ欠啔ါ䐢⁖祿ෛ爘㸣೫࠹\u1BF4樒糰䁖簭䦗甚‸ધڜ厌ᬎ械䀨̠䄠ᯀä戽ဠ☠㪁↣⩠Ƅa婆拀Ⓚ۴,圵ࠨ䀬䘥ᅻ㗧怤ᨨărં咠ӨƑɔࠠड桉\u0E910〸ጱ朰²,ईġ䠡䌦漒\u0E64Ĕ䁁ඐ浶䆡ᠲ⟐䕌ղV‧⃑嘳С㶠⨩䄈İǊð\u202Aᐦ㴚ဦᔣ⼢ษ倰⛫呁ᙂ⪃⠡ଠ砳۹䮺Р䲠╰䈠٠ᨨÐ䃫ኵဲ\u1943㋺ဤ㸡偭Р ";
+    public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮰囨䈢ħ䐤࠰ࠨ•Ⱙအ䎢ŘňÆ䴣ȢؤF䭠゠ᔤ∠偰ഀՠ₠ኼܨā᭮笁␪Цᇅ扰रࠦ吠䠪ࠦ䠧娮⠬䠬❁ỀកᲪ͠敠ἒ慽Ê䄄洡儠䋻䨡㈠䙬坈མŨྈ䞻䛊哚晪⁞倰h·䡂Ļæ抂㴢္࠮搧䈠ᇩᒠ᩠ɀ༨ʨڤʃ奲ࢠ፠ᆙả䝆䮳りĩ(ॠી᧰྄e॑ᤙ䒠剠⁌ဥࠩФΝ䂂⢴ᑠ㺀ᢣ䗨dBqÚ扜冢࿥੢䐠劣ေ¯䂍䞀ၰ๧ᐓ〈ᄠ塠Ѡ̀ာ⠤ᡤŒęጓ憒‱〿䌳℔ᐼ䊢⁚䤿ӣ◚㙀౴Ӹ抠⣀ĨǊǸ䁃း₺Ý䂁ᜤ䢑V⁄樫焠੠⹸⎲Ĉ䁎勯戡璠悈ᠥ嘡⩩‰ನ檨㡕䶪၁@恑ࠣ䘣ࢠᅀᡎ劰桠Өॢಸ熛փࢸ䀹ఽ䅠勖ਰ۴̄ጺಢ䈠ᙠᨭ⿠焠Ӡܼ䇂䒠ᯀԨĠ愜᪅䦥㶐ୀ৅Ƣ*䂕ॹ∠咠р؄У無~⁆Г椠痠ᲩⰣס㩖ᝋ司楠२ญⳘ䬣汤ǿã㱩ᖷ掠Àݒ㑁c‾䮴,⑒僢ᰣ缠ɋ乨͸䁡绑ס傓䁔瀾ሺÑ䀤ो刡开烀੶Ё䈠䈰״Áj⁑䠡戢碠㘀አ䃉㪙嘈ʂø⸪௰₈㐲暤ƩDᬿ䂖剙書࿠㴢㘩Ĉ䰵掀栰杁4〡Ƞ⭀᫠㠰㹨Zコത䂖ࠠⴠ縣吠ᆠʡ㡀䀧否䣝Ӧ愠ⓀᲢಠո*①ӈԥ獀խ@㟬箬㐱ㆾ簽Ɛᩆᇞ稯禚⟶⣑аβǚ㥎Ḇ⌢㑆 搡⁗ဣ刣౅䑒8怺₵⤦a5ਵ㏰ᩄ猢ฦ䬞㐷䈠呠カ愠ۀᲒ傠ᅼ߃ᙊ䢨ၠླྀš亀ƴ̰刷ʼ墨愠  ";
 
     /**
      * Constructs a 256x256 unprojected local map that will use land forms with a similar shape to Australia.
@@ -152,7 +155,7 @@ public class MimicLocalMap extends LocalMap {
      * @param noiseGenerator
      * @param octaveMultiplier
      */
-    public MimicLocalMap(long initialSeed, Noise noiseGenerator, float octaveMultiplier) {
+    public MimicLocalMap(long initialSeed, INoise noiseGenerator, float octaveMultiplier) {
         this(initialSeed,
                 Region.decompress(AUSTRALIA_ENCODED), noiseGenerator, octaveMultiplier);
     }
