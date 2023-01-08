@@ -17,7 +17,9 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 
 /**
  * A concrete implementation of {@link WorldMapGenerator} that tiles both east-to-west and north-to-south. It tends
@@ -29,22 +31,23 @@ import com.github.yellowstonegames.grid.Noise;
  */
 public class TilingWorldMap extends WorldMapGenerator {
 
-    protected static final float terrainFreq = 0.95f, terrainRidgedFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
-    private float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
+    protected static final float terrainBasicFreq = 0.95f, terrainRidgedFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;
+//    protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
+    protected float minHeat0 = Float.POSITIVE_INFINITY, maxHeat0 = Float.NEGATIVE_INFINITY,
             minHeat1 = Float.POSITIVE_INFINITY, maxHeat1 = Float.NEGATIVE_INFINITY,
             minWet0 = Float.POSITIVE_INFINITY, maxWet0 = Float.NEGATIVE_INFINITY;
 
-    public final Noise terrain, terrainRidged, heat, moisture, otherRidged;
+    public final NoiseWrapper terrainRidged, heat, moisture, otherRidged, terrainBasic;
 
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used as a tiling, wrapping east-to-west as well
      * as north-to-south. Always makes a 256x256 map.
      * Uses Noise as its noise generator, with 1.0f as the octave multiplier affecting detail.
-     * If you were using {@link TilingWorldMap#TilingWorldMap(long, int, int, Noise, float)}, then this would be the
-     * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 256, WorldMapGenerator.DEFAULT_NOISE, 1.0f}.
+     * If you were using {@link TilingWorldMap#TilingWorldMap(long, int, int, INoise, float)}, then this would be the
+     * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 256, WorldMapGenerator.new Noise(DEFAULT_NOISE), 1.0f}.
      */
     public TilingWorldMap() {
-        this(0x1337BABE1337D00DL, 256, 256, WorldMapGenerator.DEFAULT_NOISE, 1.0f);
+        this(0x1337BABE1337D00DL, 256, 256, new Noise(DEFAULT_NOISE), 1.0f);
     }
 
     /**
@@ -59,7 +62,7 @@ public class TilingWorldMap extends WorldMapGenerator {
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
     public TilingWorldMap(int mapWidth, int mapHeight) {
-        this(0x1337BABE1337D00DL, mapWidth, mapHeight, DEFAULT_NOISE, 1.0f);
+        this(0x1337BABE1337D00DL, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1.0f);
     }
 
     /**
@@ -75,13 +78,13 @@ public class TilingWorldMap extends WorldMapGenerator {
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
     public TilingWorldMap(long initialSeed, int mapWidth, int mapHeight) {
-        this(initialSeed, mapWidth, mapHeight, DEFAULT_NOISE, 1.0f);
+        this(initialSeed, mapWidth, mapHeight, new Noise(DEFAULT_NOISE), 1.0f);
     }
 
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used as a tiling, wrapping east-to-west as well
-     * as north-to-south. Takes an initial seed, the width/height of the map, and a noise generator (a
-     * {@link Noise} implementation, which is usually {@link Noise#instance}. The {@code initialSeed}
+     * as north-to-south. Takes an initial seed, the width/height of the map, and a noise generator (an
+     * {@link INoise} implementation, which is usually {@link Noise#instance}. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call
      * {@link #generate(long, long)}. The width and height of the map cannot be changed after the fact, but you can zoom
      * in. Any seed supplied to the Noise given to this (if it takes one) will be ignored, and
@@ -94,14 +97,14 @@ public class TilingWorldMap extends WorldMapGenerator {
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 4D noise, recommended to be {@link Noise#instance}
      */
-    public TilingWorldMap(long initialSeed, int mapWidth, int mapHeight, final Noise noiseGenerator) {
+    public TilingWorldMap(long initialSeed, int mapWidth, int mapHeight, final INoise noiseGenerator) {
         this(initialSeed, mapWidth, mapHeight, noiseGenerator, 1.0f);
     }
 
     /**
      * Constructs a concrete WorldMapGenerator for a map that can be used as a tiling, wrapping east-to-west as well
      * as north-to-south. Takes an initial seed, the width/height of the map, and parameters for noise
-     * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
+     * generation (an {@link INoise} implementation, which is usually {@link Noise#instance}, and a
      * multiplier on how many octaves of noise to use, with 1.0f being normal (high) detail and higher multipliers
      * producing even more detailed noise when zoomed-in). The {@code initialSeed} parameter may or may not be used,
      * since you can specify the seed to use when you call {@link #generate(long, long)}. The width and height of the map
@@ -117,40 +120,18 @@ public class TilingWorldMap extends WorldMapGenerator {
      * @param noiseGenerator   an instance of a noise generator capable of 4D noise, almost always {@link Noise}
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1.0f normal
      */
-    public TilingWorldMap(long initialSeed, int mapWidth, int mapHeight, final Noise noiseGenerator, float octaveMultiplier) {
+    public TilingWorldMap(long initialSeed, int mapWidth, int mapHeight, final INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, mapWidth, mapHeight);
-        terrain = new Noise(noiseGenerator);
-        terrain.setFrequency(terrain.getFrequency() * terrainFreq);
-        terrain.setNoiseType(terrain.getNoiseType() | 1);
-        terrain.setFractalOctaves((int) (0.5f + octaveMultiplier * 8));
-        terrain.setFractalLacunarity(0.5f);
-        terrain.setFractalGain(2f);
-
-        terrainRidged = new Noise(noiseGenerator);
-        terrainRidged.setFrequency(terrainRidged.getFrequency() * terrainRidgedFreq);
-        terrainRidged.setNoiseType(terrainRidged.getNoiseType() | 1);
-        terrainRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 10));
-        terrainRidged.setFractalType(Noise.RIDGED_MULTI);
-
-        heat = new Noise(noiseGenerator);
-        heat.setFrequency(heat.getFrequency() * heatFreq);
-        heat.setNoiseType(heat.getNoiseType() | 1);
-        heat.setFractalOctaves((int) (0.5f + octaveMultiplier * 3));
-        heat.setFractalLacunarity(0.5f);
-        heat.setFractalGain(2f);
-
-        moisture = new Noise(noiseGenerator);
-        moisture.setFrequency(moisture.getFrequency() * moistureFreq);
-        moisture.setNoiseType(moisture.getNoiseType() | 1);
-        moisture.setFractalOctaves((int) (0.5f + octaveMultiplier * 4));
-        moisture.setFractalLacunarity(0.5f);
-        moisture.setFractalGain(2f);
-
-        otherRidged = new Noise(noiseGenerator);
-        otherRidged.setFrequency(otherRidged.getFrequency() * otherFreq);
-        otherRidged.setNoiseType(otherRidged.getNoiseType() | 1);
-        otherRidged.setFractalOctaves((int) (0.5f + octaveMultiplier * 6));
-        otherRidged.setFractalType(Noise.RIDGED_MULTI);
+        terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainRidgedFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8)); // was 10
+        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainBasicFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 3)); // was 8
+        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 5)); // was 3, then 2
+        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
+                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
+        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
+                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
     }
 
     /**
@@ -161,7 +142,7 @@ public class TilingWorldMap extends WorldMapGenerator {
      */
     public TilingWorldMap(TilingWorldMap other) {
         super(other);
-        terrain = other.terrain;
+        terrainBasic = other.terrainBasic;
         terrainRidged = other.terrainRidged;
         heat = other.heat;
         moisture = other.moisture;
@@ -220,7 +201,7 @@ public class TilingWorldMap extends WorldMapGenerator {
             for (int x = 0, xt = 0; x < width; x++) {
                 ps = trigTable[xt++];//TrigTools.sin(p);
                 pc = trigTable[xt++];//TrigTools.cos(p);
-                heightData[x][y] = (h = terrain.getNoiseWithSeed(pc +
+                heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
                                 terrainRidged.getNoiseWithSeed(pc, ps, qc, qs, seedB - seedA) * 0.25f,
                         ps, qc, qs, seedA) + landModifier - 1.0f);
                 heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps, qc

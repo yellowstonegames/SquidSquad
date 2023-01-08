@@ -83,7 +83,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/MimicLocalSimplex2/";
 //        path = "out/worlds/" + date + "/MimicSimplex2/";
 //        path = "out/worlds/" + date + "/RoundSideSimplex2/";
-        path = "out/worlds/" + date + "/RoundSideFoam/";
+//        path = "out/worlds/" + date + "/RoundSideFoam/";
+        path = "out/worlds/" + date + "/TilingFoam/";
 //        path = "out/worlds/" + date + "/LocalFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
@@ -127,7 +128,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new MimicWorldMap(seed, noise, 2f);
 //        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
-        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
