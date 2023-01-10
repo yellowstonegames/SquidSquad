@@ -41,12 +41,10 @@ subprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
 	}
-    compileJava.exclude("emu")
-    compileTestJava.exclude("emu")
-    javadoc.exclude("emu")
     javadoc.options.source("17")
     javadoc.destinationDir = file("../docs/$name/apidocs")
 

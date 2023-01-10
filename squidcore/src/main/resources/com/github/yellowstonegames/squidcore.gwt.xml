@@ -21,9 +21,13 @@
 <!-- To compile to Gwt, you need to reference this file in your master .gwt.xml
      file (usually called GdxDefinition.gwt.xml) as follows:
      
-    <inherits name="squidgrid" />
+    <inherits name="com.github.yellowstonegames.squidcore" />
   -->
 <module>
-    <inherits name="squidcore" />
-    <source path="com/github/yellowstonegames/grid" />
+    <inherits name="com.github.tommyettinger.juniper" />
+    <inherits name="com.github.tommyettinger.digital" />
+    <inherits name="com.github.tommyettinger.jdkgdxds" />
+    <inherits name="regexodus"/>
+    <super-source path="emu"/>
+    <source path="core" />
 </module>

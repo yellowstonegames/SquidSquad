@@ -21,9 +21,11 @@
 <!-- To compile to Gwt, you need to reference this file in your master .gwt.xml
      file (usually called GdxDefinition.gwt.xml) as follows:
      
-    <inherits name="squidold" />
+    <inherits name="com.github.yellowstonegames.squidstoretext" />
   -->
 <module>
-    <inherits name="squidcore" />
-    <source path="com/github/yellowstonegames/old" />
+    <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
+    <inherits name="com.github.yellowstonegames.squidstorecore" />
+    <inherits name="com.github.yellowstonegames.squidtext" />
+    <source path="store/text" />
 </module>

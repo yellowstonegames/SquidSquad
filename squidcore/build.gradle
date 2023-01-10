@@ -2,8 +2,8 @@
 ext.projectName = 'SquidCore'
 eclipse.project.name = ext.projectName
 
-idea.module.excludeDirs += [file("src/main/java/emu/")]
-[compileJava, compileTestJava, javadoc]*.exclude("emu")
+idea.module.excludeDirs += [file("src/main/java/com/github/yellowstonegames/emu/")]
+[compileJava, compileTestJava, javadoc]*.exclude("com/github/yellowstonegames/emu")
 
 dependencies {
     api "com.github.tommyettinger:funderby:$funderbyVersion"

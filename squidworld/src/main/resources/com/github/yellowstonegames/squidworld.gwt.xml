@@ -21,9 +21,9 @@
 <!-- To compile to Gwt, you need to reference this file in your master .gwt.xml
      file (usually called GdxDefinition.gwt.xml) as follows:
      
-    <inherits name="squidpath" />
+    <inherits name="com.github.yellowstonegames.squidworld" />
   -->
 <module>
-    <inherits name="squidgrid" />
-    <source path="com/github/yellowstonegames/path" />
+    <inherits name="com.github.yellowstonegames.squidplace" />
+    <source path="world" />
 </module>

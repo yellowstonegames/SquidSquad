@@ -21,12 +21,11 @@
 <!-- To compile to Gwt, you need to reference this file in your master .gwt.xml
      file (usually called GdxDefinition.gwt.xml) as follows:
      
-    <inherits name="squidcore" />
+    <inherits name="com.github.yellowstonegames.squidglyph" />
   -->
 <module>
-    <inherits name="juniper" />
-    <inherits name="jdkgdxds" />
-    <inherits name="regexodus"/>
-    <super-source path="emu"/>
-    <source path="com/github/yellowstonegames/core" />
+    <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
+    <inherits name="com.github.yellowstonegames.squidgrid" />
+    <inherits name="textratypist" />
+    <source path="glyph" />
 </module>
