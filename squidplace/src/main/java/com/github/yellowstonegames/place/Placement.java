@@ -17,10 +17,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.FOV;
-import com.github.yellowstonegames.grid.Radius;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 
 /**
  * Utility class for finding areas where game-specific terrain features might be suitable to place.
@@ -36,9 +33,9 @@ public class Placement {
     public RoomFinder finder;
 
     private Region allRooms, allCorridors, allCaves, allFloors, nonRoom;
-    private ObjectOrderedSet<ObjectOrderedSet<Coord>> alongStraightWalls,
+    private ObjectOrderedSet<CoordOrderedSet> alongStraightWalls,
             corners, centers;
-    private ObjectOrderedSet<Coord> hidingPlaces;
+    private CoordOrderedSet hidingPlaces;
     private Placement()
     {
 
@@ -85,13 +82,13 @@ public class Placement {
     }
 
     /**
-     * Gets an ObjectOrderedSet of ObjectOrderedSet of Coord, where each inner ObjectOrderedSet of Coord refers to a placement
+     * Gets an ObjectOrderedSet of CoordOrderedSet, where each inner CoordOrderedSet refers to a placement
      * region along a straight wall with length 3 or more, not including corners. Each Coord refers to a single cell
      * along the straight wall. This could be useful for placing weapon racks in armories, chalkboards in schoolrooms
      * (tutorial missions, perhaps?), or even large paintings/murals in palaces.
      * @return a set of sets of Coord where each set of Coord is a wall's viable placement for long things along it
      */
-    public ObjectOrderedSet<ObjectOrderedSet<Coord>> getAlongStraightWalls() {
+    public ObjectOrderedSet<CoordOrderedSet> getAlongStraightWalls() {
         if(alongStraightWalls == null)
         {
             alongStraightWalls = new ObjectOrderedSet<>(32);
@@ -100,7 +97,7 @@ public class Placement {
                 working.remake(region).retract().fringe().andNot(nonRoom);
                 for (Region sp : working.split()) {
                     if (sp.size() >= 3)
-                        alongStraightWalls.add(new ObjectOrderedSet<>(sp));
+                        alongStraightWalls.add(new CoordOrderedSet(sp));
                 }
             }
         }
@@ -108,27 +105,27 @@ public class Placement {
     }
 
     /**
-     * Gets an ObjectOrderedSet of ObjectOrderedSet of Coord, where each inner ObjectOrderedSet of Coord refers to a room's
+     * Gets an ObjectOrderedSet of CoordOrderedSet, where each inner CoordOrderedSet refers to a room's
      * corners, and each Coord is one of those corners. There are more uses for corner placement than I can list. This
      * doesn't always identify all corners, since it only finds ones in rooms, and a cave too close to a corner can
      * cause that corner to be ignored.
      * @return a set of sets of Coord where each set of Coord is a room's corners
      */
-    public ObjectOrderedSet<ObjectOrderedSet<Coord>> getCorners() {
+    public ObjectOrderedSet<CoordOrderedSet> getCorners() {
         if(corners == null)
         {
             corners = new ObjectOrderedSet<>(32);
             Region working = new Region(finder.width, finder.height);
             for(Region region : finder.rooms.keySet()) {
                 working.remake(region).expand().retract8way().xor(region).andNot(nonRoom);
-                ObjectOrderedSet<Coord> os = new ObjectOrderedSet<>(working);
+                CoordOrderedSet os = new CoordOrderedSet(working);
                 corners.add(os);
             }
         }
         return corners;
     }
     /**
-     * Gets an ObjectOrderedSet of ObjectOrderedSet of Coord, where each inner ObjectOrderedSet of Coord refers to a room's cells
+     * Gets an ObjectOrderedSet of CoordOrderedSet, where each inner CoordOrderedSet refers to a room's cells
      * that are furthest from the walls, and each Coord is one of those central positions. There are many uses for this,
      * like finding a position to place a throne or shrine in a large room where it should be visible from all around.
      * This doesn't always identify all centers, since it only finds ones in rooms, and it can also find multiple
@@ -136,7 +133,7 @@ public class Placement {
      * find a 1x5 column as the centers of that room).
      * @return a set of sets of Coord where each set of Coord contains a room's cells that are furthest from the walls.
      */
-    public ObjectOrderedSet<ObjectOrderedSet<Coord>> getCenters() {
+    public ObjectOrderedSet<CoordOrderedSet> getCenters() {
         if(centers == null)
         {
             centers = new ObjectOrderedSet<>(32);
@@ -158,7 +155,7 @@ public class Placement {
                 //        differencePacked(
                 //                working,
                 //                nonRoom);
-                centers.add(new ObjectOrderedSet<>(working));
+                centers.add(new CoordOrderedSet(working));
 
             }
         }
@@ -166,7 +163,7 @@ public class Placement {
     }
 
     /**
-     * Gets an ObjectOrderedSet of Coord, where each Coord is hidden (using the given radiusStrategy and range for FOV
+     * Gets an CoordOrderedSet, where each Coord is hidden (using the given radiusStrategy and range for FOV
      * calculations) from any doorways or similar narrow choke-points where a character might be easily ambushed. If
      * multiple choke-points can see a cell (using shadow-casting FOV, which is asymmetrical), then the cell is very
      * unlikely to be included in the returned Coords, but if a cell is visible from one or no choke-points and is far
@@ -175,7 +172,7 @@ public class Placement {
      * @param range the minimum distance things are expected to hide at; often related to player FOV range
      * @return a Set of Coord where each Coord is either far away from or is concealed from a door-like area
      */
-    public ObjectOrderedSet<Coord> getHidingPlaces(Radius radiusStrategy, float range) {
+    public CoordOrderedSet getHidingPlaces(Radius radiusStrategy, float range) {
         if(hidingPlaces == null)
         {
             float[][] composite = new float[finder.width][finder.height],
@@ -192,13 +189,15 @@ public class Placement {
                 }
             }
 
-            hidingPlaces = new ObjectOrderedSet<>(new Region(composite, 0.25f).and(allFloors));
+            hidingPlaces = new CoordOrderedSet(new Region(composite, 0.25f).and(allFloors));
         }
         return hidingPlaces;
     }
 
-    private static ObjectOrderedSet<Coord> arrayToSet(Coord[] arr)
-    {
-        return ObjectOrderedSet.with(arr);
+    @Override
+    public String toString() {
+        return "Placement{" +
+                "finder=" + finder +
+                '}';
     }
 }

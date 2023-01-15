@@ -19,6 +19,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.yellowstonegames.grid.Region;
 
 /**
  * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.
@@ -26,7 +27,7 @@ import com.github.tommyettinger.digital.ArrayTools;
 public class PacMazeGenerator implements PlaceGenerator {
     public EnhancedRandom rng;
     public int width, height;
-    private boolean[][] map;
+    private Region map;
     private int[][] env;
     private char[][] maze;
 
@@ -35,15 +36,14 @@ public class PacMazeGenerator implements PlaceGenerator {
     }
 
     public PacMazeGenerator(int width, int height) {
-        this.height = height;
-        this.width = width;
-        rng = new WhiskerRandom();
+        this(width, height, new WhiskerRandom());
     }
 
     public PacMazeGenerator(int width, int height, EnhancedRandom rng) {
         this.height = height;
         this.width = width;
         this.rng = rng;
+        this.map = new Region(width, height);
     }
 
     private static final byte[] //unbiased_connections = new byte[]{3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
@@ -58,15 +58,13 @@ public class PacMazeGenerator implements PlaceGenerator {
     };
     private static final int connections_length = connections.length;
 
-    private void write(boolean[][] m, int x, int y, int xOffset, int yOffset) {
+    private void write(Region m, int x, int y, int xOffset, int yOffset) {
         final int nx = x * 3 + xOffset + 1, ny = y * 3 + yOffset + 1;
-        if (nx >= 0 && nx < m.length && ny >= 0 && ny < m[nx].length) {
-            m[nx][ny] = true;
-        }
+        m.insert(nx, ny);
     }
 
-    public boolean[][] create() {
-        map = new boolean[width][height];
+    public Region create() {
+        map.resizeAndEmpty(width, height);
         byte[][] conns = new byte[(width + 2) / 3][(height + 2) / 3];
         int xOff = (width % 3 == 1) ? -1 : 0, yOff = (height % 3 == 1) ? -1 : 0;
         for (int x = 0; x < (width + 2) / 3; x++) {
@@ -124,14 +122,7 @@ public class PacMazeGenerator implements PlaceGenerator {
         }
         int upperY = height - 1;
         int upperX = width - 1;
-        for (int i = 0; i < width; i++) {
-            map[i][0] = false;
-            map[i][upperY] = false;
-        }
-        for (int i = 0; i < height; i++) {
-            map[0][i] = false;
-            map[upperX][i] = false;
-        }
+        map.removeEdges();
         return map;
     }
 
@@ -142,8 +133,9 @@ public class PacMazeGenerator implements PlaceGenerator {
         env = new int[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                maze[x][y] = map[x][y] ? '.' : '#';
-                env[x][y] = map[x][y] ? DungeonTools.CORRIDOR_FLOOR : DungeonTools.CORRIDOR_WALL;
+                boolean b = map.contains(x, y);
+                maze[x][y] = b ? '.' : '#';
+                env[x][y] = b ? DungeonTools.CORRIDOR_FLOOR : DungeonTools.CORRIDOR_WALL;
             }
         }
 
@@ -152,8 +144,9 @@ public class PacMazeGenerator implements PlaceGenerator {
 
     @Override
     public int[][] getEnvironment() {
-        if (env == null)
-            return ArrayTools.fill(DungeonTools.CORRIDOR_WALL, width, height);
+        if (env == null) {
+            create();
+        }
         return env;
     }
 
@@ -162,7 +155,7 @@ public class PacMazeGenerator implements PlaceGenerator {
      *
      * @return a 2D boolean array; true is passable and false is not.
      */
-    public boolean[][] getBooleanMaze() {
+    public Region getBooleanMaze() {
         if (map == null)
             return create();
         return map;
@@ -178,5 +171,13 @@ public class PacMazeGenerator implements PlaceGenerator {
         if (maze == null)
             return generate();
         return maze;
+    }
+
+    @Override
+    public String toString() {
+        return "PacMazeGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
     }
 }

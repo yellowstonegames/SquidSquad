@@ -906,4 +906,13 @@ public class MixedGenerator implements PlaceGenerator {
         return dir;
     }
 
+    @Override
+    public String toString() {
+        return "MixedGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", roomWidth=" + roomWidth +
+                ", roomHeight=" + roomHeight +
+                '}';
+    }
 }

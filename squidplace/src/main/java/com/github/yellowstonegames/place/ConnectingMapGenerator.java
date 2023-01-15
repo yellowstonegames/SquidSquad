@@ -200,6 +200,8 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * @param random an EnhancedRandom to make random choices for connecting rooms
      * @param wallThickness how thick a wall between two rooms should be, in cells; 1 is minimum, and this usually
      *                      shouldn't be much more than roomWidth or roomHeight
+     * @param divideRooms if greater than 0, this is the chance that two connected rooms should only have a 1-cell-wide
+     *                    connection (which can be made into a door using {@link DungeonProcessor})
      */
     public ConnectingMapGenerator(int width, int height, int roomWidth, int roomHeight, EnhancedRandom random, int wallThickness,
                                   double divideRooms)
@@ -398,4 +400,15 @@ public class ConnectingMapGenerator implements PlaceGenerator {
         return environment;
     }
 
+    @Override
+    public String toString() {
+        return "ConnectingMapGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", roomWidth=" + roomWidth +
+                ", roomHeight=" + roomHeight +
+                ", wallThickness=" + wallThickness +
+                ", divideRooms=" + divideRooms +
+                '}';
+    }
 }

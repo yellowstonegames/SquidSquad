@@ -133,6 +133,14 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
         return dungeon;
     }
 
+    @Override
+    public String toString() {
+        return "GrowingTreeMazeGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
+
     /**
      * Produces high-quality mazes that are very similar to those produced by a recursive back-tracking algorithm.
      * <br>

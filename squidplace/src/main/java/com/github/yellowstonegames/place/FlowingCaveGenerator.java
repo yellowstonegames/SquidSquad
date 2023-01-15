@@ -247,4 +247,13 @@ public class FlowingCaveGenerator implements PlaceGenerator {
         }
         return environment;
     }
+
+    @Override
+    public String toString() {
+        return "FlowingCaveGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", type=" + type +
+                '}';
+    }
 }
