@@ -19,6 +19,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.WeightedTable;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
@@ -76,6 +77,18 @@ public class MixedGenerator implements PlaceGenerator {
     {
         return PoissonDisk.sampleRectangle(Coord.get(2, 2), Coord.get(width - 3, height - 3),
                 8f * (width + height) / 120f + 1f, width, height, 20, rng);
+    }
+
+    /**
+     * This prepares a map generator that will generate a map with width 80 and height 80, using a random seed.
+     * This version of the constructor uses a sub-random point sequence to generate the points it will draw caves and
+     * corridors between, helping to ensure a minimum distance between points, but it does not ensure that paths between
+     * points  will avoid overlapping with rooms or other paths. You call the different carver-adding methods to affect
+     * what the dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to
+     * only caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
+     */
+    public MixedGenerator() {
+        this(80, 80, new WhiskerRandom());
     }
 
     /**

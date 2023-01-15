@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.PoissonDisk;
 
@@ -72,6 +73,18 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
             }
         }
         return om2;
+    }
+    /**
+     * This prepares a map generator that will generate a map with width 80 and height 80, using a random seed.
+     * This version of the constructor uses Poisson Disk sampling to generate the points it will draw caves and
+     * corridors between, ensuring a minimum distance between points, but it does not ensure that paths between points
+     * will avoid overlapping with rooms or other paths. You call the different carver-adding methods to affect what the
+     * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
+     * caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
+     * @see PoissonDisk used to ensure spacing for the points.
+     */
+    public SymmetryDungeonGenerator() {
+        this(80, 80, new WhiskerRandom());
     }
     /**
      * This prepares a map generator that will generate a map with the given width and height, using the given RNG.
@@ -329,5 +342,15 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
     protected void markEnvironment(int x, int y, int kind) {
         super.markEnvironment(x, y, kind);
         super.markEnvironment(width - 1 - x, height - 1 - y, kind);
+    }
+
+    @Override
+    public String toString() {
+        return "SymmetryDungeonGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", roomWidth=" + roomWidth +
+                ", roomHeight=" + roomHeight +
+                '}';
     }
 }

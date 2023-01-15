@@ -43,7 +43,7 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
     public int[][] environment;
 
     public GrowingTreeMazeGenerator() {
-        this(40, 40, new WhiskerRandom());
+        this(80, 80, new WhiskerRandom());
     }
     public GrowingTreeMazeGenerator(int width, int height) {
         this(width, height, new WhiskerRandom());

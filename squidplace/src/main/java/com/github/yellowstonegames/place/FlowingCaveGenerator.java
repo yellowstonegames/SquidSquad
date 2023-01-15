@@ -119,11 +119,11 @@ public class FlowingCaveGenerator implements PlaceGenerator {
     protected CellularAutomaton ca;
 
     /**
-     * Default constructor that makes a 60x60 cave map with a random seed.
+     * Default constructor that makes a 80x80 cave map with a random seed.
      */
     public FlowingCaveGenerator()
     {
-        this(60, 60);
+        this(80, 80);
     }
 
     /**
@@ -132,13 +132,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
      * @param height the height of the dungeon map(s) to generate
      */
     public FlowingCaveGenerator(int width, int height) {
-        this.width = Math.max(3, width);
-        this.height = Math.max(3, height);
-        type = TilesetType.DEFAULT_DUNGEON;
-        rng = new WhiskerRandom();
-        gen = new DungeonBoneGen(rng);
-        ca = new CellularAutomaton(this.width, this.height);
-        environment = new int[this.width][this.height];
+        this(width, height, TilesetType.DEFAULT_DUNGEON, new WhiskerRandom());
     }
 
     /**

@@ -19,6 +19,7 @@ package com.github.yellowstonegames.place;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 
@@ -40,6 +41,18 @@ import com.github.yellowstonegames.grid.HilbertCurve;
 public class SerpentMapGenerator implements PlaceGenerator {
     private MixedGenerator mix;
     private int[] columns, rows;
+
+    /**
+     * This prepares a map generator that will generate a map with width 80 and height 80, using a random seed.
+     * The intended purpose is to carve a long path that loops through the whole dungeon, while hopefully maximizing
+     * the amount of rooms the player encounters. You call the different carver-adding methods to affect what the
+     * dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(), defaulting to only
+     * caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
+     * @see MixedGenerator
+     */
+    public SerpentMapGenerator() {
+        this(80, 80, new WhiskerRandom(), false);
+    }
 
     /**
      * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
@@ -337,5 +350,15 @@ public class SerpentMapGenerator implements PlaceGenerator {
     @Override
     public char[][] getPlaceGrid() {
         return mix.getPlaceGrid();
+    }
+
+    @Override
+    public String toString() {
+        return "SerpentMapGenerator{" +
+                "width=" + mix.width +
+                ", height=" + mix.height +
+                ", roomWidth=" + mix.roomWidth +
+                ", roomHeight=" + mix.roomHeight +
+                '}';
     }
 }

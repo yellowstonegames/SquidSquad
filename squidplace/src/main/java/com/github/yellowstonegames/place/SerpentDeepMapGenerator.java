@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.HilbertCurve;
 import com.github.yellowstonegames.grid.Region;
@@ -43,8 +44,21 @@ public class SerpentDeepMapGenerator {
     private EnhancedRandom random;
 
     /**
+     * This prepares a map generator that will generate a map with width 80, height 80, and depth 20, using a random
+     * seed. The intended purpose is to carve a long path that loops through the whole dungeon's 3D space, while
+     * hopefully maximizing the amount of rooms the player encounters. You call the different carver-adding methods to
+     * affect what the dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(),
+     * defaulting to only caves if none are called. You call generate() after adding carvers, which returns a char[][][]
+     * for a map.
+     * @see MixedGenerator
+     */
+    public SerpentDeepMapGenerator() {
+        this(80, 80, 20, new WhiskerRandom(), 0.3);
+    }
+
+    /**
      * This prepares a map generator that will generate a map with the given width, height and depth, using the given
-     * IRNG. The intended purpose is to carve a long path that loops through the whole dungeon's 3D space, while
+     * EnhancedRandom. The intended purpose is to carve a long path that loops through the whole dungeon's 3D space, while
      * hopefully maximizing the amount of rooms the player encounters. You call the different carver-adding methods to
      * affect what the dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(),
      * defaulting to only caves if none are called. You call generate() after adding carvers, which returns a char[][][]
@@ -52,7 +66,7 @@ public class SerpentDeepMapGenerator {
      * @param width the width of the final map in cells
      * @param height the height of the final map in cells
      * @param depth the number of levels deep to create
-     * @param rng an IRNG object to use for random choices; this make a lot of random choices.
+     * @param rng an EnhancedRandom object to use for random choices; this make a lot of random choices.
      * @see MixedGenerator
      */
     public SerpentDeepMapGenerator(int width, int height, int depth, EnhancedRandom rng) {
@@ -60,7 +74,7 @@ public class SerpentDeepMapGenerator {
     }
     /**
      * This prepares a map generator that will generate a map with the given width, height and depth, using the given
-     * IRNG, and will branch out to other nearby rooms that (probably) do not have staircases between layers.
+     * EnhancedRandom, and will branch out to other nearby rooms that (probably) do not have staircases between layers.
      * The intended purpose is to carve a long path that loops through the whole dungeon's 3D space, while
      * hopefully maximizing the amount of rooms the player encounters. You call the different carver-adding methods to
      * affect what the dungeon will look like, putCaveCarvers(), putBoxRoomCarvers(), and putRoundRoomCarvers(),
@@ -69,7 +83,7 @@ public class SerpentDeepMapGenerator {
      * @param width the width of the final map in cells
      * @param height the height of the final map in cells
      * @param depth the number of levels deep to create
-     * @param rng an IRNG object to use for random choices; this make a lot of random choices.
+     * @param rng an EnhancedRandom object to use for random choices; this make a lot of random choices.
      * @param branchingChance the odds from 0.0 to 1.0 that a branch will be created near each necessary room.
      * @see MixedGenerator
      */
@@ -417,5 +431,16 @@ public class SerpentDeepMapGenerator {
     public int[][] getEnvironment(int level)
     {
         return mix[Math.max(0, Math.min(depth - 1, level))].getEnvironment();
+    }
+
+    @Override
+    public String toString() {
+        return "SerpentDeepMapGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", depth=" + depth +
+                ", roomWidth=" + mix[0].roomWidth +
+                ", roomHeight=" + mix[0].roomHeight +
+                '}';
     }
 }

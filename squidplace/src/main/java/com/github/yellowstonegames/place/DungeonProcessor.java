@@ -261,14 +261,14 @@ public class DungeonProcessor implements PlaceGenerator{
 
 
     /**
-     * Make a DungeonProcessor with a WhiskerRandom using a random seed, height 40, and width 40.
+     * Make a DungeonProcessor with a WhiskerRandom using a random seed, height 80, and width 80.
      */
     public DungeonProcessor()
     {
         rng = new WhiskerRandom();
         rebuildRNG = rng.copy();
-        height = 40;
-        width = 40;
+        height = 80;
+        width = 80;
         roomFX = new ObjectIntMap<>();
         corridorFX = new ObjectIntMap<>();
         caveFX = new ObjectIntMap<>();

@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
@@ -25,6 +26,8 @@ import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Direction;
+
+import java.util.Arrays;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
@@ -543,7 +546,7 @@ public class WildernessGenerator implements PlaceGenerator {
 
     public WildernessGenerator()
     {
-        this(128, 128, Biome.TABLE[21]);
+        this(80, 80, Biome.TABLE[21]);
     }
     public WildernessGenerator(int width, int height, Biome biome)
     {
@@ -635,6 +638,16 @@ public class WildernessGenerator implements PlaceGenerator {
     @Override
     public int[][] getEnvironment() {
         return environment;
+    }
+
+    @Override
+    public String toString() {
+        return "WildernessGenerator{" +
+                "width=" + width +
+                ", height=" + height +
+                ", biome=" + biome +
+                ", idHash=" + Base.BASE16.unsigned(System.identityHashCode(this)) +
+                '}';
     }
 
     /**
@@ -778,6 +791,14 @@ public class WildernessGenerator implements PlaceGenerator {
                 }
             }
             return grid;
+        }
+
+        @Override
+        public String toString() {
+            return "MixedWildernessGenerator{" +
+                    "pieces=" + Arrays.toString(pieces) +
+                    ", idHash=" + Base.BASE16.unsigned(System.identityHashCode(this)) +
+                    '}';
         }
     }
 }

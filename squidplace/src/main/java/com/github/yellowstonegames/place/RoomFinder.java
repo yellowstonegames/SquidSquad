@@ -605,4 +605,12 @@ public class RoomFinder {
 
         return regions;
     }
+
+    @Override
+    public String toString() {
+        return "RoomFinder{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }

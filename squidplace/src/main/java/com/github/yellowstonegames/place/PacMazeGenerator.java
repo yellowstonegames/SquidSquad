@@ -31,7 +31,7 @@ public class PacMazeGenerator implements PlaceGenerator {
     private char[][] maze;
 
     public PacMazeGenerator() {
-        this(250, 250);
+        this(80, 80);
     }
 
     public PacMazeGenerator(int width, int height) {
