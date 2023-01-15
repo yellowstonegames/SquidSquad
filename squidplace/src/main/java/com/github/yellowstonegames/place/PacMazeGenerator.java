@@ -18,11 +18,12 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Region;
 
 /**
- * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade game.
+ * Meant to produce the sort of narrow, looping, not-quite-maze-like passages found in a certain famous early arcade
+ * game. This can generate either the pair of {@link #getPlaceGrid()} and {@link #getEnvironment()} that classes like
+ * {@link DungeonProcessor} use, or can produce a {@link Region} with {@link #getRegion()}.
  */
 public class PacMazeGenerator implements PlaceGenerator {
     public EnhancedRandom rng;
@@ -145,24 +146,24 @@ public class PacMazeGenerator implements PlaceGenerator {
     @Override
     public int[][] getEnvironment() {
         if (env == null) {
-            create();
+            generate();
         }
         return env;
     }
 
     /**
-     * Gets the maze as a 2D array of true for passable or false for blocked.
+     * Gets the maze as a {@link Region}, where true means passable or false means blocked.
      *
-     * @return a 2D boolean array; true is passable and false is not.
+     * @return a {@link Region} with the same width and height as this; true is passable and false is not.
      */
-    public Region getBooleanMaze() {
+    public Region getRegion() {
         if (map == null)
             return create();
         return map;
     }
 
     /**
-     * Gets the maze as a 2D array of ',' for passable or '#' for blocked.
+     * Gets the maze as a 2D array of '.' for passable or '#' for blocked.
      *
      * @return a 2D char array; '.' is passable and '#' is not.
      */

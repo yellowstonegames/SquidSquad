@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.yellowstonegames.grid.LineTools;
 
@@ -7,7 +8,7 @@ public class SerpentMapGeneratorDemo {
 
     public static void main(String[] args) {
         final int width = 60, height = 60, depth = 8;
-        FourWheelRandom random = new FourWheelRandom(0xB0BAFE77);
+        AceRandom random = new AceRandom(0xB0BAFE77BA77L);
         SerpentMapGenerator gen = new SerpentMapGenerator(width, height, random, 0.07);
         gen.putWalledBoxRoomCarvers(4);
         gen.putCaveCarvers(1);
@@ -17,7 +18,7 @@ public class SerpentMapGeneratorDemo {
         System.out.println("------------------------------------------------------------");
         System.out.println("------------------------------------------------------------");
 
-        random.setSeed(0xB0BAFE77);
+        random.setSeed(0xB0BAFE77BA77L);
         SerpentDeepMapGenerator deepSerpent = new SerpentDeepMapGenerator(width, height, depth, random, 0.15);
         deepSerpent.putWalledBoxRoomCarvers(2);
         deepSerpent.putWalledRoundRoomCarvers(2);

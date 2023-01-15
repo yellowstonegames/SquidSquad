@@ -207,42 +207,39 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
         }
         double lowest1 = 9999, lowest2 = 9999, lowest3 = 9999, lowest4 = 9999;
         Coord l1 = null, l2 = null, l3 = null, l4 = null, r1 = null, r2 = null, r3 = null, r4 = null;
-        for(ObjectList<Coord> left : connections.values())
+
+        ObjectObjectOrderedMap.OrderedMapValues<Coord, ObjectList<Coord>> lVals = new ObjectObjectOrderedMap.OrderedMapValues<>(conns);
+        ObjectObjectOrderedMap.OrderedMapValues<Coord, ObjectList<Coord>> rVals = new ObjectObjectOrderedMap.OrderedMapValues<>(conns);
+        for(ObjectList<Coord> left : lVals)
         {
-            for(ObjectList<Coord> right : connections.values())
+            rVals.resetIterator();
+            for(ObjectList<Coord> right : rVals)
             {
-                for(Coord lc : left)
-                {
-                    for(Coord rc : right)
-                    {
+                for (int i = 0; i < left.size(); i++) {
+                    Coord lc = left.get(i);
+                    for (int j = 0; j < right.size(); j++) {
+                        Coord rc = right.get(j);
                         Coord rc2 = Coord.get(width - 1 - rc.x, height - 1 - rc.y);
                         double dist = lc.distanceD(rc2);
-                        if(dist < 0.001)
+                        if (dist < 0.001)
                             continue;
-                        if(dist < lowest1)
-                        {
+                        if (dist < lowest1) {
                             lowest1 = dist;
                             l1 = lc;
                             r1 = rc2;
-                        }
-                        else if(dist < lowest2 && !lc.equals(l1) && !rc2.equals(r1))
-                        {
+                        } else if (dist < lowest2 && !lc.equals(l1) && !rc2.equals(r1)) {
                             lowest2 = dist;
                             l2 = lc;
                             r2 = rc2;
-                        }
-                        else if(dist < lowest3
-                                && !lc.equals(l1) && !rc2.equals(r1) && !lc.equals(l2) && !rc2.equals(r2))
-                        {
+                        } else if (dist < lowest3
+                                && !lc.equals(l1) && !rc2.equals(r1) && !lc.equals(l2) && !rc2.equals(r2)) {
                             lowest3 = dist;
                             l3 = lc;
                             r3 = rc2;
-                        }
-                        else if(dist < lowest4
+                        } else if (dist < lowest4
                                 && !lc.equals(l1) && !rc2.equals(r1)
                                 && !lc.equals(l2) && !rc2.equals(r2)
-                                && !lc.equals(l3) && !rc2.equals(r3))
-                        {
+                                && !lc.equals(l3) && !rc2.equals(r3)) {
                             lowest4 = dist;
                             l4 = lc;
                             r4 = rc2;

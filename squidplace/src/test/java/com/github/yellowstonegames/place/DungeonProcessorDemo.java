@@ -1,12 +1,12 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class DungeonProcessorDemo {
 
     public static void main(String[] args) {
-        LaserRandom random = new LaserRandom(0xB0BAFE77);
+        AceRandom random = new AceRandom(0xB0BAFE77BA77L);
         DungeonProcessor gen = new DungeonProcessor(60, 32, random);
 
 //        gen.addGrass(0, 10);
@@ -19,6 +19,7 @@ public class DungeonProcessorDemo {
 //        DungeonBoneGen bone = new DungeonBoneGen(random.copy());
 
         for(TilesetType tt : TilesetType.values()){
+            random.setSeed(0xB0BAFE77BA77L);
             System.out.println(tt.name());
 //            DungeonTools.debugPrint(LineTools.hashesToLines(gen.generate(tt), true));
 //            bone.generate(tt, 60, 32);

@@ -1,12 +1,12 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.*;
 
 public class FOVSymmetryDemo {
 
     public static void main(String[] args) {
-        LaserRandom random = new LaserRandom(0xB0BAFE77);
+        AceRandom random = new AceRandom(0xB0BAFE77);
         DungeonProcessor gen = new DungeonProcessor(70, 70, random);
         gen.addBoulders(DungeonProcessor.ALL, 8);
         char[][] dungeon = gen.generate();

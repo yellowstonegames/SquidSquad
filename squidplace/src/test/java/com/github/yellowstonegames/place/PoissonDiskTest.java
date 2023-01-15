@@ -1,7 +1,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
@@ -18,7 +18,7 @@ public class PoissonDiskTest {
 
     public static void main(String[] args) {
         if (!"true".equals(System.getenv("printing"))) return;
-        LaserRandom rng = new LaserRandom(0xBEEFBABEL);
+        AceRandom rng = new AceRandom(0xBEEFBABEL);
         DungeonBoneGen dg = new DungeonBoneGen(rng);
         char[][] dun = DungeonTools.wallWrap(dg.generate(TilesetType.DEFAULT_DUNGEON, 80, 80));
 
