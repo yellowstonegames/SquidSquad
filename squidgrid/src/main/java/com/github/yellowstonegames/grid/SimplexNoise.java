@@ -110,7 +110,7 @@ public class SimplexNoise implements INoise {
             G3 = (float)(1.0 / 6.0),
             F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25),
             G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05),
-            LIMIT4 = 0.5f,
+            LIMIT4 = 0.4675f,
             F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0),
             G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0),
             LIMIT5 = 0.67f,
@@ -378,9 +378,9 @@ public class SimplexNoise implements INoise {
         }
         else n4 = 0;
 
-        t = (n0 + n1 + n2 + n3 + n4) * 108f;
-//        return TrigTools.sin(MathTools.cbrt(t));
-        return t / (1f + Math.abs(t));
+        t = (n0 + n1 + n2 + n3 + n4) * 141;
+        return t / (0.750f + Math.abs(t));
+//        return t / (1f + Math.abs(t));
     }
     // debug code, for finding what constant should be used for 14.75
 //        final float ret =  (n0 + n1 + n2 + n3 + n4) * (14.7279);
@@ -546,9 +546,10 @@ public class SimplexNoise implements INoise {
         }
 
         t = (n0 + n1 + n2 + n3 + n4 + n5) * 28f;
+//        return t / (1f + Math.abs(t));
+        return t / (0.750f + Math.abs(t));
 //        return (float) Math.tanh(t);
 //        return t / (float) Math.sqrt(1f + t * t);
-        return t / (1f + Math.abs(t));
     }
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0;
 //        if(t < -1.0) {
@@ -761,7 +762,8 @@ public class SimplexNoise implements INoise {
         }
 
         t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64f;
-        return t / (1f + Math.abs(t));
+        return t / (0.750f + Math.abs(t));
+//        return t / (1f + Math.abs(t));
     }
 //        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
 
