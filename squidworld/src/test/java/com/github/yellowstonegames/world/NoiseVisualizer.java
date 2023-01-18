@@ -47,6 +47,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private int hashIndex = 6;
 
     private static final int width = 512, height = 512;
+    private static final float iWidth = 1f/width, iHeight = 1f/height;
 
     private InputAdapter input;
     
@@ -190,7 +191,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
                                             (MathTools.swayTight(i * 0x1p-6f + 0.5f))
 //                                    )
                             );
-                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(
+                            gif.palette.paletteArray[i] &= 0xFF0000FF;
+                                    /*
+                                    = DescriptiveColor.toRGBA8888(
                                     DescriptiveColor.oklabByHSL(
                                             hiLo * (hueHigh - hueBase + 1f) + hueBase, // hueBase to hueHigh
 //                                            hiLo * 0.19f + hue, // red to gold
@@ -217,6 +220,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            0.55f + TrigTools.cosTurns(i * 0x1p-9f) * -0.35f, // light, from 0.2f to 0.9f
 //                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
                                             1f));
+                                     */
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
                         }
                         gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
@@ -300,12 +304,12 @@ public class NoiseVisualizer extends ApplicationAdapter {
 
     public void putMap() {
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, c = ctr * 0.5f;
+        float bright, c = ctr * 0.25f;
         switch (dim) {
             case 0:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x + ctr, y + ctr));
+                        bright = basicPrepare(noise.getConfiguredNoise(x + c, y + c));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
@@ -314,7 +318,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
             case 1:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x, y, c));
+                        bright = basicPrepare(noise.getConfiguredNoise(x, y, ctr));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
@@ -322,8 +326,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
                 break;
             case 2:
                 for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 64 + c, xs = TrigTools.sinTurns(x * iWidth) * 64 + c;
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x, y, ctr, noise.getMutation()));
+                        float yc = TrigTools.cosTurns(y * iHeight) * 64 + c, ys = TrigTools.sinTurns(y * iHeight) * 64 + c;
+                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
@@ -331,13 +337,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
                 break;
             case 3: {
                 for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 64, xs = TrigTools.sinTurns(x * iWidth) * 64;
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.4f,
-                                (x * 0.6f - y * 0.4f) + ctr * 1.4f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.4f,
-                                (y * 0.7f - x * 0.3f) - ctr * 1.4f,
-                                (x * 0.35f - y * 0.25f) * 0.6f - (x * 0.25f - y * 0.35f) * 1.2f));
+                        float yc = TrigTools.cosTurns(y * iHeight) * 64, ys = TrigTools.sinTurns(y * iHeight) * 64;
+                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys, c));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
@@ -345,13 +348,12 @@ public class NoiseVisualizer extends ApplicationAdapter {
             }
                 break;
             case 4: {
-                for (int x = 0; x < width; x++) { 
+                for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 64 + c, xs = TrigTools.sinTurns(x * iWidth) * 64 + c;
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.2f, (x * 0.6f - y * 0.4f) + ctr * 1.2f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.2f, (y * 0.7f - x * 0.3f) - ctr * 1.2f,
-                                (x * 0.35f - y * 0.25f) * 0.65f - (x * 0.25f + y * 0.35f) * 1.35f,
-                                (y * 0.45f - x * 0.15f) * 0.75f - (y * 0.15f + x * 0.45f) * 1.25f));
+                        float yc = TrigTools.cosTurns(y * iHeight) * 64 + c, ys = TrigTools.sinTurns(y * iHeight) * 64 + c,
+                                zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 64 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 64 - c;
+                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, zc, xs, ys, zs));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
