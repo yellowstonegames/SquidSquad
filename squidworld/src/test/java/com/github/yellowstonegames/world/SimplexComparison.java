@@ -28,12 +28,13 @@ public class SimplexComparison extends ApplicationAdapter {
     private INoise scaled = new SimplexNoiseScaled(1L);//new Noise(1, 1, Noise.SIMPLEX_FRACTAL, 1);//
     private NoiseWrapper wrap0 = new NoiseWrapper(noise, 1, 0.0625f, Noise.FBM, 1);
     private NoiseWrapper wrap1 = new NoiseWrapper(scaled, 1, 0.0625f, Noise.FBM, 1);
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int dim = 3; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;
 
     private static final int width = 256, height = 256;
+    private static final float iWidth = 1f/width, iHeight = 1f/height;
 
     private InputAdapter input;
     
@@ -120,15 +121,15 @@ public class SimplexComparison extends ApplicationAdapter {
 
     public void putMap() {
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, c = ctr * 0.5f;
+        float bright, c = ctr * 0.25f;
         switch (dim) {
             case 0:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(wrap0.getNoiseWithSeed(x + ctr, y + ctr, noise.getSeed()));
+                        bright = basicPrepare(wrap0.getNoiseWithSeed(x + c, y + c, noise.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap1.getNoiseWithSeed(x + ctr, y + ctr, scaled.getSeed()));
+                        bright = basicPrepare(wrap1.getNoiseWithSeed(x + c, y + c, scaled.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -148,11 +149,13 @@ public class SimplexComparison extends ApplicationAdapter {
                 break;
             case 2:
                 for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(wrap0.getNoiseWithSeed(x, y, ctr, 0x1p-4f * (x + y - ctr), noise.getSeed()));
+                        float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c;
+                        bright = basicPrepare(wrap0.getNoiseWithSeed(xc, yc, xs, ys, noise.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap1.getNoiseWithSeed(x, y, ctr, 0x1p-4f * (x + y - ctr), scaled.getSeed()));
+                        bright = basicPrepare(wrap1.getNoiseWithSeed(xc, yc, xs, ys, scaled.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -160,21 +163,13 @@ public class SimplexComparison extends ApplicationAdapter {
                 break;
             case 3: {
                 for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(wrap0.getNoiseWithSeed(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.4f,
-                                (x * 0.6f - y * 0.4f) + ctr * 1.4f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.4f,
-                                (y * 0.7f - x * 0.3f) - ctr * 1.4f,
-                                (x * 0.35f - y * 0.25f) * 0.6f - (x * 0.25f - y * 0.35f) * 1.2f, noise.getSeed()));
+                        float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
+                        bright = basicPrepare(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, noise.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap1.getNoiseWithSeed(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.4f,
-                                (x * 0.6f - y * 0.4f) + ctr * 1.4f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.4f,
-                                (y * 0.7f - x * 0.3f) - ctr * 1.4f,
-                                (x * 0.35f - y * 0.25f) * 0.6f - (x * 0.25f - y * 0.35f) * 1.2f, scaled.getSeed()));
+                        bright = basicPrepare(wrap1.getNoiseWithSeed(xc, yc, xs, ys, c, scaled.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -182,20 +177,17 @@ public class SimplexComparison extends ApplicationAdapter {
             }
                 break;
             case 4: {
-                for (int x = 0; x < width; x++) { 
+                for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
                     for (int y = 0; y < height; y++) {
+                        float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
+                                zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
                         bright = basicPrepare(wrap0.getNoiseWithSeed(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.2f, (x * 0.6f - y * 0.4f) + ctr * 1.2f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.2f, (y * 0.7f - x * 0.3f) - ctr * 1.2f,
-                                (x * 0.35f - y * 0.25f) * 0.65f - (x * 0.25f + y * 0.35f) * 1.35f,
-                                (y * 0.45f - x * 0.15f) * 0.75f - (y * 0.15f + x * 0.45f) * 1.25f, noise.getSeed()));
+                                xc, yc, zc, xs, ys, zs, noise.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = basicPrepare(wrap1.getNoiseWithSeed(
-                                (y * 0.6f + x * 0.4f) + ctr * 1.2f, (x * 0.6f - y * 0.4f) + ctr * 1.2f,
-                                (x * 0.7f + y * 0.3f) - ctr * 1.2f, (y * 0.7f - x * 0.3f) - ctr * 1.2f,
-                                (x * 0.35f - y * 0.25f) * 0.65f - (x * 0.25f + y * 0.35f) * 1.35f,
-                                (y * 0.45f - x * 0.15f) * 0.75f - (y * 0.15f + x * 0.45f) * 1.25f, scaled.getSeed()));
+                                xc, yc, zc, xs, ys, zs, scaled.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
