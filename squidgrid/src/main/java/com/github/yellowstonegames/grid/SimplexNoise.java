@@ -545,9 +545,9 @@ public class SimplexNoise implements INoise {
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
 
-        t = (n0 + n1 + n2 + n3 + n4 + n5) * 28f;
+        t = (n0 + n1 + n2 + n3 + n4 + n5) * 32f;
 //        return t / (1f + Math.abs(t));
-        return t / (0.750f + Math.abs(t));
+        return t / (0.700f + Math.abs(t));
 //        return (float) Math.tanh(t);
 //        return t / (float) Math.sqrt(1f + t * t);
     }
@@ -762,7 +762,7 @@ public class SimplexNoise implements INoise {
         }
 
         t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64f;
-        return t / (0.750f + Math.abs(t));
+        return t / (0.500f + Math.abs(t));
 //        return t / (1f + Math.abs(t));
     }
 //        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
