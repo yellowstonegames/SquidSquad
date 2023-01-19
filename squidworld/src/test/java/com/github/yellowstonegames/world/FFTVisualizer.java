@@ -39,7 +39,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
-    private final ValueNoise[] vals = new ValueNoise[7];
+    private final HighDimensionalValueNoise[] vals = new HighDimensionalValueNoise[7];
     private final CyclicNoise cyclic = new CyclicNoise();
     private final SorbetNoise sorbet = new SorbetNoise();
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
@@ -136,7 +136,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(noise.getSeed() + ~i * 55555555L, 2 + i);
             taffies[i] = new TaffyNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
             flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
-            vals[i] = new ValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
+            vals[i] = new HighDimensionalValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);

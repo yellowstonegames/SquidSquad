@@ -19,9 +19,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.CyclicNoise;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -195,18 +193,19 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/Foam/";
 //        path = "out/worldsAnimated/" + date + "/Classic/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingFoamMaelstrom/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
 //        path = "out/worldsAnimated/" + date + "/FlowingPear/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingFoam/";
-        path = "out/worldsAnimated/i/" + date + "/FlowingCyclic/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplex/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexCentral/";
-//        path = "out/worldsAnimated/i/" + date + "/FlowingSimplexOuter/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+//        path = "out/worldsAnimated/" + date + "/FlowingSorbet/";
+//        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
+//        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
+//        path = "out/worldsAnimated/" + date + "/FlowingSimplexCentral/";
+//        path = "out/worldsAnimated/" + date + "/FlowingSimplexOuter/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingValue/";
+        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         if(!Gdx.files.local(path).exists())
@@ -244,17 +243,19 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.HERMITE);
 
-//        cycling = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
-        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
-//        cycling = new Noise3DFrom5D(new ValueNoise(seed, 5)); // between 69009ms and 94373ms
-//        cycling = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-//        cycling = new Noise3DFrom5D(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
+//        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
+        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
+//        iNoise = new Noise3DFrom5D(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
+//        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
+//        iNoise = new Noise3DFrom5D(new HighDimensionalValueNoise(seed, 5)); // between 69009ms and 94373ms
+//        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
+//        iNoise = new Noise3DFrom5D(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
 //                f -> INoise.noiseSpline(f, 1.2f, 0f))); // between ms and ms
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
-//        cycling = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+//        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 
-        world = new GlobeMap(seed, width, height, iNoise, 0.75f);
+        world = new GlobeMap(seed, width, height, iNoise, 1.75f);
 
 
         wmv = new WorldMapView(world);
@@ -311,8 +312,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        try {
         for (int i = 0; i < FRAMES; i++) {
             float angle = i / (float) FRAMES;
-            iNoise.s = TrigTools.sinTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
-            iNoise.c = TrigTools.cosTurns(angle) * 0.3125f;// 0.4f;// 0.3125f;
+            iNoise.s = TrigTools.sinTurns(angle) * 0.5f;// 0.4f;// 0.3125f;
+            iNoise.c = TrigTools.cosTurns(angle) * 0.5f;// 0.4f;// 0.3125f;
 
             world.setCenterLongitude(angle * TrigTools.PI2);
             generate(hash);
