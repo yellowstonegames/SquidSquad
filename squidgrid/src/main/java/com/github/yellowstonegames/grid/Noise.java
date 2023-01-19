@@ -3407,7 +3407,7 @@ public class Noise implements INoise {
         xin = p0;
         yin = p1;
         final float c = valueNoise(seed, xin + b, yin);
-        final float result = (a + b + c) * F3f;
+        final float result = (a + b + c) * F3;
         final float sharp = sharpness * 2.2f;
 
         final float diff = 0.5f - result;
@@ -4580,7 +4580,7 @@ public class Noise implements INoise {
         xin = p0;
         yin = p1;
         final float c = trillNoise(seed, xin + b, yin);
-        final float result = (a + b + c) * F3f;
+        final float result = (a + b + c) * F3;
         final float sharp = sharpnessInverse;
         return result / (((sharp - 1f) * (1f - Math.abs(result))) + 1.0000001f);
 //        final float diff = 0.5f - result;
@@ -6676,11 +6676,11 @@ public class Noise implements INoise {
     }
 
     public float singleSimplex(int seed, float x, float y) {
-        float t = (x + y) * F2f;
+        float t = (x + y) * F2;
         int i = fastFloor(x + t);
         int j = fastFloor(y + t);
 
-        t = (i + j) * G2f;
+        t = (i + j) * G2;
         float X0 = i - t;
         float Y0 = j - t;
 
@@ -6696,10 +6696,10 @@ public class Noise implements INoise {
             j1 = 1;
         }
 
-        float x1 = x0 - i1 + G2f;
-        float y1 = y0 - j1 + G2f;
-        float x2 = x0 - 1 + H2f;
-        float y2 = y0 - 1 + H2f;
+        float x1 = x0 - i1 + G2;
+        float y1 = y0 - j1 + G2;
+        float x2 = x0 - 1 + H2;
+        float y2 = y0 - 1 + H2;
 
         float n = 0f;
 
@@ -7019,12 +7019,12 @@ public class Noise implements INoise {
     }
 
     public float singleSimplex(int seed, float x, float y, float z) {
-        float t = (x + y + z) * F3f;
+        float t = (x + y + z) * F3;
         int i = fastFloor(x + t);
         int j = fastFloor(y + t);
         int k = fastFloor(z + t);
 
-        t = (i + j + k) * G3f;
+        t = (i + j + k) * G3;
         float x0 = x - (i - t);
         float y0 = y - (j - t);
         float z0 = z - (k - t);
@@ -7083,12 +7083,12 @@ public class Noise implements INoise {
             }
         }
 
-        float x1 = x0 - i1 + G3f;
-        float y1 = y0 - j1 + G3f;
-        float z1 = z0 - k1 + G3f;
-        float x2 = x0 - i2 + F3f;
-        float y2 = y0 - j2 + F3f;
-        float z2 = z0 - k2 + F3f;
+        float x1 = x0 - i1 + G3;
+        float y1 = y0 - j1 + G3;
+        float z1 = z0 - k1 + G3;
+        float x2 = x0 - i2 + F3;
+        float y2 = y0 - j2 + F3;
+        float z2 = z0 - k2 + F3;
         float x3 = x0 - 0.5f;
         float y3 = y0 - 0.5f;
         float z3 = z0 - 0.5f;
@@ -7249,12 +7249,12 @@ public class Noise implements INoise {
     }
 
     public float singleSimplex(int seed, float x, float y, float z, float w) {
-        float skew = (x + y + z + w) * F4f;
+        float skew = (x + y + z + w) * F4;
         int i = fastFloor(x + skew);
         int j = fastFloor(y + skew);
         int k = fastFloor(z + skew);
         int l = fastFloor(w + skew);
-        float unskew = (i + j + k + l) * G4f;
+        float unskew = (i + j + k + l) * G4;
         float X0 = i - unskew;
         float Y0 = j - unskew;
         float Z0 = k - unskew;
@@ -7293,25 +7293,25 @@ public class Noise implements INoise {
         int k3 = -rankz >>> 31;
         int l3 = -rankw >>> 31;
 
-        float x1 = x0 - i1 + G4f;
-        float y1 = y0 - j1 + G4f;
-        float z1 = z0 - k1 + G4f;
-        float w1 = w0 - l1 + G4f;
+        float x1 = x0 - i1 + G4;
+        float y1 = y0 - j1 + G4;
+        float z1 = z0 - k1 + G4;
+        float w1 = w0 - l1 + G4;
 
-        float x2 = x0 - i2 + 2 * G4f;
-        float y2 = y0 - j2 + 2 * G4f;
-        float z2 = z0 - k2 + 2 * G4f;
-        float w2 = w0 - l2 + 2 * G4f;
+        float x2 = x0 - i2 + 2 * G4;
+        float y2 = y0 - j2 + 2 * G4;
+        float z2 = z0 - k2 + 2 * G4;
+        float w2 = w0 - l2 + 2 * G4;
 
-        float x3 = x0 - i3 + 3 * G4f;
-        float y3 = y0 - j3 + 3 * G4f;
-        float z3 = z0 - k3 + 3 * G4f;
-        float w3 = w0 - l3 + 3 * G4f;
+        float x3 = x0 - i3 + 3 * G4;
+        float y3 = y0 - j3 + 3 * G4;
+        float z3 = z0 - k3 + 3 * G4;
+        float w3 = w0 - l3 + 3 * G4;
 
-        float x4 = x0 - 1 + 4 * G4f;
-        float y4 = y0 - 1 + 4 * G4f;
-        float z4 = z0 - 1 + 4 * G4f;
-        float w4 = w0 - 1 + 4 * G4f;
+        float x4 = x0 - 1 + 4 * G4;
+        float y4 = y0 - 1 + 4 * G4;
+        float z4 = z0 - 1 + 4 * G4;
+        float w4 = w0 - 1 + 4 * G4;
 
         float t0 = LIMIT4 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
         if(t0 > 0) {
@@ -7344,9 +7344,8 @@ public class Noise implements INoise {
         }
         else t4 = 0;
 
-//        float n = (t0 + t1 + t2 + t3 + t4) * 14.7279f;
-        float n = (t0 + t1 + t2 + t3 + t4) * 24f;
-        return n / (1f + Math.abs(n));
+        float n = (t0 + t1 + t2 + t3 + t4) * 141.000f;
+        return n / (0.750f + Math.abs(n));
     }
     
     // 5D Simplex
@@ -7629,8 +7628,8 @@ public class Noise implements INoise {
         }
 
 //        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 10f;
-        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 48f;
-        return n / (1f + Math.abs(n));
+        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
+        return n / (0.700f + Math.abs(n));
     }
 
     // 6D Simplex
@@ -7963,8 +7962,8 @@ public class Noise implements INoise {
         }
 
 //        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 144f;
-        return n / (1f + Math.abs(n));
+        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64.000f;
+        return n / (0.500f + Math.abs(n));
     }
 
     // Cubic Noise
@@ -9743,28 +9742,26 @@ public class Noise implements INoise {
                 '}';
     }
 
-    public static final float F2f = 0.3660254f;
-    public static final float G2f = 0.21132487f;
-    public static final float H2f = 0.42264974f;
+    public static final float F2 = 0.36602540378443864676372317075294f;
+    public static final float G2 = 0.21132486540518711774542560974902f;
+    public static final float H2 = G2 * 2.0f;
     public static final float LIMIT2 = 0.5f;
 
-    public static final float F3f = 0.33333334f;
-    public static final float G3f = 0.16666667f;
+    public static final float F3 = (float)(1.0 / 3.0);
+    public static final float G3 = (float)(1.0 / 6.0);
     public static final float LIMIT3 = 0.6f;
 
-    public static final float F4f = (float) ((2.23606797 - 1.0) / 4.0);
-    public static final float G4f = (float) ((5.0 - 2.23606797) / 20.0);
-    public static final float LIMIT4 = 0.6f;
+    public static final float F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25);
+    public static final float G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05);
+    public static final float LIMIT4 = 0.4675f;
 
-    private static final float F5 = (float) ((Math.sqrt(6.0) - 1.0) / 5.0);
-    private static final float G5 = (float) ((6.0 - Math.sqrt(6.0)) / 30.0);
-    private static final float LIMIT5 = 0.61f;
-//    private static final float LIMIT5 = 0.7f;
+    public static final float F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0);
+    public static final float G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0);
+    public static final float LIMIT5 = 0.67f;
 
-    private static final float F6 = (float) ((Math.sqrt(7.0) - 1.0) / 6.0);
-    private static final float G6 = F6 / (1f + 6f * F6);
-    private static final float LIMIT6 = 0.62f;
-//    private static final float LIMIT6 = 0.8375f;
+    public static final float F6 = (float)((Math.sqrt(7.0) - 1.0) / 6.0);
+    public static final float G6 = (float)(F6 / (1.0 + 6.0 * F6));
+    public static final float LIMIT6 = 0.69f;
 
     /**
      * Simple container class that holds 2 floats.

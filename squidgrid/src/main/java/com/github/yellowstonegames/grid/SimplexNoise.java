@@ -103,20 +103,22 @@ public class SimplexNoise implements INoise {
         return noise(x, y, z, w, u, v, seed);
     }
 
-    protected static final float F2 = 0.36602540378443864676372317075294f,
-            G2 = 0.21132486540518711774542560974902f,
-            H2 = G2 * 2.0f,
-            F3 = (float)(1.0 / 3.0),
-            G3 = (float)(1.0 / 6.0),
-            F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25),
-            G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05),
-            LIMIT4 = 0.4675f,
-            F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0),
-            G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0),
-            LIMIT5 = 0.67f,
-            F6 = (float)((Math.sqrt(7.0) - 1.0) / 6.0),
-            G6 = (float)(F6 / (1.0 + 6.0 * F6)),
-            LIMIT6 = 0.69f;
+    public static final float F2 = 0.36602540378443864676372317075294f;
+    public static final float G2 = 0.21132486540518711774542560974902f;
+    public static final float H2 = G2 * 2.0f;
+    public static final float LIMIT2 = 0.5f;
+    public static final float F3 = (float)(1.0 / 3.0);
+    public static final float G3 = (float)(1.0 / 6.0);
+    public static final float LIMIT3 = 0.6f;
+    public static final float F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25);
+    public static final float G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05);
+    public static final float LIMIT4 = 0.4675f;
+    public static final float F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0);
+    public static final float G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0);
+    public static final float LIMIT5 = 0.67f;
+    public static final float F6 = (float)((Math.sqrt(7.0) - 1.0) / 6.0);
+    public static final float G6 = (float)(F6 / (1.0 + 6.0 * F6));
+    public static final float LIMIT6 = 0.69f;
 
     public static float noise(final float x, final float y, final long seed) {
         float t = (x + y) * F2;
@@ -146,21 +148,21 @@ public class SimplexNoise implements INoise {
 
         float n0, n1, n2;
 
-        n0 = 0.5f - x0 * x0 - y0 * y0;
+        n0 = LIMIT2 - x0 * x0 - y0 * y0;
         if (n0 > 0) {
             n0 *= n0;
             n0 *= n0 * gradCoord2D(seed, i, j, x0, y0);
         }
         else n0 = 0.0f;
 
-        n1 = 0.5f - x1 * x1 - y1 * y1;
+        n1 = LIMIT2 - x1 * x1 - y1 * y1;
         if (n1 > 0) {
             n1 *= n1;
             n1 *= n1 * gradCoord2D(seed, i + i1, j + j1, x1, y1);
         }
         else n1 = 0.0f;
 
-        n2 = 0.5f - x2 * x2 - y2 * y2;
+        n2 = LIMIT2 - x2 * x2 - y2 * y2;
         if (n2 > 0)  {
             n2 *= n2;
             n2 *= n2 * gradCoord2D(seed, i + 1, j + 1, x2, y2);
@@ -242,27 +244,27 @@ public class SimplexNoise implements INoise {
         float z3 = z0 - 0.5f;
 
         // Calculate the contribution from the four corners
-        float n0 = 0.6f - x0 * x0 - y0 * y0 - z0 * z0;
+        float n0 = LIMIT3 - x0 * x0 - y0 * y0 - z0 * z0;
         if (n0 > 0) {
             n0 *= n0;
             n0 *= n0 * gradCoord3D(seed, i, j, k, x0, y0, z0);
         }
         else n0 = 0.0f;
 
-        float n1 = 0.6f - x1 * x1 - y1 * y1 - z1 * z1;
+        float n1 = LIMIT3 - x1 * x1 - y1 * y1 - z1 * z1;
         if (n1 > 0) {
             n1 *= n1;
             n1 *= n1 * gradCoord3D(seed, i + i1, j + j1, k + k1, x1, y1, z1);
         }
         else n1 = 0.0f;
 
-        float n2 = 0.6f - x2 * x2 - y2 * y2 - z2 * z2;
+        float n2 = LIMIT3 - x2 * x2 - y2 * y2 - z2 * z2;
         if (n2 > 0) {
             n2 *= n2;
             n2 *= n2 * gradCoord3D(seed, i + i2, j + j2, k + k2, x2, y2, z2);
         }
         else n2 = 0.0f;
-        float n3 = 0.6f - x3 * x3 - y3 * y3 - z3 * z3;
+        float n3 = LIMIT3 - x3 * x3 - y3 * y3 - z3 * z3;
         if (n3 > 0) {
             n3 *= n3;
             n3 *= n3 * gradCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
@@ -378,7 +380,7 @@ public class SimplexNoise implements INoise {
         }
         else n4 = 0;
 
-        t = (n0 + n1 + n2 + n3 + n4) * 141;
+        t = (n0 + n1 + n2 + n3 + n4) * 141.000f;
         return t / (0.750f + Math.abs(t));
 //        return t / (1f + Math.abs(t));
     }
@@ -545,9 +547,9 @@ public class SimplexNoise implements INoise {
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
 
-        t = (n0 + n1 + n2 + n3 + n4 + n5) * 32f;
-//        return t / (1f + Math.abs(t));
+        t = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
         return t / (0.700f + Math.abs(t));
+//        return t / (1f + Math.abs(t));
 //        return (float) Math.tanh(t);
 //        return t / (float) Math.sqrt(1f + t * t);
     }
@@ -761,7 +763,7 @@ public class SimplexNoise implements INoise {
                     gradient6DLUT[hash + 3] * w6 + gradient6DLUT[hash + 4] * u6 + gradient6DLUT[hash + 5] * v6);
         }
 
-        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64f;
+        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64.000f;
         return t / (0.500f + Math.abs(t));
 //        return t / (1f + Math.abs(t));
     }
