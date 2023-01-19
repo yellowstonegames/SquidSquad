@@ -29,6 +29,24 @@ public class NoiseAdjustment implements INoise {
         this.adjustment = adjust;
     }
 
+    public INoise getWrapped() {
+        return wrapped;
+    }
+
+    public NoiseAdjustment setWrapped(INoise wrapped) {
+        this.wrapped = wrapped;
+        return this;
+    }
+
+    public FloatToFloatFunction getAdjustment() {
+        return adjustment;
+    }
+
+    public NoiseAdjustment setAdjustment(FloatToFloatFunction adjustment) {
+        this.adjustment = adjustment;
+        return this;
+    }
+
     @Override
     public int getMinDimension() {
         return wrapped.getMinDimension();
