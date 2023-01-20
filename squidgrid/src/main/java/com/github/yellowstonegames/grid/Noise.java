@@ -9792,6 +9792,9 @@ public class Noise implements INoise {
         }
     }
 
+    /**
+     * 256 x,y pairs, all on the unit circle.
+     */
     protected static final float[] GRADIENTS_2D = {
             +0.6499429579167653f, +0.7599829941876370f,
             -0.1551483029088119f, +0.9878911904175052f,
@@ -10051,6 +10054,10 @@ public class Noise implements INoise {
             +0.4625090142797330f, +0.8866145790082576f,
     };
 
+    /**
+     * The 32 vertices of a rhombic triacontahedron, scaled to have a magnitude of about 1.2571 .
+     * These are organized into groups of four; the fourth is always ignored, and is 0.
+     */
     protected static final float[] GRADIENTS_3D =
             {
                     -0.448549002408981f, +1.174316525459290f, +0.000000000000001f, +0.0f,

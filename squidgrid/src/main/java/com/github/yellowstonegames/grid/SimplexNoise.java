@@ -19,7 +19,11 @@ import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.grid.LongPointHash.hash256;
-import static com.github.yellowstonegames.grid.Noise.*;
+import static com.github.yellowstonegames.grid.Noise.GRADIENTS_2D;
+import static com.github.yellowstonegames.grid.Noise.GRADIENTS_3D;
+import static com.github.yellowstonegames.grid.Noise.GRADIENTS_4D;
+import static com.github.yellowstonegames.grid.Noise.GRADIENTS_5D;
+import static com.github.yellowstonegames.grid.Noise.GRADIENTS_6D;
 
 /**
  * Simplex noise functions, in 2D, 3D, 4D, 5D, and 6D. This approach uses a simple sigmoid function to confine the
