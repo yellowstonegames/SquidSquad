@@ -39,6 +39,7 @@ public class SimplexComparison extends ApplicationAdapter {
 
     private static final int width = 256, height = 256;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
+    private static final float LIGHT_YELLOW = Color.toFloatBits(1f, 1f, 0.4f, 1f);
 
     private InputAdapter input;
     
@@ -217,18 +218,26 @@ public class SimplexComparison extends ApplicationAdapter {
         renderer.end();
         if(Gdx.input.isKeyPressed(A)){ // Analysis
             renderer.begin(view.getCamera().combined, GL_LINES);
-            for (int i = 0; i < 256; i++) {
-                renderer.color(Color.ROYAL);
-                renderer.vertex(i, 0, 0);
-                renderer.color(Color.ROYAL);
+            for (int i = 0; i < 255; i++) {
+                renderer.color(LIGHT_YELLOW);
                 renderer.vertex(i, freq0[i] * 0x1p-3f, 0);
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+1, freq0[i+1] * 0x1p-3f, 0);
             }
-            for (int i = 0; i < 256; i++) {
-                renderer.color(Color.YELLOW);
-                renderer.vertex(i+width, 0, 0);
-                renderer.color(Color.YELLOW);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(255, 0 * 0x1p-3f, 0);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(256, 0 * 0x1p-3f, 0);
+            for (int i = 0; i < 255; i++) {
+                renderer.color(LIGHT_YELLOW);
                 renderer.vertex(i+width, freq1[i] * 0x1p-3f, 0);
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+1+width, freq1[i+1] * 0x1p-3f, 0);
             }
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(255+width, 0 * 0x1p-3f, 0);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(256+width, 0 * 0x1p-3f, 0);
             renderer.end();
         }
 
