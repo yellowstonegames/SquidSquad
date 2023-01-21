@@ -4285,6 +4285,7 @@ public class Region implements Collection<Coord> {
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
+     * @param temp2 another Region that will be cleared and used as a temporary buffer; optimally the same size as this
      * @return this, after expanding randomly, for chaining
      */
     public Region spill(Region bounds, int volume, EnhancedRandom rng, Region temp, Region temp2) {
@@ -4297,7 +4298,7 @@ public class Region implements Collection<Coord> {
                 if(temp2 == null) temp2 = new Region(this);
                 else temp2.remake(this);
                 temp.notAnd(bounds);
-                long[] b2 = temp.data;
+                long[] boundsData = temp.data;
                 temp2.remake(this).fringe().and(bounds).tally();
                 if (temp2.ct > 0) {
                     Coord c;
@@ -4313,16 +4314,16 @@ public class Region implements Collection<Coord> {
                             }
                             ct++;
                             temp2.data[p] &= ~(1L << (y & 63));
-                            if (x < width - 1 && (b2[p = (x + 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
+                            if (x < width - 1 && (boundsData[p = (x + 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y & 63);
                             }
-                            if (y < height - 1 && (b2[p = x * ySections + (y + 1 >> 6)] & 1L << (y + 1 & 63)) != 0) {
+                            if (y < height - 1 && (boundsData[p = x * ySections + (y + 1 >> 6)] & 1L << (y + 1 & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y + 1 & 63);
                             }
-                            if (y > 0 && (b2[p = x * ySections + (y - 1 >> 6)] & 1L << (y - 1 & 63)) != 0) {
+                            if (y > 0 && (boundsData[p = x * ySections + (y - 1 >> 6)] & 1L << (y - 1 & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y - 1 & 63);
                             }
-                            if (x > 0 && (b2[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
+                            if (x > 0 && (boundsData[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y & 63);
                             }
                             temp2.tally();

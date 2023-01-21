@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Performs randomized flood-fill operations on arbitrarily-shaped areas, until a volume is reached.
@@ -30,7 +31,68 @@ public class Spill {
     protected Region spillMap, passable;
     protected EnhancedRandom random;
 
-    public Spill(Region passable, EnhancedRandom random) {
+    /**
+     * Calls {@link #Spill(Region)} by creating a Region from {@code passable} with
+     * {@link Region#Region(char[][], char)} and a "yes" char of {@code '.'}.
+     * Uses a randomly-seeded {@link WhiskerRandom}.
+     * @param passable a rectangular 2D char array where {@code '.'} represents a walkable cell
+     */
+    public Spill(char[][] passable) {
+        this(new Region(passable, '.'));
+    }
+
+    /**
+     * Calls {@link #Spill(Region)} by creating a Region from {@code passable} with
+     * {@link Region#Region(char[][], char)} and a "yes" char of {@code floorChar}.
+     * Uses a randomly-seeded {@link WhiskerRandom}.
+     * @param passable a rectangular 2D char array where {@code floorChar} represents a walkable cell
+     * @param floorChar the char that is considered walkable in {@code passable}
+     */
+    public Spill(char[][] passable, char floorChar) {
+        this(new Region(passable, floorChar));
+    }
+
+    /**
+     * Calls {@link #Spill(Region)} by creating a Region from {@code passable} with
+     * {@link Region#Region(char[][], char)} and a "yes" char of {@code '.'}.
+     * Uses the given EnhancedRandom, or a randomly-seeded {@link WhiskerRandom} if it is null.
+     * @param passable a rectangular 2D char array where {@code '.'} represents a walkable cell
+     * @param random the random number generator to use; if null, this will use a random seed
+     */
+    public Spill(char[][] passable, @Nullable EnhancedRandom random) {
+        this(new Region(passable, '.'), random);
+    }
+
+    /**
+     * Calls {@link #Spill(Region)} by creating a Region from {@code passable} with
+     * {@link Region#Region(char[][], char)} and a "yes" char of {@code floorChar}.
+     * Uses the given EnhancedRandom, or a randomly-seeded {@link WhiskerRandom} if it is null.
+     * @param passable a rectangular 2D char array where {@code floorChar} represents a walkable cell
+     * @param floorChar the char that is considered walkable in {@code passable}
+     * @param random the random number generator to use; if null, this will use a random seed
+     */
+    public Spill(char[][] passable, char floorChar,  @Nullable EnhancedRandom random) {
+        this(new Region(passable, floorChar), random);
+    }
+
+    /**
+     * Constructs a Spill from the given Region, where "on" cells represent passable areas that the spill can move
+     * through and occupy.
+     * Uses a randomly-seeded {@link WhiskerRandom}.
+     * @param passable a Region where "on" cells can be moved through; will be referenced but not modified
+     */
+    public Spill(Region passable) {
+        this(passable, null);
+    }
+
+    /**
+     * Constructs a Spill from the given Region, where "on" cells represent passable areas that the spill can move
+     * through and occupy.
+     * Uses the given EnhancedRandom, or a randomly-seeded {@link WhiskerRandom} if it is null.
+     * @param passable a Region where "on" cells can be moved through; will be referenced but not modified
+     * @param random the random number generator to use; if null, this will use a random seed
+     */
+    public Spill(Region passable,  @Nullable EnhancedRandom random) {
         this.random = random == null ? new WhiskerRandom() : random;
         this.passable = passable == null ? new Region(32, 32) : passable;
         this.spillMap = new Region(this.passable.width, this.passable.height);
@@ -65,10 +127,19 @@ public class Spill {
         return spillMap.empty().insert(0, 0, entrances).spill(passable, volume, random, buffer, buffer2);
     }
 
+    /**
+     * Gets the last spillMap produced by {@link #run(Coord, int)}.
+     * @return the last spillMap, a Region, produced by one of the run methods
+     */
     public Region getSpillMap() {
         return spillMap;
     }
 
+    /**
+     * This probably won't be used often, but you can change the spillMap this uses here. This is returned by
+     * {@link #run(Coord, int)}.
+     * @param spillMap a non-null Region that should be the same size as {@link #getPassable()}
+     */
     public void setSpillMap(Region spillMap) {
         if(spillMap != null)
             this.spillMap = spillMap;
