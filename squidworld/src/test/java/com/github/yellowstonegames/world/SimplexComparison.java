@@ -47,8 +47,20 @@ public class SimplexComparison extends ApplicationAdapter {
     private int ctr = -256;
     private boolean keepGoing = true;
 
-    private int[] freq0 = new int[256], freq1 = new int[256];
-    
+    private final int[] freq0 = new int[256];
+    private final int[] freq1 = new int[256];
+
+    public float prepare0(float n) {
+        n = n * 0.5f + 0.5f;
+        freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length-1)]++;
+        return n;
+    }
+    public float prepare1(float n) {
+        n = n * 0.5f + 0.5f;
+        freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
+        return n;
+    }
+
     public float basicPrepare(float n)
     {
 //        if(n < -1f || n > 1f) {
@@ -56,17 +68,6 @@ public class SimplexComparison extends ApplicationAdapter {
 //            return Float.MAX_VALUE;
 //        }
         return n * 0.5f + 0.5f;
-    }
-
-    public float prepare0(float n) {
-        n = n * 0.5f + 0.5f;
-        freq0[(int)(n * 255.999)]++;
-        return n;
-    }
-    public float prepare1(float n) {
-        n = n * 0.5f + 0.5f;
-        freq1[(int)(n * 255.999)]++;
-        return n;
     }
 
     @Override
@@ -240,7 +241,6 @@ public class SimplexComparison extends ApplicationAdapter {
             renderer.vertex(256+width, 0 * 0x1p-3f, 0);
             renderer.end();
         }
-
     }
 
     @Override

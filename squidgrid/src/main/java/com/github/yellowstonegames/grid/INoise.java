@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 public interface INoise {
@@ -254,7 +255,7 @@ public interface INoise {
      */
     @Beta
     static float noiseSpline(float x, final float shape, float turning) {
-        final float d = (turning += 0.5f) - (x = x * 0.5f + 0.5f);
+        final float d = (turning = turning * 0.5f + 0.5f) - (x = x * 0.5f + 0.5f);
         final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
         return (((turning * n - f) * (x + f)) / (Float.MIN_NORMAL - f + (x + shape * d) * n) - f - 0.5f) * 2f;
     }

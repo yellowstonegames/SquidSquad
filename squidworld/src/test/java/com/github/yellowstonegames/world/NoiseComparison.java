@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
@@ -17,7 +18,10 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.grid.*;
 
+import java.util.Arrays;
+
 import static com.badlogic.gdx.Input.Keys.*;
+import static com.badlogic.gdx.graphics.GL20.GL_LINES;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 
 /**
@@ -31,7 +35,7 @@ public class NoiseComparison extends ApplicationAdapter {
             0f,   // 1, spline turning
             2f,   // 2, maelstrom exponent
             4f/3f,// 3, maelstrom mul
-            1.25f,// 4, maelstrom sub
+            5f/3f,// 4, maelstrom sub
     };
 //    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
 //    private FloatToFloatFunction fff = (f) -> (TrigTools.cos(f * 4f * TrigTools.PI2) > 0.9f) ? f < 0.1f ? 1f : 0.5f : -0.2f;
@@ -74,6 +78,21 @@ public class NoiseComparison extends ApplicationAdapter {
 
     private static final int width = 256, height = 256;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
+    private static final float LIGHT_YELLOW = Color.toFloatBits(1f, 1f, 0.4f, 1f);
+
+    private final int[] freq0 = new int[256];
+    private final int[] freq1 = new int[256];
+
+    public float prepare0(float n) {
+        n = n * 0.5f + 0.5f;
+        freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length-1)]++;
+        return n;
+    }
+    public float prepare1(float n) {
+        n = n * 0.5f + 0.5f;
+        freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
+        return n;
+    }
 
     private InputAdapter input;
     
@@ -173,20 +192,20 @@ public class NoiseComparison extends ApplicationAdapter {
                         break;
                     case NUM_0:
                     case NUMPAD_0:
-                        args[0] = Math.max(args[0] + (UIUtils.shift() ? 0.01f : -0.01f), 0.001f);
+                        args[0] = Math.max(args[0] + (UIUtils.shift() ? 0.05f : -0.05f), 0.001f);
                         break;
                     case NUM_1:
                     case NUMPAD_1:
-                        args[1] = Math.min(Math.max(args[1] + (UIUtils.shift() ? 0.01f : -0.01f), -1f), 1f);
+                        args[1] = Math.min(Math.max(args[1] + (UIUtils.shift() ? 0.05f : -0.05f), -1f), 1f);
                         break;
                     case NUM_2:
                     case NUMPAD_2:
                     {
-                        args[2] = Math.max(args[2] + (UIUtils.shift() ? 0.01f : -0.01f), 0.001f);
+                        args[2] = Math.max(args[2] + (UIUtils.shift() ? 0.05f : -0.05f), 0.001f);
                         float lo = 1f / args[2];
                         float halfDiff = 0.5f * (args[2] - lo);
                         args[3] = 1f / halfDiff;
-                        args[4] = halfDiff - args[2];
+                        args[4] = args[2] * args[3] - 1f;
                     }
                         break;
                     case K: // sKip
@@ -204,16 +223,18 @@ public class NoiseComparison extends ApplicationAdapter {
     }
 
     public void putMap() {
+        Arrays.fill(freq0, 0);
+        Arrays.fill(freq1, 0);
         renderer.begin(view.getCamera().combined, GL_POINTS);
         float bright, c = ctr * 0.5f;
         switch (dim) {
             case 0:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x + ctr, y + ctr));
+                        bright = prepare0(noise.getConfiguredNoise(x + ctr, y + ctr));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap.getNoiseWithSeed(x + ctr, y + ctr, bare.getSeed()));
+                        bright = prepare1(wrap.getNoiseWithSeed(x + ctr, y + ctr, bare.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -222,10 +243,10 @@ public class NoiseComparison extends ApplicationAdapter {
             case 1:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getConfiguredNoise(x, y, c));
+                        bright = prepare0(noise.getConfiguredNoise(x, y, c));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap.getNoiseWithSeed(x, y, c, bare.getSeed()));
+                        bright = prepare1(wrap.getNoiseWithSeed(x, y, c, bare.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -236,10 +257,10 @@ public class NoiseComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c;
-                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys));
+                        bright = prepare0(noise.getConfiguredNoise(xc, yc, xs, ys));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap.getNoiseWithSeed(xc, yc, xs, ys, bare.getSeed()));
+                        bright = prepare1(wrap.getNoiseWithSeed(xc, yc, xs, ys, bare.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -250,10 +271,10 @@ public class NoiseComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
-                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys, c));
+                        bright = prepare0(noise.getConfiguredNoise(xc, yc, xs, ys, c));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap.getNoiseWithSeed(xc, yc, xs, ys, c, bare.getSeed()));
+                        bright = prepare1(wrap.getNoiseWithSeed(xc, yc, xs, ys, c, bare.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -266,10 +287,10 @@ public class NoiseComparison extends ApplicationAdapter {
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
                                 zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
-                        bright = basicPrepare(noise.getConfiguredNoise(xc, yc, zc, xs, ys, zs));
+                        bright = prepare0(noise.getConfiguredNoise(xc, yc, zc, xs, ys, zs));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        bright = basicPrepare(wrap.getNoiseWithSeed(xc, yc, zc, xs, ys, zs, bare.getSeed()));
+                        bright = prepare1(wrap.getNoiseWithSeed(xc, yc, zc, xs, ys, zs, bare.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x + width, y, 0);
                     }
@@ -278,7 +299,30 @@ public class NoiseComparison extends ApplicationAdapter {
                 break;
         }
         renderer.end();
-
+        if(Gdx.input.isKeyPressed(A)){ // Analysis
+            renderer.begin(view.getCamera().combined, GL_LINES);
+            for (int i = 0; i < 255; i++) {
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i, freq0[i] * 0x1p-3f, 0);
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+1, freq0[i+1] * 0x1p-3f, 0);
+            }
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(255, 0 * 0x1p-3f, 0);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(256, 0 * 0x1p-3f, 0);
+            for (int i = 0; i < 255; i++) {
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+width, freq1[i] * 0x1p-3f, 0);
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+1+width, freq1[i+1] * 0x1p-3f, 0);
+            }
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(255+width, 0 * 0x1p-3f, 0);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(256+width, 0 * 0x1p-3f, 0);
+            renderer.end();
+        }
     }
 
     @Override
