@@ -4271,7 +4271,7 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding randomly, for chaining
      */
     public Region spill(Region bounds, int volume, EnhancedRandom rng) {
-        return spill(bounds, volume, rng, null);
+        return spill(bounds, volume, rng, null, null);
     }
     /**
      * A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
@@ -4287,22 +4287,23 @@ public class Region implements Collection<Coord> {
      * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
      * @return this, after expanding randomly, for chaining
      */
-    public Region spill(Region bounds, int volume, EnhancedRandom rng, Region temp) {
+    public Region spill(Region bounds, int volume, EnhancedRandom rng, Region temp, Region temp2) {
         Region result = this;
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             int current = size();
             if (current < volume) {
                 if(temp == null) temp = new Region(this);
                 else temp.remake(this);
+                if(temp2 == null) temp2 = new Region(this);
+                else temp2.remake(this);
                 temp.notAnd(bounds);
-                long[] b2 = new long[temp.data.length];
-                System.arraycopy(temp.data, 0, b2, 0, b2.length);
-                temp.remake(this).fringe().and(bounds).tally();
-                if (temp.ct > 0) {
+                long[] b2 = temp.data;
+                temp2.remake(this).fringe().and(bounds).tally();
+                if (temp2.ct > 0) {
                     Coord c;
                     int x, y, p;
                     for (int i = current; i < volume; i++) {
-                        c = temp.singleRandom(rng);
+                        c = temp2.singleRandom(rng);
                         x = c.x;
                         y = c.y;
                         if (data[p = x * ySections + (y >> 6)] != (data[p] |= 1L << (y & 63))) {
@@ -4311,22 +4312,21 @@ public class Region implements Collection<Coord> {
                                 if (counts[j] > 0) ++counts[j];
                             }
                             ct++;
-                            temp.data[p] &= ~(1L << (y & 63));
+                            temp2.data[p] &= ~(1L << (y & 63));
                             if (x < width - 1 && (b2[p = (x + 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
-                                temp.data[p] |= 1L << (y & 63);
+                                temp2.data[p] |= 1L << (y & 63);
                             }
                             if (y < height - 1 && (b2[p = x * ySections + (y + 1 >> 6)] & 1L << (y + 1 & 63)) != 0) {
-                                temp.data[p] |= 1L << (y + 1 & 63);
+                                temp2.data[p] |= 1L << (y + 1 & 63);
                             }
                             if (y > 0 && (b2[p = x * ySections + (y - 1 >> 6)] & 1L << (y - 1 & 63)) != 0) {
-                                temp.data[p] |= 1L << (y - 1 & 63);
+                                temp2.data[p] |= 1L << (y - 1 & 63);
                             }
                             if (x > 0 && (b2[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
-
-                                temp.data[p] |= 1L << (y & 63);
+                                temp2.data[p] |= 1L << (y & 63);
                             }
-                            temp.tally();
-                            if (temp.ct <= 0) break;
+                            temp2.tally();
+                            if (temp2.ct <= 0) break;
                         }
                     }
                     tallied = false;
