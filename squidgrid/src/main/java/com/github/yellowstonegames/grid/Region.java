@@ -4271,19 +4271,38 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding randomly, for chaining
      */
     public Region spill(Region bounds, int volume, EnhancedRandom rng) {
+        return spill(bounds, volume, rng, null);
+    }
+    /**
+     * A randomized flood-fill that modifies this Region so it randomly adds adjacent cells while staying inside
+     * the "on" cells of {@code bounds}, until {@link #size()} is equal to {@code volume} or there are no more cells
+     * this can expand into. This Region acts as the initial state, and often contains just one cell before this
+     * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
+     * <br>
+     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
+     * you have one with the same size as this, to use as working space.
+     * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
+     * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
+     * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
+     * @return this, after expanding randomly, for chaining
+     */
+    public Region spill(Region bounds, int volume, EnhancedRandom rng, Region temp) {
         Region result = this;
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             int current = size();
             if (current < volume) {
-                Region t = new Region(this).notAnd(bounds);
-                long[] b2 = new long[t.data.length];
-                System.arraycopy(t.data, 0, b2, 0, b2.length);
-                t.remake(this).fringe().and(bounds).tally();
-                if (t.ct > 0) {
+                if(temp == null) temp = new Region(this);
+                else temp.remake(this);
+                temp.notAnd(bounds);
+                long[] b2 = new long[temp.data.length];
+                System.arraycopy(temp.data, 0, b2, 0, b2.length);
+                temp.remake(this).fringe().and(bounds).tally();
+                if (temp.ct > 0) {
                     Coord c;
                     int x, y, p;
                     for (int i = current; i < volume; i++) {
-                        c = t.singleRandom(rng);
+                        c = temp.singleRandom(rng);
                         x = c.x;
                         y = c.y;
                         if (data[p = x * ySections + (y >> 6)] != (data[p] |= 1L << (y & 63))) {
@@ -4292,22 +4311,22 @@ public class Region implements Collection<Coord> {
                                 if (counts[j] > 0) ++counts[j];
                             }
                             ct++;
-                            t.data[p] &= ~(1L << (y & 63));
+                            temp.data[p] &= ~(1L << (y & 63));
                             if (x < width - 1 && (b2[p = (x + 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
-                                t.data[p] |= 1L << (y & 63);
+                                temp.data[p] |= 1L << (y & 63);
                             }
                             if (y < height - 1 && (b2[p = x * ySections + (y + 1 >> 6)] & 1L << (y + 1 & 63)) != 0) {
-                                t.data[p] |= 1L << (y + 1 & 63);
+                                temp.data[p] |= 1L << (y + 1 & 63);
                             }
                             if (y > 0 && (b2[p = x * ySections + (y - 1 >> 6)] & 1L << (y - 1 & 63)) != 0) {
-                                t.data[p] |= 1L << (y - 1 & 63);
+                                temp.data[p] |= 1L << (y - 1 & 63);
                             }
                             if (x > 0 && (b2[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
 
-                                t.data[p] |= 1L << (y & 63);
+                                temp.data[p] |= 1L << (y & 63);
                             }
-                            t.tally();
-                            if (t.ct <= 0) break;
+                            temp.tally();
+                            if (temp.ct <= 0) break;
                         }
                     }
                     tallied = false;
