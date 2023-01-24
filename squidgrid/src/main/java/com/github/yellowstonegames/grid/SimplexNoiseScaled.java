@@ -32,6 +32,10 @@ import static com.github.yellowstonegames.grid.Noise.GRADIENTS_6D;
  * scale by a rather small constant in 4D and up, most noise tends to be in the mid-range for those dimensions, with
  * very few extreme results. {@link SimplexNoise} uses a different approach for 4D, 5D, and 6D that makes extreme values
  * more frequent and ensures the results are in-range.
+ * <br>
+ * This generally has more issues in higher dimensions than {@link SimplexNoise} does, and becomes centrally-biased and
+ * cloudy very quickly. For that reason, this is marked as Beta, and this class may be removed in favor of SimplexNoise
+ * in the future. They share exactly the same API.
  */
 @Beta
 public class SimplexNoiseScaled implements INoise {
