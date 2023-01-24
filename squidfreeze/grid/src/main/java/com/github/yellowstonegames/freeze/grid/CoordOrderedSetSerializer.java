@@ -37,6 +37,6 @@ public class CoordOrderedSetSerializer extends CollectionSerializer<CoordOrdered
 
     @Override
     protected CoordOrderedSet createCopy(Kryo kryo, CoordOrderedSet original) {
-        return new CoordOrderedSet(original.size());
+        return new CoordOrderedSet(original.size(), original.getLoadFactor());
     }
 }

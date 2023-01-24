@@ -38,6 +38,6 @@ public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
 
     @Override
     protected CoordSet createCopy(Kryo kryo, CoordSet original) {
-        return new CoordSet(original.size());
+        return new CoordSet(original.size(), original.getLoadFactor());
     }
 }

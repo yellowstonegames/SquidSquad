@@ -39,6 +39,6 @@ public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap<?>> {
 
     @Override
     protected CoordObjectMap<?> createCopy(Kryo kryo, CoordObjectMap<?> original) {
-        return new CoordObjectMap<>(original.size());
+        return new CoordObjectMap<>(original.size(), original.getLoadFactor());
     }
 }

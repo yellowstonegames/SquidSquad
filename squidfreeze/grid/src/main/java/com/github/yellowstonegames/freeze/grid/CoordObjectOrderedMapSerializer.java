@@ -38,6 +38,6 @@ public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOr
 
     @Override
     protected CoordObjectOrderedMap<?> createCopy(Kryo kryo, CoordObjectOrderedMap<?> original) {
-        return new CoordObjectOrderedMap<>(original.size());
+        return new CoordObjectOrderedMap<>(original.size(), original.getLoadFactor());
     }
 }
