@@ -319,6 +319,7 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         IntList order = map.order();
+        y += font.cellHeight * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             font.drawGlyph(batch, map.getAt(i), x + extractX(pos), y + extractY(pos));
@@ -342,6 +343,7 @@ public class GlyphGrid extends Group {
         int pos;
         float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
         IntList order = map.order();
+        y += font.cellHeight * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             xPos = x + extractX(pos);
@@ -375,6 +377,7 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         int pos;
         long glyph;
+        y += font.cellHeight * 0.5f;
         for (int xx = startCellX; xx < endCellX; xx++) {
             for (int yy = startCellY; yy < endCellY; yy++) {
                 pos = fuse(xx, yy);
