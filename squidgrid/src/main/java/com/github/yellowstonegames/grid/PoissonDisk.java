@@ -22,10 +22,12 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.TrigTools;
 
-public class PoissonDisk {
+public final class PoissonDisk {
     private static final float inverseRootTwo = (float)Math.sqrt(0.5f);
 
-
+    /**
+     * No need to instantiate.
+     */
     private PoissonDisk() {
     }
 

@@ -32,7 +32,7 @@ import com.github.yellowstonegames.core.Interpolations.InterpolationFunction;
  * but doesn't add the end color (since it is the start color of the next partial gradient, until you finally end by
  * appending just the end). Using appendPartialGradient(), you can have each transition use a different number of steps.
  */
-public class ColorGradients {
+public final class ColorGradients {
     /**
      * No need to instantiate.
      */

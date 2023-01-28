@@ -31,7 +31,12 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 /**
  * Supplemental {@link Action} classes and methods to augment {@link Actions}.
  */
-public class MoreActions {
+public final class MoreActions {
+    /**
+     * No need to instantiate.
+     */
+    private MoreActions() {
+    }
 
     /**
      * Just like {@link ParallelAction}, but if given null Action items, it ignores them.

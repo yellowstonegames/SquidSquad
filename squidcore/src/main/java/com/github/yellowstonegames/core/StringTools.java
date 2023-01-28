@@ -34,7 +34,12 @@ import java.util.List;
  * supported by fonts, like {@link #COMMON_PUNCTUATION} and {@link #LATIN_LETTERS_UPPER}.
  * @author Tommy Ettinger
  */
-public class StringTools {
+public final class StringTools {
+    /**
+     * No need to instantiate.
+     */
+    private StringTools() {
+    }
     public static String join(CharSequence delimiter, CharSequence... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -898,7 +903,7 @@ public class StringTools {
         }
         return sb.toString();
     }
-    private static final Replacer anReplacer = new Replacer(Pattern.compile("\\b([Aa])(\\p{G}+)(?=[àáâãäåæāăąǻǽaèéêëēĕėęěeìíîïĩīĭįıiòóôõöøōŏőœǿoùúûüũūŭůűųu])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1n$2");
+    private static final Replacer anReplacer = new Replacer(Pattern.compile("\\b(a)(\\p{G}+)(?=[àáâãäåæāăąǻǽaèéêëēĕėęěeìíîïĩīĭįıiòóôõöøōŏőœǿoùúûüũūŭůűųu])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1n$2");
 
     /**
      * A simple method that looks for any occurrences of the word 'a' followed by some non-zero amount of whitespace and

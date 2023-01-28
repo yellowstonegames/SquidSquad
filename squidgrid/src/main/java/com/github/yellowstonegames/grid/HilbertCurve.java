@@ -35,7 +35,7 @@ package com.github.yellowstonegames.grid;
  * very often tends to have very close distances for very nearby 2D points.
  * @author Tommy Ettinger
  */
-public class HilbertCurve {
+public final class HilbertCurve {
     public static final int DEPTH = 8;
     private static final int BITS = DEPTH << 1;
 
@@ -86,6 +86,9 @@ public class HilbertCurve {
         initialized3D = true;
     }
 
+    /**
+     * No need to instantiate.
+     */
     private HilbertCurve()
     {
     }

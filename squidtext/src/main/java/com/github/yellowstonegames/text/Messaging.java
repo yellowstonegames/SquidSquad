@@ -83,7 +83,12 @@ import regexodus.TextBuffer;
  * </ul>
  * Created by Tommy Ettinger on 10/31/2016.
  */
-public class Messaging {
+public final class Messaging {
+    /**
+     * No need to instantiate.
+     */
+    private Messaging(){
+    }
 
     /**
      * Takes message and replaces any of the special terms this recognizes, like @, ^, and $, with the appropriately-

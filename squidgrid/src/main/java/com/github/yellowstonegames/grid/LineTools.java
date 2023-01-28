@@ -21,7 +21,10 @@ package com.github.yellowstonegames.grid;
  * This can be useful in both text-based games and graphical ones, where graphical games would use a single box-drawing
  * character, like any of {@code "╴╵┘╶─└┴╷┐│┤┌┬├┼"} to determine which wall graphic to draw at a position.
  */
-public class LineTools {
+public final class LineTools {
+    /**
+     * No need to instantiate.
+     */
     private LineTools(){
     }
     public static final char[] lightA0  = " ╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),

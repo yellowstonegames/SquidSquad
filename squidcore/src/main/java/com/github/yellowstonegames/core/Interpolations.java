@@ -18,7 +18,13 @@ package com.github.yellowstonegames.core;
 
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
-public class Interpolations {
+public final class Interpolations {
+
+    /**
+     * No need to instantiate.
+     */
+    private Interpolations() {
+    }
 
     /**
      * A type of function that takes a float from 0 to 1 (usually, and also usually inclusive) and returns a float that
