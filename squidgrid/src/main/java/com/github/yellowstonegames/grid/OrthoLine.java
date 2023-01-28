@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * A simple line-drawing algorithm that only takes orthogonal steps; may be useful for LOS in games that use Manhattan
  * distances for measurements.
- * Algorithm is from http://www.redblobgames.com/grids/line-drawing.html#stepping , thanks Amit!
+ * Algorithm is from <a href="http://www.redblobgames.com/grids/line-drawing.html#stepping">Red Blob Games</a>, thanks
+ * again to Amit!
  */
 public class OrthoLine implements LineDrawer {
 
@@ -82,7 +83,7 @@ public class OrthoLine implements LineDrawer {
         }
         buffer.add(Coord.get(startX, startY));
         for (int ix = 0, iy = 0; ix <= nx || iy <= ny; ) {
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 workX += signX;
                 ix++;
             } else {
@@ -121,7 +122,7 @@ public class OrthoLine implements LineDrawer {
         if(maxLength == 0) return buffer;
         buffer.add(Coord.get(startX, startY));
         for (int ix = 0, iy = 0; (ix <= nx || iy <= ny) && buffer.size() < maxLength; ) {
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 workX += signX;
                 ix++;
             } else {
@@ -225,7 +226,7 @@ public class OrthoLine implements LineDrawer {
                 return false; //too much resistance
             }
 
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 x += signX;
                 ix++;
             } else {
@@ -308,7 +309,7 @@ public class OrthoLine implements LineDrawer {
                 return false; //too much resistance
             }
 
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 x += signX;
                 ix++;
             } else {
@@ -349,7 +350,7 @@ public class OrthoLine implements LineDrawer {
         Coord[] drawn = new Coord[nx + ny + 1];
         drawn[0] = Coord.get(startX, startY);
         for (int i = 1, ix = 0, iy = 0; ix <= nx || iy <= ny; i++) {
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 workX += signX;
                 ix++;
             } else {
@@ -378,7 +379,7 @@ public class OrthoLine implements LineDrawer {
         if(maxLength == 0) return drawn;
         drawn[0] = Coord.get(startX, startY);
         for (int i = 1, ix = 0, iy = 0; ix <= nx || iy <= ny; i++) {
-            if ((0.5f + ix) / nx < (0.5f + iy) / ny) {
+            if ((1 + ix + ix) * ny < (1 + iy + iy) * nx) {
                 workX += signX;
                 ix++;
             } else {

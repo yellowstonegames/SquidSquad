@@ -58,7 +58,7 @@ public class BresenhamLine implements LineDrawer {
      * @return The path between {@code a} and {@code b}.
      */
     public static ObjectList<Coord> line(Coord a, Coord b) {
-        return line(a.x, a.y, b.x, b.y);
+        return line(a.x, a.y, b.x, b.y, 0x7fffffff, null);
     }
 
 
@@ -72,7 +72,7 @@ public class BresenhamLine implements LineDrawer {
      * @return The path between {@code a} and {@code b}.
      */
     public static Coord[] lineArray(Coord a, Coord b) {
-        return lineArray(a.x, a.y, b.x, b.y);
+        return lineArray(a.x, a.y, b.x, b.y, 0x7fffffff);
     }
 
     /**
@@ -98,7 +98,7 @@ public class BresenhamLine implements LineDrawer {
      */
     public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY) {
         // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
-        return line(startX, startY, targetX, targetY, 0x7fffffff);
+        return line(startX, startY, targetX, targetY, 0x7fffffff, null);
     }
 
     /**

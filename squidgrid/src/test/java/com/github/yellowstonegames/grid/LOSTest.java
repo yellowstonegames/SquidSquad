@@ -209,6 +209,39 @@ public class LOSTest {
         }
     }
     @Test
+    public void testOrthoLineDraw() {
+        char[][] grid = new char[21][21], interior = new char[19][19];
+        ArrayTools.fill(grid, '#');
+        ArrayTools.fill(interior, '.');
+        ArrayTools.insert(interior, grid, 1, 1);
+        float[][] res = new float[21][21], floors = new float[19][19];
+        ArrayTools.fill(res, 1f);
+        ArrayTools.insert(floors, res, 1, 1);
+        final ObjectList<Coord> buffer = new ObjectList<>(40);
+        final EnhancedRandom random = new WhiskerRandom(123);
+        for (int length = 0; length < 10; length++) {
+            System.out.println("\n" + length);
+            ArrayTools.insert(interior, grid, 1, 1);
+            {
+                buffer.clear();
+                int finalLength = length;
+                float theta = random.nextFloat();
+                int x = Math.round(TrigTools.cosTurns(theta) * length + 10);
+                int y = Math.round(TrigTools.sinTurns(theta) * length + 10);
+
+                OrthoLine.reachable(10, 10, x, y, length, res, buffer);
+                for(Coord c : buffer)
+                    grid[c.x][c.y] = '*';
+            }
+            for (int y = 0; y < 21; y++) {
+                for (int x = 0; x < 21; x++) {
+                    System.out.print(grid[x][y]);
+                }
+                System.out.println();
+            }
+        }
+    }
+    @Test
     public void testSadLineDraw() {
         char[][] grid = new char[21][21], interior = new char[19][19];
         ArrayTools.fill(grid, '#');
