@@ -259,4 +259,18 @@ public class ColorGradients {
         }
         return appending;
     }
+
+    /**
+     * Given an IntList of packed int Oklab colors (the kind the rest of this class produces), this edits that IntList
+     * so each color is converted to RGBA format (the kind typically displayed on-screen). This is useful as a last step
+     * before the gradient is complete, since assembling a gradient works better (and looks smoother) in Oklab space.
+     * @param colors an IntList of packed int Oklab colors, as produced by the rest of this class
+     * @return {@code colors}, after it has had each item changed to use RGBA format
+     */
+    public static IntList toRGBA8888(IntList colors) {
+        for (int i = 0, n = colors.size(); i < n; i++) {
+            colors.set(i, DescriptiveColor.toRGBA8888(colors.get(i)));
+        }
+        return colors;
+    }
 }
