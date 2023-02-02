@@ -27,5 +27,9 @@
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
     <inherits name="com.github.yellowstonegames.squidgrid" />
     <inherits name="com.github.tommyettinger.textratypist" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GlyphActor"/>
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GlyphGrid"/>
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.MoreActions"/>
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GridAction"/>
     <source path="glyph" />
 </module>
