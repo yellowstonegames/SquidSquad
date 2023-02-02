@@ -26,6 +26,6 @@
 <module>
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
     <inherits name="com.github.yellowstonegames.squidgrid" />
-    <inherits name="textratypist" />
+    <inherits name="com.github.tommyettinger.textratypist" />
     <source path="glyph" />
 </module>

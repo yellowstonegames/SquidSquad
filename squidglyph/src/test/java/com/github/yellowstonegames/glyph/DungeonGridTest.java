@@ -66,7 +66,7 @@ public class DungeonGridTest extends ApplicationAdapter {
         config.setTitle("Dungeon Map ('r' rebuilds!)");
         config.setWindowedMode(GRID_WIDTH * CELL_WIDTH, GRID_HEIGHT * CELL_HEIGHT);
         config.disableAudio(true);
-        config.setForegroundFPS(120);
+        config.setForegroundFPS(360); // shouldn't need to be any faster
         config.useVsync(true);
         new Lwjgl3Application(new DungeonGridTest(), config);
     }

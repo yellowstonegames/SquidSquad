@@ -25,9 +25,10 @@
   -->
 <module>
     <inherits name="com.github.tommyettinger.juniper" />
+    <inherits name="com.github.tommyettinger.funderby" />
     <inherits name="com.github.tommyettinger.digital" />
     <inherits name="com.github.tommyettinger.jdkgdxds" />
-    <inherits name="regexodus"/>
+    <inherits name="regexodus.regexodus"/>
     <super-source path="emu"/>
     <source path="core" />
 </module>
