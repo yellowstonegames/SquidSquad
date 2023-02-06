@@ -167,6 +167,11 @@ public class PhantomNoise implements INoise {
         return this;
     }
 
+    @Override
+    public String getTag() {
+        return "PhaN";
+    }
+
     public String serializeToString() {
         return "`" + hasher.seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }

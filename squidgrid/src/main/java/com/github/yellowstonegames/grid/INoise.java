@@ -122,6 +122,10 @@ public interface INoise {
         throw new UnsupportedOperationException("getSeed() is not supported.");
     }
 
+    default String getTag() {
+        return "(NO)";
+    }
+    
     default String serializeToString() {
         throw new UnsupportedOperationException("serializeToString() is not supported.");
     }

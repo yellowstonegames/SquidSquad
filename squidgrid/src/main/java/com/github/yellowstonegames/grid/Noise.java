@@ -604,6 +604,11 @@ public class Noise implements INoise {
         this.fractalSpiral = other.fractalSpiral;
     }
 
+    @Override
+    public String getTag() {
+        return "NoiN";
+    }
+
     /**
      * Writes all fields of this Noise (except for the {@link #getPointHash()}, which must be stored separately) to a
      * String and returns it. The result of this method can be used by {@link #deserializeFromString(String)}, though if

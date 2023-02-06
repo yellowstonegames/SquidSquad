@@ -58,6 +58,11 @@ public class HighDimensionalValueNoise implements INoise {
         return this;
     }
 
+    @Override
+    public String getTag() {
+        return "HDVN";
+    }
+
     public String serializeToString() {
         return "`" + seed + '~' + dim + '`';
     }

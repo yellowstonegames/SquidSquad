@@ -174,6 +174,11 @@ float cyclicNoise(vec3 p){
         setSeed(seed, frequency);
     }
 
+    @Override
+    public String getTag() {
+        return "CycN";
+    }
+
     public String serializeToString() {
         return "`" + seed + '~' + octaves + '~' + frequency + '`';
     }

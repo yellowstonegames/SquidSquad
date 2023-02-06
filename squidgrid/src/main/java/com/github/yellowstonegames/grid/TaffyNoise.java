@@ -124,6 +124,11 @@ public class TaffyNoise implements INoise {
 
     }
 
+    @Override
+    public String getTag() {
+        return "TafN";
+    }
+
     public String serializeToString() {
         return "`" + seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
     }

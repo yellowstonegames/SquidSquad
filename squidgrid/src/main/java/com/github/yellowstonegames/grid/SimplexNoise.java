@@ -798,6 +798,11 @@ public class SimplexNoise implements INoise {
         return seed;
     }
 
+    @Override
+    public String getTag() {
+        return "SimN";
+    }
+
     public String serializeToString() {
         return "`" + seed + "`";
     }

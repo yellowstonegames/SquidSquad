@@ -218,6 +218,11 @@ public class FlanNoise implements INoise {
         this.seed = seed;
     }
 
+    @Override
+    public String getTag() {
+        return "FlaN";
+    }
+
     public String serializeToString() {
         return "`" + seed + '~' + dim + '~' + detail + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }

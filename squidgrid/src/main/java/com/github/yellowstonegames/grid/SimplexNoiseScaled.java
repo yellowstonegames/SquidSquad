@@ -790,6 +790,11 @@ public class SimplexNoiseScaled implements INoise {
         return seed;
     }
 
+    @Override
+    public String getTag() {
+        return "SiSN";
+    }
+
     public String serializeToString() {
         return "`" + seed + "`";
     }

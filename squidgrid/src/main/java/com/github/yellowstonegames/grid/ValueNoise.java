@@ -39,6 +39,11 @@ public class ValueNoise implements INoise {
         this.seed = (int) (seed ^ seed >>> 32);
     }
 
+    @Override
+    public String getTag() {
+        return "ValN";
+    }
+
     public String serializeToString() {
         return "`" + seed + '`';
     }
