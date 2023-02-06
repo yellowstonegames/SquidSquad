@@ -43,7 +43,14 @@ public class ValueNoise implements INoise {
         return "`" + seed + '`';
     }
 
-    public static ValueNoise deserializeFromString(String data) {
+    public ValueNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 3)
+            return this;
+        this.seed = DigitTools.intFromDec(data, 1, data.indexOf('`', 2));
+        return this;
+    }
+
+    public static ValueNoise recreateFromString(String data) {
         if(data == null || data.length() < 3)
             return null;
         int seed =   DigitTools.intFromDec(data, 1, data.indexOf('`', 2));

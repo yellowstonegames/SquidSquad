@@ -41,7 +41,6 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlanNoise[] flans = new FlanNoise[7];
     private final HighDimensionalValueNoise[] vals = new HighDimensionalValueNoise[7];
     private final CyclicNoise cyclic = new CyclicNoise();
-    private final SorbetNoise sorbet = new SorbetNoise();
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 19;
@@ -178,7 +177,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
-                        sorbet.seed = s;
                         cyclic.setSeed(ls);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
@@ -193,7 +191,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                         cube.setState(s);
                         rug.setState(s);
                         quilt.setState(s);
-                        sorbet.seed = s;
                         cyclic.setSeed(ls);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
@@ -225,12 +222,10 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
                         cyclic.setOctaves(octaves + 1);
-                        sorbet.setOctaves(octaves + 1);
                         break;
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         cyclic.setOctaves(octaves + 1);
-                        sorbet.setOctaves(octaves + 1);
                         break;
                     case I: // inverse mode
                         if (inverse = !inverse) {

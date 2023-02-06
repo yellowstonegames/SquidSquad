@@ -790,13 +790,19 @@ public class SimplexNoiseScaled implements INoise {
         return seed;
     }
 
-    public String serializeString() {
+    public String serializeToString() {
         return "`" + seed + "`";
     }
 
-    public static SimplexNoiseScaled deserializeString(String data) {
+    public SimplexNoiseScaled deserializeFromString(String data) {
+        seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
+        return this;
+    }
+
+    public static SimplexNoiseScaled recreateFromString(String data) {
         return new SimplexNoiseScaled(DigitTools.longFromDec(data, 1, data.length() - 1));
     }
+
 
     @Override
     public String toString() {

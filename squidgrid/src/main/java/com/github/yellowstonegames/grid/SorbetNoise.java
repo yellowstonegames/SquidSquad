@@ -26,7 +26,8 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 /**
  * A mix of {@link CyclicNoise} with value noise; much less periodic than CyclicNoise alone. Largely based upon
  * <a href="https://www.shadertoy.com/view/3tcyD7">this ShaderToy by jeyko</a>, which in turn is based on
- * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>.
+ * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. This only supports 3D and does not
+ * implement {@link INoise}.
  */
 @Beta
 public class SorbetNoise {

@@ -798,11 +798,16 @@ public class SimplexNoise implements INoise {
         return seed;
     }
 
-    public String serializeString() {
+    public String serializeToString() {
         return "`" + seed + "`";
     }
 
-    public static SimplexNoise deserializeString(String data) {
+    public SimplexNoise deserializeFromString(String data) {
+        seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
+        return this;
+    }
+
+    public static SimplexNoise recreateFromString(String data) {
         return new SimplexNoise(DigitTools.longFromDec(data, 1, data.length() - 1));
     }
 

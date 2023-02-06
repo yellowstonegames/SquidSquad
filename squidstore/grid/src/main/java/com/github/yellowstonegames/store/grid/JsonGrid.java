@@ -58,7 +58,6 @@ public final class JsonGrid {
         registerTaffyNoise(json);
         registerFlanNoise(json);
         registerCyclicNoise(json);
-        registerSorbetNoise(json);
     }
 
     /**
@@ -464,7 +463,7 @@ public final class JsonGrid {
             @Override
             public FlanNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return FlanNoise.deserializeFromString(jsonData.asString());
+                return FlanNoise.recreateFromString(jsonData.asString());
             }
         });
     }
@@ -493,24 +492,47 @@ public final class JsonGrid {
     }
 
     /**
-     * Registers SorbetNoise with the given Json object, so SorbetNoise can be written to and read from JSON.
-     * This is a simple wrapper around SorbetNoise's built-in {@link SorbetNoise#serializeToString()} and
-     * {@link SorbetNoise#deserializeFromString(String)} methods.
+     * Registers SimplexNoise with the given Json object, so SimplexNoise can be written to and read from JSON.
+     * This is a simple wrapper around SimplexNoise's built-in {@link SimplexNoise#serializeToString()} and
+     * {@link SimplexNoise#deserializeFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSorbetNoise(@NonNull Json json) {
-        json.addClassTag("SorN", SorbetNoise.class);
-        json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
+    public static void registerSimplexNoise(@NonNull Json json) {
+        json.addClassTag("SimN", SimplexNoise.class);
+        json.setSerializer(SimplexNoise.class, new Json.Serializer<SimplexNoise>() {
             @Override
-            public void write(Json json, SorbetNoise object, Class knownType) {
+            public void write(Json json, SimplexNoise object, Class knownType) {
                 json.writeValue(object.serializeToString());
             }
 
             @Override
-            public SorbetNoise read(Json json, JsonValue jsonData, Class type) {
+            public SimplexNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return SorbetNoise.deserializeFromString(jsonData.asString());
+                return SimplexNoise.recreateFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SimplexNoiseScaled with the given Json object, so SimplexNoiseScaled can be written to and read from JSON.
+     * This is a simple wrapper around SimplexNoiseScaled's built-in {@link SimplexNoiseScaled#serializeToString()} and
+     * {@link SimplexNoiseScaled#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSimplexNoiseScaled(@NonNull Json json) {
+        json.addClassTag("SmSN", SimplexNoiseScaled.class);
+        json.setSerializer(SimplexNoiseScaled.class, new Json.Serializer<SimplexNoiseScaled>() {
+            @Override
+            public void write(Json json, SimplexNoiseScaled object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
+
+            @Override
+            public SimplexNoiseScaled read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return SimplexNoiseScaled.recreateFromString(jsonData.asString());
             }
         });
     }

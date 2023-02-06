@@ -31,9 +31,9 @@ public class HighDimensionalValueNoise implements INoise {
     /**
      * How many dimensions of noise to generate; usually at least 2.
      */
-    public final int dim;
-    protected transient final float[] working, input;
-    protected transient final long[] floors;
+    public int dim;
+    protected transient float[] working, input;
+    protected transient long[] floors;
 
     public HighDimensionalValueNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -47,12 +47,33 @@ public class HighDimensionalValueNoise implements INoise {
         this.seed = seed;
     }
 
+    public HighDimensionalValueNoise reassign(long seed, int dimension) {
+        if(dim != Math.max(2, dimension)) {
+            dim = Math.max(2, dimension);
+            input = new float[dim];
+            working = new float[dim + 1];
+            floors = new long[dim + 1];
+        }
+        this.seed = seed;
+        return this;
+    }
+
     public String serializeToString() {
         return "`" + seed + '~' + dim + '`';
     }
 
-    public static HighDimensionalValueNoise deserializeFromString(String data) {
-                if(data == null || data.length() < 5)
+    public HighDimensionalValueNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 5)
+            return this;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+
+        return reassign(seed, dim);
+    }
+
+    public static HighDimensionalValueNoise recreateFromString(String data) {
+        if(data == null || data.length() < 5)
             return null;
         int pos;
         long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));

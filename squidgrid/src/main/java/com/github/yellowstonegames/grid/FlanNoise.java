@@ -71,13 +71,13 @@ public class FlanNoise implements INoise {
 //    }
 
     public long seed;
-    public final int dim;
-    public final float sharpness;
-    public final int detail;
-    protected transient final int vc;
+    public int dim;
+    public float sharpness;
+    public int detail;
+    protected transient int vc;
     protected transient float inverse;
-    protected transient final float[] points, input;
-    protected transient final float[][] vertices;
+    protected transient float[] points, input;
+    protected transient float[][] vertices;
 
     public FlanNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -116,6 +116,37 @@ public class FlanNoise implements INoise {
 
         inverse = 1f / vc;
 //        printDebugInfo();
+    }
+
+    public FlanNoise reassign(long seed, int dimension, float sharpness, int detail) {
+        this.sharpness = 0.625f / sharpness;
+        boolean unchanged = (dim == Math.max(2, dimension) && this.detail == detail);
+        if(!unchanged) {
+            dim = Math.max(2, dimension);
+            this.detail = detail;
+            vc = dim * detail;
+            points = new float[vc];
+            input = new float[dim];
+            vertices = new float[vc][dim];
+            for (int v = 0; v < vc; v++) {
+                double sum = 0.0;
+                for (int d = 0; d < dim; d++) {
+                    double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
+                    g -= (int)g;
+                    g = EnhancedRandom.probit(g);
+                    vertices[v][d] = (float) g;
+                    sum += g * g;
+                }
+                sum = 1f / Math.sqrt(sum);
+                for (int d = 0; d < dim; d++) {
+                    vertices[v][d] *= sum;
+                }
+            }
+
+            inverse = 1f / vc;
+        }
+        this.seed = seed;
+        return this;
     }
 
     private void printDebugInfo() {
@@ -191,7 +222,19 @@ public class FlanNoise implements INoise {
         return "`" + seed + '~' + dim + '~' + detail + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
-    public static FlanNoise deserializeFromString(String data) {
+    public FlanNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 7)
+            return this;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        int detail =  DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
+
+        return reassign(seed, dim, 0.625f / sharp, detail);
+    }
+
+    public static FlanNoise recreateFromString(String data) {
         if(data == null || data.length() < 7)
             return null;
         int pos;
