@@ -60,20 +60,20 @@ public class PhantomNoise implements INoise {
     /**
      * Effectively, this contains the seed for the noise.
      */
-    public final Hasher hasher;
+    public Hasher hasher;
     /**
      * How many dimensions of noise to generate; usually at least 2.
      */
-    public final int dim;
+    public int dim;
     /**
      * This should go up linearly with dimension, typically, and is usually 0.825 times {@link #dim}.
      * It can be raised to make the noise more starkly black and white, or lowered to have more mid-gray values.
      */
-    public final float sharpness;
+    public float sharpness;
     protected float inverse;
-    protected transient final float[] working, points, input;
-    protected transient final float[][] vertices;
-    protected transient final int[] floors, hashFloors;
+    protected transient float[] working, points, input;
+    protected transient float[][] vertices;
+    protected transient int[] floors, hashFloors;
 
     public PhantomNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -112,18 +112,77 @@ public class PhantomNoise implements INoise {
             vertices[v][0] = TrigTools.cos(theta) * dist;
             vertices[v][1] = TrigTools.sin(theta) * dist;
         }
+        hasher = new Hasher(seed);
         floors = new int[dim+1];
         hashFloors = new int[dim+1];
-        hasher = new Hasher(seed);
         inverse = 1f / (dim + 1f);
 //        printDebugInfo();
+    }
+
+    /**
+     * Reassigns all members of this class at once, doing the same work the constructor does, but without creating a new
+     * PhantomNoise. This can also avoid recreating arrays if {@link #dim} is equal to {@code dimension}.
+     * @param seed
+     * @param dimension
+     * @param sharpness
+     * @return this PhantonNoise, after modification
+     */
+    public PhantomNoise reassign(long seed, int dimension, float sharpness) {
+        this.sharpness = sharpness;
+        boolean unchanged = (dim == Math.max(2, dimension));
+        if(!unchanged) {
+            dim = Math.max(2, dimension);
+            input = new float[dim];
+            working = new float[dim + 1];
+            points = new float[dim + 1];
+            vertices = new float[dim + 1][dim];
+
+            float id = -1f / dim;
+            vertices[0][0] = 1f;
+            for (int v = 1; v <= dim; v++) {
+                vertices[v][0] = id;
+            }
+            for (int d = 1; d < dim; d++) {
+                float t = 0f;
+                for (int i = 0; i < d; i++) {
+                    t += vertices[d][i] * vertices[d][i];
+                }
+                vertices[d][d] = (float) Math.sqrt(1f - t);
+                t = (id - t) / vertices[d][d];
+                for (int v = d + 1; v <= dim; v++) {
+                    vertices[v][d] = t;
+                }
+            }
+            floors = new int[dim+1];
+            hashFloors = new int[dim+1];
+            inverse = 1f / (dim + 1f);
+        }
+        for (int v = 0; v <= dim; v++) {
+            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+            vertices[v][0] = TrigTools.cos(theta) * dist;
+            vertices[v][1] = TrigTools.sin(theta) * dist;
+        }
+        hasher = new Hasher(seed);
+        return this;
     }
 
     public String serializeToString() {
         return "`" + hasher.seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
-    public static PhantomNoise deserializeFromString(String data) {
+    public PhantomNoise deserializeFromString(String data) {
+                if(data == null || data.length() < 7)
+            return this;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
+
+        return reassign(seed, dim, sharp);
+    }
+
+    public static PhantomNoise recreateFromString(String data) {
                 if(data == null || data.length() < 7)
             return null;
         int pos;
@@ -132,7 +191,6 @@ public class PhantomNoise implements INoise {
         float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
 
         return new PhantomNoise(seed, dim, sharp);
-
     }
 
     protected float valueNoise(int dim) {
@@ -294,6 +352,11 @@ public class PhantomNoise implements INoise {
     @Override
     public long getSeed() {
         return hasher.seed;
+    }
+
+    @Override
+    public void setSeed(long seed) {
+        reassign(seed, dim, sharpness);
     }
 
     @Override

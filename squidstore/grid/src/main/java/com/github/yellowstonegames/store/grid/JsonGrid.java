@@ -53,6 +53,7 @@ public final class JsonGrid {
         registerRadiance(json);
         registerLightingManager(json);
         registerNoise(json);
+//        registerNoiseWrapper(json);
         registerPhantomNoise(json);
         registerTaffyNoise(json);
         registerFlanNoise(json);
@@ -394,7 +395,7 @@ public final class JsonGrid {
             @Override
             public Noise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Noise.deserializeFromString(jsonData.asString());
+                return new Noise(1).deserializeFromString(jsonData.asString());
             }
         });
     }
@@ -417,7 +418,7 @@ public final class JsonGrid {
             @Override
             public PhantomNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return PhantomNoise.deserializeFromString(jsonData.asString());
+                return PhantomNoise.recreateFromString(jsonData.asString());
             }
         });
     }
@@ -440,7 +441,7 @@ public final class JsonGrid {
             @Override
             public TaffyNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return TaffyNoise.deserializeFromString(jsonData.asString());
+                return TaffyNoise.recreateFromString(jsonData.asString());
             }
         });
     }
@@ -486,7 +487,7 @@ public final class JsonGrid {
             @Override
             public CyclicNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return CyclicNoise.deserializeFromString(jsonData.asString());
+                return CyclicNoise.recreateFromString(jsonData.asString());
             }
         });
     }

@@ -629,9 +629,9 @@ public class Noise implements INoise {
      * @param data a String produced by {@link #serializeToString()}
      * @return a new Noise object matching the data stored in the given String
      */
-    public static Noise deserializeFromString(String data){
+    public Noise deserializeFromString(String data){
         if(data == null || data.length() < 27)
-            return null;
+            return this;
         int pos;
         int seed =                     DigitTools.intFromDec(data,     1, pos = data.indexOf('~'));
         int noiseType =                DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
@@ -649,17 +649,23 @@ public class Noise implements INoise {
         float sharpness =      BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1)));
         float mutation =           BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, pos = data.indexOf('`', pos+1)));
 
-        Noise next = new Noise(seed, frequency, noiseType, octaves, lacunarity, gain);
-        next.fractalType = fractalType;
-        next.interpolation = interpolation;
-        next.gradientPerturbAmp = gradientPerturbAmp;
-        next.cellularReturnType = cellularReturnType;
-        next.cellularDistanceFunction = cellularDistanceFunction;
-        next.sharpness = sharpness;
-        next.sharpnessInverse = 1f / sharpness;
-        next.mutation = mutation;
-        next.fractalSpiral = fractalSpiral;
-        return next;
+        setSeed(seed);
+        setFrequency(frequency);
+        setNoiseType(noiseType);
+        setFractalOctaves(octaves);
+        setFractalLacunarity(lacunarity);
+        setFractalGain(gain);
+        calculateFractalBounding();
+        this.fractalType = fractalType;
+        this.interpolation = interpolation;
+        this.gradientPerturbAmp = gradientPerturbAmp;
+        this.cellularReturnType = cellularReturnType;
+        this.cellularDistanceFunction = cellularDistanceFunction;
+        this.sharpness = sharpness;
+        this.sharpnessInverse = 1f / sharpness;
+        this.mutation = mutation;
+        this.fractalSpiral = fractalSpiral;
+        return this;
     }
 
     /**

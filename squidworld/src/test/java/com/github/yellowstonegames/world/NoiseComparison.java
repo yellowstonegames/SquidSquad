@@ -42,10 +42,10 @@ public class NoiseComparison extends ApplicationAdapter {
     private FloatToFloatFunction[] adjustments =
         {
                 (f) -> f,
-                (f) -> INoise.noiseSpline(f, args[0], args[1]),
+                (f) -> MathTools.noiseSpline(f, args[0], args[1]),
                 (f) -> MathTools.clamp((TrigTools.cos(f * 20) - 0.7f) * 4f, -0.6f, 1f - Math.abs(f)),
                 (f) -> (float) Math.pow(args[2], f) * args[3] - args[4],
-                (f) -> INoise.noiseSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1]),
+                (f) -> MathTools.noiseSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1]),
         };
     private int currentAdjustment = 0;
 

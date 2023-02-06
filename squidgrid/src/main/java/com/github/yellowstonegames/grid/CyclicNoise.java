@@ -178,14 +178,26 @@ float cyclicNoise(vec3 p){
         return "`" + seed + '~' + octaves + '~' + frequency + '`';
     }
 
-    public static CyclicNoise deserializeFromString(String data) {
+    public CyclicNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 5)
+            return this;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int octaves = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float freq  = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+
+        setSeed(seed, freq);
+        setOctaves(octaves);
+        return this;
+    }
+
+    public static CyclicNoise recreateFromString(String data) {
         if(data == null || data.length() < 5)
             return null;
         int pos;
         long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
         int octaves = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
         float freq  = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
-
         return new CyclicNoise(seed, octaves, freq);
     }
 

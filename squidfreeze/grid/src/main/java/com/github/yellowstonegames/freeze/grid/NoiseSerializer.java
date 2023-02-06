@@ -38,7 +38,7 @@ public class NoiseSerializer extends Serializer<Noise> {
 
     @Override
     public Noise read(final Kryo kryo, final Input input, final Class<? extends Noise> dataClass) {
-        return Noise.deserializeFromString(input.readString());
+        return new Noise(1).deserializeFromString(input.readString());
     }
 
     @Override

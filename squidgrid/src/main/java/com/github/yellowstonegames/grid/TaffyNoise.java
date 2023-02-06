@@ -41,11 +41,11 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 @Beta
 public class TaffyNoise implements INoise {
     public long seed;
-    public final int dim;
-    public final float sharpness;
+    public int dim;
+    public float sharpness;
     protected float inverse, lesserInverse;
-    protected transient final float[] working, points, input;
-    protected transient final float[][] vertices;
+    protected transient float[] working, points, input;
+    protected transient float[][] vertices;
 
     public TaffyNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
@@ -66,6 +66,22 @@ public class TaffyNoise implements INoise {
         lesserInverse = 1f / (dim + 4f);
         setSeed(seed);
 //        printDebugInfo();
+    }
+
+    public TaffyNoise reassign(long seed, int dimension, float sharpness) {
+        this.sharpness = 1f / sharpness;
+        boolean unchanged = (dim == Math.max(2, dimension));
+        if(!unchanged) {
+            dim = Math.max(2, dimension);
+            working = new float[dim + 1];
+            points = new float[dim + 1];
+            input = new float[dim];
+            vertices = new float[dim + 1][dim];
+            inverse = 1f / (dim + 1f);
+            lesserInverse = 1f / (dim + 4f);
+        }
+        setSeed(seed);
+        return this;
     }
 
     public long getSeed() {
@@ -112,7 +128,18 @@ public class TaffyNoise implements INoise {
         return "`" + seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
     }
 
-    public static TaffyNoise deserializeFromString(String data) {
+    public TaffyNoise deserializeFromString(String data) {
+        if(data == null || data.length() < 7)
+            return this;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int dim =     DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
+
+        return reassign(seed, dim, sharp);
+    }
+
+    public static TaffyNoise recreateFromString(String data) {
         if(data == null || data.length() < 7)
             return null;
         int pos;
@@ -121,7 +148,6 @@ public class TaffyNoise implements INoise {
         float sharp = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1)));
 
         return new TaffyNoise(seed, dim, sharp);
-
     }
 
     protected float valueNoise() {

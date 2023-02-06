@@ -33,7 +33,7 @@ public class PhantomNoiseSerializer extends Serializer<PhantomNoise> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final PhantomNoise data) {
-        output.writeLong(data.hasher.seed);
+        output.writeLong(data.getSeed());
         output.writeInt(data.dim, true);
         output.writeFloat(data.sharpness);
     }
