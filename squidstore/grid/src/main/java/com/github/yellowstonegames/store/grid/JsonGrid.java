@@ -370,7 +370,7 @@ public final class JsonGrid {
 
             @Override
             public Radiance read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return Radiance.deserializeFromString(jsonData.get("v").asString());
             }
         });
@@ -388,13 +388,40 @@ public final class JsonGrid {
         json.setSerializer(Noise.class, new Json.Serializer<Noise>() {
             @Override
             public void write(Json json, Noise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(Noise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public Noise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return new Noise(1).deserializeFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new Noise(1).deserializeFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers NoiseWrapper with the given Json object, so NoiseWrapper can be written to and read from JSON.
+     * This is a simple wrapper around NoiseWrapper's built-in {@link NoiseWrapper#serializeToString()} and
+     * {@link NoiseWrapper#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerNoiseWrapper(@NonNull Json json) {
+        json.addClassTag("NoWr", NoiseWrapper.class);
+        json.setSerializer(NoiseWrapper.class, new Json.Serializer<NoiseWrapper>() {
+            @Override
+            public void write(Json json, NoiseWrapper object, Class knownType) {
+                json.writeObjectStart(NoiseWrapper.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public NoiseWrapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new NoiseWrapper().deserializeFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -411,13 +438,15 @@ public final class JsonGrid {
         json.setSerializer(PhantomNoise.class, new Json.Serializer<PhantomNoise>() {
             @Override
             public void write(Json json, PhantomNoise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(PhantomNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public PhantomNoise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return PhantomNoise.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return PhantomNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -434,13 +463,15 @@ public final class JsonGrid {
         json.setSerializer(TaffyNoise.class, new Json.Serializer<TaffyNoise>() {
             @Override
             public void write(Json json, TaffyNoise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(TaffyNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public TaffyNoise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return TaffyNoise.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return TaffyNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -457,13 +488,15 @@ public final class JsonGrid {
         json.setSerializer(FlanNoise.class, new Json.Serializer<FlanNoise>() {
             @Override
             public void write(Json json, FlanNoise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(FlanNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public FlanNoise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return FlanNoise.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return FlanNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -480,13 +513,15 @@ public final class JsonGrid {
         json.setSerializer(CyclicNoise.class, new Json.Serializer<CyclicNoise>() {
             @Override
             public void write(Json json, CyclicNoise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(CyclicNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public CyclicNoise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return CyclicNoise.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return CyclicNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -503,13 +538,15 @@ public final class JsonGrid {
         json.setSerializer(SimplexNoise.class, new Json.Serializer<SimplexNoise>() {
             @Override
             public void write(Json json, SimplexNoise object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(SimplexNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
             }
 
             @Override
             public SimplexNoise read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return SimplexNoise.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SimplexNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -526,13 +563,66 @@ public final class JsonGrid {
         json.setSerializer(SimplexNoiseScaled.class, new Json.Serializer<SimplexNoiseScaled>() {
             @Override
             public void write(Json json, SimplexNoiseScaled object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeObjectStart(SimplexNoiseScaled.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
+
             }
 
             @Override
             public SimplexNoiseScaled read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return SimplexNoiseScaled.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SimplexNoiseScaled.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers HighDimensionalValueNoise with the given Json object, so HighDimensionalValueNoise can be written to and read from JSON.
+     * This is a simple wrapper around HighDimensionalValueNoise's built-in {@link HighDimensionalValueNoise#serializeToString()} and
+     * {@link HighDimensionalValueNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerHighDimensionalValueNoise(@NonNull Json json) {
+        json.addClassTag("HDVN", HighDimensionalValueNoise.class);
+        json.setSerializer(HighDimensionalValueNoise.class, new Json.Serializer<HighDimensionalValueNoise>() {
+            @Override
+            public void write(Json json, HighDimensionalValueNoise object, Class knownType) {
+                json.writeObjectStart(HighDimensionalValueNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public HighDimensionalValueNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return HighDimensionalValueNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers ValueNoise with the given Json object, so ValueNoise can be written to and read from JSON.
+     * This is a simple wrapper around ValueNoise's built-in {@link ValueNoise#serializeToString()} and
+     * {@link ValueNoise#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerValueNoise(@NonNull Json json) {
+        json.addClassTag("ValN", ValueNoise.class);
+        json.setSerializer(ValueNoise.class, new Json.Serializer<ValueNoise>() {
+            @Override
+            public void write(Json json, ValueNoise object, Class knownType) {
+                json.writeObjectStart(ValueNoise.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public ValueNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return ValueNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

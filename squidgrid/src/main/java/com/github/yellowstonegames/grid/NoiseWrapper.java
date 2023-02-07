@@ -171,7 +171,7 @@ public class NoiseWrapper implements INoise {
     }
 
     @Override
-    public INoise deserializeFromString(String data) {
+    public NoiseWrapper deserializeFromString(String data) {
         int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
         setWrapped(Serializer.deserialize(data.substring(1, pos)));
         setSeed(Base.BASE10.readLong(data, pos+2, pos = data.indexOf('~', pos+2)));
