@@ -404,6 +404,10 @@ public class Noise implements INoise {
      * Meant to be used with {@link #setCellularReturnType(int)}.
      */
     public static final int DISTANCE_2_DIV = 7;
+    /**
+     * Meant to be used with {@link #setCellularReturnType(int)}.
+     */
+    public static final int DISTANCE_VALUE = 8;
 
     /**
      * @see #getSeed()
@@ -1466,6 +1470,7 @@ public class Noise implements INoise {
                     case CELL_VALUE:
                     case NOISE_LOOKUP:
                     case DISTANCE:
+                    case DISTANCE_VALUE:
                         return singleCellular(x, y);
                     default:
                         return singleCellular2Edge(x, y);
@@ -1600,6 +1605,8 @@ public class Noise implements INoise {
                     case NOISE_LOOKUP:
                     case DISTANCE:
                         return singleCellular(x, y, z);
+                    case DISTANCE_VALUE:
+                        return singleCellularMerging(x, y, z);
                     default:
                         return singleCellular2Edge(x, y, z);
                 }
@@ -8579,6 +8586,8 @@ public class Noise implements INoise {
             case NOISE_LOOKUP:
             case DISTANCE:
                 return singleCellular(x, y, z);
+            case DISTANCE_VALUE:
+                return singleCellularMerging(x, y, z);
             default:
                 return singleCellular2Edge(x, y, z);
         }
@@ -8663,7 +8672,7 @@ public class Noise implements INoise {
 
         switch (cellularReturnType) {
             case CELL_VALUE:
-                return valCoord3D(0, xc, yc, zc);
+                return valCoord3D(seed, xc, yc, zc);
 
             case NOISE_LOOKUP:
                 Float3 vec = CELL_3D[hash256(xc, yc, zc, seed)];
@@ -8671,9 +8680,86 @@ public class Noise implements INoise {
 
             case DISTANCE:
                 return distance - 1;
+
             default:
                 return 0;
         }
+    }
+
+
+    protected float singleCellularMerging(float x, float y, float z) {
+        int xr = fastRound(x);
+        int yr = fastRound(y);
+        int zr = fastRound(z);
+
+        float distance = 999999, sum = 0f;
+        int hash;
+
+        switch (cellularDistanceFunction) {
+            case EUCLIDEAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = vecX * vecX + vecY * vecY + vecZ * vecZ;
+
+                            if (newDistance < 1)
+                            {
+                                distance = newDistance;
+                                sum += (hash - 127.5f) * (1f - distance);
+                            }
+                        }
+                    }
+                }
+                break;
+            case MANHATTAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
+
+                            if (newDistance < 1) {
+                                distance = newDistance;
+                                sum += (hash - 127.5f) * (1f - distance);
+                            }
+                        }
+                    }
+                }
+                break;
+            case NATURAL:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
+
+                            if (newDistance < 2) {
+                                distance = newDistance;
+                                sum += (hash - 127.5f) * (1f - 0.5f * distance);
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+//        sum /= 0.5f + distSum;
+        return sum / (64f + Math.abs(sum));
     }
 
     protected float singleCellular2Edge(float x, float y, float z) {
@@ -8767,6 +8853,7 @@ public class Noise implements INoise {
             case CELL_VALUE:
             case NOISE_LOOKUP:
             case DISTANCE:
+            case DISTANCE_VALUE:
                 return singleCellular(x, y);
             default:
                 return singleCellular2Edge(x, y);
@@ -8848,6 +8935,11 @@ public class Noise implements INoise {
 
             case DISTANCE:
                 return distance - 1;
+
+            case DISTANCE_VALUE:
+                float v = (hash32(xc, yc, seed) - 15.5f) * (2f - distance);
+                return v / (2f + Math.abs(v));
+
             default:
                 return 0;
         }

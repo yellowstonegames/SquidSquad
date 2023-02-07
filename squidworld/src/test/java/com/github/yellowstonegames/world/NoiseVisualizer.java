@@ -231,8 +231,14 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         break;
                     case P: //pause
                         keepGoing = !keepGoing;
-                    case C:
+                    case SPACE:
                         ctr++;
+                        break;
+                    case C:
+                        if(UIUtils.ctrl())
+                            noise.setCellularDistanceFunction((noise.getCellularDistanceFunction() + (UIUtils.shift() ? 2 : 1)) % 3);
+                        else
+                            noise.setCellularReturnType((noise.getCellularReturnType() + (UIUtils.shift() ? 8: 1)) % 9);
                         break;
                     case E: //earlier seed
                         noise.setSeed(noise.getSeed() - 1);
