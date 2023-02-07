@@ -16,9 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.tommyettinger.ds.ObjectObjectMap;
 
 public interface INoise {
     /**
@@ -246,5 +244,92 @@ public interface INoise {
         final float r = getNoise(x, y, z, w, u, v);
         setSeed(s);
         return r;
+    }
+
+    class Serializer {
+        /**
+         * Not instantiable.
+         */
+        private Serializer() {
+        }
+
+        private static final ObjectObjectMap<String, INoise> NOISE_BY_TAG = new ObjectObjectMap<>(16);
+
+        /**
+         * Given a (typically freshly-constructed and never-reused) INoise, this registers that instance by its
+         * {@link INoise#getTag()} in a Map, so that this type of INoise can be deserialized correctly by
+         * {@link #deserialize(String)}. The INoise type must implement {@link INoise#getTag()},
+         * {@link INoise#serializeToString()}, {@link INoise#deserializeFromString(String)}, and {@link INoise#copy()}.
+         *
+         * @param random a (typically freshly-constructed) INoise that should never be reused elsewhere
+         */
+        public static void register(INoise random) {
+            String tag = random.getTag();
+            if (!NOISE_BY_TAG.containsKey(tag))
+                NOISE_BY_TAG.put(tag, random);
+            else
+                System.err.println("When registering an INoise, a duplicate tag failed to register: " + tag);
+        }
+
+        static {
+            NOISE_BY_TAG.put("(NO)", null); // for classes that cannot be serialized
+            register(new CyclicNoise());
+            register(new FlanNoise());
+            register(new HighDimensionalValueNoise());
+            register(new Noise());
+            register(new PhantomNoise());
+            register(new SimplexNoise());
+            register(new SimplexNoiseScaled());
+            register(new TaffyNoise());
+            register(new ValueNoise());
+        }
+
+        /**
+         * Gets a copy of the INoise registered with the given tag, or null if this has nothing registered for the
+         * given tag.
+         *
+         * @param tag a non-null String that could be used as a tag for an INoise registered with this class
+         * @return a new copy of the corresponding INoise, or null if none was found
+         */
+        public static INoise get(String tag) {
+            INoise r = NOISE_BY_TAG.get(tag);
+            if (r == null) return null;
+            return r.copy();
+        }
+
+        /**
+         * Given an INoise that implements {@link #serializeToString()} and {@link #getTag()}, this produces a
+         * serialized String that stores the exact state of the INoise. This serialized String can be read back in by
+         * {@link #deserialize(String)}.
+         *
+         * @param noise an INoise that implements {@link #serializeToString()} and {@link #getTag()}
+         * @return a String that can be read back in by {@link #deserialize(String)}
+         */
+        public static String serialize(INoise noise) {
+            return noise.getTag() + noise.serializeToString();
+        }
+
+        /**
+         * Given a String produced by calling {@link #serialize(INoise)} on any registered implementation
+         * (as with {@link #register(INoise)}), this reads in the deserialized data and returns a new INoise
+         * of the appropriate type. This relies on the {@link INoise#getTag() tag} of the type being registered at
+         * deserialization time, though it doesn't actually need to be registered at serialization time. This cannot
+         * read back the direct output of {@link INoise#serializeToString()}; it needs the tag prepended by
+         * {@link #serialize(INoise)} to work.
+         *
+         * @param data serialized String data probably produced by {@link #serialize(INoise)}
+         * @return a new INoise with the appropriate type internally, using the state from data
+         */
+        public static INoise deserialize(String data) {
+            int idx = data.indexOf('`');
+            if (idx == -1)
+                throw new IllegalArgumentException("String given cannot represent a valid INoise.");
+            String tagData = data.substring(0, idx);
+            INoise root = NOISE_BY_TAG.get(tagData);
+            if (root == null)
+                throw new RuntimeException("Tag in given data is invalid or unknown.");
+            return root.copy().deserializeFromString(data.substring(idx));
+        }
+
     }
 }
