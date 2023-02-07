@@ -120,18 +120,57 @@ public interface INoise {
         throw new UnsupportedOperationException("getSeed() is not supported.");
     }
 
+    /**
+     * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
+     * If a duplicate tag is already registered and {@link Serializer#register(INoise)} attempts to register the same
+     * tag again, a message is printed to {@code System.err}. The default implementation returns the String
+     * {@code (NO)}, which is already registered in Serializer to a null value. Implementing this is required for any
+     * usage of Serializer.
+     * @return a short String constant that identifies this INoise type
+     */
     default String getTag() {
         return "(NO)";
     }
 
+    /**
+     * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
+     * in by {@link #deserializeFromString(String)} to reassign the described state to another INoise. The syntax here
+     * should always start with the {@code `} character, which is used by
+     * {@link Serializer#deserializeFromString(String)} to identify the portion of a String that can be read back.
+     * <br>
+     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
+     * implement any serialization methods, but they aren't serializable by the methods in this class or in
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link #copy()}.
+     * @return a String that describes this INoise for serialization
+     */
     default String serializeToString() {
         throw new UnsupportedOperationException("serializeToString() is not supported.");
     }
 
+    /**
+     * Given a serialized String produced by {@link #serializeToString()}, reassigns this INoise to have the described
+     * state from the given String. The serialized String must have been produced by the same class as this object is.
+     * <br>
+     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
+     * implement any serialization methods, but they aren't serializable by the methods in this class or in
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link #copy()}.
+     * @param data a serialized String, typically produced by {@link #serializeToString()}
+     * @return this INoise, after being modified (if possible)
+     */
     default INoise deserializeFromString(String data) {
         throw new UnsupportedOperationException("deserializeFromString() is not supported.");
     }
 
+    /**
+     * Creates a copy of this INoise, which should be a deep copy for any mutable state but can be shallow for immutable
+     * types such as functions. This almost always just calls a copy constructor.
+     * <br>
+     * The default implementation throws an {@link UnsupportedOperationException} only. Implementors are strongly
+     * encouraged to implement this in general, and that is required to use an INoise class with {@link Serializer}.
+     * @return a copy of this INoise
+     */
     default INoise copy() {
         throw new UnsupportedOperationException("copy() is not supported.");
     }
