@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
@@ -8701,17 +8702,18 @@ public class Noise implements INoise {
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
                         for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
 
                             float vecX = xi - x + vec.x;
                             float vecY = yi - y + vec.y;
                             float vecZ = zi - z + vec.z;
 
-                            float distance = vecX * vecX + vecY * vecY + vecZ * vecZ;
+                            float distance = 1f - (vecX * vecX + vecY * vecY + vecZ * vecZ);
 
-                            if (distance < 1)
-                            {
-                                sum += (hash - 127.5f) * (1f - distance);
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
                             }
                         }
                     }
@@ -8721,16 +8723,18 @@ public class Noise implements INoise {
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
                         for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
 
                             float vecX = xi - x + vec.x;
                             float vecY = yi - y + vec.y;
                             float vecZ = zi - z + vec.z;
 
-                            float distance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
+                            float distance = 1f - (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ));
 
-                            if (distance < 1) {
-                                sum += (hash - 127.5f) * (1f - distance);
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
                             }
                         }
                     }
@@ -8740,16 +8744,18 @@ public class Noise implements INoise {
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
                         for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash = hash256(xi, yi, zi, seed)];
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
 
                             float vecX = xi - x + vec.x;
                             float vecY = yi - y + vec.y;
                             float vecZ = zi - z + vec.z;
 
-                            float distance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
+                            float distance = 2f - ((Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ));
 
-                            if (distance < 2) {
-                                sum += (hash - 127.5f) * (1f - 0.5f * distance);
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance * 0.125f;
                             }
                         }
                     }
@@ -8951,15 +8957,17 @@ public class Noise implements INoise {
             case EUCLIDEAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        Float2 vec = CELL_2D[hash = hash256(xi, yi, seed)];
+                        hash = hashAll(xi, yi, seed);
+                        Float2 vec = CELL_2D[hash & 255];
 
                         float vecX = xi - x + vec.x;
                         float vecY = yi - y + vec.y;
 
-                        float distance = vecX * vecX + vecY * vecY;
+                        float distance = 1f - (vecX * vecX + vecY * vecY);
 
-                        if (distance < 1) {
-                            sum += (hash - 127.5f) * (1f - distance);
+                        if (distance > 0f) {
+                            distance *= 3f;
+                            sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
                         }
                     }
                 }
@@ -8967,15 +8975,17 @@ public class Noise implements INoise {
             case MANHATTAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        Float2 vec = CELL_2D[hash = hash256(xi, yi, seed)];
+                        hash = hashAll(xi, yi, seed);
+                        Float2 vec = CELL_2D[hash & 255];
 
                         float vecX = xi - x + vec.x;
                         float vecY = yi - y + vec.y;
 
-                        float distance = Math.abs(vecX) + Math.abs(vecY);
+                        float distance = 1f - (Math.abs(vecX) + Math.abs(vecY));
 
-                        if (distance < 1) {
-                            sum += (hash - 127.5f) * (1f - distance);
+                        if (distance > 0f) {
+                            distance *= 3f;
+                            sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
                         }
                     }
                 }
@@ -8983,15 +8993,17 @@ public class Noise implements INoise {
             case NATURAL:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        Float2 vec = CELL_2D[hash = hash256(xi, yi, seed)];
+                        hash = hashAll(xi, yi, seed);
+                        Float2 vec = CELL_2D[hash & 255];
 
                         float vecX = xi - x + vec.x;
                         float vecY = yi - y + vec.y;
 
-                        float distance = (Math.abs(vecX) + Math.abs(vecY)) + (vecX * vecX + vecY * vecY);
+                        float distance = 2f - ((Math.abs(vecX) + Math.abs(vecY)) + (vecX * vecX + vecY * vecY));
 
-                        if (distance < 2) {
-                            sum += (hash - 127.5f) * (1f - 0.5f * distance);
+                        if (distance > 0f) {
+                            distance *= 3f;
+                            sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance * 0.125f;
                         }
                     }
                 }
