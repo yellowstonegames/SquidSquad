@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TrigTools;
 
 import static com.github.yellowstonegames.grid.Noise.*;
@@ -86,7 +87,7 @@ public class NoiseWrapper implements INoise {
     }
 
     /**
-     * Wra[s {@link #setFractalType(int)}
+     * Wraps {@link #setFractalType(int)}
      * @param mode an int between 0 and 3, corresponding to {@link Noise#FBM}, {@link Noise#BILLOW}, {@link Noise#RIDGED_MULTI}, or {@link Noise#DOMAIN_WARP}
      */
     public void setMode(int mode) {
@@ -152,6 +153,33 @@ public class NoiseWrapper implements INoise {
     @Override
     public boolean canUseSeed() {
         return wrapped.canUseSeed();
+    }
+
+    @Override
+    public String getTag() {
+        return "WraN";
+    }
+
+    @Override
+    public String serializeToString() {
+        return "`" + Serializer.serialize(wrapped) + '~' +
+                seed + '~' +
+                frequency + '~' +
+                mode + '~' +
+                octaves + '~' +
+                (fractalSpiral ? '1' : '0') + '`';
+    }
+
+    @Override
+    public INoise deserializeFromString(String data) {
+        int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
+        setWrapped(Serializer.deserialize(data.substring(1, pos)));
+        setSeed(Base.BASE10.readLong(data, pos+2, pos = data.indexOf('~', pos+2)));
+        setFrequency(Float.parseFloat(data.substring(pos+1, pos = data.indexOf('~', pos+2))));
+        setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
+        setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
+        setFractalSpiral(data.charAt(pos+1) == 1);
+        return this;
     }
 
     @Override
