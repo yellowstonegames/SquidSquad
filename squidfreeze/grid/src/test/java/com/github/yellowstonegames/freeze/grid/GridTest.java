@@ -29,30 +29,6 @@ import java.io.ByteArrayOutputStream;
 
 public class GridTest {
     @Test
-    public void testNoise() {
-        Kryo kryo = new Kryo();
-        kryo.register(Noise.class, new NoiseSerializer());
-
-        Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
-        data.setFractalSpiral(true);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
-        kryo.writeObject(output, data);
-        byte[] bytes = output.toBytes();
-        try (Input input = new Input(bytes)) {
-            Noise data2 = kryo.readObject(input, Noise.class);
-            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
-            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
-            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
-            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
-            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
-            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
-            Assert.assertEquals(data, data2);
-        }
-    }
-
-    @Test
     public void testCoord() {
         Kryo kryo = new Kryo();
         kryo.register(Coord.class, new CoordSerializer());
@@ -284,6 +260,56 @@ public class GridTest {
     }
 
     @Test
+    public void testLightingManager() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(int[][].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(Radiance.class, new RadianceSerializer());
+        kryo.register(Region.class, new RegionSerializer());
+        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(LightingManager.class, new LightingManagerSerializer());
+
+        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
+        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LightingManager data2 = kryo.readObject(input, LightingManager.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(Noise.class, new NoiseSerializer());
+
+        Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
+        data.setFractalSpiral(true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Noise data2 = kryo.readObject(input, Noise.class);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testPhantomNoise() {
         Kryo kryo = new Kryo();
         kryo.register(PhantomNoise.class, new PhantomNoiseSerializer());
@@ -356,30 +382,89 @@ public class GridTest {
     }
 
     @Test
-    public void testLightingManager() {
+    public void testSimplexNoise() {
         Kryo kryo = new Kryo();
-        kryo.register(int[].class);
-        kryo.register(int[][].class);
-        kryo.register(float[].class);
-        kryo.register(float[][].class);
-        kryo.register(Coord.class, new CoordSerializer());
-        kryo.register(Radiance.class, new RadianceSerializer());
-        kryo.register(Region.class, new RegionSerializer());
-        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-        kryo.register(LightingManager.class, new LightingManagerSerializer());
+        kryo.register(SimplexNoise.class, new SimplexNoiseSerializer());
 
-        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
-        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+        SimplexNoise data = new SimplexNoise(-9876543210L);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
         Output output = new Output(baos);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
-            LightingManager data2 = kryo.readObject(input, LightingManager.class);
+            SimplexNoise data2 = kryo.readObject(input, SimplexNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testSimplexNoiseScaled() {
+        Kryo kryo = new Kryo();
+        kryo.register(SimplexNoiseScaled.class, new SimplexNoiseScaledSerializer());
+
+        SimplexNoiseScaled data = new SimplexNoiseScaled(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            SimplexNoiseScaled data2 = kryo.readObject(input, SimplexNoiseScaled.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testValueNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(ValueNoise.class, new ValueNoiseSerializer());
+
+        ValueNoise data = new ValueNoise(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            ValueNoise data2 = kryo.readObject(input, ValueNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testHighDimensionalValueNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(HighDimensionalValueNoise.class, new HighDimensionalValueNoiseSerializer());
+
+        HighDimensionalValueNoise data = new HighDimensionalValueNoise(1234, 8);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            HighDimensionalValueNoise data2 = kryo.readObject(input, HighDimensionalValueNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
     @Test
     public void testNoiseWrapper() {
         Kryo kryo = new Kryo();
