@@ -53,7 +53,7 @@ public class NoiseWrapper implements INoise {
     }
 
     public NoiseWrapper(NoiseWrapper other) {
-        setWrapped(other.getWrapped());
+        setWrapped(other.getWrapped().copy());
         setSeed(other.getSeed());
         setFrequency(other.getFrequency());
         setFractalType(other.getFractalType());
@@ -152,6 +152,11 @@ public class NoiseWrapper implements INoise {
     @Override
     public boolean canUseSeed() {
         return wrapped.canUseSeed();
+    }
+
+    @Override
+    public NoiseWrapper copy() {
+        return new NoiseWrapper(this);
     }
 
     @Override

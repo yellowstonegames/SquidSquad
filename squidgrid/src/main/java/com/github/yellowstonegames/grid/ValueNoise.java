@@ -63,6 +63,11 @@ public class ValueNoise implements INoise {
         return new ValueNoise(seed);
     }
 
+    @Override
+    public ValueNoise copy() {
+        return new ValueNoise(seed);
+    }
+
     public static float valueNoise(int seed, float x) {
         final int STEPX = 0x9E377;
         int xFloor = MathTools.fastFloor(x);

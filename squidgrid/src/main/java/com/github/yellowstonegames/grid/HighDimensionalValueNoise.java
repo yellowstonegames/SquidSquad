@@ -87,6 +87,11 @@ public class HighDimensionalValueNoise implements INoise {
         return new HighDimensionalValueNoise(seed, dim);
     }
 
+    @Override
+    public HighDimensionalValueNoise copy() {
+        return new HighDimensionalValueNoise(seed, dim);
+    }
+
     public float getNoise(float... args) {
         return noise(args.length, args);
     }

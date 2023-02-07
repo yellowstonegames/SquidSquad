@@ -155,6 +155,11 @@ public class TaffyNoise implements INoise {
         return new TaffyNoise(seed, dim, sharp);
     }
 
+    @Override
+    public TaffyNoise copy() {
+        return new TaffyNoise(seed, dim, sharpness);
+    }
+
     protected float valueNoise() {
         return valueNoise(dim);
     }

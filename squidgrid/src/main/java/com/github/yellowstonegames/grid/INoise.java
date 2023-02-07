@@ -125,13 +125,17 @@ public interface INoise {
     default String getTag() {
         return "(NO)";
     }
-    
+
     default String serializeToString() {
         throw new UnsupportedOperationException("serializeToString() is not supported.");
     }
 
     default INoise deserializeFromString(String data) {
         throw new UnsupportedOperationException("deserializeFromString() is not supported.");
+    }
+
+    default INoise copy() {
+        throw new UnsupportedOperationException("copy() is not supported.");
     }
 
     /**

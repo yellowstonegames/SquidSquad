@@ -198,6 +198,11 @@ public class PhantomNoise implements INoise {
         return new PhantomNoise(seed, dim, sharp);
     }
 
+    @Override
+    public PhantomNoise copy() {
+        return new PhantomNoise(hasher.seed, dim, sharpness);
+    }
+
     protected float valueNoise(int dim) {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {

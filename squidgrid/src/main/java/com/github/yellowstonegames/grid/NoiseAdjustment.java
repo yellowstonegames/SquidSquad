@@ -63,6 +63,11 @@ public class NoiseAdjustment implements INoise {
     }
 
     @Override
+    public NoiseAdjustment copy() {
+        return new NoiseAdjustment(wrapped.copy(), adjustment);
+    }
+
+    @Override
     public float getNoise(float x, float y) {
         return adjustment.applyAsFloat(wrapped.getNoise(x, y));
     }

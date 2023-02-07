@@ -808,6 +808,10 @@ public class SimplexNoiseScaled implements INoise {
         return new SimplexNoiseScaled(DigitTools.longFromDec(data, 1, data.length() - 1));
     }
 
+    @Override
+    public SimplexNoiseScaled copy() {
+        return new SimplexNoiseScaled(seed);
+    }
 
     @Override
     public String toString() {

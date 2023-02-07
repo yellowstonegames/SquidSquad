@@ -251,6 +251,11 @@ public class FlanNoise implements INoise {
         return new FlanNoise(seed, dim, 0.625f / sharp, detail);
     }
 
+    @Override
+    public FlanNoise copy() {
+        return new FlanNoise(seed, dim, 0.625f / sharpness, detail);
+    }
+
     public float getNoise(float... args) {
         for (int v = 0; v < vc; v++) {
             points[v] = 0.0f;

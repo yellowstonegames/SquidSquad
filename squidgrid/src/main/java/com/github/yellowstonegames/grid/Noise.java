@@ -673,6 +673,11 @@ public class Noise implements INoise {
         return this;
     }
 
+    @Override
+    public Noise copy() {
+        return new Noise(this);
+    }
+
     /**
      * @return Returns the seed used by this object
      */

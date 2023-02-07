@@ -817,6 +817,11 @@ public class SimplexNoise implements INoise {
     }
 
     @Override
+    public SimplexNoise copy() {
+        return new SimplexNoise(seed);
+    }
+
+    @Override
     public String toString() {
         return "SimplexNoise{seed=" + seed + "}";
     }

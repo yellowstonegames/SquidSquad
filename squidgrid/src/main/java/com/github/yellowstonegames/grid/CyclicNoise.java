@@ -183,6 +183,11 @@ float cyclicNoise(vec3 p){
         return "`" + seed + '~' + octaves + '~' + frequency + '`';
     }
 
+    @Override
+    public CyclicNoise copy() {
+        return new CyclicNoise(seed, octaves, frequency);
+    }
+
     public CyclicNoise deserializeFromString(String data) {
         if(data == null || data.length() < 5)
             return this;
