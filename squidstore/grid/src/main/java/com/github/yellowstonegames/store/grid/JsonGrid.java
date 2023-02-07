@@ -53,11 +53,15 @@ public final class JsonGrid {
         registerRadiance(json);
         registerLightingManager(json);
         registerNoise(json);
-//        registerNoiseWrapper(json);
+        registerNoiseWrapper(json);
         registerPhantomNoise(json);
         registerTaffyNoise(json);
         registerFlanNoise(json);
         registerCyclicNoise(json);
+        registerSimplexNoise(json);
+        registerSimplexNoiseScaled(json);
+        registerValueNoise(json);
+        registerHighDimensionalValueNoise(json);
     }
 
     /**

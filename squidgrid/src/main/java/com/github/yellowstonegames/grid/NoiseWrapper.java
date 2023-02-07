@@ -174,11 +174,11 @@ public class NoiseWrapper implements INoise {
     public NoiseWrapper deserializeFromString(String data) {
         int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
         setWrapped(Serializer.deserialize(data.substring(1, pos)));
-        setSeed(Base.BASE10.readLong(data, pos+2, pos = data.indexOf('~', pos+2)));
+        setSeed(Base.BASE10.readLong(data, pos+1, pos = data.indexOf('~', pos+2)));
         setFrequency(Float.parseFloat(data.substring(pos+1, pos = data.indexOf('~', pos+2))));
         setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
-        setFractalSpiral(data.charAt(pos+1) == 1);
+        setFractalSpiral(data.charAt(pos+1) == '1');
         return this;
     }
 

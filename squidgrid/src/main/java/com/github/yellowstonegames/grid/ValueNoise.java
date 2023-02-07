@@ -68,6 +68,28 @@ public class ValueNoise implements INoise {
         return new ValueNoise(seed);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ValueNoise that = (ValueNoise) o;
+
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        return seed;
+    }
+
+    @Override
+    public String toString() {
+        return "ValueNoise{" +
+                "seed=" + seed +
+                '}';
+    }
+
     public static float valueNoise(int seed, float x) {
         final int STEPX = 0x9E377;
         int xFloor = MathTools.fastFloor(x);

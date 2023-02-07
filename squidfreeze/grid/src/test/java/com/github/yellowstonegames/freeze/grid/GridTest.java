@@ -387,7 +387,6 @@ public class GridTest {
         kryo.register(NoiseWrapper.class, new NoiseWrapperSerializer());
 
         NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
-        data.setFractalSpiral(true);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
         Output output = new Output(baos);
