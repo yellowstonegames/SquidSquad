@@ -1625,7 +1625,6 @@ public class Noise implements INoise {
                         return singleSimplexFractalFBM(x, y, z);
                 }
             case CELLULAR:
-            case CELLULAR_FRACTAL: // not covered yet
                 switch (cellularReturnType) {
                     case CELL_VALUE:
                     case NOISE_LOOKUP:
@@ -1635,6 +1634,17 @@ public class Noise implements INoise {
                         return singleCellularMerging(seed, x, y, z);
                     default:
                         return singleCellular2Edge(seed, x, y, z);
+                }
+            case CELLULAR_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleCellularFractalBillow(x, y, z);
+                    case RIDGED_MULTI:
+                        return singleCellularFractalRidgedMulti(x, y, z);
+                    case DOMAIN_WARP:
+                        return singleCellularFractalDomainWarp(x, y, z);
+                    default:
+                        return singleCellularFractalFBM(x, y, z);
                 }
             case WHITE_NOISE:
                 return getWhiteNoise(x, y, z);
@@ -8601,289 +8611,7 @@ public class Noise implements INoise {
 //                * CUBIC_4D_BOUNDING;
     }
 
-    // Cellular Noise
-    public float getCellular(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (cellularReturnType) {
-            case CELL_VALUE:
-            case NOISE_LOOKUP:
-            case DISTANCE:
-                return singleCellular(seed, x, y, z);
-            case DISTANCE_VALUE:
-                return singleCellularMerging(seed, x, y, z);
-            default:
-                return singleCellular2Edge(seed, x, y, z);
-        }
-    }
-
-    protected float switchCellular(int seed, float x, float y, float z) {
-        switch (cellularReturnType) {
-            case CELL_VALUE:
-            case NOISE_LOOKUP:
-            case DISTANCE:
-                return singleCellular(seed, x, y, z);
-            case DISTANCE_VALUE:
-                return singleCellularMerging(seed, x, y, z);
-            default:
-                return singleCellular2Edge(seed, x, y, z);
-        }
-    }
-
-    protected float singleCellular(int seed, float x, float y, float z) {
-        int xr = fastRound(x);
-        int yr = fastRound(y);
-        int zr = fastRound(z);
-
-        float distance = 999999;
-        int xc = 0, yc = 0, zc = 0;
-
-        switch (cellularDistanceFunction) {
-            case EUCLIDEAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = vecX * vecX + vecY * vecY + vecZ * vecZ;
-
-                            if (newDistance < distance) {
-                                distance = newDistance;
-                                xc = xi;
-                                yc = yi;
-                                zc = zi;
-                            }
-                        }
-                    }
-                }
-                break;
-            case MANHATTAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
-
-                            if (newDistance < distance) {
-                                distance = newDistance;
-                                xc = xi;
-                                yc = yi;
-                                zc = zi;
-                            }
-                        }
-                    }
-                }
-                break;
-            case NATURAL:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
-
-                            if (newDistance < distance) {
-                                distance = newDistance;
-                                xc = xi;
-                                yc = yi;
-                                zc = zi;
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-
-        switch (cellularReturnType) {
-            case CELL_VALUE:
-                return valCoord3D(seed, xc, yc, zc);
-
-            case NOISE_LOOKUP:
-                Float3 vec = CELL_3D[hash256(xc, yc, zc, seed)];
-                return layered3D(xc + vec.x, yc + vec.y, zc + vec.z, 123, 3);
-
-            case DISTANCE:
-                return distance - 1;
-
-            default:
-                return 0;
-        }
-    }
-
-
-    protected float singleCellularMerging(int seed, float x, float y, float z) {
-        int xr = fastRound(x);
-        int yr = fastRound(y);
-        int zr = fastRound(z);
-
-        float sum = 0f;
-        int hash;
-
-        switch (cellularDistanceFunction) {
-            case EUCLIDEAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            hash = hashAll(xi, yi, zi, seed);
-                            Float3 vec = CELL_3D[hash & 255];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float distance = 1f - (vecX * vecX + vecY * vecY + vecZ * vecZ);
-
-                            if (distance > 0f) {
-                                distance *= 3f;
-                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
-                            }
-                        }
-                    }
-                }
-                break;
-            case MANHATTAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            hash = hashAll(xi, yi, zi, seed);
-                            Float3 vec = CELL_3D[hash & 255];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float distance = 1f - (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ));
-
-                            if (distance > 0f) {
-                                distance *= 3f;
-                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
-                            }
-                        }
-                    }
-                }
-                break;
-            case NATURAL:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            hash = hashAll(xi, yi, zi, seed);
-                            Float3 vec = CELL_3D[hash & 255];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float distance = 2f - ((Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ));
-
-                            if (distance > 0f) {
-                                distance *= 3f;
-                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance * 0.125f;
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-        return sum / (64f + Math.abs(sum));
-    }
-
-    protected float singleCellular2Edge(int seed, float x, float y, float z) {
-        int xr = fastRound(x);
-        int yr = fastRound(y);
-        int zr = fastRound(z);
-
-        float distance = 999999;
-        float distance2 = 999999;
-
-        switch (cellularDistanceFunction) {
-            case EUCLIDEAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = vecX * vecX + vecY * vecY + vecZ * vecZ;
-
-                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
-                            distance = Math.min(distance, newDistance);
-                        }
-                    }
-                }
-                break;
-            case MANHATTAN:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
-
-                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
-                            distance = Math.min(distance, newDistance);
-                        }
-                    }
-                }
-                break;
-            case NATURAL:
-                for (int xi = xr - 1; xi <= xr + 1; xi++) {
-                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
-                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
-                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
-
-                            float vecX = xi - x + vec.x;
-                            float vecY = yi - y + vec.y;
-                            float vecZ = zi - z + vec.z;
-
-                            float newDistance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
-
-                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
-                            distance = Math.min(distance, newDistance);
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-
-        switch (cellularReturnType) {
-            case DISTANCE_2:
-                return distance2 - 1;
-            case DISTANCE_2_ADD:
-                return distance2 + distance - 1;
-            case DISTANCE_2_SUB:
-                return distance2 - distance - 1;
-            case DISTANCE_2_MUL:
-                return distance2 * distance - 1;
-            case DISTANCE_2_DIV:
-                return distance / distance2 - 1;
-            default:
-                return 0;
-        }
-    }
+    // Cellular 2D
 
     public float getCellular(float x, float y) {
         x *= frequency;
@@ -9206,13 +8934,391 @@ public class Noise implements INoise {
             spike = 1f - Math.abs(switchCellular(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
-            if(fractalSpiral){
+            if (fractalSpiral) {
                 final float x2 = rotateX2D(x, y);
                 final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
+                x = x2;
+                y = y2;
             }
             x *= lacunarity;
             y *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
+    }
+
+    // Cellular 3D
+    public float getCellular(float x, float y, float z) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+
+        switch (cellularReturnType) {
+            case CELL_VALUE:
+            case NOISE_LOOKUP:
+            case DISTANCE:
+                return singleCellular(seed, x, y, z);
+            case DISTANCE_VALUE:
+                return singleCellularMerging(seed, x, y, z);
+            default:
+                return singleCellular2Edge(seed, x, y, z);
+        }
+    }
+
+    protected float switchCellular(int seed, float x, float y, float z) {
+        switch (cellularReturnType) {
+            case CELL_VALUE:
+            case NOISE_LOOKUP:
+            case DISTANCE:
+                return singleCellular(seed, x, y, z);
+            case DISTANCE_VALUE:
+                return singleCellularMerging(seed, x, y, z);
+            default:
+                return singleCellular2Edge(seed, x, y, z);
+        }
+    }
+
+    protected float singleCellular(int seed, float x, float y, float z) {
+        int xr = fastRound(x);
+        int yr = fastRound(y);
+        int zr = fastRound(z);
+
+        float distance = 999999;
+        int xc = 0, yc = 0, zc = 0;
+
+        switch (cellularDistanceFunction) {
+            case EUCLIDEAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = vecX * vecX + vecY * vecY + vecZ * vecZ;
+
+                            if (newDistance < distance) {
+                                distance = newDistance;
+                                xc = xi;
+                                yc = yi;
+                                zc = zi;
+                            }
+                        }
+                    }
+                }
+                break;
+            case MANHATTAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
+
+                            if (newDistance < distance) {
+                                distance = newDistance;
+                                xc = xi;
+                                yc = yi;
+                                zc = zi;
+                            }
+                        }
+                    }
+                }
+                break;
+            case NATURAL:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
+
+                            if (newDistance < distance) {
+                                distance = newDistance;
+                                xc = xi;
+                                yc = yi;
+                                zc = zi;
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+
+        switch (cellularReturnType) {
+            case CELL_VALUE:
+                return valCoord3D(seed, xc, yc, zc);
+
+            case NOISE_LOOKUP:
+                Float3 vec = CELL_3D[hash256(xc, yc, zc, seed)];
+                return layered3D(xc + vec.x, yc + vec.y, zc + vec.z, 123, 3);
+
+            case DISTANCE:
+                return distance - 1;
+
+            default:
+                return 0;
+        }
+    }
+
+
+    protected float singleCellularMerging(int seed, float x, float y, float z) {
+        int xr = fastRound(x);
+        int yr = fastRound(y);
+        int zr = fastRound(z);
+
+        float sum = 0f;
+        int hash;
+
+        switch (cellularDistanceFunction) {
+            case EUCLIDEAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float distance = 1f - (vecX * vecX + vecY * vecY + vecZ * vecZ);
+
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
+                            }
+                        }
+                    }
+                }
+                break;
+            case MANHATTAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float distance = 1f - (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ));
+
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance;
+                            }
+                        }
+                    }
+                }
+                break;
+            case NATURAL:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            hash = hashAll(xi, yi, zi, seed);
+                            Float3 vec = CELL_3D[hash & 255];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float distance = 2f - ((Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ));
+
+                            if (distance > 0f) {
+                                distance *= 3f;
+                                sum += ((hash >>> 28) - (hash >>> 24 & 15)) * distance * distance * distance * 0.125f;
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+        return sum / (64f + Math.abs(sum));
+    }
+
+    protected float singleCellular2Edge(int seed, float x, float y, float z) {
+        int xr = fastRound(x);
+        int yr = fastRound(y);
+        int zr = fastRound(z);
+
+        float distance = 999999;
+        float distance2 = 999999;
+
+        switch (cellularDistanceFunction) {
+            case EUCLIDEAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = vecX * vecX + vecY * vecY + vecZ * vecZ;
+
+                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
+                            distance = Math.min(distance, newDistance);
+                        }
+                    }
+                }
+                break;
+            case MANHATTAN:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ);
+
+                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
+                            distance = Math.min(distance, newDistance);
+                        }
+                    }
+                }
+                break;
+            case NATURAL:
+                for (int xi = xr - 1; xi <= xr + 1; xi++) {
+                    for (int yi = yr - 1; yi <= yr + 1; yi++) {
+                        for (int zi = zr - 1; zi <= zr + 1; zi++) {
+                            Float3 vec = CELL_3D[hash256(xi, yi, zi, seed)];
+
+                            float vecX = xi - x + vec.x;
+                            float vecY = yi - y + vec.y;
+                            float vecZ = zi - z + vec.z;
+
+                            float newDistance = (Math.abs(vecX) + Math.abs(vecY) + Math.abs(vecZ)) + (vecX * vecX + vecY * vecY + vecZ * vecZ);
+
+                            distance2 = Math.max(Math.min(distance2, newDistance), distance);
+                            distance = Math.min(distance, newDistance);
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch (cellularReturnType) {
+            case DISTANCE_2:
+                return distance2 - 1;
+            case DISTANCE_2_ADD:
+                return distance2 + distance - 1;
+            case DISTANCE_2_SUB:
+                return distance2 - distance - 1;
+            case DISTANCE_2_MUL:
+                return distance2 * distance - 1;
+            case DISTANCE_2_DIV:
+                return distance / distance2 - 1;
+            default:
+                return 0;
+        }
+    }
+
+    protected float singleCellularFractalFBM(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = switchCellular(seed, x, y, z);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += switchCellular(seed + i, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float singleCellularFractalDomainWarp(float x, float y, float z) {
+        int seed = this.seed;
+        float latest = switchCellular(seed, x, y, z);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = switchCellular(++seed, x + a, y + b, z + c)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleCellularFractalBillow(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(switchCellular(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(switchCellular(seed + i, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleCellularFractalRidgedMulti(float x, float y, float z) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(switchCellular(seed + i, x, y, z));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
         }
         return sum * 2f / correction - 1f;
     }
