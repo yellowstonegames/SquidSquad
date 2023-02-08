@@ -8619,7 +8619,7 @@ public class Noise implements INoise {
         }
     }
 
-    protected float switchCellular(float x, float y, float z) {
+    protected float switchCellular(int seed, float x, float y, float z) {
         switch (cellularReturnType) {
             case CELL_VALUE:
             case NOISE_LOOKUP:
@@ -8901,7 +8901,7 @@ public class Noise implements INoise {
         }
     }
 
-    public float switchCellular(float x, float y) {
+    public float switchCellular(int seed, float x, float y) {
         switch (cellularReturnType) {
             case CELL_VALUE:
             case NOISE_LOOKUP:
@@ -9135,7 +9135,7 @@ public class Noise implements INoise {
     }
     protected float singleCellularFractalFBM(float x, float y) {
         int seed = this.seed;
-        float sum = singleSimplex(seed, x, y);
+        float sum = switchCellular(seed, x, y);
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
@@ -9148,14 +9148,14 @@ public class Noise implements INoise {
             y *= lacunarity;
 
             amp *= gain;
-            sum += singleSimplex(seed + i, x, y) * amp;
+            sum += switchCellular(seed + i, x, y) * amp;
         }
 
         return sum * fractalBounding;
     }
     protected float singleCellularFractalDomainWarp(float x, float y) {
         int seed = this.seed;
-        float latest = singleSimplex(seed, x, y);
+        float latest = switchCellular(seed, x, y);
         float sum = latest;
         float amp = 1;
 
@@ -9172,7 +9172,7 @@ public class Noise implements INoise {
                     b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
 
             amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b)) * amp;
+            sum += (latest = switchCellular(++seed, x + a, y + b)) * amp;
         }
 
         return sum * fractalBounding;
@@ -9180,7 +9180,7 @@ public class Noise implements INoise {
 
     protected float singleCellularFractalBillow(float x, float y) {
         int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
+        float sum = Math.abs(switchCellular(seed, x, y)) * 2 - 1;
         float amp = 1;
 
         for (int i = 1; i < octaves; i++) {
@@ -9193,7 +9193,7 @@ public class Noise implements INoise {
             y *= lacunarity;
 
             amp *= gain;
-            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
+            sum += (Math.abs(switchCellular(++seed, x, y)) * 2 - 1) * amp;
         }
 
         return sum * fractalBounding;
@@ -9203,7 +9203,7 @@ public class Noise implements INoise {
         int seed = this.seed;
         float sum = 0f, exp = 2f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
+            spike = 1f - Math.abs(switchCellular(seed + i, x, y));
             correction += (exp *= 0.5f);
             sum += spike * exp;
             if(fractalSpiral){
