@@ -151,7 +151,7 @@ public class Noise implements INoise {
     /**
      * Creates a Voronoi diagram of 2D or 3D space and fills cells based on the {@link #setCellularReturnType(int)}
      * and {@link #setCellularDistanceFunction(int)}. This is more of an advanced usage, but can yield useful results
-     * when oddly-shaped areas should have similar values.
+     * when oddly-shaped areas should have similar values. This supports 2D and 3D.
      * <br>
      * <a href="https://i.imgur.com/ScRves7.png">Noise sample at left, FFT at right.</a>
      * <br>
@@ -159,13 +159,16 @@ public class Noise implements INoise {
      */
     CELLULAR = 6,
     /**
-     * Purely chaotic, non-continuous random noise per position; looks like static on a TV screen.
+     * Creates a Voronoi diagram of 2D or 3D space and fills cells based on the {@link #setCellularReturnType(int)}
+     * and {@link #setCellularDistanceFunction(int)}. This is more of an advanced usage, but can yield useful results
+     * when oddly-shaped areas should have similar values. This version can use {@link #setFractalType(int)},
+     * {@link #setFractalOctaves(int)}, and more. This supports 2D and 3D.
      * <br>
-     * <a href="https://i.imgur.com/vBtISSx.jpg">Noise sample at left, FFT at right.</a>
+     * <a href="https://i.imgur.com/ScRves7.png">Noise sample at left, FFT at right.</a>
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
-    WHITE_NOISE = 7,
+    CELLULAR_FRACTAL = 7,
     /**
      * A simple kind of noise that gets a random float for each vertex of a square or cube, and interpolates between all
      * of them to get a smoothly changing value using... uh... some kind of cubic or bicubic interpolation, the
@@ -292,7 +295,16 @@ public class Noise implements INoise {
      * <br>
      * This is meant to be used with {@link #setNoiseType(int)}.
      */
-    TAFFY_FRACTAL = 17;
+    TAFFY_FRACTAL = 17,
+    /**
+     * Purely chaotic, non-continuous random noise per position; looks like static on a TV screen.
+     * <br>
+     * <a href="https://i.imgur.com/vBtISSx.jpg">Noise sample at left, FFT at right.</a>
+     * <br>
+     * This is meant to be used with {@link #setNoiseType(int)}.
+     */
+    WHITE_NOISE = 18;
+
 
     /**
      * Simple linear interpolation. May result in artificial-looking noise.
@@ -745,13 +757,13 @@ public class Noise implements INoise {
      * Sets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following
      * constants in this class:
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
-     * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
+     * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #CELLULAR_FRACTAL} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), {@link #MUTANT_FRACTAL} (15), {@link #TAFFY} (16),
-     * or {@link #TAFFY_FRACTAL} (17).
+     * {@link #TAFFY_FRACTAL} (17), or {@link #WHITE_NOISE} (18).
      * If this isn't called, getConfiguredNoise() will default to SIMPLEX_FRACTAL. Note that if you have a fractal noise
      * type, you can get the corresponding non-fractal noise type by subtracting 1 from the constant this returns. The
-     * reverse is not always true, because Cellular and White Noise have no fractal version.
+     * reverse is not always true, because White Noise has no fractal version.
      * @param noiseType an int from 0 to 17 corresponding to a constant from this class for a noise type
      */
     public void setNoiseType(int noiseType) {
@@ -762,13 +774,13 @@ public class Noise implements INoise {
      * Gets the default type of noise returned by {@link #getConfiguredNoise(float, float)}, using one of the following
      * constants in this class:
      * {@link #VALUE} (0), {@link #VALUE_FRACTAL} (1), {@link #PERLIN} (2), {@link #PERLIN_FRACTAL} (3),
-     * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #WHITE_NOISE} (7),
+     * {@link #SIMPLEX} (4), {@link #SIMPLEX_FRACTAL} (5), {@link #CELLULAR} (6), {@link #CELLULAR_FRACTAL} (7),
      * {@link #CUBIC} (8), {@link #CUBIC_FRACTAL} (9), {@link #FOAM} (10), {@link #FOAM_FRACTAL} (11), {@link #HONEY}
      * (12), {@link #HONEY_FRACTAL} (13), {@link #MUTANT} (14), {@link #MUTANT_FRACTAL} (15), {@link #TAFFY} (16),
-     * or {@link #TAFFY_FRACTAL} (17).
+     * {@link #TAFFY_FRACTAL} (17), or {@link #WHITE_NOISE} (18).
      * The default is SIMPLEX_FRACTAL. Note that if you have a fractal noise type, you can get the corresponding
      * non-fractal noise type by subtracting 1 from the constant this returns. The reverse is not always true, because
-     * Cellular and White Noise have no fractal version.
+     * White Noise has no fractal version.
      * @return the noise type as a code, from 0 to 17 inclusive
      */
     public int getNoiseType()
@@ -1471,11 +1483,22 @@ public class Noise implements INoise {
                     case CELL_VALUE:
                     case NOISE_LOOKUP:
                     case DISTANCE:
-                        return singleCellular(x, y);
+                        return singleCellular(seed, x, y);
                     case DISTANCE_VALUE:
-                        return singleCellularMerging(x, y);
+                        return singleCellularMerging(seed, x, y);
                     default:
-                        return singleCellular2Edge(x, y);
+                        return singleCellular2Edge(seed, x, y);
+                }
+            case CELLULAR_FRACTAL:
+                switch (fractalType) {
+                    case BILLOW:
+                        return singleCellularFractalBillow(x, y);
+                    case RIDGED_MULTI:
+                        return singleCellularFractalRidgedMulti(x, y);
+                    case DOMAIN_WARP:
+                        return singleCellularFractalDomainWarp(x, y);
+                    default:
+                        return singleCellularFractalFBM(x, y);
                 }
             case WHITE_NOISE:
                 return getWhiteNoise(x, y);
@@ -1602,15 +1625,16 @@ public class Noise implements INoise {
                         return singleSimplexFractalFBM(x, y, z);
                 }
             case CELLULAR:
+            case CELLULAR_FRACTAL: // not covered yet
                 switch (cellularReturnType) {
                     case CELL_VALUE:
                     case NOISE_LOOKUP:
                     case DISTANCE:
-                        return singleCellular(x, y, z);
+                        return singleCellular(seed, x, y, z);
                     case DISTANCE_VALUE:
-                        return singleCellularMerging(x, y, z);
+                        return singleCellularMerging(seed, x, y, z);
                     default:
-                        return singleCellular2Edge(x, y, z);
+                        return singleCellular2Edge(seed, x, y, z);
                 }
             case WHITE_NOISE:
                 return getWhiteNoise(x, y, z);
@@ -8587,15 +8611,28 @@ public class Noise implements INoise {
             case CELL_VALUE:
             case NOISE_LOOKUP:
             case DISTANCE:
-                return singleCellular(x, y, z);
+                return singleCellular(seed, x, y, z);
             case DISTANCE_VALUE:
-                return singleCellularMerging(x, y, z);
+                return singleCellularMerging(seed, x, y, z);
             default:
-                return singleCellular2Edge(x, y, z);
+                return singleCellular2Edge(seed, x, y, z);
         }
     }
 
-    protected float singleCellular(float x, float y, float z) {
+    protected float switchCellular(float x, float y, float z) {
+        switch (cellularReturnType) {
+            case CELL_VALUE:
+            case NOISE_LOOKUP:
+            case DISTANCE:
+                return singleCellular(seed, x, y, z);
+            case DISTANCE_VALUE:
+                return singleCellularMerging(seed, x, y, z);
+            default:
+                return singleCellular2Edge(seed, x, y, z);
+        }
+    }
+
+    protected float singleCellular(int seed, float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
         int zr = fastRound(z);
@@ -8689,7 +8726,7 @@ public class Noise implements INoise {
     }
 
 
-    protected float singleCellularMerging(float x, float y, float z) {
+    protected float singleCellularMerging(int seed, float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
         int zr = fastRound(z);
@@ -8765,7 +8802,7 @@ public class Noise implements INoise {
         return sum / (64f + Math.abs(sum));
     }
 
-    protected float singleCellular2Edge(float x, float y, float z) {
+    protected float singleCellular2Edge(int seed, float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
         int zr = fastRound(z);
@@ -8856,15 +8893,28 @@ public class Noise implements INoise {
             case CELL_VALUE:
             case NOISE_LOOKUP:
             case DISTANCE:
-                return singleCellular(x, y);
+                return singleCellular(seed, x, y);
             case DISTANCE_VALUE:
-                return singleCellularMerging(x, y);
+                return singleCellularMerging(seed, x, y);
             default:
-                return singleCellular2Edge(x, y);
+                return singleCellular2Edge(seed, x, y);
         }
     }
 
-    protected float singleCellular(float x, float y) {
+    public float switchCellular(float x, float y) {
+        switch (cellularReturnType) {
+            case CELL_VALUE:
+            case NOISE_LOOKUP:
+            case DISTANCE:
+                return singleCellular(seed, x, y);
+            case DISTANCE_VALUE:
+                return singleCellularMerging(seed, x, y);
+            default:
+                return singleCellular2Edge(seed, x, y);
+        }
+    }
+
+    protected float singleCellular(int seed, float x, float y) {
         int xr = fastRound(x);
         int yr = fastRound(y);
 
@@ -8946,7 +8996,7 @@ public class Noise implements INoise {
     }
 
 
-    protected float singleCellularMerging(float x, float y) {
+    protected float singleCellularMerging(int seed, float x, float y) {
         int xr = fastRound(x);
         int yr = fastRound(y);
 
@@ -9012,7 +9062,7 @@ public class Noise implements INoise {
         return sum / (64f + Math.abs(sum));
     }
 
-    protected float singleCellular2Edge(float x, float y) {
+    protected float singleCellular2Edge(int seed, float x, float y) {
         int xr = fastRound(x);
         int yr = fastRound(y);
 
@@ -9082,6 +9132,89 @@ public class Noise implements INoise {
             default:
                 return 0;
         }
+    }
+    protected float singleCellularFractalFBM(float x, float y) {
+        int seed = this.seed;
+        float sum = singleSimplex(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += singleSimplex(seed + i, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float singleCellularFractalDomainWarp(float x, float y) {
+        int seed = this.seed;
+        float latest = singleSimplex(seed, x, y);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x = x * lacunarity;
+            y = y * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx],
+                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleSimplex(++seed, x + a, y + b)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleCellularFractalBillow(float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float singleCellularFractalRidgedMulti(float x, float y) {
+        int seed = this.seed;
+        float sum = 0f, exp = 2f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
+            correction += (exp *= 0.5f);
+            sum += spike * exp;
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+        }
+        return sum * 2f / correction - 1f;
     }
 
     public void gradientPerturb3(float[] v3) {
