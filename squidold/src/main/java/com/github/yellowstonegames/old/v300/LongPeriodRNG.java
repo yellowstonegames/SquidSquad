@@ -92,6 +92,9 @@ public class LongPeriodRNG extends LegacyRandom {
         reseed(seed);
     }
 
+    /**
+     * Randomly sets the state using calls to {@link Math#random()}.
+     */
     public void reseed() {
 
         long ts = LightRNG.determine((long) ((Math.random() * 2.0 - 1.0) * 0x8000000000000L)
@@ -230,8 +233,28 @@ public class LongPeriodRNG extends LegacyRandom {
         }
     }
 
+    /**
+     * Unlike {@link #LongPeriodRNG(long[])}, this takes a long array that must have at least 16 items, as well as an
+     * int to complete the exact state of a LongPeriodRNG, and uses that state as-is. If given more than 16 items in
+     * data, this ignores items beyond the first 16. The given array is referenced directly; a new long array is created
+     * with exactly length 16 and items from {@code data} are copied into it.
+     * @param data a long array with at least 16 items; only the first 16 are copied into this
+     * @param choice only the bottom 4 bits are used, so, this should be between 0 and 15 inclusive
+     */
+    public LongPeriodRNG(long[] data, int choice) {
+        if(data.length < 16)
+            throw new IllegalArgumentException("The given data array must have a length of at least 16.");
+        this.choice = choice & 15;
+        state = new long[16];
+        System.arraycopy(data, 0, state, 0, 16);
+    }
+
+    /**
+     * Copy constructor; does not reference anything from {@code other} directly.
+     * @param other another, non-null, LongPeriodRNG
+     */
     public LongPeriodRNG(LongPeriodRNG other) {
-        choice = other.choice;
+        choice = other.choice & 15;
         state = new long[16];
         System.arraycopy(other.state, 0, state, 0, 16);
     }
@@ -270,10 +293,7 @@ public class LongPeriodRNG extends LegacyRandom {
      */
     @Override
     public LongPeriodRNG copy() {
-        LongPeriodRNG next = new LongPeriodRNG();
-        System.arraycopy(state, 0, next.state, 0, 16);
-        next.choice = choice;
-        return next;
+        return new LongPeriodRNG(this);
 
     }
 
