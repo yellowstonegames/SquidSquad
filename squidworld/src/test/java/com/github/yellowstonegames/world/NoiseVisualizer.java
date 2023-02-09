@@ -44,7 +44,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private FlawedPointHash.LowLeaningHash low = new FlawedPointHash.LowLeaningHash(123);
     private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, squish, low};
-    private int hashIndex = 6;
+    private int hashIndex = 6; // 6 for squish, best for looping square gifs
 
     private static final int width = 400, height = 400;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
@@ -69,7 +69,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
         noise.setPointHash(pointHashes[hashIndex]);
-        noise.setFractalType(Noise.RIDGED_MULTI);
+//        noise.setFractalType(Noise.RIDGED_MULTI);
         noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);

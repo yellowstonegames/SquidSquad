@@ -9029,6 +9029,7 @@ public class Noise implements INoise {
                         }
                     }
                 }
+                distance /= 1.5f;
                 break;
             case NATURAL:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
@@ -9051,6 +9052,7 @@ public class Noise implements INoise {
                         }
                     }
                 }
+                distance *= 0.5f;
                 break;
         }
 
@@ -9191,6 +9193,8 @@ public class Noise implements INoise {
                         }
                     }
                 }
+                distance /= 1.5f;
+                distance2 /= 1.5f;
                 break;
             case NATURAL:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
@@ -9209,6 +9213,8 @@ public class Noise implements INoise {
                         }
                     }
                 }
+                distance *= 0.5f;
+                distance2 *= 0.5f;
                 break;
             default:
                 break;
@@ -9218,13 +9224,13 @@ public class Noise implements INoise {
             case DISTANCE_2:
                 return distance2 - 1;
             case DISTANCE_2_ADD:
-                return distance2 + distance - 1;
+                return Math.min(Math.max(distance2 + distance - 1, -1), 1);
             case DISTANCE_2_SUB:
-                return distance2 - distance - 1;
+                return Math.min(Math.max(distance2 - distance - 1, -1), 1);
             case DISTANCE_2_MUL:
-                return distance2 * distance - 1;
+                return Math.min(Math.max(distance2 * distance - 1, -1), 1);
             case DISTANCE_2_DIV:
-                return distance / distance2 - 1;
+                return Math.min(Math.max(distance / distance2 - 1, -1), 1);
             default:
                 return 0;
         }
