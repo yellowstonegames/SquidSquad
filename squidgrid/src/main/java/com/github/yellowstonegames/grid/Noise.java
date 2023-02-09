@@ -8704,6 +8704,7 @@ public class Noise implements INoise {
                         }
                     }
                 }
+                distance /= 1f + MathTools.ROOT2_INVERSE;
                 break;
         }
 
@@ -8843,6 +8844,8 @@ public class Noise implements INoise {
                         distance = Math.min(distance, newDistance);
                     }
                 }
+                distance2 /= 1f + MathTools.ROOT2_INVERSE;
+                distance /= 1f + MathTools.ROOT2_INVERSE;
                 break;
         }
 
@@ -8850,13 +8853,13 @@ public class Noise implements INoise {
             case DISTANCE_2:
                 return distance2 - 1;
             case DISTANCE_2_ADD:
-                return distance2 + distance - 1;
+                return Math.min(Math.max(distance2 + distance - 1, -1), 1);
             case DISTANCE_2_SUB:
-                return distance2 - distance - 1;
+                return Math.min(Math.max(distance2 - distance - 1, -1), 1);
             case DISTANCE_2_MUL:
-                return distance2 * distance - 1;
+                return Math.min(Math.max(distance2 * distance - 1, -1), 1);
             case DISTANCE_2_DIV:
-                return distance / distance2 - 1;
+                return Math.min(Math.max(distance / distance2 - 1, -1), 1);
             default:
                 return 0;
         }
