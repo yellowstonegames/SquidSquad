@@ -136,4 +136,26 @@ public class OldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testSilkRNG() {
+        Kryo kryo = new Kryo();
+        kryo.register(SilkRNG.class, new SilkRNGSerializer());
+
+        SilkRNG data = new SilkRNG(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            SilkRNG data2 = kryo.readObject(input, SilkRNG.class);
+            Assert.assertEquals(data.nextLong(), data2.nextLong());
+            Assert.assertEquals(data.next(31), data2.next(31));
+            Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
+            Assert.assertEquals(data.nextLong(-12345, 12345), data2.nextLong(-12345, 12345));
+            Assert.assertEquals(data.nextDouble(), data2.nextDouble(), Double.MAX_VALUE);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
