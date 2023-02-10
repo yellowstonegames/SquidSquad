@@ -62,4 +62,21 @@ public class TextTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testLanguageSentenceForm() {
+        Kryo kryo = new Kryo();
+        kryo.register(Language.SentenceForm.class, new LanguageSentenceFormSerializer());
+
+        Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8), sf2;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Language.SentenceForm data2 = kryo.readObject(input, Language.SentenceForm.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }

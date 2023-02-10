@@ -38,8 +38,7 @@ public class JsonTextTest {
     public void testLanguageSentenceForm() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonText.registerLanguageSentenceForm(json);
-        Language lang = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
-        Language.SentenceForm sf = new Language.SentenceForm(lang, 1, 8), sf2;
+        Language.SentenceForm sf = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8), sf2;
         String data = json.toJson(sf);
         System.out.println(data);
         sf2 = json.fromJson(Language.SentenceForm.class, data);
