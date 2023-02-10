@@ -21,7 +21,10 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectObjectMap;
+import com.github.tommyettinger.kryo.jdkgdxds.ObjectObjectMapSerializer;
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Translator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -77,6 +80,27 @@ public class TextTest {
         try (Input input = new Input(bytes)) {
             Language.SentenceForm data2 = kryo.readObject(input, Language.SentenceForm.class);
             Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testTranslator() {
+        Kryo kryo = new Kryo();
+        kryo.register(Language.class, new LanguageSerializer());
+        kryo.register(ObjectObjectMap.class, new ObjectObjectMapSerializer());
+        kryo.register(Translator.class, new TranslatorSerializer());
+
+        String sentence = "For you, I can translate; I will lower my steep rate; to something affordable; since you are adorable.";
+        Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L), t2;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Translator data2 = kryo.readObject(input, Translator.class);
+            Assert.assertEquals(data, data2);
+            Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
         }
     }
 }
