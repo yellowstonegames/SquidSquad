@@ -1076,13 +1076,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-                    points[dim][2] = c * fr;
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            points[dim][2] = (c * 0.5f + (x - y) * 0.25f) * fr;
-                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
                             bright = basicPrepare(taffies[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1091,16 +1091,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 3:
-                    cc = c * fr;
+                    points[3][4] = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
                             bright = basicPrepare(taffies[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1111,15 +1108,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 4:
                     cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            points[dim][5] = yy - xx;
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            points[4][4] = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 4 - cc;
+                            points[4][5] = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 4 - cc;
                             bright = basicPrepare(taffies[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1157,13 +1152,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-                    points[dim][2] = c * fr;
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            points[dim][2] = (c * 0.5f + (x - y) * 0.25f) * fr;
-                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
                             bright = basicPrepare(noise.singleTaffyVarargs((int) noise.getSeed(), points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1172,16 +1167,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 3:
-                    cc = c * fr;
+                    points[3][4] = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
                             bright = basicPrepare(noise.singleTaffyVarargs((int) noise.getSeed(), points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1192,15 +1184,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 4:
                     cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            points[dim][5] = yy - xx;
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            points[4][4] = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 4 - cc;
+                            points[4][5] = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 4 - cc;
                             bright = basicPrepare(noise.singleTaffyVarargs((int) noise.getSeed(), points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1238,13 +1228,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-                    points[dim][2] = c * fr;
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            points[dim][2] = (c * 0.5f + (x - y) * 0.25f) * fr;
-                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
                             bright = basicPrepare(flans[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1253,16 +1243,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 3:
-                    cc = c * fr;
+                    points[3][4] = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
                             bright = basicPrepare(flans[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1273,15 +1260,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 4:
                     cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            points[dim][5] = yy - xx;
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            points[4][4] = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 4 - cc;
+                            points[4][5] = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 4 - cc;
                             bright = basicPrepare(flans[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1397,13 +1382,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-                    points[dim][2] = c * fr;
+                    cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            points[dim][2] = (c * 0.5f + (x - y) * 0.25f) * fr;
-                            points[dim][3] = 0x1p-4f * fr * (x + y - c);
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
                             bright = basicPrepare(vals[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1412,16 +1397,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 3:
-                    cc = c * fr;
+                    points[3][4] = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
                             bright = basicPrepare(vals[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
@@ -1432,15 +1414,13 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 4:
                     cc = c * fr;
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f * fr;
-                        points[dim][0] = cc + xx;
-                        points[dim][1] = xx - cc;
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f * fr;
-                            points[dim][2] = yy - cc;
-                            points[dim][3] = cc - yy;
-                            points[dim][4] = xx + yy;
-                            points[dim][5] = yy - xx;
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            points[4][4] = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 4 - cc;
+                            points[4][5] = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 4 - cc;
                             bright = basicPrepare(vals[dim].getNoise(points[dim]));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
