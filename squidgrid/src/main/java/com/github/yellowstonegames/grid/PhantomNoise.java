@@ -106,12 +106,14 @@ public class PhantomNoise implements INoise {
                 vertices[v][d] = t;
             }
         }
-        for (int v = 0; v <= dim; v++) {
-            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
-                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
-            vertices[v][0] = TrigTools.cos(theta) * dist;
-            vertices[v][1] = TrigTools.sin(theta) * dist;
-        }
+        //I'm not sure if there is a good way to reliably randomize the shape or rotation here.
+        //This can cause issues, which is why it is now commented out.
+//        for (int v = 0; v <= dim; v++) {
+//            final float theta = TrigTools.atan2Turns(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+//                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+//            vertices[v][0] = TrigTools.cosSmootherTurns(theta) * dist;
+//            vertices[v][1] = TrigTools.sinSmootherTurns(theta) * dist;
+//        }
         hasher = new Hasher(seed);
         floors = new int[dim+1];
         hashFloors = new int[dim+1];
