@@ -705,7 +705,7 @@ public abstract class GridAction extends TemporalAction {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
-                f = Math.min(0.999f, Math.max(0f, TrigTools.sinTurns((c.distance(center) - percent * 5f) * 0.35f)));
+                f = Math.min(0.999f, Math.max(0f, TrigTools.sinTurns((c.distance(center) - percent * 4f) * 0.25f)));
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],

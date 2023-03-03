@@ -192,14 +192,16 @@ public class DungeonGridTest extends ApplicationAdapter {
         }
         else{
 //            if(MathUtils.randomBoolean())
-//                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-//                        .append(new GridAction.ExplosionAction(gg, 1.5f, inView, next, 5)).conclude(post));
+                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
+                        .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useMistyColors()).conclude(post));
 //            else
 //                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
 //                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useToxicColors()).conclude(post));
 //            playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.125f, 0.2f)));
-            playerGlyph.addAction(MoreActions.bump(way, 0.3f));
-            gg.burst((playerGlyph.getX() + next.x + 1) * 0.5f, (playerGlyph.getY() + next.y + 1) * 0.5f, 1.5f, 7, ',', 0x992200FF, 0x99220000, 0f, 120f, 1f);
+
+//            playerGlyph.addAction(MoreActions.bump(way, 0.3f));
+//            gg.burst((playerGlyph.getX() + next.x + 1) * 0.5f, (playerGlyph.getY() + next.y + 1) * 0.5f, 1.5f, 7, ',', 0x992200FF, 0x99220000, 0f, 120f, 1f);
+
 //            gg.summon(next.x, next.y, next.x, next.y + 0.5f, '?', 0xFF22CCAA, 0xFF22CC00, 0f, 0f, 1f);
 //            gg.addAction(gg.dyeFG(next.x, next.y, 0x992200FF, 1f, Float.POSITIVE_INFINITY, null));
         }
