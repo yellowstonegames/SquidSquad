@@ -313,11 +313,11 @@ public class Radiance {
     {
         if(data == null) return null;
         int idx = 0;
-        return new Radiance(Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        return new Radiance(Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
         Base.SIMPLE64.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1)),
-        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
-        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
-        Base.SIMPLE64.readFloat(data, idx + 1, idx = data.indexOf('~', idx + 1)),
-        Base.SIMPLE64.readFloat(data, idx + 1, data.indexOf('`', idx + 1)));
+        Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readFloatExact(data, idx + 1, data.indexOf('`', idx + 1)));
     }
 }
