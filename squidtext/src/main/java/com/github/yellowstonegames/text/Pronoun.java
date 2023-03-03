@@ -48,7 +48,9 @@ package com.github.yellowstonegames.text;
  * does, and uses "qvqims" in place of "his" or "hers". The "special case" pronouns should be replaced before being
  * displayed, since they look like gibberish or a glitch and so are probably confusing out of context.
  * <br>
- * The documentation for each constant has a section at the end for the terms that are most-commonly changed by the
+ * The documentation for each constant starts with what {@code "@I @am @my own boss@ss."} would produce if that constant
+ * is given as a userTrait to {@link Messaging#transform(CharSequence, String, Pronoun)}. Each constant also has a
+ * section at the end for the terms that are most-commonly changed by the
  * Pronoun, like "name" for "@name" and "myself" for "@myself", with the section below that containing the terms
  * those change to with that Pronoun. For instance, with SECOND_PERSON_SINGULAR, "@mine" changes to "yours".
  */

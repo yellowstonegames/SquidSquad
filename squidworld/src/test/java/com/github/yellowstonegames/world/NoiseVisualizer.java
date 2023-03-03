@@ -28,25 +28,25 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private Noise noise = new Noise(1, 0.0625f, Noise.CELLULAR_FRACTAL, 1);
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
-    private float freq = 1f;
+    private float freq = 0x1p-4f;
     private boolean inverse;
+    private Noise noise = new Noise(1, freq, Noise.CUBIC_FRACTAL, octaves);
     private ImmediateModeRenderer20 renderer;
     
     private LongPointHash ph = new LongPointHash();
     private IntPointHash iph = new IntPointHash();
     private FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
     private FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 16);
-    private FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 32);
+    private FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 16);
     private FlawedPointHash.SquishedCubeHash squish = new FlawedPointHash.SquishedCubeHash(1, 16);
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private FlawedPointHash.LowLeaningHash low = new FlawedPointHash.LowLeaningHash(123);
     private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, squish, low};
     private int hashIndex = 6; // 6 for squish, best for looping square gifs
 
-    private static final int width = 400, height = 400;
+    private static final int width = 256, height = 256;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
 
     private InputAdapter input;
@@ -149,15 +149,16 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
 //                        for (int c = 0; c < 32; c++) {
                         for (int c = 0; c < 128; c++) {
+//                        for (int c = 0; c < 256; c++) {
                             int w = 256, h = 256;
-                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f;
+                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, inv = 1f / w;
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
 //                                    float color = basicPrepare(noise.getConfiguredNoise(x, y, c));
-                                    float color = basicPrepare(//TrigTools.sinTurns(
+                                    float color = basicPrepare(
                                             noise.getConfiguredNoise(
-                                            x, y, c - (0x1p-8f * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH))))//)
+                                            x, y, c - inv * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))
                                     );
 //                                            * 0.5f + 0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
 //                                    color = color * 0x0.FFp0f + 0x1p-8f;
@@ -177,13 +178,13 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hue = 0.425f; // Brazil green
 //                            float hue = 0.08f; // bright red
 
-//                            float hueBase = 0.675f; // a slightly violet-ish blue
+                            float hueBase = 0.675f; // a slightly violet-ish blue
 //                            float hueHigh = 0.15f; // apricot
 //                            float hueBase = 0.11f; // embers
 //                            float hueHigh = 0.2f; // orange glow
 //                            float hueBase = 0.575f; // blue-cyan
 //                            float hueHigh = 0.45f; // bright green
-                            float hueBase = 0.45f; // bright green
+//                            float hueBase = 0.45f; // bright green
                             float hueHigh = 0.425f; // Brazil green
 //                            float hueHigh = 0.27f; // gold
                             int hiLo = Math.round(
@@ -191,36 +192,39 @@ public class NoiseVisualizer extends ApplicationAdapter {
                                             (MathTools.swayTight(i * 0x1p-6f + 0.5f))
 //                                    )
                             );
-                            gif.palette.paletteArray[i] &= 0xFF0000FF;
-                                    /*
+                            gif.palette.paletteArray[i]
+//                            &= 0xFF0000FF;
                                     = DescriptiveColor.toRGBA8888(
-                                    DescriptiveColor.oklabByHSL(
-                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // hueBase to hueHigh
-//                                            hiLo * 0.19f + hue, // red to gold
-//                                            (i & 255) * 0x1p-12f - 0x1p-5f + hue, // small hue variation
-//                                            (i & 255) * 0x1p-11f - 0x3p-7f + hue, // smallish hue variation
-//                                            (i & 127) * 0x1p-7f + hue, // widest hue variation
-//                                            (i + 90 & 255) * 0x1p-9f + 0.9f,
-//                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
-//                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
-//                                            1f - (i + 90 & 255) * 0x1p-11f,
-//                                            1f - (i + 90 & 255) * 0x1p-13f,
-//                                            1f - (i & 255) * 0x1p-13f,
-                                            1f,
-//                                            hiLo == 1 && i < 160 ? 0.5f + (i * 0x1p-9f) :
-//                                            hiLo == 1 && i < 160 ? 0.6f + (i * 0x1p-9f) :
+//                                            DescriptiveColor.oklabByHSL((i + (noise.getSeed() & 255)) * 0x2p-8f, 0.75f, 0.6f, 1f)
+                                            DescriptiveColor.oklabByHSL(hueBase, 1f, i * 0x3.7p-10f, 1f)
+                            );
 
-//                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
-//                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
-//                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.4f), // biased
-//                                            MathTools.barronSpline(i * 0x1p-8f, 1.5f, 0.7f) * 0.85f + 0.05f, // biased
-                                            MathTools.square(MathTools.barronSpline(i * 0x1p-8f, 0.8f, 0.6f) - 0.3f) * 1.95f, // biased
-//                                            (i * i * 0x1p-16f), //very dark
-//                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
-//                                            0.55f + TrigTools.cosTurns(i * 0x1p-9f) * -0.35f, // light, from 0.2f to 0.9f
-//                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
-                                            1f));
-                                     */
+//                                    DescriptiveColor.oklabByHSL(
+//                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // hueBase to hueHigh
+////                                            hiLo * 0.19f + hue, // red to gold
+////                                            (i & 255) * 0x1p-12f - 0x1p-5f + hue, // small hue variation
+////                                            (i & 255) * 0x1p-11f - 0x3p-7f + hue, // smallish hue variation
+////                                            (i & 127) * 0x1p-7f + hue, // widest hue variation
+////                                            (i + 90 & 255) * 0x1p-9f + 0.9f,
+////                                            (i + 90 & 255) * 0x3p-10f + 0.125f,
+////                                            (i + 90 & 255) * 0x3p-10f + 0.2f,
+////                                            1f - (i + 90 & 255) * 0x1p-11f,
+////                                            1f - (i + 90 & 255) * 0x1p-13f,
+////                                            1f - (i & 255) * 0x1p-13f,
+//                                            1f,
+////                                            hiLo == 1 && i < 160 ? 0.5f + (i * 0x1p-9f) :
+////                                            hiLo == 1 && i < 160 ? 0.6f + (i * 0x1p-9f) :
+//
+////                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.75f, // biased
+////                                            MathTools.barronSpline(i * 0x1p-8f, 0.2f, 0.35f) * 0.7f + 0.125f, // biased
+////                                            MathTools.barronSpline(i * 0x1p-8f, 0.4f, 0.4f), // biased
+////                                            MathTools.barronSpline(i * 0x1p-8f, 1.5f, 0.7f) * 0.85f + 0.05f, // biased
+//                                            MathTools.square(MathTools.barronSpline(i * 0x1p-8f, 0.8f, 0.6f) - 0.3f) * 1.95f, // biased
+////                                            (i * i * 0x1p-16f), //very dark
+////                                            0.6f + TrigTools.cosTurns(i * 0x1p-9f) * 0.3f, // light, from 0.3f to 0.9f
+////                                            0.55f + TrigTools.cosTurns(i * 0x1p-9f) * -0.35f, // light, from 0.2f to 0.9f
+////                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
+//                                            1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
                         }
                         gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
@@ -241,13 +245,16 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             noise.setCellularReturnType((noise.getCellularReturnType() + (UIUtils.shift() ? 8: 1)) % 9);
                         break;
                     case E: //earlier seed
-                        noise.setSeed(noise.getSeed() - 1);
+                        noise.setSeed((int) noise.getSeed() - 1);
                         break;
                     case S: //seed
-                        noise.setSeed(noise.getSeed() + 1);
+                        noise.setSeed((int) noise.getSeed() + 1);
                         break;
                     case SLASH:
                         noise.setSeed((int) Hasher.randomize3(noise.getSeed()));
+                        break;
+                    case SEMICOLON: //seed
+                        noise.setFractalSpiral(!noise.isFractalSpiral());
                         break;
                     case N: // noise type
                     case EQUALS:
