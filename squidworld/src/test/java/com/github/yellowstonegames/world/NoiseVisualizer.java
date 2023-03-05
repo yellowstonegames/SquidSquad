@@ -8,6 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,6 +19,8 @@ import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.IntList;
+import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
@@ -169,7 +172,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             frames.add(p);
                         }
                         Gdx.files.local("out/").mkdirs();
-                        for (int i = 0; i < 256; i++) {
+
 //                            float hue = 0.94f; // pink
 //                            float hue = 0.2f; // apricot
 //                            float hue = 0.11f; // fire
@@ -187,17 +190,26 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hueBase = 0.45f; // bright green
                             float hueHigh = 0.425f; // Brazil green
 //                            float hueHigh = 0.27f; // gold
+
+
+                        IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolation.smooth::apply,
+                                DescriptiveColor.oklabByHSL(0.94f, 0.8f, 0.05f, 1f),
+                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
+                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
+                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)));
+                        g.toArray(gif.palette.paletteArray);
+                        for (int i = 0; i < 256; i++) {
                             int hiLo = Math.round(
 //                                    MathTools.square(
                                             (MathTools.swayTight(i * 0x1p-6f + 0.5f))
 //                                    )
                             );
-                            gif.palette.paletteArray[i]
-//                            &= 0xFF0000FF;
-                                    = DescriptiveColor.toRGBA8888(
-//                                            DescriptiveColor.oklabByHSL((i + (noise.getSeed() & 255)) * 0x2p-8f, 0.75f, 0.6f, 1f)
-                                            DescriptiveColor.oklabByHSL(hueBase, 1f, i * 0x3.7p-10f, 1f)
-                            );
+//                            gif.palette.paletteArray[i]
+////                            &= 0xFF0000FF;
+//                                    = DescriptiveColor.toRGBA8888(
+////                                            DescriptiveColor.oklabByHSL((i + (noise.getSeed() & 255)) * 0x2p-8f, 0.75f, 0.6f, 1f)
+//                                            DescriptiveColor.oklabByHSL(hueBase, 1f, i * 0x3.7p-10f, 1f)
+//                            );
 
 //                                    DescriptiveColor.oklabByHSL(
 //                                            hiLo * (hueHigh - hueBase + 1f) + hueBase, // hueBase to hueHigh
