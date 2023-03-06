@@ -131,6 +131,9 @@ public final class Interpolations {
      */
     public static final InterpolationFunction linearFunction = (a -> a);
 
+    /**
+     * Plain linear interpolation, or "lerp"; this just returns the alpha it is given.
+     */
     public static final Interpolator linear = new Interpolator("linear", linearFunction);
     /**
      * "Smoothstep" or a cubic Hermite spline.
@@ -145,16 +148,21 @@ public final class Interpolations {
      */
     public static final Interpolator smoother = new Interpolator("smoother", a -> a * a * a * (a * (a * 6 - 15) + 10));
 
+    /**
+     * When the parameter is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
+     * rate of acceleration and deceleration changes based on the parameter. Non-integer parameters are supported,
+     * unlike the Pow in libGDX. Negative powers are not supported.
+     */
     public static class Pow extends Interpolator {
         public Pow() {
             tag = "pow";
             fn = linearFunction;
             parameters = new float[]{2};
         }
-        public Pow(String tag, float... parameters) {
+        public Pow(String tag, float parameter) {
             this.tag = tag;
             fn = linearFunction;
-            this.parameters = (parameters == null || parameters.length == 0) ? new float[]{2} : parameters;
+            this.parameters = new float[]{parameter};
         }
 
         @Override
@@ -162,12 +170,30 @@ public final class Interpolations {
             final float a = fn.apply(alpha);
             final float power = parameters[0];
             if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
-            return (float) Math.pow((a - 1) * 2, power) * (power % 2 == 0 ? -0.5f : 0.5f) + 1;
+            return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
         }
     }
 
+    /**
+     * Accelerates and decelerates using a power of 2.
+     */
     public static final Pow pow2 = new Pow("pow2", 2f);
+    /**
+     * Accelerates and decelerates using a power of 3.
+     */
     public static final Pow pow3 = new Pow("pow3", 3f);
+
+//    // This might make sense to PR to libGDX, because it should avoid a modulus and conditional.
+//    public static float oPow(float a, int power){
+//        if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
+//        return (float) Math.pow((a - 1) * 2, power) * ((power & 1) - 0.5f) + 1;
+//    }
+//
+//    // This might make more sense as a replacement, since it allows non-integer powers.
+//    public static float aPow(float a, float power){
+//        if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
+//        return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
+//    }
 
     /**
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
