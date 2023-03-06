@@ -18,6 +18,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
 
+import java.util.Arrays;
+
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 public final class Interpolations {
@@ -43,17 +45,19 @@ public final class Interpolations {
         }
     }
 
-    public static abstract class Interpolator implements InterpolationFunction {
-        public abstract String getTag();
+    public static class Interpolator implements InterpolationFunction {
+        public String tag;
         public InterpolationFunction fn;
         public float[] parameters;
 
         public Interpolator() {
-            this.fn = linear;
-            parameters = new float[0];
+            this.tag = "linear";
+            this.fn = linearFunction;
+            this.parameters = new float[0];
         }
 
-        public Interpolator(InterpolationFunction fn, float... parameters) {
+        public Interpolator(String tag, InterpolationFunction fn, float... parameters) {
+            this.tag = tag;
             this.fn = fn;
             this.parameters = parameters;
         }
@@ -63,7 +67,9 @@ public final class Interpolations {
             return fn.apply(alpha);
         }
 
-        public abstract Interpolator copy();
+        public Interpolator copy() {
+            return new Interpolator(tag, fn, Arrays.copyOf(parameters, parameters.length));
+        }
 
         /**
          * Serializes the tag and any parameters of this Interpolator to a String that can be used by
@@ -82,7 +88,7 @@ public final class Interpolations {
          * @return a String storing all data from this Interpolator along with its name
          */
         public String stringSerialize(Base base) {
-            return getTag() + base.joinExact("~", parameters);
+            return tag + "`" + base.joinExact("~", parameters) + "`";
         }
 
         /**
@@ -107,7 +113,7 @@ public final class Interpolations {
          * the Bases to be identical. Returns this Interpolator, after possibly changing its state.
          * <br>
          * This isn't very useful on its own; use Interpolations.Deserializer to acquire a known Interpolator.
-         * 
+         *
          * @param data a String probably produced by {@link #stringSerialize(Base)}
          * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
          * @return this, after setting its state
@@ -118,13 +124,18 @@ public final class Interpolations {
             parameters = base.floatSplitExact(data, "~", idx + 1, data.indexOf('`', idx + 2));
             return this;
         }
-
     }
 
     /**
      * Linear interpolation; just returns its argument.
      */
-    public static InterpolationFunction linear = (f -> f);
+    public static final InterpolationFunction linearFunction = (a -> a);
+
+    public static final Interpolator linear = new Interpolator("linear", linearFunction);
+    /**
+     * "Smoothstep" or a cubic Hermite spline.
+     */
+    public static final Interpolator smooth = new Interpolator("smooth", a -> a * a * (3 - 2 * a));
 
     /**
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
