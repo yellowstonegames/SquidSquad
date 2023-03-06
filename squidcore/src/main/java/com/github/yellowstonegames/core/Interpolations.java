@@ -161,7 +161,12 @@ public final class Interpolations {
         }
         public Pow(String tag, float parameter) {
             this.tag = tag;
-            fn = linearFunction;
+            this.fn = linearFunction;
+            this.parameters = new float[]{parameter};
+        }
+        public Pow(String tag, InterpolationFunction alternateFn, float parameter) {
+            this.tag = tag;
+            this.fn = alternateFn;
             this.parameters = new float[]{parameter};
         }
 
@@ -172,6 +177,12 @@ public final class Interpolations {
             if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
             return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
         }
+
+        @Override
+        public Pow copy() {
+            return new Pow(tag, fn, parameters[0]);
+        }
+
     }
 
     /**
@@ -182,6 +193,10 @@ public final class Interpolations {
      * Accelerates and decelerates using a power of 3.
      */
     public static final Pow pow3 = new Pow("pow3", 3f);
+    /**
+     * Accelerates and decelerates using a power of 0.5.
+     */
+    public static final Pow pow0_5 = new Pow("pow0.5", 0.5f);
 
 //    // This might make sense to PR to libGDX, because it should avoid a modulus and conditional.
 //    public static float oPow(float a, int power){
@@ -197,32 +212,68 @@ public final class Interpolations {
 
     /**
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
-     * as an InterpolationFunction. Useful because it can imitate the wide variety of symmetrical interpolations by
-     * setting turning to 0.5 and shape to some value greater than 1, while also being able to produce the inverse of
-     * those interpolations by setting shape to some value between 0 and 1. It can also produce asymmetrical
-     * interpolations by using a turning value other than 0.5 .
+     * as an Interpolator or InterpolationFunction. Useful because it can imitate the wide variety of symmetrical
+     * interpolations by setting turning to 0.5 and shape to some value greater than 1, while also being able to produce
+     * the inverse of those interpolations by setting shape to some value between 0 and 1. It can also produce
+     * asymmetrical interpolations by using a turning value other than 0.5 .
      */
-    public static class BiasGain implements InterpolationFunction {
-        /**
-         * The shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
-         * values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
-         * start like square root does, taking off very quickly, but also end like square does, landing abruptly at
-         * the ending level).
-         */
-        public final float shape;
-        /**
-         * A value between 0.0 and 1.0, inclusive, where the shape changes.
-         */
-        public final float turning;
+    public static class BiasGain extends Interpolator {
+        public BiasGain() {
+            this(2f, 0.5f);
+        }
 
+        /**
+         *
+         * @param shape the shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
+         *              values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
+         *              start like square root does, taking off very quickly, but also end like square does, landing abruptly at
+         *              the ending level).
+         * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes.
+         */
         public BiasGain(float shape, float turning) {
-            this.shape = shape;
-            this.turning = turning;
+            this.tag = "biasGain$" + shape + "$" + turning;
+            this.parameters = new float[]{shape, turning};
+            this.fn = linearFunction;
+        }
+
+        /**
+         *
+         * @param shape the shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
+         *              values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
+         *              start like square root does, taking off very quickly, but also end like square does, landing abruptly at
+         *              the ending level).
+         * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes.
+         */
+        public BiasGain(String tag, float shape, float turning) {
+            this.tag = tag;
+            this.parameters = new float[]{shape, turning};
+            this.fn = linearFunction;
         }
 
         public float apply(float a) {
-            return barronSpline(a, shape, turning);
+            return barronSpline(a, parameters[0], parameters[1]);
+        }
+
+        @Override
+        public BiasGain copy() {
+            return new BiasGain(tag, parameters[0], parameters[1]);
         }
     }
 
+    /**
+     * Produces more results in the center.
+     */
+    public static final BiasGain biasGainCentered = new BiasGain("biasGainCentered", 0.5f, 0.5f);
+    /**
+     * Produces more results near 0 and near 1.
+     */
+    public static final BiasGain biasGainExtreme = new BiasGain("biasGainExtreme", 4f, 0.5f);
+    /**
+     * Produces more results near 0.
+     */
+    public static final BiasGain biasGainMostlyLow = new BiasGain("biasGainMostlyLow", 3f, 0.9f);
+    /**
+     * Produces more results near 1.
+     */
+    public static final BiasGain biasGainMostlyHigh = new BiasGain("biasGainMostlyHigh", 3f, 0.1f);
 }
