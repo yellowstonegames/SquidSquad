@@ -31,7 +31,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 2;
     private float freq = 0x1p-4f;
     private boolean inverse;
@@ -67,12 +67,18 @@ public class NoiseVisualizer extends ApplicationAdapter {
         return n * 0.5f + 0.5f;
     }
 
+    public static float circleInPrepare(float n)
+    {
+//        return Math.max(0f, n);
+        return Interpolation.circleIn.apply(n * 0.5f + 0.5f);
+    }
+
     @Override
     public void create() {
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
         noise.setPointHash(pointHashes[hashIndex]);
-//        noise.setFractalType(Noise.RIDGED_MULTI);
+        noise.setFractalType(Noise.RIDGED_MULTI);
         noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
@@ -159,7 +165,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
 //                                    float color = basicPrepare(noise.getConfiguredNoise(x, y, c));
-                                    float color = basicPrepare(
+                                    float color = circleInPrepare(
                                             noise.getConfiguredNoise(
                                             x, y, c - inv * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))
                                     );
@@ -193,10 +199,19 @@ public class NoiseVisualizer extends ApplicationAdapter {
 
 
                         IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolation.smooth::apply,
-                                DescriptiveColor.oklabByHSL(0.94f, 0.8f, 0.05f, 1f),
-                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
-                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
-                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)));
+//                                  DescriptiveColor.oklabByHSL(0.375f, 0.6f, 0.2f, 1f)
+//                                  DescriptiveColor.oklabByHSL(0.7f, 0.6f, 0.7f, 1f)
+//                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.2f, 1f)
+                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.4f, 1f)
+                                , DescriptiveColor.oklabByHSL(0.99f, 0.9f, 0.55f, 1f)
+                                , DescriptiveColor.oklabByHSL(0.8f, 1f, 0.99f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.1f, 0.85f, 0.95f, 1f)
+
+//                                DescriptiveColor.oklabByHSL(0.94f, 0.8f, 0.05f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)
+                        ));
                         g.toArray(gif.palette.paletteArray);
                         for (int i = 0; i < 256; i++) {
                             int hiLo = Math.round(
