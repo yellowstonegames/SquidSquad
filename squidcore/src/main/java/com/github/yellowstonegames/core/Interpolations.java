@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Base;
+
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 public final class Interpolations {
@@ -39,6 +41,84 @@ public final class Interpolations {
         default float apply(float start, float end, float alpha) {
             return start + apply(alpha) * (end - start);
         }
+    }
+
+    public static abstract class Interpolator implements InterpolationFunction {
+        public abstract String getTag();
+        public InterpolationFunction fn;
+        public float[] parameters;
+
+        public Interpolator() {
+            this.fn = linear;
+            parameters = new float[0];
+        }
+
+        public Interpolator(InterpolationFunction fn, float... parameters) {
+            this.fn = fn;
+            this.parameters = parameters;
+        }
+
+        @Override
+        public float apply(float alpha) {
+            return fn.apply(alpha);
+        }
+
+        public abstract Interpolator copy();
+
+        /**
+         * Serializes the tag and any parameters of this Interpolator to a String that can be used by
+         * {@link #stringDeserialize(String)} to load this Interpolator at another time. This always uses
+         * {@link Base#SIMPLE64} as its base.
+         * @return a String storing all data from this Interpolator along with its name
+         */
+        public String stringSerialize() {
+            return stringSerialize(Base.SIMPLE64);
+        }
+
+        /**
+         * Serializes the tag and any parameters of this Interpolator to a String that can be used by
+         * {@link #stringDeserialize(String)} to load this Interpolator at another time.
+         * @param base which {@link Base} to use to store any parameters using {@link Base#joinExact(String, float[])}
+         * @return a String storing all data from this Interpolator along with its name
+         */
+        public String stringSerialize(Base base) {
+            return getTag() + base.joinExact("~", parameters);
+        }
+
+        /**
+         * Given a String in the format produced by {@link #stringSerialize()}, this will attempt to set this
+         * Interpolator to match the state in the serialized data. This only works if this Interpolator is the same
+         * implementation that was serialized. Always uses {@link Base#SIMPLE64}. Returns this Interpolator, after
+         * possibly changing its state.
+         * <br>
+         * This isn't very useful on its own; use Interpolations.Deserializer to acquire a known Interpolator.
+         *
+         * @param data a String probably produced by {@link #stringSerialize()}
+         * @return this, after setting its state
+         */
+        public Interpolator stringDeserialize(String data) {
+            return stringDeserialize(data, Base.SIMPLE64);
+        }
+
+        /**
+         * Given a String in the format produced by {@link #stringSerialize(Base)}, and the same {@link Base} used by
+         * the serialization, this will attempt to set this Interpolator to match the state in the serialized data.
+         * This only works if this Interpolator is the same implementation that was serialized, and also needs
+         * the Bases to be identical. Returns this Interpolator, after possibly changing its state.
+         * <br>
+         * This isn't very useful on its own; use Interpolations.Deserializer to acquire a known Interpolator.
+         * 
+         * @param data a String probably produced by {@link #stringSerialize(Base)}
+         * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
+         * @return this, after setting its state
+         */
+        //TODO: link to Deserializer once it is written
+        public Interpolator stringDeserialize(String data, Base base) {
+            int idx = data.indexOf('`');
+            parameters = base.floatSplitExact(data, "~", idx + 1, data.indexOf('`', idx + 2));
+            return this;
+        }
+
     }
 
     /**
