@@ -136,6 +136,38 @@ public final class Interpolations {
      * "Smoothstep" or a cubic Hermite spline.
      */
     public static final Interpolator smooth = new Interpolator("smooth", a -> a * a * (3 - 2 * a));
+    /**
+     * "Smoothstep" or a cubic Hermite spline applied twice.
+     */
+    public static final Interpolator smooth2 = new Interpolator("smooth2", a -> (a *= a * (3 - 2 * a)) * a * (3 - 2 * a));
+    /**
+     * A quintic Hermite spline by Ken Perlin.
+     */
+    public static final Interpolator smoother = new Interpolator("smoother", a -> a * a * a * (a * (a * 6 - 15) + 10));
+
+    public static class Pow extends Interpolator {
+        public Pow() {
+            tag = "pow";
+            fn = linearFunction;
+            parameters = new float[]{2};
+        }
+        public Pow(String tag, float... parameters) {
+            this.tag = tag;
+            fn = linearFunction;
+            this.parameters = (parameters == null || parameters.length == 0) ? new float[]{2} : parameters;
+        }
+
+        @Override
+        public float apply(float alpha) {
+            final float a = fn.apply(alpha);
+            final float power = parameters[0];
+            if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
+            return (float) Math.pow((a - 1) * 2, power) * (power % 2 == 0 ? -0.5f : 0.5f) + 1;
+        }
+    }
+
+    public static final Pow pow2 = new Pow("pow2", 2f);
+    public static final Pow pow3 = new Pow("pow3", 3f);
 
     /**
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
