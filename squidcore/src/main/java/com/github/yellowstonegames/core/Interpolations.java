@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
 
@@ -46,20 +47,17 @@ public final class Interpolations {
     }
 
     public static class Interpolator implements InterpolationFunction {
-        public String tag;
-        public InterpolationFunction fn;
-        public float[] parameters;
+        public final @NonNull String tag;
+        public final @NonNull InterpolationFunction fn;
 
         public Interpolator() {
             this.tag = "linear";
             this.fn = linearFunction;
-            this.parameters = new float[0];
         }
 
-        public Interpolator(String tag, InterpolationFunction fn, float... parameters) {
+        public Interpolator(@NonNull String tag, @NonNull InterpolationFunction fn) {
             this.tag = tag;
             this.fn = fn;
-            this.parameters = parameters;
         }
 
         @Override
@@ -67,62 +65,24 @@ public final class Interpolations {
             return fn.apply(alpha);
         }
 
-        public Interpolator copy() {
-            return new Interpolator(tag, fn, Arrays.copyOf(parameters, parameters.length));
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Interpolator that = (Interpolator) o;
+
+            return tag.equals(that.tag);
         }
 
-        /**
-         * Serializes the tag and any parameters of this Interpolator to a String that can be used by
-         * {@link #stringDeserialize(String)} to load this Interpolator at another time. This always uses
-         * {@link Base#SIMPLE64} as its base.
-         * @return a String storing all data from this Interpolator along with its name
-         */
-        public String stringSerialize() {
-            return stringSerialize(Base.SIMPLE64);
+        @Override
+        public int hashCode() {
+            return tag.hashCode();
         }
 
-        /**
-         * Serializes the tag and any parameters of this Interpolator to a String that can be used by
-         * {@link #stringDeserialize(String)} to load this Interpolator at another time.
-         * @param base which {@link Base} to use to store any parameters using {@link Base#joinExact(String, float[])}
-         * @return a String storing all data from this Interpolator along with its name
-         */
-        public String stringSerialize(Base base) {
-            return tag + "`" + base.joinExact("~", parameters) + "`";
-        }
-
-        /**
-         * Given a String in the format produced by {@link #stringSerialize()}, this will attempt to set this
-         * Interpolator to match the state in the serialized data. This only works if this Interpolator is the same
-         * implementation that was serialized. Always uses {@link Base#SIMPLE64}. Returns this Interpolator, after
-         * possibly changing its state.
-         * <br>
-         * This isn't very useful on its own; use Interpolations.Deserializer to acquire a known Interpolator.
-         *
-         * @param data a String probably produced by {@link #stringSerialize()}
-         * @return this, after setting its state
-         */
-        public Interpolator stringDeserialize(String data) {
-            return stringDeserialize(data, Base.SIMPLE64);
-        }
-
-        /**
-         * Given a String in the format produced by {@link #stringSerialize(Base)}, and the same {@link Base} used by
-         * the serialization, this will attempt to set this Interpolator to match the state in the serialized data.
-         * This only works if this Interpolator is the same implementation that was serialized, and also needs
-         * the Bases to be identical. Returns this Interpolator, after possibly changing its state.
-         * <br>
-         * This isn't very useful on its own; use Interpolations.Deserializer to acquire a known Interpolator.
-         *
-         * @param data a String probably produced by {@link #stringSerialize(Base)}
-         * @param base which Base to use, from the "digital" library, such as {@link Base#BASE10}
-         * @return this, after setting its state
-         */
-        //TODO: link to Deserializer once it is written
-        public Interpolator stringDeserialize(String data, Base base) {
-            int idx = data.indexOf('`');
-            parameters = base.floatSplitExact(data, "~", idx + 1, data.indexOf('`', idx + 2));
-            return this;
+        @Override
+        public String toString() {
+            return tag;
         }
     }
 
@@ -147,56 +107,31 @@ public final class Interpolations {
      * A quintic Hermite spline by Ken Perlin.
      */
     public static final Interpolator smoother = new Interpolator("smoother", a -> a * a * a * (a * (a * 6 - 15) + 10));
-
     /**
-     * When the parameter is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
+     * Produces an InterpolationFunction that uses the given power variable.
+     * When power is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
      * rate of acceleration and deceleration changes based on the parameter. Non-integer parameters are supported,
      * unlike the Pow in libGDX. Negative powers are not supported.
      */
-    public static class Pow extends Interpolator {
-        public Pow() {
-            tag = "pow";
-            fn = linearFunction;
-            parameters = new float[]{2};
-        }
-        public Pow(String tag, float parameter) {
-            this.tag = tag;
-            this.fn = linearFunction;
-            this.parameters = new float[]{parameter};
-        }
-        public Pow(String tag, InterpolationFunction alternateFn, float parameter) {
-            this.tag = tag;
-            this.fn = alternateFn;
-            this.parameters = new float[]{parameter};
-        }
-
-        @Override
-        public float apply(float alpha) {
-            final float a = fn.apply(alpha);
-            final float power = parameters[0];
+    public static InterpolationFunction powFunction(final float power) {
+        return a -> {
             if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
             return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
-        }
-
-        @Override
-        public Pow copy() {
-            return new Pow(tag, fn, parameters[0]);
-        }
-
+        };
     }
 
     /**
      * Accelerates and decelerates using a power of 2.
      */
-    public static final Pow pow2 = new Pow("pow2", 2f);
+    public static final Interpolator pow2 = new Interpolator("pow2", powFunction(2f));
     /**
      * Accelerates and decelerates using a power of 3.
      */
-    public static final Pow pow3 = new Pow("pow3", 3f);
+    public static final Interpolator pow3 = new Interpolator("pow3", powFunction(3f));
     /**
      * Accelerates and decelerates using a power of 0.5.
      */
-    public static final Pow pow0_5 = new Pow("pow0.5", 0.5f);
+    public static final Interpolator pow0_5 = new Interpolator("pow0.5", powFunction(0.5f));
 
 //    // This might make sense to PR to libGDX, because it should avoid a modulus and conditional.
 //    public static float oPow(float a, int power){
@@ -211,69 +146,31 @@ public final class Interpolations {
 //    }
 
     /**
+     * Produces an InterpolationFunction that uses the given shape and turning variables.
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
      * as an Interpolator or InterpolationFunction. Useful because it can imitate the wide variety of symmetrical
      * interpolations by setting turning to 0.5 and shape to some value greater than 1, while also being able to produce
      * the inverse of those interpolations by setting shape to some value between 0 and 1. It can also produce
      * asymmetrical interpolations by using a turning value other than 0.5 .
      */
-    public static class BiasGain extends Interpolator {
-        public BiasGain() {
-            this(2f, 0.5f);
-        }
-
-        /**
-         *
-         * @param shape the shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
-         *              values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
-         *              start like square root does, taking off very quickly, but also end like square does, landing abruptly at
-         *              the ending level).
-         * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes.
-         */
-        public BiasGain(float shape, float turning) {
-            this.tag = "biasGain$" + shape + "$" + turning;
-            this.parameters = new float[]{shape, turning};
-            this.fn = linearFunction;
-        }
-
-        /**
-         *
-         * @param shape the shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
-         *              values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
-         *              start like square root does, taking off very quickly, but also end like square does, landing abruptly at
-         *              the ending level).
-         * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes.
-         */
-        public BiasGain(String tag, float shape, float turning) {
-            this.tag = tag;
-            this.parameters = new float[]{shape, turning};
-            this.fn = linearFunction;
-        }
-
-        public float apply(float a) {
-            return barronSpline(a, parameters[0], parameters[1]);
-        }
-
-        @Override
-        public BiasGain copy() {
-            return new BiasGain(tag, parameters[0], parameters[1]);
-        }
+    public static InterpolationFunction biasGainFunction(final float shape, final float turning) {
+        return a -> barronSpline(a, shape, turning);
     }
-
+    
     /**
      * Produces more results in the center.
      */
-    public static final BiasGain biasGainCentered = new BiasGain("biasGainCentered", 0.5f, 0.5f);
+    public static final Interpolator biasGainCentered = new Interpolator("biasGainCentered", biasGainFunction(0.5f, 0.5f));
     /**
      * Produces more results near 0 and near 1.
      */
-    public static final BiasGain biasGainExtreme = new BiasGain("biasGainExtreme", 4f, 0.5f);
+    public static final Interpolator biasGainExtreme = new Interpolator("biasGainExtreme", biasGainFunction(4f, 0.5f));
     /**
      * Produces more results near 0.
      */
-    public static final BiasGain biasGainMostlyLow = new BiasGain("biasGainMostlyLow", 3f, 0.9f);
+    public static final Interpolator biasGainMostlyLow = new Interpolator("biasGainMostlyLow", biasGainFunction(3f, 0.9f));
     /**
      * Produces more results near 1.
      */
-    public static final BiasGain biasGainMostlyHigh = new BiasGain("biasGainMostlyHigh", 3f, 0.1f);
+    public static final Interpolator biasGainMostlyHigh = new Interpolator("biasGainMostlyHigh", biasGainFunction(3f, 0.1f));
 }
