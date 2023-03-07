@@ -115,8 +115,8 @@ public final class Interpolations {
      */
     public static InterpolationFunction powFunction(final float power) {
         return a -> {
-            if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
-            return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
+            if (a <= 0.5f) return (float) Math.pow(a + a, power) * 0.5f;
+            return (float) Math.pow(2f - a - a, power) * -0.5f + 1f;
         };
     }
 
@@ -129,9 +129,16 @@ public final class Interpolations {
      */
     public static final Interpolator pow3 = new Interpolator("pow3", powFunction(3f));
     /**
-     * Accelerates and decelerates using a power of 0.5.
+     * Accelerates and decelerates using a power of 0.75.
      */
-    public static final Interpolator pow0_5 = new Interpolator("pow0.5", powFunction(0.5f));
+    public static final Interpolator pow0_75 = new Interpolator("pow0_75", powFunction(0.75f));
+    /**
+     * Accelerates and decelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     */
+    public static final Interpolator pow0_5 = new Interpolator("pow0_5", a -> {
+        if (a <= 0.5f) return (float) Math.sqrt(a + a) * 0.5f;
+        return (float) Math.sqrt(2f - a - a) * -0.5f + 1f;
+    });
 
 //    // This might make sense to PR to libGDX, because it should avoid a modulus and conditional.
 //    public static float oPow(float a, int power){
@@ -156,15 +163,31 @@ public final class Interpolations {
     public static InterpolationFunction biasGainFunction(final float shape, final float turning) {
         return a -> barronSpline(a, shape, turning);
     }
-    
+
     /**
-     * Produces more results in the center.
+     * Produces more results in the center, the first level of centrality.
      */
-    public static final Interpolator biasGainCentered = new Interpolator("biasGainCentered", biasGainFunction(0.5f, 0.5f));
+    public static final Interpolator biasGainCenteredA = new Interpolator("biasGainCenteredA", biasGainFunction(0.75f, 0.5f));
     /**
-     * Produces more results near 0 and near 1.
+     * Produces more results in the center, the second level of centrality.
      */
-    public static final Interpolator biasGainExtreme = new Interpolator("biasGainExtreme", biasGainFunction(4f, 0.5f));
+    public static final Interpolator biasGainCenteredB = new Interpolator("biasGainCenteredB", biasGainFunction(0.5f, 0.5f));
+    /**
+     * Produces more results in the center, the third level of centrality.
+     */
+    public static final Interpolator biasGainCenteredC = new Interpolator("biasGainCenteredC", biasGainFunction(0.25f, 0.5f));
+    /**
+     * Produces more results near 0 and near 1; the third level of extremity.
+     */
+    public static final Interpolator biasGainExtremeA = new Interpolator("biasGainExtremeA", biasGainFunction(2f, 0.5f));
+    /**
+     * Produces more results near 0 and near 1; the third level of extremity.
+     */
+    public static final Interpolator biasGainExtremeB = new Interpolator("biasGainExtremeB", biasGainFunction(3f, 0.5f));
+    /**
+     * Produces more results near 0 and near 1; the third level of extremity.
+     */
+    public static final Interpolator biasGainExtremeC = new Interpolator("biasGainExtremeC", biasGainFunction(4f, 0.5f));
     /**
      * Produces more results near 0.
      */
