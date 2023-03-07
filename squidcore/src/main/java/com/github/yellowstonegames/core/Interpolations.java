@@ -167,6 +167,18 @@ public final class Interpolations {
     public static InterpolationFunction powInFunction(final float power) {
         return a -> (float) Math.pow(a, power);
     }
+    /**
+     * Produces an InterpolationFunction that uses the given power variable.
+     * When power is greater than 1, this starts quickly and slows down toward the end. The
+     * rate of deceleration changes based on the parameter. Non-integer parameters are supported,
+     * unlike the PowOut in libGDX. Negative powers are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     */
+    public static InterpolationFunction powOutFunction(final float power) {
+        return a -> 1f - (float) Math.pow(1f - a, power);
+    }
 
     /**
      * Accelerates and decelerates using a power of 2.
@@ -217,6 +229,10 @@ public final class Interpolations {
      */
     public static final Interpolator pow2In = new Interpolator("pow2In", powInFunction(2f));
     /**
+     * Slow, then fast. This uses the same function as {@link #pow2In}.
+     */
+    public static final Interpolator slowFast = new Interpolator("slowFast", powInFunction(2f));
+    /**
      * Accelerates using a power of 3.
      */
     public static final Interpolator pow3In = new Interpolator("pow3In", powInFunction(3f));
@@ -240,6 +256,39 @@ public final class Interpolations {
      * Accelerates using a power of 0.25.
      */
     public static final Interpolator pow0_25In = new Interpolator("pow0_25In", powInFunction(0.25f));
+
+    /**
+     * Decelerates using a power of 2.
+     */
+    public static final Interpolator pow2Out = new Interpolator("pow2Out", powOutFunction(2f));
+    /**
+     * Fast, then slow. This uses the same function as {@link #pow2Out}.
+     */
+    public static final Interpolator fastSlow = new Interpolator("fastSlow", powOutFunction(2f));
+    /**
+     * Decelerates using a power of 3.
+     */
+    public static final Interpolator pow3Out = new Interpolator("pow3Out", powOutFunction(3f));
+    /**
+     * Decelerates using a power of 4.
+     */
+    public static final Interpolator pow4Out = new Interpolator("pow4Out", powOutFunction(4f));
+    /**
+     * Decelerates using a power of 5.
+     */
+    public static final Interpolator pow5Out = new Interpolator("pow5Out", powOutFunction(5f));
+    /**
+     * Decelerates using a power of 0.75.
+     */
+    public static final Interpolator pow0_75Out = new Interpolator("pow0_75Out", powOutFunction(0.75f));
+    /**
+     * Decelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     */
+    public static final Interpolator pow0_5Out = new Interpolator("pow0_5Out", a -> 1f - (float) Math.sqrt(1f - a));
+    /**
+     * Decelerates using a power of 0.25.
+     */
+    public static final Interpolator pow0_25Out = new Interpolator("pow0_25Out", powOutFunction(0.25f));
 
     /**
      * Produces an InterpolationFunction that uses the given shape and turning variables.
