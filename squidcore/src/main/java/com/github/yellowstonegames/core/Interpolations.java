@@ -16,15 +16,30 @@
 
 package com.github.yellowstonegames.core;
 
-import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
 public final class Interpolations {
 
+    private static final ObjectObjectOrderedMap<String, Interpolator> REGISTRY = new ObjectObjectOrderedMap<>(128);
+
+    /**
+     * Looks up the given {@code tag} in a registry of Interpolators, and if there exists one with that name, returns
+     * it. Otherwise, this returns null.
+     * @param tag a tag used to register an Interpolator here
+     * @return the Interpolator registered with the given tag, or null if none exists for that tag
+     */
+    public static @Nullable Interpolator get(String tag) {
+//        Interpolator i = REGISTRY.get(tag);
+//        if(i == null) throw new NoSuchElementException("The given Interpolator tag " + tag + " cannot be found.");
+//        return i;
+        return REGISTRY.get(tag);
+    }
     /**
      * No need to instantiate.
      */
@@ -51,18 +66,36 @@ public final class Interpolations {
         public final @NonNull InterpolationFunction fn;
 
         public Interpolator() {
-            this.tag = "linear";
-            this.fn = linearFunction;
+            this("linear", linearFunction);
         }
 
         public Interpolator(@NonNull String tag, @NonNull InterpolationFunction fn) {
             this.tag = tag;
             this.fn = fn;
+            REGISTRY.put(tag, this);
         }
 
         @Override
         public float apply(float alpha) {
             return fn.apply(alpha);
+        }
+
+        /**
+         * Gets the tag for this Interpolator, which is a unique String that identifies this object. If another
+         * Interpolator tries to use the same tag, this Interpolator will be un-registered and will no longer be
+         * returnable from {@link #get(String)}.
+         * @return the tag String
+         */
+        public @NonNull String getTag() {
+            return tag;
+        }
+
+        /**
+         * Gets the InterpolationFunction this actually uses to do its math work.
+         * @return the InterpolationFunction this uses
+         */
+        public @NonNull InterpolationFunction getFn() {
+            return fn;
         }
 
         @Override
