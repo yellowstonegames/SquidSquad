@@ -16,11 +16,10 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.NoSuchElementException;
 
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
@@ -77,6 +76,8 @@ public final class Interpolations {
 
         @Override
         public float apply(float alpha) {
+            if (alpha < MathTools.FLOAT_ROUNDING_ERROR) return 0;
+            if (alpha > 1) return 1;
             return fn.apply(alpha);
         }
 
@@ -91,7 +92,9 @@ public final class Interpolations {
         }
 
         /**
-         * Gets the InterpolationFunction this actually uses to do its math work.
+         * Gets the InterpolationFunction this actually uses to do its math work. Calling this function on its own does
+         * not behave the same way as calling {@link Interpolator#apply(float)} on this Interpolator; the Interpolator
+         * method clamps the result if the {@code alpha} parameter is below 0 or above 1.
          * @return the InterpolationFunction this uses
          */
         public @NonNull InterpolationFunction getFn() {
@@ -256,6 +259,15 @@ public final class Interpolations {
      * Accelerates using a power of 0.25.
      */
     public static final Interpolator pow0_25In = new Interpolator("pow0_25In", powInFunction(0.25f));
+    /**
+     * An alias for {@link #pow0_5In}, this is the inverse for {@link #pow2In}.
+     */
+    public static final Interpolator pow2InInverse = new Interpolator("pow2InInverse", a -> (float) Math.sqrt(a));
+    /**
+     * This is the inverse for {@link #pow3In}. Its function is simply a method reference to
+     * {@link MathTools#cbrt(float)}.
+     */
+    public static final Interpolator pow3InInverse = new Interpolator("pow3InInverse", MathTools::cbrt);
 
     /**
      * Decelerates using a power of 2.
@@ -289,6 +301,14 @@ public final class Interpolations {
      * Decelerates using a power of 0.25.
      */
     public static final Interpolator pow0_25Out = new Interpolator("pow0_25Out", powOutFunction(0.25f));
+    /**
+     * An alias for {@link #pow0_5Out}, this is the inverse of {@link #pow2Out}.
+     */
+    public static final Interpolator pow2OutInverse = new Interpolator("pow2OutInverse", a -> 1f - (float) Math.sqrt(1f - a));
+    /**
+     * This is the inverse for {@link #pow3Out}.
+     */
+    public static final Interpolator pow3OutInverse = new Interpolator("pow3OutInverse", a -> 1f - MathTools.cbrt(1f - a));
 
     /**
      * Produces an InterpolationFunction that uses the given shape and turning variables.
