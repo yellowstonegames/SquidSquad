@@ -368,4 +368,31 @@ public final class Interpolations {
      * Moves like a sine wave does; starts quickly and slows down.
      */
     public static final Interpolator sineOut = new Interpolator("sineOut", a -> (TrigTools.sinTurns(0.25f * a)));
+    
+// This is here so that we can validate the old circle output against the new.
+//    public static final Interpolator circleOld = new Interpolator("circle", a -> {
+//        if (a <= 0.5f) {
+//            a *= 2;
+//            return (1 - (float)Math.sqrt(1 - a * a)) / 2;
+//        }
+//        a--;
+//        a *= 2;
+//        return ((float)Math.sqrt(1 - a * a) + 1) / 2;
+//    });
+//
+    /**
+     * When graphed, forms two circular arcs; it starts slowly, accelerating rapidly towards the middle, then slows down
+     * towards the end.
+     */
+    public static final Interpolator circle = new Interpolator("circle", a -> (a <= 0.5f
+            ? (1f - (float)Math.sqrt(1f - a * a * 4f)) * 0.5f
+            : ((float)Math.sqrt(1f - 4f * (a * (a - 2f) + 1f)) + 1f) * 0.5f));
+    /**
+     * When graphed, forms one circular arc, starting slowly and accelerating at the end.
+     */
+    public static final Interpolator circleIn = new Interpolator("circleIn", a -> (1f - (float)Math.sqrt(1f - a * a)));
+    /**
+     * When graphed, forms one circular arc, starting rapidly and decelerating at the end.
+     */
+    public static final Interpolator circleOut = new Interpolator("circleOut", a -> ((float)Math.sqrt(a * (2f - a))));
 }
