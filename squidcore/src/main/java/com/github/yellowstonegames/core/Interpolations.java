@@ -145,12 +145,27 @@ public final class Interpolations {
      * When power is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
      * rate of acceleration and deceleration changes based on the parameter. Non-integer parameters are supported,
      * unlike the Pow in libGDX. Negative powers are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
      */
     public static InterpolationFunction powFunction(final float power) {
         return a -> {
             if (a <= 0.5f) return (float) Math.pow(a + a, power) * 0.5f;
             return (float) Math.pow(2f - a - a, power) * -0.5f + 1f;
         };
+    }
+    /**
+     * Produces an InterpolationFunction that uses the given power variable.
+     * When power is greater than 1, this starts slowly and speeds up toward the end. The
+     * rate of acceleration changes based on the parameter. Non-integer parameters are supported,
+     * unlike the PowIn in libGDX. Negative powers are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     */
+    public static InterpolationFunction powInFunction(final float power) {
+        return a -> (float) Math.pow(a, power);
     }
 
     /**
@@ -162,6 +177,14 @@ public final class Interpolations {
      */
     public static final Interpolator pow3 = new Interpolator("pow3", powFunction(3f));
     /**
+     * Accelerates and decelerates using a power of 4.
+     */
+    public static final Interpolator pow4 = new Interpolator("pow4", powFunction(4f));
+    /**
+     * Accelerates and decelerates using a power of 5.
+     */
+    public static final Interpolator pow5 = new Interpolator("pow5", powFunction(5f));
+    /**
      * Accelerates and decelerates using a power of 0.75.
      */
     public static final Interpolator pow0_75 = new Interpolator("pow0_75", powFunction(0.75f));
@@ -172,6 +195,10 @@ public final class Interpolations {
         if (a <= 0.5f) return (float) Math.sqrt(a + a) * 0.5f;
         return (float) Math.sqrt(2f - a - a) * -0.5f + 1f;
     });
+    /**
+     * Accelerates and decelerates using a power of 0.25.
+     */
+    public static final Interpolator pow0_25 = new Interpolator("pow0_25", powFunction(0.25f));
 
 //    // This might make sense to PR to libGDX, because it should avoid a modulus and conditional.
 //    public static float oPow(float a, int power){
@@ -184,6 +211,35 @@ public final class Interpolations {
 //        if (a <= 0.5f) return (float) Math.pow(a * 2, power) * 0.5f;
 //        return (float) Math.pow((1 - a) * 2, power) * -0.5f + 1;
 //    }
+
+    /**
+     * Accelerates using a power of 2.
+     */
+    public static final Interpolator pow2In = new Interpolator("pow2In", powInFunction(2f));
+    /**
+     * Accelerates using a power of 3.
+     */
+    public static final Interpolator pow3In = new Interpolator("pow3In", powInFunction(3f));
+    /**
+     * Accelerates using a power of 4.
+     */
+    public static final Interpolator pow4In = new Interpolator("pow4In", powInFunction(4f));
+    /**
+     * Accelerates using a power of 5.
+     */
+    public static final Interpolator pow5In = new Interpolator("pow5In", powInFunction(5f));
+    /**
+     * Accelerates using a power of 0.75.
+     */
+    public static final Interpolator pow0_75In = new Interpolator("pow0_75In", powInFunction(0.75f));
+    /**
+     * Accelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     */
+    public static final Interpolator pow0_5In = new Interpolator("pow0_5In", a -> (float) Math.sqrt(a));
+    /**
+     * Accelerates using a power of 0.25.
+     */
+    public static final Interpolator pow0_25In = new Interpolator("pow0_25In", powInFunction(0.25f));
 
     /**
      * Produces an InterpolationFunction that uses the given shape and turning variables.
