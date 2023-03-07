@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -354,4 +355,17 @@ public final class Interpolations {
      * Produces more results near 1.
      */
     public static final Interpolator biasGainMostlyHigh = new Interpolator("biasGainMostlyHigh", biasGainFunction(3f, 0.1f));
+
+    /**
+     * Moves like a sine wave does; starts slowly, rises quickly, then ends slowly.
+     */
+    public static final Interpolator sine = new Interpolator("sine", a -> (1f - TrigTools.cosTurns(0.5f * a)) * 0.5f);
+    /**
+     * Moves like a sine wave does; starts slowly and rises quickly.
+     */
+    public static final Interpolator sineIn = new Interpolator("sineIn", a -> (1f - TrigTools.cosTurns(0.25f * a)));
+    /**
+     * Moves like a sine wave does; starts quickly and slows down.
+     */
+    public static final Interpolator sineOut = new Interpolator("sineOut", a -> (TrigTools.sinTurns(0.25f * a)));
 }
