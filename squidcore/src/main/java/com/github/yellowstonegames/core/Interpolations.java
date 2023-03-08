@@ -405,35 +405,35 @@ public final class Interpolations {
     }
 
     /**
-     * Produces more results in the center, the first level of centrality.
+     * Produces more results in the center; the first level of centrality. Uses {@code biasGainFunction(0.75f, 0.5f)}.
      */
     public static final Interpolator biasGainCenteredA = new Interpolator("biasGainCenteredA", biasGainFunction(0.75f, 0.5f));
     /**
-     * Produces more results in the center, the second level of centrality.
+     * Produces more results in the center; the second level of centrality. Uses {@code biasGainFunction(0.5f, 0.5f)}.
      */
     public static final Interpolator biasGainCenteredB = new Interpolator("biasGainCenteredB", biasGainFunction(0.5f, 0.5f));
     /**
-     * Produces more results in the center, the third level of centrality.
+     * Produces more results in the center; the third level of centrality. Uses {@code biasGainFunction(0.25f, 0.5f)}.
      */
     public static final Interpolator biasGainCenteredC = new Interpolator("biasGainCenteredC", biasGainFunction(0.25f, 0.5f));
     /**
-     * Produces more results near 0 and near 1; the third level of extremity.
+     * Produces more results near 0 and near 1; the third level of extremity. Uses {@code biasGainFunction(2f, 0.5f)}.
      */
     public static final Interpolator biasGainExtremeA = new Interpolator("biasGainExtremeA", biasGainFunction(2f, 0.5f));
     /**
-     * Produces more results near 0 and near 1; the third level of extremity.
+     * Produces more results near 0 and near 1; the third level of extremity. Uses {@code biasGainFunction(3f, 0.5f)}.
      */
     public static final Interpolator biasGainExtremeB = new Interpolator("biasGainExtremeB", biasGainFunction(3f, 0.5f));
     /**
-     * Produces more results near 0 and near 1; the third level of extremity.
+     * Produces more results near 0 and near 1; the third level of extremity. Uses {@code biasGainFunction(4f, 0.5f)}.
      */
     public static final Interpolator biasGainExtremeC = new Interpolator("biasGainExtremeC", biasGainFunction(4f, 0.5f));
     /**
-     * Produces more results near 0.
+     * Produces more results near 0. Uses {@code biasGainFunction(3f, 0.9f)}.
      */
     public static final Interpolator biasGainMostlyLow = new Interpolator("biasGainMostlyLow", biasGainFunction(3f, 0.9f));
     /**
-     * Produces more results near 1.
+     * Produces more results near 1. Uses {@code biasGainFunction(3f, 0.1f)}.
      */
     public static final Interpolator biasGainMostlyHigh = new Interpolator("biasGainMostlyHigh", biasGainFunction(3f, 0.1f));
 
@@ -509,7 +509,19 @@ public final class Interpolations {
     }
 
     /**
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 2 bounces.
+     */
+    public static final Interpolator bounceOut2 = new Interpolator("bounceOut2", bounceOutFunction(1.2f, 1f, 0.4f, 0.33f));
+    /**
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 3 bounces.
+     */
+    public static final Interpolator bounceOut3 = new Interpolator("bounceOut3", bounceOutFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
+    /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces.
      */
     public static final Interpolator bounceOut4 = new Interpolator("bounceOut4", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 5 bounces.
+     */
+    public static final Interpolator bounceOut5 = new Interpolator("bounceOut5", bounceOutFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
 }
