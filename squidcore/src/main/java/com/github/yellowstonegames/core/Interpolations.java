@@ -328,6 +328,32 @@ public final class Interpolations {
     }
 
     /**
+     * Produces an InterpolationFunction that uses the given value and power variables.
+     * When power is greater than 1, this starts slowly and speeds up toward the end. The
+     * rate of acceleration changes based on the parameter. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     */
+    public static InterpolationFunction expInFunction(final float value, final float power) {
+        final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
+        return a -> ((float)Math.pow(value, power * (a - 1f)) - min) * scale;
+    }
+
+    /**
+     * Produces an InterpolationFunction that uses the given value and power variables.
+     * When power is greater than 1, this starts quickly and slows down toward the end. The
+     * rate of deceleration changes based on the parameter. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     */
+    public static InterpolationFunction expOutFunction(final float value, final float power) {
+        final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
+        return a -> 1f - ((float)Math.pow(value, -power * a) - min) * scale;
+    }
+
+    /**
      * Accelerates and decelerates using {@link #expFunction(float, float)}, value of 2 and power of 5.
      */
     public static final Interpolator exp5 = new Interpolator("exp5", expFunction(2f, 5f));
@@ -336,6 +362,26 @@ public final class Interpolations {
      * Accelerates and decelerates using {@link #expFunction(float, float)}, value of 2 and power of 10.
      */
     public static final Interpolator exp10 = new Interpolator("exp10", expFunction(2f, 10f));
+
+    /**
+     * Accelerates using {@link #expInFunction(float, float)}, value of 2 and power of 5.
+     */
+    public static final Interpolator expIn5 = new Interpolator("expIn5", expInFunction(2f, 5f));
+
+    /**
+     * Accelerates using {@link #expInFunction(float, float)}, value of 2 and power of 10.
+     */
+    public static final Interpolator expIn10 = new Interpolator("expIn10", expInFunction(2f, 10f));
+
+    /**
+     * Decelerates using {@link #expOutFunction(float, float)}, value of 2 and power of 5.
+     */
+    public static final Interpolator expOut5 = new Interpolator("expOut5", expOutFunction(2f, 5f));
+
+    /**
+     * Decelerates using {@link #expOutFunction(float, float)}, value of 2 and power of 10.
+     */
+    public static final Interpolator expOut10 = new Interpolator("expOut10", expOutFunction(2f, 10f));
 
 
     /**
