@@ -78,7 +78,7 @@ public final class Interpolations {
         @Override
         public float apply(float alpha) {
             if (alpha < MathTools.FLOAT_ROUNDING_ERROR) return 0;
-            if (alpha > 1) return 1;
+            if (alpha >= 1f) return 1f;
             return fn.apply(alpha);
         }
 
@@ -152,6 +152,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction powFunction(final float power) {
         return a -> {
@@ -159,6 +160,7 @@ public final class Interpolations {
             return (float) Math.pow(2f - a - a, power) * -0.5f + 1f;
         };
     }
+
     /**
      * Produces an InterpolationFunction that uses the given power variable.
      * When power is greater than 1, this starts slowly and speeds up toward the end. The
@@ -167,6 +169,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction powInFunction(final float power) {
         return a -> (float) Math.pow(a, power);
@@ -179,6 +182,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction powOutFunction(final float power) {
         return a -> 1f - (float) Math.pow(1f - a, power);
@@ -318,6 +322,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction expFunction(final float value, final float power) {
         final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
@@ -334,6 +339,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction expInFunction(final float value, final float power) {
         final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
@@ -347,6 +353,7 @@ public final class Interpolations {
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
      * than 1.
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction expOutFunction(final float value, final float power) {
         final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
@@ -391,6 +398,7 @@ public final class Interpolations {
      * interpolations by setting turning to 0.5 and shape to some value greater than 1, while also being able to produce
      * the inverse of those interpolations by setting shape to some value between 0 and 1. It can also produce
      * asymmetrical interpolations by using a turning value other than 0.5 .
+     * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction biasGainFunction(final float shape, final float turning) {
         return a -> barronSpline(a, shape, turning);
@@ -468,4 +476,40 @@ public final class Interpolations {
      * When graphed, forms one circular arc, starting rapidly and decelerating at the end.
      */
     public static final Interpolator circleOut = new Interpolator("circleOut", a -> ((float)Math.sqrt(a * (2f - a))));
+
+    /**
+     * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
+     * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
+     * Interpolator, such as {@link #bounceOut4}. You can also hand-edit the values in pairs; if you do, every even
+     * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
+     * true for heights. No width is typically greater than 1.5f, and they are always positive and less than 2f.
+     *
+     * @param pairs width, height, width, height... in pairs; typically none are larger than 1.5f, and all are positive
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction bounceOutFunction(final float... pairs) {
+        return a -> {
+            a += pairs[0] * 0.5f;
+            float width = 0, height = 0;
+            for (int i = 0, n = (pairs.length & -2) - 1; i < n; i += 2) {
+                width = pairs[i];
+                if (a <= width) {
+                    height = pairs[i+1];
+                    break;
+                }
+                a -= width;
+            }
+            float z = 4f / (width * width) * height * a;
+            return 1f - (z * width - z * a);
+            // pretty sure this is equivalent to the 2 lines above. Not certain.
+//            a /= width;
+//            float z = 4 / width * height * a;
+//            return 1 - (z - z * a) * width;
+        };
+    }
+
+    /**
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces.
+     */
+    public static final Interpolator bounceOut4 = new Interpolator("bounceOut4", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
 }
