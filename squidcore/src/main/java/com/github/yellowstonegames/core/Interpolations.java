@@ -185,34 +185,34 @@ public final class Interpolations {
     }
 
     /**
-     * Accelerates and decelerates using a power of 2.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 2.
      */
     public static final Interpolator pow2 = new Interpolator("pow2", powFunction(2f));
     /**
-     * Accelerates and decelerates using a power of 3.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 3.
      */
     public static final Interpolator pow3 = new Interpolator("pow3", powFunction(3f));
     /**
-     * Accelerates and decelerates using a power of 4.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 4.
      */
     public static final Interpolator pow4 = new Interpolator("pow4", powFunction(4f));
     /**
-     * Accelerates and decelerates using a power of 5.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 5.
      */
     public static final Interpolator pow5 = new Interpolator("pow5", powFunction(5f));
     /**
-     * Accelerates and decelerates using a power of 0.75.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 0.75.
      */
     public static final Interpolator pow0_75 = new Interpolator("pow0_75", powFunction(0.75f));
     /**
-     * Accelerates and decelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 0.5. Optimized with {@link Math#sqrt(double)}.
      */
     public static final Interpolator pow0_5 = new Interpolator("pow0_5", a -> {
         if (a <= 0.5f) return (float) Math.sqrt(a + a) * 0.5f;
         return (float) Math.sqrt(2f - a - a) * -0.5f + 1f;
     });
     /**
-     * Accelerates and decelerates using a power of 0.25.
+     * Accelerates and decelerates using {@link #powFunction(float)} and power of 0.25.
      */
     public static final Interpolator pow0_25 = new Interpolator("pow0_25", powFunction(0.25f));
 
@@ -229,7 +229,7 @@ public final class Interpolations {
 //    }
 
     /**
-     * Accelerates using a power of 2.
+     * Accelerates using {@link #powInFunction(float)} and power of 2.
      */
     public static final Interpolator pow2In = new Interpolator("pow2In", powInFunction(2f));
     /**
@@ -237,31 +237,31 @@ public final class Interpolations {
      */
     public static final Interpolator slowFast = new Interpolator("slowFast", powInFunction(2f));
     /**
-     * Accelerates using a power of 3.
+     * Accelerates using {@link #powInFunction(float)} and power of 3.
      */
     public static final Interpolator pow3In = new Interpolator("pow3In", powInFunction(3f));
     /**
-     * Accelerates using a power of 4.
+     * Accelerates using {@link #powInFunction(float)} and power of 4.
      */
     public static final Interpolator pow4In = new Interpolator("pow4In", powInFunction(4f));
     /**
-     * Accelerates using a power of 5.
+     * Accelerates using {@link #powInFunction(float)} and power of 5.
      */
     public static final Interpolator pow5In = new Interpolator("pow5In", powInFunction(5f));
     /**
-     * Accelerates using a power of 0.75.
+     * Accelerates using {@link #powInFunction(float)} and power of 0.75.
      */
     public static final Interpolator pow0_75In = new Interpolator("pow0_75In", powInFunction(0.75f));
     /**
-     * Accelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     * Accelerates using {@link #powInFunction(float)} and power of 0.5. Optimized with {@link Math#sqrt(double)}.
      */
     public static final Interpolator pow0_5In = new Interpolator("pow0_5In", a -> (float) Math.sqrt(a));
     /**
-     * Accelerates using a power of 0.25.
+     * Accelerates using {@link #powInFunction(float)} and power of 0.25.
      */
     public static final Interpolator pow0_25In = new Interpolator("pow0_25In", powInFunction(0.25f));
     /**
-     * An alias for {@link #pow0_5In}, this is the inverse for {@link #pow2In}.
+     * An alias for {@link #pow0_5In}, this is the inverse for {@link #pow2In}. Optimized with {@link Math#sqrt(double)}.
      */
     public static final Interpolator pow2InInverse = new Interpolator("pow2InInverse", a -> (float) Math.sqrt(a));
     /**
@@ -271,7 +271,7 @@ public final class Interpolations {
     public static final Interpolator pow3InInverse = new Interpolator("pow3InInverse", MathTools::cbrt);
 
     /**
-     * Decelerates using a power of 2.
+     * Decelerates using {@link #powOutFunction(float)} and power of 2.
      */
     public static final Interpolator pow2Out = new Interpolator("pow2Out", powOutFunction(2f));
     /**
@@ -279,37 +279,64 @@ public final class Interpolations {
      */
     public static final Interpolator fastSlow = new Interpolator("fastSlow", powOutFunction(2f));
     /**
-     * Decelerates using a power of 3.
+     * Decelerates using {@link #powOutFunction(float)} and power of 3.
      */
     public static final Interpolator pow3Out = new Interpolator("pow3Out", powOutFunction(3f));
     /**
-     * Decelerates using a power of 4.
+     * Decelerates using {@link #powOutFunction(float)} and power of 4.
      */
     public static final Interpolator pow4Out = new Interpolator("pow4Out", powOutFunction(4f));
     /**
-     * Decelerates using a power of 5.
+     * Decelerates using {@link #powOutFunction(float)} and power of 5.
      */
     public static final Interpolator pow5Out = new Interpolator("pow5Out", powOutFunction(5f));
     /**
-     * Decelerates using a power of 0.75.
+     * Decelerates using {@link #powOutFunction(float)} and power of 0.75.
      */
     public static final Interpolator pow0_75Out = new Interpolator("pow0_75Out", powOutFunction(0.75f));
     /**
-     * Decelerates using a power of 0.5. Optimized with {@link Math#sqrt(double)}.
+     * Decelerates using {@link #powOutFunction(float)} and power of 0.5. Optimized with {@link Math#sqrt(double)}.
      */
     public static final Interpolator pow0_5Out = new Interpolator("pow0_5Out", a -> 1f - (float) Math.sqrt(1f - a));
     /**
-     * Decelerates using a power of 0.25.
+     * Decelerates using {@link #powOutFunction(float)} and power of 0.25.
      */
     public static final Interpolator pow0_25Out = new Interpolator("pow0_25Out", powOutFunction(0.25f));
     /**
-     * An alias for {@link #pow0_5Out}, this is the inverse of {@link #pow2Out}.
+     * An alias for {@link #pow0_5Out}, this is the inverse of {@link #pow2Out}. Optimized with {@link Math#sqrt(double)}.
      */
     public static final Interpolator pow2OutInverse = new Interpolator("pow2OutInverse", a -> 1f - (float) Math.sqrt(1f - a));
     /**
-     * This is the inverse for {@link #pow3Out}.
+     * This is the inverse for {@link #pow3Out}. Optimized with {@link MathTools#cbrt(float)}.
      */
     public static final Interpolator pow3OutInverse = new Interpolator("pow3OutInverse", a -> 1f - MathTools.cbrt(1f - a));
+
+    /**
+     * Produces an InterpolationFunction that uses the given value and power variables.
+     * When power is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
+     * rate of acceleration and deceleration changes based on the parameter. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     */
+    public static InterpolationFunction expFunction(final float value, final float power) {
+        final float min = (float) Math.pow(value, -power), scale = 1f / (1f - min);
+        return a -> {
+            if (a <= 0.5f) return ((float)Math.pow(value, power * (a * 2f - 1f)) - min) * scale * 0.5f;
+            return (2f - ((float)Math.pow(value, -power * (a * 2f - 1f)) - min) * scale) * 0.5f;
+        };
+    }
+
+    /**
+     * Accelerates and decelerates using {@link #expFunction(float, float)}, value of 2 and power of 5.
+     */
+    public static final Interpolator exp5 = new Interpolator("exp5", expFunction(2f, 5f));
+
+    /**
+     * Accelerates and decelerates using {@link #expFunction(float, float)}, value of 2 and power of 10.
+     */
+    public static final Interpolator exp10 = new Interpolator("exp10", expFunction(2f, 10f));
+
 
     /**
      * Produces an InterpolationFunction that uses the given shape and turning variables.
@@ -368,7 +395,7 @@ public final class Interpolations {
      * Moves like a sine wave does; starts quickly and slows down.
      */
     public static final Interpolator sineOut = new Interpolator("sineOut", a -> (TrigTools.sinTurns(0.25f * a)));
-    
+
 // This is here so that we can validate the old circle output against the new.
 //    public static final Interpolator circleOld = new Interpolator("circle", a -> {
 //        if (a <= 0.5f) {
