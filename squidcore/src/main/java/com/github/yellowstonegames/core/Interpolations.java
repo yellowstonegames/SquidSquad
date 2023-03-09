@@ -617,6 +617,42 @@ public final class Interpolations {
 
     /**
      * Produces an InterpolationFunction that uses the given scale variable.
+     * This drops below 0.0 at the start of the range, accelerates very rapidly, exceeds 1.0 at the middle of the input
+     * range, and ends returning 1.0. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction swingFunction(final float scale) {
+        return a -> (a <= 0.5f)
+                ? ((scale + 1f) * (a += a) - scale) * a * a * 0.5f
+                : ((scale + 1f) * (a += a - 2f) + scale) * a * a * 0.5f + 1f;
+    }
+    /**
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 2.
+     */
+    public static final Interpolator swing2 = new Interpolator("swing2", swingFunction(2f));
+    /**
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 2. This uses the same
+     * function as {@link #swing2}.
+     */
+    public static final Interpolator swing = new Interpolator("swing", swingFunction(2f));
+    /**
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 3.
+     */
+    public static final Interpolator swing3 = new Interpolator("swing3", swingFunction(3f));
+    /**
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 0.75.
+     */
+    public static final Interpolator swing0_75 = new Interpolator("swing0_75", swingFunction(0.75f));
+    /**
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 0.5.
+     */
+    public static final Interpolator swing0_5 = new Interpolator("swing0_5", swingFunction(0.5f));
+
+    /**
+     * Produces an InterpolationFunction that uses the given scale variable.
      * This accelerates very rapidly, exceeds 1.0 at the middle of the input range, and ends returning 1.0. Negative
      * parameters are not supported.
      * <br>
@@ -633,7 +669,7 @@ public final class Interpolations {
     public static final Interpolator swing2Out = new Interpolator("swing2Out", swingOutFunction(2f));
     /**
      * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 2. This uses the same function as
-     * {@link #bounceIn4}.
+     * {@link #swing2Out}.
      */
     public static final Interpolator swingOut = new Interpolator("swingOut", swingOutFunction(2f));
     /**
@@ -648,7 +684,7 @@ public final class Interpolations {
      * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 0.5.
      */
     public static final Interpolator swing0_5Out = new Interpolator("swing0_5Out", swingOutFunction(0.5f));
-    
+
     /**
      * Produces an InterpolationFunction that uses the given scale variable.
      * This drops below 0.0 before the middle of the input range, later speeds up rapidly, and ends returning 1.0.
@@ -661,13 +697,14 @@ public final class Interpolations {
     public static InterpolationFunction swingInFunction(final float scale) {
         return a -> a * a * ((scale + 1f) * a - scale);
     }
+
     /**
      * Goes extra-low, using {@link #swingInFunction(float)} and scale of 2.
      */
     public static final Interpolator swing2In = new Interpolator("swing2In", swingInFunction(2f));
     /**
      * Goes extra-low, using {@link #swingInFunction(float)} and scale of 2. This uses the same function as
-     * {@link #bounceIn4}.
+     * {@link #swing2In}.
      */
     public static final Interpolator swingIn = new Interpolator("swingIn", swingInFunction(2f));
     /**
