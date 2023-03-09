@@ -566,4 +566,38 @@ public final class Interpolations {
      * Decelerates using {@link #bounceOutFunction(float...)}, with 5 bounces.
      */
     public static final Interpolator bounceOut5 = new Interpolator("bounceOut5", bounceOutFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+
+    /**
+     * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
+     * This bounces at the start of its interpolation.
+     * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
+     * Interpolator, such as {@link #bounceIn4}. You can also hand-edit the values in pairs; if you do, every even
+     * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
+     * true for heights. No width is typically greater than 1.5f, and they are always positive and less than 2f.
+     *
+     * @param pairs width, height, width, height... in pairs; typically none are larger than 1.5f, and all are positive
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction bounceInFunction(final float... pairs) {
+        final InterpolationFunction bOut = bounceOutFunction(pairs);
+        return a -> 1f - bOut.apply(1f - a);
+    }
+
+    /**
+     * Decelerates using {@link #bounceInFunction(float...)}, with 2 bounces.
+     */
+    public static final Interpolator bounceIn2 = new Interpolator("bounceIn2", bounceInFunction(1.2f, 1f, 0.4f, 0.33f));
+    /**
+     * Decelerates using {@link #bounceInFunction(float...)}, with 3 bounces.
+     */
+    public static final Interpolator bounceIn3 = new Interpolator("bounceIn3", bounceInFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
+    /**
+     * Decelerates using {@link #bounceInFunction(float...)}, with 4 bounces.
+     */
+    public static final Interpolator bounceIn4 = new Interpolator("bounceIn4", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
+     * Decelerates using {@link #bounceInFunction(float...)}, with 5 bounces.
+     */
+    public static final Interpolator bounceIn5 = new Interpolator("bounceIn5", bounceInFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+
 }
