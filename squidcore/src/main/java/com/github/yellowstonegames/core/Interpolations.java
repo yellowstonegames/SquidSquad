@@ -514,6 +514,11 @@ public final class Interpolations {
      */
     public static final Interpolator bounce4 = new Interpolator("bounce4", bounceFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 4 bounces. This uses the same function as
+     * {@link #bounce4}.
+     */
+    public static final Interpolator bounce = new Interpolator("bounce", bounceFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
      * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 5 bounces.
      */
     public static final Interpolator bounce5 = new Interpolator("bounce5", bounceFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
@@ -532,11 +537,11 @@ public final class Interpolations {
     public static InterpolationFunction bounceOutFunction(final float... pairs) {
         return a -> {
             a += pairs[0] * 0.5f;
-            float width = 0, height = 0;
+            float width = 0f, height = 0f;
             for (int i = 0, n = (pairs.length & -2) - 1; i < n; i += 2) {
                 width = pairs[i];
                 if (a <= width) {
-                    height = pairs[i+1];
+                    height = pairs[i + 1];
                     break;
                 }
                 a -= width;
@@ -562,6 +567,11 @@ public final class Interpolations {
      * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces.
      */
     public static final Interpolator bounceOut4 = new Interpolator("bounceOut4", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces. This uses the same function as
+     * {@link #bounceOut4}.
+     */
+    public static final Interpolator bounceOut = new Interpolator("bounceOut", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 5 bounces.
      */
@@ -596,8 +606,47 @@ public final class Interpolations {
      */
     public static final Interpolator bounceIn4 = new Interpolator("bounceIn4", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
+     * Decelerates using {@link #bounceInFunction(float...)}, with 4 bounces. This uses the same function as
+     * {@link #bounceIn4}.
+     */
+    public static final Interpolator bounceIn = new Interpolator("bounceIn", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
      * Decelerates using {@link #bounceInFunction(float...)}, with 5 bounces.
      */
     public static final Interpolator bounceIn5 = new Interpolator("bounceIn5", bounceInFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+
+    /**
+     * Produces an InterpolationFunction that uses the given scale variable.
+     * This accelerates very rapidly, exceeds 1.0 at the middle of the input range, and ends returning 1.0. Negative
+     * parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction swingOutFunction(final float scale) {
+        return a -> ((scale + 1f) * --a + scale) * a * a + 1f;
+    }
+    /**
+     * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 2.
+     */
+    public static final Interpolator swing2Out = new Interpolator("swing2Out", swingOutFunction(2f));
+    /**
+     * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 2. This uses the same function as
+     * {@link #bounceIn4}.
+     */
+    public static final Interpolator swingOut = new Interpolator("swingOut", swingOutFunction(2f));
+    /**
+     * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 3.
+     */
+    public static final Interpolator swing3Out = new Interpolator("swing3Out", swingOutFunction(3f));
+    /**
+     * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 0.75.
+     */
+    public static final Interpolator swing0_75Out = new Interpolator("swing0_75Out", swingOutFunction(0.75f));
+    /**
+     * Goes extra-high, using {@link #swingOutFunction(float)} and scale of 0.5.
+     */
+    public static final Interpolator swing0_5Out = new Interpolator("swing0_5Out", swingOutFunction(0.5f));
 
 }
