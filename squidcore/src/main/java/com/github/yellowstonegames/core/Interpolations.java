@@ -479,6 +479,48 @@ public final class Interpolations {
 
     /**
      * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
+     * Unlike {@link #bounceOutFunction(float...)}, this bounces at both the start and end of its interpolation.
+     * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
+     * Interpolator, such as {@link #bounce4}. You can also hand-edit the values in pairs; if you do, every even
+     * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
+     * true for heights. No width is typically greater than 1.5f, and they are always positive and less than 2f.
+     *
+     * @param pairs width, height, width, height... in pairs; typically none are larger than 1.5f, and all are positive
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction bounceFunction(final float... pairs) {
+        final InterpolationFunction bOut = bounceOutFunction(pairs), iOut = o -> {
+            float test = o + pairs[0] * 0.5f;
+            if (test < pairs[0]) return test / (pairs[0] * 0.5f) - 1f;
+            return bOut.apply(o);
+        };
+
+        return a -> {
+            if(a <= 0.5f) return (1f - iOut.apply(1f - a - a)) * 0.5f;
+            return iOut.apply(a + a - 1) * 0.5f + 0.5f;
+        };
+    }
+
+    /**
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 2 bounces.
+     */
+    public static final Interpolator bounce2 = new Interpolator("bounce2", bounceFunction(1.2f, 1f, 0.4f, 0.33f));
+    /**
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 3 bounces.
+     */
+    public static final Interpolator bounce3 = new Interpolator("bounce3", bounceFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
+    /**
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 4 bounces.
+     */
+    public static final Interpolator bounce4 = new Interpolator("bounce4", bounceFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    /**
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 5 bounces.
+     */
+    public static final Interpolator bounce5 = new Interpolator("bounce5", bounceFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+
+    /**
+     * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
+     * This bounces at the end of its interpolation.
      * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
      * Interpolator, such as {@link #bounceOut4}. You can also hand-edit the values in pairs; if you do, every even
      * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
