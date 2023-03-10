@@ -503,6 +503,10 @@ public final class Interpolations {
      * Moves like a sine wave does; starts slowly, rises quickly, then ends slowly.
      */
     public static final Interpolator sine = new Interpolator("sine", a -> (1f - TrigTools.cosTurns(0.5f * a)) * 0.5f);
+    // when we check against libGDX, the above (approximate) and below (exact) both aren't equal to libGDX's
+    // very-approximate code...
+    //    public static final Interpolator sine = new Interpolator("sine", a -> (1f - (float) Math.cos(Math.PI * a)) * 0.5f);
+
     /**
      * Moves like a sine wave does; starts slowly and rises quickly.
      */
@@ -576,10 +580,10 @@ public final class Interpolations {
      */
     public static final Interpolator bounce4 = new Interpolator("bounce4", bounceFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
-     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 4 bounces. This uses the same function as
-     * {@link #bounce4}.
+     * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 4 bounces. While both this and
+     * {@link #bounce4} use 4 bounces, this matches the behavior of bounce in libGDX.
      */
-    public static final Interpolator bounce = new Interpolator("bounce", bounceFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    public static final Interpolator bounce = new Interpolator("bounce", bounceFunction(0.68f, 1f, 0.34f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
      * Accelerates and decelerates using {@link #bounceFunction(float...)}, with 5 bounces.
      */
@@ -589,7 +593,7 @@ public final class Interpolations {
      * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
      * This bounces at the end of its interpolation.
      * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
-     * Interpolator, such as {@link #bounceOut4}. You can also hand-edit the values in pairs; if you do, every even
+     * Interpolator, such as {@link #bounce4Out}. You can also hand-edit the values in pairs; if you do, every even
      * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
      * true for heights. No width is typically greater than 1.5f, and they are always positive and less than 2f.
      *
@@ -620,30 +624,30 @@ public final class Interpolations {
     /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 2 bounces.
      */
-    public static final Interpolator bounceOut2 = new Interpolator("bounceOut2", bounceOutFunction(1.2f, 1f, 0.4f, 0.33f));
+    public static final Interpolator bounce2Out = new Interpolator("bounce2Out", bounceOutFunction(1.2f, 1f, 0.4f, 0.33f));
     /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 3 bounces.
      */
-    public static final Interpolator bounceOut3 = new Interpolator("bounceOut3", bounceOutFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
+    public static final Interpolator bounce3Out = new Interpolator("bounce3Out", bounceOutFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
     /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces.
      */
-    public static final Interpolator bounceOut4 = new Interpolator("bounceOut4", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    public static final Interpolator bounce4Out = new Interpolator("bounce4Out", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
-     * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces. This uses the same function as
-     * {@link #bounceOut4}.
+     * Decelerates using {@link #bounceOutFunction(float...)}, with 4 bounces. While both this and
+     * {@link #bounce4Out} use 4 bounces, this matches the behavior of bounceOut in libGDX.
      */
-    public static final Interpolator bounceOut = new Interpolator("bounceOut", bounceOutFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    public static final Interpolator bounceOut = new Interpolator("bounceOut", bounceOutFunction(0.68f, 1f, 0.34f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
      * Decelerates using {@link #bounceOutFunction(float...)}, with 5 bounces.
      */
-    public static final Interpolator bounceOut5 = new Interpolator("bounceOut5", bounceOutFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+    public static final Interpolator bounce5Out = new Interpolator("bounce5Out", bounceOutFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
 
     /**
      * Produces an InterpolationFunction that uses the given {@code width, height, width, height, ...} float array.
      * This bounces at the start of its interpolation.
      * Fair warning; using this is atypically complicated, and you should generally stick to using a predefined
-     * Interpolator, such as {@link #bounceIn4}. You can also hand-edit the values in pairs; if you do, every even
+     * Interpolator, such as {@link #bounce4In}. You can also hand-edit the values in pairs; if you do, every even
      * index is a width, and every odd index is a height. Later widths are no greater than earlier ones; this is also
      * true for heights. No width is typically greater than 1.5f, and they are always positive and less than 2f.
      *
@@ -658,24 +662,24 @@ public final class Interpolations {
     /**
      * Decelerates using {@link #bounceInFunction(float...)}, with 2 bounces.
      */
-    public static final Interpolator bounceIn2 = new Interpolator("bounceIn2", bounceInFunction(1.2f, 1f, 0.4f, 0.33f));
+    public static final Interpolator bounce2In = new Interpolator("bounce2In", bounceInFunction(1.2f, 1f, 0.4f, 0.33f));
     /**
      * Decelerates using {@link #bounceInFunction(float...)}, with 3 bounces.
      */
-    public static final Interpolator bounceIn3 = new Interpolator("bounceIn3", bounceInFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
+    public static final Interpolator bounce3In = new Interpolator("bounce3In", bounceInFunction(0.8f, 1f, 0.4f, 0.33f, 0.2f, 0.1f));
     /**
      * Decelerates using {@link #bounceInFunction(float...)}, with 4 bounces.
      */
-    public static final Interpolator bounceIn4 = new Interpolator("bounceIn4", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    public static final Interpolator bounce4In = new Interpolator("bounce4In", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
-     * Decelerates using {@link #bounceInFunction(float...)}, with 4 bounces. This uses the same function as
-     * {@link #bounceIn4}.
+     * Decelerates using {@link #bounceInFunction(float...)}, with 4 bounces. While both this and
+     * {@link #bounce4In} use 4 bounces, this matches the behavior of bounceIn in libGDX.
      */
-    public static final Interpolator bounceIn = new Interpolator("bounceIn", bounceInFunction(0.65f, 1f, 0.325f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
+    public static final Interpolator bounceIn = new Interpolator("bounceIn", bounceInFunction(0.68f, 1f, 0.34f, 0.26f, 0.2f, 0.11f, 0.15f, 0.03f));
     /**
      * Decelerates using {@link #bounceInFunction(float...)}, with 5 bounces.
      */
-    public static final Interpolator bounceIn5 = new Interpolator("bounceIn5", bounceInFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
+    public static final Interpolator bounce5In = new Interpolator("bounce5In", bounceInFunction(0.61f, 1f, 0.31f, 0.45f, 0.21f, 0.3f, 0.11f, 0.15f, 0.06f, 0.06f));
 
     /**
      * Produces an InterpolationFunction that uses the given scale variable.
