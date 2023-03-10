@@ -18,6 +18,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -39,11 +40,41 @@ public final class Interpolations {
      * @return the Interpolator registered with the given tag, or null if none exists for that tag
      */
     public static @Nullable Interpolator get(String tag) {
-//        Interpolator i = REGISTRY.get(tag);
-//        if(i == null) throw new NoSuchElementException("The given Interpolator tag " + tag + " cannot be found.");
-//        return i;
         return REGISTRY.get(tag);
     }
+
+    /**
+     * Allocates a new String array, fills it with every tag registered for an Interpolator, and returns that array.
+     * @return an array containing every String tag registered for an Interpolator
+     */
+    public static String[] getTagArray() {
+        return REGISTRY.keySet().toArray(new String[0]);
+    }
+
+    /**
+     * Allocates a new Interpolator array, fills it with every registered Interpolator, and returns that array.
+     * @return an array containing every Interpolator registered
+     */
+    public static Interpolator[] getInterpolatorArray() {
+        return REGISTRY.values().toArray(new Interpolator[0]);
+    }
+
+    /**
+     * Allocates a new ObjectList, fills it with every tag registered for an Interpolator, and returns that ObjectList.
+     * @return an ObjectList containing every String tag registered for an Interpolator
+     */
+    public static ObjectList<String> getTagList() {
+        return REGISTRY.keySet().toList();
+    }
+
+    /**
+     * Allocates a new ObjectList, fills it with every registered Interpolator, and returns that ObjectList.
+     * @return an ObjectList containing every Interpolator registered
+     */
+    public static ObjectList<Interpolator> getInterpolatorList() {
+        return REGISTRY.values().toList();
+    }
+
     /**
      * No need to instantiate.
      */
@@ -171,6 +202,10 @@ public final class Interpolations {
      * A quintic Hermite spline by Ken Perlin.
      */
     public static final Interpolator smoother = new Interpolator("smoother", a -> a * a * a * (a * (a * 6 - 15) + 10));
+    /**
+     * A quintic Hermite spline by Ken Perlin; this uses the same function as {@link #smoother}.
+     */
+    public static final Interpolator fade = new Interpolator("fade", a -> a * a * a * (a * (a * 6 - 15) + 10));
     /**
      * Produces an InterpolationFunction that uses the given power variable.
      * When power is greater than 1, this starts slowly, speeds up in the middle and slows down at the end. The
@@ -400,22 +435,22 @@ public final class Interpolations {
     /**
      * Accelerates using {@link #expInFunction(float, float)}, value of 2 and power of 5.
      */
-    public static final Interpolator expIn5 = new Interpolator("expIn5", expInFunction(2f, 5f));
+    public static final Interpolator exp5In = new Interpolator("exp5In", expInFunction(2f, 5f));
 
     /**
      * Accelerates using {@link #expInFunction(float, float)}, value of 2 and power of 10.
      */
-    public static final Interpolator expIn10 = new Interpolator("expIn10", expInFunction(2f, 10f));
+    public static final Interpolator exp10In = new Interpolator("exp10In", expInFunction(2f, 10f));
 
     /**
      * Decelerates using {@link #expOutFunction(float, float)}, value of 2 and power of 5.
      */
-    public static final Interpolator expOut5 = new Interpolator("expOut5", expOutFunction(2f, 5f));
+    public static final Interpolator exp5Out = new Interpolator("exp5Out", expOutFunction(2f, 5f));
 
     /**
      * Decelerates using {@link #expOutFunction(float, float)}, value of 2 and power of 10.
      */
-    public static final Interpolator expOut10 = new Interpolator("expOut10", expOutFunction(2f, 10f));
+    public static final Interpolator exp10Out = new Interpolator("exp10Out", expOutFunction(2f, 10f));
 
 
     /**
