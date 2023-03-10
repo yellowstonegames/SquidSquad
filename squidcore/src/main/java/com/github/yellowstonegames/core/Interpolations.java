@@ -687,9 +687,11 @@ public final class Interpolations {
      * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction swingFunction(final float scale) {
-        return a -> (a <= 0.5f)
-                ? ((scale + 1f) * (a += a) - scale) * a * a * 0.5f
-                : ((scale + 1f) * (a += a - 2f) + scale) * a * a * 0.5f + 1f;
+        final float sc = scale + scale;
+        return a -> {
+            if (a <= 0.5f) return ((sc + 1f) * (a += a) - sc) * a * a * 0.5f;
+            return ((sc + 1f) * (a += a - 2f) + sc) * a * a * 0.5f + 1f;
+        };
     }
     /**
      * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 2.
