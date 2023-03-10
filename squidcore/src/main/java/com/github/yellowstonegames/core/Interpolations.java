@@ -24,6 +24,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
+/**
+ * Provides predefined {@link Interpolator} constants and ways to generate {@link InterpolationFunction} instance, as
+ * well as acting as the registry for known Interpolator values so that they can be looked up by name.
+ */
 public final class Interpolations {
 
     private static final ObjectObjectOrderedMap<String, Interpolator> REGISTRY = new ObjectObjectOrderedMap<>(128);
@@ -61,20 +65,43 @@ public final class Interpolations {
         }
     }
 
+    /**
+     * A simple wrapper around an {@link InterpolationFunction} so it is associated with a String {@link #tag}. This
+     * also implements InterpolationFunction, and wraps the {@link #fn} it stores to clamp the output if the input is
+     * too low or too high.
+     */
     public static class Interpolator implements InterpolationFunction {
         public final @NonNull String tag;
         public final @NonNull InterpolationFunction fn;
 
+        /**
+         * Calls {@link #Interpolator(String, InterpolationFunction)} with {@code "linear"} and {@link #linearFunction}.
+         * Because {@link #linear} is already registered with that tag and function, this isn't very useful.
+         */
         public Interpolator() {
             this("linear", linearFunction);
         }
 
+        /**
+         * Creates an Interpolator that will use the given {@code fn} and registers it with the given tag. The tag must
+         * be unique; if {@link Interpolations#get(String)} returns a non-null value when looking up the given tag, then
+         * if you create an Interpolator with that tag, the existing value will be overwritten.
+         * @param tag a unique String that can be used as a key to access this with {@link Interpolations#get(String)}
+         * @param fn an {@link InterpolationFunction} to wrap
+         */
         public Interpolator(@NonNull String tag, @NonNull InterpolationFunction fn) {
             this.tag = tag;
             this.fn = fn;
             REGISTRY.put(tag, this);
         }
 
+        /**
+         * Does bounds-checking on the input before passing it to {@link #fn}. If alpha is less than, roughly,
+         * one-millionth, then this always returns 0; if alpha is greater than or equal to 1, this returns 1, and in any
+         * other case it delegates to {@link #fn}.
+         * @param alpha almost always between 0 and 1, inclusive
+         * @return an interpolated value based on alpha, which may (for some functions) be negative, or greater than 1
+         */
         @Override
         public float apply(float alpha) {
             if (alpha < MathTools.FLOAT_ROUNDING_ERROR) return 0;
@@ -739,11 +766,11 @@ public final class Interpolations {
      * Goes extra low, then extra-high, using {@link #elasticFunction(float, float, int, float)}. Value is 2, power is
      * 10, bounces are 7, and scale is 1.
      */
-    public static final Interpolator elastic = new Interpolator("elastic", elasticFunction(2f, 10f, 7, 1));
+    public static final Interpolator elastic = new Interpolator("elastic", elasticFunction(2f, 10f, 7, 1f));
 
     /**
      * Produces an InterpolationFunction that uses the given value, power, bounces, and scale variables.
-     * This exceeds 1.0 just before the end of the range,
+     * This exceeds 1.0 just after the start of the range,
      * and ends returning 1.0. Negative parameters are not supported.
      * <br>
      * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
@@ -756,8 +783,28 @@ public final class Interpolations {
         return a -> (1f - (float)Math.pow(value, power * -a) * TrigTools.sinTurns(bounce - a * bounce) * scale);
     }
     /**
-     * Goes extra-high at the end, using {@link #elasticOutFunction(float, float, int, float)}. Value is 2, power is
+     * Goes extra-high near the start, using {@link #elasticOutFunction(float, float, int, float)}. Value is 2, power is
      * 10, bounces are 7, and scale is 1.
      */
-    public static final Interpolator elasticOut = new Interpolator("elasticOut", elasticOutFunction(2f, 10f, 7, 1));
+    public static final Interpolator elasticOut = new Interpolator("elasticOut", elasticOutFunction(2f, 10f, 7, 1f));
+
+    /**
+     * Produces an InterpolationFunction that uses the given value, power, bounces, and scale variables.
+     * This drops below 0.0 just before the end of the range,
+     * but jumps up so that it ends returning 1.0. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction elasticInFunction(final float value, final float power, final int bounces,
+                                                           final float scale) {
+        final float bounce = bounces * (0.5f - (bounces & 1));
+        return a -> (float)Math.pow(value, power * (a - 1)) * TrigTools.sinTurns(a * bounce) * scale;
+    }
+    /**
+     * Goes extra-low near the end, using {@link #elasticInFunction(float, float, int, float)}. Value is 2, power is
+     * 10, bounces are 6, and scale is 1.
+     */
+    public static final Interpolator elasticIn = new Interpolator("elasticIn", elasticInFunction(2f, 10f, 6, 1f));
 }
