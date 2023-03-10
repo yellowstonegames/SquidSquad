@@ -634,10 +634,9 @@ public final class Interpolations {
      */
     public static final Interpolator swing2 = new Interpolator("swing2", swingFunction(2f));
     /**
-     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 2. This uses the same
-     * function as {@link #swing2}.
+     * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 1.5.
      */
-    public static final Interpolator swing = new Interpolator("swing", swingFunction(2f));
+    public static final Interpolator swing = new Interpolator("swing", swingFunction(1.5f));
     /**
      * Goes extra low, then extra-high, using {@link #swingFunction(float)} and scale of 3.
      */
@@ -720,4 +719,25 @@ public final class Interpolations {
      */
     public static final Interpolator swing0_5In = new Interpolator("swing0_5In", swingInFunction(0.5f));
 
+    /**
+     * Produces an InterpolationFunction that uses the given value, power, bounces, and scale variables.
+     * This drops below 0.0 near the middle of the range, accelerates near-instantly, exceeds 1.0 just after that,
+     * and ends returning 1.0. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction elasticFunction(final float value, final float power, final int bounces,
+                                                        final float scale) {
+        final float bounce = bounces * (0.5f - (bounces & 1));
+        return a -> (a <= 0.5f)
+                ? (float)Math.pow(value, power * ((a += a) - 1)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f
+                : 1 - (float)Math.pow(value, power * ((a = 2 - a - a) - 1)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f;
+    }
+    /**
+     * Goes extra low, then extra-high, using {@link #elasticFunction(float, float, int, float)}. Value is 2, power is
+     * 10, bounces are 7, and scale is 1.
+     */
+    public static final Interpolator elastic = new Interpolator("elastic", elasticFunction(2f, 10f, 7, 1));
 }
