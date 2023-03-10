@@ -732,12 +732,32 @@ public final class Interpolations {
                                                         final float scale) {
         final float bounce = bounces * (0.5f - (bounces & 1));
         return a -> (a <= 0.5f)
-                ? (float)Math.pow(value, power * ((a += a) - 1)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f
-                : 1 - (float)Math.pow(value, power * ((a = 2 - a - a) - 1)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f;
+                ? (float)Math.pow(value, power * ((a += a) - 1f)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f
+                : 1f - (float)Math.pow(value, power * ((a = 2f - a - a) - 1f)) * TrigTools.sinTurns(a * bounce) * scale * 0.5f;
     }
     /**
      * Goes extra low, then extra-high, using {@link #elasticFunction(float, float, int, float)}. Value is 2, power is
      * 10, bounces are 7, and scale is 1.
      */
     public static final Interpolator elastic = new Interpolator("elastic", elasticFunction(2f, 10f, 7, 1));
+
+    /**
+     * Produces an InterpolationFunction that uses the given value, power, bounces, and scale variables.
+     * This exceeds 1.0 just before the end of the range,
+     * and ends returning 1.0. Negative parameters are not supported.
+     * <br>
+     * The functions this method produces are not well-behaved when their {@code a} parameter is less than 0 or greater
+     * than 1.
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction elasticOutFunction(final float value, final float power, final int bounces,
+                                                        final float scale) {
+        final float bounce = bounces * (0.5f - (bounces & 1));
+        return a -> (1f - (float)Math.pow(value, power * -a) * TrigTools.sinTurns(bounce - a * bounce) * scale);
+    }
+    /**
+     * Goes extra-high at the end, using {@link #elasticOutFunction(float, float, int, float)}. Value is 2, power is
+     * 10, bounces are 7, and scale is 1.
+     */
+    public static final Interpolator elasticOut = new Interpolator("elasticOut", elasticOutFunction(2f, 10f, 7, 1));
 }
