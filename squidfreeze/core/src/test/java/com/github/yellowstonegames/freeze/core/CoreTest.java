@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.freeze.core;
 
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
@@ -10,6 +11,7 @@ import com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.*;
+import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import org.junit.Assert;
 import org.junit.Test;
 import com.esotericsoftware.kryo.Kryo;
@@ -133,6 +135,26 @@ public class CoreTest {
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data, data2);
+        }
+    }
+    @Test
+    public void testInterpolator() {
+        Kryo kryo = new Kryo();
+        kryo.register(Interpolator.class, new InterpolatorSerializer());
+
+        Interpolator data = Interpolations.elasticOut;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Interpolator data2 = kryo.readObject(input, Interpolator.class);
+            Assert.assertEquals(data.apply(0.1f), data2.apply(0.1f), MathTools.FLOAT_ROUNDING_ERROR);
+            Assert.assertEquals(data.apply(0.2f), data2.apply(0.2f), MathTools.FLOAT_ROUNDING_ERROR);
+            Assert.assertEquals(data.apply(0.7f), data2.apply(0.7f), MathTools.FLOAT_ROUNDING_ERROR);
+            Assert.assertEquals(data.apply(0.8f), data2.apply(0.8f), MathTools.FLOAT_ROUNDING_ERROR);
             Assert.assertEquals(data, data2);
         }
     }
