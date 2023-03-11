@@ -2,12 +2,14 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.*;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.*;
+import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import org.junit.Assert;
 import org.junit.Test;
 import regexodus.Pattern;
@@ -268,5 +270,18 @@ public class JsonCoreTest {
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
+    }
+    @Test
+    public void testInterpolator() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerInterpolator(json);
+        Interpolator bounce = Interpolations.bounce3;
+        String data = json.toJson(bounce);
+        System.out.println(data);
+        Interpolator bounce2 = json.fromJson(Interpolator.class, data);
+        Assert.assertEquals(bounce, bounce2);
+        Assert.assertEquals(bounce.apply(0.1f), bounce2.apply(0.1f), MathTools.FLOAT_ROUNDING_ERROR);
+        Assert.assertEquals(bounce.apply(0.3f), bounce2.apply(0.3f), MathTools.FLOAT_ROUNDING_ERROR);
+        Assert.assertEquals(bounce.apply(0.7f), bounce2.apply(0.7f), MathTools.FLOAT_ROUNDING_ERROR);
     }
 }

@@ -25,13 +25,8 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.GapShuffler;
-import com.github.yellowstonegames.core.IntShuffler;
-import com.github.yellowstonegames.core.ProbabilityTable;
-import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.core.WeightedTable;
+import com.github.yellowstonegames.core.*;
+import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import regexodus.Pattern;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -370,9 +365,33 @@ public final class JsonCore {
     }
 
     /**
+     * Registers Interpolator with the given Json object, so Interpolator can be written to and read from JSON.
+     * This is a simple wrapper around each Interpolator's unique {@link Interpolator#getTag()} and
+     * {@link Interpolations#get(String)} to read it back.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerInterpolator(@NonNull Json json) {
+        json.addClassTag("Inlr", Interpolator.class);
+        json.setSerializer(Interpolator.class, new Json.Serializer<Interpolator>() {
+            @Override
+            public void write(Json json, Interpolator object, Class knownType) {
+                json.writeValue(object.getTag());
+            }
+
+            @Override
+            public Interpolator read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Interpolations.get(jsonData.asString());
+            }
+        });
+    }
+
+    /**
      * Registers Pattern with the given Json object, so Pattern can be written to and read from JSON.
      * This is a simple wrapper around Pattern's built-in {@link Pattern#serializeToString()} and
-     * {@link Pattern#deserializeFromString(String)} methods.
+     * {@link Pattern#deserializeFromString(String)} methods. Note that Pattern is in regexodus, a
+     * dependency of squidcore.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
