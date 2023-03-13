@@ -22,6 +22,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.grid.*;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -70,7 +71,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
     public static float circleInPrepare(float n)
     {
 //        return Math.max(0f, n);
-        return Interpolation.circleIn.apply(n * 0.5f + 0.5f);
+        return Interpolations.circleIn.apply(n * 0.5f + 0.5f);
     }
 
     @Override
@@ -81,7 +82,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
         noise.setFractalType(Noise.RIDGED_MULTI);
         noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUE_NOISE);
+        gif.setDitherStrength(0.2f);
         gif.palette = new PaletteReducer(new int[] {
                 0x000000FF, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
                 0x080808FF, 0x090909FF, 0x0A0A0AFF, 0x0B0B0BFF, 0x0C0C0CFF, 0x0D0D0DFF, 0x0E0E0EFF, 0x0F0F0FFF,
@@ -202,15 +204,22 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                  DescriptiveColor.oklabByHSL(0.375f, 0.6f, 0.2f, 1f)
 //                                  DescriptiveColor.oklabByHSL(0.7f, 0.6f, 0.7f, 1f)
 //                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.2f, 1f)
-                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.4f, 1f)
-                                , DescriptiveColor.oklabByHSL(0.99f, 0.9f, 0.55f, 1f)
-                                , DescriptiveColor.oklabByHSL(0.8f, 1f, 0.99f, 1f)
+
+//                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.4f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.99f, 0.9f, 0.55f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.8f, 1f, 0.99f, 1f)
+
 //                                , DescriptiveColor.oklabByHSL(0.1f, 0.85f, 0.95f, 1f)
 
 //                                DescriptiveColor.oklabByHSL(0.94f, 0.8f, 0.05f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)
+                                  DescriptiveColor.oklabByHSL(0.65f, 1f, 0.3f, 1f)
+                                , DescriptiveColor.oklabByHSL(0.475f, 0.75f, 0.65f, 1f)
+                                , DescriptiveColor.oklabByHSL(0.7f, 0.85f, 0.87f, 1f)
+                                , DescriptiveColor.oklabByHSL(0.5f, 0.9f, 0.72f, 1f)
+
                         ));
                         g.toArray(gif.palette.paletteArray);
                         for (int i = 0; i < 256; i++) {
