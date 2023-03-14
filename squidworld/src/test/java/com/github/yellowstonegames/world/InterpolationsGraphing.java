@@ -17,16 +17,20 @@
 package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.tommyettinger.textra.Layout;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.Interpolations.Interpolator;
@@ -41,18 +45,31 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     ImmediateModeRenderer20 renderer;
     SpriteBatch batch;
     ScreenViewport view;
+    Layout name;
+    Interpolator[] interpolators;
+    int index;
     @Override
     public void create() {
-        font = KnownFonts.getQuanPixel();
+        font = KnownFonts.getCozette();
         view = new ScreenViewport();
         batch = new SpriteBatch();
         renderer = new ImmediateModeRenderer20(width * 3, false, true, 0);
-        ObjectList<Interpolator> all = Interpolations.getInterpolatorList();
-        current = all.first();
+        interpolators = Interpolations.getInterpolatorArray();
+        index = 0;
+        current = interpolators[index];
+        name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
     }
 
     @Override
     public void render() {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            current = interpolators[index = (index + 1) % interpolators.length];
+            name = font.markup("[BLACK]"+ current.tag, name.clear());
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            current = interpolators[index = (index + interpolators.length - 1) % interpolators.length];
+            name = font.markup("[BLACK]"+ current.tag, name.clear());
+        }
         ScreenUtils.clear(Color.WHITE);
         renderer.begin(view.getCamera().combined, GL_LINES);
 
@@ -92,7 +109,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         renderer.color(Color.LIGHT_GRAY);
         renderer.vertex(260, height, 0);
 
-        float h0 = 101, h1 = 101;
+        float h0, h1 = 101;
         for (int i = 0; i <= 200; i++) {
             float f = i / 200f;
             h0 = h1;
@@ -107,15 +124,16 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 
         batch.begin();
         float level = -0.4f;
-        for (int i = 20; i <= 400; i+=40) {
-            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), 35, i);
+        for (int i = 15; i <= 400; i+=40) {
+            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), 32, i);
             level += 0.2f;
         }
         level = 0f;
-        for (int i = 51; i <= 260; i+=40) {
-            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), i, 85);
+        for (int i = 46; i <= 260; i+=40) {
+            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), i, 82);
             level += 0.2f;
         }
+        font.drawGlyphs(batch, name, width * 0.5f, height - 16f, Align.center);
         batch.end();
     }
 
