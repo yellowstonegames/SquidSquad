@@ -10,6 +10,8 @@ dependencies {
     api project(':squidplace')
     api project(':squidtext')
     testImplementation project(':squidglyph')
+    testImplementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
     testImplementation "com.github.tommyettinger:anim8-gdx:$anim8Version"
