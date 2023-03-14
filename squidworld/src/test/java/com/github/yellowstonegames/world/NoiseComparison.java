@@ -17,6 +17,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.core.Interpolations;
+import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Arrays;
@@ -40,13 +41,13 @@ public class NoiseComparison extends ApplicationAdapter {
     };
 //    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
 //    private FloatToFloatFunction fff = (f) -> (TrigTools.cos(f * 4f * TrigTools.PI2) > 0.9f) ? f < 0.1f ? 1f : 0.5f : -0.2f;
-    private Interpolations.Interpolator[] adjustments =
+    private Interpolator[] adjustments =
         {
                 Interpolations.linear,
-                new Interpolations.Interpolator("parameterSpline", (f) -> MathTools.barronSpline(f, args[0], args[1])),
-                new Interpolations.Interpolator("cosineThing", (f) -> (TrigTools.cos(f * 20) + 1f) * 0.5f),
-                new Interpolations.Interpolator("parameterPow", (f) -> (float) Math.pow(args[2], f) * args[3] - args[4]),
-                new Interpolations.Interpolator("parameterPowSpline", (f) -> MathTools.barronSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1])),
+                new Interpolator("parameterSpline", (f) -> MathTools.barronSpline(f, args[0], args[1])),
+                new Interpolator("cosineThing", (f) -> (TrigTools.cos(f * 20) + 1f) * 0.5f),
+                new Interpolator("parameterPow", (f) -> (float) Math.pow(args[2], f) * args[3] - args[4]),
+                new Interpolator("parameterPowSpline", (f) -> MathTools.barronSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1])),
         };
     private int currentAdjustment = 0;
 

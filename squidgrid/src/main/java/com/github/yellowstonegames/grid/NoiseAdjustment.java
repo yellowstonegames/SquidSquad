@@ -25,13 +25,33 @@ import com.github.yellowstonegames.core.Interpolations.Interpolator;
  * range for noise is mapped to the {@code [0,1]} range that Interpolator uses, and mapped back afterwards. This uses
  * Interpolator rather than the slightly-simpler {@link InterpolationFunction} because an Interpolator can be serialized
  * just by storing its {@link Interpolator#getTag()}, and loaded by looking up its tag.
+ * <br>
+ * Example usage:
+ * <pre>
+ *     Interpolator spline_06_03 = new Interpolator("spline_06_03", (f) -> MathTools.barronSpline(f, 0.6f, 0.3f));
+ *     NoiseAdjustment centralizeLow = new NoiseAdjustment(new SimplexNoise(12345), spline_06_03);
+ * </pre>
+ * The Interpolator is created separately so that it can be created (and thus registered) before any saving or loading
+ * step might happen. You may want to create Interpolators in their own file, much like how the Interpolations class
+ * defines many Interpolators for later usage. The NoiseAdjustment can use any INoise, such as a {@link Noise} or here
+ * a {@link SimplexNoise}.
  */
 public class NoiseAdjustment implements INoise {
     public INoise wrapped;
     public Interpolator adjustment;
+
+    /**
+     * The same as calling {@code new NoiseAdjustment(new SimplexNoise(123), Interpolations.smooth)}.
+     */
     public NoiseAdjustment(){
         this(new SimplexNoise(123), Interpolations.smooth);
     }
+
+    /**
+     * Creates a NoiseAdjustment wrapping the given INoise and modifying its output with the given Interpolator.
+     * @param toWrap an INoise, such as a {@link Noise} or {@link SimplexNoise}
+     * @param adjust an Interpolator, such as {@link Interpolations#exp5}, to apply to the output of the INoise
+     */
     public NoiseAdjustment(INoise toWrap, Interpolator adjust) {
         this.wrapped = toWrap;
         this.adjustment = adjust;

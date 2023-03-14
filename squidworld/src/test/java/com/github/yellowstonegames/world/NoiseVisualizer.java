@@ -441,6 +441,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         config.useVsync(false);
         config.setResizable(false);
         config.setWindowedMode(width, height);
+        config.disableAudio(true);
         new Lwjgl3Application(new NoiseVisualizer(), config);
     }
 }

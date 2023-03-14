@@ -9,10 +9,6 @@ dependencies {
     api project(':squidfreeze:core')
     api project(':squidtext')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-    api("com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"){
-        exclude module: 'jdkgdxds'
-    }
-    api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
