@@ -33,7 +33,7 @@ import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import static com.badlogic.gdx.graphics.GL20.GL_LINES;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    private static final int width = 210, height = 320;
+    private static final int width = 300, height = 420;
 
     Interpolator current;
     Font font;
@@ -42,7 +42,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     ScreenViewport view;
     @Override
     public void create() {
-        font = KnownFonts.getAStarry().scaleTo(8, 16);
+        font = KnownFonts.getQuanPixel();
         view = new ScreenViewport();
         batch = new SpriteBatch();
         renderer = new ImmediateModeRenderer20(width * 3, false, true, 0);
@@ -56,14 +56,14 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         renderer.begin(view.getCamera().combined, GL_LINES);
 
         // horizontal graph lines
-        for (int i = 15; i < height; i+=30) {
+        for (int i = 20; i < height; i+=40) {
             renderer.color(Color.CYAN);
             renderer.vertex(0, i, 0);
             renderer.color(Color.CYAN);
             renderer.vertex(width, i, 0);
         }
         // vertical graph lines
-        for (int i = 20; i < width; i+=30) {
+        for (int i = 20; i < width; i+=40) {
             renderer.color(Color.CYAN);
             renderer.vertex(i, 0, 0);
             renderer.color(Color.CYAN);
@@ -71,26 +71,38 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         }
         // x-axis
         renderer.color(Color.NAVY);
-        renderer.vertex(0, 75, 0);
+        renderer.vertex(0, 100, 0);
         renderer.color(Color.NAVY);
-        renderer.vertex(width, 75, 0);
+        renderer.vertex(width, 100, 0);
         // y-axis
         renderer.color(Color.NAVY);
-        renderer.vertex(50, 0, 0);
+        renderer.vertex(60, 0, 0);
         renderer.color(Color.NAVY);
-        renderer.vertex(50, height, 0);
+        renderer.vertex(60, height, 0);
         renderer.end();
         // line where y == 1
         renderer.color(Color.LIGHT_GRAY);
-        renderer.vertex(0, 225, 0);
+        renderer.vertex(0, 300, 0);
         renderer.color(Color.LIGHT_GRAY);
-        renderer.vertex(width, 225, 0);
+        renderer.vertex(width, 300, 0);
         // line where x == 1
         renderer.color(Color.LIGHT_GRAY);
-        renderer.vertex(200, 0, 0);
+        renderer.vertex(260, 0, 0);
         renderer.color(Color.LIGHT_GRAY);
-        renderer.vertex(200, height, 0);
+        renderer.vertex(260, height, 0);
         renderer.end();
+        batch.begin();
+        float level = -0.4f;
+        for (int i = 20; i <= 400; i+=40) {
+            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), 35, i);
+            level += 0.2f;
+        }
+        level = 0f;
+        for (int i = 51; i <= 260; i+=40) {
+            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), i, 85);
+            level += 0.2f;
+        }
+        batch.end();
     }
 
     @Override
