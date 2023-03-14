@@ -16,6 +16,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
+import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Arrays;
@@ -34,18 +35,18 @@ public class NoiseComparison extends ApplicationAdapter {
             1f,   // 0, spline shape
             0f,   // 1, spline turning
             2f,   // 2, maelstrom exponent
-            4f/3f,// 3, maelstrom mul
-            5f/3f,// 4, maelstrom sub
+            1f,   // 3, maelstrom mul
+            1f,  // 4, maelstrom sub
     };
 //    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
 //    private FloatToFloatFunction fff = (f) -> (TrigTools.cos(f * 4f * TrigTools.PI2) > 0.9f) ? f < 0.1f ? 1f : 0.5f : -0.2f;
-    private FloatToFloatFunction[] adjustments =
+    private Interpolations.Interpolator[] adjustments =
         {
-                (f) -> f,
-                (f) -> MathTools.noiseSpline(f, args[0], args[1]),
-                (f) -> MathTools.clamp((TrigTools.cos(f * 20) - 0.7f) * 4f, -0.6f, 1f - Math.abs(f)),
-                (f) -> (float) Math.pow(args[2], f) * args[3] - args[4],
-                (f) -> MathTools.noiseSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1]),
+                Interpolations.linear,
+                new Interpolations.Interpolator("parameterSpline", (f) -> MathTools.barronSpline(f, args[0], args[1])),
+                new Interpolations.Interpolator("cosineThing", (f) -> (TrigTools.cos(f * 20) + 1f) * 0.5f),
+                new Interpolations.Interpolator("parameterPow", (f) -> (float) Math.pow(args[2], f) * args[3] - args[4]),
+                new Interpolations.Interpolator("parameterPowSpline", (f) -> MathTools.barronSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1])),
         };
     private int currentAdjustment = 0;
 

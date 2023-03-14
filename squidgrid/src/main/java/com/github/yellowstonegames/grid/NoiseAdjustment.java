@@ -16,15 +16,23 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.function.FloatToFloatFunction;
+import com.github.yellowstonegames.core.Interpolations;
+import com.github.yellowstonegames.core.Interpolations.InterpolationFunction;
+import com.github.yellowstonegames.core.Interpolations.Interpolator;
 
+/**
+ * Wraps another {@link INoise} and alters its output by running it through an {@link Interpolator}. The {@code [-1,1]}
+ * range for noise is mapped to the {@code [0,1]} range that Interpolator uses, and mapped back afterwards. This uses
+ * Interpolator rather than the slightly-simpler {@link InterpolationFunction} because an Interpolator can be serialized
+ * just by storing its {@link Interpolator#getTag()}, and loaded by looking up its tag.
+ */
 public class NoiseAdjustment implements INoise {
     public INoise wrapped;
-    public FloatToFloatFunction adjustment;
+    public Interpolator adjustment;
     public NoiseAdjustment(){
-        this(new SimplexNoise(123), f -> -f);
+        this(new SimplexNoise(123), Interpolations.smooth);
     }
-    public NoiseAdjustment(INoise toWrap, FloatToFloatFunction adjust) {
+    public NoiseAdjustment(INoise toWrap, Interpolator adjust) {
         this.wrapped = toWrap;
         this.adjustment = adjust;
     }
@@ -38,11 +46,11 @@ public class NoiseAdjustment implements INoise {
         return this;
     }
 
-    public FloatToFloatFunction getAdjustment() {
+    public Interpolator getAdjustment() {
         return adjustment;
     }
 
-    public NoiseAdjustment setAdjustment(FloatToFloatFunction adjustment) {
+    public NoiseAdjustment setAdjustment(Interpolator adjustment) {
         this.adjustment = adjustment;
         return this;
     }
@@ -69,27 +77,27 @@ public class NoiseAdjustment implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        return adjustment.applyAsFloat(wrapped.getNoise(x, y));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y)));
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        return adjustment.applyAsFloat(wrapped.getNoise(x, y, z));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y, z)));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return adjustment.applyAsFloat(wrapped.getNoise(x, y, z, w));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y, z, w)));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        return adjustment.applyAsFloat(wrapped.getNoise(x, y, z, w, u));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y, z, w, u)));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return adjustment.applyAsFloat(wrapped.getNoise(x, y, z, w, u, v));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y, z, w, u, v)));
     }
 
     @Override
@@ -104,26 +112,26 @@ public class NoiseAdjustment implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        return adjustment.applyAsFloat(wrapped.getNoiseWithSeed(x, y, seed));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, seed)));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
-        return adjustment.applyAsFloat(wrapped.getNoiseWithSeed(x, y, z, seed));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, seed)));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return adjustment.applyAsFloat(wrapped.getNoiseWithSeed(x, y, z, w, seed));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, seed)));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        return adjustment.applyAsFloat(wrapped.getNoiseWithSeed(x, y, z, w, u, seed));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, u, seed)));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        return adjustment.applyAsFloat(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed));
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed)));
     }
 }
