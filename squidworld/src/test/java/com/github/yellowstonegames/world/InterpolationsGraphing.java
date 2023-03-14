@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.Interpolations.Interpolator;
 
@@ -90,7 +91,20 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         renderer.vertex(260, 0, 0);
         renderer.color(Color.LIGHT_GRAY);
         renderer.vertex(260, height, 0);
+
+        float h0 = 101, h1 = 101;
+        for (int i = 0; i <= 200; i++) {
+            float f = i / 200f;
+            h0 = h1;
+            h1 = current.apply(101, 301, f);
+            float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
+            renderer.color(gradient);
+            renderer.vertex(59 + i, h0, 0);
+            renderer.color(gradient);
+            renderer.vertex(60 + i, h1, 0);
+        }
         renderer.end();
+
         batch.begin();
         float level = -0.4f;
         for (int i = 20; i <= 400; i+=40) {
