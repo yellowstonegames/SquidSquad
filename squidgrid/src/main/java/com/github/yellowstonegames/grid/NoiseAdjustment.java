@@ -154,4 +154,41 @@ public class NoiseAdjustment implements INoise {
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed)));
     }
+
+    /**
+     * @return "NAdj"
+     */
+    @Override
+    public String getTag() {
+        return "NAdj";
+    }
+
+    /**
+     * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
+     * in by {@link #deserializeFromString(String)} to reassign the described state to another INoise. The syntax here
+     * should always start and end with the {@code `} character, which is used by
+     * {@link Serializer#deserializeFromString(String)} to identify the portion of a String that can be read back. The
+     * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
+     *
+     * @return a String that describes this INoise for serialization
+     */
+    @Override
+    public String serializeToString() {
+        return "`" + Serializer.serialize(wrapped) + '~' + adjustment.getTag() + "`";
+    }
+
+    /**
+     * Given a serialized String produced by {@link #serializeToString()}, reassigns this INoise to have the described
+     * state from the given String. The serialized String must have been produced by the same class as this object is.
+     *
+     * @param data a serialized String, typically produced by {@link #serializeToString()}
+     * @return this INoise, after being modified (if possible)
+     */
+    @Override
+    public INoise deserializeFromString(String data) {
+        int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
+        setWrapped(Serializer.deserialize(data.substring(1, pos)));
+        setAdjustment(Interpolations.get(data.substring(pos+1, data.indexOf('`', pos+2))));
+        return this;
+    }
 }

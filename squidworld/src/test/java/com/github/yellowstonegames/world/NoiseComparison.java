@@ -48,6 +48,8 @@ public class NoiseComparison extends ApplicationAdapter {
                 new Interpolator("cosineThing", (f) -> (TrigTools.cos(f * 20) + 1f) * 0.5f),
                 new Interpolator("parameterPow", (f) -> (float) Math.pow(args[2], f) * args[3] - args[4]),
                 new Interpolator("parameterPowSpline", (f) -> MathTools.barronSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1])),
+                new Interpolator("cosineSquared", (f) -> MathTools.square(TrigTools.cosTurns(f + f * f))),
+                new Interpolator("sineHalf", (f) -> TrigTools.sinTurns(f * 0.5f)),
         };
     private int currentAdjustment = 0;
 
