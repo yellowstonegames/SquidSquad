@@ -431,6 +431,31 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers NoiseAdjustment with the given Json object, so NoiseAdjustment can be written to and read from JSON.
+     * This is a simple wrapper around NoiseAdjustment's built-in {@link NoiseAdjustment#serializeToString()} and
+     * {@link NoiseAdjustment#deserializeFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerNoiseAdjustment(@NonNull Json json) {
+        json.addClassTag("NAdj", NoiseAdjustment.class);
+        json.setSerializer(NoiseAdjustment.class, new Json.Serializer<NoiseAdjustment>() {
+            @Override
+            public void write(Json json, NoiseAdjustment object, Class knownType) {
+                json.writeObjectStart(NoiseAdjustment.class, knownType);
+                json.writeValue("v", object.serializeToString());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public NoiseAdjustment read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new NoiseAdjustment().deserializeFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
      * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#serializeToString()} and
      * {@link PhantomNoise#deserializeFromString(String)} methods.

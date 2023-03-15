@@ -185,7 +185,7 @@ public class NoiseAdjustment implements INoise {
      * @return this INoise, after being modified (if possible)
      */
     @Override
-    public INoise deserializeFromString(String data) {
+    public NoiseAdjustment deserializeFromString(String data) {
         int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
         setWrapped(Serializer.deserialize(data.substring(1, pos)));
         setAdjustment(Interpolations.get(data.substring(pos+1, data.indexOf('`', pos+2))));
