@@ -23,6 +23,8 @@ import com.github.yellowstonegames.grid.Noise;
 
 import java.util.Arrays;
 
+import static com.github.tommyettinger.digital.TrigTools.*;
+
 /**
  * A concrete implementation of {@link WorldMapGenerator} that imitates an infinite-distance perspective view of a
  * world, showing only one hemisphere, that should be as wide as it is tall (its outline is a circle). It should
@@ -203,7 +205,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
-                i_pi = 1f / TrigTools.PI,
+                i_pi = 1f / PI,
                 rx = width * 0.5f, irx = i_uw / rx,
                 ry = height * 0.5f, iry = i_uh / ry;
 
@@ -228,7 +230,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th = TrigTools.asin(rho); // c
-                lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cos(th)))) * 0.5f);
+                lon = removeExcess((centerLongitude + (atan2(ixPos * rho, rho * cos(th)))) * 0.5f);
 
                 qs = lat * 0.6366197723675814f;
                 qc = qs + 1f;
@@ -321,4 +323,40 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         setCenterLongitude(centerLongitude);
         landData.refill(heightCodeData, 4, 999);
     }
+
+//    /**
+//     * This is rather bad! Only use for tests.
+//     * @param y
+//     * @param x
+//     * @return
+//     */
+//    static public float atan2 (float y, float x) {
+//        if(y == 0f && x >= 0f) return 0f;
+//        final float ax = Math.abs(x), ay = Math.abs(y);
+//        if(ax < ay)
+//        {
+//            final float a = ax / ay,
+//                    r = 1.57079637f - (a * (0.7853981633974483f + 0.273f * (1f - a)));
+//            return (x < 0f) ? (y < 0f) ? -3.14159274f + r : 3.14159274f - r : (y < 0f) ? -r : r;
+//        }
+//        else {
+//            final float a = ay / ax,
+//                    r = (a * (0.7853981633974483f + 0.273f * (1f - a)));
+//            return (x < 0f) ? (y < 0f) ? -3.14159274f + r : 3.14159274f - r : (y < 0f) ? -r : r;
+//        }
+////// Actually this is slightly better here, but still not very good.
+////        if (x == 0f) {
+////            if (y > 0f) return PI / 2;
+////            if (y == 0f) return 0f;
+////            return -PI / 2;
+////        }
+////        final float atan, z = y / x;
+////        if (Math.abs(z) < 1f) {
+////            atan = z / (1f + 0.28f * z * z);
+////            if (x < 0f) return atan + (y < 0f ? -PI : PI);
+////            return atan;
+////        }
+////        atan = PI / 2 - z / (z * z + 0.28f);
+////        return y < 0f ? atan - PI : atan;
+//    }
 }

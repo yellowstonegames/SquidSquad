@@ -23,6 +23,8 @@ import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.NoiseWrapper;
 
+import static com.github.tommyettinger.digital.TrigTools.asin;
+
 /**
  * A concrete implementation of {@link WorldMapGenerator} that distorts the map as it nears the poles, expanding the
  * smaller-diameter latitude lines in extreme north and south regions so they take up the same space as the equator.
@@ -265,7 +267,7 @@ public class StretchWorldMap extends WorldMapGenerator {
         yPos = startY * i_h + i_uh;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             qs = -1 + yPos;//-1.5707963267948966f + yPos;
-            qc = TrigTools.cos(TrigTools.asin(qs));
+            qc = TrigTools.cos(asin(qs));
             for (int x = 0, xt = 0; x < width; x++) {
                 ps = trigTable[xt++] * qc;//TrigTools.sin(p);
                 pc = trigTable[xt++] * qc;//TrigTools.cos(p);
@@ -372,4 +374,8 @@ public class StretchWorldMap extends WorldMapGenerator {
         }
         landData.refill(heightCodeData, 4, 999);
     }
+//    static public float asin (float a) {
+//        return (a * (1f + (a *= a) * (-0.141514171442891431f + a * -0.719110791477959357f)))
+//                / (1f + a * (-0.439110389941411144f + a * -0.471306172023844527f));
+//    }
 }

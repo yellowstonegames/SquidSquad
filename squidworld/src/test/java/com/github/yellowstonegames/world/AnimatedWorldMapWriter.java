@@ -32,19 +32,19 @@ import java.util.Date;
  */
 public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1920, height = 1080;
-//    private static final int width = 256, height = 256; // localMimic
+    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 420, height = 210; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
-    private static final int width = 300, height = 300;
+//    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 5;
-    private static final int FRAMES = 240;
+    private static final int LIMIT = 3;
+    private static final int FRAMES = 480;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
     private static final boolean SEEDY = false;
@@ -92,7 +92,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewTaffy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
-        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
+//        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
@@ -109,7 +109,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/LocalSquat/";
 //        path = "out/worldsAnimated/" + date + "/LocalMimic/";
 //        path = "out/worldsAnimated/" + date + "/EllipseHammer/";
-        
+        path = "out/worldsAnimated/" + date + "/GoodFoam/";
+//        path = "out/worldsAnimated/" + date + "/RoughFoam/";
+
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
@@ -121,8 +123,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
-        writer.setDitherStrength(0.75f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUE_NOISE);
+        writer.setDitherStrength(0.25f);
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
@@ -147,9 +149,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 2f, Noise.PERLIN_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 2f, Noise.PERLIN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
         fn.setInterpolation(Noise.QUINTIC);
@@ -292,8 +294,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette = new PaletteReducer(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 30);
+        apng.write(Gdx.files.local(path + name + ".png"), pms, 30);
         temp.dispose();
 
         System.out.println();

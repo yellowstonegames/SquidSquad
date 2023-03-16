@@ -30,13 +30,13 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-    private static final int width = 800, height = 400; // mimic, elliptical
+//    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal
 //    private static final int width = 1200, height = 400; // squat
-//    private static final int width = 300, height = 300;
+    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
@@ -84,7 +84,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/MimicSimplex2/";
 //        path = "out/worlds/" + date + "/RoundSideSimplex2/";
 //        path = "out/worlds/" + date + "/RoundSideFoam/";
-        path = "out/worlds/" + date + "/TilingFoam/";
+//        path = "out/worlds/" + date + "/TilingFoam/";
 //        path = "out/worlds/" + date + "/LocalFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
@@ -106,7 +106,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
-        Noise fn = new Noise((int) ~seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
         noise = fn;
