@@ -201,4 +201,22 @@ public class NoiseAdjustment implements INoise {
         setAdjustment(Interpolations.get(data.substring(pos+1, data.indexOf('`', pos+2))));
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NoiseAdjustment that = (NoiseAdjustment) o;
+
+        if (!wrapped.equals(that.wrapped)) return false;
+        return adjustment.equals(that.adjustment);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = wrapped.hashCode();
+        result = 31 * result + adjustment.hashCode();
+        return result;
+    }
 }

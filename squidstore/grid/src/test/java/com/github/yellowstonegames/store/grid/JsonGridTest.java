@@ -3,9 +3,9 @@ package com.github.yellowstonegames.store.grid;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectFloatMap;
+import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -249,6 +249,20 @@ public class JsonGridTest {
         String data = json.toJson(noise);
         System.out.println(data);
         noise2 = json.fromJson(NoiseWrapper.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testNoiseAdjustment() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerNoiseAdjustment(json);
+        NoiseAdjustment noise, noise2;
+        noise = new NoiseAdjustment(new SimplexNoise(123), Interpolations.smooth2);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(NoiseAdjustment.class, data);
         Assert.assertEquals(noise, noise2);
         Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
         System.out.println();
