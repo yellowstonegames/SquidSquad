@@ -57,6 +57,16 @@ public class NoiseAdjustment implements INoise {
         this.adjustment = adjust;
     }
 
+    /**
+     * Copies the given NoiseAdjustment, using {@link INoise#copy()} to deep-copy the wrapped INoise, and just making
+     * a shallow copy of the adjustment because it is immutable.
+     * @param other another NoiseAdjustment to copy
+     */
+    public NoiseAdjustment(NoiseAdjustment other) {
+        this.wrapped = other.getWrapped().copy();
+        this.adjustment = other.getAdjustment();
+    }
+
     public INoise getWrapped() {
         return wrapped;
     }
