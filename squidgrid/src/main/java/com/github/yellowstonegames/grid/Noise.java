@@ -790,7 +790,7 @@ public class Noise implements INoise {
 
     /**
      * Sets the octave count for all fractal noise types.
-     * If this isn't called, it will default to 3.
+     * If this isn't called, it will default to 1.
      * @param octaves the number of octaves to use for fractal noise types, as a positive non-zero int
      */
     public void setFractalOctaves(int octaves) {
@@ -799,7 +799,7 @@ public class Noise implements INoise {
     }
 
     /**
-     * Gets the octave count for all fractal noise types. The default is 3.
+     * Gets the octave count for all fractal noise types. The default is 1.
      * @return the number of octaves to use for fractal noise types, as a positive non-zero int
      */
     public int getFractalOctaves()

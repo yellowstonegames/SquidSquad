@@ -156,6 +156,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
+                    case BACKSLASH:
+                        noise.deserializeFromString(Gdx.app.getClipboard().getContents());
+                        break;
                     case W:
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
 //                        for (int c = 0; c < 32; c++) {
@@ -215,10 +218,26 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)
-                                  DescriptiveColor.oklabByHSL(0.65f, 1f, 0.3f, 1f)
-                                , DescriptiveColor.oklabByHSL(0.475f, 0.75f, 0.65f, 1f)
-                                , DescriptiveColor.oklabByHSL(0.7f, 0.85f, 0.87f, 1f)
-                                , DescriptiveColor.oklabByHSL(0.5f, 0.9f, 0.72f, 1f)
+
+                                DescriptiveColor.oklabByHSL(0.14f, 0.9f, 0.3f, 1f),
+                                DescriptiveColor.oklabByHSL(0.07f, 0.65f, 0.03f, 1f),
+                                DescriptiveColor.oklabByHSL(0.1f, 1.0f, 0.5f, 1f),
+                                DescriptiveColor.oklabByHSL(0.05f, 0.85f, 0.8f, 1f)
+
+//                                DescriptiveColor.oklabByHSL(0.52f, 0.9f, 0.35f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.47f, 0.8f, 0.0f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.54f, 0.9f, 0.5f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.4f, 0.85f, 0.8f, 1f)
+//
+//                                DescriptiveColor.oklabByHSL(0.02f, 0.9f, 0.35f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.0f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.04f, 0.9f, 0.5f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.1f, 0.85f, 0.8f, 1f)
+
+//                                  DescriptiveColor.oklabByHSL(0.65f, 1f, 0.3f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.475f, 0.75f, 0.65f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.7f, 0.85f, 0.87f, 1f)
+//                                , DescriptiveColor.oklabByHSL(0.5f, 0.9f, 0.72f, 1f)
 
                         ));
                         g.toArray(gif.palette.paletteArray);
@@ -263,7 +282,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
                         }
-                        gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
+                        String ser = noise.serializeToString();
+                        System.out.println(ser);
+//                        gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
+                        gif.write(Gdx.files.local("out/" + ser + "_" + System.currentTimeMillis() + ".gif"), frames, 16);
                         for (int i = 0; i < frames.size; i++) {
                             frames.get(i).dispose();
                         }
