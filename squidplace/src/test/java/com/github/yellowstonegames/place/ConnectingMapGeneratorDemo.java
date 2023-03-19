@@ -1,14 +1,38 @@
 package com.github.yellowstonegames.place;
 
-import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.yellowstonegames.grid.LineTools;
 
 public class ConnectingMapGeneratorDemo {
 
     public static void main(String[] args) {
-        AceRandom random = new AceRandom(0xB0BAFE77);
-        ConnectingMapGenerator gen = new ConnectingMapGenerator(31, 31, 5, 5, random, 1, 0.5);
-        char[][] map = gen.generate();
-//        char[][] map = LineTools.hashesToLines(gen.generate());
+        DistinctRandom random = new DistinctRandom(0xB0BAFE77L);
+        ConnectingMapGenerator gen = new ConnectingMapGenerator(101, 101, 1, 1, random, 1, 1.0);
+        //// Use when you want '#' to indicate "no connection" and '.' to indicate a connection
+//        char[][] map = gen.generate();
+        //// Use when you want box-drawing character lines to indicate "no connection"; '.' indicates a connection
+        char[][] map = LineTools.hashesToLines(gen.generate());
+        //// SquidSquad uses the [x][y] convention to index 2D arrays. If you aren't using box-drawing, though, the map
+        //// is indistinguishable when indexed with [y][x], it just will be transposed (left-right swaps with up-down).
+        //// It uses y-up, like most of libGDX, even for 2D arrays.
+
+        //// This marks every room position with the char 'R' to tell them apart from connections, which use '.'
+        //// Room positions are the spots in the array where x is odd and y is odd.
+        //// If you want to know if a given position is a room, you can use: ((x & y & 1) == 1)
+        //// If that is true, the x,y position is a room. Otherwise, it is either "connection" or "no connection"
+        for (int x = 1; x < map.length - 1; x += 2) {
+            for (int y = 1; y < map[x].length - 1; y += 2) {
+                map[x][y] = 'R';
+            }
+        }
+        //// 'R' will indicate a room.
+        //// You can get a random room position with:
+//        int roomX = random.nextInt(50)*2+1;
+//        int roomY = random.nextInt(50)*2+1;
+        //// Every room can (eventually) get to every other room by traversing '.' connections.
+        //// The 1-4 neighbors each R room has are connected via a '.'; if there is anything else, they don't connect.
+
+        //// This just shows the map in the console.
         DungeonTools.debugPrint(map);
     }
 }
