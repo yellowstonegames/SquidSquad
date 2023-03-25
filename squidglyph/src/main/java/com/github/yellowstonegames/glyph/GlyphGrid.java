@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Interpolation;
@@ -314,6 +315,7 @@ public class GlyphGrid extends Group {
     public void draw(Batch batch) {
         getStage().setViewport(viewport);
         font.enableShader(batch);
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
@@ -337,6 +339,7 @@ public class GlyphGrid extends Group {
     public void draw(Batch batch, Frustum limit) {
         getStage().setViewport(viewport);
         font.enableShader(batch);
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
@@ -372,6 +375,7 @@ public class GlyphGrid extends Group {
     public void draw(Batch batch, int startCellX, int startCellY, int endCellX, int endCellY) {
         getStage().setViewport(viewport);
         font.enableShader(batch);
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
