@@ -14,7 +14,8 @@ depend on the modules you need. All the modules depend on `squidcore`, which alw
 Some modules (`squidglyph`, `squidsmooth`, and all the `squidstore` modules) depend on [libGDX](https://libgdx.com/),
 which is recommended for use with SquidSquad but not always required. That means if you don't use `squidglyph`,
 `squidsmooth`, or `squidstore`, you can use SquidSquad in purely-server-side code, in tests, or otherwise outside the
-application lifecycle libGDX expects.
+application lifecycle libGDX expects. The `squidfreeze` modules all depend on
+[Kryo](https://github.com/EsotericSoftware/kryo) and [kryo-more](https://github.com/tommyettinger/kryo-more).
 
 # Which?
 There are currently quite a few modules here; they depend on each other when necessary, so pulling in one module as a
@@ -74,7 +75,10 @@ dependency will usually pull in a few others. The full list is:
      results of some core classes from older SquidLib, such as random number generators and `CrossHash`, but support the
      newer APIs here.
  - squidfreeze
-    - Like `squidstore`, but using [Kryo](https://github.com/EsotericSoftware/kryo) instead of libGDX Json.
+    - Like `squidstore`, but using [Kryo](https://github.com/EsotericSoftware/kryo) instead of libGDX Json. Kryo uses
+      a binary format, rather than somewhat-human-readable JSON code, and can produce much smaller serialized data in
+      most cases, while both serializing and deserializing more quickly than any JSON library I've tried.
+    - Unlike most other modules here, `squidfreeze` is not GWT-compatible, because Kryo isn't either.
 
 # Why?
 Various issues cropped up repeatedly over the five-year development of SquidLib 3.0.0, such as the desire by users to be
