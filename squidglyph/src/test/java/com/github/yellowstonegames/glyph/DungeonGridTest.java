@@ -74,14 +74,15 @@ public class DungeonGridTest extends ApplicationAdapter {
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_INFO);
-        long seed = TimeUtils.millis() >>> 21;
+        long seed = EnhancedRandom.seedFromMath();// TimeUtils.millis() >>> 21;
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getInconsolata().scaleTo(15f, 25f);
+//        Font font = KnownFonts.getInconsolata().scaleTo(15f, 25f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
-//        Font font = KnownFonts.getCascadiaMono();
+        Font font = KnownFonts.getIosevkaSlabSDF().scaleTo(12f, 26f);
+//        Font font = KnownFonts.getGoNotoUniversalSDF().scaleTo(30f, 25f).setCrispness(0.4f);
 //        Font font = KnownFonts.getInconsolata();
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        Font font = KnownFonts.getCozette();
