@@ -57,23 +57,24 @@ dependency will usually pull in a few others. The full list is:
  - squidpath
    - Pathfinding, mostly using a modified version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
-     do as easily.
+     do as easily. This depends on `squidgrid`.
  - squidplace
    - Dungeon generation, mostly, with some code for other type of person-scale map generation as well. Most of the maps
      are produced as `char[][]` grids, and `DungeonTools` provides various utilities for handling such grids. The large
      `DungeonProcessor` class can be used to ensure only the connected areas of a map are preserved, and can place
-     doors, water, grass, boulders, and so on, using an environment 2D array to know what can be placed where.
+     doors, water, grass, boulders, and so on, using an environment 2D array to know what can be placed where. This
+     depends on `squidgrid`.
  - squidstore
    - Split up into a few submodules: `SquidStoreCore`, `SquidStoreGrid`, `SquidStoreOld`, and `SquidStoreText`, with
      each one containing the necessary registration code to save and load their corresponding module to JSON. This uses
      libGDX Json and its custom serializers.
  - squidworld
    - World map generation; this can be rather complex, but see the demos and tests in this project for ideas on how to
-     use it.
+     use it. This depends on `squidcore`, `squidgrid`, and `squidplace`.
  - squidold
    - Compatibility with older versions of SquidLib (and potentially SquidSquad). This tries to exactly replicate the
      results of some core classes from older SquidLib, such as random number generators and `CrossHash`, but support the
-     newer APIs here.
+     newer APIs here. This depends on `squidcore`.
  - squidfreeze
     - Like `squidstore`, but using [Kryo](https://github.com/EsotericSoftware/kryo) instead of libGDX Json. Kryo uses
       a binary format, rather than somewhat-human-readable JSON code, and can produce much smaller serialized data in
@@ -115,7 +116,7 @@ map generators in `squidplace`. This depends on `squidcore` and `squidgrid`. For
 contain dependencies like:
 ```gradle
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-	api "com.github.yellowstonegames.squidsquad:SquidPlace:$squidSquadVersion"
+	api "com.squidpony:SquidPlace:$squidSquadVersion"
 ```
 
 For projects that use GWT, your html module should contain... more:
@@ -125,18 +126,21 @@ For projects that use GWT, your html module should contain... more:
   implementation "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion:sources"
   implementation "com.github.tommyettinger:juniper:$juniperVersion:sources"
   implementation "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
-  implementation "com.github.yellowstonegames.squidsquad:SquidCore:$squidSquadVersion:sources"
-  implementation "com.github.yellowstonegames.squidsquad:SquidGrid:$squidSquadVersion:sources"
-  implementation "com.github.yellowstonegames.squidsquad:SquidPlace:$squidSquadVersion:sources"
+  implementation "com.squidpony:SquidCore:$squidSquadVersion:sources"
+  implementation "com.squidpony:SquidGrid:$squidSquadVersion:sources"
+  implementation "com.squidpony:SquidPlace:$squidSquadVersion:sources"
 ```
 
-These fetch SquidSquad from JitPack, so you should use a recent commit from
-[its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
+These fetch SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the only such
+release is `4.0.0-alpha1`. For anything else, you'll need JitPack, where you should use a recent commit from
+[its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
+different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
+using JitPack.
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
   - `digitalVersion`=0.2.0
   - `funderbyVersion`=0.0.2
-  - `jdkgdxdsVersion`=1.2.1
+  - `jdkgdxdsVersion`=1.2.1 (This can be 1.2.2, but SquidSquad 4.0.0-alpha1 will default to 1.2.1.)
   - `juniperVersion`=0.2.0
   - `regExodusVersion`=0.1.15

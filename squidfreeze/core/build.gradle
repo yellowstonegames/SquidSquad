@@ -8,7 +8,7 @@ dependencies {
     api project(':squidcore')
 
 	api("com.github.tommyettinger:kryo-digital:0.2.0.0")
-	api("com.github.tommyettinger:kryo-jdkgdxds:1.2.1.0")
+	api("com.github.tommyettinger:kryo-jdkgdxds:1.2.2.0")
 	api("com.github.tommyettinger:kryo-juniper:0.2.0.0")
 
     testImplementation "junit:junit:$junitVersion"
