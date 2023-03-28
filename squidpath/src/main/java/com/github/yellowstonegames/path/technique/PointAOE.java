@@ -225,7 +225,7 @@ public class PointAOE implements AOE {
     }
 */
     @Override
-    public void setMap(char[][] map) {
+    public void setMap(float[][] map) {
         if (map != null && map.length > 0) {
             mapWidth = map.length;
             mapHeight = map[0].length;

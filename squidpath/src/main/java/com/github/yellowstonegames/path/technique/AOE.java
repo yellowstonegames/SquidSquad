@@ -89,11 +89,12 @@ public interface AOE {
     CoordObjectOrderedMap<ObjectList<Coord>> idealLocations(Collection<Coord> priorityTargets, Collection<Coord> lesserTargets, Collection<Coord> requiredExclusions);
 
     /**
-     * This must be called before any other methods, and takes a char[][] with '#' for walls, anything else for floors.
-     * It must be bounded with walls, which DungeonProcessor does automatically.
-     * @param map width first, height second, 2D char array.
+     * This must be called before any other methods, and takes a float[][] with 1.0 or higher for walls, and anything
+     * lower for passable cells. This means the map is a resistance map, as used by
+     * {@link com.github.yellowstonegames.grid.FOV} and {@link com.github.yellowstonegames.grid.BresenhamLine}.
+     * @param map width first, height second, 2D float array.
      */
-    void setMap(char[][] map);
+    void setMap(float[][] map);
 
     /**
      * This is how an AOE interacts with anything that uses it. It expects a map to have already been set with setMap,

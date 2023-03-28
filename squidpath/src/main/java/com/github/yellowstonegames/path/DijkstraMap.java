@@ -188,7 +188,7 @@ public class DijkstraMap {
      * @param level
      */
     public DijkstraMap(final float[][] level) {
-        this(level, Measurement.MANHATTAN);
+        this(level, Measurement.MANHATTAN, false);
     }
 
     /**
@@ -198,9 +198,23 @@ public class DijkstraMap {
      * @param measurement
      */
     public DijkstraMap(final float[][] level, Measurement measurement) {
+        this(level, measurement, false);
+    }
+    /**
+     * Used to construct a DijkstraMap from either the output of another DijkstraMap, or from a resistance map of the
+     * type used by {@link com.github.yellowstonegames.grid.FOV}. ALso specifies a distance calculation.
+     *
+     * @param level a 2D float array that either was produced by {@link #scan()} or is a resistance map, depending on the last parameter
+     * @param measurement the distance calculation to use
+     * @param levelIsResistanceMap if true, {@code level} will be treated as a resistance map; if false, the output of another DijkstraMap
+     */
+    public DijkstraMap(final float[][] level, Measurement measurement, boolean levelIsResistanceMap) {
         this.measurement = measurement;
         path = new ObjectList<>();
-        initialize(level);
+        if(levelIsResistanceMap)
+            initializeByResistance(level);
+        else
+            initialize(level);
     }
 
     /**
@@ -259,20 +273,32 @@ public class DijkstraMap {
      * @return this for chaining
      */
     public DijkstraMap initialize(final float[][] level) {
+        int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        gradientMap = new float[width][height];
-        physicalMap = new float[width][height];
-        costMap = new float[width][height];
-        targetMap = new Coord[width][height];
+        if(width != oldWidth || height != oldHeight) {
+            gradientMap = new float[width][height];
+            physicalMap = new float[width][height];
+            costMap = new float[width][height];
+            targetMap = new Coord[width][height];
+        }
+        else {
+            ArrayTools.fill(targetMap, null);
+        }
         for (int x = 0; x < width; x++) {
             System.arraycopy(level[x], 0, gradientMap[x], 0, height);
             System.arraycopy(level[x], 0, physicalMap[x], 0, height);
             Arrays.fill(costMap[x], 1f);
         }
+        if(impassable2 == null)
+            impassable2 = new CoordOrderedSet(32);
+        else
+            impassable2.clear();
+        if(tempSet == null)
+            tempSet = new CoordOrderedSet(32);
+        else
+            tempSet.clear();
         standardCosts = true;
-        impassable2 = new CoordOrderedSet(32);
-        tempSet = new CoordOrderedSet(32);
         initialized = true;
         return this;
     }
@@ -286,12 +312,18 @@ public class DijkstraMap {
      * @return this for chaining
      */
     public DijkstraMap initialize(final char[][] level) {
+        int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        gradientMap = new float[width][height];
-        physicalMap = new float[width][height];
-        costMap = new float[width][height];
-        targetMap = new Coord[width][height];
+        if(width != oldWidth || height != oldHeight) {
+            gradientMap = new float[width][height];
+            physicalMap = new float[width][height];
+            costMap = new float[width][height];
+            targetMap = new Coord[width][height];
+        }
+        else {
+            ArrayTools.fill(targetMap, null);
+        }
         for (int x = 0; x < width; x++) {
             Arrays.fill(costMap[x], 1f);
             for (int y = 0; y < height; y++) {
@@ -300,9 +332,15 @@ public class DijkstraMap {
                 physicalMap[x][y] = t;
             }
         }
+        if(impassable2 == null)
+            impassable2 = new CoordOrderedSet(32);
+        else
+            impassable2.clear();
+        if(tempSet == null)
+            tempSet = new CoordOrderedSet(32);
+        else
+            tempSet.clear();
         standardCosts = true;
-        impassable2 = new CoordOrderedSet(32);
-        tempSet = new CoordOrderedSet(32);
         initialized = true;
         return this;
     }
@@ -318,12 +356,18 @@ public class DijkstraMap {
      * @return this for chaining
      */
     public DijkstraMap initialize(final char[][] level, char alternateWall) {
+        int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        gradientMap = new float[width][height];
-        physicalMap = new float[width][height];
-        costMap = new float[width][height];
-        targetMap = new Coord[width][height];
+        if(width != oldWidth || height != oldHeight) {
+            gradientMap = new float[width][height];
+            physicalMap = new float[width][height];
+            costMap = new float[width][height];
+            targetMap = new Coord[width][height];
+        }
+        else {
+            ArrayTools.fill(targetMap, null);
+        }
         for (int x = 0; x < width; x++) {
             Arrays.fill(costMap[x], 1f);
             for (int y = 0; y < height; y++) {
@@ -332,9 +376,61 @@ public class DijkstraMap {
                 physicalMap[x][y] = t;
             }
         }
+        if(impassable2 == null)
+            impassable2 = new CoordOrderedSet(32);
+        else
+            impassable2.clear();
+        if(tempSet == null)
+            tempSet = new CoordOrderedSet(32);
+        else
+            tempSet.clear();
         standardCosts = true;
-        impassable2 = new CoordOrderedSet(32);
-        tempSet = new CoordOrderedSet(32);
+        initialized = true;
+        return this;
+    }
+
+    /**
+     * Used to initialize or re-initialize a DijkstraMap that needs a new physicalMap because it either wasn't given
+     * one when it was constructed, or because the contents of the terrain have changed permanently (not if a
+     * creature moved; for that you pass the positions of creatures that block paths to scan() or findPath() ).
+     * This version takes a 2D float array that represents a resistance map, as is used by
+     * {@link com.github.yellowstonegames.grid.FOV} and {@link com.github.yellowstonegames.grid.BresenhamLine}. A
+     * resistance map has walls and other impassable cells use 1.0 or higher for their value, and fully passable cells
+     * use 0.0 for their value.
+     *
+     * @param level a 2D float array that should be used as the physicalMap for this DijkstraMap
+     * @return this for chaining
+     */
+    public DijkstraMap initializeByResistance(final float[][] level) {
+        int oldWidth = width, oldHeight = height;
+        width = level.length;
+        height = level[0].length;
+        if(width != oldWidth || height != oldHeight) {
+            gradientMap = new float[width][height];
+            physicalMap = new float[width][height];
+            costMap = new float[width][height];
+            targetMap = new Coord[width][height];
+        }
+        else {
+            ArrayTools.fill(targetMap, null);
+        }
+        for (int x = 0; x < width; x++) {
+            Arrays.fill(costMap[x], 1f);
+            for (int y = 0; y < height; y++) {
+                float t = (level[x][y] >= 1f) ? WALL : FLOOR;
+                gradientMap[x][y] = t;
+                physicalMap[x][y] = t;
+            }
+        }
+        if(impassable2 == null)
+            impassable2 = new CoordOrderedSet(32);
+        else
+            impassable2.clear();
+        if(tempSet == null)
+            tempSet = new CoordOrderedSet(32);
+        else
+            tempSet.clear();
+        standardCosts = true;
         initialized = true;
         return this;
     }
