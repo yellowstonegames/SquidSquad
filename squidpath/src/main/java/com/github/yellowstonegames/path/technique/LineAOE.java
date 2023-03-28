@@ -506,7 +506,8 @@ public class LineAOE implements AOE {
             dm.scan(null, null);
             for (int x = 0; x < dungeon.length; x++) {
                 for (int y = 0; y < dungeon[x].length; y++) {
-                    compositeMap[i][x][y] = (dm.gradientMap[x][y] < DijkstraMap.FLOOR  && dungeonCopy[x][y] == dungeonCopy[x][y] && dungeonPriorities[x][y] != '#') ? dm.gradientMap[x][y] : 99999f;
+                    if(dm.gradientMap[x][y] < DijkstraMap.FLOOR  && dungeonCopy[x][y] == dungeonCopy[x][y] && dungeonPriorities[x][y] < 1f)
+                        compositeMap[i][x][y] = dm.gradientMap[x][y];
                 }
             }
             dm.resetMap();
