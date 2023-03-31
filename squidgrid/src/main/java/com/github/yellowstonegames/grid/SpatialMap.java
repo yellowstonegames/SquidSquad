@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -100,7 +101,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         return positionMap.keySet().iterator();
     }
 
-    public PrimitiveIterator.OfInt idIterator() {
+    public IntIterator idIterator() {
         return idMap.keySet().iterator();
     }
 

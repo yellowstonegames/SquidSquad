@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.FloatList;
+import com.github.tommyettinger.ds.FloatBag;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -223,10 +223,10 @@ public final class PoissonDisk {
         }
         return points;
     }
-    protected static CoordObjectOrderedMap<ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
-                                                                                   float maxSampleRadius, float radius,
-                                                                                   int xBound, int yBound,
-                                                                                   int pointsPerTry, EnhancedRandom random) {
+    private static CoordObjectOrderedMap<ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
+                                                                   float maxSampleRadius, float radius,
+                                                                   int xBound, int yBound,
+                                                                   int pointsPerTry, EnhancedRandom random) {
         radius = Math.max(1.0001f, radius);
         maxSampleRadius *= maxSampleRadius;
         final float radius2 = radius * radius;
@@ -238,8 +238,8 @@ public final class PoissonDisk {
         final int gridHeight = Math.min((int) Math.ceil(height * iCellSize), yBound);
         final float[][] gridX = new float[gridWidth][gridHeight];
         final float[][] gridY = new float[gridWidth][gridHeight];
-        final FloatList qx = new FloatList(false, gridWidth + gridHeight);
-        final FloatList qy = new FloatList(false, gridWidth + gridHeight);
+        final FloatBag qx = new FloatBag(gridWidth + gridHeight);
+        final FloatBag qy = new FloatBag(gridWidth + gridHeight);
         final CoordObjectOrderedMap<ObjectList<Coord>> graph = new CoordObjectOrderedMap<>(8 + (int) (gridWidth * gridHeight * iCellSize));
         // Pick the first sample.
         graph.put(sample(width * 0.5f, height * 0.5f, iCellSize, qx, qy, gridX, gridY, minPos), new ObjectList<>(4));
@@ -297,7 +297,7 @@ public final class PoissonDisk {
         }
         return true;
     }
-    private static Coord sample(float x, float y, float invCellSize, FloatList qx, FloatList qy, float[][] gridX, float[][] gridY, Coord minPos){
+    private static Coord sample(float x, float y, float invCellSize, FloatBag qx, FloatBag qy, float[][] gridX, float[][] gridY, Coord minPos){
         final int gx = (int)((x - minPos.x) * invCellSize), gy = (int)((y - minPos.y) * invCellSize);
         gridX[gx][gy] = x;
         gridY[gx][gy] = y;
