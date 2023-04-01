@@ -22,13 +22,8 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordOrderedSet;
-import com.github.yellowstonegames.grid.CoordSet;
-import com.github.yellowstonegames.grid.Direction;
-import com.github.yellowstonegames.grid.LineDrawer;
-import com.github.yellowstonegames.grid.Measurement;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.path.technique.Technique;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -129,6 +124,8 @@ public class DijkstraMap {
     public ObjectList<Coord> path;
 
     private CoordOrderedSet impassable2;
+
+    private CoordOrderedSet friends;
 
     private CoordOrderedSet tempSet;
     
@@ -298,6 +295,10 @@ public class DijkstraMap {
             tempSet = new CoordOrderedSet(32);
         else
             tempSet.clear();
+        if(friends == null)
+            friends = new CoordOrderedSet(32);
+        else
+            friends.clear();
         standardCosts = true;
         initialized = true;
         return this;
@@ -340,6 +341,10 @@ public class DijkstraMap {
             tempSet = new CoordOrderedSet(32);
         else
             tempSet.clear();
+        if(friends == null)
+            friends = new CoordOrderedSet(32);
+        else
+            friends.clear();
         standardCosts = true;
         initialized = true;
         return this;
@@ -384,6 +389,10 @@ public class DijkstraMap {
             tempSet = new CoordOrderedSet(32);
         else
             tempSet.clear();
+        if(friends == null)
+            friends = new CoordOrderedSet(32);
+        else
+            friends.clear();
         standardCosts = true;
         initialized = true;
         return this;
@@ -430,6 +439,10 @@ public class DijkstraMap {
             tempSet = new CoordOrderedSet(32);
         else
             tempSet.clear();
+        if(friends == null)
+            friends = new CoordOrderedSet(32);
+        else
+            friends.clear();
         standardCosts = true;
         initialized = true;
         return this;
@@ -2207,323 +2220,306 @@ public class DijkstraMap {
         }
     }
 
-//    /**
-//     * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
-//     * of Coord positions (using the current measurement) needed to get closer to a goal, where goals are
-//     * considered valid if they are at a valid range for the given Technique to hit at least one target
-//     * and ideal if that Technique can affect as many targets as possible from a cell that can be moved
-//     * to with at most movelength steps.
-//     * <br>
-//     * The return value of this method is the path to get to a location to attack, but on its own it
-//     * does not tell the user how to perform the attack.  It does set the targetMap 2D Coord array field
-//     * so that if your position at the end of the returned path is non-null in targetMap, it will be
-//     * a Coord that can be used as a target position for Technique.apply() . If your position at the end
-//     * of the returned path is null, then an ideal attack position was not reachable by the path.
-//     * <br>
-//     * This needs a char[][] dungeon as an argument because DijkstraMap does not always have a char[][]
-//     * version of the map available to it, and certain AOE implementations that a Technique uses may
-//     * need a char[][] specifically to determine what they affect.
-//     * <br>
-//     * The maximum length of the returned list is given by moveLength; if moving the full length of
-//     * the list would place the mover in a position shared by one of the positions in allies
-//     * (which is typically filled with friendly units that can be passed through in multi-tile-
-//     * movement scenarios, and is also used considered an undesirable thing to affect for the Technique),
-//     * it will recalculate a move so that it does not pass into that cell.
-//     * <br>
-//     * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
-//     * through, and will be ignored if there is a target overlapping one.
-//     * <br>
-//     * This caches its result in a member field, path, which can be fetched after finding a path and will change with
-//     * each call to a pathfinding method.
-//     *
-//     * @param moveLength the maximum distance to try to pathfind out to; if a spot to use a Technique can be found
-//     *                   while moving no more than this distance, then the targetMap field in this object will have a
-//     *                   target Coord that is ideal for the given Technique at the x, y indices corresponding to the
-//     *                   last Coord in the returned path.
-//     * @param tech       a Technique that we will try to find an ideal place to use, and/or a path toward that place.
-//     * @param dungeon    a char 2D array with '#' for walls.
-//     * @param los        a BresenhamLine, OrthoLine, or other LineDrawer if the preferred range should try to stay in line of sight, or null if LoS
-//     *                   should be disregarded.
-//     * @param impassable locations of enemies or mobile hazards/obstacles that aren't in the map as walls
-//     * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
-//     * @param start      the Coord the pathfinder starts at.
-//     * @param targets    a Set of Coord, not an array of Coord or variable argument list as in other methods.
-//     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
-//     */
-//    public ObjectList<Coord> findTechniquePath(int moveLength, Technique tech, char[][] dungeon, LineDrawer los,
-//                                              Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
-//        return findTechniquePath(null, moveLength, tech, dungeon, los, impassable, allies, start, targets);
-//    }
-//    /**
-//     * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
-//     * of Coord positions (using the current measurement) needed to get closer to a goal, where goals are
-//     * considered valid if they are at a valid range for the given Technique to hit at least one target
-//     * and ideal if that Technique can affect as many targets as possible from a cell that can be moved
-//     * to with at most movelength steps.
-//     * <br>
-//     * The return value of this method is the path to get to a location to attack, but on its own it
-//     * does not tell the user how to perform the attack.  It does set the targetMap 2D Coord array field
-//     * so that if your position at the end of the returned path is non-null in targetMap, it will be
-//     * a Coord that can be used as a target position for Technique.apply() . If your position at the end
-//     * of the returned path is null, then an ideal attack position was not reachable by the path.
-//     * <br>
-//     * This needs a char[][] dungeon as an argument because DijkstraMap does not always have a char[][]
-//     * version of the map available to it, and certain AOE implementations that a Technique uses may
-//     * need a char[][] specifically to determine what they affect.
-//     * <br>
-//     * The maximum length of the returned list is given by moveLength; if moving the full length of
-//     * the list would place the mover in a position shared by one of the positions in allies
-//     * (which is typically filled with friendly units that can be passed through in multi-tile-
-//     * movement scenarios, and is also used considered an undesirable thing to affect for the Technique),
-//     * it will recalculate a move so that it does not pass into that cell.
-//     * <br>
-//     * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
-//     * through, and will be ignored if there is a target overlapping one.
-//     * <br>
-//     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-//     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
-//     * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
-//     * contents of buffer will not affect the path field of this DijkstraMap.
-//     *
-//     * @param buffer     an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
-//     * @param moveLength the maximum distance to try to pathfind out to; if a spot to use a Technique can be found
-//     *                   while moving no more than this distance, then the targetMap field in this object will have a
-//     *                   target Coord that is ideal for the given Technique at the x, y indices corresponding to the
-//     *                   last Coord in the returned path.
-//     * @param tech       a Technique that we will try to find an ideal place to use, and/or a path toward that place.
-//     * @param dungeon    a char 2D array with '#' for walls.
-//     * @param los        a BresenhamLine, OrthoLine, or other LineDrawer if the preferred range should try to stay in line of sight, or null if LoS
-//     *                   should be disregarded.
-//     * @param impassable locations of enemies or mobile hazards/obstacles that aren't in the map as walls
-//     * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
-//     * @param start      the Coord the pathfinder starts at.
-//     * @param targets    a Set of Coord, not an array of Coord or variable argument list as in other methods.
-//     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
-//     */
-//    public ObjectList<Coord> findTechniquePath(ObjectList<Coord> buffer, int moveLength, Technique tech, char[][] dungeon, LineDrawer los,
-//                                              Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
-//        if (!initialized || moveLength <= 0)
-//        {
-//            cutShort = true;
-//            if(buffer == null)
-//                return new ObjectList<>();
-//            else
-//            {
-//                return buffer;
-//            }
-//        }
-//        tech.setMap(dungeon);
-//        float[][] resMap = new float[width][height];
-//        float[][] worthMap = new float[width][height];
-//        float[][] userDistanceMap;
-//        float paidLength = 0f;
-//        
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < height; y++) {
-//                resMap[x][y] = (physicalMap[x][y] == WALL) ? 1f : 0f;
-//                targetMap[x][y] = null;
-//            }
-//        }
-//
-//        path.clear();
-//        if (targets == null || targets.size() == 0)
-//        {
-//            cutShort = true;
-//            if(buffer == null)
-//                return new ObjectList<>();
-//            else
-//            {
-//                return buffer;
-//            }
-//        }
-//        if (impassable == null)
-//            impassable2.clear();
-//        else {
-//            impassable2.clear();
-//            impassable2.addAll(impassable);
-//        }
-//        if (allies == null)
-//            friends.clear();
-//        else {
-//            friends.clear();
-//            friends.addAll(allies);
-//            friends.remove(start);
-//        }
-//
-//        resetMap();
-//        setGoal(start);
-//        userDistanceMap = scan(impassable2);
-//        clearGoals();
-//        resetMap();
-//        for (Coord goal : targets) {
-//            setGoal(goal.x, goal.y);
-//        }
-//        if (goals.isEmpty())
-//        {
-//            cutShort = true;
-//            if(buffer == null)
-//                return new ObjectList<>();
-//            else
-//            {
-//                return buffer;
-//            }
-//        }
-//
-//        Measurement mess = measurement;
-//        /*
-//        if(measurement == Measurement.EUCLIDEAN)
-//        {
-//            measurement = Measurement.CHEBYSHEV;
-//        }
-//        */
-//        scan(null, impassable2);
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < height; y++) {
-//                if (gradientMap[x][y] == FLOOR) {
-//                    gradientMap[x][y] = DARK;
-//                }
-//            }
-//        }
-//
-//        clearGoals();
-//
-//        Coord tempPt;
-//        OrderedMap<Coord, ObjectList<Coord>> ideal;
-//        // generate an array of the single best location to attack when you are in a given cell.
-//        for (int x = 0; x < width; x++) {
-//            CELL:
-//            for (int y = 0; y < height; y++) {
-//                tempPt = Coord.get(x, y);
-//                if (gradientMap[x][y] == WALL || gradientMap[x][y] == DARK || userDistanceMap[x][y] > moveLength * 2f)
-//                    continue;
-//                if (gradientMap[x][y] >= tech.aoe.getMinRange() && gradientMap[x][y] <= tech.aoe.getMaxRange()) {
-//                    for (Coord tgt : targets) {
-//                        if (los == null || los.isReachable(resMap, x, y, tgt.x, tgt.y)) {
-//                            ideal = tech.idealLocations(tempPt, targets, friends);
-//                            if (!ideal.isEmpty()) {
-//                                targetMap[x][y] = ideal.keyAt(0);
-//                                worthMap[x][y] = ideal.getAt(0).size();
-//                                setGoal(x, y);
-//                            }
-//                            continue CELL;
-//                        }
-//                    }
-//                    gradientMap[x][y] = FLOOR;
-//                } else
-//                    gradientMap[x][y] = FLOOR;
-//            }
-//        }
-//        scan(null,impassable2);
-//
-//        float currentDistance = gradientMap[start.x][start.y];
-//        if (currentDistance <= moveLength) {
-//            int[] g_arr = goals.toArray();
-//
-//            goals.clear();
-//            setGoal(start);
-//            scan(null, impassable2, false);
-//            gradientMap[start.x][start.y] = moveLength;
-//            int decX, decY;
-//            float bestWorth = 0f;
-//            for (int g, ig = 0; ig < g_arr.length; ig++) {
-//                g = g_arr[ig];
-//                decX = decodeX(g);
-//                decY = decodeY(g);
-//                if (gradientMap[decX][decY] <= moveLength && worthMap[decX][decY] > bestWorth) {
-//                    goals.clear();
-//                    goals.add(g);
-//                    bestWorth = worthMap[decX][decY];
-//                }
-//                else if (gradientMap[decX][decY] <= moveLength && bestWorth > 0 && worthMap[decX][decY] == bestWorth)
-//                {
-//                    goals.add(g);
-//                }
-//            }
-//            resetMap();
-//           /* for(Coord g : goals.keySet())
-//            {
-//                gradientMap[g.x][g.y] = 0f - worthMap[g.x][g.y];
-//            }*/
-//            scan(impassable2);
-//
-//        }
-//
-//        measurement = mess;
-//
-//        Coord currentPos = Coord.get(start.x, start.y);
-//        while (true) {
-//            if (frustration > 500) {
-//                path.clear();
-//                break;
-//            }
-//            float best = gradientMap[currentPos.x][currentPos.y];
-//            appendDirToShuffle(rng);
-//            int choice = 0;
-//
-//            for (int d = 0; d <= measurement.directionCount(); d++) {
-//                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-//                if(!pt.isWithin(width, height))
-//                    continue;
-//                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
-//                    if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-//                        best = gradientMap[pt.x][pt.y];
-//                        choice = d;
-//                    }
-//                }
-//            }
-//            if (best >= gradientMap[currentPos.x][currentPos.y]) {
-//                if (friends.contains(currentPos)) {
-//                    tempSet.clear();
-//                    tempSet.addAll(impassable2);
-//                    tempSet.add(currentPos);
-//                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
-//                            friends, start, targets);
-//                }
-//                break;
-//            }
-//            if (best > gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
-//                cutShort = true;
-//                frustration = 0;
-//                if(buffer == null)
-//                    return new ObjectList<>(path);
-//                else
-//                {
-//                    buffer.addAll(path);
-//                    return buffer;
-//                }
-//            }
-//            currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
-//            path.add(currentPos);
-//            paidLength += costMap[currentPos.x][currentPos.y];
-//            frustration++;
-//            if (paidLength > moveLength - 1f) {
-//                if (friends.contains(currentPos)) {
-//                    tempSet.clear();
-//                    tempSet.addAll(impassable2);
-//                    tempSet.add(currentPos);
-//                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
-//                            friends, start, targets);
-//                }
-//                break;
-//            }
-////            if(gradientMap[currentPos.x][currentPos.y] == 0)
-////                break;
-//        }
-//        cutShort = false;
-//        frustration = 0;
-//        goals.clear();
-//        if(buffer == null)
-//            return new ObjectList<>(path);
-//        else
-//        {
-//            buffer.addAll(path);
-//            return buffer;
-//        }
-//    }
+    /**
+     * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
+     * of Coord positions (using the current measurement) needed to get closer to a goal, where goals are
+     * considered valid if they are at a valid range for the given Technique to hit at least one target
+     * and ideal if that Technique can affect as many targets as possible from a cell that can be moved
+     * to with at most movelength steps.
+     * <br>
+     * The return value of this method is the path to get to a location to attack, but on its own it
+     * does not tell the user how to perform the attack.  It does set the targetMap 2D Coord array field
+     * so that if your position at the end of the returned path is non-null in targetMap, it will be
+     * a Coord that can be used as a target position for Technique.apply() . If your position at the end
+     * of the returned path is null, then an ideal attack position was not reachable by the path.
+     * <br>
+     * This needs a char[][] dungeon as an argument because DijkstraMap does not always have a char[][]
+     * version of the map available to it, and certain AOE implementations that a Technique uses may
+     * need a char[][] specifically to determine what they affect.
+     * <br>
+     * The maximum length of the returned list is given by moveLength; if moving the full length of
+     * the list would place the mover in a position shared by one of the positions in allies
+     * (which is typically filled with friendly units that can be passed through in multi-tile-
+     * movement scenarios, and is also used considered an undesirable thing to affect for the Technique),
+     * it will recalculate a move so that it does not pass into that cell.
+     * <br>
+     * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
+     * through, and will be ignored if there is a target overlapping one.
+     * <br>
+     * This caches its result in a member field, path, which can be fetched after finding a path and will change with
+     * each call to a pathfinding method.
+     *
+     * @param moveLength the maximum distance to try to pathfind out to; if a spot to use a Technique can be found
+     *                   while moving no more than this distance, then the targetMap field in this object will have a
+     *                   target Coord that is ideal for the given Technique at the x, y indices corresponding to the
+     *                   last Coord in the returned path.
+     * @param tech       a Technique that we will try to find an ideal place to use, and/or a path toward that place.
+     * @param dungeon    a char 2D array with '#' for walls.
+     * @param los        a BresenhamLine, OrthoLine, or other LineDrawer if the preferred range should try to stay in line of sight, or null if LoS
+     *                   should be disregarded.
+     * @param impassable locations of enemies or mobile hazards/obstacles that aren't in the map as walls
+     * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
+     * @param start      the Coord the pathfinder starts at.
+     * @param targets    a Set of Coord, not an array of Coord or variable argument list as in other methods.
+     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
+     */
+    public ObjectList<Coord> findTechniquePath(int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
+                                               Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
+        return findTechniquePath(null, moveLength, tech, dungeon, los, impassable, allies, start, targets);
+    }
+    /**
+     * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
+     * of Coord positions (using the current measurement) needed to get closer to a goal, where goals are
+     * considered valid if they are at a valid range for the given Technique to hit at least one target
+     * and ideal if that Technique can affect as many targets as possible from a cell that can be moved
+     * to with at most movelength steps.
+     * <br>
+     * The return value of this method is the path to get to a location to attack, but on its own it
+     * does not tell the user how to perform the attack.  It does set the targetMap 2D Coord array field
+     * so that if your position at the end of the returned path is non-null in targetMap, it will be
+     * a Coord that can be used as a target position for Technique.apply() . If your position at the end
+     * of the returned path is null, then an ideal attack position was not reachable by the path.
+     * <br>
+     * This needs a char[][] dungeon as an argument because DijkstraMap does not always have a char[][]
+     * version of the map available to it, and certain AOE implementations that a Technique uses may
+     * need a char[][] specifically to determine what they affect.
+     * <br>
+     * The maximum length of the returned list is given by moveLength; if moving the full length of
+     * the list would place the mover in a position shared by one of the positions in allies
+     * (which is typically filled with friendly units that can be passed through in multi-tile-
+     * movement scenarios, and is also used considered an undesirable thing to affect for the Technique),
+     * it will recalculate a move so that it does not pass into that cell.
+     * <br>
+     * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
+     * through, and will be ignored if there is a target overlapping one.
+     * <br>
+     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
+     * contents of buffer will not affect the path field of this DijkstraMap.
+     *
+     * @param buffer     an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param moveLength the maximum distance to try to pathfind out to; if a spot to use a Technique can be found
+     *                   while moving no more than this distance, then the targetMap field in this object will have a
+     *                   target Coord that is ideal for the given Technique at the x, y indices corresponding to the
+     *                   last Coord in the returned path.
+     * @param tech       a Technique that we will try to find an ideal place to use, and/or a path toward that place.
+     * @param dungeon    a char 2D array with '#' for walls.
+     * @param los        a BresenhamLine, OrthoLine, or other LineDrawer if the preferred range should try to stay in line of sight, or null if LoS
+     *                   should be disregarded.
+     * @param impassable locations of enemies or mobile hazards/obstacles that aren't in the map as walls
+     * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
+     * @param start      the Coord the pathfinder starts at.
+     * @param targets    a Collection of Coord, not an array of Coord or variable argument list as in other methods.
+     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
+     */
+    public ObjectList<Coord> findTechniquePath(ObjectList<Coord> buffer, int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
+                                              Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
+        if (!initialized || moveLength <= 0)
+        {
+            cutShort = true;
+            if(buffer == null)
+                return new ObjectList<>();
+            else
+            {
+                return buffer;
+            }
+        }
+        tech.setMap(dungeon);
+        float[][] worthMap = new float[width][height];
+        float[][] userDistanceMap;
+        float paidLength = 0f;
+
+        ArrayTools.fill(targetMap, null);
+
+        path.clear();
+        if (targets == null || targets.size() == 0)
+        {
+            cutShort = true;
+            if(buffer == null)
+                return new ObjectList<>();
+            else
+            {
+                return buffer;
+            }
+        }
+        if (impassable == null)
+            impassable2.clear();
+        else {
+            impassable2.clear();
+            impassable2.addAll(impassable);
+        }
+        if (allies == null)
+            friends.clear();
+        else {
+            friends.clear();
+            friends.addAll(allies);
+            friends.remove(start);
+        }
+
+        resetMap();
+        setGoal(start);
+        userDistanceMap = scan(impassable2);
+        clearGoals();
+        resetMap();
+        for (Coord goal : targets) {
+            setGoal(goal.x, goal.y);
+        }
+        if (goals.isEmpty())
+        {
+            cutShort = true;
+            if(buffer == null)
+                return new ObjectList<>();
+            else
+            {
+                return buffer;
+            }
+        }
+
+        Measurement mess = measurement;
+
+        scan(null, impassable2);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (gradientMap[x][y] == FLOOR) {
+                    gradientMap[x][y] = DARK;
+                }
+            }
+        }
+
+        clearGoals();
+
+        Coord tempPt;
+        CoordObjectOrderedMap<ObjectList<Coord>> ideal;
+        // generate an array of the single best location to attack when you are in a given cell.
+        for (int x = 0; x < width; x++) {
+            CELL:
+            for (int y = 0; y < height; y++) {
+                tempPt = Coord.get(x, y);
+                if (gradientMap[x][y] == WALL || gradientMap[x][y] == DARK || userDistanceMap[x][y] > moveLength * 2f)
+                    continue;
+                if (gradientMap[x][y] >= tech.aoe.getMinRange() && gradientMap[x][y] <= tech.aoe.getMaxRange()) {
+                    for (Coord tgt : targets) {
+                        if (los == null || los.isReachable(x, y, tgt.x, tgt.y, dungeon)) {
+                            ideal = tech.idealLocations(tempPt, targets, allies);
+                            if (!ideal.isEmpty()) {
+                                targetMap[x][y] = ideal.keyAt(0);
+                                worthMap[x][y] = ideal.getAt(0).size();
+                                setGoal(x, y);
+                            }
+                            continue CELL;
+                        }
+                    }
+                    gradientMap[x][y] = FLOOR;
+                } else
+                    gradientMap[x][y] = FLOOR;
+            }
+        }
+        scan(null,impassable2);
+
+        float currentDistance = gradientMap[start.x][start.y];
+        if (currentDistance <= moveLength) {
+            int[] g_arr = goals.toArray();
+
+            goals.clear();
+            setGoal(start);
+            scan(null, impassable2, false);
+            gradientMap[start.x][start.y] = moveLength;
+            int decX, decY;
+            float bestWorth = 0f;
+            for (int g, ig = 0; ig < g_arr.length; ig++) {
+                g = g_arr[ig];
+                decX = decodeX(g);
+                decY = decodeY(g);
+                if (gradientMap[decX][decY] <= moveLength && worthMap[decX][decY] > bestWorth) {
+                    goals.clear();
+                    goals.add(g);
+                    bestWorth = worthMap[decX][decY];
+                }
+                else if (gradientMap[decX][decY] <= moveLength && bestWorth > 0 && worthMap[decX][decY] == bestWorth)
+                {
+                    goals.add(g);
+                }
+            }
+            resetMap();
+            scan(impassable2);
+
+        }
+
+        measurement = mess;
+
+        Coord currentPos = Coord.get(start.x, start.y);
+        while (true) {
+            if (frustration > 500) {
+                path.clear();
+                break;
+            }
+            float best = gradientMap[currentPos.x][currentPos.y];
+            appendDirToShuffle(rng);
+            int choice = 0;
+
+            for (int d = 0; d <= measurement.directionCount(); d++) {
+                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                if(!pt.isWithin(width, height))
+                    continue;
+                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                    if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
+                        best = gradientMap[pt.x][pt.y];
+                        choice = d;
+                    }
+                }
+            }
+            if (best >= gradientMap[currentPos.x][currentPos.y]) {
+                if (friends.contains(currentPos)) {
+                    tempSet.clear();
+                    tempSet.addAll(impassable2);
+                    tempSet.add(currentPos);
+                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
+                            friends, start, targets);
+                }
+                break;
+            }
+            if (best > gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+                cutShort = true;
+                frustration = 0;
+                if(buffer == null)
+                    return new ObjectList<>(path);
+                else
+                {
+                    buffer.addAll(path);
+                    return buffer;
+                }
+            }
+            currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
+            path.add(currentPos);
+            paidLength += costMap[currentPos.x][currentPos.y];
+            frustration++;
+            if (paidLength > moveLength - 1f) {
+                if (friends.contains(currentPos)) {
+                    tempSet.clear();
+                    tempSet.addAll(impassable2);
+                    tempSet.add(currentPos);
+                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
+                            friends, start, targets);
+                }
+                break;
+            }
+        }
+        cutShort = false;
+        frustration = 0;
+        goals.clear();
+        if(buffer == null)
+            return new ObjectList<>(path);
+        else
+        {
+            buffer.addAll(path);
+            return buffer;
+        }
+    }
 
 
     private float cachedLongerPaths = 1.2f;
-    private CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
+    private final CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
     private Coord[] cachedFearSources;
     private float[][] cachedFleeMap;
     private int cachedSize = 1;
