@@ -39,7 +39,7 @@ import java.util.Collection;
  * LineAOE will strike a small area behind the user and in the opposite direction of the target if the radius is
  * greater than 0. This behavior may be altered in a future version.
  * <br>
- * This will produce doubles for its {@link #findArea()} method which are equal to 1.0.
+ * This will produce floats for its {@link #findArea()} method which are equal to 1.0.
  * <br>
  * This class uses {@link BresenhamLine} and {@link DijkstraMap} to create its area of effect.
  * Created by Tommy Ettinger on 7/14/2015.

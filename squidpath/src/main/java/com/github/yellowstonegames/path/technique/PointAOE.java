@@ -86,7 +86,7 @@ public class PointAOE implements AOE {
             return bestPoints;
 
 
-        double dist;
+        float dist;
         for(Coord p : targets) {
             if(requiredExclusions != null && requiredExclusions.contains(p))
                 continue;
@@ -111,7 +111,7 @@ public class PointAOE implements AOE {
         int totalTargets = priorityTargets.size() + lesserTargets.size();
         CoordObjectOrderedMap<ObjectList<Coord>> bestPoints = new CoordObjectOrderedMap<>(totalTargets * 4);
 
-        double dist;
+        float dist;
 
         for(Coord p : priorityTargets) {
             if(requiredExclusions != null && requiredExclusions.contains(p))

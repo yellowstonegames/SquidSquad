@@ -30,8 +30,8 @@ import java.util.Collection;
  * radius along the angle (in degrees), moving somewhat around corners/obstacles, and also spread a total of span
  * degrees around the angle (a span of 90 will affect a full quadrant, centered on angle). You can specify the
  * RadiusType to Radius.DIAMOND for Manhattan distance, RADIUS.SQUARE for Chebyshev, or RADIUS.CIRCLE for Euclidean.
- *
- * RADIUS.CIRCLE (Euclidean measurement) will produce the most real-looking cones. This will produce doubles for its
+ * <br>
+ * RADIUS.CIRCLE (Euclidean measurement) will produce the most real-looking cones. This will produce floats for its
  * {@link #findArea()} method which are greater than 0.0 and less than or equal to 1.0.
  *
  * This class uses {@link FOV} to create its area of effect.
@@ -40,7 +40,7 @@ import java.util.Collection;
 public class ConeAOE implements AOE {
     private Coord origin;
     private float radius, angle, span;
-    private float[][] map, tmpfov;
+    private float[][] map, tmpMap;
     private Radius radiusType;
     private Reach reach = new Reach(1, 1, Radius.SQUARE, AimLimit.FREE);
 
@@ -221,11 +221,11 @@ public class ConeAOE implements AOE {
         for (int i = 0; i < exs.length; i++) {
             t = exs[i];
             tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
-            FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
-                    dungeonCopy[x][y] = !(origin.x == x && origin.y == y) && (tmpfov[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : map[x][y];
+                    dungeonCopy[x][y] = !(origin.x == x && origin.y == y) && (tmpMap[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : map[x][y];
                 }
             }
         }
@@ -236,11 +236,11 @@ public class ConeAOE implements AOE {
             t = ts[i];
             tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
 
-            FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
-                    if (tmpfov[x][y] > 0.0)
+                    if (tmpMap[x][y] > 0.0)
                     {
                         compositeMap[i][x][y] = dm.physicalMap[x][y];
                     }
@@ -342,11 +342,11 @@ public class ConeAOE implements AOE {
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
             tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
-            FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
-                    dungeonCopy[x][y] = (tmpfov[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : dungeonCopy[x][y];
+                    dungeonCopy[x][y] = (tmpMap[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : dungeonCopy[x][y];
                 }
             }
         }
@@ -359,11 +359,11 @@ public class ConeAOE implements AOE {
             DijkstraMap dm = new DijkstraMap(map, dmm, true);
             t = pts[i];
             tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
-            FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
-                    if (tmpfov[x][y] > 0f){
+                    if (tmpMap[x][y] > 0f){
                         compositeMap[i][x][y] = dm.physicalMap[x][y];
                         dungeonPriorities[x][y] = map[x][y];
                     }
@@ -396,11 +396,11 @@ public class ConeAOE implements AOE {
 
             tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
 
-            FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
-                    if (tmpfov[x][y] > 0f){
+                    if (tmpMap[x][y] > 0f){
                         compositeMap[i][x][y] = dm.physicalMap[x][y];
                     }
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
@@ -489,12 +489,12 @@ public class ConeAOE implements AOE {
     @Override
     public void setMap(float[][] map) {
         this.map = map;
-        this.tmpfov = ArrayTools.copy(map);
+        this.tmpMap = ArrayTools.copy(map);
     }
 
     @Override
     public CoordFloatOrderedMap findArea() {
-        CoordFloatOrderedMap r = AreaUtils.arrayToMap(FOV.reuseRippleFOV(map, tmpfov, 3, origin.x, origin.y, radius,
+        CoordFloatOrderedMap r = AreaUtils.arrayToMap(FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius,
                 radiusType, angle, span));
         r.remove(origin);
         return r;
