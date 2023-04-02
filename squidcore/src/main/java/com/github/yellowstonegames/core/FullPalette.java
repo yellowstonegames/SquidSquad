@@ -19,6 +19,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.chroma;
 import static com.github.yellowstonegames.core.DescriptiveColor.hue;
@@ -49,7 +50,7 @@ public final class FullPalette {
      */
     private FullPalette() {
     }
-    public static final ObjectIntOrderedMap<String> NAMED = new ObjectIntOrderedMap<String>(1019);
+    public static final ObjectIntOrderedMap<String> NAMED = new ObjectIntOrderedMap<>(1019);
     public static final IntList LIST = new IntList(1019);
 
 
@@ -12329,4 +12330,574 @@ public final class FullPalette {
         }
         NAMES_BY_LIGHTNESS.sort((o1, o2) -> (NAMED.get(o1) & 255) - (NAMED.get(o2) & 255));
     }
+
+        /**
+     * This array is loaded with the colors found in the rainbow, in the
+     * standard ROYGBIV order. You may want to consider {@link #COLOR_WHEEL_PALETTE}
+     * if you want more hues or varying saturation/lightness; this is close to {@link #COLOR_WHEEL_PALETTE_BRIGHT}.
+     */
+    public static final int[] RAINBOW = {
+            RED_PIGMENT, ORANGE_PEEL, YELLOW, GREEN, BLUE, INDIGO_DYE, VIOLET};
+    /**
+     * This array is loaded with the colors from the traditional Japanese
+     * Red-Violet Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] RED_VIOLET_SERIES = {
+            ONE_KIN_DYE, RED_PLUM, CHERRY_BLOSSOM_DYE, PALE_CRIMSON, PEACH_DYE, MEDIUM_CRIMSON, WASHED_OUT_CRIMSON};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Red
+     * Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] RED_SERIES = {
+            IBIS_WING, LONG_SPRING, COCHINEAL_RED, THRICE_DYED_CRIMSON, PLUM_BLOSSOM_MOUSE, PURE_CRIMSON, RED_BEAN,
+            SHRIMP_BROWN, DAWN, ORANGUTAN, PERSIMMON_JUICE, RED_KITE, BLACK_KITE, GLAZED_PERSIMMON, EDO_BROWN,
+            CYPRESS_BARK, RINSED_OUT_RED, BREWED_MUSTARD_BROWN, OVERDYED_RED_BROWN, CHINESE_TEA_BROWN, FADED_CHINESE_TEA_BROWN,
+            CHESTNUT_LEATHER_BROWN, IBIS, CHERRY_BLOSSOM_MOUSE, FOREIGN_CRIMSON, DEEP_SCARLET, WATER_PERSIMMON,
+            SAPPANWOOD_INCENSE, TRUE_RED, SILVERED_RED, CHESTNUT_PLUM, CORAL_DYE, WILTED_LAWN_CLIPPINGS, RED_BIRCH,
+            CYPRESS_BARK_RED, BLOOD_RED, BLOOD, BENI_DYE, MEAT, RED_INCENSE, EARTHEN_YELLOW_RED_BROWN, DISTANT_RIVER_BROWN,
+            BIRCH_BROWN, SPARROW_BROWN, BOILED_RED_BEAN_BROWN};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Yellow
+     * Red Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] YELLOW_RED_SERIES = {
+            WALNUT, SUMAC, RICH_GARDENIA, RED_OCHRE, POLISHED_BROWN, STYLISH_PERSIMMON, DAYLILY, RED_DYE_TURMERIC,
+            LEGAL_DYE, AMBER_DYE, DECAYING_LEAVES, CLOVE_DYED, BRUSHWOOD_DYED, SOOTY_BAMBOO, EARTHEN_YELLOW, CHINESE_TEA_YELLOW,
+            CATTAIL, SCORCHED_BROWN, WASHED_OUT_PERSIMMON, SAWTOOTH_OAK, GREEN_TEA_DYE, PALE_PERSIMMON, PLUM_DYED,
+            CLOVE_BROWN, LOQUAT_BROWN, PALE_INCENSE, GOLDEN_BROWN_DYE, FOX, ALOEWOOD, WHITE_TEA_DYE,
+            DRIED_WEATHERED_BAMBOO, FLATTERY_BROWN};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Yellow
+     * Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] YELLOW_SERIES = {
+            LIGHT_YELLOW_DYE, EGG_DYE, BRIGHT_GOLD_BROWN, UNDRIED_WALL, CORN_DYE, GOLDEN_OAK, FLORAL_LEAF, TURMERIC,
+            FADED_SEN_NO_RIKYUS_TEA, LYE, TEA_GARDEN_CONTEMPLATION, RAPESEED_OIL, NIGHTINGALE_BROWN, JAPANESE_TRIANDRA_GRASS,
+            STEAMED_CHESTNUT, FINCH_BROWN, NIGHTINGALE, BRIGHT_GOLDEN_YELLOW, SUMAC_DYED, MULBERRY_DYED, CAPE_JASMINE,
+            WHITE_OAK, GAMBOGE_DYE, EGGSHELL_PAPER, GOLDEN_FALLEN_LEAVES, SEN_NO_RIKYUS_TEA, JAPANESE_IRIS,
+            SIMMERED_SEAWEED, YELLOW_SEA_PINE_BROWN, RAPEBLOSSOM_BROWN, AMUR_CORK_TREE, PALE_FALLEN_LEAVES, PATRINIA_FLOWER};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Yellow
+     * Green Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] YELLOW_GREEN_SERIES = {
+            GREENFINCH, WILLOW_TEA, FLIRTATIOUS_INDIGO_TEA, DEAD_MANS_FINGERS_SEAWEED, BAIKO_BROWN, SISKIN_SPROUT_YELLOW,
+            WILLOW_LEAVES_UNDERSIDE, WILLOW_DYE, BLUE_BLACK_CRAYFISH, PALE_OAK, RIKAN_BROWN, MOSS, THOUSAND_YEAR_OLD_BROWN,
+            IWAI_BROWN, SOOTY_WILLOW_BAMBOO, PALE_YOUNG_GREEN_ONION, FRESH_ONION, PINE_NEEDLE};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Blue
+     * Green Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] BLUE_GREEN_SERIES = {
+            JAPANESE_PALE_BLUE, WILLOW_GREY, THOUSAND_YEAR_OLD_GREEN, WHITISH_GREEN, PATINA, STOREROOM_BROWN, GREYISH_DARK_GREEN,
+            INSECT_SCREEN, ALOEWOOD_BROWN, CELADON_DYE, RUSTY_STOREROOM, SILK_CREPE_BROWN, YOUNG_BAMBOO, OLD_BAMBOO,
+            MIDORI, RUSTY_CELADON, HORSETAIL, GREEN_BAMBOO, VELVET, FRAGILE_SEAWEED_BROWN, PALE_GREEN_ONION, BLUE_GREEN_DYE,
+            IRON, GORYEO_STOREROOM};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Blue
+     * Violet Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] BLUE_VIOLET_SERIES = {
+            HARBOR_RAT, IRON_STORAGE, RUSTED_LIGHT_BLUE, LIGHT_BLUE_DYE, RUSTY_STORAGE, JAPANESE_INDIGO, LIGHT_BLUE_FLOWER,
+            OPPOSITE_FLOWER, IRONHEAD_FLOWER, SKY, ULTRAMARINE_DYE, COARSE_WOOL, NAVY_BLUE_DYE, STAINED_RED, MOUSY_WISTERIA,
+            WISTERIA_DYE, DULL_BLUE, WATER, INSIDE_OF_A_BOTTLE, NEW_BRIDGE, MOUSY_INDIGO, ONANDO, THOUSAND_HERB, LIGHT_BLUE_SILK,
+            KIMONO_STORAGE, BLACK_CHESTNUT_OAK, DARK_BLUE_DYE, LAPIS_LAZULI, DARK_BLUE_LAPIS_LAZULI, NAVY_BLUE_BELLFLOWER,
+            SAFFLOWER, DARK_INDIGO};
+    /**
+     * This array is loaded with the colors from the traditional Japanese Violet
+     * Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] VIOLET_SERIES = {
+            WISTERIA_PURPLE, TATARIAN_ASTER, BLUE_VIOLET_DYE, THIN_VIOLET, VIOLET_DYE, DARK_RED_DYE, RED_WISTERIA,
+            DOVE_FEATHER_GREY, VINE_GRAPE, TREE_PEONY, FAKE_PURPLE, SAPPANWOOD, VANISHING_RED_MOUSE, BELLFLOWER,
+            DISAPPEARING_PURPLE, DEEP_PURPLE, HALF_PURPLE, PURPLE_DYE, IRIS, RABBIT_EAR_IRIS, GRAPE_MOUSE, BURNT_BAMBOO,
+            PLUM_PURPLE, PURPLE_KITE, MULBERRY};
+    /**
+     * This array is loaded with the colors from the traditional Japanese
+     * Achromatic Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.
+     */
+    public static final int[] ACHROMATIC_SERIES = {
+            UNBLEACHED_SILK, SILVER_GREY, BROWN_RAT_GREY, BETEL_NUT_DYE, BLACK_DYE, WHITE_MOUSE, PLAIN_MOUSE,
+            INDIGO_INK_BROWN, INK, INDIGO_WHITE};
+
+    /**
+     * An array of Oklab int colors that should all be fairly different from any other in the group.
+     * This may be useful for tinting things that should be color-coded differently from each other. To get a random
+     * order for these colors while still guaranteeing that no color will be drawn twice in the first 56 choices, you
+     * can use {@code IntOrderedSet palette = new IntOrderedSet(FullPalette.VARIED_PALETTE).shuffle(rng);} (where
+     * rng is any non-null EnhancedRandom) and then get sequential colors from that set with
+     * {@code int i = 0; int color = palette.getAt(i);} , incrementing i before calling getAt again and possibly
+     * wrapping with {@code i %= 56;} .
+     * This includes 56 colors, organized in groups of 4 from dark to light in each group:
+     * <ul>
+     * <li>0-3: gray group</li>
+     * <li>4-7: brown group</li>
+     * <li>8-11: red group</li>
+     * <li>12-15: pink group</li>
+     * <li>16-19: magenta/purple group</li>
+     * <li>20-23: purple/blue-ish group</li>
+     * <li>24-27: darker blue group</li>
+     * <li>28-31: lighter blue and blue-green group</li>
+     * <li>32-35: pure green group</li>
+     * <li>36-39: grayish-green group</li>
+     * <li>40-43: yellow-green group</li>
+     * <li>44-47: yellow group</li>
+     * <li>48-51: orange group</li>
+     * <li>52-55: orange-red-pink/salmon/coral group</li>
+     * </ul>
+     */
+    public static final int[] VARIED_PALETTE = {
+            DARK_GRAY, GRAY, LIGHT_GRAY, DB_EGGSHELL,
+            DB_SEAL_BROWN, BROWNER, DARK_TAN, TAN,
+            DB_BLOOD, PURE_CRIMSON, RED, IBIS_WING,
+            TREE_PEONY, DEEP_CERISE, HOT_PINK, PINK,
+            INDIGO, PURPLE, PSYCHEDELIC_PURPLE, LIGHT_VIOLET,
+            ROYAL_PURPLE, VIOLET, HALF_PURPLE, LAVENDER_FLORAL,
+            COBALT, CERULEAN_BLUE, BLUE, CORNFLOWER_BLUE,
+            LIGHT_BLUE_FLOWER, ROBIN_EGG_BLUE, CYAN, LIGHT_BLUE,
+            GREEN_BAMBOO, PERSIAN_GREEN, ELECTRIC_GREEN, MINT_GREEN,
+            CAMO_GREEN, PALE_GREEN_ONION, PASTEL_GREEN, MOSS_GREEN,
+            OLIVE_DRAB, YELLOW_GREEN, CHARTREUSE_GREEN, ELECTRIC_LIME,
+            GOLD, SCHOOL_BUS_YELLOW, YELLOW, LEMON_CHIFFON,
+            BURNT_ORANGE, OCHRE, CAPE_JASMINE, PEACH_YELLOW,
+            SAFETY_ORANGE, CORAL_DYE, DARK_SALMON, LIGHT_YELLOW_DYE
+    };
+
+    /**
+     * DawnBringer's original 16-color palette, as posted on the
+     * <a href="http://www.pixeljoint.com/forum/forum_posts.asp?TID=12795">Pixel Joint forums</a>, and since then used
+     * in lots of pixel art. Some useful previews can be seen here https://github.com/geoffb/dawnbringer-palettes , and the order
+     * this array uses is the same as the previews at the bottom of that page.
+     * <br>
+     * <a href="http://i.imgur.com/iFJXQTx.png">Preview of all 16 colors, with names</a>
+     */
+    public static final int[] DAWNBRINGER_16 = {DB_MIDNIGHT, DB_DARK_LEATHER, DB_DEEP_OCEAN, DB_LEAD, DB_EARTH,
+            DB_FOREST, DB_LOBSTER, DB_DRAB, DB_CADET_BLUE, DB_TAWNY_BROWN, DB_IRON, DB_PEA_SOUP, DB_PUTTY,
+            DB_TURQUOISE, DB_MUSTARD, DB_EGGSHELL};
+
+
+    /**
+     * DawnBringer's 32-color palette, as posted on the Pixel Joint forums,
+     * http://www.pixeljoint.com/forum/forum_posts.asp?TID=16247 , and since then used in lots of pixel art.
+     * Some useful previews can be seen here https://github.com/geoffb/dawnbringer-palettes , and the order
+     * this array uses is the same as the previews at the bottom of that page.
+     * <br>
+     * <a href="http://i.imgur.com/2xSFryj.png">Preview of all 32 colors, with names</a>
+     */
+    public static final int[] DAWNBRINGER_32 = {DB_BLACK, DB_INK, DB_SEAL_BROWN, DB_CHESTNUT, DB_CAPPUCCINO,
+            DB_PUMPKIN, DB_FAWN, DB_NUDE, DB_DAFFODIL, DB_KEY_LIME, DB_SHAMROCK, DB_JUNGLE, DB_OLIVE, DB_MUD,
+            DB_SHADOW, DB_COBALT, DB_CERULEAN, DB_DENIM, DB_SKY_BLUE, DB_SEAFOAM, DB_PLATINUM, DB_WHITE,
+            DB_STORM_CLOUD, DB_ELEPHANT, DB_GRAPHITE, DB_SOOT, DB_EGGPLANT, DB_BLOOD, DB_CORAL, DB_LAVENDER,
+            DB_ARMY_GREEN, DB_COMPOST};
+
+    /**
+     * DawnBringer's 256-color Aurora palette, modified slightly to fit one transparent color by removing one gray.
+     * Aurora is available in <a href="http://pixeljoint.com/forum/forum_posts.asp?TID=26080">this set of tools</a>
+     * for a pixel art editor, but it is usable for lots of high-color purposes. The original palette did not have
+     * names. Naming 256 colors was an ordeal, since many of these colors are well-described by the same name, even when
+     * two or more can be distinguished visually from each other. For pixel art or low-color edits of traditional
+     * art, this palette can reproduce a lot of realistic
+     * colors and slight changes on those colors, with many skin tones (mostly, these are numbered so 1 is the darkest
+     * skin tone in a group and higher numbers get progressively lighter; the lightest tones are
+     * {@link #AURORA_LIGHT_SKIN_9}, {@link #AURORA_PINK_SKIN_4}, {@link #AURORA_BRONZE_SKIN_4}, and
+     * {@link #AURORA_DARK_SKIN_3}, with the LIGHT skin tones steadily going from warm and saturated colors at
+     * {@link #AURORA_LIGHT_SKIN_1} to more pale at 9, and the PINK skin tones meant for accents on some body parts that
+     * aren't quite skin-colored, like the lips and ears). <a href="https://i.imgur.com/CrI1LyU.png">Preview of all 256
+     * colors, each with the hex number for its index in this array.</a>
+     * <a href="https://i.imgur.com/hufvt0v.png">Another preview of all 256 colors, but with the name of each color
+     * instead (without "Aurora " at the start).</a>
+     */
+    public static final int[] DAWNBRINGER_AURORA = {
+            AURORA_TRANSPARENT, AURORA_PITCH_BLACK, AURORA_COAL_BLACK, AURORA_SHADOW, AURORA_GRAPHITE, AURORA_SMOKE, AURORA_LEAD, AURORA_IRON,
+            AURORA_ELEPHANT, AURORA_CHINCHILLA, AURORA_GREYHOUND, AURORA_SILVER, AURORA_FOG, AURORA_PLATINUM, AURORA_CLOUD, AURORA_SHINING_WHITE,
+            AURORA_SEAWATER, AURORA_HOSPITAL_GREEN, AURORA_CYAN, AURORA_BUBBLE, AURORA_PERIWINKLE, AURORA_ULTRAMARINE, AURORA_FADED_BLUE, AURORA_OCEAN_BLUE,
+            AURORA_STYGIAN_BLUE, AURORA_DEEP_PURPLE, AURORA_TYRIAN_PURPLE, AURORA_MAGENTA, AURORA_BUBBLEGUM_PINK, AURORA_PORK_CHOP, AURORA_RAW_MEAT, AURORA_FRESH_BLOOD,
+            AURORA_PUTTY, AURORA_SIENNA, AURORA_SEAL_BROWN, AURORA_MUMMY_BROWN, AURORA_FAWN, AURORA_ORANGE, AURORA_PEACH, AURORA_CREAM,
+            AURORA_LEMON, AURORA_EARWAX, AURORA_UMBER, AURORA_IVY_GREEN, AURORA_JADE, AURORA_SHAMROCK_GREEN, AURORA_CELADON, AURORA_PUCE,
+            AURORA_BEIGE, AURORA_WET_STONE, AURORA_SLOW_CREEK, AURORA_SLATE_GRAY, AURORA_LIGHT_SKIN_1, AURORA_LIGHT_SKIN_2, AURORA_LIGHT_SKIN_3, AURORA_LIGHT_SKIN_4,
+            AURORA_LIGHT_SKIN_5, AURORA_LIGHT_SKIN_6, AURORA_LIGHT_SKIN_7, AURORA_LIGHT_SKIN_8, AURORA_LIGHT_SKIN_9, AURORA_DARK_SKIN_1, AURORA_DARK_SKIN_2, AURORA_DARK_SKIN_3,
+            AURORA_PINK_SKIN_1, AURORA_PINK_SKIN_2, AURORA_PINK_SKIN_3, AURORA_PINK_SKIN_4, AURORA_BRONZE_SKIN_4, AURORA_BRONZE_SKIN_3, AURORA_BRONZE_SKIN_2, AURORA_BRONZE_SKIN_1,
+            AURORA_TAUPE, AURORA_DRAB_GREEN, AURORA_LIZARD_SCALES, AURORA_CRICKET, AURORA_OLIVE_OIL, AURORA_DUN, AURORA_CORN_SILK, AURORA_TAN,
+            AURORA_STRAW, AURORA_HONEYDEW, AURORA_TARNISH, AURORA_PEA_SOUP, AURORA_MARSH, AURORA_ASPARAGUS, AURORA_PEAT_BOG, AURORA_DEEP_JUNGLE,
+            AURORA_PINE_GREEN, AURORA_OLIVE_GREEN, AURORA_GRAY_GREEN, AURORA_MAIDENHAIR_FERN, AURORA_KELLY_GREEN, AURORA_DUSTY_GREEN, AURORA_GARTER_SNAKE, AURORA_SILVER_GREEN,
+            AURORA_PISTACHIO, AURORA_ANGEL_WING, AURORA_SAGE_GREEN, AURORA_DRIED_SAGE, AURORA_ARTICHOKE, AURORA_VIRIDIAN, AURORA_FLORAL_FOAM, AURORA_HUNTER_GREEN,
+            AURORA_DARK_TEAL, AURORA_KYANITE, AURORA_SPEARMINT, AURORA_AMAZONITE, AURORA_PASTEL_SKY, AURORA_AQUAMARINE, AURORA_DUST_BUNNY, AURORA_PATINA,
+            AURORA_CHIPPED_GRANITE, AURORA_BLUE_SMOKE, AURORA_AIR_FORCE_BLUE, AURORA_COLD_IRON, AURORA_DREARY_BLUE, AURORA_MURK, AURORA_NINJA, AURORA_WATERCOLOR_BLACK,
+            AURORA_IOLITE, AURORA_BOYSENBERRY, AURORA_WATERCOLOR_GRAY, AURORA_BLUE_STEEL, AURORA_TWILIGHT_CLOUD, AURORA_SMOG, AURORA_TROPIC_MIST, AURORA_FEATHER_DOWN,
+            AURORA_MILD_VIOLET, AURORA_VIOLET_CUSHIONS, AURORA_DULL_VIOLET, AURORA_ROYAL_VIOLET, AURORA_EMINENCE, AURORA_PRUNE, AURORA_DUSTY_GRAPE, AURORA_PINK_VIOLET,
+            AURORA_RIPE_PLUM, AURORA_MAUVE, AURORA_HAM, AURORA_COTTON_CANDY, AURORA_SILVER_PINK, AURORA_TEA_ROSE, AURORA_OLD_ROSE, AURORA_DUSTY_PINK,
+            AURORA_ROSEATE_SPOONBILL, AURORA_THULIAN_PINK, AURORA_BROWN_VELVET, AURORA_NIGHTSHADE, AURORA_SCRIBE_INK, AURORA_VARNISH, AURORA_CEDAR_WOOD, AURORA_HOT_SAUCE,
+            AURORA_LURID_RED, AURORA_BRICK, AURORA_FUSION_RED, AURORA_EMBERS, AURORA_SALMON, AURORA_TAXICAB_YELLOW, AURORA_APRICOT, AURORA_BURNT_YELLOW,
+            AURORA_DRY_PEPPER, AURORA_REDWOOD, AURORA_KOA, AURORA_OCHRE, AURORA_DULL_GREEN, AURORA_ARMY_GREEN, AURORA_DRIFTWOOD, AURORA_DRY_BRUSH,
+            AURORA_MUSH, AURORA_BANANA_PUDDING, AURORA_SAFFRON, AURORA_PENCIL_YELLOW, AURORA_CHARTREUSE, AURORA_ABSINTHE, AURORA_INFECTION, AURORA_FROG_GREEN,
+            AURORA_AVOCADO, AURORA_WOODLANDS, AURORA_DARK_PINE, AURORA_MOSS_GREEN, AURORA_FERN_GREEN, AURORA_FOREST_GLEN, AURORA_MALACHITE, AURORA_APPLE_GREEN,
+            AURORA_CELERY, AURORA_MINT_GREEN, AURORA_EMERALD, AURORA_PRASE, AURORA_EUCALYPTUS, AURORA_ZUCCHINI, AURORA_SOFT_TEAL, AURORA_MEDIUM_TEAL,
+            AURORA_SPRING_GREEN, AURORA_TURQUOISE, AURORA_SEAFOAM, AURORA_VARISCITE, AURORA_REFRESHING_MIST, AURORA_SHINING_SKY, AURORA_STEAM, AURORA_ROBIN_EGG_BLUE,
+            AURORA_DENIM_BLUE, AURORA_DEEP_TEAL, AURORA_NAVY_BLUE, AURORA_BLUEBERRY, AURORA_PRUSSIAN_BLUE, AURORA_DESERT_RAIN, AURORA_ELECTRIC_BLUE, AURORA_HIDDEN_BLUE,
+            AURORA_DULL_AZURE, AURORA_RIPPED_DENIM, AURORA_CALM_SKY, AURORA_VAPOR, AURORA_POWDER_BLUE, AURORA_SUDS, AURORA_STRONG_CYAN, AURORA_SHARP_AZURE,
+            AURORA_BLUE_EYE, AURORA_SUBTLETY, AURORA_ROUGH_SAPPHIRE, AURORA_IRIS, AURORA_CORNFLOWER_BLUE, AURORA_POLISHED_SAPPHIRE, AURORA_ROYAL_BLUE, AURORA_INDIGO,
+            AURORA_SPACE_BLUE, AURORA_THICK_AMETHYST, AURORA_JUICY_GRAPE, AURORA_BLACKLIGHT_GLOW, AURORA_PURPLE_FREESIA, AURORA_THIN_AMETHYST, AURORA_ORCHID, AURORA_LAVENDER,
+            AURORA_LILAC, AURORA_SOAP, AURORA_PINK_TUTU, AURORA_THISTLE, AURORA_HELIOTROPE, AURORA_LIGHT_PLUM, AURORA_WISTERIA, AURORA_MEDIUM_PLUM,
+            AURORA_VIOLET, AURORA_GRAPE_LOLLIPOP, AURORA_MULBERRY, AURORA_GRAPE_SODA, AURORA_EGGPLANT, AURORA_CHERRY_SYRUP, AURORA_PLUM_JUICE, AURORA_FRUIT_PUNCH,
+            AURORA_BUBBLE_GUM, AURORA_PINK_LEMONADE, AURORA_SHRIMP, AURORA_FLAMINGO, AURORA_LIPSTICK, AURORA_CARMINE, AURORA_BOLOGNA, AURORA_RASPBERRY,
+    };
+
+    /**
+     * A predefined palette of 198 colors derived from 21 hand-picked hues on the color wheel, with 9 variations on
+     * saturation and value per hue, along with 9 grayscale colors from black to white. Not all of these colors are
+     * especially distinguishable from each other; this mainly applies to the darkened colors (DARK_, DRAB_, and
+     * RICH_) and sometimes the saturated colors (FLUSH_, BRIGHT_, and RICH_). The precise meanings of the terms used:
+     * CW_ is the base color wheel color with medium saturation and value, CW_FADED_ is desaturated, CW_FLUSH_ is
+     * saturated, CW_LIGHT_ has value increased, CW_PALE_ has value increased and is desaturated, CW_BRIGHT_ has value
+     * increased and is saturated, CW_DARK_ has value decreased significantly, CW_DRAB_ has value decreased and is
+     * desaturated, and CW_RICH_ has value decreased and is saturated. The names for the colors are usually chosen based
+     * on the appearance of the CW_BRIGHT_ version and the CW_ version, which explains why CW_DRAB_APRICOT doesn't look
+     * like the apricot fruit, but CW_BRIGHT_APRICOT probably does, depending on monitor brightness.
+     * <br>
+     * The array is organized into 21 hue blocks of 9 colors each, going from mid-value to light-value to dark-value
+     * before moving to the next hue block. It starts at red, moves on to brown and orange, yellow, green, blue, purple,
+     * and comes almost all the way back around to red. It ends with 9 grayscale colors, from black to white, ordered by
+     * brightness. The grayscale colors use different names, going from darkest to lightest: CW_BLACK, CW_ALMOST_BLACK,
+     * CW_GRAY_BLACK, CW_DARK_GRAY, CW_GRAY, CW_LIGHT_GRAY, CW_GRAY_WHITE, CW_ALMOST_WHITE, and CW_WHITE. The CW_BROWN
+     * group was added after the rest, and has especially low saturation and value, but its hue is at the correct point
+     * in the order.
+     * <br>
+     * <a href="https://i.imgur.com/IWXa2KK.png">Preview of 189 colors (all except grayscale), with names</a>
+     */
+    public static final int[] COLOR_WHEEL_PALETTE = {
+            CW_RED, CW_FADED_RED, CW_FLUSH_RED, CW_LIGHT_RED, CW_PALE_RED, CW_BRIGHT_RED, CW_DARK_RED, CW_DRAB_RED, CW_RICH_RED,
+            CW_ORANGE, CW_FADED_ORANGE, CW_FLUSH_ORANGE, CW_LIGHT_ORANGE, CW_PALE_ORANGE, CW_BRIGHT_ORANGE, CW_DARK_ORANGE, CW_DRAB_ORANGE, CW_RICH_ORANGE,
+            CW_BROWN, CW_FADED_BROWN, CW_FLUSH_BROWN, CW_LIGHT_BROWN, CW_PALE_BROWN, CW_BRIGHT_BROWN, CW_DARK_BROWN, CW_DRAB_BROWN, CW_RICH_BROWN,
+            CW_APRICOT, CW_FADED_APRICOT, CW_FLUSH_APRICOT, CW_LIGHT_APRICOT, CW_PALE_APRICOT, CW_BRIGHT_APRICOT, CW_DARK_APRICOT, CW_DRAB_APRICOT, CW_RICH_APRICOT,
+            CW_GOLD, CW_FADED_GOLD, CW_FLUSH_GOLD, CW_LIGHT_GOLD, CW_PALE_GOLD, CW_BRIGHT_GOLD, CW_DARK_GOLD, CW_DRAB_GOLD, CW_RICH_GOLD,
+            CW_YELLOW, CW_FADED_YELLOW, CW_FLUSH_YELLOW, CW_LIGHT_YELLOW, CW_PALE_YELLOW, CW_BRIGHT_YELLOW, CW_DARK_YELLOW, CW_DRAB_YELLOW, CW_RICH_YELLOW,
+            CW_CHARTREUSE, CW_FADED_CHARTREUSE, CW_FLUSH_CHARTREUSE, CW_LIGHT_CHARTREUSE, CW_PALE_CHARTREUSE, CW_BRIGHT_CHARTREUSE, CW_DARK_CHARTREUSE, CW_DRAB_CHARTREUSE, CW_RICH_CHARTREUSE,
+            CW_LIME, CW_FADED_LIME, CW_FLUSH_LIME, CW_LIGHT_LIME, CW_PALE_LIME, CW_BRIGHT_LIME, CW_DARK_LIME, CW_DRAB_LIME, CW_RICH_LIME,
+            CW_HONEYDEW, CW_FADED_HONEYDEW, CW_FLUSH_HONEYDEW, CW_LIGHT_HONEYDEW, CW_PALE_HONEYDEW, CW_BRIGHT_HONEYDEW, CW_DARK_HONEYDEW, CW_DRAB_HONEYDEW, CW_RICH_HONEYDEW,
+            CW_GREEN, CW_FADED_GREEN, CW_FLUSH_GREEN, CW_LIGHT_GREEN, CW_PALE_GREEN, CW_BRIGHT_GREEN, CW_DARK_GREEN, CW_DRAB_GREEN, CW_RICH_GREEN,
+            CW_JADE, CW_FADED_JADE, CW_FLUSH_JADE, CW_LIGHT_JADE, CW_PALE_JADE, CW_BRIGHT_JADE, CW_DARK_JADE, CW_DRAB_JADE, CW_RICH_JADE,
+            CW_SEAFOAM, CW_FADED_SEAFOAM, CW_FLUSH_SEAFOAM, CW_LIGHT_SEAFOAM, CW_PALE_SEAFOAM, CW_BRIGHT_SEAFOAM, CW_DARK_SEAFOAM, CW_DRAB_SEAFOAM, CW_RICH_SEAFOAM,
+            CW_CYAN, CW_FADED_CYAN, CW_FLUSH_CYAN, CW_LIGHT_CYAN, CW_PALE_CYAN, CW_BRIGHT_CYAN, CW_DARK_CYAN, CW_DRAB_CYAN, CW_RICH_CYAN,
+            CW_AZURE, CW_FADED_AZURE, CW_FLUSH_AZURE, CW_LIGHT_AZURE, CW_PALE_AZURE, CW_BRIGHT_AZURE, CW_DARK_AZURE, CW_DRAB_AZURE, CW_RICH_AZURE,
+            CW_BLUE, CW_FADED_BLUE, CW_FLUSH_BLUE, CW_LIGHT_BLUE, CW_PALE_BLUE, CW_BRIGHT_BLUE, CW_DARK_BLUE, CW_DRAB_BLUE, CW_RICH_BLUE,
+            CW_SAPPHIRE, CW_FADED_SAPPHIRE, CW_FLUSH_SAPPHIRE, CW_LIGHT_SAPPHIRE, CW_PALE_SAPPHIRE, CW_BRIGHT_SAPPHIRE, CW_DARK_SAPPHIRE, CW_DRAB_SAPPHIRE, CW_RICH_SAPPHIRE,
+            CW_INDIGO, CW_FADED_INDIGO, CW_FLUSH_INDIGO, CW_LIGHT_INDIGO, CW_PALE_INDIGO, CW_BRIGHT_INDIGO, CW_DARK_INDIGO, CW_DRAB_INDIGO, CW_RICH_INDIGO,
+            CW_VIOLET, CW_FADED_VIOLET, CW_FLUSH_VIOLET, CW_LIGHT_VIOLET, CW_PALE_VIOLET, CW_BRIGHT_VIOLET, CW_DARK_VIOLET, CW_DRAB_VIOLET, CW_RICH_VIOLET,
+            CW_PURPLE, CW_FADED_PURPLE, CW_FLUSH_PURPLE, CW_LIGHT_PURPLE, CW_PALE_PURPLE, CW_BRIGHT_PURPLE, CW_DARK_PURPLE, CW_DRAB_PURPLE, CW_RICH_PURPLE,
+            CW_MAGENTA, CW_FADED_MAGENTA, CW_FLUSH_MAGENTA, CW_LIGHT_MAGENTA, CW_PALE_MAGENTA, CW_BRIGHT_MAGENTA, CW_DARK_MAGENTA, CW_DRAB_MAGENTA, CW_RICH_MAGENTA,
+            CW_ROSE, CW_FADED_ROSE, CW_FLUSH_ROSE, CW_LIGHT_ROSE, CW_PALE_ROSE, CW_BRIGHT_ROSE, CW_DARK_ROSE, CW_DRAB_ROSE, CW_RICH_ROSE,
+            CW_BLACK, CW_ALMOST_BLACK, CW_GRAY_BLACK, CW_DARK_GRAY, CW_GRAY, CW_LIGHT_GRAY, CW_GRAY_WHITE, CW_ALMOST_WHITE, CW_WHITE,
+    };
+
+    /**
+     * An alternate version of {@link #COLOR_WHEEL_PALETTE} that has 16 hues (instead of 21 in the other palette)
+     * followed by grayscale, with each hue containing 9 colors (there are also 9 grayscale colors). Very similar hues
+     * have been removed from COLOR_WHEEL_PALETTE to try to better support random (or random-like) selection of colors.
+     * Each section of 9 colors per hue has been reordered as well, going in this order:
+     * <ol>
+     *     <li>{@code CW_PALE}, high brightness, low saturation</li>
+     *     <li>{@code CW_LIGHT}, high brightness, medium saturation</li>
+     *     <li>{@code CW_BRIGHT}, high brightness, high saturation</li>
+     *     <li>{@code CW_FADED}, medium brightness, low saturation</li>
+     *     <li>{@code CW}, medium brightness, medium saturation</li>
+     *     <li>{@code CW_FLUSH}, medium brightness, high saturation</li>
+     *     <li>{@code CW_DRAB}, low brightness, low saturation</li>
+     *     <li>{@code CW_DARK}, low brightness, medium saturation</li>
+     *     <li>{@code CW_RICH}, low brightness, high saturation</li>
+     * </ol>
+     * The grayscale colors go from high brightness to low brightness as well, the reverse of COLOR_WHEEL_PALETTE.
+     * <br>
+     * You can use some of the utility methods in this class to get colors from this with a good distribution, including
+     * {@link #randomColorWheel(EnhancedRandom, int, int)}, {@link #indexedColorWheel(int, int, int)}, and the overloads of those
+     * methods with fewer parameters. If those methods fit your needs, you don't need to read the next section.
+     * <br>
+     * This is organized the way it is to allow efficient random color fetching when you know what brightness and
+     * saturation you want. Example code for this given an {@link EnhancedRandom} called {@code rng}, with brightness and
+     * saturation as ints called {@code bright} and {@code sat} between 0 and 2 inclusive, would be:
+     * {@code FullPalette.COLOR_WHEEL_PALETTE_REDUCED[rng.next(4) * 9 + 3 * bright + sat]}. That code won't ever get a
+     * grayscale color, but should have an equal chance of choosing any of the 16 hues, with the given saturation and
+     * brightness. You might want to select colors in a sequence, with a very low chance of similar colors being close
+     * in the sequence; this can be done in a few ways depending on whether you want saturation and brightness to change
+     * as well as hue. If you know brightness and saturation as ints between 0 and 2 (inclusive) called {@code bright}
+     * and {@code sat}, as before, you can go through the 16 hues in a good pattern using a change to the index (an int
+     * called {@code idx} here): {@code FullPalette.COLOR_WHEEL_PALETTE_REDUCED[(idx * 7 & 15) * 9 + 3 * bright + sat]}. If
+     * you add 1 to idx each time, as in an ordinary for loop, then that code will produce 16 different hues in a fairly
+     * well-distributed way as idx goes from 0 to 15. If you want brightness to also change in a sequence, you can use
+     * {@code FullPalette.COLOR_WHEEL_PALETTE_REDUCED[((idx * 497) % 48 ^ (idx * 497 >> 2 & 3)) * 3 + sat]} for idx values
+     * between 0 and 47, inclusive (this is rather complicated due to issues with simpler methods yielding brightness
+     * changes in an obvious pattern). If you want to select from all 144 non-grayscale colors in a sequence, you can
+     * try {@code FullPalette.COLOR_WHEEL_PALETTE_REDUCED[(idx * 89) % 144 ^ (idx * 89 >> 2 & 3)]}, which will yield all
+     * the colors with a good distribution as idx goes from 0 to 143.
+     */
+    public static final int[] COLOR_WHEEL_PALETTE_REDUCED = {
+            CW_PALE_RED,CW_LIGHT_RED, CW_BRIGHT_RED, CW_FADED_RED, CW_RED, CW_FLUSH_RED, CW_DRAB_RED, CW_DARK_RED, CW_RICH_RED,
+            CW_PALE_ORANGE,CW_LIGHT_ORANGE, CW_BRIGHT_ORANGE, CW_FADED_ORANGE, CW_ORANGE, CW_FLUSH_ORANGE, CW_DRAB_ORANGE, CW_DARK_ORANGE, CW_RICH_ORANGE,
+            CW_PALE_BROWN,CW_LIGHT_BROWN, CW_BRIGHT_BROWN, CW_FADED_BROWN, CW_BROWN, CW_FLUSH_BROWN, CW_DRAB_BROWN, CW_DARK_BROWN, CW_RICH_BROWN,
+            CW_PALE_APRICOT,CW_LIGHT_APRICOT, CW_BRIGHT_APRICOT, CW_FADED_APRICOT, CW_APRICOT, CW_FLUSH_APRICOT, CW_DRAB_APRICOT, CW_DARK_APRICOT, CW_RICH_APRICOT,
+            CW_PALE_GOLD,CW_LIGHT_GOLD, CW_BRIGHT_GOLD, CW_FADED_GOLD, CW_GOLD, CW_FLUSH_GOLD, CW_DRAB_GOLD, CW_DARK_GOLD, CW_RICH_GOLD,
+            CW_PALE_YELLOW,CW_LIGHT_YELLOW, CW_BRIGHT_YELLOW, CW_FADED_YELLOW, CW_YELLOW, CW_FLUSH_YELLOW, CW_DRAB_YELLOW, CW_DARK_YELLOW, CW_RICH_YELLOW,
+            CW_PALE_CHARTREUSE,CW_LIGHT_CHARTREUSE, CW_BRIGHT_CHARTREUSE, CW_FADED_CHARTREUSE, CW_CHARTREUSE, CW_FLUSH_CHARTREUSE, CW_DRAB_CHARTREUSE, CW_DARK_CHARTREUSE, CW_RICH_CHARTREUSE,
+            CW_PALE_HONEYDEW,CW_LIGHT_HONEYDEW, CW_BRIGHT_HONEYDEW, CW_FADED_HONEYDEW, CW_HONEYDEW, CW_FLUSH_HONEYDEW, CW_DRAB_HONEYDEW, CW_DARK_HONEYDEW, CW_RICH_HONEYDEW,
+            CW_PALE_GREEN,CW_LIGHT_GREEN, CW_BRIGHT_GREEN, CW_FADED_GREEN, CW_GREEN, CW_FLUSH_GREEN, CW_DRAB_GREEN, CW_DARK_GREEN, CW_RICH_GREEN,
+            CW_PALE_SEAFOAM,CW_LIGHT_SEAFOAM, CW_BRIGHT_SEAFOAM, CW_FADED_SEAFOAM, CW_SEAFOAM, CW_FLUSH_SEAFOAM, CW_DRAB_SEAFOAM, CW_DARK_SEAFOAM, CW_RICH_SEAFOAM,
+            CW_PALE_AZURE,CW_LIGHT_AZURE, CW_BRIGHT_AZURE, CW_FADED_AZURE, CW_AZURE, CW_FLUSH_AZURE, CW_DRAB_AZURE, CW_DARK_AZURE, CW_RICH_AZURE,
+            CW_PALE_BLUE,CW_LIGHT_BLUE, CW_BRIGHT_BLUE, CW_FADED_BLUE, CW_BLUE, CW_FLUSH_BLUE, CW_DRAB_BLUE, CW_DARK_BLUE, CW_RICH_BLUE,
+            CW_PALE_INDIGO,CW_LIGHT_INDIGO, CW_BRIGHT_INDIGO, CW_FADED_INDIGO, CW_INDIGO, CW_FLUSH_INDIGO, CW_DRAB_INDIGO, CW_DARK_INDIGO, CW_RICH_INDIGO,
+            CW_PALE_VIOLET,CW_LIGHT_VIOLET, CW_BRIGHT_VIOLET, CW_FADED_VIOLET, CW_VIOLET, CW_FLUSH_VIOLET, CW_DRAB_VIOLET, CW_DARK_VIOLET, CW_RICH_VIOLET,
+            CW_PALE_PURPLE,CW_LIGHT_PURPLE, CW_BRIGHT_PURPLE, CW_FADED_PURPLE, CW_PURPLE, CW_FLUSH_PURPLE, CW_DRAB_PURPLE, CW_DARK_PURPLE, CW_RICH_PURPLE,
+            CW_PALE_MAGENTA,CW_LIGHT_MAGENTA, CW_BRIGHT_MAGENTA, CW_FADED_MAGENTA, CW_MAGENTA, CW_FLUSH_MAGENTA, CW_DRAB_MAGENTA, CW_DARK_MAGENTA, CW_RICH_MAGENTA,
+            CW_WHITE, CW_ALMOST_WHITE, CW_GRAY_WHITE, CW_LIGHT_GRAY, CW_GRAY, CW_DARK_GRAY, CW_GRAY_BLACK, CW_ALMOST_BLACK, CW_BLACK,
+    };
+    /** 16 high-brightness, low-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_PALE =  {
+            CW_PALE_RED,
+            CW_PALE_ORANGE,
+            CW_PALE_BROWN,
+            CW_PALE_APRICOT,
+            CW_PALE_GOLD,
+            CW_PALE_YELLOW,
+            CW_PALE_CHARTREUSE,
+            CW_PALE_HONEYDEW,
+            CW_PALE_GREEN,
+            CW_PALE_SEAFOAM,
+            CW_PALE_AZURE,
+            CW_PALE_BLUE,
+            CW_PALE_INDIGO,
+            CW_PALE_VIOLET,
+            CW_PALE_PURPLE,
+            CW_PALE_MAGENTA
+    };
+    /** 16 high-brightness, mid-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_LIGHT =  {
+            CW_LIGHT_RED,
+            CW_LIGHT_ORANGE,
+            CW_LIGHT_BROWN,
+            CW_LIGHT_APRICOT,
+            CW_LIGHT_GOLD,
+            CW_LIGHT_YELLOW,
+            CW_LIGHT_CHARTREUSE,
+            CW_LIGHT_HONEYDEW,
+            CW_LIGHT_GREEN,
+            CW_LIGHT_SEAFOAM,
+            CW_LIGHT_AZURE,
+            CW_LIGHT_BLUE,
+            CW_LIGHT_INDIGO,
+            CW_LIGHT_VIOLET,
+            CW_LIGHT_PURPLE,
+            CW_LIGHT_MAGENTA
+    };
+    /** 16 high-brightness, high-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_BRIGHT =  {
+            CW_BRIGHT_RED,
+            CW_BRIGHT_ORANGE,
+            CW_BRIGHT_BROWN,
+            CW_BRIGHT_APRICOT,
+            CW_BRIGHT_GOLD,
+            CW_BRIGHT_YELLOW,
+            CW_BRIGHT_CHARTREUSE,
+            CW_BRIGHT_HONEYDEW,
+            CW_BRIGHT_GREEN,
+            CW_BRIGHT_SEAFOAM,
+            CW_BRIGHT_AZURE,
+            CW_BRIGHT_BLUE,
+            CW_BRIGHT_INDIGO,
+            CW_BRIGHT_VIOLET,
+            CW_BRIGHT_PURPLE,
+            CW_BRIGHT_MAGENTA
+    };
+    /** 16 mid-brightness, low-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_FADED =  {
+            CW_FADED_RED,
+            CW_FADED_ORANGE,
+            CW_FADED_BROWN,
+            CW_FADED_APRICOT,
+            CW_FADED_GOLD,
+            CW_FADED_YELLOW,
+            CW_FADED_CHARTREUSE,
+            CW_FADED_HONEYDEW,
+            CW_FADED_GREEN,
+            CW_FADED_SEAFOAM,
+            CW_FADED_AZURE,
+            CW_FADED_BLUE,
+            CW_FADED_INDIGO,
+            CW_FADED_VIOLET,
+            CW_FADED_PURPLE,
+            CW_FADED_MAGENTA
+    };
+    /** 16 mid-brightness, mid-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_MID =  {
+            CW_RED,
+            CW_ORANGE,
+            CW_BROWN,
+            CW_APRICOT,
+            CW_GOLD,
+            CW_YELLOW,
+            CW_CHARTREUSE,
+            CW_HONEYDEW,
+            CW_GREEN,
+            CW_SEAFOAM,
+            CW_AZURE,
+            CW_BLUE,
+            CW_INDIGO,
+            CW_VIOLET,
+            CW_PURPLE,
+            CW_MAGENTA
+    };
+    /** 16 mid-brightness, high-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_FLUSH =  {
+            CW_FLUSH_RED,
+            CW_FLUSH_ORANGE,
+            CW_FLUSH_BROWN,
+            CW_FLUSH_APRICOT,
+            CW_FLUSH_GOLD,
+            CW_FLUSH_YELLOW,
+            CW_FLUSH_CHARTREUSE,
+            CW_FLUSH_HONEYDEW,
+            CW_FLUSH_GREEN,
+            CW_FLUSH_SEAFOAM,
+            CW_FLUSH_AZURE,
+            CW_FLUSH_BLUE,
+            CW_FLUSH_INDIGO,
+            CW_FLUSH_VIOLET,
+            CW_FLUSH_PURPLE,
+            CW_FLUSH_MAGENTA
+    };
+    /** 16 low-brightness, low-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_DRAB =  {
+            CW_DRAB_RED,
+            CW_DRAB_ORANGE,
+            CW_DRAB_BROWN,
+            CW_DRAB_APRICOT,
+            CW_DRAB_GOLD,
+            CW_DRAB_YELLOW,
+            CW_DRAB_CHARTREUSE,
+            CW_DRAB_HONEYDEW,
+            CW_DRAB_GREEN,
+            CW_DRAB_SEAFOAM,
+            CW_DRAB_AZURE,
+            CW_DRAB_BLUE,
+            CW_DRAB_INDIGO,
+            CW_DRAB_VIOLET,
+            CW_DRAB_PURPLE,
+            CW_DRAB_MAGENTA
+    };
+    /** 16 low-brightness, mid-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_DARK =  {
+            CW_DARK_RED,
+            CW_DARK_ORANGE,
+            CW_DARK_BROWN,
+            CW_DARK_APRICOT,
+            CW_DARK_GOLD,
+            CW_DARK_YELLOW,
+            CW_DARK_CHARTREUSE,
+            CW_DARK_HONEYDEW,
+            CW_DARK_GREEN,
+            CW_DARK_SEAFOAM,
+            CW_DARK_AZURE,
+            CW_DARK_BLUE,
+            CW_DARK_INDIGO,
+            CW_DARK_VIOLET,
+            CW_DARK_PURPLE,
+            CW_DARK_MAGENTA
+    };
+    /** 16 low-brightness, high-saturation colors. */
+    public static final int[] COLOR_WHEEL_PALETTE_RICH =  {
+            CW_RICH_RED,
+            CW_RICH_ORANGE,
+            CW_RICH_BROWN,
+            CW_RICH_APRICOT,
+            CW_RICH_GOLD,
+            CW_RICH_YELLOW,
+            CW_RICH_CHARTREUSE,
+            CW_RICH_HONEYDEW,
+            CW_RICH_GREEN,
+            CW_RICH_SEAFOAM,
+            CW_RICH_AZURE,
+            CW_RICH_BLUE,
+            CW_RICH_INDIGO,
+            CW_RICH_VIOLET,
+            CW_RICH_PURPLE,
+            CW_RICH_MAGENTA
+    };
+    /**
+     * Contains 9 arrays of 16 SColors each, with each of the outer arrays having a specific saturation and brightness,
+     * and the inner arrays all going through the 16 "reduced" Color Wheel palette hues. Meant to be used with
+     * {@code IntShuffler indexShuffle = new IntShuffler(16, seed);}, where seed is any long, followed by
+     * {@code int color = COLOR_WHEEL_PALETTES[which][indexShuffle.next()];}, where which is between 0 and 8 inclusive.
+     * This allows getting various saturation and brightness combinations from the same hue.
+     * Note that the example indexShuffle returns an int between 0 and 15, so it would be used to select
+     * from the inner arrays.
+     */
+    public static final int[][] COLOR_WHEEL_PALETTES = {
+            COLOR_WHEEL_PALETTE_PALE, COLOR_WHEEL_PALETTE_LIGHT, COLOR_WHEEL_PALETTE_BRIGHT,
+            COLOR_WHEEL_PALETTE_FADED, COLOR_WHEEL_PALETTE_MID, COLOR_WHEEL_PALETTE_FLUSH,
+            COLOR_WHEEL_PALETTE_DRAB, COLOR_WHEEL_PALETTE_DARK, COLOR_WHEEL_PALETTE_RICH
+    };
+
+    /**
+     * Gets a random color from the palette {@link #COLOR_WHEEL_PALETTE_REDUCED}, with the specified brightness (0 is
+     * darkest, 1 is middle-bright, 2 is brightest) and saturation (0 is grayest, 1 is mid-saturation, 2 is fully
+     * saturated), using the specified EnhancedRandom.
+     * @param rng used to choose the hue
+     * @param bright the brightness to use, from 0 (dark) to 2 (bright)
+     * @param sat the saturation to use, from 0 (grayish) to 2 (boldly colored)
+     * @return a randomly selected int from {@link #COLOR_WHEEL_PALETTE_REDUCED}
+     */
+    public static int randomColorWheel(EnhancedRandom rng, int bright, int sat)
+    {
+        return COLOR_WHEEL_PALETTE_REDUCED[rng.next(4) * 9 + 3 * ((2 - bright & 3) % 3) + ((sat & 3) % 3)];
+    }
+
+    /**
+     * Gets a random color from the palette {@link #COLOR_WHEEL_PALETTE_REDUCED}, using the specified EnhancedRandom to
+     * determine saturation, brightness, and hue.
+     * @param rng used to choose everything
+     * @return a randomly selected int from {@link #COLOR_WHEEL_PALETTE_REDUCED}
+     */
+    public static int randomColorWheel(EnhancedRandom rng)
+    {
+        return COLOR_WHEEL_PALETTE_REDUCED[rng.nextInt(144)];
+    }
+    /**
+     * Gets a color by a shuffled index from the palette {@link #COLOR_WHEEL_PALETTE_REDUCED}, with the specified
+     * brightness (0 is darkest, 1 is middle-bright, 2 is brightest) and saturation (0 is grayest, 1 is mid-saturation,
+     * 2 is fully saturated), using the given index to ensure similar index values usually return very different colors.
+     * This can return up to 16 colors before cycling, if bright and sat stay the same.
+     * @param idx the index; should change by 1 per color generated to ensure different colors
+     * @param bright the brightness to use, from 0 (dark) to 2 (bright)
+     * @param sat the saturation to use, from 0 (grayish) to 2 (boldly colored)
+     * @return a mathematically selected int from {@link #COLOR_WHEEL_PALETTE_REDUCED}
+     */
+    public static int indexedColorWheel(int idx, int bright, int sat)
+    {
+        return COLOR_WHEEL_PALETTE_REDUCED[(idx * 7 & 15) * 9 + 3 * ((2 - bright & 3) % 3) + ((sat & 3) % 3)];
+    }
+    /**
+     * Gets a color by a shuffled index from the palette {@link #COLOR_WHEEL_PALETTE_REDUCED}, with the specified
+     * saturation (0 is grayest, 1 is mid-saturation, 2 is fully saturated), using the given index to ensure similar
+     * index values usually return very different colors. This can return up to 48 colors before cycling, if sat stays
+     * the same.
+     * @param idx the index; should change by 1 per color generated to ensure different colors
+     * @param sat the saturation to use, from 0 (grayish) to 2 (boldly colored)
+     * @return a mathematically selected int from {@link #COLOR_WHEEL_PALETTE_REDUCED}
+     */
+    public static int indexedColorWheel(int idx, int sat)
+    {
+        idx *= 497;
+        return COLOR_WHEEL_PALETTE_REDUCED[(idx % 48 ^ (idx >> 2 & 3)) * 3 + (sat & 15) % 3];
+    }
+
+    /**
+     * Gets a color by a shuffled index from the palette {@link #COLOR_WHEEL_PALETTE_REDUCED}, using the given index to
+     * ensure similar index values usually return very different colors. This can return up to 144 colors before
+     * cycling, which is the total amount of non-grayscale colors in COLOR_WHEEL_PALETTE_REDUCED.
+     * @param idx the index; should change by 1 per color generated to ensure different colors
+     * @return a mathematically selected int from {@link #COLOR_WHEEL_PALETTE_REDUCED}
+     */
+    public static int indexedColorWheel(int idx)
+    {
+        idx *= 89;
+        return COLOR_WHEEL_PALETTE_REDUCED[idx % 144 ^ (idx >> 2 & 3)];
+    }
+
 }
