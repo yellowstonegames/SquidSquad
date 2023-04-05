@@ -2,7 +2,6 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -14,9 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Arrays;
@@ -28,11 +25,12 @@ import static com.badlogic.gdx.graphics.GL20.*;
  */
 public class SimplexComparison extends ApplicationAdapter {
 
-    private INoise noise = new SimplexNoise(1L);
-    private INoise scaled = new SimplexNoiseScaled(1L);//new Noise(1, 1, Noise.SIMPLEX_FRACTAL, 1);//
-    private NoiseWrapper wrap0 = new NoiseWrapper(noise, 1, 0.0625f, Noise.FBM, 1);
+    private INoise sigmoid = new SimplexNoise(1L);
+    private INoise scaled = new OpenSimplex2(1L);
+//    private INoise scaled = new SimplexNoiseScaled(1L);
+    private NoiseWrapper wrap0 = new NoiseWrapper(sigmoid, 1, 0.0625f, Noise.FBM, 1);
     private NoiseWrapper wrap1 = new NoiseWrapper(scaled, 1, 0.0625f, Noise.FBM, 1);
-    private int dim = 3; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;
@@ -93,19 +91,19 @@ public class SimplexComparison extends ApplicationAdapter {
                         else ctr++;
                         break;
                     case E: //earlier seed
-                        noise.setSeed(noise.getSeed() - 1);
-                        scaled.setSeed(noise.getSeed());
+                        sigmoid.setSeed(sigmoid.getSeed() - 1);
+                        scaled.setSeed(sigmoid.getSeed());
                         break;
                     case S: //seed
-                        noise.setSeed(noise.getSeed() + 1);
-                        scaled.setSeed(noise.getSeed());
+                        sigmoid.setSeed(sigmoid.getSeed() + 1);
+                        scaled.setSeed(sigmoid.getSeed());
                         break;
                     case SLASH:
-                        noise.setSeed((int) Hasher.randomize3(noise.getSeed()));
-                        scaled.setSeed(noise.getSeed());
+                        sigmoid.setSeed((int) Hasher.randomize3(sigmoid.getSeed()));
+                        scaled.setSeed(sigmoid.getSeed());
                         break;
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
+                        dim = (dim + (UIUtils.shift() ? 2 : 1)) % 3;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
@@ -147,7 +145,7 @@ public class SimplexComparison extends ApplicationAdapter {
             case 0:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = prepare0(wrap0.getNoiseWithSeed(x + c, y + c, noise.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(x + c, y + c, sigmoid.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(x + c, y + c, scaled.getSeed()));
@@ -159,7 +157,7 @@ public class SimplexComparison extends ApplicationAdapter {
             case 1:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = prepare0(wrap0.getNoiseWithSeed(x, y, c, noise.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(x, y, c, sigmoid.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(x, y, c, scaled.getSeed()));
@@ -173,7 +171,7 @@ public class SimplexComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c;
-                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, noise.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, sigmoid.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, scaled.getSeed()));
@@ -187,7 +185,7 @@ public class SimplexComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
-                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, noise.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, sigmoid.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, c, scaled.getSeed()));
@@ -204,7 +202,7 @@ public class SimplexComparison extends ApplicationAdapter {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
                                 zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
                         bright = prepare0(wrap0.getNoiseWithSeed(
-                                xc, yc, zc, xs, ys, zs, noise.getSeed()));
+                                xc, yc, zc, xs, ys, zs, sigmoid.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(
