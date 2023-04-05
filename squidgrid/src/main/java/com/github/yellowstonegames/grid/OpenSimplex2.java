@@ -92,7 +92,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoise(float x, float y) {
-        return OpenSimplex2.noise2(seed, x, y);
+        return noise2(seed, x, y);
     }
 
     /**
@@ -106,7 +106,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoise(float x, float y, float z) {
-        return OpenSimplex2.noise3_Fallback(seed, x, y, z);
+        return noise3_Fallback(seed, x, y, z);
     }
 
     /**
@@ -121,7 +121,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return OpenSimplex2.noise4_Fallback(seed, x, y, z, w);
+        return noise4_Fallback(seed, x, y, z, w);
     }
 
     /**
@@ -169,7 +169,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        return OpenSimplex2.noise2(seed, x, y);
+        return noise2(seed, x, y);
     }
 
     /**
@@ -185,7 +185,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
-        return OpenSimplex2.noise3_Fallback(seed, x, y, z);
+        return noise3_Fallback(seed, x, y, z);
     }
 
     /**
@@ -202,7 +202,7 @@ public class OpenSimplex2 implements INoise {
      */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return OpenSimplex2.noise4_Fallback(seed, x, y, z, w);
+        return noise4_Fallback(seed, x, y, z, w);
     }
 
     /**
