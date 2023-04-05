@@ -82,7 +82,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
         noise.setFractalType(Noise.RIDGED_MULTI);
         noise.setInterpolation(Noise.QUINTIC);
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUE_NOISE);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.GRADIENT_NOISE);
         gif.setDitherStrength(0.2f);
         gif.palette = new PaletteReducer(new int[] {
                 0x000000FF, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
@@ -214,15 +214,20 @@ public class NoiseVisualizer extends ApplicationAdapter {
 
 //                                , DescriptiveColor.oklabByHSL(0.1f, 0.85f, 0.95f, 1f)
 
+                                DescriptiveColor.oklabByHSL(0.4f, 0.8f, 0.05f, 1f),
+                                DescriptiveColor.oklabByHSL(0.42f, 0.8f, 0.16f, 1f),
+                                DescriptiveColor.oklabByHSL(0.44f, 1f, 0.6f, 1f),
+                                DescriptiveColor.oklabByHSL(0.41f, 0.75f, 0.75f, 1f)
+
 //                                DescriptiveColor.oklabByHSL(0.94f, 0.8f, 0.05f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.97f, 0.8f, 0.2f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.04f, 1f, 0.65f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.2f, 0.75f, 0.9f, 1f)
-
-                                DescriptiveColor.oklabByHSL(0.14f, 0.9f, 0.3f, 1f),
-                                DescriptiveColor.oklabByHSL(0.07f, 0.65f, 0.03f, 1f),
-                                DescriptiveColor.oklabByHSL(0.1f, 1.0f, 0.5f, 1f),
-                                DescriptiveColor.oklabByHSL(0.05f, 0.85f, 0.8f, 1f)
+//
+//                                DescriptiveColor.oklabByHSL(0.14f, 0.9f, 0.3f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.07f, 0.65f, 0.03f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.1f, 1.0f, 0.5f, 1f),
+//                                DescriptiveColor.oklabByHSL(0.05f, 0.85f, 0.8f, 1f)
 
 //                                DescriptiveColor.oklabByHSL(0.52f, 0.9f, 0.35f, 1f),
 //                                DescriptiveColor.oklabByHSL(0.47f, 0.8f, 0.0f, 1f),
