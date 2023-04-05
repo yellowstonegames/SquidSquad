@@ -21,10 +21,268 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.yellowstonegames.core.DigitTools;
+
 /**
- * K.jpg's OpenSimplex 2, faster variant
+ * K.jpg's OpenSimplex 2, faster variant.
+ * This is a variant on the Simplex Noise algorithm in 2D, and a subtly different algorithm in 3D and 4D. This does not
+ * support 5D or 6D noise.
  */
-public class OpenSimplex2 {
+public class OpenSimplex2 implements INoise {
+    public long seed;
+
+    public OpenSimplex2() {
+        seed = 0x31337CA770E5L;
+    }
+
+    public OpenSimplex2(long seed) {
+        this.seed = seed;
+    }
+
+    /**
+     * Gets the minimum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+     * surfaces, or 3 for one that is only defined for 3D or higher-dimensional spaces.
+     *
+     * @return the minimum supported dimension, from 2 to 6 inclusive
+     */
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    /**
+     * Gets the maximum dimension supported by this generator, such as 2 for a generator that only is defined for flat
+     * surfaces, or 6 for one that is defined up to the highest dimension this interface knows about (6D).
+     *
+     * @return the maximum supported dimension, from 2 to 6 inclusive
+     */
+    @Override
+    public int getMaxDimension() {
+        return 4;
+    }
+
+    /**
+     * Returns true if this generator can be seeded with {@link #setSeed(long)} (and if so, retrieved with
+     * {@link #getSeed()}).
+     *
+     * @return true if {@link #setSeed(long)} and {@link #getSeed()} are supported, false if either isn't supported
+     */
+    @Override
+    public boolean canUseSeed() {
+        return true;
+    }
+
+    @Override
+    public long getSeed() {
+        return seed;
+    }
+
+    @Override
+    public void setSeed(long seed) {
+        this.seed = seed;
+    }
+
+    /**
+     * Gets 2D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoise(float x, float y) {
+        return OpenSimplex2.noise2(seed, x, y);
+    }
+
+    /**
+     * Gets 3D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoise(float x, float y, float z) {
+        return OpenSimplex2.noise3_Fallback(seed, x, y, z);
+    }
+
+    /**
+     * Gets 4D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w) {
+        return OpenSimplex2.noise4_Fallback(seed, x, y, z, w);
+    }
+
+    /**
+     * Gets 5D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        throw new UnsupportedOperationException("5D noise is not supported.");
+    }
+
+    /**
+     * Gets 6D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        throw new UnsupportedOperationException("6D noise is not supported.");
+    }
+
+    /**
+     * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param seed
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, long seed) {
+        return OpenSimplex2.noise2(seed, x, y);
+    }
+
+    /**
+     * Gets 3D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param seed
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, long seed) {
+        return OpenSimplex2.noise3_Fallback(seed, x, y, z);
+    }
+
+    /**
+     * Gets 4D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param seed
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+        return OpenSimplex2.noise4_Fallback(seed, x, y, z, w);
+    }
+
+    /**
+     * Gets 5D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param seed
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
+        throw new UnsupportedOperationException("5D noise is not supported.");
+
+    }
+
+    /**
+     * Gets 6D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param v    v position; can be any finite float
+     * @param seed
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
+        throw new UnsupportedOperationException("6D noise is not supported.");
+    }
+
+    /**
+     * Creates a copy of this INoise, which should be a deep copy for any mutable state but can be shallow for immutable
+     * types such as functions. This almost always just calls a copy constructor.
+     * <br>
+     * The default implementation throws an {@link UnsupportedOperationException} only. Implementors are strongly
+     * encouraged to implement this in general, and that is required to use an INoise class with {@link Serializer}.
+     *
+     * @return a copy of this INoise
+     */
+    @Override
+    public OpenSimplex2 copy() {
+        return new OpenSimplex2(seed);
+    }
+
+    public String serializeToString() {
+        return "`" + seed + '`';
+    }
+
+    public OpenSimplex2 deserializeFromString(String data) {
+        if(data == null || data.length() < 3)
+            return this;
+        this.seed = DigitTools.intFromDec(data, 1, data.indexOf('`', 2));
+        return this;
+    }
+
+    /**
+     * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
+     * If a duplicate tag is already registered and {@link Serializer#register(INoise)} attempts to register the same
+     * tag again, a message is printed to {@code System.err}. The default implementation returns the String
+     * {@code (NO)}, which is already registered in Serializer to a null value. Implementing this is required for any
+     * usage of Serializer.
+     *
+     * @return a short String constant that identifies this INoise type
+     */
+    @Override
+    public String getTag() {
+        return "OSFN";
+    }
+
+
 
     private static final long PRIME_X = 0x5205402B9270C86FL;
     private static final long PRIME_Y = 0x598CD327003817B5L;
