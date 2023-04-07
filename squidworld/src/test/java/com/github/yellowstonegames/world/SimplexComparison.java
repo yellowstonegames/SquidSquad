@@ -103,7 +103,8 @@ public class SimplexComparison extends ApplicationAdapter {
                         scaled.setSeed(sigmoid.getSeed());
                         break;
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 2 : 1)) % 3;
+                        dim = (dim + (UIUtils.shift() ? Math.min(sigmoid.getMaxDimension(), scaled.getMaxDimension()) - 2 : 1))
+                                % (Math.min(sigmoid.getMaxDimension(), scaled.getMaxDimension()) - 1);
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
