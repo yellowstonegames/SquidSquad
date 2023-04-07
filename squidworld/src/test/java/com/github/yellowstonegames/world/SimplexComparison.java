@@ -26,8 +26,8 @@ import static com.badlogic.gdx.graphics.GL20.*;
 public class SimplexComparison extends ApplicationAdapter {
 
     private INoise sigmoid = new SimplexNoise(1L);
-    private INoise scaled = new SimplexNoiseSoft(1L);
-//    private INoise scaled = new SimplexNoiseScaled(1L);
+//    private INoise scaled = new SimplexNoiseHard(1L);
+    private INoise scaled = new SimplexNoiseScaled(1L);
     private NoiseWrapper wrap0 = new NoiseWrapper(sigmoid, 1, 0.0625f, Noise.FBM, 1);
     private NoiseWrapper wrap1 = new NoiseWrapper(scaled, 1, 0.0625f, Noise.FBM, 1);
     private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
