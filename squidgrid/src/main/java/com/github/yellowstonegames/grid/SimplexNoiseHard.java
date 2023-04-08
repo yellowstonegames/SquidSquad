@@ -803,7 +803,7 @@ public class SimplexNoiseHard implements INoise {
 
     @Override
     public String getTag() {
-        return "SimN";
+        return "SiHN";
     }
 
     public String serializeToString() {

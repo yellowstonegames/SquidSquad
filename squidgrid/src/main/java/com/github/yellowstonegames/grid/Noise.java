@@ -7403,8 +7403,10 @@ public class Noise implements INoise {
         }
         else t4 = 0;
 
-        float n = (t0 + t1 + t2 + t3 + t4) * 141.000f;
-        return n / (0.750f + Math.abs(n));
+//        float n = (t0 + t1 + t2 + t3 + t4) * 141.000f;
+//        return n / (0.750f + Math.abs(n));
+        float t = (t0 + t1 + t2 + t3 + t4) * 14.7279f;
+        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
     }
     
     // 5D Simplex
@@ -7686,9 +7688,10 @@ public class Noise implements INoise {
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
 
-//        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 10f;
-        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
-        return n / (0.700f + Math.abs(n));
+//        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
+//        return n / (0.700f + Math.abs(n));
+        t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
+        return t / (-0.5f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
     }
 
     // 6D Simplex
@@ -8020,9 +8023,10 @@ public class Noise implements INoise {
             n6 *= n6 * gradCoord6D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, g + 1, x6, y6, z6, w6, u6, v6);
         }
 
-//        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64.000f;
-        return n / (0.500f + Math.abs(n));
+//        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64.000f;
+//        return n / (0.500f + Math.abs(n));
+        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
+        return t / (-0.7f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
     }
 
     // Cubic Noise

@@ -391,7 +391,7 @@ public class SimplexNoise implements INoise {
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
         t = (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        return t/(-0.3f*(1f-Math.abs(t))+1f);// gain function for [-1, 1] domain and range
+        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
     }
@@ -550,7 +550,7 @@ public class SimplexNoise implements INoise {
         }
 
         t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
-        return t/(-0.5f*(1f-Math.abs(t))+1f);// gain function for [-1, 1] domain and range
+        return t / (-0.5f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
 //        return (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 12.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -767,7 +767,7 @@ public class SimplexNoise implements INoise {
 
 //        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
         t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        return t/(-0.7f*(1f-Math.abs(t))+1f);// gain function for [-1, 1] domain and range
+        return t / (-0.7f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 9.000f;
 //        return t / (0.5f + Math.abs(t));
     }
@@ -799,7 +799,7 @@ public class SimplexNoise implements INoise {
 
     @Override
     public String getTag() {
-        return "SiSN";
+        return "SimN";
     }
 
     public String serializeToString() {
