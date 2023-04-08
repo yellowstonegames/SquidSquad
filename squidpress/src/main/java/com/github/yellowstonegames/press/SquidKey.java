@@ -1,0 +1,224 @@
+/*
+ * Copyright (c) 2022 Eben Howard, Tommy Ettinger, and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package com.github.yellowstonegames.press;
+
+import com.badlogic.gdx.InputProcessor;
+import com.github.tommyettinger.ds.IntDeque;
+
+/**
+ * This wraps an InputProcessor, storing all key events and allowing them to be processed one at a time using next() or
+ * all at once using drain(). To have an effect, it needs to be registered by calling Input.setInputProcessor(SquidKey).
+ * <br>
+ * It does not perform the blocking functionality of the now-removed Swing SquidKey implementation, because this is
+ * meant to run in an event-driven libGDX game and should not step on the toes of libGDX's input handling. To block game
+ * logic until an event has been received, check hasNext() in the game's render() method and effectively "block" by not
+ * running game logic if hasNext() returns false. You can get an event if hasNext() returns true by calling next().
+ * */
+public class SquidKey implements InputProcessor {
+    private static final int KEY_DOWN = 0;
+    private static final int KEY_UP = 1;
+    private static final int KEY_TYPED = 2;
+
+    private InputProcessor processor;
+    private final IntDeque queue = new IntDeque();
+    private final IntDeque processingQueue = new IntDeque();
+    private boolean ignoreInput;
+
+    /**
+     * Constructs a SquidKey with no InputProcessor; for this to do anything, setProcessor() must be called.
+     */
+    public SquidKey() {
+    }
+
+    /**
+     * Constructs a SquidKey with the given InputProcessor.
+     * @param processor An InputProcessor that will handle keyDown(), keyUp(), and keyTyped() events
+     */
+    public SquidKey(InputProcessor processor) {
+        this.processor = processor;
+    }
+
+    /**
+     * Constructs a SquidKey with the given InputProcessor.
+     * @param processor An InputProcessor that will handle keyDown(), keyUp(), and keyTyped() events
+     * @param ignoreInput the starting value for the ignore status; true to ignore input, false to process it.
+     */
+    public SquidKey(InputProcessor processor, boolean ignoreInput) {
+        this.processor = processor;
+        this.ignoreInput = ignoreInput;
+    }
+
+    /**
+     * Sets the InputProcessor that this object will use to make sense of Key events.
+     * @param processor An InputProcessor that will handle keyDown(), keyUp(), and keyTyped() events
+     */
+    public void setProcessor (InputProcessor processor) {
+        this.processor = processor;
+    }
+
+    /**
+     * Gets this object's InputProcessor.
+     * @return this object's InputProcessor
+     */
+    public InputProcessor getProcessor () {
+        return processor;
+    }
+
+    /**
+     * Get the status for whether this should ignore input right now or not. True means this object will ignore and not
+     * queue keypresses, false means it should process them normally. Useful to pause processing or delegate it to
+     * another object temporarily.
+     * @return true if this object currently ignores input, false otherwise.
+     */
+    public boolean getIgnoreInput() {
+        return ignoreInput;
+    }
+
+    /**
+     * Set the status for whether this should ignore input right now or not. True means this object will ignore and not
+     * queue keypresses, false means it should process them normally. Useful to pause processing or delegate it to
+     * another object temporarily.
+     * @param ignoreInput true if this should object should ignore and not queue input, false otherwise.
+     */
+    public void setIgnoreInput(boolean ignoreInput) {
+        this.ignoreInput = ignoreInput;
+    }
+
+    /**
+     * Processes all events queued up, passing them to this object's InputProcessor.
+     */
+    public void drain () {
+        IntDeque q = processingQueue;
+        if (processor == null) {
+            queue.clear();
+            return;
+        }
+        q.addAll(queue);
+        queue.clear();
+
+        for (int i = 0, n = q.size; i < n; ) {
+            switch (q.get(i++)) {
+                case KEY_DOWN:
+                    processor.keyDown(q.get(i++));
+                    break;
+                case KEY_UP:
+                    processor.keyUp(q.get(i++));
+                    break;
+                case KEY_TYPED:
+                    processor.keyTyped((char) q.get(i++));
+                    break;
+            }
+        }
+        q.clear();
+    }
+
+    /**
+     * Returns true if at least one event is queued.
+     * @return true if there is an event queued, false otherwise.
+     */
+    public boolean hasNext()
+    {
+        return queue.size >= 2;
+    }
+
+    /**
+     * Processes the first event queued up, passing it to this object's InputProcessor.
+     */
+    public void next() {
+        IntDeque q = processingQueue;
+        if (processor == null || queue.size < 2) {
+            queue.clear();
+            return;
+        }
+        q.addLast(queue.removeFirst());
+        q.addLast(queue.getFirst());
+
+        if (q.size >= 2) {
+            int e = q.get(0), n = q.get(1);
+            switch (e) {
+                case KEY_DOWN:
+                    processor.keyDown(n);
+                    break;
+                case KEY_UP:
+                    processor.keyUp(n);
+                    break;
+                case KEY_TYPED:
+                    processor.keyTyped((char) n);
+                    break;
+            }
+        }
+        q.clear();
+    }
+
+    /**
+     * Empties the backing queue of data.
+     */
+    public void flush()
+    {
+        queue.clear();
+    }
+
+    @Override
+	public boolean keyDown (int keycode) {
+        if(ignoreInput) return false;
+        queue.addLast(KEY_DOWN);
+        queue.addLast(keycode);
+        return false;
+    }
+
+    @Override
+	public boolean keyUp (int keycode) {
+        if(ignoreInput) return false;
+        queue.addLast(KEY_UP);
+        queue.addLast(keycode);
+        return false;
+    }
+
+    @Override
+	public boolean keyTyped (char character) {
+        if(ignoreInput) return false;
+        queue.addLast(KEY_TYPED);
+        queue.addLast(character);
+        return false;
+    }
+
+    @Override
+	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+	public boolean touchDragged (int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+	public boolean mouseMoved (int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+	public boolean scrolled (float amountX, float amountY) {
+        return false;
+    }
+
+}
