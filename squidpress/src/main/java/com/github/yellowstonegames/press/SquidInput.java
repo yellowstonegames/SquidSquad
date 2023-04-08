@@ -24,10 +24,10 @@ import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 
 /**
- * This input processing class can handle mouse and keyboard input, using a squidpony.squidgrid.gui.gdx.SquidMouse for
- * Mouse input and a user implementation of the SquidInput.KeyHandler interface to react to keys represented as chars
+ * This input processing class can handle mouse and keyboard input, using a {@link SquidMouse} for
+ * Mouse input and a user implementation of {@link KeyHandler} (often a lambda) to react to keys represented as chars
  * and the modifiers those keys were pressed with, any of alt, ctrl, and/or shift. Not all keys are representable by
- * default in unicode, so symbolic representations are stored in constants in this class, and are passed to
+ * default in Unicode, so symbolic representations are stored in constants in this class, and are passed to
  * {@link KeyHandler#handle(char, boolean, boolean, boolean)} as chars like DOWN_ARROW or its value, '\u005Cu2193'. Shift
  * modifies the input as it would on a QWERTY keyboard, and the exact mapping is documented in
  * {@link #fromCode(int, boolean)} as well. This class handles mouse input immediately, but stores keypresses in a
@@ -45,16 +45,11 @@ import com.github.tommyettinger.ds.IntIntOrderedMap;
  * with help from {@link #combineModifiers(char, boolean, boolean, boolean)}, while the unmap() methods allow removal of
  * any no-longer-wanted remappings.
  * <br>
- * It does not perform the blocking functionality of earlier SquidKey implementations, because this is meant to run
- * in an event-driven libGDX game and should not step on the toes of libGDX's input handling. To block game logic
+ * This does not perform any blocking functionality. To block game logic
  * until an event has been received, check hasNext() in the game's render() method and effectively "block" by not
  * running game logic if hasNext() returns false. You can process an event if hasNext() returns true by calling 
  * {@link #next()}. Mouse inputs do not affect hasNext(), and next() will process only key pressed events. Also, see
  * above about the extra behavior of hasNext regarding held keys.
- *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
- * @author Nathan Sweet
- * @author Tommy Ettinger
  * */
 public class SquidInput extends InputAdapter {
     /**
@@ -62,12 +57,13 @@ public class SquidInput extends InputAdapter {
      * modifiers that can affect them. SquidInput has numerous static char values that are expected to be passed
      * to handle() in place of the special keys (such as arrow keys) that do not have a standard char value.
      */
+    @FunctionalInterface
     public interface KeyHandler{
         /**
          * The only method you need to implement yourself in KeyHandler, this should react to keys such as
          * 'a' (produced by pressing the A key while not holding Shift), 'E' (produced by pressing the E key while
          * holding Shift), and '\u005Cu2190' (left arrow in Unicode, also available as a constant in SquidInput, produced by
-         * pressing the left arrow key even though that key does not have a default unicode representation). Capital
+         * pressing the left arrow key even though that key does not have a default Unicode representation). Capital
          * letters will be capitalized when they are passed to this, but they may or may not have the shift argument as
          * true depending on how this method was called. Symbols that may be produced by holding Shift and pressing a
          * number or a symbol key can vary between keyboards (some may require Shift to be held down, others may not).
@@ -613,7 +609,7 @@ public class SquidInput extends InputAdapter {
     }
 
     /**
-     * Maps keycodes to unicode chars, sometimes depending on whether the Shift key is held.
+     * Maps keycodes to Unicode chars, sometimes depending on whether the Shift key is held.
      *
      * It is strongly recommended that you refer to key combinations regarding non-alphabet keys by using, for example,
      * Ctrl-Shift-; instead of Ctrl-:, that is to use the unshifted key with Shift instead of assuming that all
@@ -634,7 +630,7 @@ public class SquidInput extends InputAdapter {
      * Numpad numbers will report a SquidInput constant such as UP_LEFT_ARROW for Numpad 7, but only if numpadDirections
      * is true; otherwise they send the number (here, 7). Numpad 0 sends VERTICAL_ARROW or 0.
      *
-     * Most symbol keys are mapped to a single unicode char as a constant in SquidInput and disregard Shift. The
+     * Most symbol keys are mapped to a single Unicode char as a constant in SquidInput and disregard Shift. The
      * constant is usually the same as the name of the char; possible exceptions are Backspace (on PC) or Delete (on
      * Mac) mapping to BACKSPACE, Delete (on PC) mapping to FORWARD_DELETE, Esc mapping to ESCAPE, and Enter (on PC) or
      * Return (on Mac) mapping to ENTER.
