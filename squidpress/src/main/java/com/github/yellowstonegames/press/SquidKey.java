@@ -23,10 +23,11 @@ import com.github.tommyettinger.ds.IntDeque;
  * This wraps an InputProcessor, storing all key events and allowing them to be processed one at a time using next() or
  * all at once using drain(). To have an effect, it needs to be registered by calling Input.setInputProcessor(SquidKey).
  * <br>
- * It does not perform the blocking functionality of the now-removed Swing SquidKey implementation, because this is
- * meant to run in an event-driven libGDX game and should not step on the toes of libGDX's input handling. To block game
+ * It does not perform any blocking functionality. To block game
  * logic until an event has been received, check hasNext() in the game's render() method and effectively "block" by not
  * running game logic if hasNext() returns false. You can get an event if hasNext() returns true by calling next().
+ * <br>
+ * Many games will prefer the more full-featured {@link SquidInput}, which handles key rebinding as well as mouse input.
  * */
 public class SquidKey implements InputProcessor {
     private static final int KEY_DOWN = 0;

@@ -29,7 +29,7 @@ import com.github.tommyettinger.digital.MathTools;
  * to the InputProcessor without additional changes.
  * <br>
  * This class is meant to be used as a wrapper to your own mouse InputProcessor,
- * it simply converts the coordinates from UI Component x,y to Grid based x,y
+ * it simply converts the coordinates from screen-space x,y to grid-based x,y .
  */
 public class SquidMouse extends InputAdapter {
 
