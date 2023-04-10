@@ -28,7 +28,7 @@ import com.github.tommyettinger.digital.MathTools;
  * instead of pixel-based screen coordinates. It also passes off scroll events
  * to the InputProcessor without additional changes.
  * <br>
- * This class is meant to be used as a wrapper to your own mouse InputProcessor,
+ * This class is meant to be used as a wrapper to your own mouse InputProcessor;
  * it simply converts the coordinates from screen-space x,y to grid-based x,y .
  */
 public class SquidMouse extends InputAdapter {
