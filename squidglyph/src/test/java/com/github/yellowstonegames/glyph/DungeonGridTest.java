@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -196,7 +197,9 @@ public class DungeonGridTest extends ApplicationAdapter {
         else{
 //            if(MathUtils.randomBoolean())
                 playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
-                        .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useMistyColors()).conclude(post));
+                                        .append(Actions.rotateBy(360f, 1f))
+//                        .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useMistyColors())
+                        .conclude(post));
 //            else
 //                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
 //                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useToxicColors()).conclude(post));
