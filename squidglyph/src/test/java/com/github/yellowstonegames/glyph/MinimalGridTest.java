@@ -45,9 +45,6 @@ public class MinimalGridTest extends ApplicationAdapter {
     private static final int CELL_WIDTH = 32;
     private static final int CELL_HEIGHT = 32;
 
-    private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
-    private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
-
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Traditional Roguelike Map Demo");
@@ -107,17 +104,17 @@ public class MinimalGridTest extends ApplicationAdapter {
         stage.addActor(gg);
     }
 
-    public void move(GridPoint2 way){
-
+    public void move(int x, int y){
         // this prevents movements from restarting while a slide is already in progress.
         if(playerGlyph.hasActions()) return;
 
-        final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.x), Math.round(playerGlyph.getY() + way.y));
-        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
-            playerGlyph.addAction(Actions.moveTo(next.x, next.y, 0.2f));
+        x = Math.round(playerGlyph.getX() + x);
+        y = Math.round(playerGlyph.getY() + y);
+        if(x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT && bare[x][y] == '.') {
+            playerGlyph.addAction(Actions.moveTo(x, y, 0.2f));
         }
         else{
-                playerGlyph.addAction(Actions.rotateBy(360f, 1f));
+            playerGlyph.addAction(Actions.rotateBy(360f, 1f));
         }
     }
 
@@ -250,23 +247,23 @@ public class MinimalGridTest extends ApplicationAdapter {
      */
     public void handleHeldKeys() {
         if(input.isKeyPressed(A) || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
-            move(new GridPoint2(-1, 0));
+            move(-1, 0);
         else if(input.isKeyPressed(S) || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
-            move(new GridPoint2(0, -1));
+            move(0, -1);
         else if(input.isKeyPressed(W) || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
-            move(new GridPoint2(0, 1));
+            move(0, 1);
         else if(input.isKeyPressed(D) || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
-            move(new GridPoint2(1, 0));
+            move(1, 0);
         else if(input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
-            move(new GridPoint2(-1, 1));
+            move(-1, 1);
         else if(input.isKeyPressed(U) || input.isKeyPressed(NUMPAD_9))
-            move(new GridPoint2(1, 1));
+            move(1, 1);
         else if(input.isKeyPressed(B) || input.isKeyPressed(NUMPAD_1))
-            move(new GridPoint2(-1, -1));
+            move(-1, -1);
         else if(input.isKeyPressed(N) || input.isKeyPressed(NUMPAD_3))
-            move(new GridPoint2(1, -1));
+            move(1, -1);
         else if(input.isKeyPressed(PERIOD) || input.isKeyPressed(NUMPAD_5) || input.isKeyPressed(NUMPAD_DOT))
-            move(new GridPoint2(0, 0));
+            move(0, 0);
     }
 
     @Override
