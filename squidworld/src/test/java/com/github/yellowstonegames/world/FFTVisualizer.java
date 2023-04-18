@@ -44,7 +44,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
     private static final int MODE_LIMIT = 19;
-    private int mode = 18;
+    private int mode = 1;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -336,13 +336,22 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * IntPointHash.hash256(x, y, (int)noise.getSeed()));
+                            bright = (float) (db = (1f/255f) * odd256(x, y, (int) noise.getSeed()));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
                         }
                     }
                     break;
+//                    for (int x = 0; x < width; x++) {
+//                        for (int y = 0; y < height; y++) {
+//                            bright = (float) (db = (1f/255f) * IntPointHash.hash256(x, y, (int)noise.getSeed()));
+//                            real[x][y] = db;
+//                            renderer.color(bright, bright, bright, 1f);
+//                            renderer.vertex(x, y, 0);
+//                        }
+//                    }
+//                    break;
                 case 1:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
@@ -1454,6 +1463,18 @@ public class FFTVisualizer extends ApplicationAdapter {
         s = (s + 0x9E3779B97F4A7C15L ^ s) * (y + x);
         return s >>> 56;
     }
+
+    public static int odd16(int x, int y) {
+        return ((x * 11 >>> 2 ^ y * 7 >>> 2 ^ (y - x) * 5) & 15);
+    }
+    public static int odd256(int x, int y, int s) {
+        s <<= 2;
+        return (((x+s ^ x >>> 1) + (y+s ^ y >>> 1)) * 0xDE4D >>> 4 & 15) * 17;
+//        return (((x+s) * 151 >>> 1 ^ (s-y) * 107 >>> 2 ^ (y - x ^ s) * 83 ^ s * 3 ^ x * 5 ^ y * 7) & 255);
+//         (((x + s) * 11 >>> 2 ^ (y - s) * 7 >>> 2 ^ (y - x + s) * 5) & 255) ^
+//                (((x - s) * 5 >>> 1 ^ (s - y) * 11 >>> 1 ^ (y + x - s) * 7) & 255);
+    }
+
     public static int fancy256(int x, int y, int s) {
 //        x = Math.abs(x);
 //        y = Math.abs(y);
