@@ -43,8 +43,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 19;
-    private int mode = 1;
+    private static final int MODE_LIMIT = 20;
+    private int mode = 19;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -1433,6 +1433,23 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
             }
+        } else if(mode == 19) {
+            for (int x = 0; x < width; x++) {
+                float distX = x - (width>>>1);
+                for (int y = 0; y < height; y++) {
+                    float distY = y - (height>>>1);
+                    float theta = TrigTools.atan2Turns(distY, distX) * 8;
+                    int flip = -((int)theta & 1) | 1;
+                    theta *= flip;
+                    float len = (float)Math.sqrt(distX * distX + distY * distY);
+                    float shrunk = len * 0.125f;
+                    bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
+                    real[x][y] = bright;
+                    renderer.color(bright, bright, bright, 1f);
+                    renderer.vertex(x, y, 0);
+                }
+            }
+
         }
 
         Fft.transform2D(real, imag);
