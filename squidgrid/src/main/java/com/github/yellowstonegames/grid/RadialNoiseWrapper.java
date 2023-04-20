@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.TrigTools;
 
 /**
  * A NoiseWrapper that makes its output radially symmetric around a given center point.
@@ -113,7 +114,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
 
     @Override
     public int getMaxDimension() {
-        return Math.min(wrapped.getMaxDimension(), 3);
+        return 3;
     }
 
     @Override
@@ -155,5 +156,53 @@ public class RadialNoiseWrapper extends NoiseWrapper {
     @Override
     public RadialNoiseWrapper copy() {
         return new RadialNoiseWrapper(this);
+    }
+
+    @Override
+    public float getNoise(float x, float y) {
+        x -= centerX;
+        y -= centerY;
+        float len = (float) Math.sqrt(x * x + y * y);
+        float shrunk = len / divisions;
+        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
+        theta *= flip;
+        return super.getNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len);
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z) {
+        x -= centerX;
+        y -= centerY;
+        float len = (float) Math.sqrt(x * x + y * y);
+        float shrunk = len / divisions;
+        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
+        theta *= flip;
+        return super.getNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - z);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, long seed) {
+        x -= centerX;
+        y -= centerY;
+        float len = (float) Math.sqrt(x * x + y * y);
+        float shrunk = len / divisions;
+        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
+        theta *= flip;
+        return super.getNoiseWithSeed(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len, seed);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, long seed) {
+        x -= centerX;
+        y -= centerY;
+        float len = (float) Math.sqrt(x * x + y * y);
+        float shrunk = len / divisions;
+        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
+        theta *= flip;
+        return super.getNoiseWithSeed(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - z, seed);
     }
 }

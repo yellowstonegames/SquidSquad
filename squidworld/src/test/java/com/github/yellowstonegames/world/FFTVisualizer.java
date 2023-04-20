@@ -1474,7 +1474,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     float distY = y - (height>>>1);
                     float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim);
                     float len = (float)Math.sqrt(distX * distX + distY * distY);
-                    float shrunk = len / (3+dim+dim);
+                    float shrunk = len / (3f+dim+dim);
                     bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
                     real[x][y] = bright;
                     renderer.color(bright, bright, bright, 1f);
