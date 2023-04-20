@@ -48,7 +48,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private FlawedPointHash.LowLeaningHash low = new FlawedPointHash.LowLeaningHash(123);
     private IPointHash[] pointHashes = new IPointHash[] {ph, iph, fnv, rug, quilt, cube, squish, low};
-    private int hashIndex = 6; // 6 for squish, best for looping square gifs
+    private int hashIndex = 5; // 6 for squish, best for looping square gifs
 
     private static final int width = 256, height = 256;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
@@ -60,7 +60,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private boolean keepGoing = true;
     
     private AnimatedGif gif;
-    private Array<Pixmap> frames = new Array<>(128);
+    private Array<Pixmap> frames = new Array<>(256);
 
     public static float basicPrepare(float n)
     {
@@ -84,7 +84,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
         gif = new AnimatedGif();
         gif.setDitherAlgorithm(Dithered.DitherAlgorithm.GRADIENT_NOISE);
         gif.setDitherStrength(0.2f);
-        gif.palette = new PaletteReducer(new int[] {
+        gif.palette = new PaletteReducer(
+        new int[] {
                 0x000000FF, 0x010101FF, 0x020202FF, 0x030303FF, 0x040404FF, 0x050505FF, 0x060606FF, 0x070707FF,
                 0x080808FF, 0x090909FF, 0x0A0A0AFF, 0x0B0B0BFF, 0x0C0C0CFF, 0x0D0D0DFF, 0x0E0E0EFF, 0x0F0F0FFF,
                 0x101010FF, 0x111111FF, 0x121212FF, 0x131313FF, 0x141414FF, 0x151515FF, 0x161616FF, 0x171717FF,
@@ -117,6 +118,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                 0xE8E8E8FF, 0xE9E9E9FF, 0xEAEAEAFF, 0xEBEBEBFF, 0xECECECFF, 0xEDEDEDFF, 0xEEEEEEFF, 0xEFEFEFFF,
                 0xF0F0F0FF, 0xF1F1F1FF, 0xF2F2F2FF, 0xF3F3F3FF, 0xF4F4F4FF, 0xF5F5F5FF, 0xF6F6F6FF, 0xF7F7F7FF,
                 0xF8F8F8FF, 0xF9F9F9FF, 0xFAFAFAFF, 0xFBFBFBFF, 0xFCFCFCFF, 0xFDFDFDFF, 0xFEFEFEFF, 0xFFFFFFFF,
+        });
 
 //                0x00000000, 0x000000FF, 0x081820FF, 0x132C2DFF, 0x1E403BFF, 0x295447FF, 0x346856FF, 0x497E5BFF,
 //                0x5E9463FF, 0x73AA69FF, 0x88C070FF, 0x9ECE88FF, 0xB4DCA0FF, 0xCAEAB8FF, 0xE0F8D0FF, 0xEFFBE7FF,
@@ -150,7 +152,6 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                0xff9933ff, 0xff9966ff, 0xff9999ff, 0xff99ccff, 0xff99ffff, 0xffcc00ff, 0xffcc33ff, 0xffcc66ff,
 //                0xffcc99ff, 0xffccccff, 0xffccffff, 0xffff00ff, 0xffff33ff, 0xffff66ff, 0xffff99ff, 0xffffccff,
 //                0xffffffff, 
-        });
 
         input = new InputAdapter(){
             @Override
@@ -162,8 +163,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case W:
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
 //                        for (int c = 0; c < 32; c++) {
-                        for (int c = 0; c < 128; c++) {
-//                        for (int c = 0; c < 256; c++) {
+//                        for (int c = 0; c < 128; c++) {
+                        for (int c = 0; c < 256; c++) {
                             int w = 256, h = 256;
                             float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, inv = 1f / w;
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
@@ -246,12 +247,12 @@ public class NoiseVisualizer extends ApplicationAdapter {
 
                         ));
                         g.toArray(gif.palette.paletteArray);
-                        for (int i = 0; i < 256; i++) {
-                            int hiLo = Math.round(
-//                                    MathTools.square(
-                                            (MathTools.swayTight(i * 0x1p-6f + 0.5f))
-//                                    )
-                            );
+//                        for (int i = 0; i < 256; i++) {
+//                            int hiLo = Math.round(
+////                                    MathTools.square(
+//                                            (MathTools.swayTight(i * 0x1p-6f + 0.5f))
+////                                    )
+//                            );
 //                            gif.palette.paletteArray[i]
 ////                            &= 0xFF0000FF;
 //                                    = DescriptiveColor.toRGBA8888(
@@ -286,11 +287,11 @@ public class NoiseVisualizer extends ApplicationAdapter {
 ////                                            0.65f + TrigTools.cosTurns(i * 0x1p-10f) * 0.2f, // very light, from 0.65f to 0.85f, more are high
 //                                            1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
-                        }
-                        String ser = noise.serializeToString();
+//                        }
+                        String ser = noise.serializeToString() + "_" + System.currentTimeMillis();
                         System.out.println(ser);
 //                        gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
-                        gif.write(Gdx.files.local("out/" + ser + "_" + System.currentTimeMillis() + ".gif"), frames, 16);
+                        gif.write(Gdx.files.local("out/" + ser + ".gif"), frames, 16);
                         for (int i = 0; i < frames.size; i++) {
                             frames.get(i).dispose();
                         }
