@@ -1434,19 +1434,37 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
             }
         } else if(mode == 19) {
-            for (int x = 0; x < width; x++) {
-                float distX = x - (width >>> 1);
-                for (int y = 0; y < height; y++) {
-                    float distY = y - (height >>> 1);
-                    float theta = TrigTools.atan2Turns(distY, distX) * 8f;
-                    int flip = -((int)theta & 1) | 1;
-                    theta *= flip;
-                    float len = (float) Math.sqrt(distX * distX + distY * distY);
-                    float shrunk = len * 0.125f;
-                    bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
-                    real[x][y] = bright;
-                    renderer.color(bright, bright, bright, 1f);
-                    renderer.vertex(x, y, 0);
+            if((dim & 1) == 0) {
+                for (int x = 0; x < width; x++) {
+                    float distX = x - (width >>> 1);
+                    for (int y = 0; y < height; y++) {
+                        float distY = y - (height >>> 1);
+                        float theta = TrigTools.atan2Turns(distY, distX) * 8f;
+                        int flip = -((int)theta & 1) | 1;
+                        theta *= flip;
+                        float len = (float) Math.sqrt(distX * distX + distY * distY);
+                        float shrunk = len * 0.125f;
+                        bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
+                        real[x][y] = bright;
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+            } else {
+                for (int x = 0; x < width; x++) {
+                    float distX = x - (width >>> 1);
+                    for (int y = 0; y < height; y++) {
+                        float distY = y - (height >>> 1);
+                        float len = (float) Math.sqrt(distX * distX + distY * distY);
+                        float shrunk = len * 0.08f;
+                        float theta = TrigTools.atan2Turns(distY, distX) * 12f + 0.01f * c + 0.1f * shrunk;
+                        int flip = -((int)theta & 1) | 1;
+                        theta *= flip;
+                        bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
+                        real[x][y] = bright;
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
                 }
             }
         } else if(mode == 20) {
