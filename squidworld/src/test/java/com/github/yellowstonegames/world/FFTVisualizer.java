@@ -202,10 +202,16 @@ public class FFTVisualizer extends ApplicationAdapter {
                         0xF8F8F8FF, 0xF9F9F9FF, 0xFAFAFAFF, 0xFBFBFBFF, 0xFCFCFCFF, 0xFDFDFDFF, 0xFEFEFEFF, 0xFFFFFFFF,
                 });
         IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolation.smooth::apply,
-                DescriptiveColor.oklabByHSL(0.98f, 0.85f, 0.2f, 1f),
-                DescriptiveColor.oklabByHSL(0.00f, 0.95f, 0.4f, 1f),
-                DescriptiveColor.oklabByHSL(0.02f, 1f, 0.55f, 1f),
-                DescriptiveColor.oklabByHSL(0.01f, 0.7f, 0.8f, 1f)
+                // cool blue
+                DescriptiveColor.oklabByHSL(0.68f, 0.85f, 0.2f, 1f),
+                DescriptiveColor.oklabByHSL(0.70f, 0.95f, 0.4f, 1f),
+                DescriptiveColor.oklabByHSL(0.62f, 1f, 0.55f, 1f),
+                DescriptiveColor.oklabByHSL(0.65f, 0.7f, 0.8f, 1f)
+                // rosy
+//                DescriptiveColor.oklabByHSL(0.98f, 0.85f, 0.2f, 1f),
+//                DescriptiveColor.oklabByHSL(0.00f, 0.95f, 0.4f, 1f),
+//                DescriptiveColor.oklabByHSL(0.02f, 1f, 0.55f, 1f),
+//                DescriptiveColor.oklabByHSL(0.01f, 0.7f, 0.8f, 1f)
         ));
         g.toArray(gif.palette.paletteArray);
 
@@ -1563,7 +1569,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         float distX = x - (width>>>1);
                         for (int y = 0; y < height; y++) {
                             float distY = y - (height>>>1);
-                            float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim);
+                            float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim) + (ct * 0x3p-8f);
                             float len = (float)Math.sqrt(distX * distX + distY * distY);
                             float shrunk = len / (3f+dim+dim);
                             len = (len - ct) * 0x1p-8f;
