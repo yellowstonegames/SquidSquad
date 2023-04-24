@@ -40,10 +40,10 @@ public class OpenSimplex2Smooth implements INoise {
     }
 
     /**
-     * Gets the minimum dimension supported by this generator, such as 2 for a generator that only is defined for flat
-     * surfaces, or 3 for one that is only defined for 3D or higher-dimensional spaces.
+     * Gets the minimum dimension supported by this generator, which is 2 here. This generator can produce 2D, 3D, or 4D
+     * noise.
      *
-     * @return the minimum supported dimension, from 2 to 6 inclusive
+     * @return the minimum supported dimension, which is 2 here
      */
     @Override
     public int getMinDimension() {
@@ -51,10 +51,10 @@ public class OpenSimplex2Smooth implements INoise {
     }
 
     /**
-     * Gets the maximum dimension supported by this generator, such as 2 for a generator that only is defined for flat
-     * surfaces, or 6 for one that is defined up to the highest dimension this interface knows about (6D).
+     * Gets the maximum dimension supported by this generator, which is 4 here. This generator can produce 2D, 3D, or 4D
+     * noise.
      *
-     * @return the maximum supported dimension, from 2 to 6 inclusive
+     * @return the maximum supported dimension, which is 4 here
      */
     @Override
     public int getMaxDimension() {
@@ -62,10 +62,10 @@ public class OpenSimplex2Smooth implements INoise {
     }
 
     /**
-     * Returns true if this generator can be seeded with {@link #setSeed(long)} (and if so, retrieved with
-     * {@link #getSeed()}).
+     * Returns true if this generator can be seeded with {@link #setSeed(long)} and retrieved with {@link #getSeed()},
+     * which this can be.
      *
-     * @return true if {@link #setSeed(long)} and {@link #getSeed()} are supported, false if either isn't supported
+     * @return true, because {@link #setSeed(long)} and {@link #getSeed()} are supported
      */
     @Override
     public boolean canUseSeed() {

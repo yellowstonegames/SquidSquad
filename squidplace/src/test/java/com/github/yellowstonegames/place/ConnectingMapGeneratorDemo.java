@@ -7,7 +7,12 @@ public class ConnectingMapGeneratorDemo {
 
     public static void main(String[] args) {
         DistinctRandom random = new DistinctRandom(0xB0BAFE77L);
+        // Use to generate 1x1 rooms with 1x1 connecting corridors between some rooms.
+        // There will always be a path between any pair of rooms.
+        /*
         ConnectingMapGenerator gen = new ConnectingMapGenerator(101, 101, 1, 1, random, 1, 1.0);
+         */
+        ConnectingMapGenerator gen = new ConnectingMapGenerator(41, 41, 4, 4, random, 1, 0.8f);
         //// Use when you want '#' to indicate "no connection" and '.' to indicate a connection
 //        char[][] map = gen.generate();
         //// Use when you want box-drawing character lines to indicate "no connection"; '.' indicates a connection
@@ -16,6 +21,8 @@ public class ConnectingMapGeneratorDemo {
         //// is indistinguishable when indexed with [y][x], it just will be transposed (left-right swaps with up-down).
         //// It uses y-up, like most of libGDX, even for 2D arrays.
 
+        // Use this to mark rooms with 'R'
+        /*
         //// This marks every room position with the char 'R' to tell them apart from connections, which use '.'
         //// Room positions are the spots in the array where x is odd and y is odd.
         //// If you want to know if a given position is a room, you can use: ((x & y & 1) == 1)
@@ -31,7 +38,7 @@ public class ConnectingMapGeneratorDemo {
 //        int roomY = random.nextInt(50)*2+1;
         //// Every room can (eventually) get to every other room by traversing '.' connections.
         //// The 1-4 neighbors each R room has are connected via a '.'; if there is anything else, they don't connect.
-
+         */
         //// This just shows the map in the console.
         DungeonTools.debugPrint(map);
     }

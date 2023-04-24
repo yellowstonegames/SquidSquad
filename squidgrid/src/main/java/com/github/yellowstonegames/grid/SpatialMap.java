@@ -25,7 +25,11 @@ import com.github.yellowstonegames.core.annotations.Beta;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import java.util.*;
+
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * A kind of Map-like data structure that allows lookup by int id or Coord position, and retains its insertion order.

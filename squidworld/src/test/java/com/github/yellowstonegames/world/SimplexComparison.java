@@ -25,12 +25,17 @@ import static com.badlogic.gdx.graphics.GL20.*;
  */
 public class SimplexComparison extends ApplicationAdapter {
 
-    private INoise sigmoid = new SimplexNoise(1L);
-//    private INoise scaled = new SimplexNoiseHard(1L);
+    private INoise gain = new SimplexNoise(1L);
+    private INoise hard = new SimplexNoiseHard(1L);
     private INoise scaled = new SimplexNoiseScaled(1L);
-    private NoiseWrapper wrap0 = new NoiseWrapper(sigmoid, 1, 0.0625f, Noise.FBM, 1);
-    private NoiseWrapper wrap1 = new NoiseWrapper(scaled, 1, 0.0625f, Noise.FBM, 1);
-    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private INoise osn2f = new OpenSimplex2(1L);
+    private INoise osn2s = new OpenSimplex2Smooth(1L);
+    private INoise[] noises = new INoise[]{gain, hard, scaled, osn2f, osn2s};
+    private NoiseWrapper wrap0 = new NoiseWrapper(gain, 1, 0.0625f, Noise.FBM, 1);
+    private NoiseWrapper wrap1 = new NoiseWrapper(hard, 1, 0.0625f, Noise.FBM, 1);
+    private int index0 = 0;
+    private int index1 = 1;
+    private int dim = 2; // this can be 0, 1, or 2; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;
@@ -86,25 +91,42 @@ public class SimplexComparison extends ApplicationAdapter {
                     case P: //pause
                     case SPACE:
                         keepGoing = !keepGoing;
+                        break;
+                    case NUM_0:
+                    case NUMPAD_0:
+                        wrap0.setWrapped(noises[index0 = (index0 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        break;
+                    case NUM_1:
+                    case NUMPAD_1:
+                        wrap1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        break;
                     case C:
                         if(UIUtils.shift())ctr--;
                         else ctr++;
                         break;
-                    case E: //earlier seed
-                        sigmoid.setSeed(sigmoid.getSeed() - 1);
-                        scaled.setSeed(sigmoid.getSeed());
+                    case E: {//earlier seed
+                        long seed = wrap0.wrapped.getSeed() - 1;
+                        for (int i = 0; i < noises.length; i++) {
+                            noises[i].setSeed(seed);
+                        }
                         break;
-                    case S: //seed
-                        sigmoid.setSeed(sigmoid.getSeed() + 1);
-                        scaled.setSeed(sigmoid.getSeed());
+                    }
+                    case S: {//seed
+                        long seed = wrap0.wrapped.getSeed() + 1;
+                        for (int i = 0; i < noises.length; i++) {
+                            noises[i].setSeed(seed);
+                        }
                         break;
-                    case SLASH:
-                        sigmoid.setSeed((int) Hasher.randomize3(sigmoid.getSeed()));
-                        scaled.setSeed(sigmoid.getSeed());
+                    }
+                    case SLASH: {
+                        long seed = Hasher.randomize3(wrap0.wrapped.getSeed());
+                        for (int i = 0; i < noises.length; i++) {
+                            noises[i].setSeed(seed);
+                        }
                         break;
+                    }
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? Math.min(sigmoid.getMaxDimension(), scaled.getMaxDimension()) - 2 : 1))
-                                % (Math.min(sigmoid.getMaxDimension(), scaled.getMaxDimension()) - 1);
+                        dim = (dim + (UIUtils.shift() ? 2 : 1)) % 3;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
@@ -146,7 +168,7 @@ public class SimplexComparison extends ApplicationAdapter {
             case 0:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = prepare0(wrap0.getNoiseWithSeed(x + c, y + c, sigmoid.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(x + c, y + c, gain.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(x + c, y + c, scaled.getSeed()));
@@ -158,7 +180,7 @@ public class SimplexComparison extends ApplicationAdapter {
             case 1:
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = prepare0(wrap0.getNoiseWithSeed(x, y, c, sigmoid.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(x, y, c, gain.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(x, y, c, scaled.getSeed()));
@@ -172,7 +194,7 @@ public class SimplexComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c;
-                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, sigmoid.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, gain.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, scaled.getSeed()));
@@ -186,7 +208,7 @@ public class SimplexComparison extends ApplicationAdapter {
                     float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
                     for (int y = 0; y < height; y++) {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
-                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, sigmoid.getSeed()));
+                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, gain.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, c, scaled.getSeed()));
@@ -203,7 +225,7 @@ public class SimplexComparison extends ApplicationAdapter {
                         float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
                                 zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
                         bright = prepare0(wrap0.getNoiseWithSeed(
-                                xc, yc, zc, xs, ys, zs, sigmoid.getSeed()));
+                                xc, yc, zc, xs, ys, zs, gain.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                         bright = prepare1(wrap1.getNoiseWithSeed(
