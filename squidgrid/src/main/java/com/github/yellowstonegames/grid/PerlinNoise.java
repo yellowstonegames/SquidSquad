@@ -208,8 +208,6 @@ public class PerlinNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, final long seed) {
-        x *= 2.0f;
-        y *= 2.0f;
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y);
@@ -230,9 +228,6 @@ public class PerlinNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, final long seed) {
-        x *= 2.0f;
-        y *= 2.0f;
-        z *= 2.0f;
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y),
@@ -275,10 +270,6 @@ public class PerlinNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, final long seed) {
-        x *= 2.0f;
-        y *= 2.0f;
-        z *= 2.0f;
-        w *= 2.0f;
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y),
@@ -348,11 +339,6 @@ public class PerlinNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        x *= 2.0f;
-        y *= 2.0f;
-        z *= 2.0f;
-        w *= 2.0f;
-        u *= 2.0f;
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y),
@@ -438,12 +424,6 @@ public class PerlinNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        x *= 2.0f;
-        y *= 2.0f;
-        z *= 2.0f;
-        w *= 2.0f;
-        u *= 2.0f;
-        v *= 2.0f;
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y),
