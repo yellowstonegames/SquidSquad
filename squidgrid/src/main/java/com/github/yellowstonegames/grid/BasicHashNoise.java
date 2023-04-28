@@ -209,8 +209,8 @@ public class BasicHashNoise implements INoise {
                 x0 = fastFloor(x),
                 y0 = fastFloor(y);
         final float xf = x - x0, yf = y - y0;
+        
         int s = (int) seed;
-
         x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
         y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
         return ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, s) + x * pointHash.hashWithState(x0+1, y0, s))
@@ -231,33 +231,17 @@ public class BasicHashNoise implements INoise {
                 z0 = fastFloor(z);
         final float xf = x - x0, yf = y - y0, zf = z - z0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-         return
-                 emphasizeSigned(
-                         lerp(
-                                 lerp(
-                                         lerp(
-                                                 gradCoord3D(seed, x0, y0, z0, xf, yf, zf),
-                                                 gradCoord3D(seed, x0+1, y0, z0, xf - 1, yf, zf),
-                                                 xa),
-                                         lerp(
-                                                 gradCoord3D(seed, x0, y0+1, z0, xf, yf-1, zf),
-                                                 gradCoord3D(seed, x0+1, y0+1, z0, xf - 1, yf - 1, zf),
-                                                 xa),
-                                         ya),
-                                 lerp(
-                                         lerp(
-                                                 gradCoord3D(seed, x0, y0, z0+1, xf, yf, zf-1),
-                                                 gradCoord3D(seed, x0+1, y0, z0+1, xf - 1, yf, zf-1),
-                                                 xa),
-                                         lerp(
-                                                 gradCoord3D(seed, x0, y0+1, z0+1, xf, yf-1, zf-1),
-                                                 gradCoord3D(seed, x0+1, y0+1, z0+1, xf - 1, yf - 1, zf-1),
-                                                 xa),
-                                         ya),
-                                 za) * 1.0625f);
+        int s = (int) seed;
+        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        return ((1 - z) *
+                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, s))
+                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, s)))
+                + z *
+                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, s))
+                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, s)))
+        ) * 0x1p-31f;
     }
 
     @Override
