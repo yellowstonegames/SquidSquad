@@ -114,21 +114,27 @@ public class INoiseComparison extends ApplicationAdapter {
                         else ctr++;
                         break;
                     case E: {//earlier seed
-                        long seed = noises[0].getSeed() - 1;
+                        long seed = wrap0.getSeed() - 1;
+                        wrap0.setSeed(seed);
+                        wrap1.setSeed(seed);
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
                         break;
                     }
                     case S: {//seed
-                        long seed = noises[0].getSeed() + 1;
+                        long seed = wrap0.getSeed() + 1;
+                        wrap0.setSeed(seed);
+                        wrap1.setSeed(seed);
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
                         break;
                     }
                     case SLASH: {
-                        long seed = Hasher.randomize3(noises[0].getSeed());
+                        long seed = Hasher.randomize3(wrap0.getSeed());
+                        wrap0.setSeed(seed);
+                        wrap1.setSeed(seed);
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
