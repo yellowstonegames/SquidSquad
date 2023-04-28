@@ -31,6 +31,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new SimplexNoiseScaled(1L),
             new OpenSimplex2(1L),
             new OpenSimplex2Smooth(1L),
+            new PerlinNoise(1L),
             new CyclicNoise(1L, 5, 4),
             new FlanNoise(1L, 6),
             new TaffyNoise(1L, 6),
