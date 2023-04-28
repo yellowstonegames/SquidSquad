@@ -37,6 +37,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new TaffyNoise(1L, 6),
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
+            new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32))
     };
     private int index0 = 0;
     private int index1 = 4;
@@ -113,21 +114,21 @@ public class INoiseComparison extends ApplicationAdapter {
                         else ctr++;
                         break;
                     case E: {//earlier seed
-                        long seed = wrap0.wrapped.getSeed() - 1;
+                        long seed = noises[0].getSeed() - 1;
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
                         break;
                     }
                     case S: {//seed
-                        long seed = wrap0.wrapped.getSeed() + 1;
+                        long seed = noises[0].getSeed() + 1;
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
                         break;
                     }
                     case SLASH: {
-                        long seed = Hasher.randomize3(wrap0.wrapped.getSeed());
+                        long seed = Hasher.randomize3(noises[0].getSeed());
                         for (int i = 0; i < noises.length; i++) {
                             noises[i].setSeed(seed);
                         }
