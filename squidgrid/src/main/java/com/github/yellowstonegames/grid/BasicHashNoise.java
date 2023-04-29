@@ -277,74 +277,45 @@ public class BasicHashNoise implements INoise {
                 u0 = fastFloor(u);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
-        return
-                emphasizeSigned(
-                lerp(lerp(
-                        lerp(
-                                lerp(
-                                        lerp(gradCoord5D(seed, x0, y0, z0, w0, u0, xf, yf, zf, wf, uf),
-                                                gradCoord5D(seed, x0+1, y0, z0, w0, u0, xf-1, yf, zf, wf, uf), xa),
-                                        lerp(gradCoord5D(seed, x0, y0+1, z0, w0, u0, xf, yf-1, zf, wf, uf),
-                                                gradCoord5D(seed, x0+1, y0+1, z0, w0, u0, xf-1, yf-1, zf, wf, uf), xa),
-                                        ya),
-                                lerp(
-                                        lerp(gradCoord5D(seed, x0, y0, z0+1, w0, u0, xf, yf, zf-1, wf, uf),
-                                                gradCoord5D(seed, x0+1, y0, z0+1, w0, u0, xf-1, yf, zf-1, wf, uf), xa),
-                                        lerp(gradCoord5D(seed, x0, y0+1, z0+1, w0, u0, xf, yf-1, zf-1, wf, uf),
-                                                gradCoord5D(seed, x0+1, y0+1, z0+1, w0, u0, xf-1, yf-1, zf-1, wf, uf), xa),
-                                        ya),
-                                za),
-                        lerp(
-                                lerp(
-                                        lerp(gradCoord5D(seed, x0, y0, z0, w0+1, u0, xf, yf, zf, wf-1, uf),
-                                                gradCoord5D(seed, x0+1, y0, z0, w0+1, u0, xf-1, yf, zf, wf-1, uf), xa),
-                                        lerp(gradCoord5D(seed, x0, y0+1, z0, w0+1, u0, xf, yf-1, zf, wf-1, uf),
-                                                gradCoord5D(seed, x0+1, y0+1, z0, w0+1, u0, xf-1, yf-1, zf, wf-1, uf), xa),
-                                        ya),
-                                lerp(
-                                        lerp(gradCoord5D(seed, x0, y0, z0+1, w0+1, u0, xf, yf, zf-1, wf-1, uf),
-                                                gradCoord5D(seed, x0+1, y0, z0+1, w0+1, u0, xf-1, yf, zf-1, wf-1, uf), xa),
-                                        lerp(gradCoord5D(seed, x0, y0+1, z0+1, w0+1, u0, xf, yf-1, zf-1, wf-1, uf),
-                                                gradCoord5D(seed, x0+1, y0+1, z0+1, w0+1, u0, xf-1, yf-1, zf-1, wf-1, uf), xa),
-                                        ya),
-                                za),
-                        wa),
-                        lerp(
-                                lerp(
-                                        lerp(
-                                                lerp(gradCoord5D(seed, x0, y0, z0, w0, u0+1, xf, yf, zf, wf, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0, z0, w0, u0+1, xf-1, yf, zf, wf, uf-1), xa),
-                                                lerp(gradCoord5D(seed, x0, y0+1, z0, w0, u0+1, xf, yf-1, zf, wf, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0+1, z0, w0, u0+1, xf-1, yf-1, zf, wf, uf-1), xa),
-                                                ya),
-                                        lerp(
-                                                lerp(gradCoord5D(seed, x0, y0, z0+1, w0, u0+1, xf, yf, zf-1, wf, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0, z0+1, w0, u0+1, xf-1, yf, zf-1, wf, uf-1), xa),
-                                                lerp(gradCoord5D(seed, x0, y0+1, z0+1, w0, u0+1, xf, yf-1, zf-1, wf, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0+1, z0+1, w0, u0+1, xf-1, yf-1, zf-1, wf, uf-1), xa),
-                                                ya),
-                                        za),
-                                lerp(
-                                        lerp(
-                                                lerp(gradCoord5D(seed, x0, y0, z0, w0+1, u0+1, xf, yf, zf, wf-1, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0, z0, w0+1, u0+1, xf-1, yf, zf, wf-1, uf-1), xa),
-                                                lerp(gradCoord5D(seed, x0, y0+1, z0, w0+1, u0+1, xf, yf-1, zf, wf-1, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0+1, z0, w0+1, u0+1, xf-1, yf-1, zf, wf-1, uf-1), xa),
-                                                ya),
-                                        lerp(
-                                                lerp(gradCoord5D(seed, x0, y0, z0+1, w0+1, u0+1, xf, yf, zf-1, wf-1, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0, z0+1, w0+1, u0+1, xf-1, yf, zf-1, wf-1, uf-1), xa),
-                                                lerp(gradCoord5D(seed, x0, y0+1, z0+1, w0+1, u0+1, xf, yf-1, zf-1, wf-1, uf-1),
-                                                        gradCoord5D(seed, x0+1, y0+1, z0+1, w0+1, u0+1, xf-1, yf-1, zf-1, wf-1, uf-1), xa),
-                                                ya),
-                                        za),
-                                wa),
-                        ua) * 0.7777777f);
+        int s = (int) seed;
+        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
+        u = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
+        return ((1 - u) *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, s)))
+                                + z *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, s))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, s)))
+                                + z *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, s)))
+                        )))
+                + (u *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, s)))
+                                + z *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, s))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, s)))
+                                + z *
+                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, s))
+                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, s)))
+                        ))))
+        ) * 0x1p-31f;
     }
 
     @Override
@@ -362,138 +333,80 @@ public class BasicHashNoise implements INoise {
                 u0 = fastFloor(u),
                 v0 = fastFloor(v);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0, vf = v - v0;
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
-        final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 10.0f);
-        return emphasizeSigned(
-                lerp(
-                        lerp(
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0, u0, v0, xf, yf, zf, wf, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0, u0, v0, xf - 1, yf, zf, wf, uf, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0, u0, v0, xf, yf - 1, zf, wf, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0, u0, v0, xf - 1, yf - 1, zf, wf, uf, vf), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0, u0, v0, xf, yf, zf - 1, wf, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0, u0, v0, xf - 1, yf, zf - 1, wf, uf, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0, u0, v0, xf, yf - 1, zf - 1, wf, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0, u0, v0, xf - 1, yf - 1, zf - 1, wf, uf, vf), xa),
-                                                        ya),
-                                                za),
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0 + 1, u0, v0, xf, yf, zf, wf - 1, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0 + 1, u0, v0, xf - 1, yf, zf, wf - 1, uf, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0 + 1, u0, v0, xf, yf - 1, zf, wf - 1, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0 + 1, u0, v0, xf - 1, yf - 1, zf, wf - 1, uf, vf), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0 + 1, u0, v0, xf, yf, zf - 1, wf - 1, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0 + 1, u0, v0, xf - 1, yf, zf - 1, wf - 1, uf, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0 + 1, u0, v0, xf, yf - 1, zf - 1, wf - 1, uf, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf), xa),
-                                                        ya),
-                                                za),
-                                        wa),
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0, u0 + 1, v0, xf, yf, zf, wf, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0, u0 + 1, v0, xf - 1, yf, zf, wf, uf - 1, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0, u0 + 1, v0, xf, yf - 1, zf, wf, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0, u0 + 1, v0, xf - 1, yf - 1, zf, wf, uf - 1, vf), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0, u0 + 1, v0, xf, yf, zf - 1, wf, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0, u0 + 1, v0, xf - 1, yf, zf - 1, wf, uf - 1, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0, u0 + 1, v0, xf, yf - 1, zf - 1, wf, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf), xa),
-                                                        ya),
-                                                za),
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0 + 1, u0 + 1, v0, xf, yf, zf, wf - 1, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0 + 1, u0 + 1, v0, xf - 1, yf, zf, wf - 1, uf - 1, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0 + 1, u0 + 1, v0, xf, yf - 1, zf, wf - 1, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0 + 1, u0 + 1, v0, xf, yf, zf - 1, wf - 1, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf), xa),
-                                                        ya),
-                                                za),
-                                        wa),
-                                ua),
-                        lerp(
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0, u0, v0 + 1, xf, yf, zf, wf, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0, u0, v0 + 1, xf - 1, yf, zf, wf, uf, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0, u0, v0 + 1, xf, yf - 1, zf, wf, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0, u0, v0 + 1, xf - 1, yf - 1, zf, wf, uf, vf - 1), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0, u0, v0 + 1, xf, yf, zf - 1, wf, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0, u0, v0 + 1, xf - 1, yf, zf - 1, wf, uf, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0, u0, v0 + 1, xf, yf - 1, zf - 1, wf, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0, u0, v0 + 1, xf - 1, yf - 1, zf - 1, wf, uf, vf - 1), xa),
-                                                        ya),
-                                                za),
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0 + 1, u0, v0 + 1, xf, yf, zf, wf - 1, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0 + 1, u0, v0 + 1, xf - 1, yf, zf, wf - 1, uf, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0 + 1, u0, v0 + 1, xf, yf - 1, zf, wf - 1, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0 + 1, u0, v0 + 1, xf - 1, yf - 1, zf, wf - 1, uf, vf - 1), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0 + 1, u0, v0 + 1, xf, yf, zf - 1, wf - 1, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0 + 1, u0, v0 + 1, xf - 1, yf, zf - 1, wf - 1, uf, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, xf, yf - 1, zf - 1, wf - 1, uf, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf - 1), xa),
-                                                        ya),
-                                                za),
-                                        wa),
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0, u0 + 1, v0 + 1, xf, yf, zf, wf, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0, u0 + 1, v0 + 1, xf - 1, yf, zf, wf, uf - 1, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0, u0 + 1, v0 + 1, xf, yf - 1, zf, wf, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0, u0 + 1, v0 + 1, xf - 1, yf - 1, zf, wf, uf - 1, vf - 1), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0, u0 + 1, v0 + 1, xf, yf, zf - 1, wf, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0, u0 + 1, v0 + 1, xf - 1, yf, zf - 1, wf, uf - 1, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, xf, yf - 1, zf - 1, wf, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf - 1), xa),
-                                                        ya),
-                                                za),
-                                        lerp(
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0, w0 + 1, u0 + 1, v0 + 1, xf, yf, zf, wf - 1, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0, w0 + 1, u0 + 1, v0 + 1, xf - 1, yf, zf, wf - 1, uf - 1, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, xf, yf - 1, zf, wf - 1, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf - 1), xa),
-                                                        ya),
-                                                lerp(
-                                                        lerp(gradCoord6D(seed, x0, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, xf, yf, zf - 1, wf - 1, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf - 1), xa),
-                                                        lerp(gradCoord6D(seed, x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1),
-                                                                gradCoord6D(seed, x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1), xa),
-                                                        ya),
-                                                za),
-                                        wa),
-                                ua),
-                        va) * 1.61f);
+
+        int s = (int) seed;
+        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
+        u = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
+        v = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 10.0f);
+        return ((1 - v) *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0, s)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, s)))
+                                )))))
+                + (v *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0 + 1, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0 + 1, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0 + 1, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, s)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0 + 1, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s)))
+                                ))))))
+        ) * 0x1p-31f;
     }
 }
