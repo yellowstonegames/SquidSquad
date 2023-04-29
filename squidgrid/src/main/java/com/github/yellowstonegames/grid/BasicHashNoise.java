@@ -145,25 +145,6 @@ public class BasicHashNoise implements INoise {
         return new BasicHashNoise(this.seed);
     }
 
-    //0xE60E2B722B53AEEBL, 0xCEBD76D9EDB6A8EFL, 0xB9C9AA3A51D00B65L, 0xA6F5777F6F88983FL, 0x9609C71EB7D03F7BL, 0x86D516E50B04AB1BL
-    protected static float gradCoord2D(long seed, int x, int y,
-                                        float xd, float yd) {
-        final int hash = (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y) * (seed) >>> 55 & 510);
-        return xd * GRADIENTS_2D[hash] + yd * GRADIENTS_2D[hash + 1];
-    }
-    protected static float gradCoord3D(long seed, int x, int y, int z, float xd, float yd, float zd) {
-        final int hash =
-                (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z) * (seed)
-                        >>> 59) * 3;
-        return (xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2]);
-    }
-    protected static float gradCoord4D(long seed, int x, int y, int z, int w,
-                                        float xd, float yd, float zd, float wd) {
-        final int hash =
-                (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w) * (seed)
-                        >>> 56) & -4;
-        return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
-    }
     protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,
                                         float xd, float yd, float zd, float wd, float ud) {
         final int hash =
@@ -258,58 +239,26 @@ public class BasicHashNoise implements INoise {
                 w0 = fastFloor(w);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        return
-                emphasizeSigned(
-                        lerp(
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0, z0, w0, xf, yf, zf, wf),
-                                                        gradCoord4D(seed, x0+1, y0, z0, w0, xf - 1, yf, zf, wf),
-                                                        xa),
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0+1, z0, w0, xf, yf-1, zf, wf),
-                                                        gradCoord4D(seed, x0+1, y0+1, z0, w0, xf - 1, yf - 1, zf, wf),
-                                                        xa),
-                                                ya),
-                                        lerp(
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0, z0+1, w0, xf, yf, zf-1, wf),
-                                                        gradCoord4D(seed, x0+1, y0, z0+1, w0, xf - 1, yf, zf-1, wf),
-                                                        xa),
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0+1, z0+1, w0, xf, yf-1, zf-1, wf),
-                                                        gradCoord4D(seed, x0+1, y0+1, z0+1, w0, xf - 1, yf - 1, zf-1, wf),
-                                                        xa),
-                                                ya),
-                                        za),
-                                lerp(
-                                        lerp(
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0, z0, w0+1, xf, yf, zf, wf - 1),
-                                                        gradCoord4D(seed, x0+1, y0, z0, w0+1, xf - 1, yf, zf, wf - 1),
-                                                        xa),
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0+1, z0, w0+1, xf, yf-1, zf, wf - 1),
-                                                        gradCoord4D(seed, x0+1, y0+1, z0, w0+1, xf - 1, yf - 1, zf, wf - 1),
-                                                        xa),
-                                                ya),
-                                        lerp(
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0, z0+1, w0+1, xf, yf, zf-1, wf - 1),
-                                                        gradCoord4D(seed, x0+1, y0, z0+1, w0+1, xf - 1, yf, zf-1, wf - 1),
-                                                        xa),
-                                                lerp(
-                                                        gradCoord4D(seed, x0, y0+1, z0+1, w0+1, xf, yf-1, zf-1, wf - 1),
-                                                        gradCoord4D(seed, x0+1, y0+1, z0+1, w0+1, xf - 1, yf - 1, zf-1, wf - 1),
-                                                        xa),
-                                                ya),
-                                        za),
-                                wa) * 0.555f);
+        int s = (int) seed;
+        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
+        return ((1 - w) *
+                ((1 - z) *
+                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, s))
+                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, s)))
+                        + z *
+                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, s))
+                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, s))))
+                + (w *
+                ((1 - z) *
+                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, s))
+                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, s)))
+                        + z *
+                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, s))
+                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, s)))
+                ))) * 0x1p-31f;
     }
 
 
