@@ -31,5 +31,7 @@
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GlyphGrid"/>
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.MoreActions"/>
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GridAction"/>
-    <source path="glyph" />
+    <source path="glyph">
+        <exclude name="rexpaint"/>
+    </source>
 </module>
