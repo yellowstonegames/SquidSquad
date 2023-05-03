@@ -60,13 +60,19 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         current = interpolators[index];
         name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
         if(WRITE){
+            System.out.println("<table>\n<tr><th>Graph A</th><th>Name A</th><th>Graph B</th><th>Name B</th><th>Graph C</th><th>Name C</th><th>Graph D</th><th>Name D</th></tr>");
             for (int i = 0; i < interpolators.length; i++) {
+                if((i % 4) == 0) System.out.println("<tr>");
                 current = interpolators[i];
+                name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
                 render();
                 Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
                 PixmapIO.writePNG(Gdx.files.local("out/interpolators/" + current.tag + ".png"), pixmap, 9, true);
                 pixmap.dispose();
+                System.out.println("<td><img src=\"interpolators/"+current.tag+".png\" alt=\""+current.tag+"\" /></td><td>"+current.tag+"</td>");
+                if((i % 4) == 3) System.out.println("</tr>\n<br>");
             }
+            System.out.println("</tr>\n</table>");
             Gdx.app.exit();
         }
     }
