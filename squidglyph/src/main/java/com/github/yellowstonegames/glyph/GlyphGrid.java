@@ -72,7 +72,7 @@ public class GlyphGrid extends Group {
      * Constructs a bare-bones GlyphGrid with size 64x64. Does not set {@link #font}, you will have to set it later.
      */
     public GlyphGrid() {
-        this(null, 64, 64, false);
+        this(null, 64, 64, true);
     }
 
     /**
@@ -83,7 +83,7 @@ public class GlyphGrid extends Group {
      * @param font a Font that will be copied and used for the new GlyphGrid
      */
     public GlyphGrid(Font font) {
-        this(font, 64, 64, false);
+        this(font, 64, 64, true);
     }
 
     /**
@@ -96,7 +96,7 @@ public class GlyphGrid extends Group {
      * @param gridHeight how many cells tall the grid should be
      */
     public GlyphGrid(Font font, int gridWidth, int gridHeight) {
-        this(font, gridWidth, gridHeight, false);
+        this(font, gridWidth, gridHeight, true);
     }
 
     /**

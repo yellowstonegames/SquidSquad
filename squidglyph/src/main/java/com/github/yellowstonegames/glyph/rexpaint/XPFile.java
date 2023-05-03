@@ -18,12 +18,14 @@ public class XPFile {
         this.layerCount = layerCount;
         this.layers = layers;
     }
-    public void draw(GlyphGrid terminal)
+    public void intoGlyphGrid(GlyphGrid terminal)
     {
         if(layers.size() < 1)
             return;
+        if(terminal.backgrounds == null)
+            terminal.backgrounds = new int[layers.get(0).width][layers.get(0).height];
         for (int i = 0; i < layers.size(); i++) {
-            layers.get(i).draw(terminal);
+            layers.get(i).intoGlyphGrid(terminal);
         }
     }
 
