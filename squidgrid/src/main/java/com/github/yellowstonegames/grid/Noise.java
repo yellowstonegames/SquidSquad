@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
 
@@ -305,6 +306,17 @@ public class Noise implements INoise {
      */
     WHITE_NOISE = 18;
 
+    public static final IntObjectMap<String> NOISE_TYPES = IntObjectMap.with(
+            VALUE, "Value", VALUE_FRACTAL, "ValueFractal",
+            PERLIN, "Perlin", PERLIN_FRACTAL, "PerlinFractal",
+            SIMPLEX, "Simplex", SIMPLEX_FRACTAL, "SimplexFractal",
+            CELLULAR, "Cellular", CELLULAR_FRACTAL, "CellularFractal",
+            CUBIC, "Cubic", CUBIC_FRACTAL, "CubicFractal",
+            FOAM, "Foam", FOAM_FRACTAL, "FoamFractal",
+            HONEY, "Honey", HONEY_FRACTAL, "HoneyFractal",
+            MUTANT, "Mutant", MUTANT_FRACTAL, "MutantFractal",
+            TAFFY, "Taffy", TAFFY_FRACTAL, "TaffyFractal",
+            WHITE_NOISE, "WhiteNoise");
 
     /**
      * Simple linear interpolation. May result in artificial-looking noise.
@@ -325,6 +337,10 @@ public class Noise implements INoise {
      * Meant to be used with {@link #setInterpolation(int)}.
      */
     public static final int QUINTIC = 2;
+
+    public static final IntObjectMap<String> INTERPOLATIONS = IntObjectMap.with(
+            LINEAR, "Linear", HERMITE, "Hermite", QUINTIC, "Quintic"
+    );
 
     /**
      * "Standard" layered octaves of noise, where each octave has a different frequency and weight.
@@ -362,6 +378,10 @@ public class Noise implements INoise {
      */
     public static final int DOMAIN_WARP = 3;
 
+    public static final IntObjectMap<String> FRACTAL_TYPES = IntObjectMap.with(
+            FBM, "FBM", BILLOW, "Billow", RIDGED_MULTI, "Ridged", DOMAIN_WARP, "DomainWarp"
+    );
+
     /**
      * Measures distances "as the crow flies."
      * All points at an equal distance from the origin form a circle.
@@ -383,6 +403,10 @@ public class Noise implements INoise {
      * Meant to be used with {@link #setCellularDistanceFunction(int)}.
      */
     public static final int NATURAL = 2;
+
+    public static final IntObjectMap<String> CELLULAR_DISTANCE_METRICS = IntObjectMap.with(
+            EUCLIDEAN, "Euclidean", MANHATTAN, "Manhattan", NATURAL, "Natural"
+    );
 
     /**
      * Meant to be used with {@link #setCellularReturnType(int)}.
@@ -421,6 +445,12 @@ public class Noise implements INoise {
      * Meant to be used with {@link #setCellularReturnType(int)}.
      */
     public static final int DISTANCE_VALUE = 8;
+
+    public static final IntObjectMap<String> CELLULAR_RETURN_TYPES = IntObjectMap.with(
+            CELL_VALUE, "CellValue", NOISE_LOOKUP, "NoiseLookup",
+            DISTANCE_2, "Distance2", DISTANCE_2_ADD, "Distance2Add", DISTANCE_2_SUB, "Distance2Sub",
+            DISTANCE_2_MUL, "Distance2Mul", DISTANCE_2_DIV, "Distance2Div", DISTANCE_VALUE, "DistanceValue"
+    );
 
     /**
      * @see #getSeed()
@@ -626,6 +656,33 @@ public class Noise implements INoise {
         return "NoiN";
     }
 
+    public StringBuilder appendPretty(StringBuilder sb) {
+        sb.append("Noise {")
+                .append("\n  Noise Type: ").append(NOISE_TYPES.getOrDefault(noiseType, "???"))
+                .append("\n  Fractal Type: ").append(FRACTAL_TYPES.getOrDefault(fractalType, "???"))
+                .append("\n  Frequency: ").append(frequency)
+                .append("\n  Octaves: ").append(octaves)
+                .append("\n  Seed: ").append(seed)
+                .append("\n  Lacunarity: ").append(lacunarity)
+                .append("\n  Gain: ").append(gain)
+                .append("\n  Sharpness: ").append(sharpness)
+                .append("\n  Mutation: ").append(mutation)
+                .append("\n  Interpolation: ").append(INTERPOLATIONS.getOrDefault(interpolation, "???"))
+                .append("\n  Fractal Spiral: ").append(fractalSpiral)
+                .append("\n  Cellular Distance Metric: ").append(CELLULAR_DISTANCE_METRICS.getOrDefault(cellularDistanceFunction, "???"))
+                .append("\n  Cellular Return Type: ").append(CELLULAR_RETURN_TYPES.getOrDefault(cellularReturnType, "???"))
+                .append("\n  Gradient Perturb Amplitude: ").append(gradientPerturbAmp)
+        ;
+        return sb.append("\n}");
+    }
+
+    public String toPrettyString() {
+        return appendPretty(new StringBuilder()).toString();
+    }
+
+    public void prettyPrint() {
+        System.out.println(appendPretty(new StringBuilder()));
+    }
     /**
      * Writes all fields of this Noise (except for the {@link #getPointHash()}, which must be stored separately) to a
      * String and returns it. The result of this method can be used by {@link #deserializeFromString(String)}, though if
