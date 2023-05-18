@@ -29,9 +29,11 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.grid.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import static com.badlogic.gdx.Input.Keys.*;
+import static com.badlogic.gdx.graphics.GL20.GL_LINES;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 import static com.github.yellowstonegames.grid.BlueNoise.TILE_NOISE;
 
@@ -71,6 +73,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final double[][] real = new double[width][height], imag = new double[width][height];
     private final double[][] realKnown = new double[width][height], imagKnown = new double[width][height];
     private final float[][] colors = new float[width][height];
+    private final int[] freq0 = new int[256];
+    private static final float LIGHT_YELLOW = Color.toFloatBits(1f, 1f, 0.4f, 1f);
+
     private InputAdapter input;
 
     private Viewport view;
@@ -88,9 +93,11 @@ public class FFTVisualizer extends ApplicationAdapter {
     private FastGif gif;
     private Array<Pixmap> frames = new Array<>(256);
 
-    public static float basicPrepare(float n)
+    public float basicPrepare(float n)
     {
-        return n * 0.5f + 0.5f;
+        n = n * 0.5f + 0.5f;
+        freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length -1)]++;
+        return n;
     }
 
     public static double basicPrepare(double n)
@@ -321,6 +328,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     }
 
     public void putMap() {
+        Arrays.fill(freq0, 0);
         if(Gdx.input.isKeyPressed(UP))
             threshold = Math.min(1, threshold + (1f/255f));
         else if(Gdx.input.isKeyPressed(DOWN))
@@ -1603,6 +1611,21 @@ public class FFTVisualizer extends ApplicationAdapter {
             }
         }
         renderer.end();
+        if(Gdx.input.isKeyPressed(A)){ // Analysis
+            renderer.begin(view.getCamera().combined, GL_LINES);
+            for (int i = 0; i < 255; i++) {
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i, freq0[i] * 0x1p-3f, 0);
+                renderer.color(LIGHT_YELLOW);
+                renderer.vertex(i+1, freq0[i+1] * 0x1p-3f, 0);
+            }
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(255, 0 * 0x1p-3f, 0);
+            renderer.color(LIGHT_YELLOW);
+            renderer.vertex(256, 0 * 0x1p-3f, 0);
+            renderer.end();
+        }
+
     }
 
     /**
