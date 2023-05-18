@@ -90,7 +90,7 @@ public class TextTest {
         kryo.register(ObjectObjectMap.class, new ObjectObjectMapSerializer());
         kryo.register(Translator.class, new TranslatorSerializer());
 
-        String sentence = "For you, I can translate; I will lower my steep rate; to something affordable; since you are adorable.";
+        String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
         Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L), t2;
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32);

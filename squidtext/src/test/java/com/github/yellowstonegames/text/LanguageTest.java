@@ -255,7 +255,7 @@ public class LanguageTest {
 
     }
     @Test
-    public void testNaturalCipher()
+    public void testTranslator()
     {
         if(!"true".equals(System.getenv("printing"))) return;
 

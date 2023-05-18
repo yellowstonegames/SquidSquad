@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.EnhancedRandom;
 import regexodus.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -107,10 +108,16 @@ public class Translator{
         public long nextLong() {
             // guarantees all possible states will be used, eventually, for any starting input.
             long s = ++state;
-            // the next two lines are the smallest, weakest possible XorShift generator, though
-            // they are given a counter instead of their last result, which weakens them further.
-            s ^= s << 7;
-            return s ^ s >>> 9;
+//            // the next two lines are the smallest, weakest possible XorShift generator, though
+//            // they are given a counter instead of their last result, which weakens them further.
+//            s ^= s << 7;
+//            return s ^ s >>> 9;
+            // returning the square is an option; it will alternate even and odd results.
+//            return s * s;
+            // this returns s times the Gray code of s.
+            // sequential Gray codes don't alternate even and odd results, which (surprisingly) worsens the output here.
+            // nextLong() will return an even number about 3x as often as it returns an odd one.
+            return s * (s ^ s >>> 1);
         }
 
         @Override
@@ -454,6 +461,12 @@ se$->z
         rng.setState(0xDF58476D1CE4E5B9L + shift);
         this.shift = shift;
         this.language = language.copy();
+        Arrays.sort(this.language.openingVowels);
+        Arrays.sort(this.language.openingConsonants);
+        Arrays.sort(this.language.midVowels);
+        Arrays.sort(this.language.midConsonants);
+        Arrays.sort(this.language.closingConsonants);
+        Arrays.sort(this.language.closingSyllables);
         table.clear();
         reverse.clear();
         pluralSuffix = addPart("-s", 0);
