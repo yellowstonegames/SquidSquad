@@ -22,6 +22,9 @@ import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
 
+import static com.github.yellowstonegames.core.DescriptiveColor.lerpColors;
+import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
+
 /**
  * Provides a way to assign biomes to points on a world or area map, and retrieve those biomes or the heat/moisture
  * levels those biomes depend on. After constructing a BiomeMapper and generating a world with a
@@ -695,6 +698,7 @@ public interface BiomeMapper {
             heatCodeData = null;
             moistureCodeData = null;
             biomeCodeData = null;
+            colorData = null;
         }
 
         /**
@@ -790,15 +794,32 @@ public interface BiomeMapper {
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
                     moistMix = Interpolations.smoother.apply(moistMix);
                     hotMix = Interpolations.smoother.apply(hotMix);
-                    colorData[x][y] = DescriptiveColor.lerpColors(
-                            DescriptiveColor.lerpColors(
-                                    Biome.TABLE[hotLow + wetLow * 6].colorOklab,
-                                    Biome.TABLE[hotLow + wetHigh * 6].colorOklab, moistMix),
-                            DescriptiveColor.lerpColors(
-                                    Biome.TABLE[hotHigh + wetLow * 6].colorOklab,
-                                    Biome.TABLE[hotHigh + wetHigh * 6].colorOklab, moistMix),
-                            hotMix
-                    );
+                    if(hc == 0 && heightCode <= 3){
+                        colorData[x][y] = lerpColors(Biome.TABLE[50].colorOklab, Biome.TABLE[12].colorOklab,
+                                ((world.heightData[x][y] + 1f) / (WorldMapGenerator.sandLower + 1f)));
+                    }
+                    else if(hc == 0 && heightCode == 4){
+                        colorData[x][y] = lerpColors(Biome.TABLE[0].colorOklab, Biome.TABLE[12].colorOklab,
+                                ((world.heightData[x][y] - WorldMapGenerator.sandLower)
+                                        / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower)));
+                    }
+                    else if(heightCode <= 3) {
+                        colorData[x][y] = lerpColors(Biome.TABLE[56].colorOklab, Biome.TABLE[43].colorOklab,
+                                Math.min(Math.max(((world.heightData[x][y] + 0.1f) * 7f)
+                                        / (WorldMapGenerator.sandLower + 1f), 0f), 1f));
+
+                    }
+                    else {
+                        colorData[x][y] = DescriptiveColor.lerpColors(
+                                DescriptiveColor.lerpColors(
+                                        Biome.TABLE[hotLow + wetLow * 6].colorOklab,
+                                        Biome.TABLE[hotLow + wetHigh * 6].colorOklab, moistMix),
+                                DescriptiveColor.lerpColors(
+                                        Biome.TABLE[hotHigh + wetLow * 6].colorOklab,
+                                        Biome.TABLE[hotHigh + wetHigh * 6].colorOklab, moistMix),
+                                hotMix
+                        );
+                    }
                 }
             }
         }

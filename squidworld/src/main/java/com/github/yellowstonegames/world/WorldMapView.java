@@ -210,31 +210,27 @@ public class WorldMapView {
         int[][] biomeCodeData = biomeMapper.biomeCodeData;
 
         for (int y = 0; y < height; y++) {
-            PER_CELL:
             for (int x = 0; x < width; x++) {
                 hc = heightCodeData[x][y];
-                if(hc == 1000)
-                {
+                if (hc == 1000) {
                     colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = BIOME_COLOR_TABLE[60]);
                     continue;
                 }
                 tc = heatCodeData[x][y];
                 bc = biomeCodeData[x][y];
-                if(tc == 0)
-                {
-                    switch (hc)
-                    {
+                if (tc == 0) {
+                    switch (hc) {
                         case 0:
                         case 1:
                         case 2:
                         case 3:
                             colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[50], BIOME_COLOR_TABLE[12],
-                                    ((heightData[x][y] - -1f) / (WorldMapGenerator.sandLower - -1f))));
-                            continue PER_CELL;
+                                    ((heightData[x][y] + 1f) / (WorldMapGenerator.sandLower + 1f))));
+                            continue;
                         case 4:
                             colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[0], BIOME_COLOR_TABLE[12],
                                     ((heightData[x][y] - WorldMapGenerator.sandLower) / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower))));
-                            continue PER_CELL;
+                            continue;
                     }
                 }
                 switch (hc) {
