@@ -570,7 +570,10 @@ public interface BiomeMapper {
          * The biome codes for the analyzed map, using one int to store the dominant biome only.
          */
         biomeCodeData,
-
+        /**
+         * Packed Oklab colors as ints, one for each cell in the analyzed map, representing a smooth blend between the
+         * biomes closest to the given cell.
+         */
         colorData;
 
 
@@ -626,7 +629,24 @@ public interface BiomeMapper {
                 wetterValueUpper  = 0.9f,  // 4
                 wettestValueUpper = 1.0f;  // 5
 
-        public static final float[] HEAT = new float[]{
+        public static final float[] HEAT_LOWER = new float[]{
+                0f,
+                coldestValueUpper,
+                colderValueUpper,
+                coldValueUpper,
+                warmValueUpper,
+                warmerValueUpper,
+        };
+        public static final float[] MOISTURE_LOWER = new float[]{
+                0f,
+                driestValueUpper,
+                drierValueUpper,
+                dryValueUpper,
+                wetValueUpper,
+                wetterValueUpper,
+        };
+
+        public static final float[] HEAT_UPPER = new float[]{
                 coldestValueUpper,
                 colderValueUpper,
                 coldValueUpper,
@@ -634,7 +654,7 @@ public interface BiomeMapper {
                 warmerValueUpper,
                 warmestValueUpper,
         };
-        public static final float[] MOISTURE = new float[]{
+        public static final float[] MOISTURE_UPPER = new float[]{
                 driestValueUpper,
                 drierValueUpper,
                 dryValueUpper,
@@ -642,22 +662,26 @@ public interface BiomeMapper {
                 wetterValueUpper,
                 wettestValueUpper,
         };
-        public static final float[] HEAT_MAPPED = new float[]{
-                MathTools.map(0.15f, 1f, 0f, 1f, coldestValueUpper),
-                MathTools.map(0.15f, 1f, 0f, 1f, colderValueUpper),
-                MathTools.map(0.15f, 1f, 0f, 1f, coldValueUpper),
-                MathTools.map(0.15f, 1f, 0f, 1f, warmValueUpper),
-                MathTools.map(0.15f, 1f, 0f, 1f, warmerValueUpper),
-                MathTools.map(0.15f, 1f, 0f, 1f, warmestValueUpper),
+        public static final float[] HEAT_MID = new float[]{
+//                (coldestValueUpper) * -0.5f,
+                (coldestValueUpper) * 0.5f,
+                (colderValueUpper + coldestValueUpper) * 0.5f,
+                (coldValueUpper + colderValueUpper) * 0.5f,
+                (warmValueUpper + coldValueUpper) * 0.5f,
+                (warmerValueUpper + warmValueUpper) * 0.5f,
+                (warmestValueUpper + warmerValueUpper) * 0.5f,
+//                2f - (warmestValueUpper + warmerValueUpper) * 0.5f,
         };
 
-        public static final float[] MOISTURE_MAPPED = new float[]{
-                MathTools.map(0.27f, 1f, 0f, 1f, driestValueUpper),
-                MathTools.map(0.27f, 1f, 0f, 1f, drierValueUpper),
-                MathTools.map(0.27f, 1f, 0f, 1f, dryValueUpper),
-                MathTools.map(0.27f, 1f, 0f, 1f, wetValueUpper),
-                MathTools.map(0.27f, 1f, 0f, 1f, wetterValueUpper),
-                MathTools.map(0.27f, 1f, 0f, 1f, wettestValueUpper),
+        public static final float[] MOISTURE_MID = new float[]{
+//                (driestValueUpper) * -0.5f,
+                (driestValueUpper) * 0.5f,
+                (drierValueUpper + driestValueUpper) * 0.5f,
+                (dryValueUpper + drierValueUpper) * 0.5f,
+                (wetValueUpper + dryValueUpper) * 0.5f,
+                (wetterValueUpper + wetValueUpper) * 0.5f,
+                (wettestValueUpper + wetterValueUpper) * 0.5f,
+//                2f - (wettestValueUpper + wetterValueUpper) * 0.5f,
         };
 
         /**
@@ -692,7 +716,8 @@ public interface BiomeMapper {
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             int hc = 5, mc = 5, heightCode;
-            float hot, moist, i_hot = 1f / world.maxHeat;
+            float hot, moist, i_hot = 1f / world.maxHeat, hotMix, moistMix;
+            int wetLow, wetHigh, hotLow, hotHigh;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
 
@@ -702,17 +727,53 @@ public interface BiomeMapper {
                         colorData[x][y] = Biome.TABLE[60].colorOklab;
                         continue;
                     }
-                    hot = heatData[x][y];
+                    hot = heatData[x][y] * i_hot;
                     moist = moistureData[x][y];
                     for (int i = 0; i < 6; i++) {
-                        if(moist <= MOISTURE[i]) {
+                        if(moist <= MOISTURE_UPPER[i]) {
                             mc = i;
+                            if(moist <= MOISTURE_MID[0]) {
+                                moistMix = 1f;
+                                wetLow = wetHigh = 0;
+                            }
+                            else if(moist > MOISTURE_MID[5]) {
+                                moistMix = 0f;
+                                wetLow = wetHigh = 5;
+                            }
+                            else if(moist <= MOISTURE_MID[i]) {
+                                moistMix = MathTools.map(MOISTURE_MID[i - 1], MOISTURE_MID[i], 0f, 1f, moist);
+                                wetLow = i-1;
+                                wetHigh = i;
+                            }
+                            else {
+                                moistMix = MathTools.map(MOISTURE_MID[i], MOISTURE_MID[i + 1], 0f, 1f, moist);
+                                wetLow = i;
+                                wetHigh = i+1;
+                            }
                             break;
                         }
                     }
                     for (int i = 0; i < 6; i++) {
-                        if(hot <= HEAT[i] * i_hot) {
+                        if(hot <= HEAT_UPPER[i]) {
                             hc = i;
+                            if(hot <= HEAT_MID[0]) {
+                                hotMix = 1f;
+                                hotLow = hotHigh = 0;
+                            }
+                            else if(hot > HEAT_MID[5]) {
+                                hotMix = 0f;
+                                hotLow = hotHigh = 5;
+                            }
+                            else if(hot <= HEAT_MID[i]) {
+                                hotMix = MathTools.map(HEAT_MID[i - 1], HEAT_MID[i], 0f, 1f, hot);
+                                hotLow = i-1;
+                                hotHigh = i;
+                            }
+                            else {
+                                hotMix = MathTools.map(HEAT_MID[i], HEAT_MID[i + 1], 0f, 1f, hot);
+                                hotLow = i;
+                                hotHigh = i+1;
+                            }
                             break;
                         }
                     }
@@ -720,11 +781,10 @@ public interface BiomeMapper {
                     heatCodeData[x][y] = hc;
                     moistureCodeData[x][y] = mc;
                     // 54 == 9 * 6, 9 is used for Ocean groups
-                    colorData[x][y] = Biome.TABLE[
-                            biomeCodeData[x][y]
+                    biomeCodeData[x][y]
                             = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
-                            : heightCode == 4 ? hc + 36 : hc + mc * 6
-                            ].colorOklab;
+                            : heightCode == 4 ? hc + 36 : hc + mc * 6;
+                    colorData[x][y] = Biome.TABLE[biomeCodeData[x][y]].colorOklab;
                 }
             }
         }
