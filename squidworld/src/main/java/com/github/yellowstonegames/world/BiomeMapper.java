@@ -17,6 +17,8 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
 
@@ -715,9 +717,8 @@ public interface BiomeMapper {
                 colorData = new int[world.width][world.height];
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
+            final float i_hot = 1f / world.maxHeat;
             int hc = 5, mc = 5, heightCode;
-            float hot, moist, i_hot = 1f / world.maxHeat, hotMix, moistMix;
-            int wetLow, wetHigh, hotLow, hotHigh;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
 
@@ -727,6 +728,9 @@ public interface BiomeMapper {
                         colorData[x][y] = Biome.TABLE[60].colorOklab;
                         continue;
                     }
+                    float hot, moist;
+                    float hotMix = 0.5f, moistMix = 0.5f;
+                    int wetLow = 0, wetHigh = 5, hotLow = 0, hotHigh = 5;
                     hot = heatData[x][y] * i_hot;
                     moist = moistureData[x][y];
                     for (int i = 0; i < 6; i++) {
@@ -784,7 +788,17 @@ public interface BiomeMapper {
                     biomeCodeData[x][y]
                             = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
-                    colorData[x][y] = Biome.TABLE[biomeCodeData[x][y]].colorOklab;
+                    moistMix = Interpolations.smoother.apply(moistMix);
+                    hotMix = Interpolations.smoother.apply(hotMix);
+                    colorData[x][y] = DescriptiveColor.lerpColors(
+                            DescriptiveColor.lerpColors(
+                                    Biome.TABLE[hotLow + wetLow * 6].colorOklab,
+                                    Biome.TABLE[hotLow + wetHigh * 6].colorOklab, moistMix),
+                            DescriptiveColor.lerpColors(
+                                    Biome.TABLE[hotHigh + wetLow * 6].colorOklab,
+                                    Biome.TABLE[hotHigh + wetHigh * 6].colorOklab, moistMix),
+                            hotMix
+                    );
                 }
             }
         }
