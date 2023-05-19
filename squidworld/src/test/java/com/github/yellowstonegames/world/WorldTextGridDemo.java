@@ -42,8 +42,8 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private static final int bigWidth = 512, bigHeight = 256;
 //    private static final int bigWidth = 2048, bigHeight = 1024;
     //private static final int bigWidth = 400, bigHeight = 400;
-    private static final int cellWidth = 16, cellHeight = 16;
-    private static final int shownWidth = 96, shownHeight = 48;
+    private static final int cellWidth = 24, cellHeight = 24;
+    private static final int shownWidth = 64, shownHeight = 32;
     private Stage stage;
     private GlyphGrid display;//, overlay;
     private InputProcessor input;
@@ -77,8 +77,8 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     public void create() {
         stage = new Stage();
         display = new GlyphGrid(
-                KnownFonts.getIosevkaSlab().scaleTo(cellWidth, cellHeight),
-                bigWidth, bigHeight);
+                KnownFonts.getIosevka().adjustLineHeight(1.25f),
+                bigWidth, bigHeight, true);
         view = display.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seedA = 1234567890L;
