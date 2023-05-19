@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
 
 /**
@@ -224,7 +225,6 @@ public interface BiomeMapper {
                         continue;
                     }
                     int hc, mc;
-                    boolean isLake = false;
                     if(heightCode < 4) {
                         mc = 9;
                     }
@@ -259,8 +259,9 @@ public interface BiomeMapper {
                     heatCodeData[x][y] = hc;
                     moistureCodeData[x][y] = mc;
                     // 54 == 9 * 6, 9 is used for Ocean groups
+                    // 54 == 9 * 6, 9 is used for Ocean groups
                     biomeCodeData[x][y] = heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
-                            : isLake ? hc + 48 : heightCode == 4 ? hc + 36 : hc + mc * 6;
+                            : heightCode == 4 ? hc + 36 : hc + mc * 6;
                 }
             }
         }
@@ -467,7 +468,6 @@ public interface BiomeMapper {
                     hot = heatData[x][y];
                     moist = moistureData[x][y];
                     high = heightData[x][y];
-                    boolean isLake = false;
                     if (moist >= (wettestValueUpper - (wetterValueUpper - wetterValueLower) * 0.2f)) {
                         mc = 5;
                     } else if (moist >= (wetterValueUpper - (wetValueUpper - wetValueLower) * 0.2f)) {
@@ -498,8 +498,9 @@ public interface BiomeMapper {
 
                     heatCodeData[x][y] = hc;
                     moistureCodeData[x][y] = mc;
+                    // 54 == 9 * 6, 9 is used for Ocean groups
                     bc = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
-                            : isLake ? hc + 48 : heightCode == 4 ? hc + 36 : hc + mc * 6;
+                            : heightCode == 4 ? hc + 36 : hc + mc * 6;
 
                     if(heightCode < 4) {
                         mc = 9;
@@ -532,16 +533,198 @@ public interface BiomeMapper {
                     }
 
 //                    bc |= (hc + mc * 6) << 10;
+                    // 54 == 9 * 6, 9 is used for Ocean groups
                     bc |= (heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
-                           : isLake ? hc + 48 : hc + mc * 6) << 10;
+                           : hc + mc * 6) << 10;
 
                     if(heightCode < 4)
                         biomeCodeData[x][y] = bc | (int)((heightData[x][y] + 1.0f) * 1000.0f) << 20;
                     else {
-                        biomeCodeData[x][y] = bc | (int) ((heightCode == 4)
+                        biomeCodeData[x][y] = bc | (int) (
+                                (heightCode == 4)
                                 ? 1024.0f - (WorldMapGenerator.sandUpper - high) * 10240.0f
-                                : MathTools.zigzag((high + moist) * (4.1f + high - hot)) * 512.0f + 512.0f) << 20;
+                                : MathTools.zigzag((high + moist) * (4.1f + high - hot)) * 512.0f + 512.0f
+                        ) << 20;
                     }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Does not currently blend! A work in progress.
+     */
+    @Beta
+    class BlendedBiomeMapper implements BiomeMapper
+    {
+        /**
+         * The heat codes for the analyzed map, from 0 to 5 inclusive, with 0 coldest and 5 hottest.
+         */
+        public int[][] heatCodeData,
+        /**
+         * The moisture codes for the analyzed map, from 0 to 5 inclusive, with 0 driest and 5 wettest.
+         */
+        moistureCodeData,
+        /**
+         * The biome codes for the analyzed map, using one int to store the dominant biome only.
+         */
+        biomeCodeData,
+
+        colorData;
+
+
+        /**
+         * Gets the biome code for the dominant biome at a given x,y position.
+         * @param x the x-coordinate on the map
+         * @param y the y-coordinate on the map
+         * @return the biome code for the dominant biome part at the given location
+         */
+        @Override
+        public int getBiomeCode(int x, int y) {
+            return biomeCodeData[x][y];
+        }
+
+        @Override
+        public int getHeatCode(int x, int y) {
+            return heatCodeData[x][y];
+        }
+
+        @Override
+        public int getMoistureCode(int x, int y) {
+            return moistureCodeData[x][y];
+        }
+
+        /**
+         * Gets a String array where biome codes can be used as indices to look up a name for the biome they refer to.
+         * This table uses 6 levels of heat and 6 levels of moisture, and tracks rivers, coastlines, lakes, and oceans
+         * as potentially different types of terrain. Biome codes can be obtained with {@link #getBiomeCode(int, int)}.
+         * This method returns a direct reference to {@link Biome#TABLE}, so modifying the returned array is discouraged
+         * (you should implement {@link BiomeMapper} using this class as a basis if you want to change its size).
+         * <br>
+         * Like with {@link SimpleBiomeMapper}, you can use a biome code directly from biomeCodeData as an index
+         * into this.
+         * @return a direct reference to {@link Biome#TABLE}, a Biome array with 66 items
+         */
+        @Override
+        public Biome[] getBiomeTable() {
+            return Biome.TABLE;
+        }
+
+        public static final float
+                coldestValueUpper = 0.15f, // 0
+                colderValueUpper = 0.31f,  // 1
+                coldValueUpper = 0.5f,     // 2
+                warmValueUpper = 0.69f,     // 3
+                warmerValueUpper = 0.85f,   // 4
+                warmestValueUpper = 1.0f,  //5
+        
+                driestValueUpper  = 0.27f, // 0
+                drierValueUpper   = 0.4f,  // 1
+                dryValueUpper     = 0.6f,  // 2
+                wetValueUpper     = 0.8f,  // 3
+                wetterValueUpper  = 0.9f,  // 4
+                wettestValueUpper = 1.0f;  // 5
+
+        public static final float[] HEAT = new float[]{
+                coldestValueUpper,
+                colderValueUpper,
+                coldValueUpper,
+                warmValueUpper,
+                warmerValueUpper,
+                warmestValueUpper,
+        };
+        public static final float[] MOISTURE = new float[]{
+                driestValueUpper,
+                drierValueUpper,
+                dryValueUpper,
+                wetValueUpper,
+                wetterValueUpper,
+                wettestValueUpper,
+        };
+        public static final float[] HEAT_MAPPED = new float[]{
+                MathTools.map(0.15f, 1f, 0f, 1f, coldestValueUpper),
+                MathTools.map(0.15f, 1f, 0f, 1f, colderValueUpper),
+                MathTools.map(0.15f, 1f, 0f, 1f, coldValueUpper),
+                MathTools.map(0.15f, 1f, 0f, 1f, warmValueUpper),
+                MathTools.map(0.15f, 1f, 0f, 1f, warmerValueUpper),
+                MathTools.map(0.15f, 1f, 0f, 1f, warmestValueUpper),
+        };
+
+        public static final float[] MOISTURE_MAPPED = new float[]{
+                MathTools.map(0.27f, 1f, 0f, 1f, driestValueUpper),
+                MathTools.map(0.27f, 1f, 0f, 1f, drierValueUpper),
+                MathTools.map(0.27f, 1f, 0f, 1f, dryValueUpper),
+                MathTools.map(0.27f, 1f, 0f, 1f, wetValueUpper),
+                MathTools.map(0.27f, 1f, 0f, 1f, wetterValueUpper),
+                MathTools.map(0.27f, 1f, 0f, 1f, wettestValueUpper),
+        };
+
+        /**
+         * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
+         * using fields like {@link #biomeCodeData}.
+         */
+        public BlendedBiomeMapper()
+        {
+            heatCodeData = null;
+            moistureCodeData = null;
+            biomeCodeData = null;
+        }
+
+        /**
+         * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
+         * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
+         * taken from {@link #biomeCodeData} and (packed Oklab int) colors from {@link #colorData}.
+         * @param world a WorldMapGenerator that should have generated at least one map; it may be at any zoom
+         */
+        @Override
+        public void makeBiomes(WorldMapGenerator world) {
+            if(world == null || world.width <= 0 || world.height <= 0)
+                return;
+            if(heatCodeData == null || (heatCodeData.length != world.width || heatCodeData[0].length != world.height))
+                heatCodeData = new int[world.width][world.height];
+            if(moistureCodeData == null || (moistureCodeData.length != world.width || moistureCodeData[0].length != world.height))
+                moistureCodeData = new int[world.width][world.height];
+            if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
+                biomeCodeData = new int[world.width][world.height];
+            if(colorData == null || (colorData.length != world.width || colorData[0].length != world.height))
+                colorData = new int[world.width][world.height];
+            final int[][] heightCodeData = world.heightCodeData;
+            final float[][] heatData = world.heatData, moistureData = world.moistureData;
+            int hc = 5, mc = 5, heightCode;
+            float hot, moist, i_hot = 1f / world.maxHeat;
+            for (int x = 0; x < world.width; x++) {
+                for (int y = 0; y < world.height; y++) {
+
+                    heightCode = heightCodeData[x][y];
+                    if(heightCode == 1000) {
+                        biomeCodeData[x][y] = 60;
+                        colorData[x][y] = Biome.TABLE[60].colorOklab;
+                        continue;
+                    }
+                    hot = heatData[x][y];
+                    moist = moistureData[x][y];
+                    for (int i = 0; i < 6; i++) {
+                        if(moist <= MOISTURE[i]) {
+                            mc = i;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < 6; i++) {
+                        if(hot <= HEAT[i] * i_hot) {
+                            hc = i;
+                            break;
+                        }
+                    }
+
+                    heatCodeData[x][y] = hc;
+                    moistureCodeData[x][y] = mc;
+                    // 54 == 9 * 6, 9 is used for Ocean groups
+                    colorData[x][y] = Biome.TABLE[
+                            biomeCodeData[x][y]
+                            = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
+                            : heightCode == 4 ? hc + 36 : hc + mc * 6
+                            ].colorOklab;
                 }
             }
         }
