@@ -51,14 +51,6 @@ public class BlendedWorldMapView {
         return biomeMapper.colorDataOklab;
     }
 
-    public INoise getShading() {
-        return biomeMapper.shadingNoise;
-    }
-
-    public void setShading(INoise shadingNoise) {
-        biomeMapper.shadingNoise = shadingNoise;
-    }
-
     public BlendedBiomeMapper getBiomeMapper() {
         return biomeMapper;
     }

@@ -592,8 +592,6 @@ public interface BiomeMapper {
 
         public final int[] colorTable = new int[66];
 
-        public INoise shadingNoise;
-
         /**
          * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
          * using fields like {@link #biomeCodeData}.
@@ -605,11 +603,6 @@ public interface BiomeMapper {
             biomeCodeData = null;
             colorDataOklab = null;
             initialize();
-        }
-
-        public BlendedBiomeMapper(INoise shadingNoise) {
-            this();
-            this.shadingNoise = shadingNoise;
         }
 
         public void setColorTable(int[] oklabColors) {
@@ -904,7 +897,7 @@ public interface BiomeMapper {
                                         / (WorldMapGenerator.sandLower + 1f), 0f), 1f));
                     }
                     else {
-                        int c = DescriptiveColor.lerpColors(
+                        colorDataOklab[x][y] = DescriptiveColor.adjustLightness(DescriptiveColor.lerpColors(
                                 DescriptiveColor.lerpColors(
                                         colorTable[hotLow + wetLow * 6],
                                         colorTable[hotLow + wetHigh * 6], moistMix),
@@ -912,11 +905,7 @@ public interface BiomeMapper {
                                         colorTable[hotHigh + wetLow * 6],
                                         colorTable[hotHigh + wetHigh * 6], moistMix),
                                 hotMix
-                        );
-                        if(shadingNoise != null){
-                            c = DescriptiveColor.adjustLightness(c, shadingNoise.getNoise(x, y) * 0.06f);
-                        }
-                        colorDataOklab[x][y] = c;
+                        ), 0.02f - moist * 0.09f);
                     }
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }
