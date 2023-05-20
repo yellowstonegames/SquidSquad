@@ -27,7 +27,7 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
-//    private static final int width = 1920, height = 1080;
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
@@ -37,7 +37,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 
-    private static final int width = 512, height = 512;
+//    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
@@ -92,7 +92,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
-        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 2f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
         noise = fn;
@@ -109,12 +110,12 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
-        world = new GlobeMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new GlobeMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
@@ -127,6 +128,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
         wmv = new DetailedWorldMapView(world);
+//        wmv = new BlendedWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
@@ -137,6 +139,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/HyperellipseTaffy/";
 //        path = "out/worlds/" + date + "/HyperellipseSimplex/";
 //        path = "out/worlds/" + date + "/HyperellipseFoam/";
+        path = "out/worlds/" + date + "/HyperellipseFoam/";
 //        path = "out/worlds/" + date + "/EllipseFoam/";
 //        path = "out/worlds/" + date + "/HexagonFoam/";
 //        path = "out/worlds/" + date + "/HexagonTaffy/";
@@ -146,13 +149,13 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/MimicSimplex2/";
 //        path = "out/worlds/" + date + "/RoundSideSimplex2/";
 //        path = "out/worlds/" + date + "/RoundSideFoam/";
-        path = "out/worlds/" + date + "/TilingFoam/";
+//        path = "out/worlds/" + date + "/TilingFoam/";
 //        path = "out/worlds/" + date + "/LocalFoam/";
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
 
         if(classNameMode)
-            path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "/";
+            path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_" + wmv.getClass().getSimpleName() + "/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();

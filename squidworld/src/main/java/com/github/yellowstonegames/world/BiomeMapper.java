@@ -848,10 +848,12 @@ public interface BiomeMapper {
                 biomeCodeData = new int[world.width][world.height];
             if(colorDataOklab == null || (colorDataOklab.length != world.width || colorDataOklab[0].length != world.height))
                 colorDataOklab = new int[world.width][world.height];
+            if(colorDataRgba == null || (colorDataRgba.length != world.width || colorDataRgba[0].length != world.height))
+                colorDataRgba = new int[world.width][world.height];
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             final float i_hot = 1f / world.maxHeat;
-            final float con = 0.09f * contrast;
+            final float con = 0.2f * contrast;
             int hc = 5, mc = 5, heightCode;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
