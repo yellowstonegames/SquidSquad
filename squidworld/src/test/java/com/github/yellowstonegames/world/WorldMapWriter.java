@@ -50,7 +50,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 
     private Thesaurus thesaurus;
 
-    private boolean classNameMode = true;
+    private boolean classNameMode = false;
     private String makeName(final Thesaurus thesaurus)
     {
         return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
@@ -93,7 +93,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 2f, Noise.FOAM_FRACTAL, 1);
+        Noise fn = new Noise((int) seed, 1.8f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
         noise = fn;
@@ -110,7 +110,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 1.1f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
@@ -127,8 +127,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
-        wmv = new DetailedWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
+//        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
@@ -154,8 +154,9 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/StretchFoam/";
 //        path = "out/worlds/" + date + "/LatLonFoam/";
 
-        if(classNameMode)
-            path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_" + wmv.getClass().getSimpleName() + "/";
+        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
+                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
+                    + wmv.getClass().getSimpleName() + "/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();

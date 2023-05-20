@@ -941,15 +941,19 @@ public interface BiomeMapper {
                                         / (WorldMapGenerator.sandLower + 1f), 0f), 1f));
                     }
                     else {
-                        colorDataOklab[x][y] = DescriptiveColor.adjustLightness(DescriptiveColor.lerpColors(
-                                DescriptiveColor.lerpColors(
+                        int c = lerpColors(
+                                lerpColors(
                                         colorTable[hotLow + wetLow * 6],
                                         colorTable[hotLow + wetHigh * 6], moistMix),
-                                DescriptiveColor.lerpColors(
+                                lerpColors(
                                         colorTable[hotHigh + wetLow * 6],
                                         colorTable[hotHigh + wetHigh * 6], moistMix),
                                 hotMix
-                        ), 0.02f - moist * con);
+                        );
+                        if(heightCode == 4) {
+                            c = lerpColors(colorTable[hc + 36], c, 1f - 10f * (WorldMapGenerator.sandUpper - world.heightData[x][y]));
+                        }
+                        colorDataOklab[x][y] = DescriptiveColor.adjustLightness(c, 0.02f - moist * con);
                     }
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }
