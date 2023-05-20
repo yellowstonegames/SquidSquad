@@ -16,14 +16,17 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
 
-import static com.github.yellowstonegames.core.DescriptiveColor.lerpColors;
-import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
+import java.util.Random;
+
+import static com.github.tommyettinger.digital.MathTools.zigzag;
+import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 /**
  * Provides a way to assign biomes to points on a world or area map, and retrieve those biomes or the heat/moisture
@@ -579,8 +582,91 @@ public interface BiomeMapper {
          * Packed Oklab colors as ints, one for each cell in the analyzed map, representing a smooth blend between the
          * biomes closest to the given cell.
          */
-        colorData;
+        colorDataOklab,
+        /**
+         * Packed RGBA8888 colors as ints, one for each cell in the analyzed map, representing a smooth blend between
+         * the biomes closest to the given cell. This is typically generated from {@link #colorDataOklab}.
+         */
+        colorDataRgba;
 
+        public final int[] colorTable = new int[66];
+
+        public void setColorTable(int[] oklabColors) {
+            if(oklabColors == null || oklabColors.length < 66)
+                throw new IllegalArgumentException("The array of colors must be non-null and have length of at least 66.");
+            System.arraycopy(oklabColors, 0, colorTable, 0, 66);
+        }
+
+        public void initialize()
+        {
+            for (int i = 0; i < 66; i++) {
+                colorTable[i] = Biome.TABLE[i].colorOklab;
+            }
+        }
+
+        /**
+         * Initializes the color tables this uses for all biomes, but allows rotating all hues and adjusting
+         * brightness/saturation/contrast to produce maps of non-Earth-like planets.
+         * @param hue hue rotation; 0.0 and 1.0 are no rotation, and 0.5 is maximum rotation
+         * @param saturation added to the saturation of a biome color; usually close to 0.0, always between -1 and 1
+         * @param brightness added to the lightness of a biome color; often close to 0.0, always between -1 and 1
+         */
+        public void initialize(float hue, float saturation, float brightness)
+        {
+            int b;
+            for (int i = 0; i < 66; i++) {
+                b = (Biome.TABLE[i].colorOklab);
+                if (i == 60)
+                    colorTable[i] = b;
+                else {
+                    colorTable[i] = oklabByHSL(hue + hue(b), saturation + saturation(b), brightness + channelL(b), 1f);
+                }
+            }
+        }
+
+        /**
+         * Uses the current colors in {@link #colorTable} to partly-randomize themselves, and also incorporates three
+         * random floats from the given {@code rng}.
+         * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
+         * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
+         * ice will still map to white, and different shades of ocean blue will become different shades of some color (which
+         * could still be some sort of blue). This can be a useful alternative to
+         * {@link #initialize(float, float, float)}, because that method hue-rotates all colors by the same amount,
+         * while this method adjusts each input hue differently and based on their original value. You may want to call
+         * {@link #initialize()} (either with no arguments or with four) before each call to this, because changes this
+         * makes to the color table would be read back the second time this is called without reinitialization.
+         * @param rng any non-null Random or EnhancedRandom
+         */
+        public void alter(Random rng)
+        {
+            int b;
+            float h = rng.nextFloat(0.5f) + 1f, s = rng.nextFloat(0.5f) + 1f, l = rng.nextFloat(0.5f) + 1f;
+            for (int i = 0; i < 66; i++) {
+                b = colorTable[i];
+                if (i != 60) {
+                    float hue = hue(b), saturation = saturation(b), lightness = channelL(b);
+                    colorTable[i] = oklabByHSL(
+                            zigzag((hue * h + saturation + lightness) * 0.5f),
+                            saturation + zigzag(lightness * s) * 0.1f,
+                            lightness + zigzag(saturation * l) * 0.1f, 1f);
+                }
+            }
+        }
+
+        /**
+         * Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
+         * There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
+         * type of color can be any of the color constants from {@link DescriptiveColor}, may be produced by
+         * {@link DescriptiveColor#describeOklab(CharSequence)}, or might be made manually, in advanced cases, with
+         * {@link DescriptiveColor#limitToGamut(int, int, int)} and specifying the L, A, and B channels.
+         * @param similarColors an array or vararg of packed int Oklab colors with at least one element
+         */
+        public void match(long seed, int... similarColors)
+        {
+            for (int i = 0; i < 66; i++) {
+                colorTable[i] = (similarColors[(Hasher.hash(seed, Biome.TABLE[i].name) >>> 1) % similarColors.length]);
+            }
+        }
 
         /**
          * Gets the biome code for the dominant biome at a given x,y position.
@@ -698,13 +784,13 @@ public interface BiomeMapper {
             heatCodeData = null;
             moistureCodeData = null;
             biomeCodeData = null;
-            colorData = null;
+            colorDataOklab = null;
         }
 
         /**
          * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
          * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
-         * taken from {@link #biomeCodeData} and (packed Oklab int) colors from {@link #colorData}.
+         * taken from {@link #biomeCodeData} and (packed Oklab int) colors from {@link #colorDataOklab}.
          * @param world a WorldMapGenerator that should have generated at least one map; it may be at any zoom
          */
         @Override
@@ -717,8 +803,8 @@ public interface BiomeMapper {
                 moistureCodeData = new int[world.width][world.height];
             if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
                 biomeCodeData = new int[world.width][world.height];
-            if(colorData == null || (colorData.length != world.width || colorData[0].length != world.height))
-                colorData = new int[world.width][world.height];
+            if(colorDataOklab == null || (colorDataOklab.length != world.width || colorDataOklab[0].length != world.height))
+                colorDataOklab = new int[world.width][world.height];
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             final float i_hot = 1f / world.maxHeat;
@@ -729,7 +815,7 @@ public interface BiomeMapper {
                     heightCode = heightCodeData[x][y];
                     if(heightCode == 1000) {
                         biomeCodeData[x][y] = 60;
-                        colorData[x][y] = Biome.TABLE[60].colorOklab;
+                        colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y] = colorTable[60]);
                         continue;
                     }
                     float hot, moist;
@@ -795,31 +881,31 @@ public interface BiomeMapper {
                     moistMix = Interpolations.smoother.apply(moistMix);
                     hotMix = Interpolations.smoother.apply(hotMix);
                     if(hc == 0 && heightCode <= 3){
-                        colorData[x][y] = lerpColors(Biome.TABLE[50].colorOklab, Biome.TABLE[12].colorOklab,
+                        colorDataOklab[x][y] = lerpColors(colorTable[50], colorTable[12],
                                 ((world.heightData[x][y] + 1f) / (WorldMapGenerator.sandLower + 1f)));
                     }
                     else if(hc == 0 && heightCode == 4){
-                        colorData[x][y] = lerpColors(Biome.TABLE[0].colorOklab, Biome.TABLE[12].colorOklab,
+                        colorDataOklab[x][y] = lerpColors(colorTable[0], colorTable[12],
                                 ((world.heightData[x][y] - WorldMapGenerator.sandLower)
                                         / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower)));
                     }
                     else if(heightCode <= 3) {
-                        colorData[x][y] = lerpColors(Biome.TABLE[56].colorOklab, Biome.TABLE[43].colorOklab,
+                        colorDataOklab[x][y] = lerpColors(colorTable[56], colorTable[43],
                                 Math.min(Math.max(((world.heightData[x][y] + 0.1f) * 7f)
                                         / (WorldMapGenerator.sandLower + 1f), 0f), 1f));
-
                     }
                     else {
-                        colorData[x][y] = DescriptiveColor.lerpColors(
+                        colorDataOklab[x][y] = DescriptiveColor.lerpColors(
                                 DescriptiveColor.lerpColors(
-                                        Biome.TABLE[hotLow + wetLow * 6].colorOklab,
-                                        Biome.TABLE[hotLow + wetHigh * 6].colorOklab, moistMix),
+                                        colorTable[hotLow + wetLow * 6],
+                                        colorTable[hotLow + wetHigh * 6], moistMix),
                                 DescriptiveColor.lerpColors(
-                                        Biome.TABLE[hotHigh + wetLow * 6].colorOklab,
-                                        Biome.TABLE[hotHigh + wetHigh * 6].colorOklab, moistMix),
+                                        colorTable[hotHigh + wetLow * 6],
+                                        colorTable[hotHigh + wetHigh * 6], moistMix),
                                 hotMix
                         );
                     }
+                    colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }
             }
         }

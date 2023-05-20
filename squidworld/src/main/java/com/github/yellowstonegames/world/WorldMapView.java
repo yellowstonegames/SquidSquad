@@ -19,6 +19,7 @@ package com.github.yellowstonegames.world;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.place.Biome;
+import com.github.yellowstonegames.world.BiomeMapper.DetailedBiomeMapper;
 
 import static com.github.tommyettinger.digital.MathTools.zigzag;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
@@ -26,7 +27,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to
- * {@link WorldMapGenerator#generate()} and {@link com.github.yellowstonegames.world.BiomeMapper.DetailedBiomeMapper#makeBiomes(WorldMapGenerator)}.
+ * {@link WorldMapGenerator#generate()} and {@link DetailedBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
  * <br>
@@ -37,7 +38,7 @@ public class WorldMapView {
     protected int[][] colorMap;
     protected int[][] colorMapOklab;
     protected WorldMapGenerator world;
-    protected BiomeMapper.DetailedBiomeMapper biomeMapper;
+    protected DetailedBiomeMapper biomeMapper;
 
     public int getWidth() {
         return width;
@@ -55,11 +56,11 @@ public class WorldMapView {
         return colorMapOklab;
     }
 
-    public BiomeMapper.DetailedBiomeMapper getBiomeMapper() {
+    public DetailedBiomeMapper getBiomeMapper() {
         return biomeMapper;
     }
 
-    public void setBiomeMapper(BiomeMapper.DetailedBiomeMapper biomeMapper) {
+    public void setBiomeMapper(DetailedBiomeMapper biomeMapper) {
         this.biomeMapper = biomeMapper;
     }
 
@@ -85,7 +86,7 @@ public class WorldMapView {
         height = world.height;
         colorMap = new int[width][height];
         colorMapOklab = new int[width][height];
-        this.biomeMapper = new BiomeMapper.DetailedBiomeMapper();
+        this.biomeMapper = new DetailedBiomeMapper();
         initialize();
     }
     
