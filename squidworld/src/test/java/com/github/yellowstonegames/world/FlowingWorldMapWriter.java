@@ -20,8 +20,6 @@ import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
-import com.github.yellowstonegames.world.WorldMapGenerator;
-import com.github.yellowstonegames.world.WorldMapView;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -256,7 +254,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world = new GlobeMap(seed, width, height, iNoise, 1.25f);
 
 
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
         rng.setSeed(seed);

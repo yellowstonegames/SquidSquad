@@ -150,7 +150,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
         Gdx.graphics.setContinuousRendering(false);

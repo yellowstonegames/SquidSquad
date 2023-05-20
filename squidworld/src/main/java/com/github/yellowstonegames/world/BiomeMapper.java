@@ -18,6 +18,7 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
@@ -76,6 +77,14 @@ public interface BiomeMapper {
      */
     int getMoistureCode(int x, int y);
 
+
+    int[][] getHeatCodeData();
+
+    int[][] getMoistureCodeData();
+
+    int[][] getBiomeCodeData();
+
+
     /**
      * Gets a {@link Biome} array where biome codes can be used as indices to look up a name for the biome they refer
      * to. It's common for implementations to use the existing table in {@link Biome#TABLE}; the 66-element array format
@@ -131,6 +140,21 @@ public interface BiomeMapper {
          * corresponding Biomes, or construct your own table as you see fit (see docs in {@link SimpleBiomeMapper}).
          */
         biomeCodeData;
+
+        @Override
+        public int[][] getHeatCodeData() {
+            return heatCodeData;
+        }
+
+        @Override
+        public int[][] getMoistureCodeData() {
+            return moistureCodeData;
+        }
+
+        @Override
+        public int[][] getBiomeCodeData() {
+            return biomeCodeData;
+        }
 
         @Override
         public int getBiomeCode(int x, int y) {
@@ -309,6 +333,21 @@ public interface BiomeMapper {
          */
         biomeCodeData;
 
+
+        @Override
+        public int[][] getHeatCodeData() {
+            return heatCodeData;
+        }
+
+        @Override
+        public int[][] getMoistureCodeData() {
+            return moistureCodeData;
+        }
+
+        @Override
+        public int[][] getBiomeCodeData() {
+            return biomeCodeData;
+        }
 
         /**
          * Gets the biome code for the dominant biome at a given x,y position. This is equivalent to getting the raw
@@ -590,7 +629,77 @@ public interface BiomeMapper {
          */
         colorDataRgba;
 
+        /**
+         * The colors for each biome, with each as a packed oklab int.
+         * Always has 66 items, corresponding to the biomes in {@link Biome#TABLE} in order.
+         */
         public final int[] colorTable = new int[66];
+
+        public float contrast = 1f;
+
+        public static final float
+                coldestValueUpper = 0.15f, // 0
+                colderValueUpper = 0.31f,  // 1
+                coldValueUpper = 0.5f,     // 2
+                warmValueUpper = 0.69f,    // 3
+                warmerValueUpper = 0.85f,  // 4
+                warmestValueUpper = 1.0f,  // 5
+
+        driestValueUpper  = 0.27f, // 0
+                drierValueUpper   = 0.4f,  // 1
+                dryValueUpper     = 0.6f,  // 2
+                wetValueUpper     = 0.8f,  // 3
+                wetterValueUpper  = 0.9f,  // 4
+                wettestValueUpper = 1.0f;  // 5
+
+        public static final float[] HEAT_UPPER = new float[]{
+                coldestValueUpper,
+                colderValueUpper,
+                coldValueUpper,
+                warmValueUpper,
+                warmerValueUpper,
+                warmestValueUpper,
+        };
+        public static final float[] MOISTURE_UPPER = new float[]{
+                driestValueUpper,
+                drierValueUpper,
+                dryValueUpper,
+                wetValueUpper,
+                wetterValueUpper,
+                wettestValueUpper,
+        };
+        public static final float[] HEAT_MID = new float[]{
+                (coldestValueUpper) * 0.5f,
+                (colderValueUpper + coldestValueUpper) * 0.5f,
+                (coldValueUpper + colderValueUpper) * 0.5f,
+                (warmValueUpper + coldValueUpper) * 0.5f,
+                (warmerValueUpper + warmValueUpper) * 0.5f,
+                (warmestValueUpper + warmerValueUpper) * 0.5f,
+        };
+
+        public static final float[] MOISTURE_MID = new float[]{
+                (driestValueUpper) * 0.5f,
+                (drierValueUpper + driestValueUpper) * 0.5f,
+                (dryValueUpper + drierValueUpper) * 0.5f,
+                (wetValueUpper + dryValueUpper) * 0.5f,
+                (wetterValueUpper + wetValueUpper) * 0.5f,
+                (wettestValueUpper + wetterValueUpper) * 0.5f,
+        };
+
+        @Override
+        public int[][] getHeatCodeData() {
+            return heatCodeData;
+        }
+
+        @Override
+        public int[][] getMoistureCodeData() {
+            return moistureCodeData;
+        }
+
+        @Override
+        public int[][] getBiomeCodeData() {
+            return biomeCodeData;
+        }
 
         /**
          * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
@@ -624,8 +733,9 @@ public interface BiomeMapper {
          * @param hue hue rotation; 0.0 and 1.0 are no rotation, and 0.5 is maximum rotation
          * @param saturation added to the saturation of a biome color; usually close to 0.0, always between -1 and 1
          * @param brightness added to the lightness of a biome color; often close to 0.0, always between -1 and 1
+         * @param contrast multiplied with the soft shading that applies to all land biomes
          */
-        public void initialize(float hue, float saturation, float brightness)
+        public void initialize(float hue, float saturation, float brightness, float contrast)
         {
             int b;
             for (int i = 0; i < 66; i++) {
@@ -636,6 +746,7 @@ public interface BiomeMapper {
                     colorTable[i] = oklabByHSL(hue + hue(b), saturation + saturation(b), brightness + channelL(b), 1f);
                 }
             }
+            this.contrast = contrast;
         }
 
         /**
@@ -645,13 +756,13 @@ public interface BiomeMapper {
          * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
          * ice will still map to white, and different shades of ocean blue will become different shades of some color (which
          * could still be some sort of blue). This can be a useful alternative to
-         * {@link #initialize(float, float, float)}, because that method hue-rotates all colors by the same amount,
+         * {@link #initialize(float, float, float, float)}, because that method hue-rotates all colors by the same amount,
          * while this method adjusts each input hue differently and based on their original value. You may want to call
          * {@link #initialize()} (either with no arguments or with four) before each call to this, because changes this
          * makes to the color table would be read back the second time this is called without reinitialization.
-         * @param rng any non-null Random or EnhancedRandom
+         * @param rng any non-null EnhancedRandom
          */
-        public void alter(Random rng)
+        public void alter(EnhancedRandom rng)
         {
             int b;
             float h = rng.nextFloat(0.5f) + 1f, s = rng.nextFloat(0.5f) + 1f, l = rng.nextFloat(0.5f) + 1f;
@@ -719,76 +830,6 @@ public interface BiomeMapper {
             return Biome.TABLE;
         }
 
-        public static final float
-                coldestValueUpper = 0.15f, // 0
-                colderValueUpper = 0.31f,  // 1
-                coldValueUpper = 0.5f,     // 2
-                warmValueUpper = 0.69f,     // 3
-                warmerValueUpper = 0.85f,   // 4
-                warmestValueUpper = 1.0f,  //5
-        
-                driestValueUpper  = 0.27f, // 0
-                drierValueUpper   = 0.4f,  // 1
-                dryValueUpper     = 0.6f,  // 2
-                wetValueUpper     = 0.8f,  // 3
-                wetterValueUpper  = 0.9f,  // 4
-                wettestValueUpper = 1.0f;  // 5
-
-        public static final float[] HEAT_LOWER = new float[]{
-                0f,
-                coldestValueUpper,
-                colderValueUpper,
-                coldValueUpper,
-                warmValueUpper,
-                warmerValueUpper,
-        };
-        public static final float[] MOISTURE_LOWER = new float[]{
-                0f,
-                driestValueUpper,
-                drierValueUpper,
-                dryValueUpper,
-                wetValueUpper,
-                wetterValueUpper,
-        };
-
-        public static final float[] HEAT_UPPER = new float[]{
-                coldestValueUpper,
-                colderValueUpper,
-                coldValueUpper,
-                warmValueUpper,
-                warmerValueUpper,
-                warmestValueUpper,
-        };
-        public static final float[] MOISTURE_UPPER = new float[]{
-                driestValueUpper,
-                drierValueUpper,
-                dryValueUpper,
-                wetValueUpper,
-                wetterValueUpper,
-                wettestValueUpper,
-        };
-        public static final float[] HEAT_MID = new float[]{
-//                (coldestValueUpper) * -0.5f,
-                (coldestValueUpper) * 0.5f,
-                (colderValueUpper + coldestValueUpper) * 0.5f,
-                (coldValueUpper + colderValueUpper) * 0.5f,
-                (warmValueUpper + coldValueUpper) * 0.5f,
-                (warmerValueUpper + warmValueUpper) * 0.5f,
-                (warmestValueUpper + warmerValueUpper) * 0.5f,
-//                2f - (warmestValueUpper + warmerValueUpper) * 0.5f,
-        };
-
-        public static final float[] MOISTURE_MID = new float[]{
-//                (driestValueUpper) * -0.5f,
-                (driestValueUpper) * 0.5f,
-                (drierValueUpper + driestValueUpper) * 0.5f,
-                (dryValueUpper + drierValueUpper) * 0.5f,
-                (wetValueUpper + dryValueUpper) * 0.5f,
-                (wetterValueUpper + wetValueUpper) * 0.5f,
-                (wettestValueUpper + wetterValueUpper) * 0.5f,
-//                2f - (wettestValueUpper + wetterValueUpper) * 0.5f,
-        };
-
         /**
          * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
          * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
@@ -810,6 +851,7 @@ public interface BiomeMapper {
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             final float i_hot = 1f / world.maxHeat;
+            final float con = 0.09f * contrast;
             int hc = 5, mc = 5, heightCode;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
@@ -905,7 +947,7 @@ public interface BiomeMapper {
                                         colorTable[hotHigh + wetLow * 6],
                                         colorTable[hotHigh + wetHigh * 6], moistMix),
                                 hotMix
-                        ), 0.02f - moist * 0.09f);
+                        ), 0.02f - moist * con);
                     }
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }

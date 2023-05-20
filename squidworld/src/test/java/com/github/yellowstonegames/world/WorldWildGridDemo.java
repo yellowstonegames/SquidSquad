@@ -56,7 +56,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     private Vector3 position, previousPosition, nextPosition, temp;
 //    private WorldMapGenerator.MimicMap world;
     private HyperellipticalWorldMap world;
-    private WorldMapView wmv;
+    private DetailedWorldMapView wmv;
     private PoliticalMapper pm;
     private Thesaurus thesaurus;
     private ObjectList<PoliticalMapper.Faction> factions;
@@ -110,7 +110,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seed, bigWidth, bigHeight, WorldMapGenerator.DEFAULT_NOISE, 0.8f);
         //world = new WorldMapGenerator.TilingMap(seed, bigWidth, bigHeight, WhirlingNoise.instance, 0.9);
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
         pm = new PoliticalMapper();
         cities = new CoordObjectOrderedMap<>(96);
         factions = new ObjectList<>(80);

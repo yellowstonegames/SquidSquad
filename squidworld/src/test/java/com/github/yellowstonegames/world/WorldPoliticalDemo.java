@@ -82,7 +82,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.65);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
         inner = new LocalMap(seed, width, height, new Noise(rng.nextInt(), 0.5f, Noise.FOAM_FRACTAL, 2), 0.8f);
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
         fpm = new PoliticalMapper();
 //        wmv.initialize(SColor.CW_FADED_RED, SColor.AURORA_BRICK, SColor.DEEP_SCARLET, SColor.DARK_CORAL,
 //                SColor.LONG_SPRING, SColor.WATER_PERSIMMON, SColor.AURORA_HOT_SAUCE, SColor.PALE_CARMINE,
@@ -230,7 +230,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
 
     public void putMap() { 
         int[][] cm = wmv.getColorMapOklab();
-        int[][] bio = wmv.getBiomeMapper().biomeCodeData;
+        int[][] bio = wmv.getBiomeMapper().getBiomeCodeData();
         batch.begin(view.getCamera().combined, GL20.GL_POINTS);
         int c;
         for (int x = 0; x < width; x++) {

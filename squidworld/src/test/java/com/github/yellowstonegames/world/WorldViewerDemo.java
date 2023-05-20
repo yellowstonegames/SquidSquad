@@ -132,7 +132,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.65);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
         inner = new LocalMap(seed, width << AA, height << AA, new Noise(rng.nextInt(), 1f, Noise.FOAM_FRACTAL, 2), 0.8f);
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
 //        wmv.initialize(SColor.CW_FADED_RED, SColor.AURORA_BRICK, SColor.DEEP_SCARLET, SColor.DARK_CORAL,
 //                SColor.LONG_SPRING, SColor.WATER_PERSIMMON, SColor.AURORA_HOT_SAUCE, SColor.PALE_CARMINE,
 //                SColor.AURORA_LIGHT_SKIN_3, SColor.AURORA_PINK_SKIN_2,

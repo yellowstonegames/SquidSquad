@@ -54,7 +54,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private Vector3 position, previousPosition, nextPosition, temp;
 //    private MimicWorldMap world;
     private HyperellipticalWorldMap world;
-    private WorldMapView wmv;
+    private DetailedWorldMapView wmv;
     private Thesaurus thesaurus;
     private PoliticalMapper pm;
     private ObjectList<PoliticalMapper.Faction> factions;
@@ -87,7 +87,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         Noise noise = new Noise(rng.nextInt(), 1.0f, Noise.FOAM, 1);
 //        world = new MimicWorldMap(seedA, noise, 0.8f); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
-        wmv = new WorldMapView(world);
+        wmv = new DetailedWorldMapView(world);
         thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
         pm = new PoliticalMapper();
         atlas = new IntObjectOrderedMap<>(80);
