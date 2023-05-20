@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.place.Biome;
 
 import java.util.Random;
@@ -591,6 +592,26 @@ public interface BiomeMapper {
 
         public final int[] colorTable = new int[66];
 
+        public INoise shadingNoise;
+
+        /**
+         * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
+         * using fields like {@link #biomeCodeData}.
+         */
+        public BlendedBiomeMapper()
+        {
+            heatCodeData = null;
+            moistureCodeData = null;
+            biomeCodeData = null;
+            colorDataOklab = null;
+            initialize();
+        }
+
+        public BlendedBiomeMapper(INoise shadingNoise) {
+            this();
+            this.shadingNoise = shadingNoise;
+        }
+
         public void setColorTable(int[] oklabColors) {
             if(oklabColors == null || oklabColors.length < 66)
                 throw new IllegalArgumentException("The array of colors must be non-null and have length of at least 66.");
@@ -776,18 +797,6 @@ public interface BiomeMapper {
         };
 
         /**
-         * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
-         * using fields like {@link #biomeCodeData}.
-         */
-        public BlendedBiomeMapper()
-        {
-            heatCodeData = null;
-            moistureCodeData = null;
-            biomeCodeData = null;
-            colorDataOklab = null;
-        }
-
-        /**
          * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
          * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
          * taken from {@link #biomeCodeData} and (packed Oklab int) colors from {@link #colorDataOklab}.
@@ -876,7 +885,7 @@ public interface BiomeMapper {
                     moistureCodeData[x][y] = mc;
                     // 54 == 9 * 6, 9 is used for Ocean groups
                     biomeCodeData[x][y]
-                            = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
+                            = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
                     moistMix = Interpolations.smoother.apply(moistMix);
                     hotMix = Interpolations.smoother.apply(hotMix);
@@ -895,7 +904,7 @@ public interface BiomeMapper {
                                         / (WorldMapGenerator.sandLower + 1f), 0f), 1f));
                     }
                     else {
-                        colorDataOklab[x][y] = DescriptiveColor.lerpColors(
+                        int c = DescriptiveColor.lerpColors(
                                 DescriptiveColor.lerpColors(
                                         colorTable[hotLow + wetLow * 6],
                                         colorTable[hotLow + wetHigh * 6], moistMix),
@@ -904,6 +913,10 @@ public interface BiomeMapper {
                                         colorTable[hotHigh + wetHigh * 6], moistMix),
                                 hotMix
                         );
+                        if(shadingNoise != null){
+                            c = DescriptiveColor.adjustLightness(c, shadingNoise.getNoise(x, y) * 0.06f);
+                        }
+                        colorDataOklab[x][y] = c;
                     }
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }

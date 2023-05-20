@@ -1215,6 +1215,25 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Interpolates from the packed Oklab int color oklab towards either white or black, depending on change. The value
+     * for change should be between -1f and 1f; negative values interpolate toward black, while positive ones
+     * interpolate toward white. The value for oklab should be a packed color, as from a constant here. This method
+     * does not necessarily keep the resulting color in-gamut; after performing some changes with this or other
+     * component-editing methods, you may want to call {@link #limitToGamut(int)} to make sure the color can be rendered
+     * correctly.
+     *
+     * @param oklab      the starting color as a packed float
+     * @param change how much to go away from oklab, as a float between -1 and 1; negative to black, positive to white
+     * @return a packed float that represents a color between start and black or white
+     * @see #darken(int, float) the counterpart method that darkens a float color
+     * @see #lighten(int, float) the counterpart method that lightens a float color
+     */
+    public static int adjustLightness(final int oklab, final float change) {
+        if(change < 0.0f) return darken(oklab, -change);
+        return lighten(oklab, change);
+    }
+
+    /**
      * Interpolates from the packed float color start towards a warmer color (orange to magenta) by change. While change
      * should be between 0f (return start as-is) and 1f (return fully warmed), start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors,
