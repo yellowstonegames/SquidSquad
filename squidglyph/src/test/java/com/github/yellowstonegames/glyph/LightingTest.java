@@ -65,6 +65,7 @@ public class LightingTest extends ApplicationAdapter {
     private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
     private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
     private static final int SILVER_RGBA = toRGBA8888(SILVER);
+    private static final int MEMORY_RGBA = describe("darker gray black");
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -214,7 +215,7 @@ public class LightingTest extends ApplicationAdapter {
         Coord player = floors.singleRandom(rng);
         playerGlyph.setPosition(player.x, player.y);
 
-        lighting = new LightingManager(res, "black gray", Radius.CIRCLE, 9f);
+        lighting = new LightingManager(res, "dark gray black", Radius.CIRCLE, 9f);
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
@@ -242,14 +243,16 @@ public class LightingTest extends ApplicationAdapter {
                 limitToGamut(100,
                         (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
 //        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
-        lighting.calculateFOV(playerX, playerY, playerX - 10, playerY - 10, playerX + 11, playerY + 11);
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if(lighting.fovResult[x][y] > 0)
+                if (lighting.fovResult[x][y] > 0)
                     gg.put(x, y, prunedDungeon[x][y], SILVER_RGBA);
-                else if (seen.contains(x, y))
+                else if (seen.contains(x, y)) {
                     gg.put(x, y, prunedDungeon[x][y], SILVER_RGBA);
+                    gg.backgrounds[x][y] = MEMORY_RGBA;
+
+                }
             }
         }
         lighting.draw(gg.backgrounds);
