@@ -50,8 +50,10 @@ public class LightingTest extends ApplicationAdapter {
     private Runnable post;
     private LightingManager lighting;
 
-    private static final int GRID_WIDTH = 40;
+    private static final int GRID_WIDTH = 90;
     private static final int GRID_HEIGHT = 25;
+    private static final int BIG_WIDTH = GRID_WIDTH * 2;
+    private static final int BIG_HEIGHT = GRID_HEIGHT * 2;
     private static final int CELL_WIDTH = 32;
     private static final int CELL_HEIGHT = 32;
 
@@ -64,6 +66,7 @@ public class LightingTest extends ApplicationAdapter {
     private static final int shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
     private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
     private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
+    private static final int SILVER_RGBA = toRGBA8888(SILVER);
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -89,15 +92,15 @@ public class LightingTest extends ApplicationAdapter {
         playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
         gg.addActor(playerGlyph);
         post = () -> {
-            seen.or(inView.refill(FOV.reuseFOV(res, light,
-                    Math.round(playerGlyph.getX()), Math.round(playerGlyph.getY()), 6.5f, Radius.CIRCLE), 0.001f, 999f));
+            Coord player = playerGlyph.getLocation();
+            lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
+            seen.or(inView.refill(lighting.fovResult, 0.001f, 2f));
             blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         };
 
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
-        dungeonProcessor.addWater(DungeonProcessor.ALL, 30);
-        dungeonProcessor.addGrass(DungeonProcessor.ALL, 10);
+        dungeonProcessor.addBoulders(DungeonProcessor.ALL, 3);
         waves.setFractalType(Noise.RIDGED_MULTI);
         light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
@@ -241,55 +244,26 @@ public class LightingTest extends ApplicationAdapter {
                 limitToGamut(100,
                         (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
 //        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
-        light = lighting.calculateFOV(playerX, playerY, playerX - 10, playerY - 10, playerX + 11, playerY + 11);
+        lighting.calculateFOV(playerX, playerY, playerX - 10, playerY - 10, playerX + 11, playerY + 11);
+
+        for (int x = Math.max(0, playerX - (GRID_WIDTH >> 1) - 1), i = 0; x < BIG_WIDTH && i < GRID_WIDTH + 2; x++, i++) {
+            for (int y = Math.max(0, playerY - (GRID_HEIGHT >> 1) - 1), j = 0; y < BIG_HEIGHT && j < GRID_HEIGHT + 2; y++, j++) {
+                if(lighting.fovResult[x][y] > 0)
+                    gg.put(x, y, prunedDungeon[x][y], SILVER_RGBA);
+                else if (seen.contains(x, y))
+                    gg.put(x, y, prunedDungeon[x][y], SILVER_RGBA);
+            }
+        }
+        lighting.draw(gg.backgrounds);
+
+
+
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 if (inView.contains(x, y)) {
-                    if(toCursor.contains(Coord.get(x, y))){
+                    if (toCursor.contains(Coord.get(x, y))) {
                         gg.backgrounds[x][y] = rainbow;
-                        gg.put(x, y, prunedDungeon[x][y], stoneText);
                     }
-                    else {
-                        switch (prunedDungeon[x][y]) {
-                            case '~':
-                                gg.backgrounds[x][y] = toRGBA8888(lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                                gg.put(x, y, prunedDungeon[x][y], deepText);
-                                break;
-                            case ',':
-                                gg.backgrounds[x][y] = toRGBA8888(lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
-                                gg.put(x, y, prunedDungeon[x][y], shallowText);
-                                break;
-                            case '"':
-                                gg.backgrounds[x][y] = toRGBA8888(darken(lerpColors(GRASS_OKLAB, DRY_OKLAB, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))));
-                                gg.put(x, y, prunedDungeon[x][y], grassText);
-                                break;
-                            case ' ':
-                                gg.backgrounds[x][y] = 0;
-                                break;
-                            default:
-                                gg.backgrounds[x][y] = toRGBA8888(lighten(STONE_OKLAB, 0.6f * light[x][y]));
-                                gg.put(x, y, prunedDungeon[x][y], stoneText);
-                        }
-                    }
-                } else if (seen.contains(x, y)) {
-                    switch (prunedDungeon[x][y]) {
-                        case '~':
-                            gg.backgrounds[x][y] = toRGBA8888(edit(DEEP_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gg.put(x, y, prunedDungeon[x][y], deepText);
-                            break;
-                        case ',':
-                            gg.backgrounds[x][y] = toRGBA8888(edit(SHALLOW_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gg.put(x, y, prunedDungeon[x][y], shallowText);
-                            break;
-                        case ' ':
-                            gg.backgrounds[x][y] = 0;
-                            break;
-                        default:
-                            gg.backgrounds[x][y] = toRGBA8888(edit(STONE_OKLAB, 0f, 0f, 0f, 0f, 0.7f, 0f, 0f, 1f));
-                            gg.put(x, y, prunedDungeon[x][y], stoneText);
-                    }
-                } else {
-                    gg.backgrounds[x][y] = 0;
                 }
             }
         }
