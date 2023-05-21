@@ -518,29 +518,29 @@ public final class Interpolations {
     public static final Interpolator biasGainMostlyHigh = new Interpolator("biasGainMostlyHigh", biasGainFunction(3f, 0.1f));
 
     /**
-     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.75f, 0.75f)}.
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(0.75f, 0.75f)}.
      */
-    public static final Interpolator kumaraswamyCentralA = new Interpolator("kumaraswamyCentralA", kumaraswamyFunction(0.75f, 0.75f));
+    public static final Interpolator kumaraswamyExtremeA = new Interpolator("kumaraswamyExtremeA", kumaraswamyFunction(0.75f, 0.75f));
     /**
-     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.5f, 0.5f)}.
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(0.5f, 0.5f)}.
      */
-    public static final Interpolator kumaraswamyCentralB = new Interpolator("kumaraswamyCentralB", kumaraswamyFunction(0.5f, 0.5f));
+    public static final Interpolator kumaraswamyExtremeB = new Interpolator("kumaraswamyExtremeB", kumaraswamyFunction(0.5f, 0.5f));
     /**
-     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.25f, 0.25f)}.
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(0.25f, 0.25f)}.
      */
-    public static final Interpolator kumaraswamyCentralC = new Interpolator("kumaraswamyCentralC", kumaraswamyFunction(0.25f, 0.25f));
+    public static final Interpolator kumaraswamyExtremeC = new Interpolator("kumaraswamyExtremeC", kumaraswamyFunction(0.25f, 0.25f));
     /**
-     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(2f, 2f)}.
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(2f, 2f)}.
      */
-    public static final Interpolator kumaraswamyExtremeA = new Interpolator("kumaraswamyExtremeA", kumaraswamyFunction(2f, 2f));
+    public static final Interpolator kumaraswamyCentralA = new Interpolator("kumaraswamyCentralA", kumaraswamyFunction(2f, 2f));
     /**
-     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(4f, 4f)}.
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(4f, 4f)}.
      */
-    public static final Interpolator kumaraswamyExtremeB = new Interpolator("kumaraswamyExtremeB", kumaraswamyFunction(4f, 4f));
+    public static final Interpolator kumaraswamyCentralB = new Interpolator("kumaraswamyCentralB", kumaraswamyFunction(4f, 4f));
     /**
-     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(6f, 6f)}.
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(6f, 6f)}.
      */
-    public static final Interpolator kumaraswamyExtremeC = new Interpolator("kumaraswamyExtremeC", kumaraswamyFunction(6f, 6f));
+    public static final Interpolator kumaraswamyCentralC = new Interpolator("kumaraswamyCentralC", kumaraswamyFunction(6f, 6f));
     /**
      * Produces more results near 0. Uses {@code kumaraswamyFunction(1f, 5f)}.
      */
