@@ -454,12 +454,30 @@ public final class Interpolations {
 
 
     /**
+     * Produces an InterpolationFunction that uses the possible shapes of the
+     * {@link com.github.tommyettinger.random.distribution.KumaraswamyDistribution}, but without involving a random
+     * component. This can produce a wide range of shapes for the interpolation, and may require generating several
+     * during development to get a particular shape you want. The a and b parameters must be greater than 0.0, but have
+     * no other requirements. Most curves that this method produces are somewhat asymmetrical.
+     * @param a the Kumaraswamy distribution's a parameter
+     * @param b the Kumaraswamy distribution's b parameter
+     * @return an InterpolationFunction that will use the given configuration
+     */
+    public static InterpolationFunction kumaraswamyFunction(final double a, final double b) {
+        final double A = 1.0 / a;
+        final double B = 1.0 / b;
+        return x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, B), A);
+    }
+
+    /**
      * Produces an InterpolationFunction that uses the given shape and turning variables.
      * A wrapper around {@link com.github.tommyettinger.digital.MathTools#barronSpline(float, float, float)} to use it
      * as an Interpolator or InterpolationFunction. Useful because it can imitate the wide variety of symmetrical
      * interpolations by setting turning to 0.5 and shape to some value greater than 1, while also being able to produce
      * the inverse of those interpolations by setting shape to some value between 0 and 1. It can also produce
      * asymmetrical interpolations by using a turning value other than 0.5 .
+     * @param shape   must be greater than or equal to 0; values greater than 1 are "normal interpolations"
+     * @param turning a value between 0.0 and 1.0, inclusive, where the shape changes
      * @return an InterpolationFunction that will use the given configuration
      */
     public static InterpolationFunction biasGainFunction(final float shape, final float turning) {
@@ -498,6 +516,40 @@ public final class Interpolations {
      * Produces more results near 1. Uses {@code biasGainFunction(3f, 0.1f)}.
      */
     public static final Interpolator biasGainMostlyHigh = new Interpolator("biasGainMostlyHigh", biasGainFunction(3f, 0.1f));
+
+    /**
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.75f, 0.75f)}.
+     */
+    public static final Interpolator kumaraswamyCentralA = new Interpolator("kumaraswamyCentralA", kumaraswamyFunction(0.75f, 0.75f));
+    /**
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.5f, 0.5f)}.
+     */
+    public static final Interpolator kumaraswamyCentralB = new Interpolator("kumaraswamyCentralB", kumaraswamyFunction(0.5f, 0.5f));
+    /**
+     * Produces more results in the center. Uses {@code kumaraswamyFunction(0.25f, 0.25f)}.
+     */
+    public static final Interpolator kumaraswamyCentralC = new Interpolator("kumaraswamyCentralC", kumaraswamyFunction(0.25f, 0.25f));
+    /**
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(2f, 2f)}.
+     */
+    public static final Interpolator kumaraswamyExtremeA = new Interpolator("kumaraswamyExtremeA", kumaraswamyFunction(2f, 2f));
+    /**
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(4f, 4f)}.
+     */
+    public static final Interpolator kumaraswamyExtremeB = new Interpolator("kumaraswamyExtremeB", kumaraswamyFunction(4f, 4f));
+    /**
+     * Produces more results toward the edges. Uses {@code kumaraswamyFunction(6f, 6f)}.
+     */
+    public static final Interpolator kumaraswamyExtremeC = new Interpolator("kumaraswamyExtremeC", kumaraswamyFunction(6f, 6f));
+    /**
+     * Produces more results near 0. Uses {@code kumaraswamyFunction(1f, 5f)}.
+     */
+    public static final Interpolator kumaraswamyMostlyLow = new Interpolator("kumaraswamyMostlyLow", kumaraswamyFunction(1f, 5f));
+    /**
+     * Produces more results near 1. Uses {@code kumaraswamyFunction(5f, 1f)}.
+     */
+    public static final Interpolator kumaraswamyMostlyHigh = new Interpolator("kumaraswamyMostlyHigh", kumaraswamyFunction(5f, 1f));
+
 
     /**
      * Moves like a sine wave does; starts slowly, rises quickly, then ends slowly.

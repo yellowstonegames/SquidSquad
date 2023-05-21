@@ -42,7 +42,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
 
-    private static final int LIMIT = 1;
+    private static final int LIMIT = 5;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
 
@@ -93,7 +93,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1.8f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
+//        fn.setFractalType(Noise.DOMAIN_WARP);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
         noise = fn;
@@ -110,7 +111,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 1.1f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
