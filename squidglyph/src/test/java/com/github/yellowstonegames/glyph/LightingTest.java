@@ -52,8 +52,6 @@ public class LightingTest extends ApplicationAdapter {
 
     private static final int GRID_WIDTH = 90;
     private static final int GRID_HEIGHT = 25;
-    private static final int BIG_WIDTH = GRID_WIDTH * 2;
-    private static final int BIG_HEIGHT = GRID_HEIGHT * 2;
     private static final int CELL_WIDTH = 32;
     private static final int CELL_HEIGHT = 32;
 
@@ -216,7 +214,7 @@ public class LightingTest extends ApplicationAdapter {
         Coord player = floors.singleRandom(rng);
         playerGlyph.setPosition(player.x, player.y);
 
-        lighting = new LightingManager(res, WHITE, Radius.CIRCLE, 9f);
+        lighting = new LightingManager(res, "black gray", Radius.CIRCLE, 9f);
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
@@ -245,9 +243,9 @@ public class LightingTest extends ApplicationAdapter {
                         (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
 //        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         lighting.calculateFOV(playerX, playerY, playerX - 10, playerY - 10, playerX + 11, playerY + 11);
-
-        for (int x = Math.max(0, playerX - (GRID_WIDTH >> 1) - 1), i = 0; x < BIG_WIDTH && i < GRID_WIDTH + 2; x++, i++) {
-            for (int y = Math.max(0, playerY - (GRID_HEIGHT >> 1) - 1), j = 0; y < BIG_HEIGHT && j < GRID_HEIGHT + 2; y++, j++) {
+        ArrayTools.fill(gg.backgrounds, 0);
+        for (int y = 0; y < GRID_HEIGHT; y++) {
+            for (int x = 0; x < GRID_WIDTH; x++) {
                 if(lighting.fovResult[x][y] > 0)
                     gg.put(x, y, prunedDungeon[x][y], SILVER_RGBA);
                 else if (seen.contains(x, y))
@@ -295,6 +293,7 @@ public class LightingTest extends ApplicationAdapter {
 
     @Override
     public void render() {
+        lighting.update();
         recolor();
         handleHeldKeys();
 
