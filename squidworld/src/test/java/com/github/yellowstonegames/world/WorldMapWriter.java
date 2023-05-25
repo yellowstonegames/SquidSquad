@@ -27,9 +27,9 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
-    private static final int width = 1920, height = 1080;
+//    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-//    private static final int width = 800, height = 400; // mimic, elliptical
+    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal

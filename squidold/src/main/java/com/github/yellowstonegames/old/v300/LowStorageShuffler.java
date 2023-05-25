@@ -84,6 +84,31 @@ public class LowStorageShuffler {
     }
 
     /**
+     * Constructs a LowStorageShuffler with the given exclusive upper bound and ints k0 and k1.
+     * Here, k0 and k1 will be used as the exact keys; this is meant for recreating a LowStorageShuffler,
+     * such as for deserialization.
+     * @param bound how many distinct ints this can return
+     * @param k0 the first key; will be used verbatim
+     * @param k1 the second key; will be used verbatim
+     */
+    public LowStorageShuffler(int bound, int k0, int k1)
+    {
+        // initialize our state
+        this.bound = bound;
+        index = 0;
+        key0 = k0;
+        key1 = k1;
+        // calculate next power of 4.  Needed since the balanced Feistel network needs
+        // an even number of bits to work with
+        pow4 = MathTools.nextPowerOfTwo(bound);
+        pow4 = ((pow4 | pow4 << 1) & 0x55555554) - 1;
+        // calculate our left and right masks to split our indices for the Feistel network
+        halfBits = Integer.bitCount(pow4) >>> 1;
+        rightMask = pow4 >>> halfBits;
+        leftMask = pow4 ^ rightMask;
+    }
+
+    /**
      * Gets the next distinct int in the sequence, or -1 if all distinct ints have been returned that are non-negative
      * and less than {@link #bound}.
      * @return the next item in the sequence, or -1 if the sequence has been exhausted
@@ -193,5 +218,21 @@ public class LowStorageShuffler {
 
         // put the left and right back together to form the encrypted index
         return right << halfBits | newRight;
+    }
+
+    public int getKey0() {
+        return key0;
+    }
+
+    public void setKey0(int key0) {
+        this.key0 = key0;
+    }
+
+    public int getKey1() {
+        return key1;
+    }
+
+    public void setKey1(int key1) {
+        this.key1 = key1;
     }
 }

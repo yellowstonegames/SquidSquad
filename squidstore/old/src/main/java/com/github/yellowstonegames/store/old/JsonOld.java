@@ -41,6 +41,7 @@ public final class JsonOld {
         registerLinnormRNG(json);
         registerThrustAltRNG(json);
         registerLongPeriodRNG(json);
+        registerXoshiroStarPhi32RNG(json);
         JsonSupport.registerEnhancedRandom(json);
     }
 

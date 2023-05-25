@@ -236,8 +236,6 @@ public class LightingTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        int playerX = Math.round(playerGlyph.getX());
-        int playerY = Math.round(playerGlyph.getY());
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         int rainbow = toRGBA8888(
                 limitToGamut(100,
@@ -256,17 +254,10 @@ public class LightingTest extends ApplicationAdapter {
             }
         }
         lighting.draw(gg.backgrounds);
-
-
-
-        for (int y = 0; y < GRID_HEIGHT; y++) {
-            for (int x = 0; x < GRID_WIDTH; x++) {
-                if (inView.contains(x, y)) {
-                    if (toCursor.contains(Coord.get(x, y))) {
-                        gg.backgrounds[x][y] = rainbow;
-                    }
-                }
-            }
+        for (int i = 0; i < toCursor.size(); i++) {
+            Coord curr = toCursor.get(i);
+            if(inView.contains(curr))
+                gg.backgrounds[curr.x][curr.y] = rainbow;
         }
     }
 
