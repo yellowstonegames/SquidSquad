@@ -240,6 +240,15 @@ public class LowStorageShuffler {
         this.key1 = key1;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public LowStorageShuffler setIndex(int index) {
+        this.index = (index & pow4);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
