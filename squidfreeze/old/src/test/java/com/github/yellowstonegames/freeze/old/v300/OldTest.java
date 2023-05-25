@@ -180,4 +180,49 @@ public class OldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testXoshiroStarPhi32RNG() {
+        Kryo kryo = new Kryo();
+        kryo.register(XoshiroStarPhi32RNG.class, new XoshiroStarPhi32RNGSerializer());
+
+        XoshiroStarPhi32RNG data = new XoshiroStarPhi32RNG(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            XoshiroStarPhi32RNG data2 = kryo.readObject(input, XoshiroStarPhi32RNG.class);
+            Assert.assertEquals(data.nextLong(), data2.nextLong());
+            Assert.assertEquals(data.next(31), data2.next(31));
+            Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
+            Assert.assertEquals(data.nextLong(-12345, 12345), data2.nextLong(-12345, 12345));
+            Assert.assertEquals(data.nextDouble(), data2.nextDouble(), Double.MAX_VALUE);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testLowStorageShuffler() {
+        Kryo kryo = new Kryo();
+        kryo.register(LowStorageShuffler.class, new LowStorageShufflerSerializer());
+
+        LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LowStorageShuffler data2 = kryo.readObject(input, LowStorageShuffler.class);
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
