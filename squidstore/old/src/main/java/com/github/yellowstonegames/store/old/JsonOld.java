@@ -258,4 +258,42 @@ public final class JsonOld {
         });
     }
 
+
+    /**
+     * Registers LowStorageShuffler with the given Json object, so LowStorageShuffler can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLowStorageShuffler(@NonNull Json json) {
+        json.addClassTag("LSSh", LowStorageShuffler.class);
+        json.setSerializer(LowStorageShuffler.class, new Json.Serializer<LowStorageShuffler>() {
+            @Override
+            public void write(Json json, LowStorageShuffler object, Class knownType) {
+                StringBuilder sb = new StringBuilder(64);
+                sb.append("LSSh`");
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getBound());
+                sb.append('~');
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getKey0());
+                sb.append('~');
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getKey1());
+                sb.append('~');
+                JsonSupport.getNumeralBase().appendSigned(sb, object.getIndex());
+                sb.append('`');
+                json.writeValue(sb.toString());
+            }
+
+            @Override
+            public LowStorageShuffler read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 13) return null;
+                int delim = 5;
+                int bound = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                int key0  = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int key1  = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('~', delim + 1));
+                int index = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
+                return new LowStorageShuffler(bound, key0, key1).setIndex(index);
+            }
+        });
+    }
+
 }

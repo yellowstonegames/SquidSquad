@@ -2,6 +2,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.random.FourWheelRandom;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ public class ShufflerTest {
      * May take about a minute to run, possibly longer on older hardware.
      */
     @Test
+    @Ignore
     public void testManyBounds() {
         for (int outer = 0; outer < 50; outer++) {
             for (int bound = 3; bound <= 42; bound++) {

@@ -110,4 +110,18 @@ public class JsonOldTest {
         System.out.println(Long.toString(random2.getSelectedState(0), 36));
         Assert.assertEquals(random.nextLong(), random2.nextLong());
     }
+
+    @Test
+    public void testLowStorageShuffler() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerLowStorageShuffler(json);
+        LowStorageShuffler shuffler = new LowStorageShuffler(5, 12345, 67890);
+        shuffler.next();
+        String data = json.toJson(shuffler);
+        System.out.println(data);
+        LowStorageShuffler shuffler2 = json.fromJson(LowStorageShuffler.class, data);
+        System.out.println(Long.toString(shuffler2.getKey0(), 36));
+        System.out.println(Long.toString(shuffler2.getKey1(), 36));
+        Assert.assertEquals(shuffler.next(), shuffler2.next());
+    }
 }
