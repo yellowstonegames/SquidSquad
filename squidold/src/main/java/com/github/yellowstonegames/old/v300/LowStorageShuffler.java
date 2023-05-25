@@ -220,6 +220,10 @@ public class LowStorageShuffler {
         return right << halfBits | newRight;
     }
 
+    public int getBound() {
+        return bound;
+    }
+
     public int getKey0() {
         return key0;
     }
@@ -234,5 +238,42 @@ public class LowStorageShuffler {
 
     public void setKey1(int key1) {
         this.key1 = key1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LowStorageShuffler that = (LowStorageShuffler) o;
+
+        if (bound != that.bound) return false;
+        if (index != that.index) return false;
+        if (pow4 != that.pow4) return false;
+        if (halfBits != that.halfBits) return false;
+        if (leftMask != that.leftMask) return false;
+        if (rightMask != that.rightMask) return false;
+        if (key0 != that.key0) return false;
+        return key1 == that.key1;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bound;
+        result = 31 * result + index;
+        result = 31 * result + pow4;
+        result = 31 * result + halfBits;
+        result = 31 * result + leftMask;
+        result = 31 * result + rightMask;
+        result = 31 * result + key0;
+        result = 31 * result + key1;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LowStorageShuffler{" +
+                "bound=" + bound +
+                '}';
     }
 }
