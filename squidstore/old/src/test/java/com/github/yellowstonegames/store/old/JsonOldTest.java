@@ -124,4 +124,55 @@ public class JsonOldTest {
         System.out.println(Long.toString(shuffler2.getKey1(), 36));
         Assert.assertEquals(shuffler.next(), shuffler2.next());
     }
+
+    @Test
+    public void testCrossHashYolk() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerCrossHashYolk(json);
+        CrossHash.Yolk hasher = CrossHash.Yolk.halphas;
+        String data = json.toJson(hasher);
+        System.out.println(data);
+        CrossHash.Yolk hasher2 = json.fromJson(CrossHash.Yolk.class, data);
+        Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+        Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+        Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+        Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+        long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+        Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+        Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
+    }
+
+    @Test
+    public void testCrossHashCurlup() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerCrossHashCurlup(json);
+        CrossHash.Curlup hasher = CrossHash.Curlup.halphas;
+        String data = json.toJson(hasher);
+        System.out.println(data);
+        CrossHash.Curlup hasher2 = json.fromJson(CrossHash.Curlup.class, data);
+        Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+        Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+        Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+        Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+        long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+        Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+        Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
+    }
+
+    @Test
+    public void testCrossHashMist() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerCrossHashMist(json);
+        CrossHash.Mist hasher = CrossHash.Mist.psi;
+        String data = json.toJson(hasher);
+        System.out.println(data);
+        CrossHash.Mist hasher2 = json.fromJson(CrossHash.Mist.class, data);
+        Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+        Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+        Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+        Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+        long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+        Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+        Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
+    }
 }

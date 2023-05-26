@@ -366,9 +366,9 @@ public final class JsonOld {
             public CrossHash.Mist read(Json json, JsonValue jsonData, Class type) {
                 String s;
                 if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 9) return null;
-                int delim = s.indexOf('`', 5);
-                int l1 = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
-                int l2 = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
+                int delim = 5;
+                long l1 = JsonSupport.getNumeralBase().readLong(s, delim, delim = s.indexOf('~', delim + 1));
+                long l2 = JsonSupport.getNumeralBase().readLong(s, delim + 1, delim = s.indexOf('`', delim + 1));
                 CrossHash.Mist hash = new CrossHash.Mist(l1, l2);
                 hash.l1 = l1;
                 hash.l2 = l2;
