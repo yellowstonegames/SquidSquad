@@ -1927,7 +1927,7 @@ public class CrossHash {
      * hashes for the same inputs.
      */
     public static final class Mist {
-        private transient final long l1, l2;
+        public long l1, l2;
 
         public Mist() {
             this(0x1234567876543210L, 0xEDCBA98789ABCDEFL);
@@ -4083,7 +4083,7 @@ public class CrossHash {
      * are 64 numbers outside that range so you can choose any of those when a functor must be different.
      */
     public static final class Yolk {
-        private final long seed;
+        public long seed;
 
         public Yolk(){
             this.seed = 9069147967908697017L;
@@ -5800,7 +5800,7 @@ public class CrossHash {
      * walk on six legs to climb stairs, or roll at high speeds when the conditions were right.
      */
     public static final class Curlup {
-        private final long seed;
+        public long seed;
 
         public Curlup(){
             this.seed = 0xC4CEB9FE1A85EC53L;

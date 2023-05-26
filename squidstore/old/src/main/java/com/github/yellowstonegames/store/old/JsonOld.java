@@ -296,4 +296,85 @@ public final class JsonOld {
         });
     }
 
+    /**
+     * Registers CrossHash.Yolk with the given Json object, so CrossHash.Yolk can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCrossHashYolk(@NonNull Json json) {
+        json.addClassTag("CHYo", CrossHash.Yolk.class);
+        json.setSerializer(CrossHash.Yolk.class, new Json.Serializer<CrossHash.Yolk>() {
+            @Override
+            public void write(Json json, CrossHash.Yolk object, Class knownType) {
+                json.writeValue("CHYo`" + JsonSupport.getNumeralBase().unsigned(object.seed) + "`");
+            }
+
+            @Override
+            public CrossHash.Yolk read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long seed = JsonSupport.getNumeralBase().readLong(s, 5, tick);
+                CrossHash.Yolk hash = new CrossHash.Yolk(seed);
+                hash.seed = seed;
+                return hash;
+            }
+        });
+    }
+
+    /**
+     * Registers CrossHash.Curlup with the given Json object, so CrossHash.Curlup can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCrossHashCurlup(@NonNull Json json) {
+        json.addClassTag("CHCu", CrossHash.Curlup.class);
+        json.setSerializer(CrossHash.Curlup.class, new Json.Serializer<CrossHash.Curlup>() {
+            @Override
+            public void write(Json json, CrossHash.Curlup object, Class knownType) {
+                json.writeValue("CHCu`" + JsonSupport.getNumeralBase().unsigned(object.seed) + "`");
+            }
+
+            @Override
+            public CrossHash.Curlup read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 7) return null;
+                final int tick = s.indexOf('`', 5);
+                final long seed = JsonSupport.getNumeralBase().readLong(s, 5, tick);
+                CrossHash.Curlup hash = new CrossHash.Curlup(seed);
+                hash.seed = seed;
+                return hash;
+            }
+        });
+    }
+
+    /**
+     * Registers CrossHash.Mist with the given Json object, so CrossHash.Mist can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCrossHashMist(@NonNull Json json) {
+        json.addClassTag("CHMi", CrossHash.Mist.class);
+        json.setSerializer(CrossHash.Mist.class, new Json.Serializer<CrossHash.Mist>() {
+            @Override
+            public void write(Json json, CrossHash.Mist object, Class knownType) {
+                json.writeValue("CHMi`" + JsonSupport.getNumeralBase().unsigned(object.l1) + "~"
+                        + JsonSupport.getNumeralBase().unsigned(object.l2) + "`");
+            }
+
+            @Override
+            public CrossHash.Mist read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null || s.length() < 9) return null;
+                int delim = s.indexOf('`', 5);
+                int l1 = JsonSupport.getNumeralBase().readInt(s, delim, delim = s.indexOf('~', delim + 1));
+                int l2 = JsonSupport.getNumeralBase().readInt(s, delim + 1, delim = s.indexOf('`', delim + 1));
+                CrossHash.Mist hash = new CrossHash.Mist(l1, l2);
+                hash.l1 = l1;
+                hash.l2 = l2;
+                return hash;
+            }
+        });
+    }
+
 }
