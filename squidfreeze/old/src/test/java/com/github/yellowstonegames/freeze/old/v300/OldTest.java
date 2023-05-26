@@ -71,6 +71,7 @@ public class OldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
     @Test
     public void testLinnormRNG() {
         Kryo kryo = new Kryo();
@@ -223,6 +224,75 @@ public class OldTest {
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data, data2);
+        }
+    }
+    
+    @Test
+    public void testCrossHashYolk() {
+        Kryo kryo = new Kryo();
+        kryo.register(CrossHash.Yolk.class, new CrossHashYolkSerializer());
+
+        CrossHash.Yolk hasher = CrossHash.Yolk.psi;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, hasher);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CrossHash.Yolk hasher2 = kryo.readObject(input, CrossHash.Yolk.class);
+            Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+            Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+            Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+            Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+            long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+            Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+            Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
+        }
+    }
+    
+    @Test
+    public void testCrossHashCurlup() {
+        Kryo kryo = new Kryo();
+        kryo.register(CrossHash.Curlup.class, new CrossHashCurlupSerializer());
+
+        CrossHash.Curlup hasher = CrossHash.Curlup.psi;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, hasher);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CrossHash.Curlup hasher2 = kryo.readObject(input, CrossHash.Curlup.class);
+            Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+            Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+            Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+            Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+            long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+            Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+            Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
+        }
+    }
+    
+    @Test
+    public void testCrossHashMist() {
+        Kryo kryo = new Kryo();
+        kryo.register(CrossHash.Mist.class, new CrossHashMistSerializer());
+
+        CrossHash.Mist hasher = CrossHash.Mist.psi;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, hasher);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CrossHash.Mist hasher2 = kryo.readObject(input, CrossHash.Mist.class);
+            Assert.assertEquals(hasher.hash64(""), hasher2.hash64(""));
+            Assert.assertEquals(hasher.hash(""), hasher2.hash(""));
+            Assert.assertEquals(hasher.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
+            Assert.assertEquals(hasher.hash("You're a kitty!"), hasher2.hash("You're a kitty!"));
+            long[] longs = {1L, ~1L, 12345L, ~12345L, 1234567890123456789L, ~1234567890123456789L};
+            Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
+            Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
         }
     }
 }
