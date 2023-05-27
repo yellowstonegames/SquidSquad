@@ -3,10 +3,7 @@ package com.github.yellowstonegames.glyph.rexpaint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
+import java.util.zip.*;
 
 /**
  * Methods for compressing and decompressing byte arrays directly.
@@ -40,6 +37,25 @@ public class CompressionUtils {
         }
         outputStream.close();
         return outputStream.toByteArray();
+    }
+
+    public static byte[] gzipEncodeByteArray(byte[] data) {
+        try(ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
+            byte[] buffer = new byte[1024];
+            while (inputStream.available() > 0) {
+                int count = inputStream.read(buffer, 0, 1024);
+                if(count > 0) {
+                    gzipOutputStream.write(buffer, 0, count);
+                }
+            }
+            gzipOutputStream.close();
+            inputStream.close();
+            return outputStream.toByteArray();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public static byte[] gzipDecodeByteArray(byte[] data) {

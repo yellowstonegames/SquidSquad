@@ -22,6 +22,7 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.glyph.rexpaint.XPIO;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -124,6 +125,10 @@ public class DungeonGridTest extends ApplicationAdapter {
                         break;
                     case R:
                         regenerate();
+                        break;
+                    case ENTER:
+                    case NUMPAD_ENTER:
+                        XPIO.saveXP(Gdx.files.local("Dungeon" + System.currentTimeMillis() + ".xp"), gg);
                         break;
                     default: return false;
                 }

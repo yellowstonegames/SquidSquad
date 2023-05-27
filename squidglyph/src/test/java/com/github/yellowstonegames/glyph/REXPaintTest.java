@@ -31,8 +31,9 @@ public class REXPaintTest extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        font = KnownFonts.getAStarry().scaleTo(32f, 32f);
-        XPFile room = XPIO.loadXP(Gdx.files.internal("Room.xp"));
+        font = KnownFonts.getAStarry().scaleTo(16f, 16f);
+        XPFile room = XPIO.loadXP(Gdx.files.internal("Dungeon1685158102701.xp"));
+//        XPFile room = XPIO.loadXP(Gdx.files.internal("Room.xp"));
 
         gg = new GlyphGrid(font, room.getLayer(0).width, room.getLayer(0).height);
 

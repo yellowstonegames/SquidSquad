@@ -153,7 +153,7 @@ public class XPIO {
         }
         buf.flip();
         try(DataOutputStream dos = new DataOutputStream(file.write(false))) {
-            dos.write(CompressionUtils.compress(buf.array()));
+            dos.write(CompressionUtils.gzipEncodeByteArray(buf.array()));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
