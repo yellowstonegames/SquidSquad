@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.yellowstonegames.path"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.yellowstonegames.path"},{"l":"com.github.yellowstonegames.path.technique"}];updateSearchResults();

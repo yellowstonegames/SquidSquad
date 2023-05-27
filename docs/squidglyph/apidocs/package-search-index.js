@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.yellowstonegames.glyph"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.yellowstonegames.glyph"},{"l":"com.github.yellowstonegames.glyph.rexpaint"}];updateSearchResults();

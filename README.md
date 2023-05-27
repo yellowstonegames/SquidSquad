@@ -11,10 +11,10 @@ depend on the modules you need. All the modules depend on `squidcore`, which alw
 [digital](https://github.com/tommyettinger/digital) for various number and digit stuff,
 [juniper](https://github.com/tommyettinger/juniper) for random number generation, and
 [regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API.
-Some modules (`squidglyph`, `squidsmooth`, and all the `squidstore` modules) depend on [libGDX](https://libgdx.com/),
-which is recommended for use with SquidSquad but not always required. That means if you don't use `squidglyph`,
-`squidsmooth`, or `squidstore`, you can use SquidSquad in purely-server-side code, in tests, or otherwise outside the
-application lifecycle libGDX expects. The `squidfreeze` modules all depend on
+Some modules (`squidglyph`, `squidsmooth`, `squidpress`, and all the `squidstore` modules) depend on
+[libGDX](https://libgdx.com/), which is recommended for use with SquidSquad but not always required. That means if you
+don't use `squidglyph`, `squidsmooth`, `squidpress`, or `squidstore`, you can use SquidSquad in purely-server-side code,
+in tests, or otherwise outside the application lifecycle libGDX expects. The `squidfreeze` modules all depend on
 [Kryo](https://github.com/EsotericSoftware/kryo) and [kryo-more](https://github.com/tommyettinger/kryo-more).
 
 # Which?
@@ -50,10 +50,12 @@ dependency will usually pull in a few others. The full list is:
    - `squidsmooth` can be useful for graphical games, but is less useful for text-based ones.
  - squidglyph
    - This depends on `squidcore` and `squidgrid`. It provides text-based display (meant for classical
-     roguelikes and games like them) using the external library `TextraTypist`. Right now it only provides `GlyphMap`,
+     roguelikes and games like them) using the external library `TextraTypist`. Right now it only provides `GlyphGrid`,
      which makes it somewhat easier to handle a grid of text with smoothly-moving glyphs over it, `GlyphActor`, which
      is a scene2d `Actor` drawn with just one (potentially colorful or styled) glyph, and some classes for `Action`s,
-     which can be applied to a `GlyphMap` or `GlyphActor`.
+     which can be applied to a `GlyphGrid` or `GlyphActor`.
+   - On platforms other than GWT, this module can load [REXPaint](https://www.gridsagegames.com/rexpaint/) .xp files. It
+     can also save a `GlyphGrid` to a new .xp file. These use the small `XPIO` class.
  - squidpath
    - Pathfinding, mostly using a modified version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
@@ -64,6 +66,9 @@ dependency will usually pull in a few others. The full list is:
      `DungeonProcessor` class can be used to ensure only the connected areas of a map are preserved, and can place
      doors, water, grass, boulders, and so on, using an environment 2D array to know what can be placed where. This
      depends on `squidgrid`.
+ - squidpress
+   - Input handling, wrapping libGDX input classes to match the features SquidLib offers already. This depends on
+     libGDX. This supports key rebinding in SquidInput, and there's an existing vi-keys rebind in `keymaps/`.
  - squidstore
    - Split up into a few submodules: `SquidStoreCore`, `SquidStoreGrid`, `SquidStoreOld`, and `SquidStoreText`, with
      each one containing the necessary registration code to save and load their corresponding module to JSON. This uses
@@ -108,39 +113,24 @@ ProGuard does its optimizations.
 
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
-on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. For GWT... OK. Deep breaths. On a new
-project that uses [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff), you should check the third-party
-extensions `jdkgdxds`, `juniper`, and `regexodus`, plus any others you might want (`jdkgdxds-interop`, for instance, is
-required by `squidstore`, and `textratypist` is required by `squidglyph`). For now, let's say we only want the dungeon
-map generators in `squidplace`. This depends on `squidcore` and `squidgrid`. For all projects, your core module will
-contain dependencies like:
-```gradle
-	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-	api "com.squidpony:SquidPlace:$squidSquadVersion"
-```
+on the SquidSquad module(s) you want, and the rest will be obtained by Gradle.
 
-For projects that use GWT, your html module should contain... more:
-```gradle
-  implementation "com.github.tommyettinger:digital:$digitalVersion:sources"
-  implementation "com.github.tommyettinger:funderby:$funderbyVersion:sources"
-  implementation "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion:sources"
-  implementation "com.github.tommyettinger:juniper:$juniperVersion:sources"
-  implementation "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
-  implementation "com.squidpony:SquidCore:$squidSquadVersion:sources"
-  implementation "com.squidpony:SquidGrid:$squidSquadVersion:sources"
-  implementation "com.squidpony:SquidPlace:$squidSquadVersion:sources"
-```
+For GWT... OK. Deep breaths. Please use gdx-liftoff. Do not use gdx-setup. Use Maven only if you are an absolute wizard.
+Select SquidSquad dependencies here, and gdx-liftoff will take care of their dependencies on and off GWT. Generate the
+project. Relax. If you need to add another SquidSquad dependency, my usual recommendation is to generate an empty
+project with all dependencies you want selected, then to compare the `gradle.properties` and all `build.gradle` files
+between your empty and original projects. Copy over any changes you want, reload your Gradle project, and you're done.
 
 These fetch SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the only such
-release is `4.0.0-alpha1`. For anything else, you'll need JitPack, where you should use a recent commit from
+release is `4.0.0-alpha2`. For anything else, you'll need JitPack, where you should use a recent commit from
 [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
 different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
 using JitPack.
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.2.0
-  - `funderbyVersion`=0.0.2
-  - `jdkgdxdsVersion`=1.2.1 (This can be 1.2.2, but SquidSquad 4.0.0-alpha1 will default to 1.2.1.)
-  - `juniperVersion`=0.2.0
+  - `digitalVersion`=0.3.2
+  - `funderbyVersion`=0.1.1
+  - `jdkgdxdsVersion`=1.3.1
+  - `juniperVersion`=0.3.4
   - `regExodusVersion`=0.1.15
