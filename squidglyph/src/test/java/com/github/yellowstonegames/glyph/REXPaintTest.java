@@ -8,13 +8,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
-import com.github.yellowstonegames.glyph.rexpaint.REXReader;
+import com.github.yellowstonegames.glyph.rexpaint.XPIO;
 import com.github.yellowstonegames.glyph.rexpaint.XPFile;
-import com.github.yellowstonegames.place.Biome;
-import com.github.yellowstonegames.place.WildernessGenerator;
 
 public class REXPaintTest extends ApplicationAdapter {
 
@@ -34,8 +31,8 @@ public class REXPaintTest extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        font = KnownFonts.getIosevkaSlabMSDF().scaleTo(16f, 32f);
-        XPFile room = REXReader.loadXP(Gdx.files.internal("Room.xp"));
+        font = KnownFonts.getAStarry().scaleTo(32f, 32f);
+        XPFile room = XPIO.loadXP(Gdx.files.internal("Room.xp"));
 
         gg = new GlyphGrid(font, room.getLayer(0).width, room.getLayer(0).height);
 

@@ -27,12 +27,7 @@ public class CompressionUtils {
             outputStream.write(buffer, 0, count);
         }
         outputStream.close();
-        byte[] output = outputStream.toByteArray();
-        /*
-        LOG.debug("Original: " + data.length / 1024 + " Kb");
-        LOG.debug("Compressed: " + output.length / 1024 + " Kb");
-        */
-        return output;
+        return outputStream.toByteArray();
     }
     public static byte[] decompress(byte[] data) throws IOException, DataFormatException {
         Inflater inflater = new Inflater();
@@ -44,16 +39,11 @@ public class CompressionUtils {
             outputStream.write(buffer, 0, count);
         }
         outputStream.close();
-        byte[] output = outputStream.toByteArray();
-        /*
-        LOG.debug("Original: " + data.length);
-        LOG.debug("Compressed: " + output.length);
-        */
-        return output;
+        return outputStream.toByteArray();
     }
 
     public static byte[] gzipDecodeByteArray(byte[] data) {
-        GZIPInputStream gzipInputStream = null;
+        GZIPInputStream gzipInputStream;
         try {
             gzipInputStream = new GZIPInputStream(
                     new ByteArrayInputStream(data));
@@ -63,7 +53,6 @@ public class CompressionUtils {
             while (gzipInputStream.available() > 0) {
                 int count = gzipInputStream.read(buffer, 0, 1024);
                 if(count > 0) {
-                    //System.out.println("Read " + count + " bytes");
                     outputStream.write(buffer, 0, count);
                 }
             }
@@ -72,8 +61,7 @@ public class CompressionUtils {
             gzipInputStream.close();
             return outputStream.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Failed to gzip-decode byte array.");
         }
     }
 }

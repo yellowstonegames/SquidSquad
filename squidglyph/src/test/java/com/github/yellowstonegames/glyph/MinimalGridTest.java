@@ -8,30 +8,14 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LineWobble;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
-import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.path.DijkstraMap;
-import com.github.yellowstonegames.place.DungeonProcessor;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 public class MinimalGridTest extends ApplicationAdapter {
 
@@ -58,10 +42,6 @@ public class MinimalGridTest extends ApplicationAdapter {
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_INFO);
-        long seed = MathUtils.random.nextLong();// random seed every time
-//        long seed = TimeUtils.millis() >>> 21; // use to keep each seed for about half an hour; useful for testing
-        Gdx.app.log("SEED", "Initial seed is " + seed);
-        RandomXS128 random = new RandomXS128(seed);
         stage = new Stage();
         Font font = KnownFonts.getInconsolata().scaleTo(15f, 25f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
