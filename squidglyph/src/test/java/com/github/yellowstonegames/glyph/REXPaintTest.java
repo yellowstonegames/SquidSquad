@@ -22,7 +22,7 @@ public class REXPaintTest extends ApplicationAdapter {
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("REXPaint test");
-        config.setWindowedMode(720, 640);
+        config.setWindowedMode(40<<5, 25<<5);
         config.disableAudio(true);
         config.useVsync(false);
         new Lwjgl3Application(new REXPaintTest(), config);
@@ -31,11 +31,11 @@ public class REXPaintTest extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        font = KnownFonts.getAStarry().scaleTo(16f, 16f);
-        XPFile room = XPIO.loadXP(Gdx.files.internal("Dungeon1685158102701.xp"));
+        font = KnownFonts.getIosevkaSlab().scaleTo(20f, 32f).adjustLineHeight(1.25f);
+        XPFile room = XPIO.loadXP(Gdx.files.internal("Dungeon1685158844401.xp"));
 //        XPFile room = XPIO.loadXP(Gdx.files.internal("Room.xp"));
 
-        gg = new GlyphGrid(font, room.getLayer(0).width, room.getLayer(0).height);
+        gg = new GlyphGrid(font, room.getLayer(0).width, room.getLayer(0).height, true);
 
         room.intoGlyphGrid(gg);
         stage.addActor(gg);

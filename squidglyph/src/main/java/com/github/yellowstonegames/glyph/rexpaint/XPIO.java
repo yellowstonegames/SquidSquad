@@ -19,11 +19,15 @@
 package com.github.yellowstonegames.glyph.rexpaint;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.yellowstonegames.glyph.GlyphActor;
 import com.github.yellowstonegames.glyph.GlyphGrid;
+import com.github.yellowstonegames.grid.Coord;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -131,19 +135,30 @@ public class XPIO {
         for(IntLongMap.Entry e : data.map){
             int x = GlyphGrid.extractX(e.key);
             int y = GlyphGrid.extractY(e.key);
-            map[x][y] = e.value;
+            map[x][h-1-y] = e.value;
         }
+        SnapshotArray<Actor> snap = data.getChildren();
+        Actor[] actors = snap.begin();
+        for (int i = 0, n = snap.size; i < n; i++) {
+            Actor a = actors[i];
+            if(!(a instanceof GlyphActor)) continue;
+            GlyphActor g = (GlyphActor) a;
+            Coord loc = g.getLocation();
+            map[loc.x][h-1-loc.y] = g.glyph;
+        }
+        snap.end();
+
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 long v = map[x][y];
-                buf.putInt((char) v);
+                buf.putInt(unicodeToCp437.getOrDefault((char)v, (char) v));
                 if ((v & 0x000000FE00000000L) == 0) {
                     v = (v & 0xFFFFFFFFL) | 0xFF00FF0000000000L;
                 }
                 buf.put((byte) (v >>> 56));
                 buf.put((byte) (v >>> 48));
                 buf.put((byte) (v >>> 40));
-                int bg = data.backgrounds[x][y];
+                int bg = data.backgrounds[x][h-1-y];
                 if ((bg & 0xFE) == 0)
                     bg = 0xFF00FF00;
                 buf.put((byte) (bg >>> 24));
