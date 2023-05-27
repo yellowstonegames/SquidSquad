@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2023 See AUTHORS file.
+  ~ Copyright (c) 2022-2023 See AUTHORS file.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -32,6 +32,6 @@
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.MoreActions"/>
     <extend-configuration-property name="gdx.reflect.include" value="com.github.yellowstonegames.glyph.GridAction"/>
     <source path="glyph">
-        <exclude name="rexpaint"/>
+        <exclude name="rexpaint/**.java"/>
     </source>
 </module>
