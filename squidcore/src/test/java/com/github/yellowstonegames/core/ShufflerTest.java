@@ -97,13 +97,15 @@ public class ShufflerTest {
     }
 
     /**
-     * May take about a minute to run, possibly longer on older hardware.
+     * This previously ran for many more iterations (outer went to 50 instead of 8) and tried more bound values (up to
+     * 42 instead of 20). Doing that made this test take a lot longer. Changing the number of ints added to buckets
+     * isn't an easy solution because if the limit of 1000000 changes, the threshold of 85000 also needs to change by an
+     * unclear amount.
      */
     @Test
-    @Ignore
     public void testManyBounds() {
-        for (int outer = 0; outer < 50; outer++) {
-            for (int bound = 3; bound <= 42; bound++) {
+        for (int outer = 0; outer < 8; outer++) {
+            for (int bound = 3; bound <= 20; bound++) {
                 long seed = Hasher.randomize3(outer);
                 IntShuffler is = new IntShuffler(bound, seed);
                 int[] buckets = new int[bound];
