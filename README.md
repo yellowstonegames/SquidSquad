@@ -115,14 +115,17 @@ The dependency situation is complicated because everything depends on `squidcore
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle.
 
-For GWT... OK. Deep breaths. Please use gdx-liftoff. Do not use gdx-setup. Use Maven only if you are an absolute wizard.
-Select SquidSquad dependencies here, and gdx-liftoff will take care of their dependencies on and off GWT. Generate the
-project. Relax. If you need to add another SquidSquad dependency, my usual recommendation is to generate an empty
-project with all dependencies you want selected, then to compare the `gradle.properties` and all `build.gradle` files
-between your empty and original projects. Copy over any changes you want, reload your Gradle project, and you're done.
+For GWT... OK. Deep breaths. Please use [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff). Do not use
+gdx-setup. Use Maven only if you are an absolute wizard. Select SquidSquad dependencies here, and gdx-liftoff will take
+care of their dependencies on and off GWT. Generate the project. Relax. If you need to add another dependency, from
+SquidSquad or somewhere else, my usual recommendation is to generate an empty project with all dependencies you want
+selected, then to compare the `gradle.properties` and all `build.gradle` files between your empty and original projects.
+Copy over any changes you want, reload your Gradle project, and you're done. There probably won't be many changes, and
+they will probably all be in the dependencies, but this ensures all the versions are up-to-date and necessary other
+projects are present.
 
-These fetch SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the only such
-release is `4.0.0-alpha2`. For anything else, you'll need JitPack, where you should use a recent commit from
+These fetch SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best such
+release is `4.0.0-alpha3`. For anything else, you'll need JitPack, where you should use a recent commit from
 [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
 different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
 using JitPack.
