@@ -40,5 +40,12 @@ public class BlueNoiseStats {
             }
             System.out.println("Distance " + i + ": total is " + sums[i]);
         }
+        for (int v = 0; v < 256; v++) {
+            double total = 0.0;
+            for (int d = 1; d < 64; d += 2) {
+                total += distances[d][v] / (double) counts[d];
+            }
+            System.out.println("Value " + v + ": total is " + total);
+        }
     }
 }
