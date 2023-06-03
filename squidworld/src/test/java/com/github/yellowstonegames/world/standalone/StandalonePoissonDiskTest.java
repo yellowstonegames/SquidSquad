@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.place;
+package com.github.yellowstonegames.world.standalone;
 
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedMap;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
-import com.github.yellowstonegames.grid.PoissonDisk;
+import com.github.yellowstonegames.place.DungeonTools;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
@@ -30,41 +33,26 @@ import com.github.yellowstonegames.place.tileset.TilesetType;
  * A test for the randomized spraying of Coords in the PoissonDisk class.
  * Needs to be in SquidPlace because the dungeon map generation is here.
  */
-public class PoissonDiskTest {
+public class StandalonePoissonDiskTest {
 
     public static void main(String[] args) {
-//        if (!"true".equals(System.getenv("printing"))) return;
-        AceRandom rng = new AceRandom(0xBEEFBABEL);
+        AceRandom rng = new AceRandom();
         DungeonBoneGen dg = new DungeonBoneGen(rng);
-        char[][] dun = DungeonTools.wallWrap(dg.generate(TilesetType.DEFAULT_DUNGEON, 80, 80));
-
-        // System.out.println(dg);
-
-        CoordOrderedSet disks = PoissonDisk.sampleMap(dun, 4f, rng, '#');
-
-        for (Coord c : disks) {
-            if (dun[c.x][c.y] != '#')
-                dun[c.x][c.y] = 'o';
-        }
-        //hl[entry.x][entry.y] = '@';
-        dg.setDungeon(dun);
-        System.out.println(dg);
-        System.out.println();
+        char[][] dun = new char[80][80];
 
         ArrayTools.fill(dun, '.');
         DungeonTools.wallWrap(dun);
 
-        CoordObjectOrderedMap<ObjectList<Coord>> points = PoissonDisk.sampleRectangle(
-                Coord.get(1, 1), Coord.get(78, 78), 2.5f,
+        OrderedMap<GridPoint2, Array<GridPoint2>> points = StandalonePoissonDisk.sampleRectangle(
+                new GridPoint2(1, 1), new GridPoint2(78, 78), 2.5f,
                 80, 80, 30, rng);
-        for (int i = 0; i < points.size(); i++) {
-            Coord c = points.keyAt(i);
-            dun[c.x][c.y] = (char) ('0' + points.getAt(i).size());
+        for (int i = 0; i < points.size; i++) {
+            GridPoint2 c = points.orderedKeys().get(i);
+            dun[c.x][c.y] = (char) ('0' + points.get(c).size);
         }
         dg.setDungeon(dun);
         System.out.println(dg);
         System.out.println();
-
     }
 
 }

@@ -139,7 +139,7 @@ public final class StandalonePoissonDisk {
         maxSampleRadius *= maxSampleRadius;
         final float radius2 = radius * radius;
         final float iCellSize = 1f / (radius * inverseRootTwo);
-        final float ik = 1f / pointsPerTry;
+        final float ik = MathUtils.PI2 / pointsPerTry;
         final float width = maxPos.x - minPos.x + 1, height = maxPos.y - minPos.y + 1;
         final GridPoint2 gridCenter = minPos.cpy().add(maxPos);
         gridCenter.x /= 2;
