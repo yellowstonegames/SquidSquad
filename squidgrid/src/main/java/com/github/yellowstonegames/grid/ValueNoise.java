@@ -20,8 +20,8 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 
 /**
- * An INoise implementation that produces blocky noise from 1D to 6D. This is typically faster than
- * {@link HighDimensionalValueNoise}, but can't produce noise in 7D or higher.
+ * An INoise implementation that produces blocky noise from 1D to 7D. This is typically faster than
+ * {@link HighDimensionalValueNoise}, but can't produce noise in 8D or higher.
  */
 public class ValueNoise implements INoise {
 

@@ -103,8 +103,8 @@ public class HighDimensionalValueNoise implements INoise {
         long hash;
         for (int i = 0; i < dim; i++) {
             floors[i] = MathTools.longFloor(args[i]);
-            working[i] = args[i] - floors[i];
-            working[i] *= working[i] * (3f - 2f * working[i]);
+            final float w = args[i] - floors[i];
+            working[i] = w * w * (3f - 2f * w);
         }
         float sum = 0f, temp;
         final int limit = 1 << dim;

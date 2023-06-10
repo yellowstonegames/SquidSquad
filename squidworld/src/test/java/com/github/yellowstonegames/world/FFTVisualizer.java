@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.FastGif;
 import com.github.tommyettinger.anim8.PaletteReducer;
@@ -67,11 +66,12 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
-    private final HighDimensionalValueNoise[] vals = new HighDimensionalValueNoise[7];
+    private final HighDimensionalValueNoise[] hdvs = new HighDimensionalValueNoise[7];
+    private final ValueNoise val = new ValueNoise(noise.getSeed());
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 22;
+    private static final int MODE_LIMIT = 23;
     private int mode = 21;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
@@ -173,7 +173,7 @@ public class FFTVisualizer extends ApplicationAdapter {
             phantoms[i] = new PhantomNoise(noise.getSeed() + ~i * 55555555L, 2 + i);
             taffies[i] = new TaffyNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
             flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
-            vals[i] = new HighDimensionalValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
+            hdvs[i] = new HighDimensionalValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
         noise.setPointHash(pointHashes[hashIndex]);
@@ -267,10 +267,11 @@ public class FFTVisualizer extends ApplicationAdapter {
                         rug.setState(s);
                         quilt.setState(s);
                         cyclic.setSeed(ls);
+                        val.setSeed(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
                             flans[i].setSeed(ls);
-                            vals[i].setSeed(ls);
+                            hdvs[i].setSeed(ls);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -281,10 +282,11 @@ public class FFTVisualizer extends ApplicationAdapter {
                         rug.setState(s);
                         quilt.setState(s);
                         cyclic.setSeed(ls);
+                        val.setSeed(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
                             flans[i].setSeed(ls);
-                            vals[i].setSeed(ls);
+                            hdvs[i].setSeed(ls);
                         }
                         System.out.println("Using seed " + s);
                         break;
@@ -1446,82 +1448,6 @@ public class FFTVisualizer extends ApplicationAdapter {
 
             }
         } else if(mode == 18) {
-            float fr = noise.getFrequency();
-            switch (dim) {
-                case 0:
-                    for (int x = 0; x < width; x++) {
-                        points[dim][0] = (c+x)*fr;
-                        for (int y = 0; y < height; y++) {
-                            points[dim][1] = (c+y)*fr;
-                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 1:
-                    points[dim][2] = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[dim][0] = x * fr;
-                        for (int y = 0; y < height; y++) {
-                            points[dim][1] = y * fr;
-                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 2:
-                    cc = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
-                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
-                        for (int y = 0; y < height; y++) {
-                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
-                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
-                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 3:
-                    points[3][4] = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
-                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
-                        for (int y = 0; y < height; y++) {
-                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
-                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
-                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-                case 4:
-                    cc = c * fr;
-                    for (int x = 0; x < width; x++) {
-                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4;
-                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4;
-                        for (int y = 0; y < height; y++) {
-                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4;
-                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4;
-                            points[4][4] = TrigTools.cosTurns(cc * -0x1.8p-6f) * 4;
-                            points[4][5] = TrigTools.sinTurns(cc * -0x1.8p-6f) * 4;
-                            bright = basicPrepare(vals[dim].getNoise(points[dim]));
-                            real[x][y] = bright;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
-                        }
-                    }
-                    break;
-            }
-        } else if(mode == 19) {
             if((dim & 1) == 0) {
                 for (int x = 0; x < width; x++) {
                     float distX = x - (width >>> 1);
@@ -1555,7 +1481,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                 }
             }
-        } else if(mode == 20) {
+        } else if(mode == 19) {
             for (int x = 0; x < width; x++) {
                 float distX = x - (width>>>1);
                 for (int y = 0; y < height; y++) {
@@ -1569,7 +1495,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     renderer.vertex(x, y, 0);
                 }
             }
-        } else if(mode == 21) {
+        } else if(mode == 20) {
             for (int x = 0; x < width; x++) {
                 float distX = x - (width>>>1);
                 for (int y = 0; y < height; y++) {
@@ -1615,6 +1541,158 @@ public class FFTVisualizer extends ApplicationAdapter {
                 }
                 frames.clear();
 
+            }
+        } else if(mode == 21) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = (c+x)*fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = (c+y)*fr;
+                            bright = basicPrepare(val.getNoise(points[dim][0], points[dim][1]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(val.getNoise(points[dim][0], points[dim][1], points[dim][2]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
+                        for (int y = 0; y < height; y++) {
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            bright = basicPrepare(val.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    points[3][4] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            bright = basicPrepare(val.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3], points[dim][4]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            points[4][4] = TrigTools.cosTurns(cc * -0x1.8p-6f) * 4;
+                            points[4][5] = TrigTools.sinTurns(cc * -0x1.8p-6f) * 4;
+                            bright = basicPrepare(val.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3], points[dim][4], points[dim][5]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
+        } else if(mode == 22) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = (c+x)*fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = (c+y)*fr;
+                            bright = basicPrepare(hdvs[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(hdvs[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
+                        for (int y = 0; y < height; y++) {
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            bright = basicPrepare(hdvs[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    points[3][4] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            bright = basicPrepare(hdvs[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            points[4][4] = TrigTools.cosTurns(cc * -0x1.8p-6f) * 4;
+                            points[4][5] = TrigTools.sinTurns(cc * -0x1.8p-6f) * 4;
+                            bright = basicPrepare(hdvs[dim].getNoise(points[dim]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
             }
         }
 
