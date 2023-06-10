@@ -105,6 +105,7 @@ public class HighDimensionalValueNoise implements INoise {
             floors[i] = MathTools.longFloor(args[i]);
             final float w = args[i] - floors[i];
             working[i] = w * w * (3f - 2f * w);
+            floors[i] *= gold[i];
         }
         float sum = 0f, temp;
         final int limit = 1 << dim;
@@ -115,7 +116,7 @@ public class HighDimensionalValueNoise implements INoise {
             for (int j = 0; j < dim; j++) {
                 bit = (i >>> j & 1);
                 temp *= bit + (1|-bit) * working[j];
-                hash += (floors[j] - bit) * gold[j];
+                hash += floors[j] - (-bit & gold[j]);
             }
             hash ^= hash * hash | 1L; // xqo, a xorsquare operation
             sum += temp * (hash >> 32);
@@ -130,10 +131,12 @@ public class HighDimensionalValueNoise implements INoise {
         floors[0] = MathTools.longFloor(x);
         x -= floors[0];
         x *= x * (3f - 2f * x);
+        floors[0] *= gold[0];
 
         floors[1] = MathTools.longFloor(y);
         y -= floors[1];
         y *= y * (3f - 2f * y);
+        floors[1] *= gold[1];
 
         float sum = 0f, temp;
         int bit;
@@ -142,11 +145,11 @@ public class HighDimensionalValueNoise implements INoise {
             hash = hashSeed;
             bit = i & 1;
             temp *= bit + (1|-bit) * x;
-            hash += (floors[0] - bit) * gold[0];
+            hash += floors[0] - (-bit & gold[0]);
 
             bit = i >>> 1;
             temp *= bit + (1|-bit) * y;
-            hash += (floors[1] - bit) * gold[1];
+            hash += floors[1] - (-bit & gold[1]);
 
             hash ^= hash * hash | 1L; // xqo, a xorsquare operation
             sum += temp * (hash >> 32);
