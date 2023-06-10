@@ -43,8 +43,8 @@ public class HighDimensionalValueNoise implements INoise {
     public HighDimensionalValueNoise(long seed, int dimension) {
         dim = Math.max(2, dimension);
         input = new float[dim];
-        working = new float[dim+1];
-        floors = new long[dim+1];
+        working = new float[dim<<1];
+        floors = new long[dim];
         this.seed = seed;
     }
 
@@ -52,8 +52,8 @@ public class HighDimensionalValueNoise implements INoise {
         if(dim != Math.max(2, dimension)) {
             dim = Math.max(2, dimension);
             input = new float[dim];
-            working = new float[dim + 1];
-            floors = new long[dim + 1];
+            working = new float[dim << 1];
+            floors = new long[dim];
         }
         this.seed = seed;
         return this;
@@ -97,14 +97,14 @@ public class HighDimensionalValueNoise implements INoise {
         return noise(args.length, args);
     }
 
-    protected float noise(int dim, float... args) {
+    protected float noise(final int dim, float... args) {
         final long[] gold = QuasiRandomTools.goldenLong[dim];
         final long hashSeed = gold[dim] * seed;
         long hash;
         for (int i = 0; i < dim; i++) {
             floors[i] = MathTools.longFloor(args[i]);
             final float w = args[i] - floors[i];
-            working[i] = w * w * (3f - 2f * w);
+            working[i<<1|1] = -(working[i<<1] = w * w * (3f - 2f * w));
             floors[i] *= gold[i];
         }
         float sum = 0f, temp;
@@ -115,7 +115,7 @@ public class HighDimensionalValueNoise implements INoise {
             hash = hashSeed;
             for (int j = 0; j < dim; j++) {
                 bit = (i >>> j & 1);
-                temp *= bit + (1|-bit) * working[j];
+                temp *= bit + working[j<<1|bit];
                 hash += floors[j] - (-bit & gold[j]);
             }
             hash ^= hash * hash | 1L; // xqo, a xorsquare operation
