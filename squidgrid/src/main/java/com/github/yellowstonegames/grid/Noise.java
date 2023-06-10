@@ -2198,7 +2198,7 @@ public class Noise implements INoise {
      */
     public static float wobbleTight(final int seed, float value)
     {
-        final int floor = value >= 0f ? (int) value : (int) value - 1;
+        int floor = MathTools.fastFloor(value);
         int z = seed + floor, x = z++;
         final float start = ((x = ((x = (x ^ x >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f,
                 end = ((x = ((x = (z ^ z >>> 16) * 0x21fad) ^ x >>> 15) * 0x73597) >>> 1 ^ x >>> 16) * 0x1p-31f;
@@ -2315,9 +2315,9 @@ public class Noise implements INoise {
 
 
     public float singleValue (int seed, float x, float y) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         switch (interpolation) {
             case HERMITE:
@@ -2344,10 +2344,10 @@ public class Noise implements INoise {
      * @return noise from 0 to 1.
      */
     protected float valueNoise (int seed, float x, float y) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
         xFloor *= 0xD1B55;
@@ -2470,11 +2470,11 @@ public class Noise implements INoise {
     }
 
     public float singleValue(int seed, float x, float y, float z) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         switch (interpolation) {
             case HERMITE:
@@ -2510,13 +2510,13 @@ public class Noise implements INoise {
      */
     protected float valueNoise(int seed, float x, float y, float z)
     {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         z *= z * (3 - 2 * z);
         //0xDB4F1, 0xBBE05, 0xA0F2F
@@ -2655,13 +2655,13 @@ public class Noise implements INoise {
     }
 
     public float singleValue(int seed, float x, float y, float z, float w) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
         switch (interpolation) {
             case HERMITE:
@@ -2700,16 +2700,16 @@ public class Noise implements INoise {
     }
     protected float valueNoise(int seed, float x, float y, float z, float w)
     {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         z *= z * (3 - 2 * z);
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
         w *= w * (3 - 2 * w);
         //0xE19B1, 0xC6D1D, 0xAF36D, 0x9A695
@@ -2866,15 +2866,15 @@ public class Noise implements INoise {
     }
 
     public float singleValue(int seed, float x, float y, float z, float w, float u) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        int uFloor = u >= 0 ? (int) u : (int) u - 1;
+        int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
         switch (interpolation) {
             case HERMITE:
@@ -2934,19 +2934,19 @@ public class Noise implements INoise {
     }
 
     protected float valueNoise(int seed, float x, float y, float z, float w, float u) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         z *= z * (3 - 2 * z);
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
         w *= w * (3 - 2 * w);
-        int uFloor = u >= 0 ? (int) u : (int) u - 1;
+        int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
         u *= u * (3 - 2 * u);
         //0xE60E3, 0xCEBD7, 0xB9C9B, 0xA6F57, 0x9609D, 0x86D51
@@ -3133,17 +3133,17 @@ public class Noise implements INoise {
     }
 
     public float singleValue(int seed, float x, float y, float z, float w, float u, float v) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        int uFloor = u >= 0 ? (int) u : (int) u - 1;
+        int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
-        int vFloor = v >= 0 ? (int) v : (int) v - 1;
+        int vFloor = MathTools.fastFloor(v);
         v -= vFloor;
         switch (interpolation) {
             case HERMITE:
@@ -3240,22 +3240,22 @@ public class Noise implements INoise {
     }
 
     protected float valueNoise(int seed, float x, float y, float z, float w, float u, float v) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         z *= z * (3 - 2 * z);
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
         w *= w * (3 - 2 * w);
-        int uFloor = u >= 0 ? (int) u : (int) u - 1;
+        int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
         u *= u * (3 - 2 * u);
-        int vFloor = v >= 0 ? (int) v : (int) v - 1;
+        int vFloor = MathTools.fastFloor(v);
         v -= vFloor;
         v *= v * (3 - 2 * v);
         //0xE95E1, 0xD4BC7, 0xC1EDB, 0xB0C8B, 0xA1279, 0x92E85
@@ -3335,25 +3335,25 @@ public class Noise implements INoise {
     }
 
     protected float valueNoise(int seed, float x, float y, float z, float w, float u, float v, float m) {
-        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
         x *= x * (3 - 2 * x);
-        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
         y *= y * (3 - 2 * y);
-        int zFloor = z >= 0 ? (int) z : (int) z - 1;
+        int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
         z *= z * (3 - 2 * z);
-        int wFloor = w >= 0 ? (int) w : (int) w - 1;
+        int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
         w *= w * (3 - 2 * w);
-        int uFloor = u >= 0 ? (int) u : (int) u - 1;
+        int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
         u *= u * (3 - 2 * u);
-        int vFloor = v >= 0 ? (int) v : (int) v - 1;
+        int vFloor = MathTools.fastFloor(v);
         v -= vFloor;
         v *= v * (3 - 2 * v);
-        int mFloor = m >= 0 ? (int) m : (int) m - 1;
+        int mFloor = MathTools.fastFloor(m);
         m -= mFloor;
         m *= m * (3 - 2 * m);
         xFloor *= 0xEBEDF;

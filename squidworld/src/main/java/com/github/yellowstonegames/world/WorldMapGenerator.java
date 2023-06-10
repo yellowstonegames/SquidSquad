@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
@@ -154,7 +155,7 @@ public abstract class WorldMapGenerator {
     protected static float removeExcess(float radians)
     {
         radians *= 0.6366197723675814f;
-        final int floor = (radians >= 0f ? (int) radians : (int) radians - 1);
+        final int floor = MathTools.fastFloor(radians);
         return (radians - (floor & -2) - ((floor & 1) << 1)) * TrigTools.PI;
     }
     /**

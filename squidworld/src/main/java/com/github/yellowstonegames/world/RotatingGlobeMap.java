@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -234,8 +235,8 @@ public class RotatingGlobeMap extends WorldMapGenerator {
 
                 qs = lat * 0.6366197723675814f;
                 qc = qs + 1f;
-                int sf = (qs >= 0f ? (int) qs : (int) qs - 1) & -2;
-                int cf = (qc >= 0f ? (int) qc : (int) qc - 1) & -2;
+                int sf = MathTools.fastFloor(qs) & -2;
+                int cf = MathTools.fastFloor(qc) & -2;
                 qs -= sf;
                 qc -= cf;
                 qs *= 2f - qs;
@@ -246,8 +247,8 @@ public class RotatingGlobeMap extends WorldMapGenerator {
 
                 ps = lon * 0.6366197723675814f;
                 pc = ps + 1f;
-                sf = (ps >= 0f ? (int) ps : (int) ps - 1) & -2;
-                cf = (pc >= 0f ? (int) pc : (int) pc - 1) & -2;
+                sf = MathTools.fastFloor(ps) & -2;
+                cf = MathTools.fastFloor(pc) & -2;
                 ps -= sf;
                 pc -= cf;
                 ps *= 2f - ps;

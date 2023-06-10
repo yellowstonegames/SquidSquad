@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -101,7 +102,7 @@ public class HighDimensionalValueNoise implements INoise {
         final long hashSeed = gold[dim] * seed;
         long hash;
         for (int i = 0; i < dim; i++) {
-            floors[i] = args[i] >= 0f ? (long) args[i] : (long) args[i] - 1L;
+            floors[i] = MathTools.longFloor(args[i]);
             working[i] = args[i] - floors[i];
             working[i] *= working[i] * (3f - 2f * working[i]);
         }
@@ -126,11 +127,11 @@ public class HighDimensionalValueNoise implements INoise {
         final long[] gold = QuasiRandomTools.goldenLong[2];
         final long hashSeed = gold[2] * seed;
         long hash;
-        floors[0] = x >= 0f ? (long) x : (long) x - 1L;
+        floors[0] = MathTools.longFloor(x);
         x -= floors[0];
         x *= x * (3f - 2f * x);
 
-        floors[1] = y >= 0f ? (long) y : (long) y - 1L;
+        floors[1] = MathTools.longFloor(y);
         y -= floors[1];
         y *= y * (3f - 2f * y);
 
