@@ -17,17 +17,24 @@
 package com.github.yellowstonegames.glyph;
 
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.List;
 
 public abstract class GridAction extends TemporalAction {
+    /**
+     * A randomly-seeded random number generator that is meant to be used only for visual effects that don't change
+     * gameplay or other logic. This uses the fastest pseudo-random number generator in Juniper right now,
+     * {@link WhiskerRandom}, but because the output of a randomly-seeded generator can't be relied upon, the
+     * implementation could change in a future version.
+     * <br>
+     * The main thing this is used for currently is to assign seeds to actions with a pseudo-random component.
+     */
+    public static final WhiskerRandom GUI_RANDOM = new WhiskerRandom();
     public GlyphGrid grid;
     public Region valid;
 
@@ -85,6 +92,13 @@ public abstract class GridAction extends TemporalAction {
          * such (no false negatives). You can edit this if you need to, but it isn't recommended.
          */
         public List<Coord> affected;
+
+        /**
+         * An int that determines how any pseudo-random effects in this will look. This is usually set at creation by
+         * the constructor (using {@link #GUI_RANDOM} to get a random int), but you can set this manually to replicate
+         * a particular appearance, such as for replays.
+         */
+        public int seed;
         /**
          * Constructs an ExplosionAction with explicit settings for some fields. The valid cells this can affect will be
          * the full expanse of the GlyphGrid. The duration will be 1 second.
@@ -92,7 +106,6 @@ public abstract class GridAction extends TemporalAction {
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
          */
-
         public ExplosionAction(GlyphGrid targeting, Coord center, int radius)
         {
             this(targeting, 1f, center, radius);
@@ -108,6 +121,7 @@ public abstract class GridAction extends TemporalAction {
         public ExplosionAction(GlyphGrid targeting, float duration, Coord center, int radius)
         {
             super(targeting, duration);
+            seed = GUI_RANDOM.nextInt();
             this.center = center;
             this.radius = radius;
             float[][] resMap = new float[valid.width][valid.height];
@@ -126,6 +140,7 @@ public abstract class GridAction extends TemporalAction {
         public ExplosionAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius)
         {
             super(targeting, duration, valid);
+            seed = GUI_RANDOM.nextInt();
             this.center = center;
             this.radius = radius;
             float[][] resMap = ArrayTools.fill(1f, valid.width, valid.height);
@@ -190,6 +205,7 @@ public abstract class GridAction extends TemporalAction {
         public ExplosionAction(GlyphGrid targeting, float duration, Region valid, Coord center, int radius, float angle, float span)
         {
             super(targeting, duration, valid);
+            seed = GUI_RANDOM.nextInt();
             this.center = center;
             this.radius = radius;
             float[][] resMap = ArrayTools.fill(1f, valid.width, valid.height);
@@ -259,7 +275,7 @@ public abstract class GridAction extends TemporalAction {
             Coord c;
             float f, light;
             int color;
-            int idx, seed = System.identityHashCode(this);
+            int idx;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0.0f)
@@ -364,8 +380,8 @@ public abstract class GridAction extends TemporalAction {
          * another char array, such as if you take {@link com.github.yellowstonegames.core.StringTools#PUNCTUATION} and
          * call {@link String#toCharArray()} on it, to this at any time between calls to {@link #update(float)} (which
          * is usually called indirectly via Stage's {@link com.badlogic.gdx.scenes.scene2d.Stage#act()} method if this
-         * has been added to an Actor on that Stage). These chars are pseudo-randomly selected approximately once every
-         * eighth of a second, and may change sooner if the effect expands more quickly than that.
+         * has been added to an Actor on that Stage). These chars are pseudo-randomly selected every time the percent
+         * completed changes.
          */
         public char[] choices = "`~!@#$%^&*()-_=+\\|][}{'\";:/?.>,<".toCharArray();
 
@@ -592,8 +608,9 @@ public abstract class GridAction extends TemporalAction {
             Coord c;
             float f;
             int color;
-            int idx, seed = System.identityHashCode(this), clen = choices.length;
-            final long tick = Hasher.randomize1((System.currentTimeMillis() >>> 7) * seed);
+            int idx;
+            int clen = choices.length;
+            final long tick = Hasher.randomize1(BitConversion.doubleToLongBits(percent) + seed);
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
                 if(lightMap[c.x][c.y] <= 0.0)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
@@ -649,7 +666,6 @@ public abstract class GridAction extends TemporalAction {
             int len = affected.size();
             Coord c;
             float f, light;
-            int seed = System.identityHashCode(this);
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)

@@ -219,7 +219,7 @@ public class DungeonGridTest extends ApplicationAdapter {
 //            if(MathUtils.randomBoolean())
                 playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
                                         .append(Actions.rotateBy(360f, 1f))
-//                        .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useMistyColors())
+                        .append(new GridAction.GibberishAction(gg, 1.5f, inView, next, 5))
                         .conclude(post));
 //            else
 //                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
