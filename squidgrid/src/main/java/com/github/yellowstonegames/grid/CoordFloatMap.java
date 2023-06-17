@@ -27,7 +27,7 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
  * should use a normal {@link ObjectFloatMap} instead, since some optimizations here require Coord keys to be in the
- * pool.
+ * pool. This does much better if all Coord keys use non-negative x and y values.
  * <br>
  * You can create a CoordFloatMap with {@link #fromArray2D(float[][], float, float)} if you have a 2D float array and
  * want to get the positions within some range.
@@ -59,7 +59,7 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Rosenberg-Strong
+        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Cantor
     }
 
     @Override

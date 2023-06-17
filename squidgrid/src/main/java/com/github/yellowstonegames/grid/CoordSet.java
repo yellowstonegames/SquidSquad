@@ -26,6 +26,7 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
  * should use a normal {@link ObjectSet} instead, since some optimizations here require Coord items to be in the pool.
+ * This does much better if all Coord items use non-negative x and y values.
  */
 public class CoordSet extends ObjectSet<Coord> {
     public CoordSet() {
@@ -58,7 +59,7 @@ public class CoordSet extends ObjectSet<Coord> {
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Rosenberg-Strong
+        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Cantor
     }
 
     @Override

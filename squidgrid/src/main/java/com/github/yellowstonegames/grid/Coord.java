@@ -486,19 +486,23 @@ public class Coord {
     }
 
     /**
-     * Gets the hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs will
-     * generate, but instead uses a highly-specific technique based on the
+     * Gets a variant hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs
+     * will generate, but instead uses a highly-specific technique based on the
      * <a href="https://arxiv.org/abs/1706.04129">Rosenberg-Strong pairing function</a>. This technique will generally
      * return all low values before it returns high values, if small Coord components are hashed first. The bits of the
      * results will not be especially random, but they won't collide much at all, so in this case we may not want the
      * most-random hashes. It does much better when Coords are in the default pooled range of -3 or greater.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">The Rosenberg-Strong pairing function is discussed more here</a>;.
+     * <br>
+     * This works best if the Coords hashed are within the pooled range, including negative values between -3 and -1. If
+     * There are no negative x or y values, this does not perform as well as it could, and will probably perform worse
+     * than {@link #hashCode()}.
      *
      * @return an int that should, for most different Coord values, be significantly different from the other hash codes
-     * @see #rosenbergStrongHashCode(int, int) A static method that gets similar but more-random results than this method without involving a Coord
+     * @see #rosenbergStrongHashCode(int, int) A static method that gets the same results as this method without involving a Coord
+     * @see #rosenbergStrongRandomizedHashCode(int, int) A static method that gets similar but more-random results than this method without involving a Coord
      */
-    @Override
-    public int hashCode() {
+    public int denseHashCode() {
         //// for Coord, since it can be as low as -3, and Rosenberg-Strong works only for positive integers
 //        final int x = this.x + 3; // These are incorporated into the math below.
 //        final int y = this.y + 3;
@@ -515,10 +519,14 @@ public class Coord {
      * the expense of any random-seeming quality in the hash. This is simply the Cantor pairing function, and while it
      * does not behave particularly well with negative x or negative y, it does extremely well at not wasting space or
      * computation time in a hash table with Coord keys that are very densely packed.
+     * <br>
+     * This can produce negative results for some negative x,y inputs, but usually produces small positive results when
+     * both x and y are small and positive, and large positive results if either x or y is even moderately large.
      *
      * @return an int that should, for different non-negative Coord values, be at least a little different from other hash codes
      */
-    public int denseHashCode() {
+    @Override
+    public int hashCode() {
         return y + ((x + y) * (x + y + 1) >> 1);
     }
 
