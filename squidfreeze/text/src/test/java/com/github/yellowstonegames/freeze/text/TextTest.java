@@ -19,8 +19,6 @@ package com.github.yellowstonegames.freeze.text;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.kryo.jdkgdxds.ObjectObjectMapSerializer;
 import com.github.yellowstonegames.text.Language;

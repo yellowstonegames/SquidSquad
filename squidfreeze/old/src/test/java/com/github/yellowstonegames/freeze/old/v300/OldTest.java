@@ -19,8 +19,6 @@ package com.github.yellowstonegames.freeze.old.v300;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.old.v300.*;
 import org.junit.Assert;
 import org.junit.Test;

@@ -20,7 +20,6 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
-import static com.github.tommyettinger.digital.MathTools.lerp;
 import static com.github.yellowstonegames.grid.Noise.*;
 
 @Beta

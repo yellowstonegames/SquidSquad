@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.yellowstonegames.core.StringTools;
 
 /**
  * Utilities for handling floating-point positions, to be added to as needed.

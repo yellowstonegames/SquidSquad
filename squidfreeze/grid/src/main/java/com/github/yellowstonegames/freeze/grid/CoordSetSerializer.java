@@ -20,7 +20,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.github.yellowstonegames.grid.CoordSet;
-import com.github.yellowstonegames.grid.CoordSet;
 
 /**
  * Serializer for {@link CoordSet}; needs {@link CoordSerializer} registered for Coord.

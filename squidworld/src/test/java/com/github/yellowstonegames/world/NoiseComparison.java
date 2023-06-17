@@ -31,7 +31,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import com.github.yellowstonegames.grid.*;

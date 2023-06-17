@@ -18,7 +18,6 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.random.FourWheelRandom;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;

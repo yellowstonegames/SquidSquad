@@ -21,7 +21,6 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.SimplexNoise;
-import com.github.yellowstonegames.grid.SimplexNoise;
 
 /**
  * Serializer for {@link SimplexNoise}; doesn't need anything else registered.

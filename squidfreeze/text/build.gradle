@@ -8,7 +8,6 @@ dependencies {
     api project(':squidcore')
     api project(':squidfreeze:core')
     api project(':squidtext')
-	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"

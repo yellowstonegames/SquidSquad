@@ -22,10 +22,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
-import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.place.Biome;
-
-import java.util.Random;
 
 import static com.github.tommyettinger.digital.MathTools.zigzag;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
