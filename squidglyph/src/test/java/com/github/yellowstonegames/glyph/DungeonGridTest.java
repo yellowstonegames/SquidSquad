@@ -313,6 +313,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                 }
             }
         }
+        gg.map.remove(playerGlyph.getLocation());
     }
 
     /**

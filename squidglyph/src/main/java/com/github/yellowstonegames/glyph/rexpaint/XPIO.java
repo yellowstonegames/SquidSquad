@@ -28,6 +28,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.glyph.GlyphActor;
 import com.github.yellowstonegames.glyph.GlyphGrid;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordLongOrderedMap;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -131,9 +132,9 @@ public class XPIO {
         buf.putInt(w); // Image width.
         buf.putInt(h); // Image height.
         long[][] map = new long[w][h];
-        for(IntLongMap.Entry e : data.map){
-            int x = GlyphGrid.extractX(e.key);
-            int y = GlyphGrid.extractY(e.key);
+        for(CoordLongOrderedMap.Entry<Coord> e : data.map){
+            int x = e.key.x;
+            int y = e.key.y;
             map[x][h-1-y] = e.value;
         }
         SnapshotArray<Actor> snap = data.getChildren();

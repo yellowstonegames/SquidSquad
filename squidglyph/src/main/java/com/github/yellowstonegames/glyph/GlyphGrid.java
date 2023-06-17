@@ -32,12 +32,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.textra.ColorLookup;
 import com.github.tommyettinger.textra.Font;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
 
+import com.github.yellowstonegames.grid.CoordLongOrderedMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -54,7 +56,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <br>
  * {@link com.badlogic.gdx.scenes.scene2d.Action} behavior is unfortunately a little complex, but issues can usually be
  * resolved by moving around the order in which {@link Stage#act()} {@link Stage#draw()}, and map-changing methods are
- * called. Typically, if you {@link #put(int, long)} every visible glyph every frame, you would do that first, then call
+ * called. Typically, if you {@link #put(Coord, long)} every visible glyph every frame, you would do that first, then call
  * Stage.act(), and only then call Stage.draw(). This allows Actions (in act()) to affect the GlyphGrid without the map
  * being overwritten before it can be drawn. There are some useful Actions specialized to working with GlyphGrid in
  * {@link GridAction}, and some non-specialized support code for Actions in {@link MoreActions}.
@@ -62,7 +64,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class GlyphGrid extends Group {
     protected int gridWidth;
     protected int gridHeight;
-    public IntLongOrderedMap map;
+    public CoordLongOrderedMap map;
     public int[][] backgrounds = null;
     protected Font font;
     public Viewport viewport;
@@ -112,12 +114,13 @@ public class GlyphGrid extends Group {
      */
     public GlyphGrid(Font font, int gridWidth, int gridHeight, boolean squareCenteredCells) {
         super();
+        Coord.expandPoolTo(gridWidth, gridHeight);
         setTransform(false);
         this.startX = 0;
         this.startY = 0;
         this.gridWidth = this.endX = gridWidth;
         this.gridHeight = this.endY = gridHeight;
-        map = new IntLongOrderedMap(gridWidth * gridHeight);
+        map = new CoordLongOrderedMap(gridWidth * gridHeight, 0.5f);
         viewport = new StretchViewport(gridWidth, gridHeight);
         if (font != null) {
             setFont(new Font(font), squareCenteredCells);
@@ -191,66 +194,6 @@ public class GlyphGrid extends Group {
     }
 
     /**
-     * Combines the up-to-15-bit non-negative ints x and y into one non-negative result int.
-     * This is used to get the keys for a GlyphGrid given x,y inputs. Because jdkgdxds uses
-     * Fibonacci hashing to scramble keys, there's no concern here from leaving all of x in
-     * the lower half of the bits and all of y in the upper half.
-     *
-     * @param x an up-to-15-bit non-negative int (between 0 and 32767, inclusive)
-     * @param y an up-to-15-bit non-negative int (between 0 and 32767, inclusive)
-     * @return a non-negative int that combines x and y into one value
-     */
-    public static int fuse(final int x, final int y) {
-        return (x & 0x7FFF) | (y << 16 & 0x7FFF0000);
-    }
-
-    /**
-     * Combines the up-to-15-bit non-negative x and y components of the Coord {@code xy} into one
-     * non-negative result int. This is used to get the keys for a GlyphGrid given x,y inputs. Because
-     * jdkgdxds uses Fibonacci hashing to scramble keys, there's no concern here from leaving all of
-     * x in the lower half of the bits and all of y in the upper half.
-     *
-     * @param xy a Coord with non-negative x and y
-     * @return a non-negative int that combines the Coord's x and y into one value
-     */
-    public static int fuse(final Coord xy) {
-        return (xy.x & 0x7FFF) | (xy.y << 16 & 0x7FFF0000);
-    }
-
-    /**
-     * Given a fused x,y pair as an int (typically produced by {@link #fuse(int, int)}), this
-     * gets the x component from it, as an int.
-     *
-     * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
-     * @return the x component of fused
-     */
-    public static int extractX(int fused) {
-        return fused & 0x7FFF;
-    }
-
-    /**
-     * Given a fused x,y pair as an int (typically produced by {@link #fuse(int, int)}), this
-     * gets the y component from it, as an int.
-     *
-     * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
-     * @return the y component of fused
-     */
-    public static int extractY(int fused) {
-        return fused >>> 16 & 0x7FFF;
-    }
-
-    /**
-     * A convenience method that extracts the x and y components from {@code fused} and returns
-     * them as a Coord.
-     *
-     * @param fused a fused x,y pair as an int as produced by {@link #fuse(int, int)}
-     * @return
-     */
-    public static Coord extractCoord(int fused) {
-        return Coord.get(fused & 0x7FFF, fused >>> 16 & 0x7FFF);
-    }
-
-    /**
      * Places a character (optionally with style information) at the specified cell, using white foreground color.
      *
      * @param x         x position of the cell, measured in cells on the grid
@@ -258,7 +201,7 @@ public class GlyphGrid extends Group {
      * @param codepoint the character, with or without style information, to place
      */
     public void put(int x, int y, int codepoint) {
-        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
+        map.put(Coord.get(x, y), (codepoint & 0xFFFFFFFFL) | 0xFFFFFFFE00000000L);
     }
 
     /**
@@ -270,7 +213,7 @@ public class GlyphGrid extends Group {
      * @param color     the RGBA8888 color to use for the character
      */
     public void put(int x, int y, int codepoint, int color) {
-        map.put(fuse(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
+        map.put(Coord.get(x, y), (codepoint & 0xFFFFFFFFL) | (long) color << 32);
     }
 
     /**
@@ -282,7 +225,7 @@ public class GlyphGrid extends Group {
      * @param color      the RGBA8888 color to use for the character
      */
     public void put(int x, int y, char simpleChar, int color) {
-        map.put(fuse(x, y), (simpleChar) | (long) color << 32);
+        map.put(Coord.get(x, y), (simpleChar) | (long) color << 32);
     }
 
     /**
@@ -293,17 +236,17 @@ public class GlyphGrid extends Group {
      * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
      */
     public void put(int x, int y, long glyph) {
-        map.put(fuse(x, y), glyph);
+        map.put(Coord.get(x, y), glyph);
     }
 
     /**
-     * Places a glyph (optionally with style information and/or color) at the specified cell (given as a fused value).
-     * This put() method has the least overhead if you already have a fused int key and long glyph.
+     * Places a glyph (optionally with style information and/or color) at the specified cell (given as a Coord).
+     * This put() method has the least overhead if you already have a Coord key and long glyph.
      *
-     * @param fused a fused x,y position, as produced by {@link #fuse(int, int)}
+     * @param fused a Coord representing an x,y position
      * @param glyph the glyph to place, as produced by {@link Font#markupGlyph(char, String, ColorLookup)}
      */
-    public void put(int fused, long glyph) {
+    public void put(Coord fused, long glyph) {
         map.put(fused, glyph);
     }
 
@@ -319,13 +262,13 @@ public class GlyphGrid extends Group {
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
-        int pos;
-        IntList order = map.order();
+        Coord pos;
+        ObjectList<Coord> order = map.order();
         y -= font.descent * font.scaleY;
 //        x += font.cellWidth * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            font.drawGlyph(batch, map.getAt(i), x + extractX(pos), y + extractY(pos));
+            font.drawGlyph(batch, map.getAt(i), x + pos.x, y + pos.y);
         }
         super.drawChildren(batch, 1f);
     }
@@ -344,15 +287,15 @@ public class GlyphGrid extends Group {
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
-        int pos;
         float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
-        IntList order = map.order();
+        Coord pos;
+        ObjectList<Coord> order = map.order();
         y -= font.descent * font.scaleY;
 //        x += font.cellWidth * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            xPos = x + extractX(pos);
-            yPos = y + extractY(pos);
+            xPos = x + pos.x;
+            yPos = y + pos.y;
             if (limit.boundsInFrustum(xPos, yPos, 0, boundsWidth, boundsHeight, 1f))
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
@@ -381,13 +324,13 @@ public class GlyphGrid extends Group {
         float x = getX(), y = getY();
         if (backgrounds != null)
             font.drawBlocks(batch, backgrounds, x, y);
-        int pos;
+        Coord pos;
         long glyph;
         y -= font.descent * font.scaleY;
 //        x += font.cellWidth * 0.5f;
         for (int xx = startCellX; xx < endCellX; xx++) {
             for (int yy = startCellY; yy < endCellY; yy++) {
-                pos = fuse(xx, yy);
+                pos = Coord.get(xx, yy);
                 glyph = map.getOrDefault(pos, 0L);
                 if ((glyph & 0x000000FE00000000L) != 0L) // if pos was found and glyph is not transparent
                     font.drawGlyph(batch, glyph, x + xx * font.cellWidth, y + yy * font.cellHeight);
@@ -448,7 +391,7 @@ public class GlyphGrid extends Group {
     }
 
     public MoreActions.LenientSequenceAction dyeFG(int x, int y, int newColor, float change, float duration, Runnable post) {
-        final int fused = fuse(x, y);
+        final Coord fused = Coord.get(x, y);
         final long existing = map.getOrDefault(fused, 0),
                 next = (existing & 0xFFFFFFFFL) | (long) DescriptiveColor.lerpColors((int) (existing >>> 32), newColor, change) << 32;
         TemporalAction temporal = new TemporalAction() {
