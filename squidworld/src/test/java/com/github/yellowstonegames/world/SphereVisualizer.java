@@ -35,10 +35,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.HilbertCurve;
+import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
@@ -49,7 +50,7 @@ import java.util.Random;
  */
 public class SphereVisualizer extends ApplicationAdapter {
     private int mode = 0;
-    private int modes = 4;
+    private int modes = 5;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -72,7 +73,6 @@ public class SphereVisualizer extends ApplicationAdapter {
     public void create() {
         startTime = TimeUtils.millis();
         Coord.expandPoolTo(512, 512);
-        HilbertCurve.init2D();
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("Cozette-standard.fnt"));
         font.setColor(Color.BLACK);
@@ -120,6 +120,19 @@ public class SphereVisualizer extends ApplicationAdapter {
             onSphereGaussian(circleCoord);
             renderer.color(black);
             renderer.vertex(circleCoord[0] * 250 + 260, circleCoord[1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphereHaltonMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x1000; i++) {
+            onSphereHalton(circleCoord, i);
+            renderer.color(black);
+            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -204,12 +217,14 @@ public class SphereVisualizer extends ApplicationAdapter {
             break;
             case 3: spherePairMode();
             break;
+            case 4: sphereHaltonMode();
+            break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         font.draw(batch, String.format("Mode %d at %d FPS",
                         mode, Gdx.graphics.getFramesPerSecond()),
-                64, 500+22, 256+128, Align.center, true);
+                64, 518, 256+128, Align.center, true);
 //        font.draw(batch, "Lower parameters A/B/C by holding a, b, or c;\nhold Shift and A/B/C to raise.", 64, 500-5, 256+128, Align.center, true);
 //        font.draw(batch, "a – lambda; should be greater than 0.0", 64, 500-32, 256+128, Align.center, true);
         batch.end();
@@ -489,6 +504,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[1] = y;
         //vector[2] = z;
     }
+    public void onSphereHalton(final float[] vector, int index)
+    {
+        float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, index));
+        float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, index));
+        float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, index));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
     public void insideCircleBoxMuller(final double[] vector)
     {
         double mag = 0.0;
@@ -677,7 +706,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
         config.setResizable(false);
         config.setForegroundFPS(60);
-        config.setWindowedMode(512, 520);
+        config.setWindowedMode(512, 530);
         new Lwjgl3Application(new SphereVisualizer(), config);
     }
 
