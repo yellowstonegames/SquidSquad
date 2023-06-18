@@ -45,6 +45,7 @@ import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
 import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.world.random.SplurgeRandom;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
@@ -69,8 +70,9 @@ public class CorrelationVisualizer extends ApplicationAdapter {
     private static final EnhancedRandom[][][] randoms = new EnhancedRandom[][][]{
             makeGrid(new LaserRandom(1, 1)),
             makeGrid(new MizuchiRandom(1, 1)),
+            makeGrid(new SplurgeRandom(1, 1)),
     };
-    int currentRandom = 0, randomCount = 2;
+    int currentRandom = 0, randomCount = 3;
     int currentMode = 0, modeCount = 3;
 
     public static void refreshGrid() {
