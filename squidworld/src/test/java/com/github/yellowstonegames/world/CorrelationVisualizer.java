@@ -22,30 +22,17 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.anim8.AnimatedGif;
-import com.github.tommyettinger.anim8.Dithered;
-import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.random.MizuchiRandom;
-import com.github.yellowstonegames.core.ColorGradients;
-import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Interpolations;
-import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.world.random.SplurgeRandom;
+import com.github.yellowstonegames.world.random.SportyRandom;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
@@ -71,8 +58,9 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new LaserRandom(1, 1)),
             makeGrid(new MizuchiRandom(1, 1)),
             makeGrid(new SplurgeRandom(1, 1)),
+            makeGrid(new SportyRandom(1, 1)),
     };
-    int currentRandom = 0, randomCount = 3;
+    int currentRandom = 0, randomCount = randoms.length;
     int currentMode = 0, modeCount = 3;
 
     public static void refreshGrid() {
