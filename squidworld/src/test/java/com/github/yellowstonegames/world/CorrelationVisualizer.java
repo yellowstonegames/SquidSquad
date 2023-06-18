@@ -55,6 +55,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
 
     private ImmediateModeRenderer20 renderer;
     private static final int width = 256, height = 256;
+    private static final float[][] previousGrid = new float[width][height];
     public static EnhancedRandom[][] makeGrid(EnhancedRandom base){
         EnhancedRandom[][] g = new EnhancedRandom[width][height];
         for (int x = 0; x < width; x++) {
@@ -128,7 +129,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 bt = (int)randoms[currentRandom][x][y].nextLong() & 255;
-                renderer.color(BitConversion.intBitsToFloat(0xFE000000 | bt << 16 | bt << 8 | bt));
+                renderer.color(previousGrid[x][y] = BitConversion.intBitsToFloat(0xFE000000 | bt << 16 | bt << 8 | bt));
                 renderer.vertex(x, y, 0);
             }
         }
@@ -139,12 +140,22 @@ public class CorrelationVisualizer extends ApplicationAdapter {
     public void render() {
         // not sure if this is always needed...
 //        Gdx.gl.glDisable(GL20.GL_BLEND);
+        ScreenUtils.clear(Color.BLACK);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
         if (keepGoing) {
             // standard clear the background routine for libGDX
-            ScreenUtils.clear(Color.BLACK);
             ctr++;
             putMap();
+        }
+        else {
+            renderer.begin(view.getCamera().combined, GL_POINTS);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    renderer.color(previousGrid[x][y]);
+                    renderer.vertex(x, y, 0);
+                }
+            }
+            renderer.end();
         }
     }
 
