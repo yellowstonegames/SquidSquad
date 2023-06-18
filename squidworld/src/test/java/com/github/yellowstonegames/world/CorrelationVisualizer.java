@@ -71,6 +71,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new MizuchiRandom(1, 1)),
     };
     int currentRandom = 0, randomCount = 2;
+    int currentMode = 0, modeCount = 3;
 
     public static void refreshGrid() {
         for (int i = 0, n = randoms.length; i < n; i++) {
@@ -112,6 +113,9 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                     case ENTER:
                         currentRandom = ((currentRandom + (UIUtils.shift() ? randomCount - 1: 1)) % randomCount);
                         break;
+                    case M:
+                        currentMode = ((currentMode + (UIUtils.shift() ? modeCount - 1: 1)) % modeCount);
+                        break;
                     case Q:
                     case ESCAPE: {
                         Gdx.app.exit();
@@ -126,12 +130,34 @@ public class CorrelationVisualizer extends ApplicationAdapter {
     public void putMap() {
         renderer.begin(view.getCamera().combined, GL_POINTS);
         int bt;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                bt = (int)randoms[currentRandom][x][y].nextLong() & 255;
-                renderer.color(previousGrid[x][y] = BitConversion.intBitsToFloat(0xFE000000 | bt << 16 | bt << 8 | bt));
-                renderer.vertex(x, y, 0);
-            }
+        switch (currentMode) {
+            case 0:
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bt = (int) randoms[currentRandom][x][y].nextLong() & 255;
+                        renderer.color(previousGrid[x][y] = BitConversion.intBitsToFloat(0xFE000000 | bt << 16 | bt << 8 | bt));
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+                break;
+            case 1:
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bt = -((int) randoms[currentRandom][x][y].nextLong() & 1) >>> 8;
+                        renderer.color(previousGrid[x][y] = BitConversion.intBitsToFloat(0xFE000000 | bt));
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+                break;
+            case 2:
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bt = -(int) (randoms[currentRandom][x][y].nextLong() >>> 63) >>> 8;
+                        renderer.color(previousGrid[x][y] = BitConversion.intBitsToFloat(0xFE000000 | bt));
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+                break;
         }
         renderer.end();
     }
