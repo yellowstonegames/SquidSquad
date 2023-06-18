@@ -32,6 +32,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.yellowstonegames.world.random.SplurgeRandom;
+import com.github.yellowstonegames.world.random.SpoonRandom;
 import com.github.yellowstonegames.world.random.SportyRandom;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -59,6 +60,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new MizuchiRandom(1, 1)),
             makeGrid(new SplurgeRandom(1, 1)),
             makeGrid(new SportyRandom(1, 1)),
+            makeGrid(new SpoonRandom(1, 1)),
     };
     int currentRandom = 0, randomCount = randoms.length;
     int currentMode = 0, modeCount = 3;
