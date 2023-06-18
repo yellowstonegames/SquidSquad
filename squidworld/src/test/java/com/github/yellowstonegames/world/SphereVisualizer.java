@@ -50,7 +50,7 @@ import java.util.Random;
  */
 public class SphereVisualizer extends ApplicationAdapter {
     private int mode = 0;
-    private int modes = 5;
+    private int modes = 6;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -131,6 +131,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < 0x1000; i++) {
             onSphereHalton(circleCoord, i);
+            renderer.color(black);
+            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphereRobertsMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 0x1000; i++) {
+            onSphereRoberts(circleCoord, i);
             renderer.color(black);
             renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
         }
@@ -218,6 +231,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 3: spherePairMode();
             break;
             case 4: sphereHaltonMode();
+            break;
+            case 5: sphereRobertsMode();
             break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -509,6 +524,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, index));
         float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, index));
         float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, index));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+    public void onSphereRoberts(final float[] vector, int index)
+    {
+        float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 40) * 0x1p-24);
+        float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][1] * index >>> 40) * 0x1p-24);
+        float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][2] * index >>> 40) * 0x1p-24);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
