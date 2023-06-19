@@ -20,6 +20,13 @@ package com.github.yellowstonegames.world.random;
 import com.github.tommyettinger.random.EnhancedRandom;
 
 /**
+ * 253 bits of state. Period is 2 to the 64.
+ * There are 2 to the 189 possible streams.
+ * Each of streamB, streamC, and streamD are always odd numbers,
+ * which is why this has a slightly smaller state size.
+ * <br>
+ * Maybe this is overkill. {@link SpoonRandom} is like this, but
+ * "only" has 190 bits of state.
  */
 public class SportyRandom extends EnhancedRandom {
 	@Override
@@ -32,15 +39,15 @@ public class SportyRandom extends EnhancedRandom {
 	 */
 	protected long stateA;
 	/**
-	 * The second state; can be any long.
+	 * The second state; can be any odd long.
 	 */
 	protected long stateB;
 	/**
-	 * The third state; can be any long.
+	 * The third state; can be any odd long.
 	 */
 	protected long stateC;
 	/**
-	 * The fourth state; can be any long.
+	 * The fourth state; can be any odd long.
 	 */
 	protected long stateD;
 
@@ -49,9 +56,9 @@ public class SportyRandom extends EnhancedRandom {
 	 */
 	public SportyRandom() {
 		stateA = EnhancedRandom.seedFromMath();
-		stateB = EnhancedRandom.seedFromMath();
-		stateC = EnhancedRandom.seedFromMath();
-		stateD = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath() | 1L;
+		stateC = EnhancedRandom.seedFromMath() | 1L;
+		stateD = EnhancedRandom.seedFromMath() | 1L;
 	}
 
 	/**
@@ -69,11 +76,11 @@ public class SportyRandom extends EnhancedRandom {
 	 * These states will be used verbatim for stateA and stateB. Both stateC and stateD will be assigned 1.
 	 *
 	 * @param stateA any {@code long} value
-	 * @param stateB any {@code long} value
+	 * @param stateB any odd {@code long} value
 	 */
 	public SportyRandom(long stateA, long stateB) {
 		this.stateA = stateA;
-		this.stateB = stateB;
+		this.stateB = stateB | 1L;
 		this.stateC = 1L;
 		this.stateD = 1L;
 	}
@@ -83,15 +90,15 @@ public class SportyRandom extends EnhancedRandom {
 	 * These states will be used verbatim.
 	 *
 	 * @param stateA any {@code long} value
-	 * @param stateB any {@code long} value
-	 * @param stateC any {@code long} value
-	 * @param stateD any {@code long} value
+	 * @param stateB any odd {@code long} value
+	 * @param stateC any odd {@code long} value
+	 * @param stateD any odd {@code long} value
 	 */
 	public SportyRandom(long stateA, long stateB, long stateC, long stateD) {
 		this.stateA = stateA;
-		this.stateB = stateB;
-		this.stateC = stateC;
-		this.stateD = stateD;
+		this.stateB = stateB | 1L;
+		this.stateC = stateC | 1L;
+		this.stateD = stateD | 1L;
 	}
 
 	/**
@@ -127,11 +134,12 @@ public class SportyRandom extends EnhancedRandom {
 
 	/**
 	 * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-	 * Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything
-	 * else, this treats it as 3 and sets stateD.
+	 * Selections 0, 1, 2, and 3 refer to states A, B, C, and D, and if the selection is anything
+	 * else, this ignores it and sets nothing. States B, C, and D are always odd, so if they would
+	 * be set with an even number this adds 1 to value before setting.
 	 *
 	 * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
-	 * @param value     the exact value to use for the selected state, if valid
+	 * @param value     the value to use for the selected state, if valid
 	 */
 	@Override
 	public void setSelectedState (int selection, long value) {
@@ -140,13 +148,13 @@ public class SportyRandom extends EnhancedRandom {
 			stateA = value;
 			break;
 		case 1:
-			stateB = value;
+			stateB = value | 1L;
 			break;
 		case 2:
-			stateC = value;
+			stateC = value | 1L;
 			break;
 		case 3:
-			stateD = value;
+			stateD = value | 1L;
 			break;
 		}
 	}
@@ -161,7 +169,7 @@ public class SportyRandom extends EnhancedRandom {
 	@Override
 	public void setSeed (long seed) {
 		stateA = seed ^ 0xC6BC279692B5C323L;
-		stateB = seed ^ ~0xC6BC279692B5C323L;
+		stateB = (seed ^ ~0xC6BC279692B5C323L) | 1L;
 		seed ^= seed >>> 32;
 		seed *= 0xbea225f9eb34556dL;
 		seed ^= seed >>> 29;
@@ -169,8 +177,8 @@ public class SportyRandom extends EnhancedRandom {
 		seed ^= seed >>> 32;
 		seed *= 0xbea225f9eb34556dL;
 		seed ^= seed >>> 29;
-		stateC = ~seed;
-		stateD = seed;
+		stateC = ~seed | 1L;
+		stateD = seed | 1L;
 	}
 
 	public long getStateA () {
@@ -196,7 +204,7 @@ public class SportyRandom extends EnhancedRandom {
 	 * @param stateB can be any long
 	 */
 	public void setStateB (long stateB) {
-		this.stateB = stateB;
+		this.stateB = stateB | 1L;
 	}
 
 	public long getStateC () {
@@ -209,7 +217,7 @@ public class SportyRandom extends EnhancedRandom {
 	 * @param stateC can be any long
 	 */
 	public void setStateC (long stateC) {
-		this.stateC = stateC;
+		this.stateC = stateC | 1L;
 	}
 
 	public long getStateD () {
@@ -222,7 +230,7 @@ public class SportyRandom extends EnhancedRandom {
 	 * @param stateD can be any long
 	 */
 	public void setStateD (long stateD) {
-		this.stateD = stateD;
+		this.stateD = stateD | 1L;
 	}
 
 	/**
@@ -254,20 +262,20 @@ public class SportyRandom extends EnhancedRandom {
 	@Override
 	public void setState (long stateA, long stateB, long stateC, long stateD) {
 		this.stateA = stateA;
-		this.stateB = stateB;
-		this.stateC = stateC;
-		this.stateD = stateD;
+		this.stateB = stateB | 1L;
+		this.stateC = stateC | 1L;
+		this.stateD = stateD | 1L;
 	}
 
 	@Override
 	public long nextLong () {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL);
+		x *= (stateB += 0x77C0AC660748C2BEL);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL);
 		x ^= x >>> 32;
-		x *= 1L | (stateD += 0x89E182857D9ED689L);
+		x *= (stateD += 0x13C3050AFB3DAD12L);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -276,16 +284,16 @@ public class SportyRandom extends EnhancedRandom {
 	public long previousLong () {
 		long x = (stateA);
 		x ^= x >>> 32;
-		x *= 1L | (stateB);
+		x *= (stateB);
 		x ^= x >>> 33;
-		x *= 1L | (stateC);
+		x *= (stateC);
 		x ^= x >>> 32;
-		x *= 1L | (stateD);
+		x *= (stateD);
 		x ^= x >>> 31;
 		stateA -= 0xDB4F0B9175AE2165L;
-		stateB -= 0xBBE0563303A4615FL;
-		stateC -= 0xA0F2EC75A1FE1575L;
-		stateD -= 0x89E182857D9ED689L;
+		stateB -= 0x77C0AC660748C2BEL;
+		stateC -= 0x41E5D8EB43FC2AEAL;
+		stateD -= 0x13C3050AFB3DAD12L;
 		return x;
 	}
 
@@ -293,11 +301,11 @@ public class SportyRandom extends EnhancedRandom {
 	public long skip(long advance) {
 		long x = (stateA += 0xDB4F0B9175AE2165L * advance);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL * advance);
+		x *= (stateB += 0x77C0AC660748C2BEL * advance);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L * advance);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL * advance);
 		x ^= x >>> 32;
-		x *= 1L | (stateD += 0x89E182857D9ED689L * advance);
+		x *= (stateD += 0x13C3050AFB3DAD12L * advance);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -306,11 +314,11 @@ public class SportyRandom extends EnhancedRandom {
 	public int next (int bits) {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL);
+		x *= (stateB += 0x77C0AC660748C2BEL);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL);
 		x ^= x >>> 32;
-		x *= 1L | (stateD += 0x89E182857D9ED689L);
+		x *= (stateD += 0x13C3050AFB3DAD12L);
 		x ^= x >>> 31;
 		return (int)x >>> (32 - bits);
 	}

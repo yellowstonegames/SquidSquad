@@ -128,7 +128,7 @@ public class SpoonRandom extends EnhancedRandom {
 
 	/**
 	 * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-	 * Selections 0, 1, and 2 refer to states A, B, and C,  and if the selection is anything
+	 * Selections 0, 1, and 2 refer to states A, B, and C, and if the selection is anything
 	 * else, this ignores it and sets nothing. States B and C are always odd, so if they would
 	 * be set with an even number this adds 1 to value before setting.
 	 *
