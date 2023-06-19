@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -49,6 +50,8 @@ import java.util.Random;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
+    public static final int POINT_COUNT = 0x100;
+    private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
     private int modes = 7;
     private SpriteBatch batch;
@@ -59,7 +62,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private Camera camera;
     private int[] amounts = new int[512];
     private double[] dAmounts = new double[512];
-    private long seed = 1L;
+    private long seed = 123456789L;
     private long startTime;
     private float[] circleCoord = new float[3];
     private WhiskerRandom whisker = new WhiskerRandom(seed);
@@ -69,6 +72,34 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float red = Color.RED.toFloatBits();
     private final float smoke = Color.toFloatBits(0f, 0f, 0f, 0.25f);
 
+    /**
+     * With seed 123456789 given to a WhiskerRandom for the random types...
+     * <br>
+     * On mode 0, minimum distance was 0.003787, between point 75, [0.515751,0.836292,-0.186055] and point 139, [0.518916,0.834248,-0.186432]
+     * On mode 1, minimum distance was 0.001726, between point 244, [0.507996,0.529551,-0.679350] and point 247, [0.508196,0.530826,-0.678204]
+     * On mode 2, minimum distance was 0.004055, between point 117, [0.441669,-0.894222,-0.072774] and point 157, [0.438834,-0.895810,-0.070349]
+     * On mode 3, minimum distance was 0.008227, between point 8, [0.511021,0.423659,-0.747911] and point 147, [0.512761,0.430063,-0.743049]
+     * On mode 4, minimum distance was 0.012335, between point 130, [0.049258,-0.972008,0.229726] and point 250, [0.051183,-0.974644,0.217831]
+     * On mode 5, minimum distance was 0.004672, between point 22, [-0.802256,0.284587,-0.524781] and point 226, [-0.800069,0.288543,-0.525959]
+     * On mode 6, minimum distance was 0.013058, between point 52, [0.088732,0.995822,0.021552] and point 152, [0.090197,0.995887,0.008577]
+     */
+    public void showStats() {
+        float minDist2 = Float.MAX_VALUE;
+        int closeI = 0, closeJ = 1;
+        for (int i = 0; i < POINT_COUNT; i++) {
+            for (int j = i + 1; j < POINT_COUNT; j++) {
+                if (minDist2 != (minDist2 = Math.min(minDist2,
+                        Vector3.dst2(points[i][0], points[i][1], points[i][2], points[j][0], points[j][1], points[j][2])))) {
+                    closeI = i;
+                    closeJ = j;
+                }
+            }
+        }
+        System.out.printf("On mode %d, minimum distance was %f, between point %d, [%f,%f,%f] and point %d, [%f,%f,%f]\n",
+                mode, Math.sqrt(minDist2),
+                closeI, points[closeI][0], points[closeI][1], points[closeI][2],
+                closeJ, points[closeJ][0], points[closeJ][1], points[closeJ][2]);
+    }
     @Override
     public void create() {
         startTime = TimeUtils.millis();
@@ -81,21 +112,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         camera = viewport.getCamera();
         renderer = new ImmediateModeRenderer20(0x80000, false, true, 0);
         Arrays.fill(amounts, 0);
-        input = new InputAdapter(){
+        input = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                if(keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER)
-                {
+                if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
                     mode = (mode + 1) % modes;
                     System.out.println("Changed to mode " + mode);
                     return true;
-                } else if(keycode == Input.Keys.MINUS || keycode == Input.Keys.BACKSPACE)
-                {
+                } else if (keycode == Input.Keys.MINUS || keycode == Input.Keys.BACKSPACE) {
                     mode = (mode + modes - 1) % modes;
                     System.out.println("Changed to mode " + mode);
                     return true;
-                }
-                if(keycode == Input.Keys.ESCAPE)
+                } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
+                    showStats();
+                } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
                 return false;
@@ -108,12 +138,12 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        whisker.setSeed(1L);
+        whisker.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereTrig(circleCoord);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereTrig(i);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -122,12 +152,12 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        whisker.setSeed(1L);
+        whisker.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereGaussian(circleCoord);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereGaussian(i);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -137,10 +167,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereHalton(circleCoord, i);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereHalton(i);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -150,10 +180,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereRoberts(circleCoord, i);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereRoberts(i);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -162,10 +192,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereRobertsVDC(circleCoord, i);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereRobertsVDC(i);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
         renderer.end();
     }
@@ -190,9 +220,9 @@ public class SphereVisualizer extends ApplicationAdapter {
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        seed = 1L;
-        for (int i = 0; i < 0x1000; i++) {
-            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
+        long seed = this.seed;
+        for (int i = 0; i < POINT_COUNT; i++) {
+            points[i][0] = points[i][1] = points[i][2] = 0f;
 
 //            float s = TrigTools.sinDeg(i);
 //            float c = TrigTools.cosDeg(i);
@@ -201,9 +231,9 @@ public class SphereVisualizer extends ApplicationAdapter {
 //            rot[3] = -s;
 //            RotationTools.rotate(pole, rot, circleCoord);
 
-            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), circleCoord);
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed, RotationTools.randomRotation2D(-100000000000L - seed)), points[i]);
             renderer.color(black);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 250 + 260, circleCoord[1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
 //                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
 //                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
@@ -219,23 +249,23 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        whisker.setSeed(1L);
+        whisker.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 0x1000; i++) {
-            onSphereGaussian(circleCoord);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereGaussian(i);
             renderer.color(smoke);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 125 + 260 - 126, circleCoord[1] * 125 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125 + 260 - 126, points[i][1] * 125 + 260, 0);
         }
 //        time++;
 //        pole[0] = TrigTools.cosDeg(time);
 //        pole[1] = 0;
 //        pole[2] = TrigTools.sinDeg(time);
-        seed = 1L;
-        for (int i = 0; i < 0x1000; i++) {
-            circleCoord[0] = circleCoord[1] = circleCoord[2] = 0f;
-            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), circleCoord);
+        long seed = this.seed;
+        for (int i = 0; i < POINT_COUNT; i++) {
+            points[i][0] = points[i][1] = points[i][2] = 0f;
+            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), points[i]);
             renderer.color(smoke);
-            renderer.vertex((circleCoord[0] * c + circleCoord[2] * s) * 125 + 260 + 126, circleCoord[1] * 125 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125 + 260 + 126, points[i][1] * 125 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
 //                System.out.println("Problem coordinate: " + circleCoord[0] + ", " + circleCoord[1] + ", " + circleCoord[2] + " is off by " +
 //                        (Math.sqrt(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2]) - 1));
@@ -525,18 +555,20 @@ public class SphereVisualizer extends ApplicationAdapter {
             vector[1] = v2 * mag;
         }
     }
-    public void onSphereTrig(final float[] vector)
+    public void onSphereTrig(final int index)
     {
         float theta = whisker.nextExclusiveFloat();
         float d = whisker.nextExclusiveSignedFloat();
         float phi = TrigTools.acosTurns(d);
         float sinPhi = TrigTools.sinTurns(phi);
 
+        float[] vector = points[index];
+
         vector[0] = TrigTools.cosTurns(theta) * sinPhi;
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         vector[2] = TrigTools.cosTurns(phi);
     }
-    public void onSphereGaussian(final float[] vector)
+    public void onSphereGaussian(final int index)
     {
         float x = (float) whisker.nextGaussian();
         float y = (float) whisker.nextGaussian();
@@ -546,11 +578,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         x *= mag;
         y *= mag;
         z *= mag;
+
+        float[] vector = points[index];
         vector[0] = x;
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereHalton(final float[] vector, int index)
+    public void onSphereHalton(final int index)
     {
         float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, index));
         float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, index));
@@ -560,11 +594,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         x *= mag;
         y *= mag;
         z *= mag;
+
+        float[] vector = points[index];
         vector[0] = x;
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereRoberts(final float[] vector, int index)
+    public void onSphereRoberts(final int index)
     {
         float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 41) * 0x1p-23);
         float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][1] * index >>> 41) * 0x1p-23);
@@ -574,11 +610,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         x *= mag;
         y *= mag;
         z *= mag;
+
+        float[] vector = points[index];
         vector[0] = x;
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereRobertsVDC(final float[] vector, int index)
+    public void onSphereRobertsVDC(final int index)
     {
         long v = Long.reverse(index) >>> 1;
         float x = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][0] * index ^ v) >>> 41) * 0x1p-23);
@@ -589,6 +627,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         x *= mag;
         y *= mag;
         z *= mag;
+
+        float[] vector = points[index];
         vector[0] = x;
         vector[1] = y;
         vector[2] = z;
