@@ -75,40 +75,37 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         }
     }
 
-    private InputAdapter input;
-    
     private Viewport view;
-    private int ctr = 0;
     private boolean keepGoing = true;
-    
-    public static float basicPrepare(float n)
-    {
-//        return Math.max(0f, n);
-        return n * 0.5f + 0.5f;
-    }
 
     @Override
     public void create() {
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
-        input = new InputAdapter(){
+        InputAdapter input = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
-                    case P: //pause
-                        keepGoing = !keepGoing;
                     case SPACE:
-                        ctr++;
+                    case P: // pause
+                        keepGoing = !keepGoing;
+                        break;
+                    case S: // step
+                        putMap();
                         break;
                     case N: // next
                     case EQUALS:
                     case ENTER:
-                        currentRandom = ((currentRandom + (UIUtils.shift() ? randomCount - 1: 1)) % randomCount);
+                        currentRandom = ((currentRandom + (UIUtils.shift() ? randomCount - 1 : 1)) % randomCount);
+                        refreshGrid();
+                        if (!keepGoing) putMap();
                         break;
-                    case M:
-                        currentMode = ((currentMode + (UIUtils.shift() ? modeCount - 1: 1)) % modeCount);
+                    case M: // mode
+                        currentMode = ((currentMode + (UIUtils.shift() ? modeCount - 1 : 1)) % modeCount);
+                        refreshGrid();
+                        if (!keepGoing) putMap();
                         break;
-                    case Q:
+                    case Q: // quit
                     case ESCAPE: {
                         Gdx.app.exit();
                     }
@@ -156,13 +153,9 @@ public class CorrelationVisualizer extends ApplicationAdapter {
 
     @Override
     public void render() {
-        // not sure if this is always needed...
-//        Gdx.gl.glDisable(GL20.GL_BLEND);
         ScreenUtils.clear(Color.BLACK);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
         if (keepGoing) {
-            // standard clear the background routine for libGDX
-            ctr++;
             putMap();
         }
         else {
