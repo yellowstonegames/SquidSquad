@@ -20,6 +20,17 @@ package com.github.yellowstonegames.world.random;
 import com.github.tommyettinger.random.EnhancedRandom;
 
 /**
+ * 190 bits of state. Period is 2 to the 64.
+ * There are 2 to the 126 possible streams.
+ * Both streamB and streamC are always odd numbers,
+ * which is why this has a slightly smaller state size.
+ * <br>
+ * I wanna change
+ * your mind
+ * Said I wanna set it right
+ * this time
+ * I'm looking through you
+ * You know who you are
  */
 public class SpoonRandom extends EnhancedRandom {
 	@Override
@@ -32,11 +43,11 @@ public class SpoonRandom extends EnhancedRandom {
 	 */
 	protected long stateA;
 	/**
-	 * The second state; can be any long.
+	 * The second state; can be any odd long.
 	 */
 	protected long stateB;
 	/**
-	 * The third state; can be any long.
+	 * The third state; can be any odd long.
 	 */
 	protected long stateC;
 
@@ -45,8 +56,8 @@ public class SpoonRandom extends EnhancedRandom {
 	 */
 	public SpoonRandom() {
 		stateA = EnhancedRandom.seedFromMath();
-		stateB = EnhancedRandom.seedFromMath();
-		stateC = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath() | 1L;
+		stateC = EnhancedRandom.seedFromMath() | 1L;
 	}
 
 	/**
@@ -61,14 +72,14 @@ public class SpoonRandom extends EnhancedRandom {
 
 	/**
 	 * Creates a new SpoonRandom with the given two states; all {@code long} values are permitted.
-	 * These states will be used verbatim for stateA and stateB. Both stateC and stateD will be assigned 1.
+	 * These states will be used verbatim for stateA and stateB. stateC will be assigned 1.
 	 *
 	 * @param stateA any {@code long} value
-	 * @param stateB any {@code long} value
+	 * @param stateB any odd {@code long} value (if even, will be made odd)
 	 */
 	public SpoonRandom(long stateA, long stateB) {
 		this.stateA = stateA;
-		this.stateB = stateB;
+		this.stateB = stateB | 1L;
 		this.stateC = 1L;
 	}
 
@@ -77,13 +88,13 @@ public class SpoonRandom extends EnhancedRandom {
 	 * These states will be used verbatim.
 	 *
 	 * @param stateA any {@code long} value
-	 * @param stateB any {@code long} value
-	 * @param stateC any {@code long} value
+	 * @param stateB any odd {@code long} value (if even, will be made odd)
+	 * @param stateC any odd {@code long} value (if even, will be made odd)
 	 */
 	public SpoonRandom(long stateA, long stateB, long stateC) {
 		this.stateA = stateA;
-		this.stateB = stateB;
-		this.stateC = stateC;
+		this.stateB = stateB | 1L;
+		this.stateC = stateC | 1L;
 	}
 
 	/**
@@ -118,7 +129,8 @@ public class SpoonRandom extends EnhancedRandom {
 	/**
 	 * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
 	 * Selections 0, 1, and 2 refer to states A, B, and C,  and if the selection is anything
-	 * else, this ignores it and sets nothing.
+	 * else, this ignores it and sets nothing. States B and C are always odd, so if they would
+	 * be set with an even number this adds 1 to value before setting.
 	 *
 	 * @param selection used to select which state variable to set; generally 0, 1, or 2
 	 * @param value     the exact value to use for the selected state, if valid
@@ -130,25 +142,24 @@ public class SpoonRandom extends EnhancedRandom {
 			stateA = value;
 			break;
 		case 1:
-			stateB = value;
+			stateB = value | 1L;
 			break;
 		case 2:
-			stateC = value;
+			stateC = value | 1L;
 			break;
 		}
 	}
 
 	/**
 	 * This initializes all 4 states of the generator to random values based on the given seed.
-	 * (2 to the 64) possible initial generator states can be produced here, all with a different
-	 * first value returned by {@link #nextLong()}.
+	 * (2 to the 64) possible initial generator states can be produced here, though there are
+	 * (2 to the 190) possible states in total.
 	 *
 	 * @param seed the initial seed; may be any long
 	 */
 	@Override
 	public void setSeed (long seed) {
-		stateA = seed ^ 0xC6BC279692B5C323L;
-		stateB = seed ^ ~0xC6BC279692B5C323L;
+		stateA = seed;
 		seed ^= seed >>> 32;
 		seed *= 0xbea225f9eb34556dL;
 		seed ^= seed >>> 29;
@@ -156,7 +167,8 @@ public class SpoonRandom extends EnhancedRandom {
 		seed ^= seed >>> 32;
 		seed *= 0xbea225f9eb34556dL;
 		seed ^= seed >>> 29;
-		stateC = ~seed;
+		stateB = (seed ^ 0xC6BC279692B5C323L) | 1L;
+		stateC = (seed ^ ~0xC6BC279692B5C323L) | 1L;
 	}
 
 	public long getStateA () {
@@ -179,10 +191,10 @@ public class SpoonRandom extends EnhancedRandom {
 	/**
 	 * Sets the second part of the state.
 	 *
-	 * @param stateB can be any long
+	 * @param stateB can be any odd long (if even, will be made odd)
 	 */
 	public void setStateB (long stateB) {
-		this.stateB = stateB;
+		this.stateB = stateB | 1L;
 	}
 
 	public long getStateC () {
@@ -192,26 +204,21 @@ public class SpoonRandom extends EnhancedRandom {
 	/**
 	 * Sets the third part of the state.
 	 *
-	 * @param stateC can be any long
+	 * @param stateC can be any odd long (if even, will be made odd)
 	 */
 	public void setStateC (long stateC) {
-		this.stateC = stateC;
+		this.stateC = stateC | 1L;
 	}
 
 	/**
-	 * Sets each state variable to either {@code stateA} or {@code stateB}, alternating.
-	 * This uses {@link #setSelectedState(int, long)} to set the values. If there is one
-	 * state variable ({@link #getStateCount()} is 1), then this only sets that state
-	 * variable to stateA. If there are two state variables, the first is set to stateA,
-	 * and the second to stateB. If there are more, it reuses stateA, then stateB, then
-	 * stateA, and so on until all variables are set.
+	 * Equivalent to {@code setState(stateA, stateB, 1L)}.
 	 *
-	 * @param stateA the long value to use for states at index 0, 2, 4, 6...
-	 * @param stateB the long value to use for states at index 1, 3, 5, 7...
+	 * @param stateA the long value to use for stateA
+	 * @param stateB the odd long value to use for stateB (if even, will be made odd)
 	 */
 	@Override
 	public void setState(long stateA, long stateB) {
-		setState(stateA, stateB, 1L, 1L);
+		setState(stateA, stateB, 1L);
 	}
 
 	/**
@@ -220,23 +227,23 @@ public class SpoonRandom extends EnhancedRandom {
 	 * and {@link #setStateC(long)} as a group.
 	 *
 	 * @param stateA the first state; can be any long
-	 * @param stateB the second state; can be any long
-	 * @param stateC the third state; can be any long
+	 * @param stateB the second state; can be any odd long (if even, will be made odd)
+	 * @param stateC the third state; can be any odd long (if even, will be made odd)
 	 */
 	@Override
 	public void setState (long stateA, long stateB, long stateC) {
 		this.stateA = stateA;
-		this.stateB = stateB;
-		this.stateC = stateC;
+		this.stateB = stateB | 1L;
+		this.stateC = stateC | 1L;
 	}
 
 	@Override
 	public long nextLong () {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL);
+		x *= (stateB += 0x77C0AC660748C2BEL);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -245,13 +252,13 @@ public class SpoonRandom extends EnhancedRandom {
 	public long previousLong () {
 		long x = (stateA);
 		x ^= x >>> 32;
-		x *= 1L | (stateB);
+		x *= (stateB);
 		x ^= x >>> 33;
-		x *= 1L | (stateC);
+		x *= (stateC);
 		x ^= x >>> 31;
 		stateA -= 0xDB4F0B9175AE2165L;
-		stateB -= 0xBBE0563303A4615FL;
-		stateC -= 0xA0F2EC75A1FE1575L;
+		stateB -= 0x77C0AC660748C2BEL;
+		stateC -= 0x41E5D8EB43FC2AEAL;
 		return x;
 	}
 
@@ -259,9 +266,9 @@ public class SpoonRandom extends EnhancedRandom {
 	public long skip(long advance) {
 		long x = (stateA += 0xDB4F0B9175AE2165L * advance);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL * advance);
+		x *= (stateB += 0x77C0AC660748C2BEL * advance);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L * advance);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL * advance);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -270,9 +277,9 @@ public class SpoonRandom extends EnhancedRandom {
 	public int next (int bits) {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= 1L | (stateB += 0xBBE0563303A4615FL);
+		x *= (stateB += 0x77C0AC660748C2BEL);
 		x ^= x >>> 33;
-		x *= 1L | (stateC += 0xA0F2EC75A1FE1575L);
+		x *= (stateC += 0x41E5D8EB43FC2AEAL);
 		x ^= x >>> 31;
 		return (int)x >>> (32 - bits);
 	}

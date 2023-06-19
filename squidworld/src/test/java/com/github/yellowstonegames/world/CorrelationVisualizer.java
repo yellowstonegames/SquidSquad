@@ -188,6 +188,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Test: Random Correlation Visualization");
         config.useVsync(true);
+        config.setForegroundFPS(0);
         config.setResizable(false);
         config.setWindowedMode(width, height);
         config.disableAudio(true);
