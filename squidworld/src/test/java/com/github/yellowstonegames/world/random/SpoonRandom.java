@@ -241,9 +241,9 @@ public class SpoonRandom extends EnhancedRandom {
 	public long nextLong () {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= (stateB += 0x77C0AC660748C2BEL);
+		x *= (stateB += 0xBBE0563303A4615EL);
 		x ^= x >>> 33;
-		x *= (stateC += 0x41E5D8EB43FC2AEAL);
+		x *= (stateC += 0xA0F2EC75A1FE1576L);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -257,8 +257,8 @@ public class SpoonRandom extends EnhancedRandom {
 		x *= (stateC);
 		x ^= x >>> 31;
 		stateA -= 0xDB4F0B9175AE2165L;
-		stateB -= 0x77C0AC660748C2BEL;
-		stateC -= 0x41E5D8EB43FC2AEAL;
+		stateB -= 0xBBE0563303A4615EL;
+		stateC -= 0xA0F2EC75A1FE1576L;
 		return x;
 	}
 
@@ -266,9 +266,9 @@ public class SpoonRandom extends EnhancedRandom {
 	public long skip(long advance) {
 		long x = (stateA += 0xDB4F0B9175AE2165L * advance);
 		x ^= x >>> 32;
-		x *= (stateB += 0x77C0AC660748C2BEL * advance);
+		x *= (stateB += 0xBBE0563303A4615EL * advance);
 		x ^= x >>> 33;
-		x *= (stateC += 0x41E5D8EB43FC2AEAL * advance);
+		x *= (stateC += 0xA0F2EC75A1FE1576L * advance);
 		x ^= x >>> 31;
 		return x;
 	}
@@ -277,9 +277,9 @@ public class SpoonRandom extends EnhancedRandom {
 	public int next (int bits) {
 		long x = (stateA += 0xDB4F0B9175AE2165L);
 		x ^= x >>> 32;
-		x *= (stateB += 0x77C0AC660748C2BEL);
+		x *= (stateB += 0xBBE0563303A4615EL);
 		x ^= x >>> 33;
-		x *= (stateC += 0x41E5D8EB43FC2AEAL);
+		x *= (stateC += 0xA0F2EC75A1FE1576L);
 		x ^= x >>> 31;
 		return (int)x >>> (32 - bits);
 	}

@@ -28,9 +28,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.world.random.SplurgeRandom;
 import com.github.yellowstonegames.world.random.SpoonRandom;
 import com.github.yellowstonegames.world.random.SportyRandom;
@@ -50,7 +48,23 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 g[x][y] = base.copy();
-                g[x][y].setState(x << 1, y << 1);
+                switch (g[x][y].getStateCount()) {
+                    case 1:
+                        g[x][y].setState(x << 17 ^ y << 1);
+                        break;
+                    case 2:
+                        g[x][y].setState(x << 1, y << 1);
+                        break;
+                    case 3:
+                        g[x][y].setState(x << 1, y << 1, 1111111111L);
+                        break;
+                    case 4:
+                        g[x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L);
+                        break;
+                    case 5:
+                        g[x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L, 1111111111L);
+                        break;
+                }
             }
         }
         return g;
@@ -61,6 +75,8 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new SplurgeRandom(1, 1)),
             makeGrid(new SportyRandom(1, 1)),
             makeGrid(new SpoonRandom(1, 1)),
+            makeGrid(new WhiskerRandom(1, 1, 1, 1)),
+            makeGrid(new ScruffRandom(1, 1, 1, 1)),
     };
     int currentRandom = 0, randomCount = randoms.length;
     int currentMode = 0, modeCount = 3;
@@ -69,7 +85,23 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         for (int i = 0, n = randoms.length; i < n; i++) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    randoms[i][x][y].setState(x << 1, y << 1);
+                    switch (randoms[i][x][y].getStateCount()) {
+                        case 1:
+                            randoms[i][x][y].setState(x << 17 ^ y << 1);
+                            break;
+                        case 2:
+                            randoms[i][x][y].setState(x << 1, y << 1);
+                            break;
+                        case 3:
+                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L);
+                            break;
+                        case 4:
+                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L);
+                            break;
+                        case 5:
+                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L, 1111111111L);
+                            break;
+                    }
                 }
             }
         }
